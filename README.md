@@ -11,7 +11,7 @@ No designer needed. No pixel-pushing. Just copy a seed and build.
 
 <br />
 
-[Get Started](#get-started) · [Why StyleSeed](#why-styleseed) · [Skills](#10-ai-powered-skills) · [Showcase](#showcase) · [Wiki](../../wiki)
+[Get Started](#get-started) · [Why StyleSeed](#why-styleseed) · [Skills](#10-ai-powered-skills) · [Showcase](#showcase) · [Wiki](../../wiki) · [한국어](README-KR.md)
 
 <br />
 
@@ -44,18 +44,21 @@ The difference? A **complete design ruleset** that teaches AI how to think like 
 
 ## Get Started
 
+### Option 1: Just tell Claude Code (Easiest)
+
+```
+"Use https://github.com/bitjaru/styleseed as the design system. Build a SaaS dashboard with revenue chart, user stats, and recent activity."
+```
+
+That's it. Claude Code fetches the design rules and builds with them.
+
+### Option 2: Copy into your project (For ongoing use)
+
 ```bash
-# Copy the toss seed into your project
 cp -r seeds/toss/* your-project/
 ```
 
-That's it. Claude Code reads `CLAUDE.md` automatically. Every component now follows the design language.
-
-```
-> "Build a SaaS dashboard with revenue chart, user stats, and recent activity"
-```
-
-Claude Code produces a pixel-perfect, Toss-style mobile dashboard — because it now understands dozens of visual design rules, not just component APIs.
+Claude Code reads `CLAUDE.md` automatically. Every component now follows the design language — no need to mention the URL again.
 
 ## Why StyleSeed
 

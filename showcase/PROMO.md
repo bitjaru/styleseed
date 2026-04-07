@@ -109,6 +109,32 @@ MIT: https://github.com/bitjaru/styleseed
 
 ---
 
+## Claude Code Discord
+
+**Post in #showcase or #community-projects:**
+
+```
+🌱 StyleSeed — Make Claude Code design like a UI/UX designer
+
+I built a design system for my own app and open-sourced it. It teaches Claude Code how to think like a designer.
+
+What's included:
+• Comprehensive design rules (color philosophy, typography ratios, layout patterns, forbidden mistakes)
+• 47 React components (shadcn/ui + dashboard patterns)
+• 10 Claude Code skills: /ui-page, /ui-review, /ux-audit, /ux-copy, /ux-feedback, /ux-flow
+• Tailwind CSS v4 theme with dark mode
+
+Usage — just tell Claude Code:
+"Refer to https://github.com/bitjaru/styleseed/tree/main/seeds/toss — read CLAUDE.md and DESIGN-LANGUAGE.md, then build a dashboard using these design rules."
+
+Also works with Cursor (.cursorrules included).
+
+GitHub: https://github.com/bitjaru/styleseed
+MIT licensed. PRs welcome for new design styles (Apple, Linear, Stripe).
+```
+
+---
+
 ## Hacker News (Show HN)
 
 **Title:** Show HN: StyleSeed – 2,200 lines of design rules that make AI produce professional UI

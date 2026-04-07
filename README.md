@@ -66,6 +66,13 @@ cp -r styleseed/seeds/toss/* your-project/
 
 Now Claude Code reads `CLAUDE.md` automatically every time — no need to mention the URL again.
 
+### Option 3: Cursor users
+
+Copy `.cursorrules` into your project root:
+```bash
+cp styleseed/seeds/toss/.cursorrules your-project/.cursorrules
+```
+
 ## Why StyleSeed
 
 ### The Problem Everyone Has

@@ -6,12 +6,12 @@
 
 ### Stop tweaking AI-generated UI. Start designing it.
 
-**2,600+ lines of design rules that make Claude Code produce professional-quality UI.**<br />
+**Comprehensive design rules that make Claude Code produce professional-quality UI.**<br />
 No designer needed. No pixel-pushing. Just copy a seed and build.
 
 <br />
 
-[Get Started](#get-started) · [Why StyleSeed](#why-styleseed) · [Skills](#10-ai-powered-skills) · [Showcase](#showcase) · [awesome-design-md](#styleseed--awesome-design-md)
+[Get Started](#get-started) · [Why StyleSeed](#why-styleseed) · [Skills](#10-ai-powered-skills) · [Showcase](#showcase) · [Wiki](../../wiki)
 
 <br />
 
@@ -40,7 +40,7 @@ You ask Claude Code to build a dashboard. Without a design system, you get gener
 
 <br />
 
-The difference? **2,200 lines of design rules** that teach AI how to think like a designer.
+The difference? A **complete design ruleset** that teaches AI how to think like a designer.
 
 ## Get Started
 
@@ -55,7 +55,7 @@ That's it. Claude Code reads `CLAUDE.md` automatically. Every component now foll
 > "Build a SaaS dashboard with revenue chart, user stats, and recent activity"
 ```
 
-Claude Code produces a pixel-perfect, Toss-style mobile dashboard — because it now understands 60 visual design rules, not just component APIs.
+Claude Code produces a pixel-perfect, Toss-style mobile dashboard — because it now understands dozens of visual design rules, not just component APIs.
 
 ## Why StyleSeed
 
@@ -76,13 +76,13 @@ Without design opinions, AI produces:
 
 A seed isn't just tokens. It's a complete **design brain** for AI:
 
-| Layer | What It Does | Lines |
-|-------|-------------|-------|
-| **Design Language** | 60 specific visual rules (color philosophy, number display ratios, card structure, forbidden patterns) | 2,600+ |
-| **Design Tokens** | Colors, typography, spacing, shadows, motion, border radius — light & dark mode | 195 |
-| **CSS Theme** | Tailwind CSS v4 implementation with semantic tokens | 370 |
-| **Components** | 31 UI primitives (shadcn/ui-based) + 16 pattern components | 3,400+ |
-| **AI Skills** | 10 Claude Code slash commands for UI generation, review, and UX design | 690 |
+| Layer | What It Does |
+|-------|-------------|
+| **Design Language** | Specific visual rules — color philosophy, number display ratios, card structure, page composition, forbidden patterns |
+| **Design Tokens** | Colors, typography, spacing, shadows, motion, border radius — light & dark mode |
+| **CSS Theme** | Tailwind CSS v4 implementation with semantic tokens |
+| **Components** | 31 UI primitives (shadcn/ui-based) + 16 pattern components |
+| **AI Skills** | 10 Claude Code slash commands for UI generation, review, and UX design |
 
 ### Example Rules That Make the Difference
 
@@ -102,14 +102,14 @@ Rule: All content lives inside cards. Never place content directly on
       the page background. The contrast between card (#FFF) and 
       background (#FAFAFA) IS the visual separator.
 
-Rule: No dropdown selectors inside cards. 2-4 options = pill toggle.
-      5+ options = separate page. No exceptions.
+Rule: Never repeat the same section type twice in a row.
+      Alternate tall and compact sections to create visual rhythm.
 
 Rule: Card shadows are barely visible (opacity 4-8%). 
       If you can clearly see the shadow, it's too strong.
 ```
 
-A designer would take weeks to document all this. We did it in 2,200 lines. Claude Code reads it in seconds.
+These are just 6 of dozens of rules. [See the full design language →](seeds/toss/DESIGN-LANGUAGE.md)
 
 ## 10 AI-Powered Skills
 
@@ -165,19 +165,19 @@ Result: A professionally designed, accessible, UX-optimized onboarding flow — 
 
 ## StyleSeed + awesome-design-md
 
-[awesome-design-md](https://github.com/VoltAgent/awesome-design-md) (23K+ stars) popularized DESIGN.md — plain-text design docs for AI agents. **We love it. We build on it.**
+[awesome-design-md](https://github.com/VoltAgent/awesome-design-md) popularized DESIGN.md — plain-text design docs for AI agents. **We love it. We build on it.**
 
 ### How They're Different
 
 | | DESIGN.md | StyleSeed |
 |---|-----------|-----------|
-| **What it is** | Brand identity tokens (~100 lines) | Complete design brain (2,600+ lines) |
+| **What it is** | Brand identity tokens | Complete design brain |
 | **Teaches AI** | What colors/fonts to use | How to think like a designer |
 | **Components** | None | 31 primitives + 16 patterns |
 | **AI Skills** | None | 10 Claude Code slash commands |
-| **Layout rules** | None | 4 section types, information pyramid |
+| **Layout rules** | None | Section types, information pyramid, visual rhythm |
 | **UX guidance** | None | Nielsen's heuristics, microcopy, feedback states |
-| **"Don't" rules** | None | 30+ forbidden patterns that prevent amateur mistakes |
+| **"Don't" rules** | None | Dozens of forbidden patterns that prevent amateur mistakes |
 
 ### Using Both Together (Recommended)
 
@@ -198,7 +198,7 @@ cp -r styleseed/seeds/toss/* your-project/
 
 | Seed | Style | What's Included | Status |
 |------|-------|----------------|--------|
-| **[toss](seeds/toss/)** | Toss-style mobile fintech | 31 UI + 16 patterns, 69 rules, 10 skills | **Ready** |
+| **[toss](seeds/toss/)** | Toss-style mobile fintech | 47 components, 10 skills, comprehensive ruleset | **Ready** |
 | apple | Apple HIG-inspired | — | Coming Soon |
 | linear | Linear app-style | — | Coming Soon |
 | stripe | Stripe dashboard | — | Coming Soon |
@@ -208,7 +208,7 @@ cp -r styleseed/seeds/toss/* your-project/
 ```
 seeds/toss/
 ├── CLAUDE.md                 # AI reads this automatically
-├── DESIGN-LANGUAGE.md        # 2,600+ lines of visual design rules
+├── DESIGN-LANGUAGE.md        # Comprehensive visual design rules
 ├── .claude/skills/           # 10 slash commands (6 UI + 4 UX)
 ├── tokens/                   # 6 JSON token files
 ├── css/                      # Tailwind CSS v4 theme (light + dark)
@@ -231,6 +231,10 @@ React 18 · TypeScript · Tailwind CSS v4 · Radix UI · Vite 6 · Lucide Icons 
   --brand: #721FE5;  /* ← Change this. Everything else adapts. */
 }
 ```
+
+## Documentation
+
+Full documentation is in the **[Wiki](../../wiki)** — design rules reference, page composition recipes, chart guides, and more.
 
 ## Contributing
 

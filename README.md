@@ -15,10 +15,9 @@ No designer needed. No pixel-pushing. Just copy a seed and build.
 
 <br />
 
-<!--
-TODO: Add hero image/GIF showing before vs after
-<img src="showcase/hero.gif" width="720" alt="Before and after: generic AI UI vs StyleSeed-powered UI" />
--->
+<img src="showcase/toss-dashboard.png" width="320" alt="SaaS dashboard built with StyleSeed Toss seed" />
+
+*This dashboard was generated with Claude Code + Toss seed. Zero designer involvement.*
 
 </div>
 
@@ -32,17 +31,13 @@ You ask Claude Code to build a dashboard. Without a design system, you get this:
 
 With a **StyleSeed**, you get this:
 
+<div align="center">
+  <img src="showcase/toss-full.png" width="320" alt="Full dashboard built with StyleSeed" />
+</div>
+
 > Toss-style cards with subtle shadows, 5-level grayscale typography, big numbers with small units at 2:1 ratio, proper information pyramid, consistent 6px grid spacing. It looks like a **professional designer built it**.
 
 The difference? **2,200 lines of design rules** that teach AI how to think like a designer.
-
-<!--
-TODO: Side-by-side comparison screenshots
-<div align="center">
-  <img src="showcase/before.png" width="320" alt="Without StyleSeed" />
-  <img src="showcase/after.png" width="320" alt="With StyleSeed" />
-</div>
--->
 
 ## Get Started
 
@@ -163,18 +158,11 @@ Result: A professionally designed, accessible, UX-optimized onboarding flow — 
 
 ## Showcase
 
-> Production app built entirely with Claude Code + Toss seed. Zero designer involvement.
-
-<!--
-TODO: Add real screenshots (OilDealer app, anonymized)
 <div align="center">
-  <img src="showcase/toss-dashboard.png" width="280" alt="Dashboard" />
-  <img src="showcase/toss-market.png" width="280" alt="Market view" />
-  <img src="showcase/toss-detail.png" width="280" alt="Detail page" />
+  <img src="showcase/toss-full.png" width="320" alt="Full SaaS dashboard built with Toss seed" />
 </div>
--->
 
-*Screenshots coming soon*
+> Built entirely with Claude Code + Toss seed. Zero designer involvement. The design rules handle color philosophy, typography hierarchy, spacing, card structure, and information pyramid automatically.
 
 ## StyleSeed + awesome-design-md
 

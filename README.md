@@ -26,7 +26,7 @@ You ask Claude Code to build a dashboard. Without a design system, you get gener
 **With a StyleSeed:**
 
 <div align="center">
-  <img src="showcase/toss-hero-v2.png?v=3" width="280" alt="SaaS dashboard built with StyleSeed Toss seed" />
+  <img src="showcase/toss-hero-v2.png?v=4" width="280" alt="SaaS dashboard built with StyleSeed Toss seed" />
   <br />
   <em>Built with Claude Code + Toss seed. Zero designer involvement.</em>
 </div>
@@ -34,7 +34,7 @@ You ask Claude Code to build a dashboard. Without a design system, you get gener
 <details>
 <summary><strong>See full page screenshot</strong></summary>
 <div align="center">
-  <img src="showcase/toss-full-v2.png?v=3" width="280" alt="Full dashboard" />
+  <img src="showcase/toss-full-v2.png?v=4" width="280" alt="Full dashboard" />
 </div>
 </details>
 

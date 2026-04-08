@@ -24,20 +24,6 @@ No designer needed. No pixel-pushing. Just copy a seed and build.
 You ask Claude Code to build a dashboard. Without a design system, you get generic cards, inconsistent spacing, random font sizes. It *works* — but it looks like a hackathon project.
 
 **With a StyleSeed:**
-
-<div align="center">
-  <img src="showcase/toss-hero-v2.png?v=4" width="280" alt="SaaS dashboard built with StyleSeed Toss seed" />
-  <br />
-  <em>Built with Claude Code + Toss seed. Zero designer involvement.</em>
-</div>
-
-<details>
-<summary><strong>See full page screenshot</strong></summary>
-<div align="center">
-  <img src="showcase/toss-full-v2.png?v=4" width="280" alt="Full dashboard" />
-</div>
-</details>
-
 <br />
 
 The difference? A **complete design ruleset** that teaches AI how to think like a designer.

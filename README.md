@@ -26,15 +26,15 @@ You ask Claude Code to build a dashboard. Without a design system, you get gener
 **With a StyleSeed:**
 
 <div align="center">
-  <img src="showcase/toss-hero-v2.png?v=5" width="280" alt="SaaS dashboard built with StyleSeed Toss seed" />
+  <img src="showcase/light-hero.png" width="280" alt="Light mode" />&nbsp;&nbsp;&nbsp;&nbsp;<img src="showcase/dark-hero.png" width="280" alt="Dark mode" />
   <br />
-  <em>Built with Claude Code + Toss seed. Zero designer involvement.</em>
+  <em>Light & Dark — Built with Claude Code + Toss seed. Zero designer involvement.</em>
 </div>
 
 <details>
-<summary><strong>See full page screenshot</strong></summary>
+<summary><strong>See full page screenshots</strong></summary>
 <div align="center">
-  <img src="showcase/toss-full-v2.png?v=5" width="280" alt="Full dashboard" />
+  <img src="showcase/light-full.png" width="280" alt="Light mode full" />&nbsp;&nbsp;&nbsp;&nbsp;<img src="showcase/dark-full.png" width="280" alt="Dark mode full" />
 </div>
 </details>
 

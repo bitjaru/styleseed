@@ -44,7 +44,22 @@ The difference? A **complete design ruleset** that teaches AI how to think like 
 
 ## Get Started
 
-### Option 1: Give Claude Code the URL (Easiest)
+### Option 1: Interactive Setup (Recommended)
+
+After copying the seed into your project, run:
+```
+/ui-setup
+```
+Claude Code walks you through step by step:
+1. What type of app? (SaaS, e-commerce, fintech...)
+2. Brand color? (pick or enter hex)
+3. Want a specific brand style? (Stripe, Linear, Vercel... from awesome-design-md)
+4. Font preference?
+5. App name & first page?
+
+It configures everything and generates your first page automatically.
+
+### Option 2: Give Claude Code the URL
 
 ```
 Refer to https://github.com/bitjaru/styleseed/tree/main/seeds/toss — 
@@ -57,7 +72,7 @@ following this design system.
 
 Claude Code reads the design rules and builds with them. No setup needed.
 
-### Option 2: Copy into your project (For ongoing use)
+### Option 3: Copy into your project (For ongoing use)
 
 ```bash
 git clone https://github.com/bitjaru/styleseed.git
@@ -66,7 +81,7 @@ cp -r styleseed/seeds/toss/* your-project/
 
 Now Claude Code reads `CLAUDE.md` automatically every time — no need to mention the URL again.
 
-### Option 3: Cursor users
+### Option 4: Cursor users
 
 Copy `.cursorrules` into your project root:
 ```bash
@@ -129,7 +144,13 @@ These are just 6 of dozens of rules. [See the full design language →](seeds/to
 
 ## 10 AI-Powered Skills
 
-After copying a seed, you get **10 slash commands** — 6 for UI, 4 for UX:
+After copying a seed, you get **11 slash commands** — 1 setup + 6 UI + 4 UX:
+
+### Setup
+
+| Skill | What It Does |
+|-------|-------------|
+| `/ui-setup` | **Interactive wizard** — walks you through brand color, font, design concept, and generates your first page |
 
 ### UI Skills — Build It Right
 

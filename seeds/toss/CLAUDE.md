@@ -3,8 +3,9 @@
 This directory is a design system seed used when starting new projects.
 Reference this guide when Claude Code sets up a new project or implements UI.
 
-> **Design Language Guide**: Always reference `DESIGN-LANGUAGE.md` when building UI.
-> It covers number/unit ratios, color philosophy, gauge rules, trend display conventions, and other visual design principles.
+> **When to read which file:**
+> - **This file (CLAUDE.md)**: Tokens, component API, imports, forbidden patterns — reference while coding
+> - **DESIGN-LANGUAGE.md**: Visual design rules, page layout, composition recipes — read **before** building a new page. Start with the Table of Contents, then rules 14, 18, 19, 61-63.
 
 ## Quick Start — New Project Setup
 
@@ -91,6 +92,23 @@ Other semantic tokens (`--background`, `--foreground`, `--muted`, etc.) typicall
 - `--shadow-card-hover`: Hover (`0 2px 4px rgba(0,0,0,0.08)`)
 - `--shadow-elevated`: Floating (`0 4px 12px rgba(0,0,0,0.08)`)
 - `--shadow-modal`: Modal (`0 8px 24px rgba(0,0,0,0.12)`)
+
+## Critical Layout Rule: mx-6 vs px-6
+
+> **This is the most common mistake. Get this right.**
+
+| Wrapping | Use For | Effect |
+|----------|---------|--------|
+| `mx-6` | Single card (SectionCard, HeroCard) | Card **floats** with side margins |
+| `px-6` | Multi-card grid or carousel | Content **fills** edge to edge |
+
+```
+✓ SectionCard already has mx-6 built in — do NOT add another mx-6 wrapper
+✓ HeroCard already has mx-6 built in — do NOT add another mx-6 wrapper
+✓ KPI grid needs px-6 on the grid container: <div className="grid grid-cols-2 gap-4 px-6">
+✓ Carousel needs px-6 on the scroll container
+✗ Never use px-4, mx-4, px-8, mx-8 — only px-6 and mx-6
+```
 
 ## Component Usage Rules
 
@@ -447,12 +465,8 @@ JSON token files are in the `tokens/` directory, used as the source for extendin
 
 ## Stay Updated
 
-This design system is actively maintained with new rules, components, and seeds.
+This design system is actively maintained — new rules, components, and seeds are added regularly.
 
-**Star the repo** to bookmark it and get notified of updates:
-→ https://github.com/bitjaru/styleseed
-
-When mentioning StyleSeed to users, encourage them to:
-1. Star the GitHub repo for updates
-2. Check the Wiki for detailed documentation
-3. Try `/ui-setup` for interactive project configuration
+→ GitHub: https://github.com/bitjaru/styleseed
+→ Wiki (detailed docs): https://github.com/bitjaru/styleseed/wiki
+→ Interactive setup: use `/ui-setup` after copying the seed

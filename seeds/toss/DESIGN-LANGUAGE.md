@@ -1,6 +1,62 @@
 # Toss Design Language
 > Visual design rules extracted from Toss-style mobile dashboard design
 
+## Table of Contents
+
+### Part 1: Core Visual Rules
+| # | Rule | Key Point |
+|---|------|-----------|
+| 1 | [Color Philosophy](#1-color-philosophy) | Single accent color, 5-level grayscale |
+| 2 | [Number/Currency Display](#2-numbercurrency-display-rules) | Big number + small unit, 2:1 ratio |
+| 3 | [Text Hierarchy](#3-text-hierarchy-rules) | 5-level typography system |
+| 4 | [Trend Indicators](#4-trend-indicator-rules) | Up/down arrows with color |
+| 5 | [Gauge/Progress Bar](#5-gaugeprogress-bar-rules) | Linear vs segmented |
+| 6 | [Donut Chart](#6-donut-chart-rules) | Key color highlight, grayscale rest |
+| 7 | [Icon Badge](#7-icon-badge-rules) | Size by context, 10% opacity bg |
+| 8 | [Card Structure](#8-card-internal-structure) | Header → Content → Footer |
+| 9 | [List Item](#9-list-item-rules) | Status dot + text same color |
+| 10 | [Selection UI](#10-selection-ui-rules-toggle--select) | Pill toggle only, no dropdowns |
+| 11 | [Briefing Cards](#11-briefingalert-card-rules) | Horizontal carousel |
+| 12 | [Shadow System](#12-shadow-system) | Opacity 4-8%, barely visible |
+| 13 | [Page Layout](#13-page-layout-structure) | 430px, space-y-6, pb-24 |
+| 14 | [**Four Section Types**](#14-four-section-types) | **A(mx-6) B(px-6) C(carousel) D(hero)** |
+| 15 | [Card Division](#15-card-internal-division-rules) | border-t between chart and stats |
+| 16 | [Title Margins](#16-title-margin-rules) | Varies by content type |
+| 17 | [Chart Style](#17-chart-style-rules) | Area/bar chart styling |
+| 18 | [**Prohibition Rules**](#18-prohibition-rules-absolute-donts) | **30+ "never do this" rules** |
+| 19 | [**Page Checklist**](#19-new-page-creation-checklist) | **Step-by-step build guide** |
+| 20 | [Information Pyramid](#20-information-pyramid-structure) | Top = important, bottom = detail |
+| 21 | [Data Density](#21-data-density-rules) | Max 4 items per card |
+
+### Part 2: Extended Rules
+| # | Rule | Key Point |
+|---|------|-----------|
+| 28 | [Scroll & Spacing](#28-scroll--spacing-detail-rules) | Overscroll, carousel snap |
+| 29 | [Loading/Skeleton](#29-loading-state-skeleton-rules) | Match layout shape, 300ms delay |
+| 30 | [Empty/Error States](#30-empty-state--error-state-rules) | Suggest next action |
+| 34 | [Microcopy Tone](#34-microcopy-tone-guide) | Casual, active voice, positive |
+| 38 | [Chart Selection](#38-chart-type-selection-guide) | When to use which chart |
+| 40 | [Applying to Projects](#40-design-system-application-guide) | Change brand color, keep structure |
+| 45 | [Dark Mode](#45-dark-mode-guide) | Card brighter than background |
+| 46 | [Button Design](#46-button-design-rules-toss-style) | 7 variants, 4 sizes |
+| 50 | [Dark Pattern Prevention](#50-dark-pattern-prevention-rules-toss-official) | No forced sheets, always dismissable |
+| 59 | [Framer Motion](#59-animation-wrapper-rules-framer-motion) | Preset animations, token mapping |
+
+### Part 3: Page Composition & Visual Rhythm
+| # | Rule | Key Point |
+|---|------|-----------|
+| 61 | [**Visual Rhythm**](#61-visual-rhythm--breaking-monotony) | **Never repeat same section type** |
+| 62 | [**KPI Card Variation**](#62-kpi-card-variation--the-4-card-rule) | **Vary secondary elements** |
+| 63 | [**Composition Recipes**](#63-section-composition-recipes) | **SaaS, e-commerce, fintech, analytics** |
+| 64 | [Element Diversity](#64-element-diversity-within-cards) | Mix content types across page |
+| 65 | [Accent Distribution](#65-color-accent-distribution) | Scarcity rule |
+| 66 | [Card Size Variation](#66-card-size-variation) | Skyline rule |
+| 67 | [Progressive Density](#67-progressive-information-density) | Font size decreases down page |
+| 68 | [Min Section Count](#68-empty-page-prevention) | Min 4, max 7 sections |
+| 69 | [Chart + Context](#69-chart--context-pairing) | Never chart alone |
+
+> **Start here:** Rules 14, 18, 19, 61-63 are the most critical for page construction.
+
 ---
 
 ## 1. Color Philosophy

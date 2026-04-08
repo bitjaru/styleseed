@@ -201,7 +201,7 @@ cp -r styleseed/seeds/toss/* your-project/
 
 | Seed | 스타일 | 포함 내용 | 상태 |
 |------|--------|----------|------|
-| **[toss](seeds/toss/)** | 토스 스타일 모바일 핀테크 | 47 컴포넌트, 10 스킬, 전체 룰셋 | **사용 가능** |
+| **[toss](seeds/toss/)** | 토스 스타일 모바일 핀테크 | 48 컴포넌트, 11 스킬, 전체 룰셋 | **사용 가능** |
 | apple | Apple HIG 스타일 | — | 준비 중 |
 | linear | Linear 앱 스타일 | — | 준비 중 |
 | stripe | Stripe 대시보드 | — | 준비 중 |

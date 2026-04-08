@@ -2,7 +2,7 @@
 name: ui-setup
 description: Interactive setup wizard — guides you step-by-step to configure the design system for your project
 argument-hint: (no arguments needed)
-allowed-tools: Read, Write, Edit, Grep, Glob, Bash, WebFetch, AskUserQuestion
+allowed-tools: Read, Write, Edit, Grep, Glob, Bash, WebFetch
 ---
 
 # Design System Setup Wizard
@@ -11,113 +11,156 @@ Guide the user through setting up StyleSeed for their project, step by step.
 
 ## Instructions
 
-Walk through these steps ONE AT A TIME. Ask the user each question, wait for their answer, then proceed to the next step. Do not skip steps or ask multiple questions at once.
+Walk through these steps ONE AT A TIME. After each step, wait for the user to respond before proceeding. Keep it conversational and friendly.
 
 ### Step 1: App Type
 
-Ask the user:
-> What type of app are you building?
-> 1. SaaS Dashboard (analytics, metrics, charts)
-> 2. E-commerce (products, orders, payments)
-> 3. Fintech (transactions, portfolio, market data)
-> 4. Social / Content (feeds, profiles, messaging)
-> 5. Productivity / Internal tool
-> 6. Other (describe it)
+Ask:
+```
+What type of app are you building?
 
-Based on their answer, remember the app type for later page composition recommendations.
+1. SaaS Dashboard (analytics, metrics, charts)
+2. E-commerce (products, orders, payments)  
+3. Fintech (transactions, portfolio, market data)
+4. Social / Content (feeds, profiles, messaging)
+5. Productivity / Internal tool
+6. Other — describe it
+```
+
+Remember the answer — it determines which page composition recipe to use (DESIGN-LANGUAGE.md Section 63).
 
 ### Step 2: Brand Color
 
-Ask the user:
-> What's your brand color? Pick one:
-> 1. 💜 Purple (#721FE5) — default Toss style
-> 2. 🔵 Blue (#2563EB) — trust, corporate
-> 3. 🟢 Green (#059669) — growth, health, finance
-> 4. 🟠 Orange (#EA580C) — energy, creative
-> 5. 🔴 Red (#DC2626) — bold, urgent
-> 6. ⚫ Dark (#18181B) — minimal, premium
-> 7. Custom — enter your hex code
+Ask:
+```
+What's your brand color?
+
+1. Purple (#721FE5) — default Toss style
+2. Blue (#2563EB) — trust, corporate
+3. Green (#059669) — growth, health, finance
+4. Orange (#EA580C) — energy, creative
+5. Red (#DC2626) — bold, urgent
+6. Dark (#18181B) — minimal, premium
+7. Custom — just type your hex code
+```
 
 After they choose, update `css/theme.css`:
-```css
-:root {
-  --brand: [chosen color];
-}
+- In `:root` block: change `--brand` to the chosen hex
+- In `.dark` block: change `--brand` to a lighter version for dark backgrounds
+
+Dark mode color mapping:
+| Light | Dark |
+|-------|------|
+| #721FE5 | #9B5FFF |
+| #2563EB | #60A5FA |
+| #059669 | #34D399 |
+| #EA580C | #FB923C |
+| #DC2626 | #F87171 |
+| #18181B | #A1A1AA |
+
+For custom hex: lighten by ~30% (increase luminance in HSL).
+
+### Step 3: Design Concept (from awesome-design-md)
+
+Ask:
 ```
-Also update the dark mode brand color (lighten by ~20% for dark backgrounds).
+Want to apply an existing brand's visual style?
 
-### Step 3: Design Concept (Optional — awesome-design-md)
+Popular options from awesome-design-md:
+1. Stripe — clean, professional
+2. Linear — minimal, dark-first
+3. Vercel — black & white, geometric
+4. Notion — warm, friendly
+5. Spotify — bold, dark, green
+6. Supabase — modern, green
+7. Airbnb — warm, coral
+8. No thanks — keep the default style
+9. Other — name any brand or describe a vibe
+```
 
-Ask the user:
-> Do you want to base your visual identity on an existing brand?
-> You can pick from awesome-design-md (https://github.com/VoltAgent/awesome-design-md):
-> 
-> Popular options:
-> 1. Stripe — clean, professional, purple/blue
-> 2. Linear — minimal, dark-first, violet
-> 3. Vercel — black & white, geometric
-> 4. Notion — warm, friendly, beige tones
-> 5. GitHub — neutral, functional
-> 6. No thanks — use the default Toss style
-> 7. Other — tell me a brand or describe a vibe
+If they pick a brand (options 1-7 or 9):
+1. Fetch: `https://raw.githubusercontent.com/VoltAgent/awesome-design-md/main/design-md/[brand]/DESIGN.md`
+   - Brand folder names: `stripe`, `linear.app`, `vercel`, `notion`, `spotify`, `supabase`, `airbnb`
+2. Read the DESIGN.md and extract: primary color, secondary colors, text colors, background colors
+3. Apply extracted colors to `css/theme.css` (both `:root` and `.dark` blocks)
+4. Keep ALL StyleSeed layout rules, typography ratios, spacing, and component patterns unchanged — only swap the color palette
 
-If they pick a brand from awesome-design-md:
-1. Fetch the DESIGN.md from `https://raw.githubusercontent.com/VoltAgent/awesome-design-md/main/designs/[brand]/DESIGN.md`
-2. Extract the color palette and apply it to `css/theme.css`
-3. Keep all StyleSeed layout rules, typography ratios, and component patterns — only swap the visual identity
+If they pick 8 (No thanks): skip, keep current brand color from Step 2.
 
 ### Step 4: Font
 
-Ask the user:
-> What font style do you prefer?
-> 1. Pretendard + Inter (default — great for Korean + English)
-> 2. Inter only (clean, universal)
-> 3. SF Pro (Apple-style, macOS/iOS feel)
-> 4. Geist (Vercel-style, modern)
-> 5. Custom — tell me the font name
+Ask:
+```
+What font do you prefer?
 
-After they choose, update `css/fonts.css` with the appropriate import and `css/base.css` font-family.
+1. Inter (clean, universal — recommended)
+2. Pretendard + Inter (Korean + English)
+3. Geist (Vercel-style, modern)
+4. DM Sans (friendly, rounded)
+5. Custom — tell me the font name
+```
+
+After they choose:
+- Update `css/fonts.css`: change the @import URL
+- Update `css/base.css`: change `font-family` in the body rule
+
+Font imports:
+| Font | Import |
+|------|--------|
+| Inter | `@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');` |
+| Geist | `@import url('https://cdn.jsdelivr.net/npm/geist@1/dist/fonts/geist-sans/style.css');` |
+| DM Sans | `@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');` |
+| Pretendard | Keep existing import in fonts.css |
 
 ### Step 5: App Name & First Page
 
-Ask the user:
-> What's your app name? And what should the first page be?
-> Example: "Acme — a SaaS analytics dashboard with revenue, users, and activity"
+Ask:
+```
+Last step! What's your app name and what should the main page show?
+
+Example: "Acme — SaaS dashboard with revenue, users, and recent activity"
+```
 
 Then:
-1. Update the TopBar logo text
-2. Generate the first page using `/ui-page` with the appropriate recipe from DESIGN-LANGUAGE.md (Section 63 — Page Composition Recipes)
-3. Apply the chosen brand color, font, and design concept
+1. Read DESIGN-LANGUAGE.md Section 63 for the matching recipe (based on Step 1 app type)
+2. Generate the first page using the page composition recipe:
+   - SaaS → Hero + KPI Grid + Chart + Progress + Activity List
+   - E-commerce → Hero + KPI Grid + Donut + Bar Chart + Orders List
+   - Fintech → Hero + KPI Grid + Donut + Area Chart + Transactions
+   - Social → Hero + Stats + Feed List + Trending Carousel
+   - Productivity → Hero + KPI Grid + Progress + Task List
+3. Set the TopBar logo text to the app name
+4. Apply the chosen brand color, font, and design concept
+5. Place the file in `src/app/App.tsx` or appropriate location
 
 ### Step 6: Summary
 
-Show the user what was configured:
+Show:
 ```
-✅ Setup Complete!
+Setup Complete!
 
 App: [name]
-Brand Color: [color] 
-Font: [font]
-Design Concept: [concept or "Toss default"]
-First Page: [page name]
+Brand Color: [hex] (dark mode: [dark hex])
+Font: [font name]
+Design Concept: [brand or "Toss default"]
+First Page: [description]
 
 Files modified:
-- css/theme.css (brand color + dark mode)
+- css/theme.css (colors)
 - css/fonts.css (font import)
 - css/base.css (font family)
-- src/app/[PageName].tsx (first page)
+- src/app/App.tsx (first page)
 
 Next steps:
-- Run `npm run dev` to see your app
-- Use /ui-page to add more pages
-- Use /ux-audit to check UX quality
-- Use /ui-review to verify design compliance
+- npm run dev to preview
+- /ui-page to add more pages
+- /ux-audit to check UX quality
+- /ui-review to verify design compliance
 ```
 
-## Important
+## Rules
 
-- Always ask ONE question at a time
-- Wait for the user's response before proceeding
-- Keep it conversational and friendly
-- If the user seems unsure, suggest the default option
-- The Toss design RULES (layout, typography ratios, spacing, forbidden patterns) stay the same regardless of color/font choice — only the visual identity changes
+- Ask ONE question at a time. Wait for response.
+- If the user seems unsure, recommend the default option.
+- Design RULES (layout, typography ratios, spacing, forbidden patterns) stay the same regardless of color/font choice.
+- Always verify the awesome-design-md DESIGN.md URL is accessible before applying. If fetch fails, tell the user and fall back to manual color selection.

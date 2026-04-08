@@ -11,7 +11,7 @@ No designer needed. No pixel-pushing. Just copy a seed and build.
 
 <br />
 
-[Get Started](#get-started) · [Why StyleSeed](#why-styleseed) · [Skills](#10-ai-powered-skills) · [Showcase](#showcase) · [Wiki](../../wiki) · [한국어](README-KR.md)
+[Get Started](#get-started) · [Why StyleSeed](#why-styleseed) · [Skills](#11-ai-powered-skills) · [Showcase](#showcase) · [Wiki](../../wiki) · [한국어](README-KR.md)
 
 <br />
 
@@ -112,7 +112,7 @@ A seed isn't just tokens. It's a complete **design brain** for AI:
 | **Design Language** | Specific visual rules — color philosophy, number display ratios, card structure, page composition, forbidden patterns |
 | **Design Tokens** | Colors, typography, spacing, shadows, motion, border radius — light & dark mode |
 | **CSS Theme** | Tailwind CSS v4 implementation with semantic tokens |
-| **Components** | 31 UI primitives (shadcn/ui-based) + 16 pattern components |
+| **Components** | 32 UI primitives (shadcn/ui + motion) + 16 pattern components |
 | **AI Skills** | 11 Claude Code slash commands for UI generation, review, and UX design |
 
 ### Example Rules That Make the Difference
@@ -222,7 +222,7 @@ They're **complementary**, not competing:
 
 ```bash
 # Stripe's visual identity + Toss's deep design rules
-cp awesome-design-md/designs/stripe/DESIGN.md your-project/
+cp awesome-design-md/design-md/stripe/DESIGN.md your-project/
 cp -r styleseed/seeds/toss/* your-project/
 
 # Now AI knows Stripe's brand colors AND professional layout/UX rules
@@ -250,7 +250,7 @@ seeds/toss/
 ├── tokens/                   # 6 JSON token files
 ├── css/                      # Tailwind CSS v4 theme (light + dark)
 ├── components/
-│   ├── ui/                   # 31 shadcn/ui-based primitives
+│   ├── ui/                   # 32 shadcn/ui-based primitives (includes motion.tsx)
 │   └── patterns/             # 16 dashboard patterns
 ├── utils/                    # Formatting utilities
 ├── icons/                    # Custom SVG icon library

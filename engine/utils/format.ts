@@ -1,5 +1,5 @@
 /**
- * StyleSeed / Toss — Formatting Utilities
+ * StyleSeed — Formatting Utilities
  * Number, date, and trend formatters.
  * Includes Korean (KRW) formatters and generic currency/locale support.
  */

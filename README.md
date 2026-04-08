@@ -6,6 +6,10 @@
 
 ### Make AI code like a UI/UX designer.
 
+![GitHub release](https://img.shields.io/github/v/release/bitjaru/styleseed?style=flat-square)
+![GitHub stars](https://img.shields.io/github/stars/bitjaru/styleseed?style=flat-square)
+![License](https://img.shields.io/github/license/bitjaru/styleseed?style=flat-square)
+
 **A design engine that teaches Claude Code and Cursor how to think like a designer.**<br />
 Pick any brand skin. Get professional UI. No designer needed.
 
@@ -73,8 +77,14 @@ The wizard walks you through:
 # Copy engine (rules, components, skills)
 cp -r engine/* your-project/
 
-# Pick a skin (colors + fonts)
+# Copy engine css to src/styles
+cp -r engine/css/* your-project/src/styles/
+
+# Pick a skin — copy theme.css alongside other css files
 cp skins/stripe/theme.css your-project/src/styles/theme.css
+
+# Copy components
+cp -r engine/components/* your-project/src/components/
 ```
 
 ### Option 3: Just give AI the URL

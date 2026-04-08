@@ -1,6 +1,6 @@
 ---
 name: ux-copy
-description: Generate UX microcopy (button labels, error messages, empty states, toasts) following Toss-style voice and tone
+description: Generate UX microcopy (button labels, error messages, empty states, toasts) following a casual-but-polite voice and tone
 argument-hint: [context] [description]
 allowed-tools: Read, Write, Edit, Grep, Glob
 ---
@@ -15,7 +15,7 @@ Description: $ARGUMENTS
 1. Read the design language reference:
    - `DESIGN-LANGUAGE.md` sections on Microcopy Tone Guide and UX Writing
 
-2. Apply the Toss-style voice principles:
+2. Apply the voice principles:
 
 ### Tone Rules
 - **Casual but polite**: Friendly, not robotic. Like talking to a helpful friend.

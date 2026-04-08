@@ -1,5 +1,5 @@
-# Toss Design Language
-> Visual design rules extracted from Toss-style mobile dashboard design
+# StyleSeed Design Language
+> Visual design rules for professional mobile dashboard design
 
 ## Table of Contents
 
@@ -38,8 +38,8 @@
 | 38 | [Chart Selection](#38-chart-type-selection-guide) | When to use which chart |
 | 40 | [Applying to Projects](#40-design-system-application-guide) | Change brand color, keep structure |
 | 45 | [Dark Mode](#45-dark-mode-guide) | Card brighter than background |
-| 46 | [Button Design](#46-button-design-rules-toss-style) | 7 variants, 4 sizes |
-| 50 | [Dark Pattern Prevention](#50-dark-pattern-prevention-rules-toss-official) | No forced sheets, always dismissable |
+| 46 | [Button Design](#46-button-design-rules) | 7 variants, 4 sizes |
+| 50 | [Dark Pattern Prevention](#50-dark-pattern-prevention-rules) | No forced sheets, always dismissable |
 | 59 | [Framer Motion](#59-animation-wrapper-rules-framer-motion) | Preset animations, token mapping |
 
 ### Part 3: Page Composition & Visual Rhythm
@@ -62,7 +62,7 @@
 ## 1. Color Philosophy
 
 ### Key Color Principle — A Single Accent for Unity
-- **Create unity with a single key color `#721FE5` (purple)**
+- **Create unity with a single key color (your brand color, defined by skin)**
 - Key color is used **only for active/selected states**
 - Everything else is **grayscale** so the key color stands out
 
@@ -224,7 +224,7 @@ Format: +{number}%
 | Track height | `h-4` (16px) | **2/3** of card p-6 (24px) |
 | Track color | `#E8E6E1` | surface-muted |
 | Track corners | `rounded-full` | Fully rounded |
-| Fill color | `#721FE5` | Key color |
+| Fill color | `var(--brand)` | Key color |
 | Fill corners | `rounded-full` | Fully rounded |
 
 ```tsx
@@ -240,7 +240,7 @@ Format: +{number}%
 | Segment height | `h-6` (24px) | **Same** as card p-6 |
 | Segment gap | `gap-1` (4px) | **1/6** of height |
 | Segment corners | `rounded` (4px) | Slightly rounded |
-| Active color | `#721FE5` | Key color |
+| Active color | `var(--brand)` | Key color |
 | Inactive color | `#E8E6E1` | surface-muted |
 
 ```tsx
@@ -290,9 +290,9 @@ Rules:
 ## 6. Donut Chart Rules
 
 ### Key Color Highlight Principle
-- **Only the selected item uses the key color (#721FE5)**, the rest are grayscale
+- **Only the selected item uses the key color (var(--brand))**, the rest are grayscale
 - Unselected opacity: `0.3` (dimmed)
-- Selected glow: `box-shadow: 0 0 0 2px #721FE540`
+- Selected glow: `box-shadow: 0 0 0 2px color-mix(in srgb, var(--brand) 25%, transparent)`
 
 ### Chart Dimensions
 
@@ -384,9 +384,9 @@ Rules:
 Normal row:   bg-surface-subtle (#FAFAF9)
 My row:       bg-brand-tint (#F0E8FF) + border-2 border-brand
 Normal rank:  bg-surface-muted (#E8E6E1) + text-text-tertiary
-My rank:      bg-brand (#721FE5) + text-white
+My rank:      bg-brand + text-white
 Normal name:  text-text-primary (#3C3C3C)
-My name:      text-brand (#721FE5)
+My name:      text-brand
 ```
 
 ---
@@ -651,7 +651,7 @@ The gap between title and content varies by content type:
 ## 17. Chart Style Rules
 
 ### Area Chart
-- Line: `stroke="#721FE5"` + `strokeWidth={2.5}`
+- Line: `stroke="var(--brand)"` + `strokeWidth={2.5}`
 - Gradient fill: key color 15% → 0% (top → bottom)
 - No dots displayed (`dot={false}`)
 - X-axis: 10px #7A7A7A, axis line/ticks hidden
@@ -934,7 +934,7 @@ Applies to: hero metrics, KPI metrics, list amounts, chart prices, donut center,
 |------|--------|-------|
 | Shadow change | `shadow-card` → `shadow-card-hover` | Icon buttons |
 | Opacity change | `opacity 0.3 ↔ 1` | Donut segments/legend |
-| Glow | `box-shadow: 0 0 0 2px #721FE540` | Selected donut dot |
+| Glow | `box-shadow: 0 0 0 2px color-mix(in srgb, var(--brand) 25%, transparent)` | Selected donut dot |
 | Color transition | `text-disabled` → `text-brand` | Nav, toggle |
 
 ### Transition Animations
@@ -1315,9 +1315,9 @@ Pretendard (a CJK font) has a **taller ascender than Latin fonts**, which causes
 
 ## 34. Microcopy Tone Guide
 
-### Conversational Tone (Toss Style)
+### Conversational Tone
 
-The Toss voice uses a casual-but-polite conversational tone. In English, this means friendly, direct language that avoids corporate stiffness while remaining respectful.
+A casual-but-polite conversational tone. In English, this means friendly, direct language that avoids corporate stiffness while remaining respectful.
 
 #### Casual vs Formal Tone
 ```
@@ -1483,7 +1483,7 @@ NO  More than 1 chart per card
 #### Step 1: Change Key Color
 ```css
 :root {
-  --brand: #721FE5;  /* <- Change only this to shift the entire tone */
+  --brand: /* your brand color here */;  /* <- Change only this to shift the entire tone */
 }
 ```
 - Changing just the key color updates: icon badges, progress, toggles, nav -- everything
@@ -1519,7 +1519,7 @@ NO  Number + unit 2:1 ratio
 NO  Label uppercase + tracking
 NO  Page background #FAFAFA
 ```
-These are the **essence of the Toss style**. Changing only the key color and domain maintains a unified feel.
+These are the **essence of the design system**. Changing only the key color and domain maintains a unified feel.
 
 ---
 
@@ -1718,17 +1718,17 @@ className="bg-card rounded-2xl p-6 shadow-[var(--shadow-card)]
 ```
 NO  Pure #000000 background (use #121212 even considering OLED burn-in)
 NO  Reusing light mode shadows in dark (they're invisible)
-NO  Making key color darker (#721FE5 -> even darker purple) -- must go brighter
+NO  Making key color darker in dark mode -- must go brighter
 NO  Using same color for card and background (contrast difference required)
 NO  Running dark mode without card borders (shadows alone are invisible)
 ```
 
 ---
 
-## 46. Button Design Rules (Toss Style)
+## 46. Button Design Rules
 
-> Based on TDS (Toss Design System) + Seed Design official specs.
-> Core of Toss buttons: **not pill but appropriate radius**, **150ms color transition**, **pressed = one step darker**.
+> Based on the design system + Seed Design official specs.
+> Core principle: **not pill but appropriate radius**, **150ms color transition**, **pressed = one step darker**.
 
 ### Button Variants (7 Types)
 
@@ -1742,7 +1742,7 @@ NO  Running dark mode without card borders (shadows alone are invisible)
 | `ghost` | transparent | text-primary | `bg-surface-muted/50` | Minimal button |
 | `brandGhost` | transparent | `text-brand` | `bg-brand/8` | Key color text (retry, etc.) |
 
-### Button Sizes (4 Levels, Toss Official)
+### Button Sizes (4 Levels)
 
 | Size | Height | Radius | Text | Padding X | Icon | Usage |
 |------|--------|--------|------|----------|------|-------|
@@ -1752,9 +1752,9 @@ NO  Running dark mode without card borders (shadows alone are invisible)
 | `lg` | **52px** | **14px** (`rounded-xl`) | 18px bold | 20px | 22px | **Large CTA** |
 | `icon` | **40px** | **pill** (`rounded-full`) | -- | -- | 18px | TopBar icons |
 
-Key point: **Only xs is pill (fully rounded)**. sm/md are 10px (`rounded-lg`), lg is 14px (`rounded-xl`). Toss buttons are NOT all pill-shaped.
+Key point: **Only xs is pill (fully rounded)**. sm/md are 10px (`rounded-lg`), lg is 14px (`rounded-xl`). Buttons are NOT all pill-shaped.
 
-### Button States (Toss Pattern)
+### Button States
 
 | State | Effect | Transition |
 |-------|--------|-----------|
@@ -1765,7 +1765,7 @@ Key point: **Only xs is pill (fully rounded)**. sm/md are 10px (`rounded-lg`), l
 | Loading | Text -> spinner (16px) swap, size preserved, clicks blocked | -- |
 
 ```
-NO  active:scale (shrink effect) -- Toss uses color change only
+NO  active:scale (shrink effect) -- use color change only
 NO  hover:bg-{color}/90 (darken via opacity) -- use a distinct darker shade
 OK  active:bg-brand/85 (slightly darker on press)
 ```
@@ -1776,7 +1776,7 @@ OK  active:bg-brand/85 (slightly darker on press)
 
 **When CTA is needed on other pages**:
 ```tsx
-{/* Fixed bottom CTA (Toss BottomCTA pattern) */}
+{/* Fixed bottom CTA (BottomCTA pattern) */}
 <div className="fixed bottom-0 left-0 right-0 px-4 pb-safe bg-card/80 backdrop-blur-lg">
   <div className="mx-auto max-w-[430px] py-3">
     <Button size="lg" className="w-full">Place order</Button>
@@ -1845,12 +1845,12 @@ OK  active:bg-brand/85 (slightly darker on press)
 | Button-button vertical gap | `gap-4` (16px) |
 | Button-content gap | `mt-6` (24px) |
 | Fixed bottom CTA safe area | `pb-safe` + `py-3` |
-| Screen left/right margin | `px-4` (16px, Toss global-gutter) or `px-6` (24px) |
+| Screen left/right margin | `px-4` (16px, global-gutter) or `px-6` (24px) |
 
 ### Button Prohibitions
 ```
 NO  CTA button inside cards (on dashboards)
-NO  active:scale shrink effect (Toss uses color transition only)
+NO  active:scale shrink effect (use color transition only)
 NO  Gradient backgrounds on buttons
 NO  Multi-line text inside buttons
 NO  Icon + text together at sm or smaller sizes
@@ -1937,9 +1937,9 @@ NO  Vertical dividers
 
 ---
 
-## 49. UX Writing Details (Conversational Tone -- Toss Style)
+## 49. UX Writing Details (Conversational Tone)
 
-> Principles extracted from the official Toss voice and tone guide. An extension of section 34 (Microcopy Tone).
+> Principles for a casual-but-polite voice and tone. An extension of section 34 (Microcopy Tone).
 
 ### 1. Conversational Tone -- No Exceptions
 Use a friendly, conversational voice everywhere. No context is too serious for clear, human language.
@@ -1986,7 +1986,7 @@ OK  "Send money"                       NO  "Initiate remittance"
 OK  "Please try again"                 NO  "Retry"
 ```
 
-### 6. CTA Button Label Rules (Toss Official)
+### 6. CTA Button Label Rules
 ```
 OK  "Place order"   -- action is clear
 OK  "Confirm"       -- outcome is clear
@@ -2009,9 +2009,9 @@ NO  Using "Cancel" on the left
 
 ---
 
-## 50. Dark Pattern Prevention Rules (Toss Official)
+## 50. Dark Pattern Prevention Rules
 
-> These are **launch-blocking** violations per the Toss UX guide.
+> These are **launch-blocking** violations per UX best practices.
 
 ### Absolute Prohibitions
 ```
@@ -2032,7 +2032,7 @@ OK  CTA label = action verb + clear outcome
 
 ---
 
-## 51. Graphic Resource Usage Principles (Toss Official)
+## 51. Graphic Resource Usage Principles
 
 ### Icon Usage Rules
 - Size: use within **24-40px** range
@@ -2049,7 +2049,7 @@ OK  CTA label = action verb + clear outcome
 | No negative emotions | Begging/pleading/discomfort = dark pattern |
 | No decorative effects | Particles, excessive gradients, meaningless effects |
 
-### Toss Graphic Style
+### Graphic Style
 ```
 OK  Simple, clear, clean digital style
 NO  Hand-drawn feel
@@ -2071,10 +2071,10 @@ NO  Particles / tiny effects
 ### Reference Width
 | System | Reference Width | Description |
 |--------|----------------|-------------|
-| Toss Official (TDS) | **375px** | Based on iPhone SE/8 |
+| Reference (375px) | **375px** | Based on iPhone SE/8 |
 | This Design System | **430px** | Based on iPhone Pro Max |
 
-- Toss official is 375px but our Figma original is designed at 430px
+- The 375px reference is common but our Figma original is designed at 430px
 - Screens exceeding 430px: `max-w-[430px] mx-auto` center alignment
 - Screens below 430px: content scales down naturally (watch for fixed px elements)
 
@@ -2089,7 +2089,7 @@ NO  Particles / tiny effects
 
 ---
 
-## 53. Component Composition & Screen Structure Principles (LINE + Toss Reference)
+## 53. Component Composition & Screen Structure Principles
 
 ### Screen Composition Order
 ```
@@ -2107,13 +2107,13 @@ NO  Carousel inside carousel
 NO  Bottom sheet inside bottom sheet
 ```
 
-### TDS Component Padding Rules (Toss Official)
-- Most TDS components have **built-in padding**
+### Component Padding Rules
+- Most design system components have **built-in padding**
 - They look natural even without gap
 - When spacing adjustment is needed, use **auto-layout gap**
 
 ### When Creating Custom Components
-- Must **harmonize** with other TDS components
+- Must **harmonize** with other design system components
 - No arbitrary cropping / color correction / shape distortion
 - Solve with existing pattern combinations when possible
 
@@ -2186,7 +2186,7 @@ Message: 14px normal text-text-secondary, center-aligned
 Buttons: horizontal layout, gap-2, both flex-1
 ```
 
-### Button Rules (Toss Official)
+### Button Rules
 ```
 Left: "Close" -- outline style (border-brand text-brand bg-card)
 Right: Action CTA -- solid style (bg-brand text-white)
@@ -2513,7 +2513,7 @@ When displaying a 2×2 KPI grid, **vary the secondary element** in each card:
 ## 65. Color Accent Distribution
 
 ### The Accent Scarcity Rule
-Key color (#721FE5) creates impact through **scarcity**. Distribute it sparingly:
+Key color creates impact through **scarcity**. Distribute it sparingly:
 
 ```
 Per page, key color should appear in:

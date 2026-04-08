@@ -1,5 +1,5 @@
 {
-  "$description": "StyleSeed / Toss - Motion / Animation Tokens",
+  "$description": "StyleSeed - Motion / Animation Tokens",
   "duration": {
     "fast": "100ms",
     "normal": "200ms",

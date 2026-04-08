@@ -27,7 +27,7 @@ Modify in `:root` of `src/styles/theme.css`:
 
 | Variable | Purpose | Default |
 |----------|---------|---------|
-| `--brand` | Brand accent color | `#721FE5` |
+| `--brand` | Brand accent color | Defined by skin (e.g. `#721FE5` for toss) |
 | `--primary` | Buttons, links, primary UI | `#030213` |
 | `--destructive` | Error/danger | `#d4183d` |
 | `--success` | Success indicator | `#6B9B7A` |
@@ -37,7 +37,7 @@ Modify in `:root` of `src/styles/theme.css`:
 Other semantic tokens (`--background`, `--foreground`, `--muted`, etc.) typically don't need changes.
 
 ### Typography
-- Default font: Pretendard (CJK) + Inter (Latin fallback)
+- Default font: Inter (Latin) + Pretendard (option for Korean/CJK projects)
 - To change: modify the `css/fonts.css` import + update font-family in `css/base.css`
 - Default size: 16px (`--font-size`)
 
@@ -156,35 +156,35 @@ For components not included in the seed, check shadcn/ui registry for additional
 ## Color Usage Cheatsheet
 
 ### Text Hierarchy
-| Usage | Tailwind Class | Hex |
-|-------|---------------|-----|
-| Metrics/titles | `text-text-primary` | `#3C3C3C` |
-| Labels/captions | `text-text-secondary` | `#6A6A6A` |
-| Subtitles/axis labels | `text-text-tertiary` | `#7A7A7A` |
-| Inactive/disabled | `text-text-disabled` | `#9B9B9B` |
-| Default icons | `text-icon-default` | `#4A5568` |
+| Usage | Tailwind Class | Note |
+|-------|---------------|------|
+| Metrics/titles | `text-text-primary` | Defined by skin |
+| Labels/captions | `text-text-secondary` | Defined by skin |
+| Subtitles/axis labels | `text-text-tertiary` | Defined by skin |
+| Inactive/disabled | `text-text-disabled` | Defined by skin |
+| Default icons | `text-icon-default` | Defined by skin |
 
 ### Backgrounds/Surfaces
-| Usage | Tailwind Class | Hex |
-|-------|---------------|-----|
-| Page background | `bg-surface-page` | `#FAFAFA` |
-| List items | `bg-surface-subtle` | `#FAFAF9` |
-| Progress bars/borders | `bg-surface-muted` | `#E8E6E1` |
-| Brand tint (selected row) | `bg-brand-tint` | `#F0E8FF` |
-| Card background | `bg-card` | `#FFFFFF` |
-| Pure background | `bg-background` | `#FFFFFF` |
+| Usage | Tailwind Class | Note |
+|-------|---------------|------|
+| Page background | `bg-surface-page` | Defined by skin |
+| List items | `bg-surface-subtle` | Defined by skin |
+| Progress bars/borders | `bg-surface-muted` | Defined by skin |
+| Brand tint (selected row) | `bg-brand-tint` | Defined by skin |
+| Card background | `bg-card` | Defined by skin |
+| Pure background | `bg-background` | Defined by skin |
 
 ### UI Colors
-| Usage | Tailwind Class | Hex |
-|-------|---------------|-----|
-| Brand accent | `text-brand` / `bg-brand` | `#721FE5` |
-| Primary button | `bg-primary` | `#030213` |
-| Success/up | `text-success` | `#6B9B7A` |
-| Error/danger | `text-destructive` | `#D4183D` |
-| Warning | `text-warning` | `#D97706` |
-| Info | `text-info` | `#3B82F6` |
-| Alert badge | `bg-alert-badge` | `#FF4444` |
-| Border | `border-border` | `rgba(0,0,0,0.1)` |
+| Usage | Tailwind Class | Note |
+|-------|---------------|------|
+| Brand accent | `text-brand` / `bg-brand` | Defined by skin |
+| Primary button | `bg-primary` | Defined by skin |
+| Success/up | `text-success` | Defined by skin |
+| Error/danger | `text-destructive` | Defined by skin |
+| Warning | `text-warning` | Defined by skin |
+| Info | `text-info` | Defined by skin |
+| Alert badge | `bg-alert-badge` | Defined by skin |
+| Border | `border-border` | Defined by skin |
 
 ## Pattern Components
 
@@ -421,14 +421,16 @@ All animations auto-disable when `prefers-reduced-motion: reduce` is set (`base.
 - **Screen reader**: Use `sr-only` class for visually hidden content
 
 ### Color Contrast (WCAG AA)
-| Token | Contrast on White | Usage |
-|-------|------------------|-------|
-| `--foreground` (#030213) | 19.8:1 | Body text |
-| `--muted-foreground` (#717182) | 4.6:1 | Secondary text |
-| `--brand` (#721FE5) | 4.8:1 | Accent |
-| `--destructive` (#D4183D) | 5.2:1 | Error |
-| `--warning` (#D97706) | 4.6:1 | Warning text |
-| `--success` (#6B9B7A) | 3.4:1 | Large text/icons only |
+Exact contrast ratios depend on your skin's color values. Verify your skin meets these minimums:
+
+| Token | Minimum Contrast | Usage |
+|-------|-----------------|-------|
+| `--foreground` | 7:1+ | Body text |
+| `--muted-foreground` | 4.5:1+ | Secondary text |
+| `--brand` | 4.5:1+ | Accent (verify with your brand color) |
+| `--destructive` | 4.5:1+ | Error |
+| `--warning` | 4.5:1+ | Warning text |
+| `--success` | 3:1+ | Large text/icons only |
 
 ### Safe Area
 For notch/Dynamic Island support on mobile:
@@ -451,12 +453,17 @@ Custom skills available in the project:
 
 | Skill | Description | Usage |
 |-------|-------------|-------|
+| `/ui-setup` | Interactive setup wizard for new projects | `/ui-setup` |
 | `/ui-component` | Create a new component following design system rules | `/ui-component Button large CTA button` |
 | `/ui-page` | Scaffold a mobile page | `/ui-page Dashboard main dashboard` |
 | `/ui-review` | Check UI code for design system compliance | `/ui-review src/app/MyPage.tsx` |
 | `/ui-tokens` | Query/add/modify design tokens | `/ui-tokens list color` |
 | `/ui-pattern` | Generate composed UI patterns | `/ui-pattern grid-2col KPI card grid` |
 | `/ui-a11y` | Accessibility audit and auto-fix | `/ui-a11y src/components/Card.tsx` |
+| `/ux-flow` | Design user flows and navigation maps | `/ux-flow checkout multi-step checkout` |
+| `/ux-audit` | Audit screens for UX issues (Nielsen's heuristics) | `/ux-audit src/app/Dashboard.tsx` |
+| `/ux-copy` | Generate UX microcopy (buttons, errors, toasts) | `/ux-copy empty-state no orders` |
+| `/ux-feedback` | Design feedback patterns (toasts, dialogs, states) | `/ux-feedback error payment failed` |
 
 ## Token Source Files (framework-agnostic)
 

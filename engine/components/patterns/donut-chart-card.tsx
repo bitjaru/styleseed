@@ -93,7 +93,7 @@ function DonutChartCard({
                   className="size-3 rounded-full transition-all duration-300"
                   style={{
                     backgroundColor: selectedItem === item.name ? "var(--brand)" : grayColors[index % grayColors.length],
-                    boxShadow: selectedItem === item.name ? "0 0 0 2px #721FE540" : "none",
+                    boxShadow: selectedItem === item.name ? "0 0 0 2px color-mix(in srgb, var(--brand) 25%, transparent)" : "none",
                   }}
                 />
                 <span className="text-text-primary text-[13px] font-semibold">{item.name}</span>

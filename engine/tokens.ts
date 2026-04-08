@@ -1,12 +1,12 @@
 /**
- * StyleSeed / Toss — TypeScript Design Tokens
+ * StyleSeed — TypeScript Design Tokens
  * TS token object synced with CSS variables (theme.css).
  * Use for dynamic styling, chart colors, conditional styles in components.
  */
 
 export const tokens = {
   colors: {
-    brand: "#721FE5",
+    brand: "#721FE5", // default — overridden by skin's theme.css
     brandTint: "#F0E8FF",
 
     text: {
@@ -42,7 +42,7 @@ export const tokens = {
 
   typography: {
     fontFamily: {
-      sans: "'Pretendard', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+      sans: "'Inter', 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
       mono: "'JetBrains Mono', 'Fira Code', monospace",
     },
     fontSize: {

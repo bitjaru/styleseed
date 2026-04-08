@@ -1,11 +1,11 @@
-/* StyleSeed / Toss - Font Imports */
-/* Pretendard: Korean-optimized sans-serif */
-/* Inter: Latin fallback with matching metrics */
+/* StyleSeed - Font Imports */
+/* Inter: Default sans-serif for non-CJK projects */
+/* Pretendard: Recommended for Korean/CJK projects (add as primary if needed) */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800&display=swap');
 
 body {
-  font-family: 'Pretendard', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: 'Inter', 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

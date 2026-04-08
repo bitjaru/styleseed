@@ -1,7 +1,7 @@
 {
-  "$description": "StyleSeed / Toss - Typography Tokens",
+  "$description": "StyleSeed - Typography Tokens",
   "fontFamily": {
-    "sans": "'Pretendard', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+    "sans": "'Inter', 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
     "mono": "'JetBrains Mono', 'Fira Code', monospace"
   },
   "fontSize": {

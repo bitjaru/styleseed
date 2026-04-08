@@ -1,6 +1,6 @@
 ---
 name: ui-tokens
-description: View, add, or modify design tokens in the StyleSeed Toss design system
+description: View, add, or modify design tokens in the StyleSeed design system
 argument-hint: [action: list|add|update] [token-type: color|spacing|shadow|radius|typography]
 allowed-tools: Read, Write, Edit, Grep, Glob
 ---

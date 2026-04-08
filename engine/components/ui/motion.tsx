@@ -1,5 +1,5 @@
 /**
- * StyleSeed / Toss — Motion Primitives (Framer Motion)
+ * StyleSeed — Motion Primitives (Framer Motion)
  *
  * Pre-configured animation wrappers that follow the design language.
  * Install: npm install framer-motion

@@ -35,7 +35,7 @@ Ask:
 ```
 What's your brand color?
 
-1. Purple (#721FE5) — default Toss style
+1. Purple (#721FE5) — default style (toss skin)
 2. Blue (#2563EB) — trust, corporate
 3. Green (#059669) — growth, health, finance
 4. Orange (#EA580C) — energy, creative
@@ -142,7 +142,7 @@ Setup Complete!
 App: [name]
 Brand Color: [hex] (dark mode: [dark hex])
 Font: [font name]
-Design Concept: [brand or "Toss default"]
+Design Concept: [brand or "default"]
 First Page: [description]
 
 Files modified:

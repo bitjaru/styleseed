@@ -1,5 +1,5 @@
 {
-  "$description": "StyleSeed / Toss - Border Radius Tokens",
+  "$description": "StyleSeed - Border Radius Tokens",
   "base": "0.625rem",
   "scale": {
     "sm": "calc(0.625rem - 4px)",

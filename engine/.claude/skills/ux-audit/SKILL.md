@@ -96,7 +96,7 @@ Target: **$ARGUMENTS**
 - [ ] Bottom content not behind home indicator
 - [ ] BottomNav has `pb-safe` padding
 
-### Dark Pattern Prevention (Toss Official)
+### Dark Pattern Prevention
 - [ ] No forced bottom sheets on entry
 - [ ] No exit-prevention dialogs
 - [ ] Every screen has a way to go back/dismiss

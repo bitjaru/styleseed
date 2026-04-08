@@ -16,7 +16,7 @@ Target: **$ARGUMENTS**
 #### 1. Perceivable
 - **Color contrast**: Text must meet 4.5:1 (normal) or 3:1 (large/bold text)
   - Check `text-muted-foreground` (#717182) on `bg-background` (#FFFFFF) = 4.6:1 (passes)
-  - Check `text-brand` (#721FE5) on white = 4.8:1 (passes)
+  - Check `text-brand` on white (verify contrast with your skin's brand color)
   - Flag any custom colors that don't meet ratio
 - **Non-text contrast**: UI controls/graphics must meet 3:1
 - **Text alternatives**: All `<img>` need `alt`, icons need `aria-label` when meaningful
@@ -51,14 +51,14 @@ Target: **$ARGUMENTS**
 
 ## Design System Token Reference
 
-| Token | Hex | Contrast on White |
-|-------|-----|-------------------|
-| `--foreground` | #030213 | 19.8:1 |
-| `--muted-foreground` | #717182 | 4.6:1 |
-| `--brand` | #721FE5 | 4.8:1 |
-| `--destructive` | #D4183D | 5.2:1 |
-| `--success` | #6B9B7A | 3.4:1 (large text only!) |
-| `--warning` | #F59E0B | 2.1:1 (FAILS — needs darker variant for text) |
+| Token | Minimum Contrast | Note |
+|-------|-----------------|------|
+| `--foreground` | 7:1+ | Body text — verify with your skin |
+| `--muted-foreground` | 4.5:1+ | Secondary text — verify with your skin |
+| `--brand` | 4.5:1+ | Accent — verify with your skin's brand color |
+| `--destructive` | 4.5:1+ | Error — verify with your skin |
+| `--success` | 3:1+ | Large text/icons only — verify with your skin |
+| `--warning` | 4.5:1+ | Warning text — some skins need a darker variant |
 
 ## Output
 

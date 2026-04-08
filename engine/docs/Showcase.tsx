@@ -77,7 +77,7 @@ function Showcase() {
         {/* Page header */}
         <header className="space-y-3">
           <p className="text-[12px] font-semibold text-brand uppercase tracking-[0.05em]">
-            StyleSeed / Toss
+            StyleSeed
           </p>
           <h1 className="text-[48px] font-bold text-foreground tracking-[-0.02em] leading-none">
             Seed Showcase
@@ -603,7 +603,7 @@ function Showcase() {
         {/* Footer */}
         <footer className="pt-6 pb-12 border-t border-border">
           <p className="text-[12px] text-muted-foreground">
-            StyleSeed / Toss Seed &mdash; Showcase generated for reference.
+            StyleSeed &mdash; Showcase generated for reference.
           </p>
         </footer>
       </div>

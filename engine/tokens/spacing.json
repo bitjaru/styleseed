@@ -1,5 +1,5 @@
 {
-  "$description": "StyleSeed / Toss - Spacing Tokens (6px base unit)",
+  "$description": "StyleSeed - Spacing Tokens (6px base unit)",
   "base": 6,
   "scale": {
     "0": "0px",

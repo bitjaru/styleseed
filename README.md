@@ -113,7 +113,7 @@ A seed isn't just tokens. It's a complete **design brain** for AI:
 | **Design Tokens** | Colors, typography, spacing, shadows, motion, border radius — light & dark mode |
 | **CSS Theme** | Tailwind CSS v4 implementation with semantic tokens |
 | **Components** | 31 UI primitives (shadcn/ui-based) + 16 pattern components |
-| **AI Skills** | 10 Claude Code slash commands for UI generation, review, and UX design |
+| **AI Skills** | 11 Claude Code slash commands for UI generation, review, and UX design |
 
 ### Example Rules That Make the Difference
 
@@ -142,7 +142,7 @@ Rule: Card shadows are barely visible (opacity 4-8%).
 
 These are just 6 of dozens of rules. [See the full design language →](seeds/toss/DESIGN-LANGUAGE.md)
 
-## 10 AI-Powered Skills
+## 11 AI-Powered Skills
 
 After copying a seed, you get **11 slash commands** — 1 setup + 6 UI + 4 UX:
 
@@ -211,7 +211,7 @@ Result: A professionally designed, accessible, UX-optimized onboarding flow — 
 | **What it is** | Brand identity tokens | Complete design brain |
 | **Teaches AI** | What colors/fonts to use | How to think like a designer |
 | **Components** | None | 31 primitives + 16 patterns |
-| **AI Skills** | None | 10 Claude Code slash commands |
+| **AI Skills** | None | 11 Claude Code slash commands |
 | **Layout rules** | None | Section types, information pyramid, visual rhythm |
 | **UX guidance** | None | Nielsen's heuristics, microcopy, feedback states |
 | **"Don't" rules** | None | Dozens of forbidden patterns that prevent amateur mistakes |
@@ -235,7 +235,7 @@ cp -r styleseed/seeds/toss/* your-project/
 
 | Seed | Style | What's Included | Status |
 |------|-------|----------------|--------|
-| **[toss](seeds/toss/)** | Toss-style mobile fintech | 47 components, 10 skills, comprehensive ruleset | **Ready** |
+| **[toss](seeds/toss/)** | Toss-style mobile fintech | 48 components, 11 skills, comprehensive ruleset | **Ready** |
 | apple | Apple HIG-inspired | — | Coming Soon |
 | linear | Linear app-style | — | Coming Soon |
 | stripe | Stripe dashboard | — | Coming Soon |
@@ -246,7 +246,7 @@ cp -r styleseed/seeds/toss/* your-project/
 seeds/toss/
 ├── CLAUDE.md                 # AI reads this automatically
 ├── DESIGN-LANGUAGE.md        # Comprehensive visual design rules
-├── .claude/skills/           # 10 slash commands (6 UI + 4 UX)
+├── .claude/skills/           # 11 slash commands (1 setup + 6 UI + 4 UX)
 ├── tokens/                   # 6 JSON token files
 ├── css/                      # Tailwind CSS v4 theme (light + dark)
 ├── components/

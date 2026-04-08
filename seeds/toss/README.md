@@ -21,7 +21,7 @@ Inspired by [Toss Design System (TDS)](https://toss.im/design-system) — the Ko
 | UI Primitives | 31 components | shadcn/ui-based (button, card, dialog, etc.) |
 | Pattern Components | 16 components | Dashboard patterns (StatCard, HeroCard, ChartCard, etc.) |
 | Design Tokens | 6 files | Colors, typography, spacing, radii, shadows, motion |
-| Claude Skills | 10 skills | 6 UI + 4 UX slash commands |
+| Claude Skills | 11 skills | 1 setup + 6 UI + 4 UX slash commands |
 | CSS Theme | 4 files | Tailwind CSS v4 with light/dark mode |
 
 ## Quick Start

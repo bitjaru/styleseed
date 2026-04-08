@@ -1,0 +1,229 @@
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --font-size: 16px;
+
+  /* === CUSTOMIZE: Brand Colors === */
+  --brand: #171717;
+  --primary: #171717;
+  --primary-foreground: #ffffff;
+
+  /* === Surface & Background === */
+  --background: #ffffff;
+  --foreground: #171717;
+  --card: #ffffff;
+  --card-foreground: #171717;
+  --popover: #ffffff;
+  --popover-foreground: #171717;
+
+  /* === Secondary & Muted === */
+  --secondary: #fafafa;
+  --secondary-foreground: #171717;
+  --muted: #ebebeb;
+  --muted-foreground: #666666;
+  --accent: #fafafa;
+  --accent-foreground: #171717;
+
+  /* === Status Colors === */
+  --destructive: #ff5b4f;
+  --destructive-foreground: #ffffff;
+  --success: #0a72ef;
+  --success-foreground: #ffffff;
+  --warning: #D97706;
+  --warning-foreground: #ffffff;
+  --info: #0072f5;
+  --info-foreground: #ffffff;
+
+  /* === Text Hierarchy === */
+  --text-primary: #171717;
+  --text-secondary: #4d4d4d;
+  --text-tertiary: #666666;
+  --text-disabled: #808080;
+  --icon-default: #666666;
+
+  /* === Surface Colors === */
+  --surface-page: #ffffff;
+  --surface-subtle: #fafafa;
+  --surface-muted: #ebebeb;
+  --brand-tint: #f5f5f5;
+  --alert-badge: #ff5b4f;
+
+  /* === Borders & Inputs === */
+  --border: #ebebeb;
+  --input: transparent;
+  --input-background: #fafafa;
+  --switch-background: #d4d4d4;
+
+  /* === Typography === */
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+
+  /* === Focus Ring === */
+  --ring: hsla(212, 100%, 48%, 1);
+
+  /* === Chart Colors === */
+  --chart-1: #171717;
+  --chart-2: #0a72ef;
+  --chart-3: #de1d8d;
+  --chart-4: #ff5b4f;
+  --chart-5: #666666;
+
+  /* === Radius === */
+  --radius: 0.5rem;
+
+  /* === Shadows === */
+  --shadow-card: rgba(0,0,0,0.08) 0px 0px 0px 1px, rgba(0,0,0,0.04) 0px 2px 2px;
+  --shadow-button: rgba(0,0,0,0.08) 0px 0px 0px 1px;
+  --shadow-card-hover: rgba(0,0,0,0.08) 0px 0px 0px 1px, rgba(0,0,0,0.04) 0px 4px 8px -4px;
+  --shadow-elevated: rgba(0,0,0,0.08) 0px 0px 0px 1px, rgba(0,0,0,0.04) 0px 8px 8px -8px, #fafafa 0px 0px 0px 1px;
+  --shadow-modal: rgba(0,0,0,0.08) 0px 0px 0px 1px, rgba(0,0,0,0.08) 0px 16px 32px -8px;
+
+  /* === Motion / Animation === */
+  --duration-fast: 100ms;
+  --duration-normal: 200ms;
+  --duration-moderate: 300ms;
+  --duration-slow: 350ms;
+  --ease-default: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* === Sidebar === */
+  --sidebar: #fafafa;
+  --sidebar-foreground: #171717;
+  --sidebar-primary: #171717;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #ebebeb;
+  --sidebar-accent-foreground: #171717;
+  --sidebar-border: #ebebeb;
+  --sidebar-ring: hsla(212, 100%, 48%, 1);
+}
+
+.dark {
+  /* === Background & Surface (brightness order: page < card < subtle) === */
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --card: #141414;
+  --card-foreground: #ededed;
+  --popover: #1a1a1a;
+  --popover-foreground: #ededed;
+
+  /* === Text Hierarchy (dark) === */
+  --text-primary: #ededed;
+  --text-secondary: #a0a0a0;
+  --text-tertiary: #777777;
+  --text-disabled: #555555;
+  --icon-default: #777777;
+
+  /* === Surface (dark) === */
+  --surface-page: #0a0a0a;
+  --surface-subtle: #1a1a1a;
+  --surface-muted: rgba(255, 255, 255, 0.06);
+  --brand-tint: rgba(255, 255, 255, 0.06);
+  --alert-badge: #ff5b4f;
+
+  /* === Key Color & Status (brightened for dark mode) === */
+  --brand: #ffffff;
+  --primary: #ededed;
+  --primary-foreground: #0a0a0a;
+  --secondary: #1a1a1a;
+  --secondary-foreground: #ededed;
+  --muted: #1a1a1a;
+  --muted-foreground: #777777;
+  --accent: #1a1a1a;
+  --accent-foreground: #ededed;
+  --destructive: #ff6b61;
+  --destructive-foreground: #0a0a0a;
+  --success: #3b8ff0;
+  --success-foreground: #0a0a0a;
+  --warning: #fbbf24;
+  --warning-foreground: #0a0a0a;
+  --info: #3b8ff0;
+  --info-foreground: #0a0a0a;
+
+  /* === Border & Input === */
+  --border: rgba(255, 255, 255, 0.08);
+  --input: rgba(255, 255, 255, 0.08);
+  --input-background: #1a1a1a;
+  --switch-background: #404040;
+  --ring: hsla(212, 100%, 48%, 1);
+
+  /* === Shadow → replaced by borders in dark mode === */
+  --shadow-card: none;
+  --shadow-button: none;
+  --shadow-card-hover: none;
+
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --chart-1: #ffffff;
+  --chart-2: #3b8ff0;
+  --chart-3: #f472b6;
+  --chart-4: #ff6b61;
+  --chart-5: #777777;
+  --sidebar: #141414;
+  --sidebar-foreground: #ededed;
+  --sidebar-primary: #ffffff;
+  --sidebar-primary-foreground: #0a0a0a;
+  --sidebar-accent: #1a1a1a;
+  --sidebar-accent-foreground: #ededed;
+  --sidebar-border: rgba(255, 255, 255, 0.08);
+  --sidebar-ring: hsla(212, 100%, 48%, 1);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-brand: var(--brand);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+  --color-text-disabled: var(--text-disabled);
+  --color-icon-default: var(--icon-default);
+  --color-surface-page: var(--surface-page);
+  --color-surface-subtle: var(--surface-subtle);
+  --color-surface-muted: var(--surface-muted);
+  --color-brand-tint: var(--brand-tint);
+  --color-alert-badge: var(--alert-badge);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-input-background: var(--input-background);
+  --color-switch-background: var(--switch-background);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}

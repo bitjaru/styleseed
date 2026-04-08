@@ -1,6 +1,8 @@
-# StyleSeed — Toss
+# StyleSeed — Design Engine
 
-This directory is a design system seed used when starting new projects.
+A brand-agnostic design engine that makes AI produce professional-quality UI.
+The engine provides layout rules, components, and skills. The skin provides colors and fonts.
+
 Reference this guide when Claude Code sets up a new project or implements UI.
 
 > **When to read which file:**
@@ -9,11 +11,14 @@ Reference this guide when Claude Code sets up a new project or implements UI.
 
 ## Quick Start — New Project Setup
 
-1. Copy files from `scaffold/` to your project root
-2. Copy `css/` → `src/styles/`
-3. Copy `components/` → `src/components/`
+1. Copy `engine/` files into your project:
+   - `scaffold/` → project root
+   - `css/` → `src/styles/`
+   - `components/` → `src/components/`
+2. Pick a skin from `skins/` (toss, stripe, linear, vercel, notion, or 58+ via awesome-design-md)
+3. Copy the skin's `theme.css` → `src/styles/theme.css`
 4. `npm install` (or pnpm install)
-5. Change the `--brand` color in `src/styles/theme.css` to match your project
+5. Or just run `/ui-setup` and it does all of this interactively
 
 ## Token Customization
 

@@ -1,0 +1,8 @@
+{
+  "name": "Vercel",
+  "description": "Monochrome developer-focused design with shadow-as-border technique and Geist typography",
+  "brand": "#171717",
+  "brandDark": "#ffffff",
+  "font": "Geist, Arial, -apple-system, system-ui, sans-serif",
+  "source": "awesome-design-md"
+}

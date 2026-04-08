@@ -1,9 +1,0 @@
-/* Your Style — Theme CSS
- * Replace these values with your design tokens.
- * See seeds/toss/css/theme.css for a complete reference.
- */
-:root {
-  --brand: #000000; /* ← Your brand color */
-  --background: #FFFFFF;
-  --foreground: #1A1A1A;
-}

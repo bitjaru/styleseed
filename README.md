@@ -279,9 +279,22 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 ## Updating
 
-Already using StyleSeed? See [engine/UPDATE.md](engine/UPDATE.md) for how to pull latest rules and components.
+Already using StyleSeed? Quick update (always safe):
 
-**Get notified of updates:** Click **Watch** → **Custom** → **Releases** on this repo. You'll get an email when new versions ship.
+```bash
+# Pull latest
+cd styleseed && git pull
+
+# Update design rules + skills (safe — no project-specific content)
+cp styleseed/engine/DESIGN-LANGUAGE.md your-project/.claude/DESIGN-LANGUAGE.md
+cp -r styleseed/engine/.claude/skills/ your-project/.claude/skills/
+```
+
+**Don't overwrite:** your `theme.css` (brand colors), `CLAUDE.md` (if project-specific), or customized components.
+
+Full guide: [engine/UPDATE.md](engine/UPDATE.md)
+
+**Get notified:** Click **Watch** → **Custom** → **Releases** on this repo.
 
 ## License
 

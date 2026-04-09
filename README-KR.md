@@ -49,7 +49,7 @@ Claude Code한테 "대시보드 만들어줘" 하면 보통 이런 결과가 나
 
 seed를 프로젝트에 복사한 후:
 ```
-/ui-setup
+/ss-setup
 ```
 Claude Code가 하나씩 물어봅니다:
 1. 어떤 앱? (SaaS, 이커머스, 핀테크...)
@@ -138,40 +138,40 @@ seed를 복사하면 **슬래시 명령어 11개**를 쓸 수 있습니다 — U
 
 | 스킬 | 기능 |
 |------|------|
-| `/ui-component` | 디자인 규칙에 맞는 새 컴포넌트 생성 |
-| `/ui-page` | 모바일 페이지 스캐폴딩 |
-| `/ui-pattern` | UI 패턴 조합 (카드 그리드, 테이블, 차트) |
-| `/ui-review` | 디자인 시스템 위반 감사 |
-| `/ui-tokens` | 디자인 토큰 조회/추가/수정 |
-| `/ui-a11y` | 접근성 감사 (WCAG 2.2 AA) |
+| `/ss-component` | 디자인 규칙에 맞는 새 컴포넌트 생성 |
+| `/ss-page` | 모바일 페이지 스캐폴딩 |
+| `/ss-pattern` | UI 패턴 조합 (카드 그리드, 테이블, 차트) |
+| `/ss-review` | 디자인 시스템 위반 감사 |
+| `/ss-tokens` | 디자인 토큰 조회/추가/수정 |
+| `/ss-a11y` | 접근성 감사 (WCAG 2.2 AA) |
 
 ### UX 스킬 — 잘 설계하기 (디자이너 없이)
 
 | 스킬 | 기능 |
 |------|------|
-| `/ux-flow` | 유저 플로우 설계 (점진적 공개, 정보 피라미드) |
-| `/ux-audit` | 닐슨 10대 사용성 원칙으로 UX 평가 |
-| `/ux-copy` | UX 마이크로카피 생성 (버튼, 에러, 빈 상태, 토스트) |
-| `/ux-feedback` | 4가지 피드백 상태 추가 (로딩, 빈 상태, 에러, 성공) |
+| `/ss-flow` | 유저 플로우 설계 (점진적 공개, 정보 피라미드) |
+| `/ss-audit` | 닐슨 10대 사용성 원칙으로 UX 평가 |
+| `/ss-copy` | UX 마이크로카피 생성 (버튼, 에러, 빈 상태, 토스트) |
+| `/ss-feedback` | 4가지 피드백 상태 추가 (로딩, 빈 상태, 에러, 성공) |
 
 ### 워크플로우 예시
 
 ```bash
 # 1. 플로우 설계
-> /ux-flow "이메일 인증 포함 온보딩"
+> /ss-flow "이메일 인증 포함 온보딩"
 
 # 2. 페이지 생성
-> /ui-page Onboarding "3단계 온보딩: 이름, 이메일 인증, 설정"
+> /ss-page Onboarding "3단계 온보딩: 이름, 이메일 인증, 설정"
 
 # 3. UX 카피 생성
-> /ux-copy "온보딩 — 버튼 라벨, 에러 메시지, 성공 상태"
+> /ss-copy "온보딩 — 버튼 라벨, 에러 메시지, 성공 상태"
 
 # 4. 피드백 상태 추가
-> /ux-feedback src/pages/Onboarding.tsx
+> /ss-feedback src/pages/Onboarding.tsx
 
 # 5. 전체 검토
-> /ux-audit src/pages/Onboarding.tsx
-> /ui-review src/pages/Onboarding.tsx
+> /ss-audit src/pages/Onboarding.tsx
+> /ss-review src/pages/Onboarding.tsx
 ```
 
 결과: 디자이너 없이 만든, 전문적이고 접근성 좋은 온보딩 플로우.

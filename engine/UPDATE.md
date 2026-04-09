@@ -78,7 +78,7 @@ If your project has its own CLAUDE.md with project-specific context, don't repla
  7. Card shadows ≤ 8% opacity
  8. Touch targets ≥ 44×44px
  9. Semantic tokens only — NEVER hardcode hex in components
-10. After generating ANY page → run /ui-review to verify
+10. After generating ANY page → run /ss-review to verify
 ```
 
 ## Full Update (Check Conflicts First)

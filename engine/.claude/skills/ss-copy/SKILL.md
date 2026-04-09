@@ -1,5 +1,5 @@
 ---
-name: ux-copy
+name: ss-copy
 description: Generate UX microcopy (button labels, error messages, empty states, toasts) following a casual-but-polite voice and tone
 argument-hint: [context] [description]
 allowed-tools: Read, Write, Edit, Grep, Glob

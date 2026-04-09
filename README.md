@@ -61,7 +61,7 @@ The engine is **brand-agnostic** — pair it with any color skin and it works.
 cp -r engine/* your-project/
 
 # Run the setup wizard
-/ui-setup
+/ss-setup
 ```
 
 The wizard walks you through:
@@ -157,7 +157,7 @@ Use them together: awesome-design-md provides the skin, StyleSeed provides the b
 | **[linear](skins/linear/)** | Dark-first — violet, minimal, developer-focused | awesome-design-md |
 | **[vercel](skins/vercel/)** | Monochrome — black & white, geometric | awesome-design-md |
 | **[notion](skins/notion/)** | Warm — blue accent, friendly, warm neutrals | awesome-design-md |
-| **[58+ more](skins/_from-awesome-design-md/)** | Any brand from awesome-design-md | Auto-fetch via `/ui-setup` |
+| **[58+ more](skins/_from-awesome-design-md/)** | Any brand from awesome-design-md | Auto-fetch via `/ss-setup` |
 
 ## Engine Contents
 
@@ -192,39 +192,39 @@ engine/
 ### Setup
 | Skill | What It Does |
 |-------|-------------|
-| `/ui-setup` | **Interactive wizard** — pick skin, brand color, font, generates first page |
+| `/ss-setup` | **Interactive wizard** — pick skin, brand color, font, generates first page |
 
 ### UI — Build It Right
 | Skill | What It Does |
 |-------|-------------|
-| `/ui-component` | Generate components following design conventions |
-| `/ui-page` | Scaffold pages with proper layout structure |
-| `/ui-pattern` | Compose UI patterns (card grid, chart, list) |
-| `/ui-review` | Audit code for design system violations |
-| `/ui-tokens` | View, add, or modify design tokens |
-| `/ui-a11y` | Accessibility audit (WCAG 2.2 AA) |
-| `/ui-lint` | Quick automated lint — catches common violations in seconds |
-| `/ui-update` | Pull latest engine updates — analyzes your project and updates safely |
+| `/ss-component` | Generate components following design conventions |
+| `/ss-page` | Scaffold pages with proper layout structure |
+| `/ss-pattern` | Compose UI patterns (card grid, chart, list) |
+| `/ss-review` | Audit code for design system violations |
+| `/ss-tokens` | View, add, or modify design tokens |
+| `/ss-a11y` | Accessibility audit (WCAG 2.2 AA) |
+| `/ss-lint` | Quick automated lint — catches common violations in seconds |
+| `/ss-update` | Pull latest engine updates — analyzes your project and updates safely |
 
 ### UX — Design It Right (No Designer Needed)
 | Skill | What It Does |
 |-------|-------------|
-| `/ux-flow` | Design user flows (progressive disclosure, information pyramid) |
-| `/ux-audit` | Nielsen's 10 usability heuristics evaluation |
-| `/ux-copy` | Generate UX microcopy (buttons, errors, empty states, toasts) |
-| `/ux-feedback` | Add loading/success/error/empty states to any component |
+| `/ss-flow` | Design user flows (progressive disclosure, information pyramid) |
+| `/ss-audit` | Nielsen's 10 usability heuristics evaluation |
+| `/ss-copy` | Generate UX microcopy (buttons, errors, empty states, toasts) |
+| `/ss-feedback` | Add loading/success/error/empty states to any component |
 
 ### Example Workflow
 
 ```bash
-/ui-setup                    # Pick skin, configure project
-/ui-page Dashboard           # Scaffold main page
-/ux-copy "dashboard"         # Generate all microcopy
-/ux-feedback src/Dashboard   # Add loading/error states
-/ux-audit src/Dashboard      # Check UX quality
-/ui-lint src/Dashboard       # Quick violation scan
-/ui-review src/Dashboard     # Deep design compliance check
-/ui-update                   # Pull latest engine updates
+/ss-setup                    # Pick skin, configure project
+/ss-page Dashboard           # Scaffold main page
+/ss-copy "dashboard"         # Generate all microcopy
+/ss-feedback src/Dashboard   # Add loading/error states
+/ss-audit src/Dashboard      # Check UX quality
+/ss-lint src/Dashboard       # Quick violation scan
+/ss-review src/Dashboard     # Deep design compliance check
+/ss-update                   # Pull latest engine updates
 ```
 
 ### Example Prompts
@@ -240,7 +240,7 @@ Build a SaaS dashboard with revenue, users, and activity.
 ```
 Follow CLAUDE.md and DESIGN-LANGUAGE.md rules.
 Create a settings page with profile, notifications, and danger zone.
-Run /ui-review when done.
+Run /ss-review when done.
 ```
 
 **Improve existing page:**
@@ -251,7 +251,7 @@ Check visual rhythm (rule 61) and KPI variation (rule 62).
 
 **Update engine:**
 ```
-/ui-update
+/ss-update
 ```
 
 ## Example Design Rules

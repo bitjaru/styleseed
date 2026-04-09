@@ -27,7 +27,7 @@ cp -r engine/* your-project/
 cp skins/stripe/theme.css your-project/src/styles/theme.css
 
 # Or use interactive setup
-/ui-setup
+/ss-setup
 ```
 
 Design rules in this engine work with ANY skin — the 69 rules are about layout, composition, typography ratios, and visual rhythm, not specific colors.

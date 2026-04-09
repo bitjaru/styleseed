@@ -1,5 +1,5 @@
 ---
-name: ui-pattern
+name: ss-pattern
 description: Generate a composed UI pattern (card layout, list, form section, grid, etc.) using design system primitives
 argument-hint: [pattern-type] [description]
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash

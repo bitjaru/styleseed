@@ -1,5 +1,5 @@
 ---
-name: ui-page
+name: ss-page
 description: Scaffold a new mobile page/screen using the StyleSeed layout patterns
 argument-hint: [page-name] [description]
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash

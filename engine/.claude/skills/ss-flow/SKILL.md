@@ -1,5 +1,5 @@
 ---
-name: ux-flow
+name: ss-flow
 description: Design user flows and navigation structure following proven UX patterns
 argument-hint: [flow-name] [description]
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash

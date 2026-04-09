@@ -15,7 +15,7 @@ The engine provides layout rules, components, and skills. The skin provides colo
  7. Card shadows ≤ 8% opacity — if visible, it's too strong
  8. Touch targets ≥ 44×44px — no tiny tap areas
  9. Semantic tokens only (text-brand, bg-card) — NEVER hardcode hex in components
-10. After generating ANY page → run /ui-review to verify compliance
+10. After generating ANY page → run /ss-review to verify compliance
 ```
 
 Reference this guide when Claude Code sets up a new project or implements UI.
@@ -33,7 +33,7 @@ Reference this guide when Claude Code sets up a new project or implements UI.
 2. Pick a skin from `skins/` (toss, stripe, linear, vercel, notion, or 58+ via awesome-design-md)
 3. Copy the skin's `theme.css` → `src/styles/theme.css`
 4. `npm install` (or pnpm install)
-5. Or just run `/ui-setup` and it does all of this interactively
+5. Or just run `/ss-setup` and it does all of this interactively
 
 ## Token Customization
 
@@ -468,19 +468,19 @@ Custom skills available in the project:
 
 | Skill | Description | Usage |
 |-------|-------------|-------|
-| `/ui-setup` | Interactive setup wizard for new projects | `/ui-setup` |
-| `/ui-component` | Create a new component following design system rules | `/ui-component Button large CTA button` |
-| `/ui-page` | Scaffold a mobile page | `/ui-page Dashboard main dashboard` |
-| `/ui-review` | Check UI code for design system compliance | `/ui-review src/app/MyPage.tsx` |
-| `/ui-tokens` | Query/add/modify design tokens | `/ui-tokens list color` |
-| `/ui-pattern` | Generate composed UI patterns | `/ui-pattern grid-2col KPI card grid` |
-| `/ui-a11y` | Accessibility audit and auto-fix | `/ui-a11y src/components/Card.tsx` |
-| `/ux-flow` | Design user flows and navigation maps | `/ux-flow checkout multi-step checkout` |
-| `/ux-audit` | Audit screens for UX issues (Nielsen's heuristics) | `/ux-audit src/app/Dashboard.tsx` |
-| `/ux-copy` | Generate UX microcopy (buttons, errors, toasts) | `/ux-copy empty-state no orders` |
-| `/ux-feedback` | Design feedback patterns (toasts, dialogs, states) | `/ux-feedback error payment failed` |
-| `/ui-lint` | Quick automated lint for common violations | `/ui-lint src/app/Dashboard.tsx` |
-| `/ui-update` | Pull latest StyleSeed engine updates | `/ui-update` |
+| `/ss-setup` | Interactive setup wizard for new projects | `/ss-setup` |
+| `/ss-component` | Create a new component following design system rules | `/ss-component Button large CTA button` |
+| `/ss-page` | Scaffold a mobile page | `/ss-page Dashboard main dashboard` |
+| `/ss-review` | Check UI code for design system compliance | `/ss-review src/app/MyPage.tsx` |
+| `/ss-tokens` | Query/add/modify design tokens | `/ss-tokens list color` |
+| `/ss-pattern` | Generate composed UI patterns | `/ss-pattern grid-2col KPI card grid` |
+| `/ss-a11y` | Accessibility audit and auto-fix | `/ss-a11y src/components/Card.tsx` |
+| `/ss-flow` | Design user flows and navigation maps | `/ss-flow checkout multi-step checkout` |
+| `/ss-audit` | Audit screens for UX issues (Nielsen's heuristics) | `/ss-audit src/app/Dashboard.tsx` |
+| `/ss-copy` | Generate UX microcopy (buttons, errors, toasts) | `/ss-copy empty-state no orders` |
+| `/ss-feedback` | Design feedback patterns (toasts, dialogs, states) | `/ss-feedback error payment failed` |
+| `/ss-lint` | Quick automated lint for common violations | `/ss-lint src/app/Dashboard.tsx` |
+| `/ss-update` | Pull latest StyleSeed engine updates | `/ss-update` |
 
 ## How to Use StyleSeed (Tell Users This)
 
@@ -490,12 +490,25 @@ When a user asks you to build UI, follow this workflow:
 2. **Check the Golden Rules** at the top of this file
 3. **Build** using existing components from `components/ui/` and `components/patterns/`
 4. **Verify** by running through the Golden Rules checklist
-5. **Lint** with `/ui-lint` to catch violations
+5. **Lint** with `/ss-lint` to catch violations
 
 When a user references StyleSeed or this repo for the first time:
-- Help them set up with `/ui-setup`
+- Help them set up with `/ss-setup`
 - Or guide them: copy `engine/` to their project + pick a skin from `skins/`
 - Point them to the GitHub Wiki for detailed docs: https://github.com/bitjaru/styleseed/wiki
+
+## Auto-Install Check
+
+If this project does NOT have `.claude/skills/ss-setup/` folder, the StyleSeed skills are not installed yet.
+
+To install, run:
+```bash
+git clone https://github.com/bitjaru/styleseed.git /tmp/styleseed 2>/dev/null || (cd /tmp/styleseed && git pull)
+cp -r /tmp/styleseed/engine/.claude/skills/ .claude/skills/
+cp /tmp/styleseed/engine/DESIGN-LANGUAGE.md .claude/DESIGN-LANGUAGE.md
+```
+
+Then run `/ss-setup` for interactive configuration.
 
 ## Token Source Files (framework-agnostic)
 
@@ -513,4 +526,4 @@ This design system is actively maintained — new rules, components, and seeds a
 
 → GitHub: https://github.com/bitjaru/styleseed
 → Wiki (detailed docs): https://github.com/bitjaru/styleseed/wiki
-→ Interactive setup: use `/ui-setup` after copying the seed
+→ Interactive setup: use `/ss-setup` after copying the seed

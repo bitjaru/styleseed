@@ -1,5 +1,5 @@
 ---
-name: ui-review
+name: ss-review
 description: Review UI code for design system compliance, accessibility, and best practices
 argument-hint: [file-path]
 allowed-tools: Read, Grep, Glob

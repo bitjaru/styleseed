@@ -1,5 +1,5 @@
 ---
-name: ux-audit
+name: ss-audit
 description: Audit screens for UX issues using Nielsen's heuristics and modern mobile UX best practices
 argument-hint: [file-path or screen-name]
 allowed-tools: Read, Grep, Glob

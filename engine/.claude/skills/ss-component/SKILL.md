@@ -1,5 +1,5 @@
 ---
-name: ui-component
+name: ss-component
 description: Generate a new UI component following the StyleSeed design conventions
 argument-hint: [component-name] [description]
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash

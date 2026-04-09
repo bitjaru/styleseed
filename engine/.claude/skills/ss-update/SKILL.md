@@ -95,7 +95,7 @@ For CLAUDE.md (Golden Rules):
 
 **Never touch:**
 - theme.css — say "Your theme.css (skin) is untouched."
-- components/ — say "Your components are untouched. Run `/ui-lint` to check compliance."
+- components/ — say "Your components are untouched. Run `/ss-lint` to check compliance."
 
 ### Step 5: Summary
 
@@ -111,7 +111,7 @@ Not touched:
 - theme.css (your skin)
 - components/ (your code)
 
-Next: run /ui-lint on your pages to check for rule violations.
+Next: run /ss-lint on your pages to check for rule violations.
 ```
 
 ## Important

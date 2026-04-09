@@ -153,9 +153,9 @@ Files modified:
 
 Next steps:
 - npm run dev to preview
-- /ui-page to add more pages
-- /ux-audit to check UX quality
-- /ui-review to verify design compliance
+- /ss-page to add more pages
+- /ss-audit to check UX quality
+- /ss-review to verify design compliance
 ```
 
 ## Rules

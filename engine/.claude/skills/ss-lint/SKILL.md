@@ -11,7 +11,7 @@ Target: **$ARGUMENTS**
 
 ## What This Does
 
-Fast, grep-based scan for common design violations. Runs in seconds (unlike /ui-review which is a deep manual audit). Run this after every file change.
+Fast, grep-based scan for common design violations. Runs in seconds (unlike /ss-review which is a deep manual audit). Run this after every file change.
 
 ## Checks
 

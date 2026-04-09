@@ -48,4 +48,4 @@ Description: $ARGUMENTS
    - **Edge cases** (empty states, errors, loading) for each screen
    - **Scaffolded pages** using `PageShell`, `TopBar`, `BottomNav` patterns
 
-4. Generate the actual page files using `/ui-page` conventions.
+4. Generate the actual page files using `/ss-page` conventions.

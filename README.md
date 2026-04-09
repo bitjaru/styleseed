@@ -165,18 +165,20 @@ Use them together: awesome-design-md provides the skin, StyleSeed provides the b
 engine/
 ├── CLAUDE.md                 # AI reads this automatically
 ├── DESIGN-LANGUAGE.md        # 69 visual design rules (brand-agnostic)
-├── .claude/skills/           # 13 slash commands
-│   ├── ui-setup/             #   Interactive setup wizard
-│   ├── ui-component/         #   Generate components
-│   ├── ui-page/              #   Scaffold pages
-│   ├── ui-pattern/           #   Compose layouts
-│   ├── ui-review/            #   Design compliance check
-│   ├── ui-tokens/            #   Manage tokens
-│   ├── ui-a11y/              #   Accessibility audit
-│   ├── ux-flow/              #   Design user flows
-│   ├── ux-audit/             #   UX heuristic evaluation
-│   ├── ux-copy/              #   Generate microcopy
-│   └── ux-feedback/          #   Add loading/error/empty states
+├── .claude/skills/           # 13 slash commands (/ss-*)
+│   ├── ss-setup/             #   Interactive setup wizard
+│   ├── ss-page/              #   Scaffold pages
+│   ├── ss-component/         #   Generate components
+│   ├── ss-pattern/           #   Compose layouts
+│   ├── ss-review/            #   Design compliance check
+│   ├── ss-tokens/            #   Manage tokens
+│   ├── ss-a11y/              #   Accessibility audit
+│   ├── ss-lint/              #   Quick violation scan
+│   ├── ss-update/            #   Pull latest engine
+│   ├── ss-flow/              #   Design user flows
+│   ├── ss-audit/             #   UX heuristic evaluation
+│   ├── ss-copy/              #   Generate microcopy
+│   └── ss-feedback/          #   Add loading/error/empty states
 ├── components/
 │   ├── ui/                   # 32 primitives (shadcn/ui + motion)
 │   └── patterns/             # 16 dashboard patterns

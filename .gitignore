@@ -4,3 +4,7 @@ dist/
 *.local
 .env
 .env.*
+
+# Promo & blog (local only)
+showcase/PROMO*.md
+showcase/blog-*.md

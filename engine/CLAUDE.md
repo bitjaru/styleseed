@@ -15,7 +15,8 @@ The engine provides layout rules, components, and skills. The skin provides colo
  7. Card shadows ≤ 8% opacity — if visible, it's too strong
  8. Touch targets ≥ 44×44px — no tiny tap areas
  9. Semantic tokens only (text-brand, bg-card) — NEVER hardcode hex in components
-10. After generating ANY page → run /ss-review to verify compliance
+10. Font sizes from the "Font Size by Context" table ONLY — don't guess
+11. After generating ANY page → run /ss-review to verify compliance
 ```
 
 Reference this guide when Claude Code sets up a new project or implements UI.
@@ -95,6 +96,23 @@ Other semantic tokens (`--background`, `--foreground`, `--muted`, etc.) typicall
 - **500 (medium)**: Labels, buttons, default headings
 - **600 (semibold)**: Nav labels, emphasized captions
 - **700 (bold)**: Metric values, list titles, section headers
+
+#### Font Size by Context (USE THIS — don't guess sizes)
+
+| Context | Number | Unit | Label | Tailwind Example |
+|---------|--------|------|-------|-----------------|
+| **Hero card** | `text-[48px]` | `text-[24px]` | `text-[12px] uppercase` | `<p class="text-[48px] font-bold">3.8<span class="text-[24px]">M</span></p>` |
+| **KPI card** | `text-[36px]` | `text-[18px]` | `text-[12px] uppercase` | `<p class="text-[36px] font-bold">$48.2<span class="text-[18px]">K</span></p>` |
+| **Section title** | — | — | `text-[18px] font-bold` | `<h3 class="text-[18px] font-bold">Recent Activity</h3>` |
+| **List item name** | — | — | `text-[14px] font-bold` | `<p class="text-[14px] font-bold">Acme Corp</p>` |
+| **List item amount** | `text-[17px]` | `text-[11px]` | — | `<span class="text-[17px] font-bold">$8,400</span>` |
+| **Chart stat footer** | `text-[18px]` | `text-[10px]` | `text-[11px] uppercase` | — |
+| **Trend %** | `text-[13px]` | — | — | `<span class="text-[13px] text-success font-bold">+8.2%</span>` |
+| **Subtitle/date** | — | — | `text-[13px] text-text-tertiary` | `<p class="text-[13px] text-text-tertiary">April 7, 2026</p>` |
+| **Status dot text** | — | — | `text-[11px] font-bold` | `<span class="text-[11px] font-bold" style="color: #22C55E">Completed</span>` |
+| **Badge label** | — | — | `text-[12px] uppercase tracking-wide` | `<span class="text-[12px] font-bold uppercase tracking-[0.05em]">ALERT</span>` |
+
+**Rule: NEVER pick a font size that's not in this table.** If unsure, use the closest context match.
 
 ### Spacing
 - Uses Tailwind default utilities

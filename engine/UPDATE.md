@@ -45,6 +45,9 @@ Every project is different. The key question: **where did you put the StyleSeed 
 | Copied to .claude/ | `./.claude/DESIGN-LANGUAGE.md` | `./.claude/skills/` |
 | Copied to src/ | `./src/DESIGN-LANGUAGE.md` | `./.claude/skills/` |
 
+The table shows Claude Code's project path. For Codex, use
+`./.agents/skills/` instead; the skill contents are identical.
+
 ## What's ALWAYS Safe to Update
 
 These files contain no project-specific content:
@@ -52,7 +55,7 @@ These files contain no project-specific content:
 | File | What It Is | Command |
 |------|-----------|---------|
 | `DESIGN-LANGUAGE.md` | Design rules (only additions, never breaking) | `cp styleseed/engine/DESIGN-LANGUAGE.md [your-location]` |
-| `.claude/skills/` | All 12 skill definitions | `cp -r styleseed/engine/.claude/skills/ your-project/.claude/skills/` |
+| `.claude/skills/` | All 19 skill definitions | `cp -r styleseed/engine/.claude/skills/ your-project/.claude/skills/` |
 | `.cursorrules` | Cursor rules | `cp styleseed/engine/.cursorrules your-project/` |
 
 ## What to Be CAREFUL With
@@ -73,7 +76,11 @@ cp styleseed/engine/DESIGN-LANGUAGE.md your-project/.claude/DESIGN-LANGUAGE.md
 # or: cp styleseed/engine/DESIGN-LANGUAGE.md your-project/DESIGN-LANGUAGE.md
 
 # Update skills (always safe)
+# Claude Code
 cp -r styleseed/engine/.claude/skills/ your-project/.claude/skills/
+# Codex
+mkdir -p your-project/.agents/skills
+cp -r styleseed/engine/.claude/skills/* your-project/.agents/skills/
 
 # Update Cursor rules
 cp styleseed/engine/.cursorrules your-project/.cursorrules

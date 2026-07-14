@@ -107,31 +107,41 @@ Claude Code한테 "대시보드 만들어줘" 하면 보통 이런 결과가 나
 Claude Code·Codex·Cursor 등 아무 AI 에이전트에 이 한 문장을 붙여넣으면 됩니다 — **설치 + 전체 루프를 한 번에**:
 
 ```
-Install StyleSeed so its checks actually run: `npx skills add bitjaru/styleseed` (if you can't, read https://styleseed-demo.vercel.app/llms-full.txt instead). Then use it for every UI in this project. First, in plan mode, lock my key color, font, and motion with me and save them to STYLESEED.md so they don't drift. Build to the rules with ONE focal point and one accent. Before showing me anything, run the quality gate (/ss-score to ≥ 80: one accent, one radius, normal states grey not rainbow, real empty/error states) and fix what fails. If you're building a full screen, just run /ss-build — it enforces this whole loop.
+Install StyleSeed so its checks actually run: `npx skills add bitjaru/styleseed` (if you can't, read https://styleseed-demo.vercel.app/llms-full.txt instead). Then use it for every UI in this project. First, in plan mode, lock my key color, font, and motion with me and save them to STYLESEED.md so they don't drift. Build to the rules with ONE focal point and one accent. Before showing me anything, run the quality gate (`/ss-score` in Claude Code, `$ss-score` in Codex) to ≥ 80 and fix what fails. For a full screen, run `/ss-build` in Claude Code or `$ss-build` in Codex — it enforces this whole loop.
 ```
 
-> 💡 **왜 설치부터 시키나:** 결과가 "AI스러움"을 벗는 결정적 단계는 **퀄리티 게이트**인데, `/ss-score`·`/ss-build`는 **스킬이 설치돼 있어야 실제로 돌아갑니다.** URL만 읽히면 게이트가 "자가채점(대충 넘어감)"으로 전락해요. 설치하면 락이 `STYLESEED.md`에 **저장돼 안 흔들리고**, 게이트가 진짜로 채점·수정한 뒤에 보여줍니다. 설치가 안 되면 URL로도 규칙은 배우지만 더 약합니다.
+> 💡 **왜 설치부터 시키나:** 결과가 "AI스러움"을 벗는 결정적 단계는 **퀄리티 게이트**인데, `ss-score`·`ss-build`는 **스킬이 설치돼 있어야 실제로 돌아갑니다.** URL만 읽히면 게이트가 "자가채점(대충 넘어감)"으로 전락해요. 설치하면 락이 `STYLESEED.md`에 **저장돼 안 흔들리고**, 게이트가 진짜로 채점·수정한 뒤에 보여줍니다. 설치가 안 되면 URL로도 규칙은 배우지만 더 약합니다.
 
-설치형이 좋으면 `npx skills add bitjaru/styleseed` → `/ss-build` (또는 `/ss-setup`).
+설치 후 Claude Code에서는 `/ss-build`, Codex에서는 `$ss-build`를 실행하세요. Codex의 `/skills` 목록에서도 선택할 수 있습니다.
 
 ### 방법 1: 인터랙티브 설정 (추천)
 
-**1단계 — 스킬 먼저 복사.** 프로젝트 루트 폴더에서 (Claude Code가 아니라 터미널에서) 실행하세요:
+**1단계 — 스킬 설치.** 모든 지원 에이전트에서 가장 간단한 방법은 다음 명령입니다:
+
+```bash
+npx skills add bitjaru/styleseed
+```
+
+프로젝트에 직접 복사하려면 에이전트가 읽는 경로를 선택하세요:
 
 ```bash
 # StyleSeed 다운로드
 git clone https://github.com/bitjaru/styleseed.git /tmp/styleseed
 
-# 슬래시 스킬을 프로젝트에 복사 (.claude/skills 를 명시적으로 복사 —
-# `cp -r engine/*` 는 숨김 폴더를 건너뛰어서 /ss-setup 이 안 보이는 원인)
+# Claude Code
 mkdir -p .claude/skills
 cp -r /tmp/styleseed/engine/.claude/skills/* .claude/skills/
+
+# Codex 저장소 스킬
+mkdir -p .agents/skills
+cp -r /tmp/styleseed/engine/.claude/skills/* .agents/skills/
 ```
 
-**2단계 — Claude Code 재시작** (스킬은 시작할 때 로드됨) 후 실행:
+**2단계 — 새 에이전트 세션을 시작**한 뒤 setup을 실행하세요:
 
-```
-/ss-setup
+```text
+Claude Code: /ss-setup
+Codex:       $ss-setup   # 또는 /skills에서 ss-setup 선택
 ```
 
 그러면 Claude Code가 하나씩 물어봅니다:
@@ -278,7 +288,7 @@ AI 코딩 도구는 기능적인 UI를 잘 만듭니다. 하지만 **기능적 �
 | **역할** | 브랜드 토큰 (피부) | 디자인 감각 (뇌) |
 | **AI에게 가르치는 것** | 어떤 색/폰트를 쓸지 | 어떻게 디자이너처럼 생각할지 |
 | **컴포넌트** | 없음 | 48개 |
-| **AI 스킬** | 없음 | 15개 |
+| **AI 스킬** | 없음 | 19개 |
 | **레이아웃 규칙** | 없음 | 섹션 타입, 정보 피라미드, 시각적 리듬 |
 | **금지 패턴** | 없음 | 수십 개의 "이러면 안 됨" 규칙 |
 

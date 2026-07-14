@@ -67,10 +67,10 @@
 **The fastest way — paste this one sentence** into Claude Code, Codex, Cursor, or any AI agent. It installs StyleSeed *and* runs the whole loop:
 
 ```
-Install StyleSeed so its checks actually run: `npx skills add bitjaru/styleseed` (if you can't, read https://styleseed-demo.vercel.app/llms-full.txt instead). Then use it for every UI in this project. First, in plan mode, lock my key color, font, and motion with me and save them to STYLESEED.md so they don't drift. Build to the rules with ONE focal point and one accent. Before showing me anything, run the quality gate (/ss-score to ≥ 80: one accent, one radius, normal states grey not rainbow, real empty/error states) and fix what fails. If you're building a full screen, just run /ss-build — it enforces this whole loop.
+Install StyleSeed so its checks actually run: `npx skills add bitjaru/styleseed` (if you can't, read https://styleseed-demo.vercel.app/llms-full.txt instead). Then use it for every UI in this project. First, in plan mode, lock my key color, font, and motion with me and save them to STYLESEED.md so they don't drift. Build to the rules with ONE focal point and one accent. Before showing me anything, run the quality gate (`/ss-score` in Claude Code, `$ss-score` in Codex) to ≥ 80 and fix what fails. For a full screen, run `/ss-build` in Claude Code or `$ss-build` in Codex — it enforces this whole loop.
 ```
 
-**Why the prompt installs first:** the quality gate is the step that makes output stop looking generic — but `/ss-score` and `/ss-build` can only *run* if the skills are installed. Point an agent at the rules-URL alone and the "gate" degrades to an honor-system self-check it usually skips. Installing makes the loop real: the lock persists in `STYLESEED.md` (no drift), and the gate actually scores and fixes before you see anything. Can't install? The URL still teaches the rules — just weaker. Works with **Claude Code (`CLAUDE.md`), Codex / Amp / Gemini CLI (`AGENTS.md`), and Cursor (`.cursorrules`)** — StyleSeed ships all three. (Planning first is what keeps the result from looking random — see [Troubleshooting](#troubleshooting--i-applied-styleseed-but-the-ui-still-looks-bad).)
+**Why the prompt installs first:** the quality gate is the step that makes output stop looking generic — but the `ss-score` and `ss-build` skills can only *run* if they are installed. Point an agent at the rules-URL alone and the "gate" degrades to an honor-system self-check it usually skips. Installing makes the loop real: the lock persists in `STYLESEED.md` (no drift), and the gate actually scores and fixes before you see anything. Can't install? The URL still teaches the rules — just weaker. Works with **Claude Code (`CLAUDE.md`), Codex / Amp / Gemini CLI (`AGENTS.md`), and Cursor (`.cursorrules`)** — StyleSeed ships all three. (Planning first is what keeps the result from looking random — see [Troubleshooting](#troubleshooting--i-applied-styleseed-but-the-ui-still-looks-bad).)
 
 **What your agent actually does with StyleSeed loaded:**
 
@@ -90,12 +90,12 @@ agent  ▸  ✓ 88/100 — one accent, grey normal states, real empty/error stat
 > plain markdown (`CLAUDE.md` / `AGENTS.md` / `DESIGN-LANGUAGE.md`), so the prompt above —
 > or just copying those files in — is 90% of StyleSeed with nothing to approve.
 
-**Want the `/ss-*` slash-command skills too** (optional automation: setup wizard, review, score)?
+**Want the 19 `ss-*` agent skills too** (optional automation: setup wizard, review, score)?
 
 ```bash
 npx skills add bitjaru/styleseed
 ```
-Installs all 19 skills into Claude Code, Codex, Cursor, Gemini CLI, Amp and more — then run `/ss-setup`. Your agent will ask you to approve them once on first use (standard for any executable skill). No install possible? The rules alone still do the core work.
+Installs all 19 skills into Claude Code, Codex, Cursor, Gemini CLI, Amp and more. Then run `/ss-setup` in Claude Code or `$ss-setup` in Codex (you can also choose it from Codex's `/skills` picker). Your agent may ask you to approve tools on first use. No install possible? The rules alone still do the core work.
 
 **Your agent, its exact path:**
 
@@ -103,7 +103,8 @@ Installs all 19 skills into Claude Code, Codex, Cursor, Gemini CLI, Amp and more
 |---|---|---|
 | **Claude Code** | `CLAUDE.md` + `/ss-*` skills | `npx skills add bitjaru/styleseed` |
 | **Cursor** | `.cursorrules` | `cp engine/.cursorrules .cursorrules` — or paste the prompt above |
-| **Codex · Amp · Gemini CLI** | `AGENTS.md` + skills | `npx skills add bitjaru/styleseed` |
+| **Codex** | `AGENTS.md` + `$ss-*` skills (`.agents/skills`) | `npx skills add bitjaru/styleseed` |
+| **Amp · Gemini CLI** | `AGENTS.md` + skills | `npx skills add bitjaru/styleseed` |
 | **Windsurf · Copilot · any other** | the paste-prompt above | no install — paste & go |
 
 <sub>More paths (manual copy, Cursor, awesome-design-md brands) in [Install by hand](#install-by-hand) below.</sub>
@@ -176,7 +177,7 @@ Design data is the paint. Design judgment is knowing where to put it.
 
 **[See the before/after →](https://styleseed-demo.vercel.app/why)** — the same dashboard brief, generated generically vs. with the 74 rules applied. Every fix annotated with the rule behind it.
 
-StyleSeed is a **design engine** — 74 visual rules, 48 components, a named motion system, and 19 slash commands that teach LLMs the judgment, not just the data:
+StyleSeed is a **design engine** — 74 visual rules, 48 components, a named motion system, and 19 agent skills that teach LLMs the judgment, not just the data:
 
 ```
 "The most refined black isn't #000 — it's #2A2A2A"
@@ -221,28 +222,37 @@ Drop `DESIGN-LANGUAGE.md` into your Claude Design workflow and the same model pr
 The fastest paths are at the top — [paste one prompt](#get-started-in-30-seconds), or `npx skills add bitjaru/styleseed`. To wire StyleSeed into an existing project manually, use one of the options below.
 
 > **New to this? Read top to bottom — every step matters.** The most common
-> mistake is expecting `/ss-setup` to work before the skills are copied into
-> `.claude/skills/`. Do step 1 first.
+> mistake is expecting setup to work before the skill is installed. Claude
+> Code scans `.claude/skills/`; Codex scans `.agents/skills/`.
 
 ### Option 1: Interactive Setup (Recommended)
 
-**Step 1 — Install the skills.** Run this from **your project's root folder** (a terminal, not Claude Code):
+**Step 1 — Install the skills.** The portable path for every supported agent is:
 
 ```bash
-# Download StyleSeed somewhere on your machine
+npx skills add bitjaru/styleseed
+```
+
+For a manual project-local install, clone StyleSeed and copy the canonical
+skill folders into the path your agent scans:
+
+```bash
 git clone https://github.com/bitjaru/styleseed.git /tmp/styleseed
 
-# Copy the slash-command skills into your project.
-# NOTE: copy .claude/skills explicitly — `cp -r engine/*` skips hidden
-# folders, which is why /ss-setup "doesn't exist" if you only do that.
+# Claude Code
 mkdir -p .claude/skills
 cp -r /tmp/styleseed/engine/.claude/skills/* .claude/skills/
+
+# Codex (repository-scoped skills)
+mkdir -p .agents/skills
+cp -r /tmp/styleseed/engine/.claude/skills/* .agents/skills/
 ```
 
-**Step 2 — Restart Claude Code** (skills load at startup), open your project, and run:
+**Step 2 — Start a fresh agent session**, open your project, and invoke setup:
 
-```
-/ss-setup
+```text
+Claude Code: /ss-setup
+Codex:       $ss-setup   # or open /skills and choose ss-setup
 ```
 
 The wizard then walks you through:
@@ -252,9 +262,9 @@ The wizard then walks you through:
 4. Font preference
 5. Generates your first page automatically
 
-> Don't see the `/ss-*` commands? Confirm `ls .claude/skills/` lists `ss-setup`,
-> `ss-page`, etc., use the `/ss-` prefix (the old `/ui-*` names are gone), and
-> restart Claude Code.
+> Don't see the skills? For Claude Code, check `.claude/skills/` and use the
+> `/ss-` prefix. For Codex, check `.agents/skills/`, open `/skills`, or invoke
+> `$ss-setup`. Start a new session after installing if discovery looks stale.
 
 ### Option 2: Manual Setup
 
@@ -348,7 +358,7 @@ stop looking AI-made.
 - 74 visual design rules (layout, composition, rhythm, forbidden patterns)
 - 48 React components (32 primitives + 16 patterns)
 - A named motion system (5 seeds + a copy-paste keyword library)
-- 15 Claude Code skills (setup, UI, motion, UX, accessibility)
+- 19 cross-agent skills (setup, UI, motion, UX, accessibility)
 - Works with ANY color palette
 
 **Skin** = what your app looks like (visual identity)
@@ -425,8 +435,9 @@ All seeds auto-respect `prefers-reduced-motion`, and the `/ss-motion` skill pull
 ```
 engine/
 ├── CLAUDE.md                 # AI reads this automatically
+├── AGENTS.md                 # Codex and other AGENTS.md-compatible agents
 ├── DESIGN-LANGUAGE.md        # 74 visual design rules (brand-agnostic)
-├── .claude/skills/           # 19 slash commands (/ss-*)
+├── .claude/skills/           # 19 canonical skills (Claude: /ss-*)
 │   ├── ss-setup/             #   Interactive setup wizard
 │   ├── ss-page/              #   Scaffold pages
 │   ├── ss-component/         #   Generate components
@@ -609,7 +620,11 @@ cd styleseed && git pull
 
 # Update design rules + skills (safe — no project-specific content)
 cp styleseed/engine/DESIGN-LANGUAGE.md your-project/.claude/DESIGN-LANGUAGE.md
+# Claude Code
 cp -r styleseed/engine/.claude/skills/ your-project/.claude/skills/
+# Codex
+mkdir -p your-project/.agents/skills
+cp -r styleseed/engine/.claude/skills/* your-project/.agents/skills/
 ```
 
 **Don't overwrite:** your `theme.css` (brand colors), `CLAUDE.md` (if project-specific), or customized components.

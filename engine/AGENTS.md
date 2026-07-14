@@ -140,6 +140,12 @@ screenshot. Then present + report the score. A 30-second self-review is the prod
 
 ## How to use StyleSeed
 
+**Skill invocation differs by agent.** Claude Code uses `/ss-build`,
+`/ss-score`, and the other `/ss-*` commands. Codex uses `$ss-build`,
+`$ss-score`, and the other `$ss-*` skills (or selects them from `/skills`).
+The `/ss-*` spelling below names the shared workflow; use your agent's native
+invocation syntax.
+
 **If the `/ss-*` skills are installed, run `/ss-build` to build a screen** — it enforces the
 exact loop that made the reference demo look designed instead of generic (lock the look →
 build → `/ss-score` → fix to ≥ 80 → *then* show). Building free-hand and skipping that loop is

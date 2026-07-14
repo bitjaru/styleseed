@@ -126,7 +126,7 @@ seeds/your-style/
 ├── README.md              # Seed overview and setup instructions
 ├── CLAUDE.md              # AI integration guide (Claude Code reads this)
 ├── DESIGN-LANGUAGE.md     # Visual design rules (the core value)
-├── .claude/skills/        # Claude Code slash commands
+├── .claude/skills/        # Canonical agent skills (Claude /ss-*, Codex $ss-*)
 ├── tokens/                # JSON design tokens
 │   ├── colors.json
 │   ├── typography.json

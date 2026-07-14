@@ -1,11 +1,11 @@
 {
-  "version": "2.10.0",
-  "released": "2026-07-09",
+  "version": "2.10.1",
+  "released": "2026-07-14",
   "rules": 74,
   "skills": 19,
   "skins": 7,
-  "whatsNew": "The gate now has eyes. /ss-score reads the code — but some of the worst 'AI-made' tells only exist in pixels: a hero that doesn't actually dominate, a lower third of dead whitespace, a web font that silently failed to load and fell back to Times, two colors that look like two accents once rendered, an empty state that's a blank white void. A human sees these in half a second; a code-reading gate misses all of them. New /ss-verify closes that gap: it renders the screen, screenshots it, and the agent LOOKS at the image — scoring the same StyleSeed gate against what it actually sees, including the empty/loading/error states, then fixes and re-renders until it passes. Code-clean is necessary; pixel-clean is the real bar. It never claims a visual pass without a real screenshot. Runs after /ss-score, and /ss-build finishes a renderable screen with it.",
-  "update": "Run /ss-update, or: npx skills add bitjaru/styleseed",
+  "whatsNew": "First-class Codex discovery: a root AGENTS.md, repo-scoped .agents/skills bridge to all 19 canonical skills, correct $ss-* invocation guidance, and Codex-specific manual install and update paths. Claude Code continues to use /ss-* from the same skill source, so the two integrations cannot drift.",
+  "update": "Claude Code: /ss-update. Codex: $ss-update. Or run: npx skills add bitjaru/styleseed",
   "changelog": "https://github.com/bitjaru/styleseed/releases",
   "repo": "https://github.com/bitjaru/styleseed"
 }

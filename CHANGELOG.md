@@ -3,6 +3,30 @@
 All notable changes to StyleSeed. Agents can check the latest version at
 [version.json](https://styleseed-demo.vercel.app/version.json) and run `/ss-update`.
 
+## [2.10.1] — 2026-07-14
+
+**Theme: first-class Codex discovery.** StyleSeed already shipped `AGENTS.md`, but the
+repository itself exposed its 19 skills only through Claude Code's `.claude/skills`
+path and documented Claude's slash-command syntax for every agent.
+
+### Added
+- A root `AGENTS.md` with repository structure, canonical skill ownership, generated-file
+  rules, verification commands, and release boundaries.
+- A repository-scoped `.agents/skills` bridge to the canonical 19 skills, so Codex discovers
+  `$ss-setup`, `$ss-build`, `$ss-score`, `$ss-verify`, and the rest without maintaining a
+  second copy that can drift.
+
+### Changed
+- English and Korean setup docs now distinguish Claude Code's `/ss-*` invocation from
+  Codex's `$ss-*` invocation and `/skills` picker.
+- Manual installation and update docs now include Codex's `.agents/skills` project path.
+- Stale skill counts in the engine, update, comparison, and contributor docs now say 19.
+
+### Verified
+- A fresh Codex session loaded the repository `AGENTS.md`, discovered all 19 repo-scoped
+  skills, and invoked `$ss-score` from the canonical `engine/.claude/skills/ss-score/SKILL.md`.
+- The 113-route Next.js demo production build passes.
+
 ## [2.10.0] — 2026-07-09
 
 **Theme: the gate now has eyes.** `/ss-score` reads the *code* — but some of the worst

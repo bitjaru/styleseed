@@ -7,8 +7,9 @@ The brand-agnostic design engine. Contains layout rules, components, skills, and
 | Directory | Contents |
 |-----------|----------|
 | `CLAUDE.md` | AI integration guide — Claude Code reads this automatically |
+| `AGENTS.md` | Cross-agent guide — Codex reads this automatically |
 | `DESIGN-LANGUAGE.md` | 74 visual design rules with Table of Contents |
-| `.claude/skills/` | 11 slash commands (1 setup + 6 UI + 4 UX) |
+| `.claude/skills/` | 19 canonical agent skills (Claude `/ss-*`, Codex `$ss-*`) |
 | `components/ui/` | 32 shadcn/ui-based primitives (including motion.tsx) |
 | `components/patterns/` | 16 dashboard pattern components |
 | `css/` | base.css, fonts.css, index.css (theme.css comes from skins/) |
@@ -27,7 +28,8 @@ cp -r engine/* your-project/
 cp skins/stripe/theme.css your-project/src/styles/theme.css
 
 # Or use interactive setup
-/ss-setup
+# Claude Code: /ss-setup
+# Codex:       $ss-setup
 ```
 
 Design rules in this engine work with ANY skin — the 74 rules are about layout, composition, typography ratios, and visual rhythm, not specific colors.

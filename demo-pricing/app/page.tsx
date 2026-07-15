@@ -117,7 +117,7 @@ export default function HomePage() {
           <div className="mx-auto max-w-6xl px-6 py-16">
             <div className="flex flex-wrap items-end justify-between gap-4">
               <div>
-                <div className="text-[11px] font-bold uppercase tracking-widest text-neutral-500">Get started</div>
+                <div className="text-[11px] font-bold uppercase tracking-widest text-neutral-400">Get started</div>
                 <h2 className="mt-2 text-[clamp(26px,4vw,36px)] font-bold tracking-tight">
                   The fastest way is one sentence.
                 </h2>
@@ -141,7 +141,7 @@ export default function HomePage() {
               <PromptBox tone="dark" />
             </div>
 
-            <div className="mt-10 text-[11px] font-bold uppercase tracking-widest text-neutral-500">
+            <div className="mt-10 text-[11px] font-bold uppercase tracking-widest text-neutral-400">
               For real projects — install it
             </div>
             <div className="mt-4 max-w-xl rounded-2xl bg-white/[0.06] p-6 ring-1 ring-white/10">
@@ -153,12 +153,12 @@ export default function HomePage() {
                 <code className="font-mono text-[13px] text-violet-300">/ss-build</code> can only
                 <em> run</em> once installed. Then your lock persists in{" "}
                 <code className="font-mono text-[13px] text-neutral-300">STYLESEED.md</code> (no drift),
-                and every screen is scored and fixed before you see it. All 16 skills, universally —
+                and every screen is scored and fixed before you see it. All 19 skills, universally —
                 Claude Code, Codex, Cursor, Gemini CLI &amp; 12+ more.
               </p>
               <div className="mt-4 space-y-1.5">
                 <code className="block rounded-lg bg-black/40 px-3 py-2 font-mono text-[13px] text-neutral-100">npx skills add bitjaru/styleseed</code>
-                <code className="block rounded-lg bg-black/40 px-3 py-2 font-mono text-[13px]"><span className="text-neutral-500"># then, to build a screen: </span><span className="text-violet-300">/ss-build</span></code>
+                <code className="block rounded-lg bg-black/40 px-3 py-2 font-mono text-[13px]"><span className="text-neutral-400"># then, to build a screen: </span><span className="text-violet-300">/ss-build</span></code>
               </div>
             </div>
           </div>
@@ -226,7 +226,7 @@ export default function HomePage() {
                 { k: "Why it works", v: "The eye locks onto magnitude first; equal sizes flatten it into noise." },
               ].map((c, i) => (
                 <div key={c.k} className="rounded-2xl bg-neutral-50 p-5" style={{ boxShadow: "inset 0 0 0 1px rgba(0,0,0,0.04)" }}>
-                  <div className="text-[11px] font-bold uppercase tracking-widest" style={{ color: i === 2 ? "#7C3AED" : "#9CA3AF" }}>{c.k}</div>
+                  <div className="text-[11px] font-bold uppercase tracking-widest" style={{ color: i === 2 ? "#7C3AED" : "#6B7280" }}>{c.k}</div>
                   <div className="mt-1.5 text-[14px] font-semibold leading-snug text-neutral-800">{c.v}</div>
                 </div>
               ))}
@@ -330,7 +330,7 @@ export default function HomePage() {
                   brand DNAs and {seedCount} motion seeds live in the browser. Copy the source, rules
                   and all.
                 </p>
-                <p className="mt-2 max-w-md text-[13px] text-neutral-500">
+                <p className="mt-2 max-w-md text-[13px] text-neutral-600">
                   Skins are <em>inspired-by</em> token sets — brand-flavored color/radius/shadow/motion
                   values, not recreations of those companies&rsquo; design languages. Restructuring the
                   actual design is the presets&rsquo; job (<code className="rounded bg-neutral-100 px-1 font-mono text-[12px]">/ss-restyle</code>).
@@ -365,7 +365,7 @@ export default function HomePage() {
                       <h3 className="text-[15px] font-bold tracking-tight text-neutral-900">
                         {entry.name}
                       </h3>
-                      <span className="text-[11px] font-semibold uppercase tracking-widest text-neutral-400">
+                      <span className="text-[11px] font-semibold uppercase tracking-widest text-neutral-600">
                         {entry.category}
                       </span>
                     </div>

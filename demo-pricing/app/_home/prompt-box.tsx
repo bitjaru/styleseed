@@ -34,7 +34,6 @@ export function PromptBox({
   return (
     <button
       onClick={copy}
-      aria-label="Copy the StyleSeed prompt"
       className={`group flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left transition-colors ${
         dark
           ? "bg-black/40 ring-1 ring-white/10 hover:ring-white/25"

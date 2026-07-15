@@ -212,7 +212,7 @@ function MagneticMini() {
         x.set(0);
         y.set(0);
       }}
-      style={{ x, y, background: "#3182F6" }}
+      style={{ x, y, background: "#2563EB" }}
       className="rounded-lg px-3 py-2 text-[11px] font-bold text-white"
     >
       pull
@@ -226,7 +226,7 @@ function GlowMini() {
       animate={{ boxShadow: ["0 0 0px #8B5CF600", "0 0 22px #8B5CF6cc", "0 0 0px #8B5CF600"] }}
       transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
       className="flex h-11 w-12 items-center justify-center rounded-lg text-[10px] font-bold text-white"
-      style={{ background: "#8B5CF6" }}
+      style={{ background: "#7C3AED" }}
     >
       live
     </motion.div>
@@ -250,7 +250,7 @@ function ConfettiMini() {
         )
       }
       className="relative rounded-lg px-3 py-2 text-[11px] font-bold text-white"
-      style={{ background: "#FF4E8B" }}
+      style={{ background: "#DB2777" }}
     >
       pop
       {bits.map((b) => (
@@ -268,9 +268,9 @@ function ConfettiMini() {
 }
 
 const SEED_COLOR: Record<SeedId, string> = {
-  spring: "#3182F6",
+  spring: "#2563EB",
   silk: "#635BFF",
   snap: "#5E6AD2",
-  float: "#F59E0B",
-  pulse: "#FF4E8B",
+  float: "#B45309",
+  pulse: "#DB2777",
 };

@@ -330,6 +330,11 @@ export default function HomePage() {
                   brand DNAs and {seedCount} motion seeds live in the browser. Copy the source, rules
                   and all.
                 </p>
+                <p className="mt-2 max-w-md text-[13px] text-neutral-500">
+                  Skins are <em>inspired-by</em> token sets — brand-flavored color/radius/shadow/motion
+                  values, not recreations of those companies&rsquo; design languages. Restructuring the
+                  actual design is the presets&rsquo; job (<code className="rounded bg-neutral-100 px-1 font-mono text-[12px]">/ss-restyle</code>).
+                </p>
               </div>
               <Link
                 href="/showcase"

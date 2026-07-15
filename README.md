@@ -16,6 +16,8 @@
 
 **One component. Three brand DNAs.** Same chat UI morphing across Toss · Raycast · Arc — colors, radius, motion, shadows, gradients all driven by StyleSeed tokens. Just a `data-skin` attribute.
 
+<sub>Skins are *inspired-by* token sets — brand-flavored color/radius/shadow/motion values, not recreations of those companies' design languages. The layer that restructures the actual design is the presets (`/ss-restyle`, below).</sub>
+
 <br />
 
 [![▶ Live Demo](https://img.shields.io/badge/▶_Live_Demo-Open-111111?style=for-the-badge&logoColor=white)](https://styleseed-demo.vercel.app)

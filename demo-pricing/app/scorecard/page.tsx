@@ -162,8 +162,9 @@ export default function Scorecard() {
             />
           </div>
           <figcaption className="mt-3 text-center text-[13px] text-neutral-500">
-            Same product, same prompt — before ({BEFORE_TOTAL}) vs after ({AFTER_TOTAL}). Only the
-            rules changed.
+            The tells the gate deducts for, annotated on a before/after build — default indigo,
+            gradient text, icon-chips vs one chosen accent, the real product, one focal point. Our
+            landing&rsquo;s {BEFORE_TOTAL} was the same story.
           </figcaption>
         </figure>
       </section>

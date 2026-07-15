@@ -46,6 +46,8 @@
 
 <sub>Full pages: [before](showcase/v26-before.png) · [after](showcase/v26-after.png) · **[more before/afters →](https://styleseed-demo.vercel.app/why)**</sub>
 
+<sub>🔥 We ran an early version of *this page* through our own gate. **[It scored 58/100 → here's the receipt](https://styleseed-demo.vercel.app/scorecard)**</sub>
+
 <br /><br />
 
 <img src="showcase/style-gallery.png" width="840" alt="The same Relay product rendered in six StyleSeed presets — swiss (sharp grid, red), editorial (serif seasoning, oxblood), technical (dark, dense, teal), warm-dtc (pill, terracotta), minimal-mono (whitespace, one accent), brutalist-lite (hard borders, cobalt). Each is coherent and distinct, none looks generic." />
@@ -216,6 +218,20 @@ The rules are **brand-agnostic** — they don't reference specific colors, only 
 3. Brand skins make it look like your brand, not like "AI made this"
 
 Drop `DESIGN-LANGUAGE.md` into your Claude Design workflow and the same model produces noticeably more refined output — without changing a single prompt.
+
+### "Why not just use the official `frontend-design` skill?"
+
+Use both — they solve different halves of the problem. Anthropic's official [`frontend-design`](https://github.com/anthropics/skills) skill scaffolds a clean screen fast, and it's a great starting point. StyleSeed is the layer **on top**:
+
+| | Official `frontend-design` | **StyleSeed** |
+| --- | --- | --- |
+| Gets you a coherent screen | ✅ | ✅ |
+| Names & bans the generic-AI tells | — | ✅ by name (default indigo, icon-chip, rainbow lists…) |
+| Scored gate that fixes before you see it | — | ✅ `/ss-score` loops to ≥80 |
+| Locks decisions so they don't drift across prompts | — | ✅ `STYLESEED.md` |
+| Presets + dials to move the whole look at once | — | ✅ `/ss-restyle`, `/ss-dial` |
+
+Official gets you *coherent*. StyleSeed keeps you from looking *templated*. Run the official skill to scaffold, then let StyleSeed's gate refine and enforce.
 
 ## Install by hand
 

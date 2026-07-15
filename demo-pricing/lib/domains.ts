@@ -1,8 +1,9 @@
 /**
  * App-domain design guides — the data behind /guides and /guides/[domain].
  * Mirrors engine/APP-PLAYBOOKS.md + the type recipe in engine/VISUAL-CRAFT.md,
- * structured for programmatic SEO pages targeting "<domain> app design / ui
- * patterns / typography" long-tail queries.
+ * structured for programmatic SEO pages targeting AI-coding-agent long-tail
+ * queries — "make Claude Code / Cursor / Codex build a <domain> app that
+ * doesn't look AI-generated".
  */
 
 export interface Dial {
@@ -21,7 +22,7 @@ export interface TypeSpec {
 export interface Domain {
   slug: string;
   name: string;
-  /** SEO-facing phrase, e.g. "Fintech app design" */
+  /** SEO-facing phrase, e.g. "Fintech UI that doesn't look AI-generated" */
   seoName: string;
   accent: string;
   dna: string;
@@ -40,7 +41,7 @@ export const DOMAINS: Domain[] = [
   {
     slug: "fintech",
     name: "Fintech & Banking",
-    seoName: "Fintech app design",
+    seoName: "Fintech UI that doesn't look AI-generated",
     accent: "#3182F6",
     dna: "Trust through restraint. The accent is reserved for money in motion; calm reads as careful.",
     radius: "Soft (8–12px) — approachable but composed",
@@ -65,7 +66,7 @@ export const DOMAINS: Domain[] = [
   {
     slug: "saas",
     name: "SaaS & B2B Dashboards",
-    seoName: "SaaS dashboard design",
+    seoName: "SaaS dashboards that look designed, not generated",
     accent: "#5E6AD2",
     dna: "Information per pixel. Power users want density, speed, and one quiet accent.",
     radius: "Sharp–medium (4–8px) — precise, dense",
@@ -90,7 +91,7 @@ export const DOMAINS: Domain[] = [
   {
     slug: "ecommerce",
     name: "E-commerce & Retail",
-    seoName: "E-commerce UI design",
+    seoName: "E-commerce UI that doesn't look AI-generated",
     accent: "#FF6B35",
     dna: "Product imagery is the hero; the accent drives one thing — buy.",
     radius: "Soft (8–12px) — friendly, tactile",
@@ -115,7 +116,7 @@ export const DOMAINS: Domain[] = [
   {
     slug: "social",
     name: "Social & Community",
-    seoName: "Social app design",
+    seoName: "Social app UI that looks designed, not AI-generated",
     accent: "#FF4E8B",
     dna: "User content leads; the UI is alive but never competes with it.",
     radius: "Soft → pill — playful, avatars fully round",
@@ -140,7 +141,7 @@ export const DOMAINS: Domain[] = [
   {
     slug: "content",
     name: "Content, Media & Docs",
-    seoName: "Content & blog UI design",
+    seoName: "Blog & editorial UI that doesn't look AI-generated",
     accent: "#635BFF",
     dna: "Typography is the design. Reading is the product; color is a distraction.",
     radius: "Sharp (0–4px) — editorial, print-like",
@@ -165,7 +166,7 @@ export const DOMAINS: Domain[] = [
   {
     slug: "productivity",
     name: "Productivity & Tools",
-    seoName: "Productivity app design",
+    seoName: "Productivity UI that looks designed, not generated",
     accent: "#5E6AD2",
     dna: "Calm chrome so the user's work is the focus; keyboard-first, fast.",
     radius: "Sharp–medium (4–8px) — crisp, efficient",
@@ -190,7 +191,7 @@ export const DOMAINS: Domain[] = [
   {
     slug: "health",
     name: "Health, Wellness & Fitness",
-    seoName: "Health & fitness app design",
+    seoName: "Health & fitness UI that doesn't look AI-generated",
     accent: "#10B981",
     dna: "Calm and reassuring. One clear focus per screen; reduce load on a tired user.",
     radius: "Soft → pill (12px+) — calm, gentle",
@@ -215,7 +216,7 @@ export const DOMAINS: Domain[] = [
   {
     slug: "devtools",
     name: "Developer Tools",
-    seoName: "Developer tool UI design",
+    seoName: "Developer-tool UI that doesn't look AI-generated",
     accent: "#8B5CF6",
     dna: "Dark-first, dense, precise. Devs distrust slow or flashy UI.",
     radius: "Sharp (4px) — technical, exact",

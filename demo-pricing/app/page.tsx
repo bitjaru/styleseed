@@ -91,11 +91,11 @@ export default function HomePage() {
               href="https://github.com/bitjaru/styleseed"
               target="_blank"
               rel="noreferrer"
-              aria-label="Star StyleSeed on GitHub — 600+ stars"
+              aria-label="Star StyleSeed on GitHub — 680+ stars"
               className="hidden items-center gap-1.5 rounded-md border border-neutral-200 bg-white px-2.5 py-1.5 text-[14px] font-bold text-neutral-700 transition-colors hover:border-neutral-900 sm:inline-flex"
             >
               Star on GitHub
-              <span className="font-semibold text-neutral-500">★ 600+</span>
+              <span className="font-semibold text-neutral-500">★ 680+</span>
             </a>
             <Link
               href="/showcase"
@@ -285,6 +285,22 @@ export default function HomePage() {
                 </tbody>
               </table>
             </div>
+            {/* the question every Claude Code user now asks */}
+            <div className="mt-8 rounded-2xl border border-white/10 bg-white/[0.03] p-6">
+              <div className="text-[11px] font-bold uppercase tracking-widest text-violet-300">
+                &ldquo;Why not just use the official frontend-design skill?&rdquo;
+              </div>
+              <p className="mt-2 max-w-3xl text-[15px] leading-relaxed text-neutral-300">
+                Use both. Anthropic&rsquo;s official{" "}
+                <code className="rounded bg-white/10 px-1 font-mono text-[13px]">frontend-design</code>{" "}
+                skill scaffolds a clean screen fast — it&rsquo;s a great starting point. StyleSeed is the
+                layer <span className="font-semibold text-white">on top</span>: it names and bans the
+                generic-AI tells, scores every screen to a{" "}
+                <span className="font-semibold text-white">≥80 gate</span> and fixes it before you see it,
+                and locks your design decisions so they don&rsquo;t drift across prompts. Official gets you
+                coherent; StyleSeed keeps you from looking templated.
+              </p>
+            </div>
             <p className="mt-5 max-w-3xl text-[14px] leading-relaxed text-neutral-400">
               Also in the box: 7 brand skins from one <code className="rounded bg-white/10 px-1 font-mono text-[13px]">data-skin</code>{" "}
               attribute, 5 motion seeds plus 20+ keyword moves, and a drop-in{" "}
@@ -407,7 +423,7 @@ export default function HomePage() {
               >
                 <GithubIcon size={15} />
                 Star on GitHub
-                <span className="font-semibold text-neutral-500">★ 600+</span>
+                <span className="font-semibold text-neutral-500">★ 680+</span>
               </a>
             </div>
             <p className="mx-auto mt-5 max-w-md text-[15px] text-neutral-600">

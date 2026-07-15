@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "styleseed",
+  "displayName": "StyleSeed",
+  "version": "2.10.1",
+  "description": "A design-rules engine your AI coding agent reads before it builds UI — so it stops shipping generic, AI-looking screens. 74 rules, a scored quality gate that fixes the tells before you see them, presets, dials, and a visual verifier.",
+  "author": {
+    "name": "bitjaru",
+    "url": "https://github.com/bitjaru"
+  },
+  "homepage": "https://styleseed-demo.vercel.app",
+  "repository": "https://github.com/bitjaru/styleseed",
+  "license": "MIT",
+  "keywords": [
+    "design-system",
+    "ui",
+    "design-review",
+    "tailwind",
+    "react",
+    "frontend",
+    "code-quality",
+    "accessibility",
+    "claude-code",
+    "cursor",
+    "codex"
+  ],
+  "skills": ["./skills/", "./engine/.claude/skills"]
+}

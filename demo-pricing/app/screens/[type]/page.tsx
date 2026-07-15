@@ -18,17 +18,18 @@ export async function generateMetadata({
   const { type } = await params;
   const s = SCREEN_BY_SLUG[type];
   if (!s) return {};
-  const title = `${s.seoName} — structure, hierarchy & patterns`;
-  const description = `${s.job} A practical design guide for the ${s.name.toLowerCase()} screen: structure, hierarchy, signature patterns, and the anti-patterns to avoid.`;
+  const title = `${s.seoName} — for Claude Code, Cursor & Codex`;
+  const description = `Get Claude Code, Cursor or Codex to build a ${s.name.toLowerCase()} that doesn't look AI-generated. ${s.job} The structure, hierarchy, signature patterns and anti-patterns that make a ${s.name.toLowerCase()} look designed.`;
   return {
     title,
     description,
     keywords: [
       s.seoName.toLowerCase(),
-      `${s.slug} ui design`,
-      `${s.slug} layout`,
-      `${s.slug} page design`,
-      "design system",
+      `${s.slug} that doesn't look ai-generated`,
+      `claude code ${s.slug} design`,
+      `cursor ${s.slug} ui`,
+      `ai generated ${s.slug}`,
+      "make ai ui look designed",
       "claude code design",
     ],
     alternates: { canonical: `${BASE}/screens/${s.slug}` },
@@ -58,7 +59,7 @@ export default async function ScreenGuidePage({
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    headline: `${s.seoName} — a practical design guide`,
+    headline: `${s.seoName} — a StyleSeed guide for AI coding agents`,
     description: s.job,
     url: `${BASE}/screens/${s.slug}`,
     author: { "@type": "Organization", name: "StyleSeed" },

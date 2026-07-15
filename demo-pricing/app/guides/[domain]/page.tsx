@@ -18,17 +18,18 @@ export async function generateMetadata({
   const { domain } = await params;
   const d = DOMAIN_BY_SLUG[domain];
   if (!d) return {};
-  const title = `${d.seoName} — color, density, typography & motion`;
-  const description = `${d.dna} A practical design guide for ${d.name.toLowerCase()}: how to bias color, density, typography, motion, and patterns — and which StyleSeed skin fits.`;
+  const title = `${d.seoName} — for Claude Code, Cursor & Codex`;
+  const description = `Get Claude Code, Cursor or Codex to build a ${d.name.toLowerCase()} app that doesn't look AI-generated. ${d.dna} The color, density, typography, motion and patterns that make ${d.name.toLowerCase()} look designed — plus the StyleSeed skin to start from.`;
   return {
     title,
     description,
     keywords: [
       d.seoName.toLowerCase(),
-      `${d.name.toLowerCase()} ui`,
-      `${d.name.toLowerCase()} ui patterns`,
-      `${d.slug} dashboard design`,
-      "design system",
+      `${d.name.toLowerCase()} ui that doesn't look ai-generated`,
+      `claude code ${d.slug} design`,
+      `cursor ${d.slug} ui`,
+      `ai generated ${d.slug} ui`,
+      "make ai ui look designed",
       "claude code design",
     ],
     alternates: { canonical: `${BASE}/guides/${d.slug}` },
@@ -58,7 +59,7 @@ export default async function DomainGuidePage({
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    headline: `${d.seoName} — a practical design guide`,
+    headline: `${d.seoName} — a StyleSeed guide for AI coding agents`,
     description: d.dna,
     url: `${BASE}/guides/${d.slug}`,
     author: { "@type": "Organization", name: "StyleSeed" },

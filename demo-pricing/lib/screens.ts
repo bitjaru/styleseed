@@ -1,14 +1,15 @@
 /**
  * Page-type (screen-type) design guides — the data behind /screens and
  * /screens/[type]. Mirrors engine/PAGE-TYPES.md, structured for programmatic SEO
- * targeting "<screen> design / UI / layout" long-tail queries — the second axis of
- * design judgment (domain × screen-type). See lib/domains.ts for the first axis.
+ * targeting AI-coding-agent long-tail queries — "<screen> that doesn't look
+ * AI-generated" — the second axis of design judgment (domain × screen-type).
+ * See lib/domains.ts for the first axis.
  */
 
 export interface Screen {
   slug: string;
   name: string;
-  /** SEO-facing phrase, e.g. "Dashboard design" */
+  /** SEO-facing phrase, e.g. "AI dashboard that doesn't look generated" */
   seoName: string;
   accent: string;
   /** what this screen has to accomplish */
@@ -26,7 +27,7 @@ export const SCREENS: Screen[] = [
   {
     slug: "dashboard",
     name: "Dashboard / Overview",
-    seoName: "Dashboard design",
+    seoName: "AI dashboard that doesn't look generated",
     accent: "#3182F6",
     job: "Answer “how are things?” in 3 seconds, then let the user drill down.",
     structure: "Information pyramid — one hero metric → a small KPI set → a supporting list or chart. Vary section types; never four identical cards in a row.",
@@ -39,7 +40,7 @@ export const SCREENS: Screen[] = [
   {
     slug: "form",
     name: "Form / Create / Edit",
-    seoName: "Form design",
+    seoName: "Forms that don't look AI-generated",
     accent: "#10B981",
     job: "Get accurate input with the least friction and the most confidence.",
     structure: "Single column, logical grouping into section cards, one clear primary action (bottom or sticky). Labels above fields, not beside.",
@@ -52,7 +53,7 @@ export const SCREENS: Screen[] = [
   {
     slug: "landing",
     name: "Landing / Marketing",
-    seoName: "Landing page design",
+    seoName: "Landing pages that don't look AI-generated",
     accent: "#8B5CF6",
     job: "In one screen: say what it is + why it matters + one next action.",
     structure: "Hero (headline + subhead + a single primary CTA) → proof (features / social proof) → CTA again. One conversion goal per page.",
@@ -65,7 +66,7 @@ export const SCREENS: Screen[] = [
   {
     slug: "detail",
     name: "Detail / Profile",
-    seoName: "Detail & profile page design",
+    seoName: "Detail & profile pages that don't look AI-generated",
     accent: "#F59E0B",
     job: "Show one thing deeply, with its primary action obvious.",
     structure: "Identity header (title / image / status) → key facts → body sections → one primary action (often sticky on mobile).",
@@ -78,7 +79,7 @@ export const SCREENS: Screen[] = [
   {
     slug: "list",
     name: "List / Search / Browse",
-    seoName: "List & search UI design",
+    seoName: "List & search UI that doesn't look AI-generated",
     accent: "#5E6AD2",
     job: "Scan many items fast, find the right one, act.",
     structure: "Optional filter/search bar → consistent rows or cards → a clear per-item action. Consistency beats variety here.",
@@ -91,7 +92,7 @@ export const SCREENS: Screen[] = [
   {
     slug: "settings",
     name: "Settings / Account",
-    seoName: "Settings page design",
+    seoName: "Settings pages that don't look AI-generated",
     accent: "#64748B",
     job: "Let the user find and change one setting with confidence, safely.",
     structure: "Grouped section cards by topic (profile / notifications / billing / danger), each setting a labeled row with its control on the trailing edge. Destructive actions isolated and marked.",
@@ -104,7 +105,7 @@ export const SCREENS: Screen[] = [
   {
     slug: "onboarding",
     name: "Onboarding / Empty state",
-    seoName: "Onboarding & empty state design",
+    seoName: "Onboarding & empty states that don't look AI-generated",
     accent: "#FF6B35",
     job: "Get the user to their first win with minimal steps — never a dead end.",
     structure: "Few steps with visible progress, one decision per step, a strong ‘what's next.’ Empty states are onboarding in disguise — always offer the next action.",

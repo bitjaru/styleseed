@@ -6,34 +6,34 @@ import { Comparison } from "./comparison";
 const BASE = "https://styleseed-demo.vercel.app";
 
 const description =
-  "Same prompt, same components — one has design judgment. A side-by-side of " +
-  "generic AI-generated UI vs the same dashboard with StyleSeed's 74 design " +
-  "rules applied: grayscale discipline, one accent, 2:1 numbers, visual rhythm, " +
-  "intentional motion.";
+  "Why does AI-generated UI look the same? Because models pick the same defaults " +
+  "every time. A side-by-side of generic AI-generated UI vs the same dashboard with " +
+  "StyleSeed's 74 design rules applied: grayscale discipline, one accent, 2:1 numbers, " +
+  "visual rhythm, intentional motion.";
 
 export const metadata: Metadata = {
-  title: "Why StyleSeed — generic AI UI vs the same UI with design judgment",
+  title: "Why does AI-generated UI look the same? — StyleSeed",
   description,
   keywords: [
-    "AI generated UI ugly",
-    "make AI UI look better",
+    "why does ai generated ui look the same",
+    "ai generated ui looks the same",
+    "make ai ui look designed",
     "claude code design",
     "before after design system",
-    "AI design judgment",
     "design rules for LLM",
   ],
   alternates: { canonical: `${BASE}/why` },
   openGraph: {
     type: "website",
     url: `${BASE}/why`,
-    title: "Same prompt. Same components. One has judgment.",
+    title: "Why does AI-generated UI look the same?",
     description,
     siteName: "StyleSeed",
     images: [{ url: `${BASE}/og/why.png`, width: 1280, height: 640 }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Same prompt. Same components. One has judgment.",
+    title: "Why does AI-generated UI look the same?",
     description,
     images: [`${BASE}/og/why.png`],
   },
@@ -43,7 +43,7 @@ function jsonLd() {
   return {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    headline: "Why AI-generated UI looks generated — and the judgment layer that fixes it",
+    headline: "Why does AI-generated UI look the same? — and the judgment layer that fixes it",
     description,
     url: `${BASE}/why`,
     author: { "@type": "Organization", name: "StyleSeed" },
@@ -70,9 +70,9 @@ export default function WhyPage() {
             Why StyleSeed
           </div>
           <h1 className="text-[clamp(30px,5vw,44px)] font-bold leading-tight tracking-tight">
-            Same prompt. Same components.
+            Why does AI-generated UI
             <br />
-            One has <span className="text-violet-600">judgment</span>.
+            all look the <span className="text-violet-600">same</span>?
           </h1>
           <p className="mt-4 text-[16px] leading-relaxed text-neutral-600">
             Both dashboards below were &ldquo;built by AI&rdquo; from the same brief, with the

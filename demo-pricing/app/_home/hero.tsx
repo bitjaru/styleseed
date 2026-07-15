@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { motion, type Variants } from "framer-motion";
@@ -8,7 +9,7 @@ import { GithubIcon } from "./github-icon";
 
 const STATS = [
   { value: "74", label: "design rules" },
-  { value: "15", label: "AI skills" },
+  { value: "19", label: "AI skills" },
   { value: "7", label: "brand skins" },
   { value: "5", label: "motion seeds" },
 ];
@@ -101,7 +102,7 @@ export function Hero() {
           >
             <GithubIcon size={15} />
             Star on GitHub
-            <span className="font-semibold text-neutral-500">★ 600+</span>
+            <span className="font-semibold text-neutral-500">★ 680+</span>
           </a>
           <Link
             href="/how-it-thinks"
@@ -111,6 +112,27 @@ export function Hero() {
             <ArrowRight size={14} />
           </Link>
         </motion.div>
+
+        {/* visual proof — the same product, agent-defaults vs StyleSeed rules */}
+        <motion.figure variants={item} className="mx-auto mt-16 max-w-4xl">
+          <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-950 shadow-[0_24px_60px_-20px_rgba(0,0,0,0.35)]">
+            <Image
+              src="/v26-compare.png"
+              alt="The same product built by an AI agent's defaults versus with StyleSeed's rules — before shows default indigo, gradient text, and placeholder mocks; after shows a chosen accent, the real product, and one focal point."
+              width={1516}
+              height={1008}
+              priority
+              className="h-auto w-full"
+            />
+          </div>
+          <figcaption className="mt-3 text-[13px] text-neutral-500">
+            Same product, same prompt — only the rules changed. This page scored 58/100 on our own
+            gate first.{" "}
+            <Link href="/scorecard" className="font-semibold text-violet-600 hover:underline">
+              See the receipt →
+            </Link>
+          </figcaption>
+        </motion.figure>
 
         <motion.dl
           variants={item}

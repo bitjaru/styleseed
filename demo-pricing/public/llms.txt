@@ -25,18 +25,23 @@ output comes from constraints, so before you write any code:
   design with the user and lock these decisions one at a time, holding full context. This is
   the #1 fix for "the design looks random / has no key color."
 - **Pin the key color (accent).** Ask the user for a brand color; if none, recommend one by
-  app type (fintech blue `#3182F6`, SaaS indigo `#5E6AD2`, e-commerce orange `#FF6B35`,
-  social pink `#FF4E8B`, content `#635BFF`, health green `#10B981`, dev-tools violet
-  `#8B5CF6`). ONE accent only — everything else greyscale. Or pick a skin.
+  app type (fintech blue `#3182F6`, e-commerce warm terracotta `#C14E24`, social pink
+  `#FF4E8B`, content `#635BFF`, health teal `#0D9488`, dev-tools violet `#8B5CF6`).
+  NEVER the generic default indigo `#5E6AD2`/`#4F46E5` — shipping it is the #1 "AI-made"
+  tell and the gate deducts it under every lock. Default palette = ONE accent + greyscale
+  (a locked brand-palette or +categorical mode is also legal — see Palette mode in the lock).
 - **Pick a motion seed** by vibe: Spring / Silk / Snap / Float / Pulse.
-- **Write a design-lock file.** Save the chosen skin/accent/radius/motion to `STYLESEED.md` in
+- **Write a design-lock file.** Save the chosen skin/accent/radius/elevation(enum:
+  layered-shadow | tonal-ramp | flat-borders | oled-black)/density/palette-mode/motion to `STYLESEED.md` in
   the project root, and re-read + obey it on EVERY prompt. This is the #1 fix for "the design
   is different every time" — decisions become persistent project state, not chat memory.
 - **Then build, then run the Quality Gate before showing the user.** Generating UI is not
-  "done" — check: one accent (no 2nd hue, no emoji icons, no decorative color), one radius;
-  normal/"보통" states grey (color only the minority that needs attention, no rainbow list);
-  clear hierarchy; content in cards on an 8px rhythm; empty/loading/error states; buttons that
-  name the action; focus rings + no pure #000. If `/ss-*` skills are installed run `/ss-score`
+  "done" — check (LOCK-RELATIVE — read STYLESEED.md first; no lock = defaults at full strictness):
+  colors from the locked palette mode (default one accent, no emoji icons); one radius;
+  normal/"보통" states grey (severity color only for the minority, no rainbow list); clear
+  hierarchy; a deliberate separation language on the locked density's rhythm (default
+  cards + 8px comfortable); empty/loading/error states; buttons that name the action;
+  focus rings + no pure #000 unless the lock declares oled-black/brutalist-lite/swiss. If `/ss-*` skills are installed run `/ss-score`
   (target ≥ 80) and fix what fails; else self-score. Never present UI that hasn't passed.
 - **For reliable results, install the rule files** (CLAUDE.md / AGENTS.md / .cursorrules) into
   the project so they're re-read every prompt. A one-shot URL read drifts mid-session.

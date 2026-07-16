@@ -157,8 +157,12 @@ Then:
    <!-- Locked design decisions. The agent re-reads this every prompt and must obey it. -->
    - App domain:        [Step 1 app type]
    - Skin:              [Step 3 concept, or "custom"]
-   - Key color (accent): [Step 2 hex]    # the ONLY accent — everything else greyscale
+   - Preset:            (none)          # set later by /ss-restyle — the gate reads this
+   - Palette mode:      single-accent   # single-accent | brand-palette: [#hex=role, ...] — optionally +categorical
+   - Key color (accent): [Step 2 hex]    # the accent (single-accent mode) — everything else greyscale
    - Radius personality: [sharp | soft | pill — one everywhere]
+   - Elevation:         layered-shadow  # ENUM: layered-shadow | tonal-ramp | flat-borders | oled-black
+   - Density:           comfortable     # airy | comfortable | compact | dense
    - Motion seed:       [Spring | Silk | Snap | Float | Pulse]
    - Type:              [Step 4 font]
    - Locked:            [today]

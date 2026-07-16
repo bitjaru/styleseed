@@ -1,7 +1,7 @@
 # StyleSeed — Full Context
 
 Source: github.com/bitjaru/styleseed (CLAUDE.md + DESIGN-LANGUAGE.md + VISUAL-CRAFT.md + UX-WRITING.md)
-Generated: 2026-07-16T06:43:42.348Z
+Generated: 2026-07-16T07:02:02.156Z
 
 ---
 
@@ -22,8 +22,9 @@ The engine provides layout rules, components, and skills. The skin provides colo
  3. No pure black (#000) by default — darkest text defined by skin (~#2A2A2A). A lock that
     declares a true-black/oled base or brutalist/swiss preset legalizes #000 surfaces
     (keep text contrast floors either way)
- 4. Numbers 2:1 with units — 48px number + 24px unit (default; a lock declaring uniform
-    numeric style, e.g. technical mono tables, hierarchies by weight/color instead)
+ 4. Numbers 2:1 with units — 48px number + 24px unit (default). A lock/preset that declares
+    uniform numeric styling (e.g. technical mono tables) is exempt, but must then carry
+    hierarchy with weight/color
  5. One spatial rhythm on the 8px grid — mobile: space-y-6 · mx-6 · px-6; desktop: same
     principle via container + gap-6/gap-8 (don't mix off-grid one-offs)
  6. Never repeat same section type consecutively — create visual rhythm
@@ -73,12 +74,12 @@ design-lock file.** Before building any UI:
 - Surface:           desktop-web     # mobile-app | desktop-web (B2B) — decides the type scale
 - Mood:              soft · minimal · airy · calm   # edges · feel · density · tone
 - Skin:              toss            # or "custom" — NEVER the unlocked default indigo
-- Preset:            (none)          # swiss | editorial | technical | warm-dtc | minimal-mono | brutalist-lite — written by /ss-restyle; THE GATE READS THIS and re-keys its deductions to the preset's language
-- Palette mode:      single-accent   # single-accent (default) | brand-palette: [hex:role, ...] (Duolingo/M3-style N colors with roles) | +categorical (CD-1 category hues on rows/tags legal)
+- Preset:            (none)          # swiss | editorial | technical | warm-dtc | minimal-mono | brutalist-lite (written by /ss-restyle; the gate reads it)
+- Palette mode:      single-accent   # single-accent | brand-palette: [#hex=role, ...] — optionally +categorical (e.g. "single-accent +categorical")
 - Key color (accent): #3182F6        # the ONLY accent — everything else greyscale
 - Font:              Pretendard       # display + body (e.g. "Fraunces / Inter") — chosen, not default
 - Radius personality: soft           # sharp | soft | pill — one SCALE everywhere (see mapping table)
-- Elevation:         light=layered ≤8% above-left · dark=tonal ramp + hairline
+- Elevation:         layered-shadow  # ENUM the gate reads: layered-shadow | tonal-ramp | flat-borders | oled-black (light default = layered-shadow ≤8% above-left; dark default = tonal-ramp)
 - Motion seed:       Spring          # Spring | Silk | Snap | Float | Pulse
 - Type scale:        desktop (body 16-18px)   # mobile-tight | desktop-larger | app-chrome
 - Density:           comfortable
@@ -1612,13 +1613,13 @@ that froze the reference demo's fingerprint into law and wrongly penalized legit
 ✗ Key color gradient background
 ✗ Using key color across 2+ sections simultaneously at large scale
 ```
-Key color is for **small elements only**: icon badges (10% opacity), progress fill, selected dots, active nav, badge pills.
-Card backgrounds are **always `bg-card` (white)** or `bg-surface-subtle`.
+Key color defaults to **small elements only**: icon badges (10% opacity), progress fill, selected dots, active nav, badge pills.
+Card backgrounds default to `bg-card` (white) or `bg-surface-subtle` — a locked brand-palette may assign a large-surface role deliberately (one role, locked, consistent).
 
 ### Pure Black 🔧 (default — locked oled-black/brutalist/swiss overrides for SURFACES)
 ```
 ✗ #000000 text on white (default — use the 900/950 neutral)
-✗ bg-black when nothing is locked
+✗ bg-black unless the lock declares oled-black elevation or a brutalist-lite/swiss preset
 ✓ #000 base legal under a locked oled-black dark language (Vercel/Linear-class, CL-5) or
   a locked brutalist/swiss black-and-white identity — text contrast floors ⛔ still apply
 ```
@@ -1643,8 +1644,9 @@ If existing pattern combinations cannot solve it, confirm with the user first.
 ✗ Card radius off the locked radius personality (default soft = rounded-2xl; sharp locks 6–8px)
 ✗ Placing floating buttons above bottom nav ⛔
 ```
-**Section separation is achieved through cards + spacing (space-y-6) only.**
-The difference between page background (#FAFAFA) and card background (#FFFFFF) serves as a natural divider.
+**Default: section separation = cards + spacing (space-y-6);** under a locked flat/borders/
+editorial language, whitespace-grid or hard borders do the same job (one language only ⛔).
+The difference between page background (#FAFAFA) and card background (#FFFFFF) serves as the default natural divider.
 Dividers (border-t) are used **only inside cards** to separate chart from stats.
 
 ### Selection UI 🔧 (mobile-app skin defaults)

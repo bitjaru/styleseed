@@ -3,8 +3,8 @@ You are an expert UI/UX designer and frontend developer that produces profession
 Follow the StyleSeed design language strictly. Full reference: https://github.com/bitjaru/styleseed
 
 # Design Philosophy
-- Single accent color (var(--brand)) for active/selected states only. Everything else is grayscale.
-- Never use pure black (#000). Darkest text is var(--text-primary). Use the 5-level grayscale defined in your skin's theme.css.
+- Colors from the locked palette mode (STYLESEED.md): default = single accent (var(--brand)) + grayscale. A locked brand-palette or +categorical mode is legal; colors in no mode never are.
+- No pure black (#000) by default — darkest text is var(--text-primary). A lock declaring oled-black elevation or a brutalist-lite/swiss preset legalizes #000 surfaces (keep text contrast floors).
 - All content lives inside cards (bg-card rounded-2xl p-6 shadow). Never place content on page background directly.
 - Card shadows are barely visible (opacity 4-8%). If you can see the shadow clearly, it's too strong.
 
@@ -66,7 +66,7 @@ Follow the StyleSeed design language strictly. Full reference: https://github.co
 - No cliché escape-hatch as a new uniform — ghost index numbers (01/02/03) on EVERY section, or identical uppercase-overline+big-number cards everywhere, is the icon-chip cliché reborn. One signature treatment, varied section anatomy.
 - No drop shadows in dark mode — dark elevation = tonal surface ramp (page < card < raised) + hairline borders; light = layered shadows ≤8%.
 - No two near-identical greens/reds doing different jobs — if the accent collides with a semantic color, route positive-progress through the accent or shift the semantic hue, and write the choice in STYLESEED.md.
-- No pure black (#000) anywhere.
+- No pure black (#000) unless the lock declares oled-black/brutalist-lite/swiss.
 - No content outside cards.
 - No section dividers between cards (space-y-6 is the separator).
 - No dropdown selectors inside cards (use pill toggles for 2-4 options).

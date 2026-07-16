@@ -55,8 +55,10 @@ grep -n ' ml-\| mr-\| pl-\| pr-' [file]
 ```bash
 grep -n 'text-black\|bg-black\|#000000\|#000"' [file]
 ```
-**Violation:** Any pure black
-**Fix:** Use skin's text-primary token
+**Violation:** Any pure black — UNLESS `STYLESEED.md` declares `Elevation: oled-black` or
+`Preset: brutalist-lite`/`swiss` (then #000 surfaces/borders are the locked style; only
+`text-black` on white still flags). Check the lock before flagging.
+**Fix:** Use skin's text-primary token (or lock the style if intentional)
 
 ### 6. Missing data-slot
 ```bash

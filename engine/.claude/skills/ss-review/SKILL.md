@@ -75,7 +75,7 @@ Review the file: **$ARGUMENTS**
 > parts. Check that each axis below uses ONE value system-wide; flag a mix as a real
 > issue, not a nitpick.
 - [ ] **One radius personality** — sharp (0-4px) OR soft (8-12px) OR pill, applied to every card/button/input/modal. No mixing (e.g. a `rounded-none` panel with `rounded-full` buttons).
-- [ ] **One accent color** for interactive emphasis (+ semantic red/green/amber only) — not two+ competing accents.
+- [ ] **Colors from the locked palette mode** (read `STYLESEED.md` first) — default: one accent for interactive emphasis (+ semantic red/green/amber only), not two+ competing accents; a locked `brand-palette`/`+categorical` mode is legal, hues in no mode are not. No lock = single-accent at full strictness.
 - [ ] **No emoji as UI icons** (🚗🧺⭐ as list/nav/status/category markers) — they inject many uncontrolled hues; use one line-icon set in `currentColor`.
 - [ ] **Status color = severity, not decoration** — a normal/OK/"보통" state is neutral grey (not colored); color marks only the minority of rows that need attention; same value → same color.
 - [ ] **No decorative hues** — favorite stars, category dots, avatars use the accent or grey, not a new color each.

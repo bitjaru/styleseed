@@ -3,6 +3,30 @@
 All notable changes to StyleSeed. Agents can check the latest version at
 [version.json](https://styleseed-demo.vercel.app/version.json) and run `/ss-update`.
 
+## [2.11.1] — 2026-07-16
+
+**Hotfix: v2.11.0 fixed the canon but not the mirrors — and weakened the unlocked case.**
+A post-release adversarial code review (10 confirmed findings) caught both.
+
+### Fixed
+- **Every non-Claude entry point synced to lock-relative law**: `engine/AGENTS.md` (Codex/
+  Gemini), `.cursorrules` (Cursor), `UPDATE.md`'s Golden-Rules merge block (which was
+  re-installing pre-2.11 absolutes into user projects on upgrade), and `llms.txt` (which
+  still *recommended* the never-excusable default indigo `#5E6AD2`).
+- **Unlocked strictness restored**: every [LOCK] deduction now resolves to an explicit
+  default when no lock exists (`single-accent` · `layered-shadow`/`tonal-ramp` by surface
+  mode · `comfortable` density · CC-9d fires) — lock-referencing triggers are never
+  unsatisfiable, so unlocked flat-border/rainbow/beige output deducts exactly as v2.10.
+- The deleted −3 decorative-hue deduction is restored; "categorical" requires the literal
+  `+categorical` flag in the lock (no self-certification).
+- `Elevation` is now a 4-value enum (`layered-shadow | tonal-ramp | flat-borders |
+  oled-black`) used identically by the lock template, Golden Rules, and the scorer;
+  shadow caps get an absolute 15% ceiling unless a lock states a value.
+- `ss-setup` writes the full v2.11 lock (Preset/Palette mode/Elevation enum/Density);
+  `ss-restyle` rewrites Density + Palette mode; `ss-lint`/`ss-review` are lock-aware.
+- §18's two surviving pre-2.11 absolutes rewritten; `version.json` whatsNew corrected;
+  ss-score's example output updated to the real 8-category weights + lock-status line.
+
 ## [2.11.0] — 2026-07-16
 
 **Theme: the gate scores lock-relative — variation is no longer punished.** An internal

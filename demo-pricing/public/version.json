@@ -1,10 +1,10 @@
 {
-  "version": "2.11.0",
-  "released": "2026-07-14",
+  "version": "2.11.1",
+  "released": "2026-07-16",
   "rules": 74,
   "skills": 19,
   "skins": 7,
-  "whatsNew": "First-class Codex discovery: a root AGENTS.md, repo-scoped .agents/skills bridge to all 19 canonical skills, correct $ss-* invocation guidance, and Codex-specific manual install and update paths. Claude Code continues to use /ss-* from the same skill source, so the two integrations cannot drift.",
+  "whatsNew": "The gate now scores lock-relative: /ss-score reads STYLESEED.md first and re-keys deductions to your locked look (preset/palette mode/elevation enum/density). New legal languages: oled-black dark, editorial reading surfaces, brand-palette & categorical colors. No lock = full default strictness.",
   "update": "Claude Code: /ss-update. Codex: $ss-update. Or run: npx skills add bitjaru/styleseed",
   "changelog": "https://github.com/bitjaru/styleseed/releases",
   "repo": "https://github.com/bitjaru/styleseed"

@@ -12,20 +12,28 @@ build any UI, dashboard, page, or component in this project, follow the rules be
 ## Golden Rules (NEVER break these)
 
 ```
- 1. All content inside cards — NEVER on bare page background
- 2. Single accent color (--brand) — everything else grayscale
- 3. No pure black (#000) — darkest text is defined by the skin (~#2A2A2A)
- 4. Numbers 2:1 with units — 48px number + 24px unit, always
+ 1. All content sits in a deliberate separation language — cards+tone by default; a locked
+    flat-borders/oled-black/editorial language separates with whitespace/grid/hard borders instead.
+    Floating with NO separation language is the violation
+ 2. Colors come from the locked palette mode — default single accent (--brand) + grayscale;
+    a locked brand-palette or +categorical mode is legal; hues in NO mode never are
+ 3. No pure black (#000) by default — darkest text ~#2A2A2A. A locked oled-black base or
+    brutalist-lite/swiss preset legalizes #000 surfaces (text contrast floors stay)
+ 4. Numbers 2:1 with units — 48px number + 24px unit (default; a lock declaring uniform
+    numeric styling is exempt, hierarchy via weight/color instead)
  5. One spatial rhythm on the 8px grid — mobile: space-y-6 · mx-6 · px-6; desktop: container + gap-6/gap-8
  6. Never repeat the same section type consecutively — create visual rhythm
- 7. Elevation, one language: LIGHT = layered shadows ≤ 8%; DARK = tonal surface ramp + hairline borders (shadows don't read on dark)
+ 7. Elevation, ONE language as locked (enum: layered-shadow | tonal-ramp | flat-borders |
+    oled-black) — light default layered ≤8%, dark default tonal-ramp; mixing two is the fail
  8. Touch targets ≥ 44×44px on touch surfaces; pointer-first desktop controls may be 36–40px (keep focus rings)
  9. Semantic tokens only (text-brand, bg-card) — NEVER hardcode hex in components
 10. Font sizes from the "Font Size by Context" table ONLY — don't guess; match scale to surface (desktop/web B2B body ≥16px, not 14px)
 11. NO emoji as UI icons; also AVOID the AI cliché of a generic Lucide line-icon inside an identical pale-tinted rounded-square chip repeated for every feature — vary the treatment or drop the chip
 12. NEVER ship the default/unlocked accent (generic indigo #5E6AD2/#4F46E5) or a copied demo layout — lock a domain-fit key color + font FIRST. Coherent ≠ distinctive
 13. One focal point per screen — the primary must dominate; an all-even grid of same-weight cards is the "machine-composed" tell
-14. After generating ANY page → run the Quality Gate below (or /ss-review); never show UI that hasn't passed
+14. After generating ANY page → run the Quality Gate below (or /ss-review); never show UI that hasn't passed.
+    Gate scores LOCK-RELATIVE: read STYLESEED.md first — deductions fire on violations of the
+    locked look, not deviation from the default skin. No lock = full default strictness
 ```
 
 **The coherence meta-rule (the #1 fix for "looks AI-generated"):** for each axis —
@@ -57,9 +65,13 @@ live only in chat memory and drift. Fix with a project design-lock file:
 - Surface:           desktop-web     # mobile-app | desktop-web (B2B) — decides the type scale
 - Mood:              soft · minimal · airy · calm   # edges · feel · density · tone
 - Skin:              toss            # or "custom" — NEVER the unlocked default indigo
-- Key color (accent): #3182F6        # the ONLY accent — everything else greyscale
+- Preset:            (none)          # swiss | editorial | technical | warm-dtc | minimal-mono | brutalist-lite (the gate reads this)
+- Palette mode:      single-accent   # single-accent | brand-palette: [#hex=role, ...] — optionally +categorical
+- Key color (accent): #3182F6        # the accent (single-accent mode) — everything else greyscale
 - Font:              Pretendard       # display + body, chosen (not the bare default)
 - Radius personality: soft (12px)    # sharp 0-4 | soft 8-12 | pill — one everywhere
+- Elevation:         layered-shadow  # ENUM: layered-shadow | tonal-ramp | flat-borders | oled-black
+- Density:           comfortable     # airy | comfortable | compact | dense (one position project-wide)
 - Motion seed:       Spring          # Spring | Silk | Snap | Float | Pulse
 - Type scale:        desktop (body 16-18px)   # mobile-tight | desktop-larger
 ```

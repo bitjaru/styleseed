@@ -33,8 +33,8 @@ presets = the mixed-personality tell we ban. Pick one; it *replaces* the look.
 3. **Hold the modern floor (§CC-9d).** Distinctive must not read *dated*: white/fresh base, serif
    as seasoning (one display moment, never body), keep the air. A preset that turns into a beige
    serif brochure has failed, not succeeded.
-4. **Rewrite the lock** — Skin/Mood/Accent/Font/Radius/Elevation/Motion/Type + a one-line
-   `Signature move`, **and set `Preset: <name>`** — this field is the handshake the gate reads:
+4. **Rewrite the lock** — Skin/Mood/Accent/Font/Radius/**Elevation (enum value)**/**Density**/
+   **Palette mode**/Motion/Type + a one-line `Signature move`, **and set `Preset: <name>`** — this field is the handshake the gate reads:
    `/ss-score` re-keys its deductions to the preset's language (v2.11), so brutalist borders or
    an editorial serif body are scored as the locked style, not as violations of the default skin.
    This is now the source of truth for every later prompt.

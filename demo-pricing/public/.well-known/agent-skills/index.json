@@ -62,7 +62,7 @@
       "type": "skill-md",
       "description": "Quick automated lint — detects common design system violations in seconds",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-lint/SKILL.md",
-      "digest": "sha256:56f4f2316b6e6a6ddcc01dd6d81f6ad6d6188dbba09bb89e7ad605226e48f773"
+      "digest": "sha256:7247911c312b7bf29f90dd22fbdbe617047f72ac3e512b775aff1437dc9903cd"
     },
     {
       "name": "ss-motion",
@@ -90,28 +90,28 @@
       "type": "skill-md",
       "description": "Re-style a project to a named aesthetic — swiss, editorial, technical, warm-dtc, minimal-mono, brutalist-lite. A preset is a *coordinate* across the dial axes (radius + density + color + weight + motion) plus a font, accent family, and one signature move — applied coherently as a single identity, written to the lock, and re-gated. This is for mood words (\"more editorial\") that aren't one axis; for a single axis use /ss-dial.",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-restyle/SKILL.md",
-      "digest": "sha256:d6f57930315a4673ff473f31d60c36062e7f69f8e3725adcfe75a3e5815b2858"
+      "digest": "sha256:c3592ae168f2a8b502bb6c1db29724c05a30f955d36e80f281ef579a6dc81c89"
     },
     {
       "name": "ss-review",
       "type": "skill-md",
       "description": "Review UI code for design system compliance, accessibility, and best practices",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-review/SKILL.md",
-      "digest": "sha256:16c698c3106e34abe723b42458d7e2fd7364dd613121c2f6ae3248e06bdfec8b"
+      "digest": "sha256:2b37ef8ce615db92fd019003e279f4a39b4953d93d63e3e9264b523c51d89397"
     },
     {
       "name": "ss-score",
       "type": "skill-md",
       "description": "Score a UI file's design quality 0-100 against StyleSeed's design language — per-category breakdown, the worst offenders, and a prioritized fix list. A quantified version of /ss-review.",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-score/SKILL.md",
-      "digest": "sha256:eb2463172e20a4ac59976b22615981b22e667744abfb0a7eb0470f46c646caa8"
+      "digest": "sha256:ab664cafe0c30290e46b69e1b13f4c7c6aa2a8fad636963c1b553f45f0d68a80"
     },
     {
       "name": "ss-setup",
       "type": "skill-md",
       "description": "Interactive setup wizard — guides you step-by-step to configure the design system for your project",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-setup/SKILL.md",
-      "digest": "sha256:30571591657f8c10bdbe777d4d271d0f580e12b6463cbc0fbf1cc3ff34456085"
+      "digest": "sha256:a11a180f9d1605288f833ecb00477fc9f50fe8c7667c880b2a8014630c4be002"
     },
     {
       "name": "ss-tokens",
@@ -132,7 +132,7 @@
       "type": "skill-md",
       "description": "The VISUAL gate — render the UI, screenshot it, and score what you actually SEE, not what the code says. Catches the tells that only show up in pixels (dead whitespace, cramping, a hero that doesn't dominate, fonts that didn't load, real rendered color, the squint \"does this look AI-made\" test) — the things /ss-score can't read from source. Renders empty/loading/error states too, then fixes and re-renders until it passes. Use as the final gate on any screen you can render.",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-verify/SKILL.md",
-      "digest": "sha256:5fb30651a7c22fd57396e99b4c948726bbe3bc41d48c97d8b4f8cce096daa4f1"
+      "digest": "sha256:bdaa7c4de6acc71c6d68f811bd9def454570a30c09f167386e2164f877fb455d"
     }
   ]
 }

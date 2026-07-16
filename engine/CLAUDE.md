@@ -15,8 +15,9 @@ The engine provides layout rules, components, and skills. The skin provides colo
  3. No pure black (#000) by default — darkest text defined by skin (~#2A2A2A). A lock that
     declares a true-black/oled base or brutalist/swiss preset legalizes #000 surfaces
     (keep text contrast floors either way)
- 4. Numbers 2:1 with units — 48px number + 24px unit (default; a lock declaring uniform
-    numeric style, e.g. technical mono tables, hierarchies by weight/color instead)
+ 4. Numbers 2:1 with units — 48px number + 24px unit (default). A lock/preset that declares
+    uniform numeric styling (e.g. technical mono tables) is exempt, but must then carry
+    hierarchy with weight/color
  5. One spatial rhythm on the 8px grid — mobile: space-y-6 · mx-6 · px-6; desktop: same
     principle via container + gap-6/gap-8 (don't mix off-grid one-offs)
  6. Never repeat same section type consecutively — create visual rhythm
@@ -66,12 +67,12 @@ design-lock file.** Before building any UI:
 - Surface:           desktop-web     # mobile-app | desktop-web (B2B) — decides the type scale
 - Mood:              soft · minimal · airy · calm   # edges · feel · density · tone
 - Skin:              toss            # or "custom" — NEVER the unlocked default indigo
-- Preset:            (none)          # swiss | editorial | technical | warm-dtc | minimal-mono | brutalist-lite — written by /ss-restyle; THE GATE READS THIS and re-keys its deductions to the preset's language
-- Palette mode:      single-accent   # single-accent (default) | brand-palette: [hex:role, ...] (Duolingo/M3-style N colors with roles) | +categorical (CD-1 category hues on rows/tags legal)
+- Preset:            (none)          # swiss | editorial | technical | warm-dtc | minimal-mono | brutalist-lite (written by /ss-restyle; the gate reads it)
+- Palette mode:      single-accent   # single-accent | brand-palette: [#hex=role, ...] — optionally +categorical (e.g. "single-accent +categorical")
 - Key color (accent): #3182F6        # the ONLY accent — everything else greyscale
 - Font:              Pretendard       # display + body (e.g. "Fraunces / Inter") — chosen, not default
 - Radius personality: soft           # sharp | soft | pill — one SCALE everywhere (see mapping table)
-- Elevation:         light=layered ≤8% above-left · dark=tonal ramp + hairline
+- Elevation:         layered-shadow  # ENUM the gate reads: layered-shadow | tonal-ramp | flat-borders | oled-black (light default = layered-shadow ≤8% above-left; dark default = tonal-ramp)
 - Motion seed:       Spring          # Spring | Silk | Snap | Float | Pulse
 - Type scale:        desktop (body 16-18px)   # mobile-tight | desktop-larger | app-chrome
 - Density:           comfortable

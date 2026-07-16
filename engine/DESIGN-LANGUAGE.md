@@ -704,13 +704,13 @@ that froze the reference demo's fingerprint into law and wrongly penalized legit
 ✗ Key color gradient background
 ✗ Using key color across 2+ sections simultaneously at large scale
 ```
-Key color is for **small elements only**: icon badges (10% opacity), progress fill, selected dots, active nav, badge pills.
-Card backgrounds are **always `bg-card` (white)** or `bg-surface-subtle`.
+Key color defaults to **small elements only**: icon badges (10% opacity), progress fill, selected dots, active nav, badge pills.
+Card backgrounds default to `bg-card` (white) or `bg-surface-subtle` — a locked brand-palette may assign a large-surface role deliberately (one role, locked, consistent).
 
 ### Pure Black 🔧 (default — locked oled-black/brutalist/swiss overrides for SURFACES)
 ```
 ✗ #000000 text on white (default — use the 900/950 neutral)
-✗ bg-black when nothing is locked
+✗ bg-black unless the lock declares oled-black elevation or a brutalist-lite/swiss preset
 ✓ #000 base legal under a locked oled-black dark language (Vercel/Linear-class, CL-5) or
   a locked brutalist/swiss black-and-white identity — text contrast floors ⛔ still apply
 ```
@@ -735,8 +735,9 @@ If existing pattern combinations cannot solve it, confirm with the user first.
 ✗ Card radius off the locked radius personality (default soft = rounded-2xl; sharp locks 6–8px)
 ✗ Placing floating buttons above bottom nav ⛔
 ```
-**Section separation is achieved through cards + spacing (space-y-6) only.**
-The difference between page background (#FAFAFA) and card background (#FFFFFF) serves as a natural divider.
+**Default: section separation = cards + spacing (space-y-6);** under a locked flat/borders/
+editorial language, whitespace-grid or hard borders do the same job (one language only ⛔).
+The difference between page background (#FAFAFA) and card background (#FFFFFF) serves as the default natural divider.
 Dividers (border-t) are used **only inside cards** to separate chart from stats.
 
 ### Selection UI 🔧 (mobile-app skin defaults)

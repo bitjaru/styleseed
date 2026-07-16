@@ -92,16 +92,20 @@ If your project has its own CLAUDE.md with project-specific context, don't repla
 
 ```markdown
 ## Golden Rules (NEVER break these)
- 1. All content inside cards — NEVER on bare page background
- 2. Single accent color (--brand) — everything else grayscale
- 3. No pure black (#000) — darkest text is defined by skin
- 4. Numbers 2:1 with units — 48px number + 24px unit, always
- 5. space-y-6 between sections · mx-6 for cards · px-6 for grids
+ 1. A deliberate separation language everywhere — cards+tone default; a locked
+    flat-borders/oled-black/editorial language may use whitespace/grid/borders
+ 2. Colors from the locked palette mode — default: single accent + grayscale
+ 3. No pure black (#000) by default — a locked oled-black/brutalist-lite/swiss
+    preset legalizes #000 surfaces
+ 4. Numbers 2:1 with units (default; locked uniform-numeric styles exempt)
+ 5. The locked density's rhythm (default comfortable: space-y-6 · mx-6 · px-6)
  6. Never repeat same section type consecutively
- 7. Card shadows ≤ 8% opacity
- 8. Touch targets ≥ 44×44px
+ 7. Elevation in ONE locked language (enum: layered-shadow | tonal-ramp |
+    flat-borders | oled-black); light default = layered ≤8%
+ 8. Touch targets ≥ 44×44px (pointer-first desktop 36–40px OK, keep focus rings)
  9. Semantic tokens only — NEVER hardcode hex in components
-10. After generating ANY page → run /ss-review to verify
+10. After generating ANY page → run the gate (/ss-score to ≥80, lock-relative);
+    it reads STYLESEED.md first — no lock = full default strictness
 ```
 
 ## Full Update (Check Conflicts First)

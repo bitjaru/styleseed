@@ -66,7 +66,10 @@ Look at the image and run the StyleSeed gate **perceptually** — and **judge ag
 read `STYLESEED.md` first, because what "reads AI-generated" depends on the locked look. Pill
 controls are the locked personality under `warm-dtc` (not a tell); hard borders are the style
 under `brutalist-lite`; a serif reading column is correct under `editorial`. The tells below are
-the *unlocked-default* signatures — the combination of generic choices nobody locked:
+the *unlocked-default* signatures — the combination of generic choices nobody locked.
+**If there is NO lock, judge at full default strictness** (pill+generic-sans IS a tell,
+serif-paper IS dated, borders-as-separation on light IS flat) and say so in the report —
+same fallback rule as `/ss-score` Step 0:
 
 ```
 □ Squint test    — blur your focus / imagine it at 50%. Does it still read "AI-generated"?

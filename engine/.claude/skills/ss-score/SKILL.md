@@ -30,10 +30,13 @@ Why: coherence means "one deliberate system", not "one house style." A textbook
 surface (serif body, paper tone) is *correct* under its lock — punishing it is a
 false positive that teaches users to distrust the gate.
 
-**If there is NO lock**, score against the defaults below at full strictness — an
-unlocked project drifting through random choices is exactly the failure the gate
-exists to catch. (And say so: "no `STYLESEED.md` found — scored against defaults;
-run Quick Setup to lock a look.")
+**If there is NO lock**, every [LOCK] deduction fires against these defaults — treat the
+project as if it locked: `Palette mode: single-accent` · `Elevation: layered-shadow` (light) /
+`tonal-ramp` (dark, judged by the surface's actual mode) · `Density: comfortable
+(space-y-6 · px-6 · p-6/p-8)` · `Radius: soft` · product surface (CC-9d fires). A
+lock-referencing trigger is NEVER unsatisfiable: no lock = the default value, full v2.10
+strictness. (And say so: "no `STYLESEED.md` found — scored against defaults; run Quick
+Setup to lock a look.")
 
 ## What to score
 
@@ -56,15 +59,18 @@ map to the design language. Total = 100.
 For each category, start at full marks and **subtract** for violations you find by
 reading the code. Be specific and evidence-based — cite the line.
 
-**Color discipline (16)** — deduct for: **[LOCK]** any `#000`/`text-black` **unless the lock
-declares a true-black/oled base or a brutalist/swiss preset** (−4 each, cap −8; pure-#000 *text
-on white* stays discouraged by default — the 900/950 neutral reads better); **[LOCK]** hues
-outside the locked palette used decoratively (−5) — the lock's `Palette mode` decides what's
-legal: `single-accent` (default — one accent + greys) · `brand-palette` (N named colors with
-assigned roles, Duolingo/M3-style — legal if each hue is IN the lock with a role) ·
-`categorical` (CD-1 category hues on rows/tags/labels — legal when they encode *category*,
-not decoration). What's ALWAYS deducted: colors that appear in **no** mode — random per-item
-hues no lock names; **emoji used as UI icons** (multi-color, breaks any palette) (−5); **a
+**Color discipline (16)** — deduct for: **[LOCK]** any `#000`/`text-black` (−4 each, cap −8) — a lock declaring `oled-black`
+elevation or `Preset: brutalist-lite`/`swiss` exempts #000 **surfaces/borders only**;
+`text-black` on white deducts under every lock (use the 900/950 neutral) and everything
+deducts when no lock exists; **[LOCK]** hues
+outside the effective palette mode used decoratively (−5) — the lock's `Palette mode` decides
+what's legal: `single-accent` (one accent + greys) · `brand-palette: [...]` (N named colors
+with assigned roles, Duolingo/M3-style — each hue must be listed IN the lock) · the
+`+categorical` flag (stackable on either mode: CD-1 category hues on rows/tags/labels,
+consistent mapping, ~6–8 cap). **No lock = `single-accent`. A mode counts only if the lock
+literally declares it** — "these hues encode category" is not a defense unless
+`+categorical` is in the lock file; **decorative hues** (gold stars, rainbow category dots,
+a different hue per card) outside the effective mode (−3, on top of the −5 when both apply); **emoji used as UI icons** (multi-color, breaks any palette) (−5); **a
 normal/OK/"보통" state shown in a *severity* color** instead of neutral grey (−4 — category
 coloring per CD-1/CL-2a is not a severity violation); **severity color on most/every row**
 (no hierarchy) (−4); hardcoded hex where a semantic token exists (−2 each, cap −6); status
@@ -81,9 +87,9 @@ stock/placeholder visual instead of *this* product (−3); the **escape hatch as
 (§CC-9c) — ghost 01/02/03 index numbers on every section, or identical uppercase-overline +
 big-number cards repeated with no variation (−2); **[LOCK] distinctive-but-dated** (§CC-9d) —
 full beige/paper page base, serif body text, dark-heavy blocks that read "brochure" not
-"2026 product" (−3) — fires on product/SaaS surfaces under the default lock; a locked
-`editorial`/reading surface legalizes serif body + a paper-toned canvas, and is instead
-gated on reading craft (measure 50–75ch, line-height ≥1.5, contrast). Cap −10.
+"2026 product" (−3) — fires on ANY surface when no lock declares an editorial/reading identity (no lock = fires,
+as v2.10); a locked `editorial`/reading surface legalizes serif body + a paper-toned canvas,
+and is instead gated on reading craft (measure 50–75ch, line-height ≥1.5, contrast). Cap −10.
 
 **Hierarchy & typography (16)** — deduct for: **[LOCK]** number/unit not ~2:1 (−4 — the
 Toss-signature default; a lock/preset that declares uniform numeric styling, e.g. technical
@@ -100,20 +106,23 @@ of the marketing 40–56px headline scale).
 grid (swiss/editorial/minimal), or hard borders (brutalist). Content floating with *no*
 deliberate separation is the violation, not the absence of cards specifically; a locked
 `editorial`/reading surface with a bare text column and a proper measure is correct. **[LOCK]**
-spacing off the locked density's rhythm (−3) — the locked `Density` position (ss-dial ramp:
-airy `space-y-10/p-8` · comfortable `space-y-6/p-6` · dense `space-y-4/p-4`) is the grid;
-`px-6`-literals only bind the default comfortable position; same section type repeated in a
+spacing off the effective density's rhythm (−3) — the locked `Density` position (ss-dial
+ramp: airy `space-y-10/p-8` · comfortable `space-y-6/p-6·p-8` · compact `space-y-4/p-4/gap-4`
+· dense `space-y-4/p-4/gap-3`) is the grid; **no lock = comfortable**, so unlocked `px-4`/
+`px-8`-as-gutter deviations deduct exactly as v2.10; ONE position per project — mixing ramp
+positions across screens is the violation even though each is individually legal; same section type repeated in a
 row (−4); mixed off-scale one-offs (7/13/19px values on any density) (−3).
 
-**Cards & elevation (10)** — deduct for: **[LOCK]** borders doing separation work that the
-locked elevation language assigns to tone+shadow (−4) — this fires ONLY when the lock's
-`Elevation` is the layered-shadow default. When the lock declares `flat`/`borders`
-(swiss · minimal-mono · brutalist-lite) or the DARK tonal ramp (technical, any dark mode),
-borders ARE the elevation language — don't deduct; instead check the border discipline is
-coherent (one weight everywhere, per §C0). **[LOCK]** shadows over the locked opacity cap
-(default ~8%; a preset may raise it — M3-style elevation is legal if locked) or drop
-shadows in dark mode (−4); **[LOCK]** no elevation separation in the locked language (−5)
-— tone-flat is a violation under `layered-shadow`, correct under `flat`.
+**Cards & elevation (10)** — the effective elevation language decides (lock enum:
+`layered-shadow` | `tonal-ramp` | `flat-borders` | `oled-black`; no lock → `layered-shadow`
+on light surfaces, `tonal-ramp` on dark — judge the surface's actual mode). Deduct for:
+**[LOCK]** borders doing the separation work under an effective `layered-shadow` language
+(−4 — fires on every unlocked light-mode surface, exactly as v2.10); under `flat-borders`/
+`oled-black`/`tonal-ramp`, borders ARE the language — don't deduct, but check ONE border
+weight everywhere (§C0); **[LOCK]** shadows over the effective cap (default ~8%, absolute
+ceiling 15% unless a lock explicitly raises it with a stated value) or drop shadows in dark
+mode (−4); **[LOCK]** no separation at all in the effective language (−5) — tone-flat is a
+violation under `layered-shadow`, correct under `flat-borders`.
 
 **States & a11y (18)** — deduct for: missing empty/loading/error state on a data
 surface (−5 each, cap −10 — a static mockup or marketing landing with NO data surface is
@@ -146,24 +155,26 @@ Clamp each category at 0. Sum to a total.
 ## Output format
 
 ```
-## Design Score: 70 / 100   (src/app/Dashboard.tsx)
+## Design Score: 67 / 100   (src/app/Dashboard.tsx)
+Lock: none found — scored against defaults (run Quick Setup to lock a look)
 
-████████████████░░░░░░  C-
+█████████████░░░░░░░  D+
 
-Color discipline      13/18   ▓▓▓░  #000 headings (l.12,40); orange+blue+green accents (l.28-34)
-Hierarchy & typography 15/18  ▓▓▓▓  number/unit 1:1 on hero (l.18)
-Layout & rhythm        11/14  ▓▓▓░  two identical KPI rows (l.22-31)
-Cards & elevation       8/12  ▓▓░░  1px borders doing separation (l.22)
+Color discipline      10/16   ▓▓░░  #000 headings (l.12,40); orange+blue+green accents (l.28-34)
+Hierarchy & typography 12/16  ▓▓▓░  number/unit 1:1 on hero (l.18)
+Layout & rhythm         9/12  ▓▓▓░  two identical KPI rows (l.22-31)
+Cards & elevation       6/10  ▓▓░░  1px borders doing separation on light, no lock (l.22)
 States & a11y          11/18  ▓▓░░  no empty/loading state; focus ring missing (l.55)
-Motion & interaction    6/8   ▓▓▓░  default fade, not a named seed
-Coherence               6/12  ▓▓░░  sharp cards (l.22) + pill buttons (l.48); 3 accent hues (§C0)
+Motion & interaction    4/6   ▓▓▓░  default fade, not a named seed
+Coherence               8/12  ▓▓░░  sharp cards (l.22) + pill buttons (l.48) (§C0)
+Distinctiveness         7/10  ▓▓▓░  icon-chip row repeated per feature (l.60-78)
 
 ### Fix first (highest score gain)
 1. Add empty + loading states to the orders list       → +7 states (§71)
 2. Unify radius (pick soft 8-12px) + collapse to one accent → +9 coherence+color (§C0, §2)
 3. Drop the 1px borders, use tone + ≤8% shadow         → +4 cards  (§7)
 
-Re-score after: ~92 / 100.
+Re-score after: ~88 / 100.
 ```
 
 Use letter bands: 90+ A · 80-89 B · 70-79 C · 60-69 D · <60 F.

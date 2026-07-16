@@ -408,6 +408,56 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* Field notes — the writing behind the rules */}
+        <section className="border-t border-neutral-200 bg-neutral-50">
+          <div className="mx-auto max-w-5xl px-6 py-14">
+            <div className="text-[11px] font-bold uppercase tracking-widest text-neutral-500">
+              Field notes
+            </div>
+            <h2 className="mt-2 text-[clamp(22px,3vw,28px)] font-bold tracking-tight text-neutral-900">
+              The thinking behind the rules
+            </h2>
+            <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+              {[
+                {
+                  href: "https://dev.to/kiwibreaksme/why-ai-generated-uis-look-off-and-the-one-principle-that-fixes-it-4j20",
+                  tag: "The principle",
+                  title: "Why AI-generated UIs look \u2018off\u2019 \u2014 and the one principle that fixes it",
+                  sub: "Coherence: one value per axis \u00b7 \ud55c\uad6d\uc5b4\ud310 3.5k+ reads",
+                },
+                {
+                  href: "https://dev.to/kiwibreaksme/i-catalogued-every-tell-that-makes-a-ui-look-ai-generated-my-own-tool-kept-failing-the-test-n52",
+                  tag: "The tells",
+                  title: "I catalogued every tell that makes a UI look AI-generated",
+                  sub: "The taxonomy \u2014 and my own tool failing the test",
+                },
+                {
+                  href: "https://dev.to/kiwibreaksme/aiga-mandeun-ui-boyeojugi-jeone-caejeomsikyeora-geiteureul-mandeulgo-nae-raendingbuteo-ddeoleojin-iyagi-ea7",
+                  tag: "The gate \u00b7 \ud55c\uad6d\uc5b4",
+                  title: "AI\uac00 \ub9cc\ub4e0 UI, \ubcf4\uc5ec\uc8fc\uae30 \uc804\uc5d0 \ucc44\uc810\uc2dc\ucf1c\ub77c",
+                  sub: "\ub8f0\ub9cc\uc73c\ub860 \ubd80\uc871\ud588\ub358 \uc774\uc720, 58\u219286 \ucc44\uc810\ud45c",
+                },
+              ].map((a) => (
+                <a
+                  key={a.href}
+                  href={a.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="group rounded-2xl bg-white p-5 shadow-sm transition-shadow hover:shadow-md"
+                >
+                  <div className="text-[11px] font-bold uppercase tracking-widest text-violet-600">
+                    {a.tag}
+                  </div>
+                  <h3 className="mt-2 text-[15px] font-bold leading-snug text-neutral-900 group-hover:underline">
+                    {a.title}
+                  </h3>
+                  <p className="mt-1.5 text-[13px] text-neutral-600">{a.sub}</p>
+                </a>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* CTA */}
         <WhatsNew />
 
@@ -484,6 +534,14 @@ export default function HomePage() {
             <Link href="/pricing" className="text-neutral-300 hover:text-white">
               Pricing demo
             </Link>
+            <a
+              href="https://dev.to/kiwibreaksme"
+              className="text-neutral-300 hover:text-white"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Field notes
+            </a>
             <a
               href="https://github.com/bitjaru/styleseed"
               className="text-neutral-300 hover:text-white"

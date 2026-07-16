@@ -593,6 +593,15 @@ Yes. The engine is brand-agnostic. Pick any skin, swap the brand color, ship.
 
 Full docs in the **[Wiki](../../wiki)** — design rules reference, composition recipes, chart guides, skills reference.
 
+## Field notes — the thinking behind the rules
+
+Longer-form writing on why AI-built UI looks the way it does (and what actually fixed it):
+
+- **[Why AI-Generated UIs Look 'Off' — and the One Principle That Fixes It](https://dev.to/kiwibreaksme/why-ai-generated-uis-look-off-and-the-one-principle-that-fixes-it-4j20)** — coherence, the "one value per axis" law, with copy-paste CSS. ([한국어판](https://dev.to/kiwibreaksme/aiga-mandeun-uiga-eodinga-eosaeghan-iyu-geurigo-geugeol-gocineun-han-gaji-weoncig-5e4p) — 3.5k+ reads)
+- **[I catalogued every tell that makes a UI look AI-generated. My own tool kept failing the test.](https://dev.to/kiwibreaksme/i-catalogued-every-tell-that-makes-a-ui-look-ai-generated-my-own-tool-kept-failing-the-test-n52)** — the tells taxonomy + the 58/100 self-own.
+- **[AI가 만든 UI, 보여주기 전에 채점시켜라](https://dev.to/kiwibreaksme/aiga-mandeun-ui-boyeojugi-jeone-caejeomsikyeora-geiteureul-mandeulgo-nae-raendingbuteo-ddeoleojin-iyagi-ea7)** *(KR)* — why rules alone failed and the enforced gate was the fix.
+- **[Your Vibe-Coded App Looks Ugly. Here's What I Did About It.](https://dev.to/kiwibreaksme/your-vibe-coded-app-looks-ugly-heres-what-i-did-about-it-2nb4)** — the origin story.
+
 ## Contributing
 
 StyleSeed is a **living judgment framework** — the rules aren't carved in stone. If you use it and

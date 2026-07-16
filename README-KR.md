@@ -389,6 +389,15 @@ awesome-design-md는 브랜드별 DESIGN.md를 줍니다 (what). StyleSeed는 �
 
 상세 문서는 **[Wiki](../../wiki)**에 있습니다 — 디자인 규칙, 페이지 구성 레시피, 차트 가이드 등.
 
+## 필드 노트 — 룰 뒤에 있는 생각들
+
+AI가 만든 UI가 왜 그렇게 생겼는지, 뭐가 실제로 고쳤는지에 대한 긴 글:
+
+- **[AI가 만든 UI가 어딘가 '어색한' 이유 — 그리고 그걸 고치는 한 가지 원칙](https://dev.to/kiwibreaksme/aiga-mandeun-uiga-eodinga-eosaeghan-iyu-geurigo-geugeol-gocineun-han-gaji-weoncig-5e4p)** — 정합성(coherence)과 "축마다 값 하나" 법칙, 복붙 CSS 포함 (3.5k+ 읽음)
+- **[개발자 친구도 못 알아들어서, 제일 쉽게 다시 씁니다 — 스타일시드가 하는 일](https://dev.to/kiwibreaksme/gaebalja-cingudo-mos-aladeuleoseo-jeil-swibge-dasi-sseubnida-seutailsideuga-haneun-il-36cg)** — 이 프로젝트가 뭐 하는 물건인지 3분 설명 (토스 CSS 실측 포함)
+- **[AI가 만든 UI, 보여주기 전에 채점시켜라 — 게이트를 만들고 내 랜딩부터 떨어진 이야기](https://dev.to/kiwibreaksme/aiga-mandeun-ui-boyeojugi-jeone-caejeomsikyeora-geiteureul-mandeulgo-nae-raendingbuteo-ddeoleojin-iyagi-ea7)** — 룰만으론 부족했던 이유와 강제 게이트, 58→86 채점표
+- **[디자이너 없이 바이브코딩으로 토스급 UI 만드는 법](https://dev.to/kiwibreaksme/dijaineo-eobsi-baibeukodingeuro-toseugeub-ui-mandeuneun-beob-5c0g)** — 시작이 된 글
+
 ## 기여하기
 
 StyleSeed는 **살아있는 판단 프레임워크**입니다 — 룰은 고정된 게 아니에요. 써보다가 "이렇게 하면 확실히 더 낫다"는 패턴을 찾으면, 룰로 제안해서 모두의 AI에게 가르치세요.

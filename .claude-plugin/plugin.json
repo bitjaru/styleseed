@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "styleseed",
   "displayName": "StyleSeed",
-  "version": "2.10.1",
+  "version": "2.11.0",
   "description": "A design-rules engine your AI coding agent reads before it builds UI — so it stops shipping generic, AI-looking screens. 74 rules, a scored quality gate that fixes the tells before you see them, presets, dials, and a visual verifier.",
   "author": {
     "name": "bitjaru",
@@ -24,5 +24,8 @@
     "cursor",
     "codex"
   ],
-  "skills": ["./skills/", "./engine/.claude/skills"]
+  "skills": [
+    "./skills/",
+    "./engine/.claude/skills"
+  ]
 }

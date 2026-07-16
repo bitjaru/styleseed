@@ -36,12 +36,12 @@ of this table.
 |---|---|---|
 | **Corner / radius** | One personality: **sharp 0–4px** · **soft 8–12px** · **pill 9999px**. Card, button, input, modal, image, avatar all obey it. | Sharp dialog + rounded buttons = "two products glued together." The #1 tell of un-designed UI. |
 | **Shadow** | One scale, one light source (**above-left**), one hue tint. A modal and a card use the *same* family, different tiers. | Mixed light directions / some-black-some-tinted = "scene with two suns." |
-| **Accent color** | **One** primary accent for interactive emphasis (+ semantic red/green/amber). One CTA color across the whole app. | Multiple accents → nothing reads as "the" action; hierarchy collapses. |
+| **Accent color** | Colors from the **locked palette mode**: one primary accent (default) — or a locked brand-palette (N hues with assigned roles) / categorical set (CD-1). One CTA color across the whole app either way. | Hues in no mode (random per-item colors) → nothing reads as "the" action; hierarchy collapses. |
 | **Spacing unit** | One base grid: **8px** (4px allowed as a half-step for icon↔label). Every margin/padding/gap is a multiple. | Off-grid values (7, 13, 19px) read as "sloppy" without users knowing why. |
 | **Icon style** | One family, one fill mode (all outline **or** all filled), one stroke weight (e.g. **2px @ 24px**). | Mixing Material + Feather + emoji, or 1.5px and 2px strokes, looks "out of place." |
 | **Type scale** | One modular scale, ≤2 font families, one weight ramp. | Arbitrary sizes destroy rhythm; >2 families looks amateur. |
 | **Motion / easing** | One duration set (~150/200/300ms) + one easing family; same enter/exit logic everywhere. | Some snappy, some sluggish = feels like different apps. |
-| **Border** | One hairline weight (**1px**) and one low-contrast neutral border token. | Mixed 1px/2px borders and random grays look unintentional. |
+| **Border** | One border weight system-wide — hairline **1px** default; a locked brutalist personality may set **2px** as *the* weight. | Mixed 1px/2px borders and random grays look unintentional (one locked weight ≠ mixing). |
 | **State layers** | One opacity ramp for hover/focus/pressed on *all* interactive elements. | Buttons darken, links underline, cards scale — feedback feels random. |
 | **Control height** | Buttons, inputs, selects share a height set (e.g. **40px** default). | A 44px input next to a 32px button breaks the baseline. |
 
@@ -247,11 +247,14 @@ face on *everything* + heavy ink blocks — stops reading "designed" and starts 
 pamphlet / insurance terms," especially in Korean (명조 전면 사용 = 신문/약관 느낌). The modern
 floor:
 - **Base stays fresh**: page background white or near-white; warm/tinted paper tones are a
-  *section* accent (one band, a card), never the whole canvas.
+  *section* accent (one band, a card), never the whole canvas — **except a locked
+  `editorial`/reading surface**, where a paper-toned canvas (FT-style) is a legitimate identity;
+  there, gate on reading craft instead (measure 50–75ch, line-height ≥1.5, contrast floors).
 - **Serif is seasoning, not the diet**: display serif on the hero headline or ONE key number —
   body, labels, UI chrome stay in a modern sans (Pretendard/Inter). Never serif body on a SaaS/
-  product surface. Prefer contemporary serifs (Fraunces, Newsreader; KR: 본명조 display cuts) over
-  dated ones.
+  product surface **by default — a locked reading/editorial surface (long-form content, Medium/
+  NYT-class) legalizes serif body**. Prefer contemporary serifs (Fraunces, Newsreader; KR: 본명조
+  display cuts) over dated ones.
 - **Keep the air**: distinctive treatments must preserve whitespace and lightness — density +
   dark blocks + serif compounds into "old", not "premium".
 - Quick self-check: *"would this pass as a 2026 product site, or does it look like a 2010s
@@ -287,6 +290,10 @@ warning amber, bad/blocked = error red — and the same score must always get th
 (3) Reserve color for the **minority** of items that actually need attention; if most rows
 are "fine," most rows are grey. (4) Pair the color with text/icon (CL-4) so it survives
 colorblindness and greyscale. *A screen where 80% of badges are colored has no hierarchy.*
+(5) **Severity color ≠ category color**: hues that encode *category* (calendar per listing,
+GitHub-style labels, Notion tags) follow **CD-1 categorical rules** (locked set, ~6–8 cap,
+consistent mapping) and are legal on many rows — the ban is on *severity* colors applied to
+non-severity states, not on categorical encoding.
 For the **soft chip background** behind a status label, use the skin's tint tokens —
 `bg-success-tint`, `bg-warning-tint`, `bg-destructive-tint`, `bg-info-tint` (a foreground
 of the matching `text-success`/`text-warning`/… ) — **don't hand-mix a one-off hex**; the
@@ -313,10 +320,13 @@ use the 900/950 neutral. *Why: pure grey looks lifeless and clashes with the acc
 bold) **≥3:1**, UI components & graphics **≥3:1**. AAA = 7:1 / 4.5:1. **Never convey
 info by color alone** — pair with text/icon/shape. ([WCAG 2.2], [WebAIM])
 
-**CL-5 · Dark mode is not an invert.** Base = **#121212** (not `#000`); raise elevation
+**CL-5 · Dark mode is not an invert.** Base = **#121212** default (Material); raise elevation
 with white overlays (~5% @1dp, 8% @2dp, 12% @8dp, 16% @24dp). **Desaturate accents
 ~25%** (Material: primary tone 40→80). Re-derive each role from the tonal palette.
-([Material Dark Theme], [Material 3 Color])
+**`oled-black` variant (lockable):** a true `#000` base with hairline borders carrying the
+elevation (Vercel/Linear-class) is a legitimate locked language — separation comes from
+borders + restrained surface steps instead of lightness overlays; text contrast floors and
+one-border-weight discipline still apply. ([Material Dark Theme], [Material 3 Color])
 
 ---
 

@@ -62,12 +62,16 @@ the component with realistic props, then screenshot that.
 
 ## Step 2 — Score what you SEE (the visual gate)
 
-Look at the image and run the StyleSeed gate **perceptually**. These are the checks that need
-eyes, not source:
+Look at the image and run the StyleSeed gate **perceptually** — and **judge against the lock**:
+read `STYLESEED.md` first, because what "reads AI-generated" depends on the locked look. Pill
+controls are the locked personality under `warm-dtc` (not a tell); hard borders are the style
+under `brutalist-lite`; a serif reading column is correct under `editorial`. The tells below are
+the *unlocked-default* signatures — the combination of generic choices nobody locked:
 
 ```
 □ Squint test    — blur your focus / imagine it at 50%. Does it still read "AI-generated"?
-                   (bland gradient, pill button + generic sans, icon-chip row, even flat grid) → FAIL
+                   (bland gradient, pill button + generic sans WITH no locked pill personality,
+                   icon-chip row, even flat grid) → FAIL
 □ Focal          — does ONE element actually dominate at a glance? If your eye lands nowhere,
                    or on an all-even grid, the focal point failed regardless of what code intended
 □ Balance        — dead whitespace (a lower third of empty), or cramped/colliding elements?

@@ -6,15 +6,23 @@ The engine provides layout rules, components, and skills. The skin provides colo
 ## Golden Rules (NEVER break these)
 
 ```
- 1. All content inside cards — NEVER on bare page background
- 2. Single accent color (--brand) — everything else grayscale
- 3. No pure black (#000) — darkest text is defined by skin (~#2A2A2A)
- 4. Numbers 2:1 with units — 48px number + 24px unit, always
+ 1. All content sits in a deliberate separation language — cards+tone by default; a locked
+    flat/borders or editorial preset may separate with whitespace/grid/hard borders instead.
+    Content floating with NO separation language is the violation
+ 2. Colors come from the locked palette — default: single accent (--brand) + grayscale.
+    A locked brand-palette (N colors with roles) or categorical mode (CD-1) is legal;
+    hues in NO mode (random per-item colors) never are
+ 3. No pure black (#000) by default — darkest text defined by skin (~#2A2A2A). A lock that
+    declares a true-black/oled base or brutalist/swiss preset legalizes #000 surfaces
+    (keep text contrast floors either way)
+ 4. Numbers 2:1 with units — 48px number + 24px unit (default; a lock declaring uniform
+    numeric style, e.g. technical mono tables, hierarchies by weight/color instead)
  5. One spatial rhythm on the 8px grid — mobile: space-y-6 · mx-6 · px-6; desktop: same
     principle via container + gap-6/gap-8 (don't mix off-grid one-offs)
  6. Never repeat same section type consecutively — create visual rhythm
- 7. Elevation, one language: LIGHT = layered shadows ≤ 8% opacity (if visible, too strong);
-    DARK = shadows don't read — tonal surface ramp (page < card < raised) + hairline borders
+ 7. Elevation, ONE language as locked: layered-shadow (light default, ≤8% opacity) |
+    tonal-ramp + hairline (dark default) | flat-borders (swiss/minimal/brutalist locks —
+    borders/whitespace do the separating; no soft shadows mixed in)
  8. Touch targets ≥ 44×44px on touch surfaces; pointer-first desktop controls may be 36–40px
     (keep visible focus rings either way)
  9. Semantic tokens only (text-brand, bg-card) — NEVER hardcode hex in components
@@ -58,6 +66,8 @@ design-lock file.** Before building any UI:
 - Surface:           desktop-web     # mobile-app | desktop-web (B2B) — decides the type scale
 - Mood:              soft · minimal · airy · calm   # edges · feel · density · tone
 - Skin:              toss            # or "custom" — NEVER the unlocked default indigo
+- Preset:            (none)          # swiss | editorial | technical | warm-dtc | minimal-mono | brutalist-lite — written by /ss-restyle; THE GATE READS THIS and re-keys its deductions to the preset's language
+- Palette mode:      single-accent   # single-accent (default) | brand-palette: [hex:role, ...] (Duolingo/M3-style N colors with roles) | +categorical (CD-1 category hues on rows/tags legal)
 - Key color (accent): #3182F6        # the ONLY accent — everything else greyscale
 - Font:              Pretendard       # display + body (e.g. "Fraunces / Inter") — chosen, not default
 - Radius personality: soft           # sharp | soft | pill — one SCALE everywhere (see mapping table)
@@ -145,8 +155,9 @@ demo was reviewed and fixed, not a first draft. **Never show the user UI that ha
 
 **The gate** (check every item — each is a common "AI-generated" tell):
 ```
-□ Coherence  — ONE accent (no 2nd/3rd hue, NO emoji icons, no gold/decorative color),
-               ONE radius personality, ONE shadow language, ONE icon set  (§C0)
+□ Coherence  — colors from the locked palette mode ONLY (single-accent default; locked
+               brand-palette/categorical legal; NO emoji icons, no unlocked decorative hues),
+               ONE radius personality, ONE elevation language, ONE icon set  (§C0)
 □ Distinctive — accent is a CHOSEN domain-fit color, NOT the unlocked default indigo
                (#5E6AD2/#4F46E5); layout is NOT the StyleSeed demo copied verbatim; the hero
                shows THIS product (not a stock chat card); the escape hatch isn't a new
@@ -163,13 +174,16 @@ demo was reviewed and fixed, not a first draft. **Never show the user UI that ha
 □ Color=meaning — normal/OK/"보통" rows are GREY; color marks only the minority that needs
                attention; no rainbow list; same value → same color  (§65, CL-2a)
 □ Hierarchy  — one clear primary per screen; numbers 2:1 with unit; sizes from the table
-□ Layout     — content in cards (not bare bg); 8px rhythm; gap-around-group > gap-inside
+□ Layout     — a deliberate separation language everywhere (cards+tone default; locked
+               flat/borders/editorial separates by whitespace/grid/borders); the locked
+               density's rhythm; gap-around-group > gap-inside
 □ States     — every data surface has empty + loading + error (not just the full state).
                Static mockup / marketing landing with no data surface → mark N/A, don't fail
 □ Copy       — buttons name the action ("Send $2,400" not "Submit"); errors help, not blame
 □ Polish     — visible focus rings; ≥44px touch / 36–40px pointer targets; prefers-reduced-
-               motion; elevation in ONE language (light: layered soft shadow · dark: tonal
-               surface ramp + hairline border — never a hard shadow); no pure #000
+               motion; elevation in ONE language AS LOCKED (layered-shadow | tonal-ramp |
+               flat-borders — mixing two is the fail, not the locked choice); no pure #000
+               unless the lock declares a true-black base
 □ Motion fits the surface — app/dashboard = calm (no scroll-jacking/scroll-linked/3D). A
                marketing/landing/brand page GETS the Cinematic tier (§43): scroll-LINKED reveals,
                pinned sections, subtle parallax, 3D hero, animated gradient/video bg, rich hover
@@ -180,7 +194,10 @@ demo was reviewed and fixed, not a first draft. **Never show the user UI that ha
 
 **How to gate:**
 1. If the `/ss-*` skills are installed → run **`/ss-score`** (0–100 + prioritized fix list).
-   Otherwise self-score against the checklist above.
+   Otherwise self-score against the checklist above. **Either way, score LOCK-RELATIVE:**
+   read `STYLESEED.md` first — deductions fire on violations of the locked look (preset,
+   palette mode, elevation, density), not on deviation from the default Toss-flavored skin.
+   No lock = full default strictness.
 2. **Target ≥ 80/100.** If anything fails, **fix the violations and re-check** — loop up to ~3×.
 3. **If you can render it, finish with `/ss-verify` (the VISUAL gate).** `/ss-score` reads the
    *code*; some of the worst "AI-made" tells only exist in *pixels* — a hero that doesn't

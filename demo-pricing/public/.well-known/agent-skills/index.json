@@ -90,7 +90,7 @@
       "type": "skill-md",
       "description": "Re-style a project to a named aesthetic — swiss, editorial, technical, warm-dtc, minimal-mono, brutalist-lite. A preset is a *coordinate* across the dial axes (radius + density + color + weight + motion) plus a font, accent family, and one signature move — applied coherently as a single identity, written to the lock, and re-gated. This is for mood words (\"more editorial\") that aren't one axis; for a single axis use /ss-dial.",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-restyle/SKILL.md",
-      "digest": "sha256:92124877b4830e3fc022e45b1755b27594ca2c4a12419bbf18f8a0deaa4eb95d"
+      "digest": "sha256:d6f57930315a4673ff473f31d60c36062e7f69f8e3725adcfe75a3e5815b2858"
     },
     {
       "name": "ss-review",
@@ -104,7 +104,7 @@
       "type": "skill-md",
       "description": "Score a UI file's design quality 0-100 against StyleSeed's design language — per-category breakdown, the worst offenders, and a prioritized fix list. A quantified version of /ss-review.",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-score/SKILL.md",
-      "digest": "sha256:943da33887903625774413cc1b752c5e6193938e5362d3c75bd2c451522a601a"
+      "digest": "sha256:eb2463172e20a4ac59976b22615981b22e667744abfb0a7eb0470f46c646caa8"
     },
     {
       "name": "ss-setup",
@@ -132,7 +132,7 @@
       "type": "skill-md",
       "description": "The VISUAL gate — render the UI, screenshot it, and score what you actually SEE, not what the code says. Catches the tells that only show up in pixels (dead whitespace, cramping, a hero that doesn't dominate, fonts that didn't load, real rendered color, the squint \"does this look AI-made\" test) — the things /ss-score can't read from source. Renders empty/loading/error states too, then fixes and re-renders until it passes. Use as the final gate on any screen you can render.",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-verify/SKILL.md",
-      "digest": "sha256:7493e38a733ca10ce285bdce70653a79b619ea78975cf5c627cb7cc008bf58c1"
+      "digest": "sha256:5fb30651a7c22fd57396e99b4c948726bbe3bc41d48c97d8b4f8cce096daa4f1"
     }
   ]
 }

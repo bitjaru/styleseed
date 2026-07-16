@@ -17,6 +17,24 @@ you can track UI quality like you track test coverage.
 - For a full prose audit with fixes → use `/ss-review`
 - For non-UI files (logic, config) — scoring is meaningless
 
+## Step 0 — Read the lock FIRST (the gate scores lock-relative)
+
+Before scoring, **read `STYLESEED.md`** in the project root. The lock's `Preset`,
+`Radius personality`, `Elevation`, `Density`, `Palette mode`, and `Surface` **re-key
+the deductions below** — a deduction fires when the code violates *the lock*, not when
+it deviates from the default Toss-flavored skin. Deductions marked **[LOCK]** are
+lock-relative; unmarked deductions are floors that apply everywhere.
+
+Why: coherence means "one deliberate system", not "one house style." A textbook
+`brutalist-lite` build (hard borders, true black/white) or an `editorial` reading
+surface (serif body, paper tone) is *correct* under its lock — punishing it is a
+false positive that teaches users to distrust the gate.
+
+**If there is NO lock**, score against the defaults below at full strictness — an
+unlocked project drifting through random choices is exactly the failure the gate
+exists to catch. (And say so: "no `STYLESEED.md` found — scored against defaults;
+run Quick Setup to lock a look.")
+
 ## What to score
 
 Score the file (or each file in a directory) on **six weighted categories** that
@@ -38,14 +56,21 @@ map to the design language. Total = 100.
 For each category, start at full marks and **subtract** for violations you find by
 reading the code. Be specific and evidence-based — cite the line.
 
-**Color discipline (16)** — deduct for: any `#000`/`text-black` (−4 each, cap −8);
-more than one accent hue used decoratively (−5); **emoji used as UI icons** (multi-color,
-breaks single accent) (−5); **a normal/OK/"보통" state shown in a status color** instead of
-neutral grey (−4); **status color on most/every row** (no severity hierarchy) (−4);
-**decorative hues** (gold stars, rainbow category dots) instead of accent/grey (−3);
-hardcoded hex where a semantic token exists (−2 each, cap −6); status conveyed by color
-alone (−4); **the unlocked default indigo (`#5E6AD2`/`#4F46E5`) used as the accent** instead of
-a chosen domain-fit color (−4).
+**Color discipline (16)** — deduct for: **[LOCK]** any `#000`/`text-black` **unless the lock
+declares a true-black/oled base or a brutalist/swiss preset** (−4 each, cap −8; pure-#000 *text
+on white* stays discouraged by default — the 900/950 neutral reads better); **[LOCK]** hues
+outside the locked palette used decoratively (−5) — the lock's `Palette mode` decides what's
+legal: `single-accent` (default — one accent + greys) · `brand-palette` (N named colors with
+assigned roles, Duolingo/M3-style — legal if each hue is IN the lock with a role) ·
+`categorical` (CD-1 category hues on rows/tags/labels — legal when they encode *category*,
+not decoration). What's ALWAYS deducted: colors that appear in **no** mode — random per-item
+hues no lock names; **emoji used as UI icons** (multi-color, breaks any palette) (−5); **a
+normal/OK/"보통" state shown in a *severity* color** instead of neutral grey (−4 — category
+coloring per CD-1/CL-2a is not a severity violation); **severity color on most/every row**
+(no hierarchy) (−4); hardcoded hex where a semantic token exists (−2 each, cap −6); status
+conveyed by color alone (−4); **the unlocked default indigo (`#5E6AD2`/`#4F46E5`) used as the
+accent** instead of a chosen domain-fit color (−4 — this one is never excused by a lock:
+locking the default indigo *is* the tell).
 
 **Distinctiveness (10)** — a coherent screen can still read "AI-generated." Deduct for: the
 **icon-chip cliché** — a generic Lucide line-icon in an identical pale-tinted rounded-square,
@@ -54,11 +79,15 @@ repeated for every feature/step (−4, §CC-9b); the **StyleSeed demo layout cop
 point** — an all-even grid of same-weight, centered, evenly-spaced cards (−3); the hero shows a
 stock/placeholder visual instead of *this* product (−3); the **escape hatch as a new uniform**
 (§CC-9c) — ghost 01/02/03 index numbers on every section, or identical uppercase-overline +
-big-number cards repeated with no variation (−2); **distinctive-but-dated** (§CC-9d) — full
-beige/paper page base, serif body text on a product surface, dark-heavy blocks that read
-"brochure" not "2026 product" (−3). Cap −10.
+big-number cards repeated with no variation (−2); **[LOCK] distinctive-but-dated** (§CC-9d) —
+full beige/paper page base, serif body text, dark-heavy blocks that read "brochure" not
+"2026 product" (−3) — fires on product/SaaS surfaces under the default lock; a locked
+`editorial`/reading surface legalizes serif body + a paper-toned canvas, and is instead
+gated on reading craft (measure 50–75ch, line-height ≥1.5, contrast). Cap −10.
 
-**Hierarchy & typography (16)** — deduct for: number/unit not ~2:1 (−4); font
+**Hierarchy & typography (16)** — deduct for: **[LOCK]** number/unit not ~2:1 (−4 — the
+Toss-signature default; a lock/preset that declares uniform numeric styling, e.g. technical
+mono tables, is exempt — check hierarchy comes from weight/color instead); font
 sizes off the Font Size table / `text-[var(--…)]` for size (−5); everything the
 same weight, no clear primary (−5); cramped or wrong line-height on body (−3);
 **body < 16px on a desktop/web B2B surface** (tight mobile scale on a wide screen) (−4 —
@@ -66,14 +95,25 @@ but dense-data chrome is exempt: chart ticks, mono SHAs/timestamps, table metada
 12–13px are correct; and dashboard app-chrome h1 at 22–24px is correct, not a violation
 of the marketing 40–56px headline scale).
 
-**Layout & rhythm (12)** — deduct for: content on bare background, not in cards
-(−6); `px-4`/`px-8`/`mx-4` instead of `px-6`/`mx-6` (−3); same section type
-repeated in a row (−4); no `space-y-6` rhythm (−3).
+**Layout & rhythm (12)** — deduct for: **[LOCK]** no separation language at all (−6) —
+"separation" is whatever the lock's `Elevation` declares: cards+tone (default), whitespace+
+grid (swiss/editorial/minimal), or hard borders (brutalist). Content floating with *no*
+deliberate separation is the violation, not the absence of cards specifically; a locked
+`editorial`/reading surface with a bare text column and a proper measure is correct. **[LOCK]**
+spacing off the locked density's rhythm (−3) — the locked `Density` position (ss-dial ramp:
+airy `space-y-10/p-8` · comfortable `space-y-6/p-6` · dense `space-y-4/p-4`) is the grid;
+`px-6`-literals only bind the default comfortable position; same section type repeated in a
+row (−4); mixed off-scale one-offs (7/13/19px values on any density) (−3).
 
-**Cards & elevation (10)** — deduct for: 1px borders doing separation work that
-tone+shadow should (−4, LIGHT mode only — in DARK mode hairline borders + a tonal surface
-ramp ARE the correct elevation language, don't deduct); shadows over ~8% opacity / visibly
-heavy, or drop shadows used in dark mode (−4); no card/background tone separation (−5).
+**Cards & elevation (10)** — deduct for: **[LOCK]** borders doing separation work that the
+locked elevation language assigns to tone+shadow (−4) — this fires ONLY when the lock's
+`Elevation` is the layered-shadow default. When the lock declares `flat`/`borders`
+(swiss · minimal-mono · brutalist-lite) or the DARK tonal ramp (technical, any dark mode),
+borders ARE the elevation language — don't deduct; instead check the border discipline is
+coherent (one weight everywhere, per §C0). **[LOCK]** shadows over the locked opacity cap
+(default ~8%; a preset may raise it — M3-style elevation is legal if locked) or drop
+shadows in dark mode (−4); **[LOCK]** no elevation separation in the locked language (−5)
+— tone-flat is a violation under `layered-shadow`, correct under `flat`.
 
 **States & a11y (18)** — deduct for: missing empty/loading/error state on a data
 surface (−5 each, cap −10 — a static mockup or marketing landing with NO data surface is

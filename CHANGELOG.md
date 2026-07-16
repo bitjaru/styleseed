@@ -3,6 +3,42 @@
 All notable changes to StyleSeed. Agents can check the latest version at
 [version.json](https://styleseed-demo.vercel.app/version.json) and run `/ss-update`.
 
+## [2.11.0] — 2026-07-16
+
+**Theme: the gate scores lock-relative — variation is no longer punished.** An internal
+adversarial audit (7 real design systems vs the rules) found the scorer was *lock-blind*:
+it graded every project against the default Toss-flavored skin, so a textbook `brutalist-lite`
+build could fail the very gate its own preset demanded, and legitimate systems (pure-black
+dev-dark, multi-color brand palettes, serif editorial) were structurally capped below 80.
+
+### Changed
+- **`/ss-score` now reads `STYLESEED.md` first (Step 0)** and re-keys deductions to the lock:
+  a deduction fires when code violates *the locked look*, not when it deviates from the house
+  default. No lock = full default strictness (unlocked drift is still the enemy).
+- **Palette discipline is now three lockable modes**: `single-accent` (default) ·
+  `brand-palette` (N colors with roles — Duolingo/M3-class) · `categorical` (CD-1 category
+  hues on rows/tags/labels). Deductions target hues in *no* mode; the default-indigo tell is
+  never excused.
+- **DESIGN-LANGUAGE §18 split into ⛔ floors vs 🔧 skin defaults.** px-6-only, rounded-2xl-only,
+  dropdown bans, shadow caps, 2:1-always and pure-black were demoted from "absolute" to
+  Toss-skin defaults a lock can override; a11y, dark patterns, and incoherence remain floors.
+- **Golden Rules 1/2/3/4/7 rephrased lock-relative** (separation language / locked palette /
+  #000 by default / numeric style / elevation language as locked).
+- `/ss-restyle` now writes `Preset:` into the lock — the handshake `/ss-score` reads back.
+- `/ss-verify` judges the screenshot against the locked personality (pill controls under
+  `warm-dtc` are the style, not a tell).
+
+### Added
+- **`oled-black` dark language** (CL-5, §45): true `#000` base + hairline-border elevation
+  (Vercel/Linear-class) as a lockable alternative to the tonal ramp.
+- **Editorial/reading surface legality** (CC-9d): a locked editorial surface may use serif body
+  and a paper-toned canvas — gated on reading craft (measure, line-height, contrast) instead.
+- **Category-color legality** (CL-2a): hues that encode *category* (labels, tags, calendars)
+  follow CD-1 and are legal on many rows; the severity-color ban is unchanged.
+- Lock template gains `Preset:` and `Palette mode:` fields (CLAUDE.md).
+- §51: a *locked* illustration identity (cartoon/hand-drawn/painterly) is legal when applied
+  consistently; unlocked style drift stays banned.
+
 ## [2.10.1] — 2026-07-14
 
 **Theme: first-class Codex discovery.** StyleSeed already shipped `AGENTS.md`, but the

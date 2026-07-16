@@ -34,10 +34,14 @@ presets = the mixed-personality tell we ban. Pick one; it *replaces* the look.
    as seasoning (one display moment, never body), keep the air. A preset that turns into a beige
    serif brochure has failed, not succeeded.
 4. **Rewrite the lock** — Skin/Mood/Accent/Font/Radius/Elevation/Motion/Type + a one-line
-   `Signature move`. This is now the source of truth for every later prompt.
-5. **Re-run the Quality Gate** (`/ss-score`, loop to ≥ 80). Report: preset applied, the coordinate,
-   the score. A restyle that scores < 80 is fixed before presenting — a named look is no excuse
-   for incoherence.
+   `Signature move`, **and set `Preset: <name>`** — this field is the handshake the gate reads:
+   `/ss-score` re-keys its deductions to the preset's language (v2.11), so brutalist borders or
+   an editorial serif body are scored as the locked style, not as violations of the default skin.
+   This is now the source of truth for every later prompt.
+5. **Re-run the Quality Gate** (`/ss-score`, loop to ≥ 80 — it scores lock-relative, so the
+   preset's own defining traits are legal). Report: preset applied, the coordinate, the score.
+   A restyle that scores < 80 is fixed before presenting — a named look is no excuse for
+   incoherence (mixed axes, missing states, contrast failures still fail under any preset).
 
 ---
 

@@ -5,6 +5,10 @@ registerShowcase({
   name: "Settings",
   blurb: "Account, billing, and notifications in a single sidebar layout — an Arc-style playful surface.",
   category: "settings",
+  grammar: "institutional-service",
+  adapter: "product-ui",
+  job: "Change consequential account preferences safely and understand what each action affects.",
+  signature: "Plain-language grouping, explicit state, and restrained confirmation reduce mistakes.",
   primarySkin: "arc",
   primarySeed: "spring",
   rationale: {

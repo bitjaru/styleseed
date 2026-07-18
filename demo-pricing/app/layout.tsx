@@ -52,7 +52,7 @@ export const metadata: Metadata = {
         url: "/og/styleseed-og.png",
         width: 1200,
         height: 630,
-        alt: "StyleSeed — Teach your AI design judgment, not just components. 74 design rules your AI reads automatically.",
+        alt: "StyleSeed — fixed AI design judgment, multiple output grammars, and reference-compiled rule sets.",
       },
     ],
   },
@@ -99,6 +99,7 @@ export default function RootLayout({
     "@graph": [
       {
         "@type": "SoftwareApplication",
+        "@id": `${SITE_URL}/#software`,
         name: SITE_NAME,
         description: SITE_DESC,
         url: SITE_URL,
@@ -109,16 +110,33 @@ export default function RootLayout({
         softwareVersion: "3.0.0",
         programmingLanguage: ["Markdown", "TypeScript", "React", "Python"],
         codeRepository: "https://github.com/bitjaru/styleseed",
+        publisher: { "@id": `${SITE_URL}/#organization` },
+        isPartOf: { "@id": `${SITE_URL}/#website` },
+        dateModified: "2026-07-18",
         keywords:
           "design method for AI, Claude Code, Cursor, Codex, output grammars, reference compiler, AI UI, carousel design, vibe coding, design judgment",
         sameAs: SAME_AS,
       },
       {
         "@type": "Organization",
+        "@id": `${SITE_URL}/#organization`,
         name: "StyleSeed",
         url: SITE_URL,
-        logo: `${SITE_URL}/og/styleseed-og.png`,
+        logo: `${SITE_URL}/favicon.ico`,
         sameAs: SAME_AS,
+      },
+      {
+        "@type": "WebSite",
+        "@id": `${SITE_URL}/#website`,
+        name: SITE_NAME,
+        url: SITE_URL,
+        description: SITE_DESC,
+        publisher: { "@id": `${SITE_URL}/#organization` },
+        inLanguage: "en",
+        hasPart: [
+          { "@id": `${SITE_URL}/showcase#page` },
+          { "@id": `${SITE_URL}/architecture#page` },
+        ],
       },
     ],
   };

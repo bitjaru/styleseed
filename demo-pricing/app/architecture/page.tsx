@@ -1,5 +1,44 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+
+const BASE = "https://styleseed-demo.vercel.app";
+const DESCRIPTION =
+  "How StyleSeed composes fixed AI design judgment, eight output grammars, five surface adapters, project references, and code plus pixel verification.";
+
+export const metadata: Metadata = {
+  title: "StyleSeed engine architecture — AI design grammar compiler",
+  description: DESCRIPTION,
+  keywords: [
+    "AI design engine architecture",
+    "design grammar compiler",
+    "reference to design system",
+    "vibe coding design method",
+    "StyleSeed architecture",
+  ],
+  alternates: { canonical: `${BASE}/architecture` },
+  openGraph: {
+    type: "article",
+    url: `${BASE}/architecture`,
+    title: "StyleSeed v3 engine architecture",
+    description: DESCRIPTION,
+    siteName: "StyleSeed",
+    images: [
+      {
+        url: `${BASE}/og/styleseed-og.png`,
+        width: 1200,
+        height: 630,
+        alt: "StyleSeed v3 design grammar engine architecture diagram",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "StyleSeed v3 engine architecture",
+    description: DESCRIPTION,
+    images: [`${BASE}/og/styleseed-og.png`],
+  },
+};
 
 const layers = [
   ["Core judgment", "Non-negotiable coherence, hierarchy, semantics, accessibility, and task fitness."],
@@ -11,8 +50,48 @@ const layers = [
 ];
 
 export default function ArchitecturePage() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "TechArticle",
+        "@id": `${BASE}/architecture#page`,
+        url: `${BASE}/architecture`,
+        headline: "StyleSeed v3 engine architecture",
+        description: DESCRIPTION,
+        image: `${BASE}/styleseed-architecture.svg`,
+        datePublished: "2026-07-18",
+        dateModified: "2026-07-18",
+        author: { "@type": "Organization", name: "StyleSeed", url: BASE },
+        isPartOf: { "@id": `${BASE}/#website` },
+        about: [
+          "AI design judgment",
+          "output grammars",
+          "surface adapters",
+          "reference compiler",
+        ],
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "StyleSeed", item: BASE },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Engine architecture",
+            item: `${BASE}/architecture`,
+          },
+        ],
+      },
+    ],
+  };
+
   return (
     <main className="min-h-screen bg-[#F7F7FB] text-neutral-900">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div className="mx-auto max-w-6xl px-6 py-12">
         <Link href="/" className="inline-flex items-center gap-1.5 text-[14px] font-semibold text-neutral-600 hover:text-neutral-950">
           <ArrowLeft size={14} /> Home

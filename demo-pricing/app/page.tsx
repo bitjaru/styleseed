@@ -9,6 +9,7 @@ import { Hero } from "./_home/hero";
 import { PromptBox } from "./_home/prompt-box";
 import { WhatsNew } from "./_home/whats-new";
 import { GithubIcon } from "./_home/github-icon";
+import { GithubStarCount } from "./_home/github-star-count";
 
 const HERO_SHOWCASE_IDS = ["finance", "food", "fitness", "music", "issues", "wallet"];
 
@@ -94,11 +95,11 @@ export default function HomePage() {
               href="https://github.com/bitjaru/styleseed"
               target="_blank"
               rel="noreferrer"
-              aria-label="Star StyleSeed on GitHub — 680+ stars"
+              aria-label="Star StyleSeed on GitHub"
               className="hidden items-center gap-1.5 rounded-md border border-neutral-200 bg-white px-2.5 py-1.5 text-[14px] font-bold text-neutral-700 transition-colors hover:border-neutral-900 sm:inline-flex"
             >
               Star on GitHub
-              <span className="font-semibold text-neutral-500">★ 680+</span>
+              <GithubStarCount className="font-semibold text-neutral-500" />
             </a>
             <Link
               href="/showcase"
@@ -508,7 +509,7 @@ export default function HomePage() {
               >
                 <GithubIcon size={15} />
                 Star on GitHub
-                <span className="font-semibold text-neutral-500">★ 680+</span>
+                <GithubStarCount className="font-semibold text-neutral-500" />
               </a>
             </div>
             <p className="mx-auto mt-5 max-w-md text-[15px] text-neutral-600">

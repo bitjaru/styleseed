@@ -1,5 +1,27 @@
 import type { SeedId } from "@engine/motion";
 
+export const OUTPUT_GRAMMARS = [
+  "consumer-service",
+  "operations-console",
+  "technical-instrument",
+  "editorial-reading",
+  "commerce-conversion",
+  "institutional-service",
+  "expressive-marketing",
+  "sequential-story",
+] as const;
+
+export const SURFACE_ADAPTERS = [
+  "product-ui",
+  "social-carousel",
+  "slide-deck",
+  "document-report",
+  "single-frame",
+] as const;
+
+export type OutputGrammar = (typeof OUTPUT_GRAMMARS)[number];
+export type SurfaceAdapter = (typeof SURFACE_ADAPTERS)[number];
+
 /**
  * A showcase entry is metadata only — server-safe. The actual render
  * function lives in app/showcase/_renderers/ so it can be looked up
@@ -13,6 +35,14 @@ export type ShowcaseEntry = {
   blurb: string;
   /** Primary intent: "dashboard" / "pricing" / "marketing" / ... */
   category: string;
+  /** Functional v3 grammar that owns hierarchy, density, and action logic. */
+  grammar: OutputGrammar;
+  /** Renderer/surface contract used by this artifact. */
+  adapter: SurfaceAdapter;
+  /** The user job this build is designed to support. */
+  job: string;
+  /** One identifying move that proves the grammar is more than a skin. */
+  signature: string;
   /** Default skin to render when the user lands on the entry. */
   primarySkin: string;
   /** Default motion seed to render with. */

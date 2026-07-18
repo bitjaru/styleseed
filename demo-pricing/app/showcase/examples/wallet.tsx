@@ -5,6 +5,10 @@ registerShowcase({
   name: "Mobile Wallet",
   blurb: "Account balance, transfers, and recent activity — a Toss-style consumer banking app.",
   category: "mobile",
+  grammar: "consumer-service",
+  adapter: "product-ui",
+  job: "Know the available balance and complete a trusted money action quickly.",
+  signature: "Personal financial state leads; transfer actions and recent activity remain calm and legible.",
   primarySkin: "toss",
   primarySeed: "spring",
   rationale: {

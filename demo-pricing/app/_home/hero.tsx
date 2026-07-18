@@ -6,6 +6,7 @@ import { ArrowRight, Sparkles } from "lucide-react";
 import { motion, type Variants } from "framer-motion";
 import { PromptBox } from "./prompt-box";
 import { GithubIcon } from "./github-icon";
+import { GithubStarCount } from "./github-star-count";
 
 const STATS = [
   { value: "74", label: "design rules" },
@@ -103,7 +104,7 @@ export function Hero() {
           >
             <GithubIcon size={15} />
             Star on GitHub
-            <span className="font-semibold text-neutral-500">★ 680+</span>
+            <GithubStarCount className="font-semibold text-neutral-500" />
           </a>
           <Link
             href="/architecture"

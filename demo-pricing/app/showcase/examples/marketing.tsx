@@ -5,6 +5,10 @@ registerShowcase({
   name: "Marketing Landing",
   blurb: "Hero, features, and CTA — a Vercel-style decisive marketing surface.",
   category: "marketing",
+  grammar: "expressive-marketing",
+  adapter: "product-ui",
+  job: "Understand the promise, trust the proof, and take one next step.",
+  signature: "A memorable first fold leads into concrete product proof instead of feature-card filler.",
   primarySkin: "vercel",
   primarySeed: "snap",
   rationale: {

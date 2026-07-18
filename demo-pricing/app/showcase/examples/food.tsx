@@ -5,6 +5,10 @@ registerShowcase({
   name: "Food Delivery",
   blurb: "Restaurant feed, cart, and live order tracking — a Baemin/DoorDash-style consumer app.",
   category: "mobile",
+  grammar: "commerce-conversion",
+  adapter: "product-ui",
+  job: "Choose food with confidence and move from browsing to an order.",
+  signature: "Imagery carries appetite while one persistent cart action carries conversion.",
   primarySkin: "arc",
   primarySeed: "spring",
   rationale: {

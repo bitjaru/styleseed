@@ -5,6 +5,10 @@ registerShowcase({
   name: "Finance Dashboard",
   blurb: "KPI strip, revenue trend, and recent transactions — a Toss-style daily view.",
   category: "dashboard",
+  grammar: "operations-console",
+  adapter: "product-ui",
+  job: "Scan business health, detect a change, and drill into recent activity.",
+  signature: "Dense KPIs lead into one decision chart and an auditable activity list.",
   primarySkin: "toss",
   primarySeed: "spring",
   rationale: {

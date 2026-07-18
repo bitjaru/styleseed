@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { GithubStarCount } from "../_home/github-star-count";
 
 const BASE = "https://styleseed-demo.vercel.app";
 
@@ -278,7 +279,7 @@ export default function Scorecard() {
               className="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 text-[14px] font-bold text-neutral-900 transition-colors hover:bg-neutral-200"
             >
               Star on GitHub
-              <span className="font-semibold text-neutral-500">★ 680+</span>
+              <GithubStarCount className="font-semibold text-neutral-500" />
             </a>
           </div>
           <p className="mt-6 text-[14px] text-neutral-400">

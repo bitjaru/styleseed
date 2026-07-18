@@ -5,6 +5,10 @@ registerShowcase({
   name: "Fitness Tracker",
   blurb: "Activity rings, workout history, and weekly goals — an Apple Fitness-style health app.",
   category: "mobile",
+  grammar: "consumer-service",
+  adapter: "product-ui",
+  job: "Understand today's progress and start the next healthy action quickly.",
+  signature: "One personal state dominates; history and goals support it without dashboard chrome.",
   primarySkin: "raycast",
   primarySeed: "pulse",
   rationale: {

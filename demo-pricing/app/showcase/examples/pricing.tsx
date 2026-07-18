@@ -5,6 +5,10 @@ registerShowcase({
   name: "Pricing",
   blurb: "Three-tier with billing toggle — a Stripe-style composed editorial surface (mirrors the existing /pricing route).",
   category: "marketing",
+  grammar: "commerce-conversion",
+  adapter: "product-ui",
+  job: "Compare plans, understand the tradeoff, and choose without hidden ambiguity.",
+  signature: "Plan differences and total commitment lead; one recommended path stays identifiable.",
   primarySkin: "stripe",
   primarySeed: "silk",
   rationale: {

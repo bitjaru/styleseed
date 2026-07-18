@@ -5,6 +5,10 @@ registerShowcase({
   name: "Issue Tracker",
   blurb: "Kanban board with filters and assignees — a Linear-style power-user view.",
   category: "workflow",
+  grammar: "technical-instrument",
+  adapter: "product-ui",
+  job: "Triage, assign, and move technical work with minimal interaction cost.",
+  signature: "Status, ownership, and identifiers stay visible at power-user density.",
   primarySkin: "linear",
   primarySeed: "snap",
   rationale: {

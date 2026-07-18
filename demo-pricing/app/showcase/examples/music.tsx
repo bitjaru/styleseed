@@ -5,6 +5,10 @@ registerShowcase({
   name: "Music Player",
   blurb: "Now-playing, queue, and library — a Spotify-style streaming app.",
   category: "mobile",
+  grammar: "consumer-service",
+  adapter: "product-ui",
+  job: "Recognize what is playing and control playback without interrupting listening.",
+  signature: "Media identity supplies the color; transport controls remain immediate and stable.",
   primarySkin: "notion",
   primarySeed: "silk",
   rationale: {

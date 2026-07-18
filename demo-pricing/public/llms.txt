@@ -75,6 +75,8 @@ skill owns Instagram canvas, safe zones, crop, PIL rendering, and export QA.
 
 - Full engine context: https://styleseed-demo.vercel.app/llms-full.txt
 - Architecture: https://styleseed-demo.vercel.app/architecture
+- Live grammar showcase: https://styleseed-demo.vercel.app/showcase
+- Machine-readable showcase catalog: https://styleseed-demo.vercel.app/showcase/catalog.json
 - Repository: https://github.com/bitjaru/styleseed
 - Live demo: https://styleseed-demo.vercel.app
 - Skill manifest: https://styleseed-demo.vercel.app/.well-known/agent-skills/index.json

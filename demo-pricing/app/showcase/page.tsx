@@ -1,104 +1,222 @@
+import type { Metadata } from "next";
 import Link from "next/link";
-import Image from "next/image";
-import "./examples"; // side-effect: registers every entry
-import { listShowcase } from "@/lib/showcase";
+import { ArrowRight, Check, FlaskConical } from "lucide-react";
+import "./examples";
+import {
+  OUTPUT_GRAMMARS,
+  SURFACE_ADAPTERS,
+  listShowcase,
+} from "@/lib/showcase";
 import { loadRegistry } from "@/lib/registry";
 import { seeds as motionSeeds } from "@engine/motion";
+import { ShowcaseBrowser } from "./showcase-browser";
 
-const OG = "https://styleseed-demo.vercel.app/og/showcase.png";
+const BASE = "https://styleseed-demo.vercel.app";
+const OG = `${BASE}/og/showcase.png`;
 const SHOW_DESC =
-  "Browse 11 finished UI pages — not static templates, but the design engine's output. Toggle brand skins and motion seeds live, then recreate any of them with one command.";
+  "Explore StyleSeed v3 through live, inspectable builds organized by output grammar, user job, surface adapter, skin, and motion. See why each AI-generated result was designed that way.";
 
-export const metadata = {
-  title: "StyleSeed Showcase — 11 reference builds × 7 skins × 5 motion seeds",
+export const metadata: Metadata = {
+  title: "AI design grammar showcase — live StyleSeed builds",
   description: SHOW_DESC,
-  alternates: { canonical: "https://styleseed-demo.vercel.app/showcase" },
+  keywords: [
+    "AI design examples",
+    "vibe coding showcase",
+    "design grammar examples",
+    "Claude Code UI examples",
+    "Codex UI design",
+    "AI design system gallery",
+    "StyleSeed showcase",
+  ],
+  alternates: { canonical: `${BASE}/showcase` },
   openGraph: {
     type: "website",
-    url: "https://styleseed-demo.vercel.app/showcase",
-    title: "StyleSeed Showcase — 11 reference builds, every brand, every motion",
+    url: `${BASE}/showcase`,
+    title: "StyleSeed v3 showcase — design grammar in working outputs",
     description: SHOW_DESC,
     siteName: "StyleSeed",
-    images: [{ url: OG, width: 1280, height: 640 }],
+    images: [{ url: OG, width: 1280, height: 640, alt: "StyleSeed output grammar showcase" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "StyleSeed Showcase — 11 reference builds, every brand, every motion",
+    title: "StyleSeed v3 design grammar showcase",
     description: SHOW_DESC,
     images: [OG],
   },
 };
 
+const ADAPTER_LABELS = {
+  "product-ui": "Product UI",
+  "social-carousel": "Social carousel",
+  "slide-deck": "Slide deck",
+  "document-report": "Document / report",
+  "single-frame": "Single frame",
+} as const;
+
 export default function ShowcasePage() {
   const entries = listShowcase();
   const skinCount = loadRegistry().skins.length;
   const seedCount = Object.keys(motionSeeds).length;
+  const liveGrammars = OUTPUT_GRAMMARS.filter((grammar) =>
+    entries.some((entry) => entry.grammar === grammar),
+  );
+  const liveAdapters = SURFACE_ADAPTERS.filter((adapter) =>
+    entries.some((entry) => entry.adapter === adapter),
+  );
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "CollectionPage",
+        "@id": `${BASE}/showcase#page`,
+        url: `${BASE}/showcase`,
+        name: "StyleSeed AI design grammar showcase",
+        description: SHOW_DESC,
+        isPartOf: { "@id": `${BASE}/#website` },
+        about: ["AI design judgment", "output grammars", "vibe coding", "design systems"],
+        mainEntity: { "@id": `${BASE}/showcase#builds` },
+      },
+      {
+        "@type": "ItemList",
+        "@id": `${BASE}/showcase#builds`,
+        numberOfItems: entries.length,
+        itemListElement: entries.map((entry, index) => ({
+          "@type": "ListItem",
+          position: index + 1,
+          url: `${BASE}/showcase/${entry.id}`,
+          name: `${entry.name} — ${entry.grammar}`,
+          description: entry.job,
+        })),
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "StyleSeed", item: BASE },
+          { "@type": "ListItem", position: 2, name: "Showcase", item: `${BASE}/showcase` },
+        ],
+      },
+    ],
+  };
 
   return (
-    <main className="min-h-screen bg-white text-gray-900">
-      <div className="mx-auto max-w-6xl px-6 py-12">
-        <header className="mb-12">
-          <Link href="/" className="text-sm text-gray-500 hover:text-gray-900">
+    <main className="min-h-screen bg-white text-neutral-950">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+
+      <section className="border-b border-neutral-200 bg-[radial-gradient(circle_at_top_left,rgba(124,58,237,0.09),transparent_36%),linear-gradient(to_bottom,#fff,#fafafa)]">
+        <div className="mx-auto max-w-6xl px-6 pb-14 pt-10">
+          <Link href="/" className="text-sm font-medium text-neutral-500 hover:text-neutral-950">
             ← StyleSeed home
           </Link>
-          <h1 className="mt-4 text-4xl font-bold tracking-tight">Showcase</h1>
-          <p className="mt-3 max-w-2xl text-lg text-gray-600">
-            {entries.length} finished pages, each toggleable across {skinCount} brand skins and{" "}
-            {seedCount} motion seeds — {entries.length * skinCount * seedCount} live variants in
-            total. Click any card to view the page, swap a skin, or pull the source.
-          </p>
-        </header>
-
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {entries.map((entry) => (
-            <Link
-              key={entry.id}
-              href={`/showcase/${entry.id}`}
-              className="group block overflow-hidden rounded-xl border border-gray-200 bg-white transition-shadow hover:shadow-lg"
-            >
-              <div className="relative aspect-[16/10] overflow-hidden bg-gray-100">
-                <Image
-                  src={`/showcase-hero/${entry.id}.png`}
-                  alt={`${entry.name} hero`}
-                  width={1440}
-                  height={900}
-                  className="h-full w-full object-cover object-top transition-transform group-hover:scale-[1.02]"
-                  priority={false}
-                />
-              </div>
-              <div className="border-t border-gray-200 p-5">
-                <div className="flex items-baseline justify-between">
-                  <h2 className="text-lg font-semibold group-hover:text-blue-600">
-                    {entry.name}
-                  </h2>
-                  <span className="text-[11px] uppercase tracking-wider text-gray-400">
-                    {entry.category}
-                  </span>
-                </div>
-                <p className="mt-2 line-clamp-2 text-sm text-gray-600">{entry.blurb}</p>
-                <div className="mt-4 flex items-center gap-3 text-[11px] text-gray-500">
-                  <span className="font-mono">skin · {entry.primarySkin}</span>
-                  <span className="font-mono">motion · {entry.primarySeed}</span>
-                </div>
-              </div>
-            </Link>
-          ))}
+          <div className="mt-10 grid gap-8 lg:grid-cols-[1fr_360px] lg:items-end">
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-violet-600">
+                StyleSeed v3 · evidence, not templates
+              </p>
+              <h1 className="mt-3 max-w-4xl text-[clamp(42px,7vw,72px)] font-bold leading-[0.98] tracking-[-0.045em]">
+                See how the method changes with the job.
+              </h1>
+              <p className="mt-5 max-w-2xl text-[17px] leading-relaxed text-neutral-600">
+                These are working outputs, not a component gallery. Each one exposes the user job,
+                output grammar, surface adapter, and signature decision behind the visual result.
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-200">
+              <Metric value={entries.length} label="live builds" />
+              <Metric value={`${liveGrammars.length}/${OUTPUT_GRAMMARS.length}`} label="grammars proven" />
+              <Metric value={`${liveAdapters.length}/${SURFACE_ADAPTERS.length}`} label="adapters proven" />
+              <Metric value={`${skinCount} × ${seedCount}`} label="skin / motion" />
+            </div>
+          </div>
         </div>
+      </section>
 
-        <footer className="mt-16 border-t border-gray-200 pt-6 text-sm text-gray-500">
-          <p>
-            Each entry can be recreated locally with{" "}
-            <code className="rounded bg-gray-100 px-1.5 py-0.5 font-mono">
-              /ss-page {`<id>`}
-            </code>{" "}
-            or by reading{" "}
-            <code className="rounded bg-gray-100 px-1.5 py-0.5 font-mono">
-              app/showcase/examples/{`<id>`}.tsx
-            </code>
-            .
-          </p>
-        </footer>
+      <div className="mx-auto max-w-6xl px-6 py-14">
+        <ShowcaseBrowser entries={entries} grammars={OUTPUT_GRAMMARS} />
+
+        <section className="mt-20 border-t border-neutral-200 pt-12" aria-labelledby="adapter-coverage">
+          <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr]">
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-neutral-400">
+                Honest coverage
+              </p>
+              <h2 id="adapter-coverage" className="mt-2 text-3xl font-bold tracking-tight">
+                Five surface contracts. One has live public proof today.
+              </h2>
+              <p className="mt-3 text-[15px] leading-relaxed text-neutral-600">
+                StyleSeed v3 supports non-web artifacts at the engine level. The public showcase
+                marks them as engine-ready until a validated export is shipped—no fake examples.
+              </p>
+              <Link
+                href="/architecture"
+                className="mt-5 inline-flex items-center gap-1.5 text-sm font-bold text-violet-700 hover:underline"
+              >
+                Read the adapter architecture <ArrowRight size={14} />
+              </Link>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {SURFACE_ADAPTERS.map((adapter) => {
+                const isLive = liveAdapters.includes(adapter);
+                return (
+                  <div key={adapter} className="rounded-2xl border border-neutral-200 bg-neutral-50 p-5">
+                    <div className="flex items-center justify-between gap-3">
+                      <h3 className="font-bold text-neutral-950">{ADAPTER_LABELS[adapter]}</h3>
+                      <span
+                        className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-[10px] font-bold uppercase tracking-[0.1em] ${
+                          isLive
+                            ? "bg-emerald-100 text-emerald-800"
+                            : "bg-amber-100 text-amber-800"
+                        }`}
+                      >
+                        {isLive ? <Check size={11} /> : <FlaskConical size={11} />}
+                        {isLive ? "Live proof" : "Engine ready"}
+                      </span>
+                    </div>
+                    <p className="mt-2 text-[12px] leading-relaxed text-neutral-600">
+                      {adapter === "product-ui"
+                        ? `${entries.length} inspectable web and mobile product builds.`
+                        : "Grammar and verification contract shipped; validated public artifact next."}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        <section className="mt-16 rounded-3xl bg-neutral-950 px-6 py-10 text-white sm:px-10">
+          <div className="grid gap-6 sm:grid-cols-[1fr_auto] sm:items-center">
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-violet-300">
+                Your reference is not here?
+              </p>
+              <h2 className="mt-2 text-3xl font-bold tracking-tight">Compile it into a rule set.</h2>
+              <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-neutral-300">
+                <code className="text-violet-200">$ss-reference</code> analyzes screenshots, URLs,
+                Figma exports, or existing UI into an evidence-backed project grammar—without
+                cloning the source screen.
+              </p>
+            </div>
+            <Link
+              href="/architecture"
+              className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-white px-5 py-3 text-sm font-bold text-neutral-950 hover:bg-neutral-200"
+            >
+              See how it compiles <ArrowRight size={14} />
+            </Link>
+          </div>
+        </section>
       </div>
     </main>
+  );
+}
+
+function Metric({ value, label }: { value: string | number; label: string }) {
+  return (
+    <div className="bg-white p-5">
+      <div className="text-2xl font-bold tracking-tight text-neutral-950">{value}</div>
+      <div className="mt-1 text-[10px] font-bold uppercase tracking-[0.12em] text-neutral-400">
+        {label}
+      </div>
+    </div>
   );
 }

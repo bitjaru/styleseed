@@ -4,6 +4,7 @@ dist/
 *.local
 .env
 .env.*
+.lazyweb/
 
 # Promo & blog (local only)
 showcase/PROMO*.md

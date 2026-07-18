@@ -1,10 +1,12 @@
 {
-  "version": "2.11.1",
-  "released": "2026-07-16",
+  "version": "3.0.0",
+  "released": "2026-07-18",
   "rules": 74,
-  "skills": 19,
+  "skills": 20,
   "skins": 7,
-  "whatsNew": "The gate now scores lock-relative: /ss-score reads STYLESEED.md first and re-keys deductions to your locked look (preset/palette mode/elevation enum/density). New legal languages: oled-black dark, editorial reading surfaces, brand-palette & categorical colors. No lock = full default strictness.",
+  "grammars": 8,
+  "adapters": 5,
+  "whatsNew": "StyleSeed v3 fixes the design method, not one Toss-like look: 8 job-specific output grammars, 5 surface adapters for UI and non-web artifacts, and /ss-reference to compile screenshots, URLs, Figma, or existing UI into evidence-backed project rule sets. The build loop now requires both code score and rendered pixel verification.",
   "update": "Claude Code: /ss-update. Codex: $ss-update. Or run: npx skills add bitjaru/styleseed",
   "changelog": "https://github.com/bitjaru/styleseed/releases",
   "repo": "https://github.com/bitjaru/styleseed"

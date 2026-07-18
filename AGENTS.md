@@ -1,14 +1,17 @@
 # StyleSeed repository guide
 
-StyleSeed is a design-rules engine for coding agents. Keep the rules, skills,
-components, skins, and generated demo artifacts in sync.
+StyleSeed is an AI design-method engine for coding agents. It combines fixed judgment,
+job-specific output grammars, surface adapters, and project-local reference grammars. Keep the
+rules, skills, components, skins, and generated demo artifacts in sync.
 
 ## Before changing the engine
 
 - Read `engine/AGENTS.md` for the cross-agent design rules.
 - Read the relevant nested guide before editing its subtree. In particular,
   `demo-pricing/AGENTS.md` applies to the Next.js demo.
-- Treat `engine/.claude/skills/` as the canonical source for all 19 StyleSeed
+- Read `engine/PRODUCT-PRINCIPLES.md`, `engine/RULESETS.md`, `engine/ADAPTERS.md`, and
+  `engine/ARCHITECTURE.md` before changing product behavior.
+- Treat `engine/.claude/skills/` as the canonical source for all 20 StyleSeed
   skills. `.agents/skills` is a repository-scoped Codex symlink to that same
   directory; never create a second copy of a skill there.
 - Claude Code invokes a skill as `/ss-setup`, `/ss-build`, and so on. Codex
@@ -23,7 +26,7 @@ copies as the source of truth.
 
 ## Verification
 
-- Documentation-only or skill-only changes: run `git diff --check`.
+- Every engine change: run `node scripts/validate-engine.mjs` and `git diff --check`.
 - Engine, skin, component, registry, or demo changes: run `npm run build` from
   `demo-pricing/`, then run `git diff --check` from the repository root.
 - The demo build fetches Google Fonts and may require network access.

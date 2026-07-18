@@ -7,6 +7,11 @@ allowed-tools: Read, Grep, Glob, Bash
 
 # Design Lint (Quick Check)
 
+Read `PRODUCT-PRINCIPLES.md`, the selected output grammar, `ADAPTERS.md`, and `STYLESEED.md`
+before classifying a match. Lint detects deterministic drift; it must not flag an exact
+grammar/profile/adapter contract as a violation or let an arbitrary lock value create an
+exception.
+
 ## When NOT to use
 
 - For deeper review of design judgment (composition, hierarchy, rhythm) → use `/ss-review`
@@ -27,7 +32,7 @@ Search for hex colors in className strings that should be semantic tokens:
 ```bash
 grep -n '#[0-9a-fA-F]\{3,8\}' [file] | grep -v 'theme.css\|tokens\|\.json'
 ```
-**Violation:** `text-[#3C3C3C]`, `bg-[#721FE5]`
+**Violation:** `text-[#3C3C3C]`, `bg-[#3182F6]`
 **Fix:** `text-text-primary`, `bg-brand`
 
 ### 2. Raw Pixel Values in Tailwind
@@ -51,14 +56,12 @@ grep -n ' ml-\| mr-\| pl-\| pr-' [file]
 **Violation:** `ml-2`, `mr-4`
 **Fix:** `ms-2`, `me-4`
 
-### 5. Forbidden Colors
+### 5. Uncontracted Hard Black
 ```bash
 grep -n 'text-black\|bg-black\|#000000\|#000"' [file]
 ```
-**Violation:** Any pure black — UNLESS `STYLESEED.md` declares `Elevation: oled-black` or
-`Preset: brutalist-lite`/`swiss` (then #000 surfaces/borders are the locked style; only
-`text-black` on white still flags). Check the lock before flagging.
-**Fix:** Use skin's text-primary token (or lock the style if intentional)
+**Violation:** Pure black without an exact structural role in the selected grammar/profile
+**Fix:** Use the semantic ink token, or cite the maintained contract that requires hard black
 
 ### 6. Missing data-slot
 ```bash

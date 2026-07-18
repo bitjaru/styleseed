@@ -7,6 +7,11 @@ allowed-tools: Read, Grep, Glob
 
 # UI Design Review
 
+First resolve the effective rule set from `PRODUCT-PRINCIPLES.md`, `RULESETS.md` or the compiled
+grammar, `ADAPTERS.md`, domain/page, optional `PRESETS.md` profile, and `STYLESEED.md`. Review
+task fitness and grammar coherence before framework conventions. For non-web artifacts, replace
+React/Tailwind-only checks with the active adapter's render/export checks.
+
 ## When NOT to use
 
 - For accessibility-only issues → use `/ss-a11y`
@@ -75,7 +80,8 @@ Review the file: **$ARGUMENTS**
 > parts. Check that each axis below uses ONE value system-wide; flag a mix as a real
 > issue, not a nitpick.
 - [ ] **One radius personality** — sharp (0-4px) OR soft (8-12px) OR pill, applied to every card/button/input/modal. No mixing (e.g. a `rounded-none` panel with `rounded-full` buttons).
-- [ ] **Colors from the locked palette mode** (read `STYLESEED.md` first) — default: one accent for interactive emphasis (+ semantic red/green/amber only), not two+ competing accents; a locked `brand-palette`/`+categorical` mode is legal, hues in no mode are not. No lock = single-accent at full strictness.
+- [ ] **One identifiable primary action** plus only the selected grammar's stable semantic,
+      categorical, or brand roles — no competing decorative emphasis hues.
 - [ ] **No emoji as UI icons** (🚗🧺⭐ as list/nav/status/category markers) — they inject many uncontrolled hues; use one line-icon set in `currentColor`.
 - [ ] **Status color = severity, not decoration** — a normal/OK/"보통" state is neutral grey (not colored); color marks only the minority of rows that need attention; same value → same color.
 - [ ] **No decorative hues** — favorite stars, category dots, avatars use the accent or grey, not a new color each.

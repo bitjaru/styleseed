@@ -1,36 +1,582 @@
 # StyleSeed — Full Context
 
-Source: github.com/bitjaru/styleseed (CLAUDE.md + DESIGN-LANGUAGE.md + VISUAL-CRAFT.md + UX-WRITING.md)
-Generated: 2026-07-16T07:02:02.156Z
+Source: github.com/bitjaru/styleseed (constitution + grammars + adapters + compiler + craft)
+Generated: 2026-07-18T12:15:54.261Z
+
+---
+
+# StyleSeed Product Constitution
+
+StyleSeed is an **AI design-method engine**. Its primary job is to make a coding agent
+reason like a strong UI/UX designer and apply that reasoning consistently. Components,
+skins, scores, and screenshots support that job; they do not define it.
+
+## The fixed method, not one fixed look
+
+StyleSeed enforces a stable way of judging design. It does **not** force every product to
+look like Toss, a SaaS dashboard, or the StyleSeed demo. A trustworthy consumer-finance
+home, an observability console, an editorial story, and a product-detail page solve
+different jobs and therefore need different design grammars.
+
+The effective rule set is composed:
+
+```text
+Core judgment
+  × one output grammar from RULESETS.md (built-in or reference-compiled)
+  × one surface adapter from ADAPTERS.md
+  × one domain playbook from APP-PLAYBOOKS.md
+  × one page type from PAGE-TYPES.md
+  × optional aesthetic profile from PRESETS.md
+  × bounded project tokens from STYLESEED.md
+= the rules for this screen
+```
+
+## Authority order
+
+When instructions disagree, use this order:
+
+1. **Core invariants** below.
+2. **Output grammar** — the functional visual language selected in `RULESETS.md`, or a
+   project-local grammar compiled by `REFERENCE-COMPILER.md`.
+3. **Surface adapter** — the renderer contract and physical constraints in `ADAPTERS.md`.
+4. **Domain playbook** and **page/artifact type**.
+5. **Aesthetic profile** — an optional coordinated restyle from `PRESETS.md`.
+6. **Design lock** — records selections and bounded project parameters.
+7. **Skins and components** — implementation material, not sources of judgment.
+8. **Score and visual verification** — evidence that the method was applied.
+
+`STYLESEED.md` is persistence, not permission. An arbitrary value in the lock never turns
+a violation into a sound design decision. Unknown values fall back to the nearest maintained
+grammar and the core defaults.
+
+## Core invariants
+
+These apply to every grammar, profile, domain, page, skin, and agent:
+
+- One deliberate visual system per product: radius, spacing, elevation, icon language,
+  typography, color roles, imagery, and motion agree.
+- One focal point per screen and a clear information hierarchy.
+- Color communicates role or meaning. One primary action remains identifiable even when
+  semantic, categorical, or product colors are present.
+- Semantic tokens replace component-level hardcoded colors.
+- Spacing follows a repeatable scale; proximity communicates grouping.
+- Typography fits the surface and task, with readable measure, contrast, and hierarchy.
+- Data surfaces include useful loading, empty, and error states.
+- Controls remain operable: visible focus, sufficient targets, labels, reduced-motion
+  support, and no dark patterns.
+- Motion fits the surface and never delays comprehension or action.
+- Distinctiveness comes from the product, its content, and its selected grammar — not a
+  copied demo, generic indigo, repeated icon chips, emoji chrome, or template uniformity.
+
+## What the lock may select
+
+The lock may select only inputs the engine understands:
+
+- domain, surface adapter, page/artifact type, and one output grammar;
+- one optional aesthetic profile and one skin or semantic token set;
+- primary action/accent, type pairing, density, radius, elevation, imagery, and motion values
+  inside the selected grammar's allowed ranges;
+- one product-specific signature move that still obeys the invariants;
+- a project-local reference grammar with provenance and confidence recorded by the compiler.
+
+The lock may not invent a palette mode, waive accessibility, legalize mixed systems, or
+override a core invariant. A reusable built-in grammar requires research, examples, and
+regression evaluation. A reference-derived grammar stays project-local until it meets that bar.
+
+## The product loop
+
+```text
+understand the job → choose or compile a grammar → lock bounded decisions
+→ build with judgment → score the implementation → visually verify rendered output
+→ present the result and evidence
+```
+
+The build method is the product. Scoring and verification are auxiliary gates: they find
+drift, but they never choose or rewrite the design philosophy after the fact.
+
+
+---
+
+# StyleSeed Engine Architecture
+
+StyleSeed converts product intent and visual evidence into an enforceable design method for
+coding agents. The architecture separates **fixed judgment**, **task-specific grammar**, and
+**project-specific choices** so consistency does not collapse into one universal aesthetic.
+
+![StyleSeed engine architecture](../assets/styleseed-architecture.svg)
+
+## System flow
+
+```mermaid
+flowchart LR
+  A[Product brief<br/>domain · surface · page] --> B{Grammar source}
+  R[User references<br/>images · URLs · existing UI] --> C[Reference compiler]
+  C --> D[Project-local grammar<br/>evidence · confidence · tokens · checks]
+  B --> E[Built-in output grammar]
+  D --> F[Rule composer]
+  E --> F
+  P[Core judgment<br/>non-negotiable] --> F
+  S[Surface adapter<br/>canvas · renderer · export] --> F
+  X[Domain + page type] --> F
+  Y[Optional style profile] --> F
+  L[STYLESEED.md<br/>bounded selections] --> F
+  F --> G[Agent build method]
+  G --> H[Code gate<br/>ss-score]
+  H -->|fix loop| G
+  H --> I[Pixel gate<br/>ss-verify]
+  I -->|fix + re-render| G
+  I --> J[Designed output<br/>score + visual evidence]
+```
+
+## Layers and authority
+
+| Layer | Responsibility | May change | May not change |
+|---|---|---|---|
+| Product constitution | Stable design judgment | maintained invariants | per-project aesthetics |
+| Output grammar | Organize attention and action for an output class | bounded twelve-axis contract | accessibility or core coherence |
+| Surface adapter | Translate method into an artifact/render contract | canvas, safe zones, export, surface QA | visual authority or product judgment |
+| Reference compiler | Derive a local grammar from evidence | local rules with confidence | global built-ins or protected assets |
+| Domain + page playbooks | Contextual composition bias | content/order/detail decisions | grammar identity |
+| Aesthetic profile | Coordinated look adjustment | radius, density, tone, motion within bounds | task structure |
+| Design lock | Persist selected values | known enums and project tokens | invent exceptions or waive rules |
+| Build skills | Apply the composed method | implementation | self-certify without evidence |
+| Score + verify | Detect code and pixel drift | fixes needed to comply | redefine the chosen method |
+
+## Grammar sources
+
+### Built-in
+
+Maintained in `RULESETS.md`. Built-ins require independent evidence, counterexamples, rendered
+samples, and regression coverage. They are selected by output job: consumer service,
+operations console, technical instrument, editorial reading, commerce conversion,
+institutional service, or expressive marketing.
+
+### Reference-compiled
+
+`/ss-reference` runs `REFERENCE-COMPILER.md`. It ingests user references, fills the same
+twelve-axis schema, cites evidence and confidence, and writes a project-local grammar under
+`.styleseed/rulesets/`. A transfer screen proves that the result is a reusable language rather
+than a clone of one source screen.
+
+## Runtime composition
+
+The rule composer resolves conflicts by authority, then hands one effective rule set to the
+agent:
+
+```text
+effectiveRules = constrain(
+  coreJudgment,
+  outputGrammar,
+  surfaceAdapter,
+  domainPlaybook,
+  pageType,
+  optionalStyleProfile,
+  boundedDesignLock
+)
+```
+
+The design lock stores selections; it is not executable policy. A value outside the grammar's
+range is rejected or replaced by the nearest safe fallback.
+
+## Non-web outputs
+
+`ADAPTERS.md` lets the same method drive product UI, social carousels, slide decks, documents,
+and single-frame graphics. The companion renderer owns physical production constraints. For
+example, StyleSeed supplies the `sequential-story` grammar and brand system while the Claude
+`carousel-build` skill owns Instagram canvas, safe zones, crop, PIL rendering, and export QA.
+
+## Verification model
+
+StyleSeed uses two auxiliary gates because source correctness and rendered quality fail in
+different ways:
+
+- `ss-score` reads implementation evidence: tokens, hierarchy, states, semantics, coherence,
+  and characteristic grammar tells.
+- `ss-verify` renders the result and checks pixels: actual focal dominance, type loading,
+  balance, optical rhythm, responsive behavior, and state rendering.
+
+Both gates return to the build loop. Neither gate is the design engine; the composed method is.
+
+## Extension boundary
+
+- Add a new built-in grammar only after the promotion rule in `RULESETS.md` passes.
+- Use `/ss-reference` for project-specific or emerging languages.
+- Add a new aesthetic profile only when it is a full coordinated axis contract, not a mood word.
+- Keep components and skins downstream. They implement a decision; they do not decide.
+
+
+---
+
+# StyleSeed Output Grammars
+
+An output grammar is a maintained contract for **how a class of product should organize
+attention, information, action, and feedback**. It is selected by the job of the result,
+not by whichever brand the user mentions first.
+
+Toss is evidence for one grammar, not the universal StyleSeed look. Stripe, Shopify, Sentry,
+the Financial Times, and other products are likewise evidence — never templates to copy.
+
+Choose exactly one built-in grammar, or compile a project-local one with `/ss-reference`.
+Every grammar inherits `PRODUCT-PRINCIPLES.md`.
+
+## Selection guide
+
+| Grammar | Use for | Reference families | Defining priority |
+|---|---|---|---|
+| `consumer-service` | fintech, health, benefits, personal productivity, mobile home | Toss, Wise, Chime, Credit Karma | reassurance + next useful action |
+| `operations-console` | B2B SaaS, admin, analytics, workflow tools | Stripe, Shopify, Polar, Mixpanel | scan + compare + act |
+| `technical-instrument` | observability, infrastructure, security, developer tools | Sentry, Better Stack, LogRocket | live state + diagnosis |
+| `editorial-reading` | journalism, reports, research, documentation detail | FT, Boston Globe, USWDS content | comprehension + reading rhythm |
+| `commerce-conversion` | product detail, booking, cart, checkout, marketplace | Amazon, Shopify commerce patterns | evaluate + trust + commit |
+| `institutional-service` | government, regulated forms, healthcare workflows | GOV.UK, USWDS, public-service systems | certainty + accessibility + completion |
+| `expressive-marketing` | launches, campaigns, brand and product landing pages | premium product/brand sites | proposition + proof + momentum |
+| `sequential-story` | social carousels, visual explainers, slide narratives | editorial carousel and deck systems | hook + progression + retention |
+
+## Required grammar contract
+
+Every built-in or compiled grammar defines these twelve axes:
+
+1. user job and primary decision;
+2. attention model and focal point;
+3. information architecture and composition;
+4. density and spacing rhythm;
+5. typography roles and measure;
+6. color roles and semantic exceptions;
+7. surface, radius, border, and elevation language;
+8. imagery/data-visualization role;
+9. navigation and action hierarchy;
+10. state, feedback, and motion behavior;
+11. responsive transformation;
+12. characteristic tells to require and anti-patterns to reject.
+
+### `consumer-service`
+
+- **Job:** understand personal state without anxiety and take one useful next action.
+- **Attention:** one dominant balance, status, benefit, or briefing; secondary services recede.
+- **Composition:** short contextual heading → dominant summary → small set of next actions →
+  progressive detail. Mobile-first, thumb-reachable, explicit bottom navigation where needed.
+- **Density/type:** comfortable to airy; friendly sans; large plain-language numbers; short copy.
+- **Color/surface:** calm neutral base, one brand action color, semantic colors only for real
+  status. Soft grouped surfaces are common but a card is used only when it groups a decision.
+- **Feedback:** immediate, reassuring, reversible; money and health values do not animate
+  theatrically.
+- **Reject:** every service as equal card, promotional clutter above state, rainbow categories,
+  cute language in serious moments, or copying Toss component-for-component.
+
+### `operations-console`
+
+- **Job:** scan system or business state, compare changes, find exceptions, act efficiently.
+- **Attention:** one operational focal panel; supporting KPIs form hierarchy rather than a
+  uniform card wall.
+- **Composition:** persistent navigation → scope/time controls → focal trend or queue →
+  comparable metrics → actionable table/list. Detail lives below or on demand.
+- **Density/type:** comfortable to compact; neutral grotesk; tabular numerals; labels may be
+  small but body and decisions remain readable on desktop.
+- **Color/surface:** restrained brand accent; categorical colors only for stable, repeated data
+  semantics. Tone, alignment, and grouping carry more hierarchy than decoration.
+- **Feedback:** filters and mutations respond instantly; loading preserves layout; bulk action
+  consequences are explicit.
+- **Reject:** same-weight KPI tiles everywhere, decorative gradients, mobile-tight type on a
+  1440px canvas, or charts without a decision they support.
+
+### `technical-instrument`
+
+- **Job:** observe live state, isolate anomalies, and diagnose a system.
+- **Attention:** current incident, trace, monitor, or performance state dominates.
+- **Composition:** stable navigation and scope → live status/timeline → dense evidence table or
+  trace → drill-down. Group by diagnostic relationship, not visual symmetry.
+- **Density/type:** compact to dense; sans for UI, mono only for identifiers, timestamps, code,
+  and aligned numeric evidence.
+- **Color/surface:** neutral light or dark tonal ramp; one signal accent; status colors are
+  semantic and sparse. Dark mode uses tonal levels and hairlines, not floating shadows.
+- **Feedback:** near-instant, non-blocking, time-aware; paused/live state is unmistakable.
+- **Reject:** decorative terminal cosplay, neon rainbow telemetry, excessive mono body copy,
+  or animation that competes with changing data.
+
+### `editorial-reading`
+
+- **Job:** understand, retain, and navigate a narrative or argument.
+- **Attention:** title/deck/byline or the opening visual establishes the reading promise.
+- **Composition:** strong title rhythm → bounded reading column → meaningful media/pull quote →
+  related context after the narrative. Chrome recedes.
+- **Density/type:** airy around the story; 45–90 characters per line, normally near 60–70;
+  comfortable body size/leading; serif is optional and role-specific, never an automatic theme.
+- **Color/surface:** ink and paper-like neutrals may be used without faking print; one quiet
+  accent for links and editorial signals. Whitespace and type replace gratuitous cards.
+- **Feedback:** reading position, save, share, and footnotes are calm and unobtrusive.
+- **Reject:** forcing all content into cards, app-dashboard chrome around prose, overly wide
+  measures, serif everywhere, or interaction patterns that interrupt reading.
+
+### `commerce-conversion`
+
+- **Job:** evaluate an offer, resolve uncertainty, select a variant, and commit.
+- **Attention:** product/service evidence leads; price, availability, primary CTA, and trust
+  information remain easy to connect.
+- **Composition:** media → identity/price/proof → variants → primary action → delivery/returns →
+  details and comparison. On mobile, keep the commitment action reachable without hiding terms.
+- **Density/type:** comfortable; product information is highly scannable; images are evidence,
+  not decorative filler.
+- **Color/surface:** brand color supports the purchase action; ratings, discounts, stock, and
+  errors use stable semantics rather than a promotional rainbow.
+- **Feedback:** variant and cart changes are immediate and reversible; costs and constraints
+  appear before commitment.
+- **Reject:** urgency dark patterns, buried shipping/returns, competing CTAs, tiny variant
+  targets, or a lifestyle mood that obscures the actual product.
+
+### `institutional-service`
+
+- **Job:** understand eligibility or obligation, provide accurate information, and complete a
+  consequential task with confidence.
+- **Attention:** task title, current step, and required action dominate over branding.
+- **Composition:** plain-language intro → prerequisites → one step at a time → review → clear
+  confirmation and recovery path.
+- **Density/type:** comfortable, highly legible, robust at zoom; labels and help stay adjacent
+  to controls; long content uses bounded measure.
+- **Color/surface:** conservative semantic palette with high contrast; errors never rely on
+  color alone; decorative color is rare.
+- **Feedback:** preserve entered data, explain errors, expose progress, and provide reference
+  numbers/next steps after completion.
+- **Reject:** novelty over comprehension, ambiguous icons, low-contrast minimalism, hidden
+  requirements, or motion that makes a serious workflow feel unstable.
+
+### `expressive-marketing`
+
+- **Job:** understand the proposition, believe the proof, and choose a next step.
+- **Attention:** one unmistakable promise paired with real product or brand evidence.
+- **Composition:** proposition → proof → differentiated mechanism → examples/outcomes → CTA.
+  Section forms vary to create rhythm; repetition is deliberate, not template filler.
+- **Density/type:** airy with confident display hierarchy; body copy remains readable.
+- **Color/surface:** wider brand palette and expressive media are allowed when roles remain
+  coherent and one action is primary.
+- **Feedback:** cinematic motion may support sequence, but first read and CTA work without it;
+  reduced motion yields a complete page.
+- **Reject:** generic gradient headline, equal three-card feature rows, fake metrics, copied
+  demo visuals, scroll-jacking, or motion used as a substitute for a proposition.
+
+### `sequential-story`
+
+- **Job:** make one idea understandable and worth continuing across a bounded visual sequence.
+- **Attention:** slide/frame one earns the next gesture; each following frame has one dominant
+  message and a visible place in the sequence.
+- **Composition:** hook → context/why → evidence or mechanism → useful action → reframe/close.
+  Alternate big type, evidence, image, and utility frames so the sequence has rhythm.
+- **Density/type:** designed for the adapter's viewing distance and dwell time; one message per
+  frame; body copy is bounded and never shrunk to rescue an overloaded slide.
+- **Color/surface:** project grammar and brand tokens carry across all frames; emphasis roles
+  remain stable. Continuity comes from a system, not identical templates.
+- **Imagery:** crops, captions, and sources are intentional; generated-image text/logos are
+  replaced during deterministic rendering.
+- **Feedback/navigation:** folio, progress, swipe cue, and CTA fit the publishing surface without
+  occupying its unsafe UI zones.
+- **Reject:** ten identical cards, a weak explanatory cover, one composition repeated on every
+  frame, content that works only as a caption, missing source attribution, or platform crop loss.
+
+## Promotion rule
+
+A project-local grammar becomes built-in only after multiple independent reference sets,
+counterexamples, a rendered sample on at least two page types, and regression checks show
+that it is distinct, transferable, and does not waive the core invariants.
+
+
+---
+
+# StyleSeed Surface Adapters
+
+StyleSeed's method is renderer-independent. A surface adapter translates the composed design
+rules into the physical constraints and verification workflow of a concrete output.
+
+```text
+StyleSeed decides: judgment · grammar · hierarchy · visual language · bounded tokens
+Adapter decides: canvas · safe zones · renderer · asset rules · export · surface-specific QA
+```
+
+## Adapter contract
+
+Every adapter declares:
+
+- `id`, artifact type, renderer or companion skill;
+- canvas/viewport, responsive or crop variants, safe zones, and reading distance;
+- supported primitives and asset/font constraints;
+- how StyleSeed semantic tokens are injected;
+- artifact-specific states or sequence rules;
+- render/export command and output manifest;
+- pixel verification procedure and accessibility/export checks.
+
+The active adapter is recorded in `STYLESEED.md`. Adapter constraints may narrow a grammar;
+they cannot override core judgment.
+
+## Built-in adapter profiles
+
+| Adapter | Outputs | Typical renderer/companion |
+|---|---|---|
+| `product-ui` | web apps, mobile apps, dashboards, forms | project framework, browser renderer |
+| `social-carousel` | Instagram carousels, visual explainers | `carousel-build` skill / PIL pipeline |
+| `slide-deck` | presentations, pitches, teaching decks | presentation skill or native slide renderer |
+| `document-report` | PDF, DOCX, long-form reports | document/PDF renderer |
+| `single-frame` | posters, covers, social cards, thumbnails | image/SVG/canvas renderer |
+
+## `social-carousel` integration
+
+Use `sequential-story` unless another grammar clearly owns the content. The installed Claude
+`carousel-build` skill is the canonical companion when available:
+
+1. StyleSeed reads or compiles the grammar and writes brand/type/motion/content rules to
+   `STYLESEED.md`.
+2. `carousel-build` reads that lock, then applies deterministic engineering constraints:
+   3:4 `1080×1440`, platform safe zones, crop behavior, 8px rhythm, type scale, gradient
+   banding prevention, available font weights, and reproducible PIL rendering.
+3. Copy and publishing skills may add their own contracts without altering visual authority.
+4. `/ss-score` checks sequence coherence and grammar fit; `/ss-verify` opens every exported
+   frame and checks crop, safe zone, typography, rhythm, false text, and continuity.
+
+Recommended lock additions:
+
+```markdown
+- Surface adapter: social-carousel
+- Artifact type: information-carousel
+- Canvas: 1080x1440
+- Sequence grammar: hook → why → evidence → action → reframe → CTA
+- Renderer: carousel-build
+- Safe zone contract: adapter:ADAPTERS.md#social-carousel-integration
+```
+
+Do not duplicate the renderer's rapidly changing platform measurements inside a visual grammar.
+The adapter/companion owns them; StyleSeed owns the visual judgment applied within them.
+
+## Adding adapters
+
+Add an adapter when the same StyleSeed method can be expressed through a new deterministic
+renderer. Test at least one built-in and one reference-compiled grammar on the surface, document
+failure modes, and prove the exported artifact can be visually inspected.
+
+
+---
+
+# StyleSeed Aesthetic Profiles
+
+Profiles are optional coordinated **aesthetic coordinates** used by `/ss-restyle`. They are
+not output grammars and never replace the functional rules in `RULESETS.md`.
+
+For example, `editorial-reading × minimal-mono` and `operations-console × minimal-mono` share
+restraint but still organize content differently. Choose at most one profile; `none` is valid.
+
+| Profile | Coordinate | Signature | Do not use as permission for |
+|---|---|---|---|
+| `swiss` | sharp · structured · compact · restrained · snap | asymmetric grid and typographic alignment | illegible tiny type or ornament-free sameness |
+| `editorial` | soft/sharp · airy · warm-muted · silk | one display-type moment | serif body on every product surface |
+| `technical` | sharp · dense · cool · still | mono evidence and tonal layers | decorative terminal cosplay |
+| `warm-dtc` | soft/pill · airy · warm-vivid · spring | tactile product/image moment | competing warm colors or pill-everything |
+| `minimal-mono` | sharp/soft · airy · near-monochrome · snap/silk | one precise typographic gesture | missing hierarchy or invisible controls |
+| `brutalist-lite` | sharp · comfortable · high-contrast · snap | one hard structural move | broken states, mixed border weights, or inaccessible contrast |
+
+Each profile must apply coherently across radius, density, typography, palette temperature,
+elevation, motion, composition, and one signature move. A real locked brand color or required
+font survives the profile when compatible; the output grammar and core invariants always win.
+
+
+---
+
+# Reference-to-Rule-Set Compiler
+
+StyleSeed can turn user-supplied screenshots, URLs, Figma exports, moodboards, or an existing
+product into a **project-local output grammar**. The goal is not visual cloning. The goal is
+to recover the repeatable design decisions behind the references and make an agent apply them
+consistently to new screens.
+
+## Inputs
+
+- Prefer 3–8 references that represent the same intended product language.
+- Accept a single reference, but mark every inferred axis low confidence.
+- Record source, date, surface adapter, canvas/viewport, and what the user wants to preserve.
+- Separate product UI from marketing, editorial, and brand imagery before synthesis.
+
+## Compiler pipeline
+
+1. **Ingest** — capture/render each reference; do not infer from a brand name alone.
+2. **Observe** — describe visible facts without aesthetic labels. For sequential artifacts,
+   observe both frame-level composition and sequence-level progression.
+3. **Measure** — estimate spacing units, type ratios, measure, radii, control heights,
+   surface levels, palette roles, contrast, layout proportions, and density.
+4. **Classify** — identify user job, page type, attention model, navigation, action hierarchy,
+   states, responsive behavior, imagery/data role, and motion evidence.
+5. **Cluster** — retain repeated decisions; label single-reference choices as hypotheses.
+6. **Resolve conflicts** — prefer the user's stated goal, repeated evidence, accessibility,
+   and task fitness in that order. Never average incompatible systems into a muddy hybrid.
+7. **Abstract** — express transferable rules and tokens, not copied component coordinates.
+8. **Compile** — write the artifacts below and select the nearest built-in fallback grammar.
+9. **Validate** — build at least one screen not shown in the references; score and visually
+   verify it. A grammar that only recreates the source screen has failed abstraction.
+
+## Twelve-axis output
+
+The compiler must fill the same twelve-axis contract as `RULESETS.md`: user job, attention,
+composition, density, typography, color, surfaces, imagery/data, navigation/action, states and
+motion, responsive transformation, and characteristic tells/anti-patterns.
+
+For each axis record:
+
+```text
+Decision · evidence IDs · confidence (high/medium/low) · allowed range · counterexample
+```
+
+## Generated project artifacts
+
+Write these under `.styleseed/rulesets/<slug>/`:
+
+- `RULESET.md` — human-readable twelve-axis contract and source provenance;
+- `tokens.json` — semantic values/ranges, never component-specific copied hex alone;
+- `evidence.json` — source IDs, observations, confidence, and unresolved questions;
+- `checks.md` — required tells, forbidden tells, and visual regression scenarios;
+- `reference-board.html` — visual evidence beside each extracted claim when images are usable.
+- `adapter.json` — selected `ADAPTERS.md` contract plus artifact-specific overrides.
+
+Then update `STYLESEED.md`:
+
+```markdown
+- Output grammar: reference:<slug>
+- Grammar path: .styleseed/rulesets/<slug>/RULESET.md
+- Grammar fallback: <nearest built-in grammar>
+- Reference confidence: <high|medium|low>
+```
+
+## Safety and quality boundaries
+
+- Never claim exact measurements that cannot be observed; use ranges and confidence.
+- Do not copy logos, proprietary illustrations, text, or trademarked component arrangements.
+- Do not derive identity from one fashionable detail. Require repeated evidence for a rule.
+- Accessibility and platform conventions override a reference defect.
+- A reference grammar may vary bounded axes; it may not waive the core invariants.
+- Keep project-local grammars local by default. Promotion into StyleSeed is a maintainer action.
+
 
 ---
 
 # StyleSeed — Design Engine
 
-A brand-agnostic design engine that makes AI produce professional-quality UI.
-The engine provides layout rules, components, and skills. The skin provides colors and fonts.
+A design-method engine that makes AI reason like a strong UI/UX designer. StyleSeed fixes the
+judgment process, not one aesthetic: a consumer-finance home, operations console, editorial
+story, and commerce detail page use different output grammars. Skins provide materials; they
+never define the method.
+
+**Read `PRODUCT-PRINCIPLES.md` first.** Resolve every screen as core judgment × one output
+grammar (`RULESETS.md` or a project-local grammar compiled with `/ss-reference`) × domain ×
+page type × optional aesthetic profile (`PRESETS.md`) × bounded `STYLESEED.md` values.
 
 ## Golden Rules (NEVER break these)
 
 ```
- 1. All content sits in a deliberate separation language — cards+tone by default; a locked
-    flat/borders or editorial preset may separate with whitespace/grid/hard borders instead.
-    Content floating with NO separation language is the violation
- 2. Colors come from the locked palette — default: single accent (--brand) + grayscale.
-    A locked brand-palette (N colors with roles) or categorical mode (CD-1) is legal;
-    hues in NO mode (random per-item colors) never are
- 3. No pure black (#000) by default — darkest text defined by skin (~#2A2A2A). A lock that
-    declares a true-black/oled base or brutalist/swiss preset legalizes #000 surfaces
-    (keep text contrast floors either way)
- 4. Numbers 2:1 with units — 48px number + 24px unit (default). A lock/preset that declares
-    uniform numeric styling (e.g. technical mono tables) is exempt, but must then carry
-    hierarchy with weight/color
+ 1. Use the selected output grammar's grouping model — cards, whitespace, rules, or tonal
+    surfaces are tools, not a universal answer
+ 2. Color has stable roles and one identifiable primary action; extra hues require semantic,
+    categorical, or brand meaning defined by the grammar
+ 3. No accidental pure black (#000); structural hard black is allowed only when an exact
+    maintained grammar/profile contract calls for it
+ 4. Numbers 2:1 with units — 48px number + 24px unit, always
  5. One spatial rhythm on the 8px grid — mobile: space-y-6 · mx-6 · px-6; desktop: same
     principle via container + gap-6/gap-8 (don't mix off-grid one-offs)
  6. Never repeat same section type consecutively — create visual rhythm
- 7. Elevation, ONE language as locked: layered-shadow (light default, ≤8% opacity) |
-    tonal-ramp + hairline (dark default) | flat-borders (swiss/minimal/brutalist locks —
-    borders/whitespace do the separating; no soft shadows mixed in)
+ 7. Elevation, one language: LIGHT = layered shadows ≤ 8% opacity (if visible, too strong);
+    DARK = shadows don't read — tonal surface ramp (page < card < raised) + hairline borders
  8. Touch targets ≥ 44×44px on touch surfaces; pointer-first desktop controls may be 36–40px
     (keep visible focus rings either way)
  9. Semantic tokens only (text-brand, bg-card) — NEVER hardcode hex in components
@@ -46,6 +592,17 @@ The engine provides layout rules, components, and skills. The skin provides colo
 Reference this guide when Claude Code sets up a new project or implements UI.
 
 > **When to read which file:**
+> - **PRODUCT-PRINCIPLES.md**: Product constitution, authority order, fixed method vs variable
+>   look. Read first.
+> - **RULESETS.md**: Functional output grammars selected by the result's job. Read before domain
+>   and page rules. Toss is one reference family, not the default for every result.
+> - **ADAPTERS.md**: Surface/renderer contracts for product UI, carousels, decks, documents,
+>   reports, and single-frame graphics.
+> - **REFERENCE-COMPILER.md**: How `/ss-reference` turns user-supplied visual references into a
+>   project-local evidence-backed grammar.
+> - **PRESETS.md**: Optional aesthetic profiles for `/ss-restyle`; never a substitute for the
+>   output grammar.
+> - **ARCHITECTURE.md**: Engine flow, authority layers, grammar sources, and verification model.
 > - **This file (CLAUDE.md)**: Tokens, component API, imports, forbidden patterns — reference while coding
 > - **DESIGN-LANGUAGE.md**: Visual design rules, page layout, composition recipes — read **before** building a new page. Start with the Table of Contents, then rules 14, 18, 19, 61-63.
 > - **METHODOLOGY.md**: UI/UX reasoning patterns (progressive disclosure, info density, atomic design, skeleton/empty/microinteraction, contextual onboarding, Linear/Toss aesthetic, color discipline, motion vibe vocabulary) — read **before scaffolding a new dashboard** or when wondering *why* the rules in DESIGN-LANGUAGE.md exist. Chapter 8 (Motion Vibe Vocabulary) is the entry point for the `engine/motion/` seed system.
@@ -60,9 +617,9 @@ The #1 cause of "the design looks random / colors went in anywhere / it's differ
 time" is that design decisions live only in chat memory, so they drift. **Fix: a project
 design-lock file.** Before building any UI:
 
-1. **Look for `STYLESEED.md` in the project root.** If it exists, it is the **source of
-   truth** — obey it on *every* prompt. Never introduce a second accent, a different radius
-   personality, or an off-lock color. If a request conflicts with the lock, say so and ask.
+1. **Look for `STYLESEED.md` in the project root.** If it exists, it is the source of truth for
+   valid bounded selections — obey it on every prompt, but never let it override the constitution,
+   grammar, or adapter. If a request conflicts with the composed rules, explain the conflict.
 2. **If it doesn't exist, run Quick Setup (below) and WRITE it** before scaffolding. Use this
    template (fill from the user's choices):
 
@@ -72,14 +629,18 @@ design-lock file.** Before building any UI:
      must obey it. Change a value here to change it project-wide. -->
 - App domain:        fintech
 - Surface:           desktop-web     # mobile-app | desktop-web (B2B) — decides the type scale
+- Page type:         dashboard
+- Output grammar:    consumer-service # built-in name or reference:<slug>
+- Grammar path:      built-in:engine/RULESETS.md
+- Grammar fallback:  consumer-service
+- Reference confidence: n/a          # high | medium | low for compiled references
+- Aesthetic profile: none            # optional PRESETS.md profile
 - Mood:              soft · minimal · airy · calm   # edges · feel · density · tone
 - Skin:              toss            # or "custom" — NEVER the unlocked default indigo
-- Preset:            (none)          # swiss | editorial | technical | warm-dtc | minimal-mono | brutalist-lite (written by /ss-restyle; the gate reads it)
-- Palette mode:      single-accent   # single-accent | brand-palette: [#hex=role, ...] — optionally +categorical (e.g. "single-accent +categorical")
-- Key color (accent): #3182F6        # the ONLY accent — everything else greyscale
+- Primary action:     #3182F6        # additional hues need grammar-defined roles
 - Font:              Pretendard       # display + body (e.g. "Fraunces / Inter") — chosen, not default
 - Radius personality: soft           # sharp | soft | pill — one SCALE everywhere (see mapping table)
-- Elevation:         layered-shadow  # ENUM the gate reads: layered-shadow | tonal-ramp | flat-borders | oled-black (light default = layered-shadow ≤8% above-left; dark default = tonal-ramp)
+- Elevation:         light=layered ≤8% above-left · dark=tonal ramp + hairline
 - Motion seed:       Spring          # Spring | Silk | Snap | Float | Pulse
 - Type scale:        desktop (body 16-18px)   # mobile-tight | desktop-larger | app-chrome
 - Density:           comfortable
@@ -120,7 +681,11 @@ Run this setup with the user (in plan mode), then build:
 1. **App type + surface** — domain (fintech / SaaS / e-commerce / social / content /
    productivity / health / dev-tools) **and surface** (mobile app vs desktop/web B2B). Bias
    rules per **APP-PLAYBOOKS.md** and **PAGE-TYPES.md**. Surface decides the type scale (below).
-2. **Mood / vibe — ask 3–4 aesthetic calls in plain words (or propose them from the skin),
+2. **Output grammar + page type** — select one functional grammar from `RULESETS.md` by the
+   user's job, then the page type. If supplied references are not represented, run
+   `/ss-reference`; never reduce them to a palette. Toss is evidence for `consumer-service`,
+   not a universal default.
+3. **Mood / vibe — ask 3–4 aesthetic calls in plain words (or propose them from the skin),
    then lock.** This is what makes a UI feel *chosen* instead of defaulted. Each axis maps to a
    concrete rule value, so the whole UI shares one mood:
    - **Edges** → radius personality: *sharp* (0–4px; technical, serious) · *soft* (8–12px;
@@ -135,16 +700,19 @@ Run this setup with the user (in plan mode), then build:
    compact·calm · Arc → soft·expressive·airy·playful), let the user tweak in their words
    ("make the corners sharper", "more playful"), then **lock all four**. One mood → one radius,
    one shadow language, one density, one motion — applied everywhere.
-3. **Accent (key color)** — recommend a domain-fit color or skin (see Smart defaults). If the
-   user has a brand hex, use it. **One accent only; everything else greyscale.** Skins:
+4. **Optional aesthetic profile + accent** — use at most one `PRESETS.md` profile, or none.
+   Recommend a domain-fit color or skin (see Smart defaults). If the
+   user has a brand hex, use it. Keep one identifiable primary action; additional hues require
+   stable roles in the selected grammar. Skins:
    Toss/Stripe/Linear/Notion/Raycast/Arc/Vercel.
-4. **Font** — recommend a pairing by skin/language, don't leave the default: Korean/CJK →
+5. **Font** — recommend a pairing by skin/language, don't leave the default: Korean/CJK →
    **Pretendard** · fintech/SaaS neutral → **Inter** · editorial → **Inter/serif display** ·
    dev/mono-accent → **Geist / IBM Plex**. State the display + body font in the lock.
-5. **Motion seed** — confirm from the Tone above: Spring (bouncy; Toss/Arc) · Silk (smooth;
+6. **Motion seed** — confirm from the Tone above: Spring (bouncy; Toss/Arc) · Silk (smooth;
    Stripe/Notion) · Snap (instant; Linear/Raycast/Vercel) · Float (gentle) · Pulse (rhythmic).
    Per moment: CTA→spring press, modal→silk entrance, list→stagger-cascade, balance/number→**none**.
-6. **Write the lock, then build, then check.** Save app type / surface / **mood** / accent / skin / **font**
+7. **Write the lock, then build, then check.** Save app type / surface / output grammar / page
+   type / optional profile / **mood** / accent / skin / **font**
    / motion / density to `STYLESEED.md` (see Design Lock above). Apply the full rules (read
    DESIGN-LANGUAGE.md + VISUAL-CRAFT.md — not a summary), pick the type scale for the surface
    (mobile-tight vs **desktop-larger, body ≥16px**), give the page **one focal point** (don't
@@ -163,9 +731,8 @@ demo was reviewed and fixed, not a first draft. **Never show the user UI that ha
 
 **The gate** (check every item — each is a common "AI-generated" tell):
 ```
-□ Coherence  — colors from the locked palette mode ONLY (single-accent default; locked
-               brand-palette/categorical legal; NO emoji icons, no unlocked decorative hues),
-               ONE radius personality, ONE elevation language, ONE icon set  (§C0)
+□ Coherence  — one identifiable primary action; no unassigned decorative hues or emoji icons;
+               ONE coordinated radius family, ONE surface language, ONE icon set (§C0)
 □ Distinctive — accent is a CHOSEN domain-fit color, NOT the unlocked default indigo
                (#5E6AD2/#4F46E5); layout is NOT the StyleSeed demo copied verbatim; the hero
                shows THIS product (not a stock chat card); the escape hatch isn't a new
@@ -182,16 +749,14 @@ demo was reviewed and fixed, not a first draft. **Never show the user UI that ha
 □ Color=meaning — normal/OK/"보통" rows are GREY; color marks only the minority that needs
                attention; no rainbow list; same value → same color  (§65, CL-2a)
 □ Hierarchy  — one clear primary per screen; numbers 2:1 with unit; sizes from the table
-□ Layout     — a deliberate separation language everywhere (cards+tone default; locked
-               flat/borders/editorial separates by whitespace/grid/borders); the locked
-               density's rhythm; gap-around-group > gap-inside
+□ Layout     — grouping matches the output grammar; repeatable spacing rhythm;
+               gap-around-group > gap-inside
 □ States     — every data surface has empty + loading + error (not just the full state).
                Static mockup / marketing landing with no data surface → mark N/A, don't fail
 □ Copy       — buttons name the action ("Send $2,400" not "Submit"); errors help, not blame
 □ Polish     — visible focus rings; ≥44px touch / 36–40px pointer targets; prefers-reduced-
-               motion; elevation in ONE language AS LOCKED (layered-shadow | tonal-ramp |
-               flat-borders — mixing two is the fail, not the locked choice); no pure #000
-               unless the lock declares a true-black base
+               motion; elevation in ONE language (light: layered soft shadow · dark: tonal
+               surface ramp + hairline border — never a hard shadow); no pure #000
 □ Motion fits the surface — app/dashboard = calm (no scroll-jacking/scroll-linked/3D). A
                marketing/landing/brand page GETS the Cinematic tier (§43): scroll-LINKED reveals,
                pinned sections, subtle parallax, 3D hero, animated gradient/video bg, rich hover
@@ -202,10 +767,7 @@ demo was reviewed and fixed, not a first draft. **Never show the user UI that ha
 
 **How to gate:**
 1. If the `/ss-*` skills are installed → run **`/ss-score`** (0–100 + prioritized fix list).
-   Otherwise self-score against the checklist above. **Either way, score LOCK-RELATIVE:**
-   read `STYLESEED.md` first — deductions fire on violations of the locked look (preset,
-   palette mode, elevation, density), not on deviation from the default Toss-flavored skin.
-   No lock = full default strictness.
+   Otherwise self-score against the checklist above.
 2. **Target ≥ 80/100.** If anything fails, **fix the violations and re-check** — loop up to ~3×.
 3. **If you can render it, finish with `/ss-verify` (the VISUAL gate).** `/ss-score` reads the
    *code*; some of the worst "AI-made" tells only exist in *pixels* — a hero that doesn't
@@ -238,7 +800,7 @@ Modify in `:root` of `src/styles/theme.css`:
 
 | Variable | Purpose | Default |
 |----------|---------|---------|
-| `--brand` | Brand accent color | Defined by skin (e.g. `#721FE5` for toss) |
+| `--brand` | Brand accent color | Defined by skin (e.g. `#3182F6` for toss) |
 | `--primary` | Buttons, links, primary UI | `#030213` |
 | `--destructive` | Error/danger | `#d4183d` |
 | `--success` | Success indicator | `#6B9B7A` |
@@ -908,14 +1470,20 @@ naturally, after delivering working UI; don't nag.
 ---
 
 # StyleSeed Design Language
-> Visual design rules for professional mobile dashboard design
+> Detailed craft rules used inside the composed StyleSeed method
+
+Read `PRODUCT-PRINCIPLES.md`, select an output grammar from `RULESETS.md`, and select a surface
+adapter from `ADAPTERS.md` before applying this file. Several recipes below originated in the
+mobile `consumer-service` grammar; they are defaults for that context, not universal laws for
+editorial, technical, commerce, carousel, document, or marketing outputs. Exact grammar and
+adapter contracts override contextual recipes, but never the core invariants.
 
 ## Table of Contents
 
 ### Part 1: Core Visual Rules
 | # | Rule | Key Point |
 |---|------|-----------|
-| 1 | [Color Philosophy](#1-color-philosophy) | Single accent color, 5-level grayscale |
+| 1 | [Color Philosophy](#1-color-philosophy) | Stable color roles, identifiable primary action |
 | 2 | [Number/Currency Display](#2-numbercurrency-display-rules) | Big number + small unit, 2:1 ratio |
 | 3 | [Text Hierarchy](#3-text-hierarchy-rules) | 5-level typography system |
 | 4 | [Trend Indicators](#4-trend-indicator-rules) | Up/down arrows with color |
@@ -975,14 +1543,16 @@ naturally, after delivering working UI; don't nag.
 
 ## 1. Color Philosophy
 
-### Key Color Principle — A Single Accent for Unity
-- **Create unity with a single key color (your brand color, defined by skin)**
-- Key color is used **only for active/selected states**
-- Everything else is **grayscale** so the key color stands out
+### Key Color Principle — Stable Roles Create Unity
+- Keep one unmistakable primary action/key color.
+- Additional hues are legal only when the selected output grammar defines a stable semantic,
+  categorical, editorial, or brand role for them.
+- Default to restraint. A color without a repeatable meaning is decoration and should be removed.
 
 ```
-✓ Key color usage: active nav, selected chart, progress bar fill, icon badge
-✗ Key color forbidden: body text, large background areas, general borders
+✓ Key color usage: primary action, active navigation, selected state, focal data
+✓ Defined extra role: stable chart category, semantic severity, expressive-marketing brand field
+✗ Forbidden: arbitrary rainbow lists, competing CTA colors, component-local decorative hues
 ```
 
 ### Impact Colors — Small, Strong
@@ -999,7 +1569,8 @@ naturally, after delivering working UI; don't nag.
 | Notification | `#FF4444` | dot 6px | notification badge (single dot) |
 
 ### Grayscale — 5-Level Text Hierarchy
-Pure black (#000) is **never used**. Soft blacks for a gentle tone.
+Pure black (#000) is not a casual default. Use a refined ink ramp; structural hard black is
+reserved for an exact maintained grammar/profile contract such as a high-contrast aesthetic.
 
 | Level | Hex | Role | Example |
 |-------|-----|------|---------|
@@ -1597,35 +2168,26 @@ The gap between title and content varies by content type:
 
 ---
 
-## 18. Prohibition Rules — Floors vs Skin Defaults (v2.11)
+## 18. Prohibition Rules (Absolute Don'ts)
 
-**Two tiers live here.** ⛔ **FLOORS** apply on every surface under every lock (a11y, dark
-patterns, incoherence). 🔧 **SKIN DEFAULTS** are the Toss-flavored house style — they bind when
-nothing is locked, and a `STYLESEED.md` lock/preset legitimately overrides them (the gate
-scores lock-relative; see CLAUDE.md). Historically everything below was written as absolute —
-that froze the reference demo's fingerprint into law and wrongly penalized legitimate systems
-(pure-black dev-dark, multi-color brand palettes, serif editorial). The tier tags fix that.
-
-### Key Color Overuse Forbidden 🔧 (default — a locked brand-palette assigns large-surface roles deliberately)
+### Key Color Overuse Forbidden
 ```
 ✗ Painting entire card background with bg-brand
 ✗ Key color background + white text large-area card
 ✗ Key color gradient background
 ✗ Using key color across 2+ sections simultaneously at large scale
 ```
-Key color defaults to **small elements only**: icon badges (10% opacity), progress fill, selected dots, active nav, badge pills.
-Card backgrounds default to `bg-card` (white) or `bg-surface-subtle` — a locked brand-palette may assign a large-surface role deliberately (one role, locked, consistent).
+Key color is for **small elements only**: icon badges (10% opacity), progress fill, selected dots, active nav, badge pills.
+Card backgrounds are **always `bg-card` (white)** or `bg-surface-subtle`.
 
-### Pure Black 🔧 (default — locked oled-black/brutalist/swiss overrides for SURFACES)
+### Pure Black Forbidden
 ```
-✗ #000000 text on white (default — use the 900/950 neutral)
-✗ bg-black unless the lock declares oled-black elevation or a brutalist-lite/swiss preset
-✓ #000 base legal under a locked oled-black dark language (Vercel/Linear-class, CL-5) or
-  a locked brutalist/swiss black-and-white identity — text contrast floors ⛔ still apply
+✗ #000000, text-black, bg-black
+✗ No pure black usage under any circumstances
 ```
-Default darkest: `#2A2A2A` (strong), default text: `#3C3C3C` (primary).
+Darkest color: `#2A2A2A` (strong), default text: `#3C3C3C` (primary).
 
-### Ad-hoc Components 🔧 (mobile-app skin defaults — desktop SaaS locks may use standard selects/radios with proper focus states ⛔)
+### Ad-hoc Components Forbidden
 ```
 ✗ Creating new patterns not in the seed
 ✗ CTA buttons FIXED to the bottom of the viewport on a dashboard (a full-width button INLINE in the scroll flow is fine — this bans the floating/fixed bottom bar, not width)
@@ -1635,21 +2197,21 @@ Default darkest: `#2A2A2A` (strong), default text: `#3C3C3C` (primary).
 If a new component is needed, **compose it from one of the 4 section types (A/B/C/D)**.
 If existing pattern combinations cannot solve it, confirm with the user first.
 
-### Layout 🔧 (comfortable-density Toss defaults — the LOCKED density/preset sets the actual values; floating with NO separation language is the ⛔ floor)
+### Layout Forbidden
 ```
-✗ Content with no separation language at all (cards/tone, whitespace/grid, or borders — per lock) ⛔
-✗ Placing dividers (hr, border-b, Separator) between sections (default)
-✗ Section gap other than the locked density's rhythm (default comfortable = space-y-6)
-✗ Margins/padding off the locked density position (default = mx-6/px-6, p-6/p-8)
-✗ Card radius off the locked radius personality (default soft = rounded-2xl; sharp locks 6–8px)
-✗ Placing floating buttons above bottom nav ⛔
+✗ Placing content directly outside cards (text, metrics, lists, etc.)
+✗ Placing dividers (hr, border-b, Separator) between sections
+✗ Changing section gap to anything other than space-y-6
+✗ Using left/right margin/padding other than mx-6/px-6
+✗ Changing card padding to anything other than p-6/p-8
+✗ Changing card radius to anything other than rounded-2xl
+✗ Placing floating buttons above bottom nav
 ```
-**Default: section separation = cards + spacing (space-y-6);** under a locked flat/borders/
-editorial language, whitespace-grid or hard borders do the same job (one language only ⛔).
-The difference between page background (#FAFAFA) and card background (#FFFFFF) serves as the default natural divider.
+**Section separation is achieved through cards + spacing (space-y-6) only.**
+The difference between page background (#FAFAFA) and card background (#FFFFFF) serves as a natural divider.
 Dividers (border-t) are used **only inside cards** to separate chart from stats.
 
-### Selection UI 🔧 (mobile-app skin defaults)
+### Selection UI Forbidden
 ```
 ✗ Select dropdown (▼ arrow) inside cards
 ✗ Radio buttons / checkbox filters
@@ -1657,21 +2219,19 @@ Dividers (border-t) are used **only inside cards** to separate chart from stats.
 ✗ Placing toggles in card content area (header right only)
 ```
 
-### Typography — mixed
+### Typography Forbidden
 ```
-✗ Using grays outside the locked grayscale ramp ⛔ (any ramp, but ONE ramp)
-✗ Displaying numbers and units at the same size 🔧 (Toss signature — a locked uniform-numeric
-  style, e.g. technical mono tables, hierarchies by weight/color instead)
-✗ Displaying numbers without units (context is lost) ⛔
-✗ Omitting uppercase + tracking on labels 🔧 (Latin default; Korean labels never track — §CJK)
+✗ Using grays outside the defined 5-level grayscale
+✗ Displaying numbers and units at the same size
+✗ Displaying numbers without units (context is lost)
+✗ Omitting uppercase + tracking on labels
 ```
 
-### Shadow 🔧 (defaults — the locked elevation language sets the cap; M3-style locked elevation may exceed 8%)
+### Shadow Forbidden
 ```
-✗ Shadows above the locked opacity cap (default ~8%; visibly heavy = wrong under any lock)
-✗ Colored shadows (adding color in rgba) — except a brand-tinted shadow the lock declares
-✗ Different shadow levels per card ⛔ (incoherence — banned under every lock)
-✗ Soft shadows mixed INTO a locked flat/borders language ⛔ (one language only)
+✗ Strong shadows (opacity 15% or above)
+✗ Colored shadows (adding color in rgba)
+✗ Different shadow levels per card
 ```
 
 ---
@@ -1946,7 +2506,11 @@ Layer 2: Content             → relative z-10
 
 ---
 
-## Core Design Principles Summary
+## Consumer-service recipe summary
+
+> This summary captures the original mobile dashboard recipe. Use it only when the effective
+> grammar is `consumer-service` (or a compiled grammar explicitly inherits it). It is not the
+> cross-output StyleSeed constitution.
 
 ### Color (4)
 1. Unity through one key color, used only for active/selected states
@@ -1985,7 +2549,8 @@ Layer 2: Content             → relative z-10
 22. Background decoration only in hero cards, `overflow-hidden` required
 
 ### Prohibitions (7)
-23. No content placed directly outside cards — **all content lives inside cards**
+23. In this recipe, data modules live inside cards; navigation, headings, actions, editorial
+    prose, and other grammar-owned structures do not need card containers
 24. No key-color background cards
 25. No ad-hoc components
 26. No card overlap/stacking
@@ -2608,11 +3173,6 @@ Disabled: opacity-50 cursor-not-allowed
 The relationship between card (#FFFFFF) and background (#FAFAFA) in light mode must preserve the **same sense of depth** in dark mode.
 Cards must be **brighter than background** for visual section separation.
 
-> **v2.11 — two legal dark languages** (lock ONE): **tonal-ramp** (below — #121212-family base,
-> elevation by surface lightness; Material-class) or **oled-black** (true `#000` base, elevation
-> carried by hairline borders + restrained surface steps; Vercel/Linear-class — see CL-5).
-> Mixing the two on one product is the violation; either one, locked, is correct.
-
 ```
 Light:  background #FAFAFA  ->  card #FFFFFF     (card is brighter OK)
 Dark:   background #121212  ->  card #1E1E1E     (card is brighter OK)
@@ -3025,15 +3585,14 @@ OK  CTA label = action verb + clear outcome
 | No negative emotions | Begging/pleading/discomfort = dark pattern |
 | No decorative effects | Particles, excessive gradients, meaningless effects |
 
-### Graphic Style 🔧 (default — a LOCKED illustration identity overrides)
+### Graphic Style
 ```
-OK  Simple, clear, clean digital style (default)
-OK  A locked illustration language — cartoon/mascot (Duolingo-class), hand-drawn
-    (Headspace-class), painterly — IS legal when the lock declares it as the brand's
-    imagery identity and it's applied consistently (one style, locked palette, every asset)
-NO  Unlocked style drift — a different illustration style per screen/asset ⛔
-NO  Low-resolution graphics ⛔
-NO  Particles / meaningless decorative effects (default; Cinematic tier §43 governs marketing)
+OK  Simple, clear, clean digital style
+NO  Hand-drawn feel
+NO  Painterly / lyrical style
+NO  Cartoon-style illustration
+NO  Low-resolution graphics
+NO  Particles / tiny effects
 ```
 
 ### Dark / Light Mode Support
@@ -3787,8 +4346,9 @@ Numbers are defaults, not dogma — but don't deviate without a reason.
 > "looks off" but you can't say why. Pair with **APP-PLAYBOOKS.md** (domain bias)
 > and **PAGE-TYPES.md** (screen bias).
 >
-> **Priority:** The 11 Golden Rules (CLAUDE.md) and DESIGN-LANGUAGE.md win every
-> conflict. This file refines taste *within* those rules; it never overrides them.
+> **Priority:** `PRODUCT-PRINCIPLES.md` → output grammar (`RULESETS.md` or compiled) →
+> `ADAPTERS.md` → domain/page → optional profile → bounded lock. This file refines craft within
+> that composed method; it never overrides it.
 
 ---
 
@@ -3800,7 +4360,7 @@ accent colors, icons from three families, shadows lit from different directions.
 UI reads as professional when it feels **shaped by one deliberate mind**
 ([UX Collective], [Tubik]).
 
-**The meta-law: for each design axis below, choose exactly ONE value or family, encode
+**The meta-law: for each design axis below, choose exactly ONE coordinated family, encode
 it as a token, and apply it everywhere.** Coherence is not "every screen is identical"
 — it's that the same decisions repeat. The user's instinct — *"if the corners are
 sharp, everything must be sharp"* — is exactly right, and it generalizes to every row
@@ -3810,12 +4370,12 @@ of this table.
 |---|---|---|
 | **Corner / radius** | One personality: **sharp 0–4px** · **soft 8–12px** · **pill 9999px**. Card, button, input, modal, image, avatar all obey it. | Sharp dialog + rounded buttons = "two products glued together." The #1 tell of un-designed UI. |
 | **Shadow** | One scale, one light source (**above-left**), one hue tint. A modal and a card use the *same* family, different tiers. | Mixed light directions / some-black-some-tinted = "scene with two suns." |
-| **Accent color** | Colors from the **locked palette mode**: one primary accent (default) — or a locked brand-palette (N hues with assigned roles) / categorical set (CD-1). One CTA color across the whole app either way. | Hues in no mode (random per-item colors) → nothing reads as "the" action; hierarchy collapses. |
+| **Color roles** | One primary action plus the grammar's stable semantic/categorical/brand roles. | Competing emphasis hues or local decorative colors collapse hierarchy. |
 | **Spacing unit** | One base grid: **8px** (4px allowed as a half-step for icon↔label). Every margin/padding/gap is a multiple. | Off-grid values (7, 13, 19px) read as "sloppy" without users knowing why. |
 | **Icon style** | One family, one fill mode (all outline **or** all filled), one stroke weight (e.g. **2px @ 24px**). | Mixing Material + Feather + emoji, or 1.5px and 2px strokes, looks "out of place." |
 | **Type scale** | One modular scale, ≤2 font families, one weight ramp. | Arbitrary sizes destroy rhythm; >2 families looks amateur. |
 | **Motion / easing** | One duration set (~150/200/300ms) + one easing family; same enter/exit logic everywhere. | Some snappy, some sluggish = feels like different apps. |
-| **Border** | One border weight system-wide — hairline **1px** default; a locked brutalist personality may set **2px** as *the* weight. | Mixed 1px/2px borders and random grays look unintentional (one locked weight ≠ mixing). |
+| **Border** | One hairline weight (**1px**) and one low-contrast neutral border token. | Mixed 1px/2px borders and random grays look unintentional. |
 | **State layers** | One opacity ramp for hover/focus/pressed on *all* interactive elements. | Buttons darken, links underline, cards scale — feedback feels random. |
 | **Control height** | Buttons, inputs, selects share a height set (e.g. **40px** default). | A 44px input next to a 32px button breaks the baseline. |
 
@@ -4021,14 +4581,11 @@ face on *everything* + heavy ink blocks — stops reading "designed" and starts 
 pamphlet / insurance terms," especially in Korean (명조 전면 사용 = 신문/약관 느낌). The modern
 floor:
 - **Base stays fresh**: page background white or near-white; warm/tinted paper tones are a
-  *section* accent (one band, a card), never the whole canvas — **except a locked
-  `editorial`/reading surface**, where a paper-toned canvas (FT-style) is a legitimate identity;
-  there, gate on reading craft instead (measure 50–75ch, line-height ≥1.5, contrast floors).
+  *section* accent (one band, a card), never the whole canvas.
 - **Serif is seasoning, not the diet**: display serif on the hero headline or ONE key number —
   body, labels, UI chrome stay in a modern sans (Pretendard/Inter). Never serif body on a SaaS/
-  product surface **by default — a locked reading/editorial surface (long-form content, Medium/
-  NYT-class) legalizes serif body**. Prefer contemporary serifs (Fraunces, Newsreader; KR: 본명조
-  display cuts) over dated ones.
+  product surface. Prefer contemporary serifs (Fraunces, Newsreader; KR: 본명조 display cuts) over
+  dated ones.
 - **Keep the air**: distinctive treatments must preserve whitespace and lightness — density +
   dark blocks + serif compounds into "old", not "premium".
 - Quick self-check: *"would this pass as a 2026 product site, or does it look like a 2010s
@@ -4064,10 +4621,6 @@ warning amber, bad/blocked = error red — and the same score must always get th
 (3) Reserve color for the **minority** of items that actually need attention; if most rows
 are "fine," most rows are grey. (4) Pair the color with text/icon (CL-4) so it survives
 colorblindness and greyscale. *A screen where 80% of badges are colored has no hierarchy.*
-(5) **Severity color ≠ category color**: hues that encode *category* (calendar per listing,
-GitHub-style labels, Notion tags) follow **CD-1 categorical rules** (locked set, ~6–8 cap,
-consistent mapping) and are legal on many rows — the ban is on *severity* colors applied to
-non-severity states, not on categorical encoding.
 For the **soft chip background** behind a status label, use the skin's tint tokens —
 `bg-success-tint`, `bg-warning-tint`, `bg-destructive-tint`, `bg-info-tint` (a foreground
 of the matching `text-success`/`text-warning`/… ) — **don't hand-mix a one-off hex**; the
@@ -4094,13 +4647,10 @@ use the 900/950 neutral. *Why: pure grey looks lifeless and clashes with the acc
 bold) **≥3:1**, UI components & graphics **≥3:1**. AAA = 7:1 / 4.5:1. **Never convey
 info by color alone** — pair with text/icon/shape. ([WCAG 2.2], [WebAIM])
 
-**CL-5 · Dark mode is not an invert.** Base = **#121212** default (Material); raise elevation
+**CL-5 · Dark mode is not an invert.** Base = **#121212** (not `#000`); raise elevation
 with white overlays (~5% @1dp, 8% @2dp, 12% @8dp, 16% @24dp). **Desaturate accents
 ~25%** (Material: primary tone 40→80). Re-derive each role from the tonal palette.
-**`oled-black` variant (lockable):** a true `#000` base with hairline borders carrying the
-elevation (Vercel/Linear-class) is a legitimate locked language — separation comes from
-borders + restrained surface steps instead of lightness overlays; text contrast floors and
-one-border-weight discipline still apply. ([Material Dark Theme], [Material 3 Color])
+([Material Dark Theme], [Material 3 Color])
 
 ---
 

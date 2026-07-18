@@ -9,9 +9,9 @@ import { GithubIcon } from "./github-icon";
 
 const STATS = [
   { value: "74", label: "design rules" },
-  { value: "19", label: "AI skills" },
-  { value: "7", label: "brand skins" },
-  { value: "5", label: "motion seeds" },
+  { value: "20", label: "AI skills" },
+  { value: "8", label: "output grammars" },
+  { value: "5", label: "surface adapters" },
 ];
 
 const container: Variants = {
@@ -52,7 +52,7 @@ export function Hero() {
             className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-neutral-600"
           >
             <Sparkles size={11} className="text-violet-500" />
-            A thinking framework for UI · Claude Code, Codex & Cursor
+            A design-method engine · Claude Code, Codex & Cursor
           </motion.div>
         </motion.div>
 
@@ -69,8 +69,9 @@ export function Hero() {
           variants={item}
           className="mx-auto mt-6 max-w-xl text-[17px] leading-relaxed text-neutral-600"
         >
-          Your AI ships default-indigo, icon-chip, template UI. StyleSeed hands it 74 rules of
-          designer judgment — and a quality gate that fixes the tells before you see them.
+          StyleSeed selects the right design grammar for the result — or compiles one from your
+          references — then makes the agent build with consistent designer judgment. Web UI,
+          mobile products, carousels, decks, documents, and more.
         </motion.p>
 
         <motion.div
@@ -105,10 +106,10 @@ export function Hero() {
             <span className="font-semibold text-neutral-500">★ 680+</span>
           </a>
           <Link
-            href="/how-it-thinks"
+            href="/architecture"
             className="inline-flex items-center gap-1 text-[14px] font-semibold text-violet-600 hover:underline"
           >
-            See how it thinks
+            See the engine architecture
             <ArrowRight size={14} />
           </Link>
         </motion.div>

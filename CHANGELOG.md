@@ -3,6 +3,49 @@
 All notable changes to StyleSeed. Agents can check the latest version at
 [version.json](https://styleseed-demo.vercel.app/version.json) and run `/ss-update`.
 
+## [3.0.0] — 2026-07-18
+
+**Theme: fixed design judgment, multiple output languages.** StyleSeed no longer treats its
+original Toss-flavored mobile dashboard rules as the universal answer. The engine selects a
+functional grammar for the artifact's job, or compiles a project-local grammar from references,
+then applies it through a surface-specific renderer contract.
+
+### Added
+- `PRODUCT-PRINCIPLES.md` — product constitution and explicit authority order. The design lock
+  persists bounded selections; it cannot create exceptions or redefine the method.
+- `RULESETS.md` — eight output grammars: consumer service, operations console, technical
+  instrument, editorial reading, commerce conversion, institutional service, expressive
+  marketing, and sequential story.
+- `/ss-reference` + `REFERENCE-COMPILER.md` — compile screenshots, URLs, Figma exports,
+  moodboards, or an existing UI into a project-local twelve-axis grammar with evidence IDs,
+  confidence, semantic tokens, anti-patterns, and a transfer validation artifact.
+- `ADAPTERS.md` — product UI, social carousel, slide deck, document/report, and single-frame
+  output contracts. The Claude `carousel-build` skill is documented as the first companion:
+  StyleSeed provides grammar/brand judgment; the renderer owns Instagram canvas, safe zones,
+  crop, PIL rendering, and export QA.
+- `ARCHITECTURE.md` and a reusable SVG architecture diagram, also published on the demo site.
+- Deterministic engine validation and CI to catch version, mirror, skill-count, forbidden-law,
+  and build-loop drift.
+
+### Changed
+- `/ss-setup` now selects output grammar, surface adapter, domain/page or artifact type, optional
+  aesthetic profile, and bounded brand tokens. Toss is one `consumer-service` reference family,
+  never the default for every result.
+- `/ss-build` composes the full rule stack and requires `/ss-score` followed by `/ss-verify` for
+  every renderable artifact.
+- `/ss-score`, `/ss-verify`, `/ss-review`, and `/ss-lint` judge exact maintained grammar/profile
+  contracts, not arbitrary lock-relative exemptions.
+- `/ss-restyle` profiles are explicitly aesthetic coordinates, separate from functional output
+  grammars.
+- Claude, Codex/AGENTS, Cursor, README, Korean README, LLM mirrors, plugin metadata, and demo
+  positioning now share the same v3 model.
+
+### Research basis
+- Cross-surface review included consumer finance, B2B operations, developer monitoring,
+  editorial, commerce, and public-service systems. The local Lazyweb report records visual
+  evidence; primary sources include Toss TDS and official public design-system typography
+  guidance. Findings are encoded as transferable grammar contracts, not brand clones.
+
 ## [2.11.1] — 2026-07-16
 
 **Hotfix: v2.11.0 fixed the canon but not the mirrors — and weakened the unlocked case.**
@@ -330,6 +373,10 @@ release raises the floor of the default path.
 - Agent-agnostic delivery: CLAUDE.md + AGENTS.md + .cursorrules.
 - 8 `/guides` + 7 `/screens` programmatic-SEO pages, `/how-it-thinks`, `/faq`.
 
+[3.0.0]: https://github.com/bitjaru/styleseed/releases/tag/v3.0.0
+[2.11.1]: https://github.com/bitjaru/styleseed/releases/tag/v2.11.1
+[2.11.0]: https://github.com/bitjaru/styleseed/releases/tag/v2.11.0
+[2.10.1]: https://github.com/bitjaru/styleseed/releases/tag/v2.10.1
 [2.10.0]: https://github.com/bitjaru/styleseed/releases/tag/v2.10.0
 [2.9.0]: https://github.com/bitjaru/styleseed/releases/tag/v2.9.0
 [2.8.0]: https://github.com/bitjaru/styleseed/releases/tag/v2.8.0

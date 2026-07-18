@@ -1,192 +1,140 @@
-# StyleSeed — design rules for any coding agent
+# StyleSeed — design method for any coding agent
 
-This is the cross-agent entry point. **Codex, Amp, Gemini CLI, Windsurf, Cline, and
-any tool that follows the `AGENTS.md` convention read this file automatically.**
-Claude Code users get the same rules from `CLAUDE.md` (identical content, deeper API
-reference). Cursor users: these same rules live in `.cursorrules`.
+This is the cross-agent entry point for Codex, Amp, Gemini CLI, Windsurf, Cline, and other
+tools that read `AGENTS.md`. Claude Code uses `CLAUDE.md`; Cursor uses `.cursorrules`.
 
-StyleSeed is a **design engine**: it teaches you (the agent) the *judgment* to build
-professional UI — not just components, but which decision to make and why. When you
-build any UI, dashboard, page, or component in this project, follow the rules below.
+StyleSeed fixes **how an agent judges design**, not one Toss-like aesthetic. It applies to web
+and mobile products, social carousels, slide decks, documents/reports, and single-frame graphics.
 
-## Golden Rules (NEVER break these)
+## Read in authority order
 
-```
- 1. All content sits in a deliberate separation language — cards+tone by default; a locked
-    flat-borders/oled-black/editorial language separates with whitespace/grid/hard borders instead.
-    Floating with NO separation language is the violation
- 2. Colors come from the locked palette mode — default single accent (--brand) + grayscale;
-    a locked brand-palette or +categorical mode is legal; hues in NO mode never are
- 3. No pure black (#000) by default — darkest text ~#2A2A2A. A locked oled-black base or
-    brutalist-lite/swiss preset legalizes #000 surfaces (text contrast floors stay)
- 4. Numbers 2:1 with units — 48px number + 24px unit (default; a lock declaring uniform
-    numeric styling is exempt, hierarchy via weight/color instead)
- 5. One spatial rhythm on the 8px grid — mobile: space-y-6 · mx-6 · px-6; desktop: container + gap-6/gap-8
- 6. Never repeat the same section type consecutively — create visual rhythm
- 7. Elevation, ONE language as locked (enum: layered-shadow | tonal-ramp | flat-borders |
-    oled-black) — light default layered ≤8%, dark default tonal-ramp; mixing two is the fail
- 8. Touch targets ≥ 44×44px on touch surfaces; pointer-first desktop controls may be 36–40px (keep focus rings)
- 9. Semantic tokens only (text-brand, bg-card) — NEVER hardcode hex in components
-10. Font sizes from the "Font Size by Context" table ONLY — don't guess; match scale to surface (desktop/web B2B body ≥16px, not 14px)
-11. NO emoji as UI icons; also AVOID the AI cliché of a generic Lucide line-icon inside an identical pale-tinted rounded-square chip repeated for every feature — vary the treatment or drop the chip
-12. NEVER ship the default/unlocked accent (generic indigo #5E6AD2/#4F46E5) or a copied demo layout — lock a domain-fit key color + font FIRST. Coherent ≠ distinctive
-13. One focal point per screen — the primary must dominate; an all-even grid of same-weight cards is the "machine-composed" tell
-14. After generating ANY page → run the Quality Gate below (or /ss-review); never show UI that hasn't passed.
-    Gate scores LOCK-RELATIVE: read STYLESEED.md first — deductions fire on violations of the
-    locked look, not deviation from the default skin. No lock = full default strictness
+1. `PRODUCT-PRINCIPLES.md` — fixed judgment and authority boundary.
+2. `RULESETS.md` — select one functional output grammar.
+3. `ADAPTERS.md` — select the renderer/surface contract.
+4. A project-local `.styleseed/rulesets/<slug>/RULESET.md` when selected.
+5. `APP-PLAYBOOKS.md` + `PAGE-TYPES.md` — domain and page/artifact bias.
+6. `PRESETS.md` — optional aesthetic profile only.
+7. `STYLESEED.md` — bounded project selections.
+8. `DESIGN-LANGUAGE.md` + `VISUAL-CRAFT.md` + `UX-WRITING.md` — detailed craft.
+
+See `ARCHITECTURE.md` for the full system. When instructions conflict, the earlier layer wins.
+
+## Composition model
+
+```text
+core judgment
+× output grammar (built-in or reference-compiled)
+× surface adapter
+× domain + page/artifact type
+× optional aesthetic profile
+× bounded STYLESEED.md values
+= effective rules for the artifact
 ```
 
-**The coherence meta-rule (the #1 fix for "looks AI-generated"):** for each axis —
-corner radius, accent color, shadow, spacing unit, icon style — pick ONE value and
-apply it everywhere. Mixing an axis (sharp card + pill buttons, two accents) is the
-fastest tell of un-designed UI. See `VISUAL-CRAFT.md` §C0.
+Toss is evidence for `consumer-service`, not the StyleSeed default. Aesthetic profiles such as
+`swiss` or `technical` coordinate appearance; they do not replace functional output grammar.
 
-## When to read which file
+## Core invariants
 
-- **`CLAUDE.md`** — tokens, component API, imports, forbidden patterns. Reference while coding.
-- **`DESIGN-LANGUAGE.md`** — the 74 visual rules + composition recipes. Read **before** building a page (start with the Table of Contents, then rules 14, 18, 19, 61-63).
-- **`VISUAL-CRAFT.md`** — research-backed craft + the coherence laws (one choice per axis, layered shadows, nested-radius law, type recipe by app type). Read when a UI "looks off" but you can't say why.
-- **`APP-PLAYBOOKS.md`** — how to bias the rules for the app's domain (fintech, SaaS, e-commerce, social…). Read right after you know what kind of app this is.
-- **`PAGE-TYPES.md`** — how to bias for the screen type (dashboard / form / landing / detail / list / settings). Domain × page-type = the actual judgment.
-- **`METHODOLOGY.md`** — the *why* behind the rules (info density, hierarchy, motion vibe vocabulary).
+- One coherent system for radius, spacing, elevation, type, icons, color roles, imagery, and motion.
+- One focal point and one identifiable primary action.
+- Additional color requires a stable semantic, categorical, editorial, data, or brand role.
+- Semantic tokens replace component-local hardcoded colors.
+- Spacing and proximity create repeatable grouping.
+- Typography fits the task, surface, reading distance, and content measure.
+- Data surfaces have useful loading, empty, and error states.
+- Focus, contrast, targets, labels, reduced motion, and honest consent remain intact.
+- Motion fits the artifact and never delays comprehension or action.
+- Distinctiveness comes from product content and the selected grammar, never copied demos,
+  generic indigo, repeated icon chips, emoji chrome, or template uniformity.
 
-## Design Lock — read this EVERY prompt before building UI
+The design lock persists valid selections. It cannot waive these invariants or invent a new
+palette mode.
 
-The #1 cause of "the design looks random / different every time" is that design decisions
-live only in chat memory and drift. Fix with a project design-lock file:
+## Design lock — read before every visual task
 
-1. **Look for `STYLESEED.md` in the project root.** If it exists, it is the source of truth —
-   obey it every prompt; never add a second accent, a different radius, or an off-lock color.
-2. **If it doesn't exist, run Quick Setup (below) and WRITE it** before scaffolding:
+Look for `STYLESEED.md` in the project root. If missing, use setup before writing visual code or
+render scripts. A valid lock resembles:
 
 ```markdown
 # StyleSeed — Design Lock
-- App domain:        fintech
-- Surface:           desktop-web     # mobile-app | desktop-web (B2B) — decides the type scale
-- Mood:              soft · minimal · airy · calm   # edges · feel · density · tone
-- Skin:              toss            # or "custom" — NEVER the unlocked default indigo
-- Preset:            (none)          # swiss | editorial | technical | warm-dtc | minimal-mono | brutalist-lite (the gate reads this)
-- Palette mode:      single-accent   # single-accent | brand-palette: [#hex=role, ...] — optionally +categorical
-- Key color (accent): #3182F6        # the accent (single-accent mode) — everything else greyscale
-- Font:              Pretendard       # display + body, chosen (not the bare default)
-- Radius personality: soft (12px)    # sharp 0-4 | soft 8-12 | pill — one everywhere
-- Elevation:         layered-shadow  # ENUM: layered-shadow | tonal-ramp | flat-borders | oled-black
-- Density:           comfortable     # airy | comfortable | compact | dense (one position project-wide)
-- Motion seed:       Spring          # Spring | Silk | Snap | Float | Pulse
-- Type scale:        desktop (body 16-18px)   # mobile-tight | desktop-larger
+<!-- Persistent selections. This file cannot waive core invariants. -->
+- App domain: fintech
+- Surface: mobile-app
+- Surface adapter: product-ui
+- Page type: dashboard
+- Output grammar: consumer-service
+- Grammar path: built-in:engine/RULESETS.md
+- Grammar fallback: consumer-service
+- Reference confidence: n/a
+- Aesthetic profile: none
+- Skin: custom
+- Primary action: #3182F6
+- Font: Pretendard
+- Radius: soft
+- Elevation: light=tonal grouping + restrained shadow · dark=tonal ramp + hairline
+- Density: comfortable
+- Motion: Spring restrained
+- Imagery/data role: personal state first; charts only for a decision
+- Signature move: one calm contextual briefing above the account summary
+- Locked: YYYY-MM-DD
 ```
 
-When the user later says "make it more X," update the lock *and* the UI together. The lock is
-what keeps the result consistent across prompts — without it, even perfect rules drift.
+For non-web output add adapter fields such as canvas, artifact type, renderer, and safe-zone
+contract. Unknown values fall back to the nearest maintained grammar; they are not exemptions.
 
-## Quick Setup — MANDATORY before building (consistency comes from constraints)
+## Setup and reference routing
 
-**Not optional.** If there's no `STYLESEED.md` lock and you're about to build UI, this is the
-**FIRST thing you do — before any code.** Skipping it is how output lands generic (default
-indigo, tight type, template layout) and the user says "still looks AI-made." **If your tool
-has a plan/ask mode, use it**: decide the choices below **one at a time, with the user**, then
-build.
+1. Understand the user, job, domain, artifact, platform, and primary decision.
+2. Select one output grammar from `RULESETS.md` and one adapter from `ADAPTERS.md`.
+3. If supplied references are not represented, use `$ss-reference` and
+   `REFERENCE-COMPILER.md`. Never reduce a reference to a palette swap or clone its protected
+   assets, text, or trademarked arrangement.
+4. Select domain/page bias and at most one optional aesthetic profile.
+5. Confirm bounded brand/type/density/radius/elevation/imagery/motion values and write the lock.
 
-**Smart defaults — recommend, never fall back to the generic default.** Infer from product
-name/domain/language/copy and propose ONE default to accept with a tap (Korean + fintech/
-regulation → **Toss `#3182F6`**; premium SaaS → **Stripe**; dev/dark → **Linear**; editorial →
-**Notion**). **The unlocked default indigo (`#5E6AD2`/`#4F46E5`) is FORBIDDEN as a final choice.**
+Reference compilation produces evidence, confidence, tokens, anti-patterns, adapter metadata,
+and a transfer validation artifact under `.styleseed/rulesets/<slug>/`.
 
-1. **App type + surface** — domain (fintech / SaaS / e-commerce / social / content /
-   productivity / health / dev-tools) **and surface** (mobile app vs desktop/web B2B — sets the
-   type scale). Bias per `APP-PLAYBOOKS.md` + `PAGE-TYPES.md`.
-2. **Mood / vibe** — ask 3–4 aesthetic calls in plain words (or propose from the skin), then
-   lock. Each maps to a concrete value: **Edges** → radius (sharp 0–4 · soft 8–12 · pill) ·
-   **Feel** → shadow/ornament (minimal · expressive) · **Density** → spacing+type (airy ·
-   compact) · **Tone** → motion+saturation (calm · playful). Default from skin (Toss → soft·
-   minimal·airy·calm; Linear → sharp·minimal·compact·calm), let the user tweak ("sharper
-   corners"), lock all four. This is what makes it feel *chosen*, not defaulted.
-3. **Accent (key color)** — a domain-fit color or skin (see Smart defaults), or the user's brand
-   hex. **One accent only; everything else greyscale.**
-4. **Font** — recommend by skin/language, don't leave the default: Korean/CJK → Pretendard ·
-   fintech/SaaS → Inter · editorial → serif display + Inter · dev → Geist. State it in the lock.
-5. **Motion seed** — confirm from Tone: Spring (Toss/Arc) · Silk (Stripe/Notion) · Snap (Linear/
-   Raycast/Vercel) · Float · Pulse. Per moment: CTA→spring press, modal→silk, list→stagger.
-6. **Write `STYLESEED.md` (the lock), build, then check** — save the choices (incl. surface +
-   mood + font), apply the full rules (read `DESIGN-LANGUAGE.md` + `VISUAL-CRAFT.md`, not a summary),
-   pick the type scale for the surface (desktop body ≥16px), give the page **one focal point**,
-   self-check coherence (VISUAL-CRAFT §C0), then run the Quality Gate.
+## Build loop
 
-Confirm each choice before building. **More constraints = less variance.** For the most
-consistent results, copy the rule files into the project so they're re-read every prompt —
-a one-shot URL read drifts mid-session.
+Use `$ss-build` when installed:
 
-## Quality Gate — run this BEFORE showing the user ANY UI (non-negotiable)
-
-Generating the UI is not "done." Before presenting it, it must pass the gate — the difference
-between "looks generated" and "looks designed." Never show UI that hasn't passed.
-
+```text
+select or compile grammar → select adapter → lock → build with the composed method
+→ $ss-score → fix to >=80 → render → $ss-verify → fix and re-render → present evidence
 ```
-□ Coherence  — ONE accent (no 2nd hue, NO emoji icons, no decorative color), ONE radius,
-               ONE shadow, ONE icon set
-□ Color=meaning — normal/OK/"보통" rows GREY; color only the minority needing attention; no
-               rainbow list; same value → same color
-□ Hierarchy  — one clear primary; numbers 2:1 with unit
-□ Layout     — content in cards; 8px rhythm; gap-around-group > gap-inside
-□ States     — empty + loading + error on every data surface (static mockup / landing with no
-               data surface → N/A, don't fail)
-□ Copy       — buttons name the action; errors help, not blame
-□ Polish     — focus rings; ≥44px touch / 36–40px pointer targets; prefers-reduced-motion;
-               elevation in one language (light: soft layered shadow · dark: tonal ramp +
-               hairline); no pure #000
-□ Not a new uniform — the cliché escape hatch isn't repeated everywhere (ghost 01/02/03 on
-               every section = the icon-chip cliché reborn; see VISUAL-CRAFT CC-9c)
-□ Motion by surface — app/dashboard = calm (no scroll-jacking, no scroll-linked, no 3D). But a
-               marketing/landing/brand page gets the Cinematic tier (§43): scroll-LINKED reveals,
-               pinned sections, subtle parallax, 3D hero, animated gradient/video bg, rich hover —
-               this is how family/stripe/linear read premium; don't flag it. Guardrails: 60fps
-               (transform/opacity), never blocks first read/CTA, prefers-reduced-motion = complete
-               static page. Scroll-JACKING (hijacking/trapping) + animating money stay banned.
-```
-If the `/ss-*` skills are installed run `/ss-score` (0–100 + fix list); else self-score against
-the list. **Target ≥ 80** — fix what fails, re-check (loop up to ~3×). **Then, if it renders,
-finish with `/ss-verify` (the VISUAL gate)**: `/ss-score` reads the code; some tells live only in
-pixels (dead whitespace, a font that didn't load, no focal, a blank empty state). Render →
-screenshot → look → fix → re-render, states included. Never claim a visual pass without seeing a
-screenshot. Then present + report the score. A 30-second self-review is the product.
 
-## How to use StyleSeed
+The build method is the product. Score and verification are auxiliary proof gates.
 
-**Skill invocation differs by agent.** Claude Code uses `/ss-build`,
-`/ss-score`, and the other `/ss-*` commands. Codex uses `$ss-build`,
-`$ss-score`, and the other `$ss-*` skills (or selects them from `/skills`).
-The `/ss-*` spelling below names the shared workflow; use your agent's native
-invocation syntax.
+### Code gate
 
-**If the `/ss-*` skills are installed, run `/ss-build` to build a screen** — it enforces the
-exact loop that made the reference demo look designed instead of generic (lock the look →
-build → `/ss-score` → fix to ≥ 80 → *then* show). Building free-hand and skipping that loop is
-precisely how output lands "AI-made" (no lock → default indigo; no gate → first draft shipped).
+`$ss-score` reads implementation evidence and names the effective rule set. It checks eight
+weighted categories: color, hierarchy/type, layout/rhythm, surfaces/elevation, states/a11y,
+motion/interaction, coherence, and distinctiveness. Fix highest-gain failures and re-score.
 
-If the skills aren't installed, do the same loop by hand:
+### Pixel gate
 
-1. **Lock the look FIRST** — no `STYLESEED.md`? Run Quick Setup in plan mode (domain·surface·
-   mood·accent·font·motion) and write the lock **before any code**. If it exists, obey it.
-2. Read `DESIGN-LANGUAGE.md` (TOC → rules 14, 18, 19, 61-63) + `VISUAL-CRAFT.md` (§C0, §CC-9x)
-   and the matching `APP-PLAYBOOKS.md` × `PAGE-TYPES.md` — not a one-shot summary.
-3. Build with ONE focal point, the surface's type scale, no icon-chip cliché, the lock's
-   accent/font/mood everywhere.
-4. **Gate loop** — `/ss-score` (code, else self-score) → if < 80, fix the top items → re-score →
-   repeat to ≥ 80. Never present a draft you haven't scored. **Then, if it renders, `/ss-verify`
-   (pixels)** — screenshot, look, fix what only shows up rendered, re-render. Then present + report.
+For every renderable artifact, `$ss-verify` must inspect actual output at the adapter's required
+viewports, frames, pages, and states. Check focal dominance, loaded type, balance, optical rhythm,
+crop/safe zones, contrast, responsive transformation, and grammar fit. Re-render after fixes.
+Never claim a visual pass without seeing the rendered artifact.
 
-## Staying current (check once per project — don't nag)
+For example, StyleSeed supplies a carousel's `sequential-story` grammar and brand rules; the
+Claude `carousel-build` companion owns 1080×1440 canvas, Instagram safe zones, crop, PIL render,
+and export. Verification opens every exported frame.
 
-StyleSeed is actively maintained: the rule set grows as the community proposes rules
-via PR, so a project pinned to an old copy misses newer judgment. **Once per project**
-— at setup, or the first time the user references StyleSeed in a session — you MAY:
+## Skill invocation
 
-1. Read the local version from `engine/VERSION` (or `VERSION` near these files).
-2. Fetch `https://styleseed-demo.vercel.app/version.json`.
-3. If its `version` is newer, tell the user **once**, briefly:
-   *"StyleSeed v<remote> is out (you're on v<local>) — <whatsNew>. Run `/ss-update` (or `npx skills add bitjaru/styleseed`) to pull the new rules."*
-   Then drop it.
+- Claude Code: `/ss-build`, `/ss-reference`, `/ss-score`, `/ss-verify`, etc.
+- Codex: `$ss-build`, `$ss-reference`, `$ss-score`, `$ss-verify`, or the `/skills` picker.
+- The canonical 20 skills live in `engine/.claude/skills`; repository `.agents/skills` is a
+  symlink to that directory so agent implementations cannot drift.
 
-Never block work on this, never repeat it, and skip it entirely if you can't fetch.
+## Staying current
 
-→ Source & updates: https://github.com/bitjaru/styleseed
+Once per project, the agent may compare the local `engine/VERSION` with
+`https://styleseed-demo.vercel.app/version.json`. If newer, tell the user once and suggest
+`$ss-update` or `npx skills add bitjaru/styleseed`. Never block the current work or nag.
+
+Source: https://github.com/bitjaru/styleseed

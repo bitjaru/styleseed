@@ -4,7 +4,7 @@
   --font-size: 16px;
 
   /* === CUSTOMIZE: Brand Colors === */
-  --brand: #721FE5;
+  --brand: #3182F6;
   --primary: #030213;
   --primary-foreground: oklch(1 0 0);
 
@@ -45,7 +45,7 @@
   --surface-page: #FAFAFA;
   --surface-subtle: #FAFAF9;
   --surface-muted: #E8E6E1;
-  --brand-tint: #F0E8FF;
+  --brand-tint: #E8F3FF;
   --alert-badge: #FF4444;
 
   /* === Borders & Inputs === */
@@ -119,11 +119,11 @@
   --surface-page: #121212;
   --surface-subtle: #252525;
   --surface-muted: rgba(255, 255, 255, 0.08);
-  --brand-tint: rgba(155, 95, 255, 0.15);
+  --brand-tint: rgba(49, 130, 246, 0.18);
   --alert-badge: #FF5C5C;
 
   /* === Key Color & Status (brightened for dark mode) === */
-  --brand: #9B5FFF;
+  --brand: #4593FC;
   --primary: #E0E0E0;
   --primary-foreground: #121212;
   --secondary: #252525;

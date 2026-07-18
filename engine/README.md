@@ -1,6 +1,7 @@
 # StyleSeed Engine
 
-The brand-agnostic design engine. Contains layout rules, components, skills, and design language — everything except colors and fonts.
+The AI design-method engine. It combines fixed judgment, job-specific output grammars,
+surface adapters, reference compilation, detailed craft, components, and agent skills.
 
 ## What's Here
 
@@ -8,8 +9,14 @@ The brand-agnostic design engine. Contains layout rules, components, skills, and
 |-----------|----------|
 | `CLAUDE.md` | AI integration guide — Claude Code reads this automatically |
 | `AGENTS.md` | Cross-agent guide — Codex reads this automatically |
+| `PRODUCT-PRINCIPLES.md` | Product constitution and authority order |
+| `RULESETS.md` | 8 built-in functional output grammars |
+| `ADAPTERS.md` | 5 renderer/surface contracts, including non-web outputs |
+| `REFERENCE-COMPILER.md` | Evidence-to-rule-set compilation protocol |
+| `PRESETS.md` | Optional aesthetic profiles, separate from grammars |
+| `ARCHITECTURE.md` | Technical architecture and diagrams |
 | `DESIGN-LANGUAGE.md` | 74 visual design rules with Table of Contents |
-| `.claude/skills/` | 19 canonical agent skills (Claude `/ss-*`, Codex `$ss-*`) |
+| `.claude/skills/` | 20 canonical agent skills (Claude `/ss-*`, Codex `$ss-*`) |
 | `components/ui/` | 32 shadcn/ui-based primitives (including motion.tsx) |
 | `components/patterns/` | 16 dashboard pattern components |
 | `css/` | base.css, fonts.css, index.css (theme.css comes from skins/) |
@@ -32,4 +39,5 @@ cp skins/stripe/theme.css your-project/src/styles/theme.css
 # Codex:       $ss-setup
 ```
 
-Design rules in this engine work with ANY skin — the 74 rules are about layout, composition, typography ratios, and visual rhythm, not specific colors.
+The method works with any skin and across multiple artifact renderers. Select the output grammar
+and adapter first; skins provide tokens, not judgment.

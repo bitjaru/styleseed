@@ -6,7 +6,7 @@
 
 export const tokens = {
   colors: {
-    brand: "#721FE5", // default — overridden by skin's theme.css
+    brand: "#3182F6", // example — overridden by the selected skin or project lock
     brandTint: "#F0E8FF",
 
     text: {

@@ -46,8 +46,8 @@ export default function GuidesIndex() {
           </h1>
           <p className="mt-4 text-[16px] leading-relaxed text-neutral-600">
             Design judgment isn&rsquo;t one-size-fits-all. Each app type biases color, density,
-            typography, motion, and patterns differently — within the same 74 universal rules.
-            Pick your domain.
+            typography, motion, and patterns differently — inside a composed output grammar,
+            surface adapter, and fixed quality bar. Pick your domain.
           </p>
         </header>
 

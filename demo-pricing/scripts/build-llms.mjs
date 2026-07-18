@@ -51,19 +51,37 @@ const designLang = readFileSync(resolve(engineDir, 'DESIGN-LANGUAGE.md'), 'utf-8
 const readOpt = (f) => existsSync(resolve(engineDir, f)) ? readFileSync(resolve(engineDir, f), 'utf-8') : ''
 const visualCraft = readOpt('VISUAL-CRAFT.md')
 const uxWriting = readOpt('UX-WRITING.md')
+const productPrinciples = readOpt('PRODUCT-PRINCIPLES.md')
+const ruleSets = readOpt('RULESETS.md')
+const adapters = readOpt('ADAPTERS.md')
+const presets = readOpt('PRESETS.md')
+const referenceCompiler = readOpt('REFERENCE-COMPILER.md')
+const architecture = readOpt('ARCHITECTURE.md')
 
 const fullHeader =
   `# StyleSeed — Full Context\n\n` +
-  `Source: github.com/bitjaru/styleseed (CLAUDE.md + DESIGN-LANGUAGE.md + VISUAL-CRAFT.md + UX-WRITING.md)\n` +
+  `Source: github.com/bitjaru/styleseed (constitution + grammars + adapters + compiler + craft)\n` +
   `Generated: ${new Date().toISOString()}\n\n---\n\n`
 
 writeFileSync(
   resolve(publicDir, 'llms-full.txt'),
-  fullHeader + claude +
+  fullHeader +
+    (productPrinciples ? productPrinciples + '\n\n---\n\n' : '') +
+    (architecture ? architecture + '\n\n---\n\n' : '') +
+    (ruleSets ? ruleSets + '\n\n---\n\n' : '') +
+    (adapters ? adapters + '\n\n---\n\n' : '') +
+    (presets ? presets + '\n\n---\n\n' : '') +
+    (referenceCompiler ? referenceCompiler + '\n\n---\n\n' : '') +
+    claude +
     '\n\n---\n\n' + designLang +
     (visualCraft ? '\n\n---\n\n' + visualCraft : '') +
     (uxWriting ? '\n\n---\n\n' + uxWriting : ''),
 )
+
+const architectureSvg = resolve(root, '../assets/styleseed-architecture.svg')
+if (existsSync(architectureSvg)) {
+  cpSync(architectureSvg, resolve(publicDir, 'styleseed-architecture.svg'))
+}
 
 // ============================================================
 // 2. .well-known/agent-skills/index.json — skill discovery

@@ -1,12 +1,18 @@
 # StyleSeed Design Language
-> Visual design rules for professional mobile dashboard design
+> Detailed craft rules used inside the composed StyleSeed method
+
+Read `PRODUCT-PRINCIPLES.md`, select an output grammar from `RULESETS.md`, and select a surface
+adapter from `ADAPTERS.md` before applying this file. Several recipes below originated in the
+mobile `consumer-service` grammar; they are defaults for that context, not universal laws for
+editorial, technical, commerce, carousel, document, or marketing outputs. Exact grammar and
+adapter contracts override contextual recipes, but never the core invariants.
 
 ## Table of Contents
 
 ### Part 1: Core Visual Rules
 | # | Rule | Key Point |
 |---|------|-----------|
-| 1 | [Color Philosophy](#1-color-philosophy) | Single accent color, 5-level grayscale |
+| 1 | [Color Philosophy](#1-color-philosophy) | Stable color roles, identifiable primary action |
 | 2 | [Number/Currency Display](#2-numbercurrency-display-rules) | Big number + small unit, 2:1 ratio |
 | 3 | [Text Hierarchy](#3-text-hierarchy-rules) | 5-level typography system |
 | 4 | [Trend Indicators](#4-trend-indicator-rules) | Up/down arrows with color |
@@ -66,14 +72,16 @@
 
 ## 1. Color Philosophy
 
-### Key Color Principle — A Single Accent for Unity
-- **Create unity with a single key color (your brand color, defined by skin)**
-- Key color is used **only for active/selected states**
-- Everything else is **grayscale** so the key color stands out
+### Key Color Principle — Stable Roles Create Unity
+- Keep one unmistakable primary action/key color.
+- Additional hues are legal only when the selected output grammar defines a stable semantic,
+  categorical, editorial, or brand role for them.
+- Default to restraint. A color without a repeatable meaning is decoration and should be removed.
 
 ```
-✓ Key color usage: active nav, selected chart, progress bar fill, icon badge
-✗ Key color forbidden: body text, large background areas, general borders
+✓ Key color usage: primary action, active navigation, selected state, focal data
+✓ Defined extra role: stable chart category, semantic severity, expressive-marketing brand field
+✗ Forbidden: arbitrary rainbow lists, competing CTA colors, component-local decorative hues
 ```
 
 ### Impact Colors — Small, Strong
@@ -90,7 +98,8 @@
 | Notification | `#FF4444` | dot 6px | notification badge (single dot) |
 
 ### Grayscale — 5-Level Text Hierarchy
-Pure black (#000) is **never used**. Soft blacks for a gentle tone.
+Pure black (#000) is not a casual default. Use a refined ink ramp; structural hard black is
+reserved for an exact maintained grammar/profile contract such as a high-contrast aesthetic.
 
 | Level | Hex | Role | Example |
 |-------|-----|------|---------|
@@ -688,35 +697,26 @@ The gap between title and content varies by content type:
 
 ---
 
-## 18. Prohibition Rules — Floors vs Skin Defaults (v2.11)
+## 18. Prohibition Rules (Absolute Don'ts)
 
-**Two tiers live here.** ⛔ **FLOORS** apply on every surface under every lock (a11y, dark
-patterns, incoherence). 🔧 **SKIN DEFAULTS** are the Toss-flavored house style — they bind when
-nothing is locked, and a `STYLESEED.md` lock/preset legitimately overrides them (the gate
-scores lock-relative; see CLAUDE.md). Historically everything below was written as absolute —
-that froze the reference demo's fingerprint into law and wrongly penalized legitimate systems
-(pure-black dev-dark, multi-color brand palettes, serif editorial). The tier tags fix that.
-
-### Key Color Overuse Forbidden 🔧 (default — a locked brand-palette assigns large-surface roles deliberately)
+### Key Color Overuse Forbidden
 ```
 ✗ Painting entire card background with bg-brand
 ✗ Key color background + white text large-area card
 ✗ Key color gradient background
 ✗ Using key color across 2+ sections simultaneously at large scale
 ```
-Key color defaults to **small elements only**: icon badges (10% opacity), progress fill, selected dots, active nav, badge pills.
-Card backgrounds default to `bg-card` (white) or `bg-surface-subtle` — a locked brand-palette may assign a large-surface role deliberately (one role, locked, consistent).
+Key color is for **small elements only**: icon badges (10% opacity), progress fill, selected dots, active nav, badge pills.
+Card backgrounds are **always `bg-card` (white)** or `bg-surface-subtle`.
 
-### Pure Black 🔧 (default — locked oled-black/brutalist/swiss overrides for SURFACES)
+### Pure Black Forbidden
 ```
-✗ #000000 text on white (default — use the 900/950 neutral)
-✗ bg-black unless the lock declares oled-black elevation or a brutalist-lite/swiss preset
-✓ #000 base legal under a locked oled-black dark language (Vercel/Linear-class, CL-5) or
-  a locked brutalist/swiss black-and-white identity — text contrast floors ⛔ still apply
+✗ #000000, text-black, bg-black
+✗ No pure black usage under any circumstances
 ```
-Default darkest: `#2A2A2A` (strong), default text: `#3C3C3C` (primary).
+Darkest color: `#2A2A2A` (strong), default text: `#3C3C3C` (primary).
 
-### Ad-hoc Components 🔧 (mobile-app skin defaults — desktop SaaS locks may use standard selects/radios with proper focus states ⛔)
+### Ad-hoc Components Forbidden
 ```
 ✗ Creating new patterns not in the seed
 ✗ CTA buttons FIXED to the bottom of the viewport on a dashboard (a full-width button INLINE in the scroll flow is fine — this bans the floating/fixed bottom bar, not width)
@@ -726,21 +726,21 @@ Default darkest: `#2A2A2A` (strong), default text: `#3C3C3C` (primary).
 If a new component is needed, **compose it from one of the 4 section types (A/B/C/D)**.
 If existing pattern combinations cannot solve it, confirm with the user first.
 
-### Layout 🔧 (comfortable-density Toss defaults — the LOCKED density/preset sets the actual values; floating with NO separation language is the ⛔ floor)
+### Layout Forbidden
 ```
-✗ Content with no separation language at all (cards/tone, whitespace/grid, or borders — per lock) ⛔
-✗ Placing dividers (hr, border-b, Separator) between sections (default)
-✗ Section gap other than the locked density's rhythm (default comfortable = space-y-6)
-✗ Margins/padding off the locked density position (default = mx-6/px-6, p-6/p-8)
-✗ Card radius off the locked radius personality (default soft = rounded-2xl; sharp locks 6–8px)
-✗ Placing floating buttons above bottom nav ⛔
+✗ Placing content directly outside cards (text, metrics, lists, etc.)
+✗ Placing dividers (hr, border-b, Separator) between sections
+✗ Changing section gap to anything other than space-y-6
+✗ Using left/right margin/padding other than mx-6/px-6
+✗ Changing card padding to anything other than p-6/p-8
+✗ Changing card radius to anything other than rounded-2xl
+✗ Placing floating buttons above bottom nav
 ```
-**Default: section separation = cards + spacing (space-y-6);** under a locked flat/borders/
-editorial language, whitespace-grid or hard borders do the same job (one language only ⛔).
-The difference between page background (#FAFAFA) and card background (#FFFFFF) serves as the default natural divider.
+**Section separation is achieved through cards + spacing (space-y-6) only.**
+The difference between page background (#FAFAFA) and card background (#FFFFFF) serves as a natural divider.
 Dividers (border-t) are used **only inside cards** to separate chart from stats.
 
-### Selection UI 🔧 (mobile-app skin defaults)
+### Selection UI Forbidden
 ```
 ✗ Select dropdown (▼ arrow) inside cards
 ✗ Radio buttons / checkbox filters
@@ -748,21 +748,19 @@ Dividers (border-t) are used **only inside cards** to separate chart from stats.
 ✗ Placing toggles in card content area (header right only)
 ```
 
-### Typography — mixed
+### Typography Forbidden
 ```
-✗ Using grays outside the locked grayscale ramp ⛔ (any ramp, but ONE ramp)
-✗ Displaying numbers and units at the same size 🔧 (Toss signature — a locked uniform-numeric
-  style, e.g. technical mono tables, hierarchies by weight/color instead)
-✗ Displaying numbers without units (context is lost) ⛔
-✗ Omitting uppercase + tracking on labels 🔧 (Latin default; Korean labels never track — §CJK)
+✗ Using grays outside the defined 5-level grayscale
+✗ Displaying numbers and units at the same size
+✗ Displaying numbers without units (context is lost)
+✗ Omitting uppercase + tracking on labels
 ```
 
-### Shadow 🔧 (defaults — the locked elevation language sets the cap; M3-style locked elevation may exceed 8%)
+### Shadow Forbidden
 ```
-✗ Shadows above the locked opacity cap (default ~8%; visibly heavy = wrong under any lock)
-✗ Colored shadows (adding color in rgba) — except a brand-tinted shadow the lock declares
-✗ Different shadow levels per card ⛔ (incoherence — banned under every lock)
-✗ Soft shadows mixed INTO a locked flat/borders language ⛔ (one language only)
+✗ Strong shadows (opacity 15% or above)
+✗ Colored shadows (adding color in rgba)
+✗ Different shadow levels per card
 ```
 
 ---
@@ -1037,7 +1035,11 @@ Layer 2: Content             → relative z-10
 
 ---
 
-## Core Design Principles Summary
+## Consumer-service recipe summary
+
+> This summary captures the original mobile dashboard recipe. Use it only when the effective
+> grammar is `consumer-service` (or a compiled grammar explicitly inherits it). It is not the
+> cross-output StyleSeed constitution.
 
 ### Color (4)
 1. Unity through one key color, used only for active/selected states
@@ -1076,7 +1078,8 @@ Layer 2: Content             → relative z-10
 22. Background decoration only in hero cards, `overflow-hidden` required
 
 ### Prohibitions (7)
-23. No content placed directly outside cards — **all content lives inside cards**
+23. In this recipe, data modules live inside cards; navigation, headings, actions, editorial
+    prose, and other grammar-owned structures do not need card containers
 24. No key-color background cards
 25. No ad-hoc components
 26. No card overlap/stacking
@@ -1699,11 +1702,6 @@ Disabled: opacity-50 cursor-not-allowed
 The relationship between card (#FFFFFF) and background (#FAFAFA) in light mode must preserve the **same sense of depth** in dark mode.
 Cards must be **brighter than background** for visual section separation.
 
-> **v2.11 — two legal dark languages** (lock ONE): **tonal-ramp** (below — #121212-family base,
-> elevation by surface lightness; Material-class) or **oled-black** (true `#000` base, elevation
-> carried by hairline borders + restrained surface steps; Vercel/Linear-class — see CL-5).
-> Mixing the two on one product is the violation; either one, locked, is correct.
-
 ```
 Light:  background #FAFAFA  ->  card #FFFFFF     (card is brighter OK)
 Dark:   background #121212  ->  card #1E1E1E     (card is brighter OK)
@@ -2116,15 +2114,14 @@ OK  CTA label = action verb + clear outcome
 | No negative emotions | Begging/pleading/discomfort = dark pattern |
 | No decorative effects | Particles, excessive gradients, meaningless effects |
 
-### Graphic Style 🔧 (default — a LOCKED illustration identity overrides)
+### Graphic Style
 ```
-OK  Simple, clear, clean digital style (default)
-OK  A locked illustration language — cartoon/mascot (Duolingo-class), hand-drawn
-    (Headspace-class), painterly — IS legal when the lock declares it as the brand's
-    imagery identity and it's applied consistently (one style, locked palette, every asset)
-NO  Unlocked style drift — a different illustration style per screen/asset ⛔
-NO  Low-resolution graphics ⛔
-NO  Particles / meaningless decorative effects (default; Cinematic tier §43 governs marketing)
+OK  Simple, clear, clean digital style
+NO  Hand-drawn feel
+NO  Painterly / lyrical style
+NO  Cartoon-style illustration
+NO  Low-resolution graphics
+NO  Particles / tiny effects
 ```
 
 ### Dark / Light Mode Support

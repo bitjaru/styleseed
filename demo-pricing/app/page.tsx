@@ -65,6 +65,9 @@ export default function HomePage() {
             <Link href="/how-it-thinks" className="hover:text-neutral-900">
               How it thinks
             </Link>
+            <Link href="/architecture" className="hover:text-neutral-900">
+              Architecture
+            </Link>
             <Link href="/showcase" className="hover:text-neutral-900">
               Showcase
             </Link>
@@ -112,6 +115,31 @@ export default function HomePage() {
         {/* Hero */}
         <Hero />
 
+        <section className="border-t border-neutral-200 bg-[#F7F7FB]">
+          <div className="mx-auto grid max-w-6xl items-center gap-10 px-6 py-20 lg:grid-cols-[0.85fr_1.4fr]">
+            <div>
+              <div className="text-[11px] font-bold uppercase tracking-widest text-violet-600">New in v3</div>
+              <h2 className="mt-2 text-[clamp(28px,4vw,42px)] font-bold leading-tight tracking-tight">
+                One method.<br />Many output grammars.
+              </h2>
+              <p className="mt-4 text-[15px] leading-relaxed text-neutral-600">
+                Toss-like consumer UI is one researched language, not the universal answer.
+                StyleSeed now selects the grammar for the job — and can compile a new one from
+                your screenshots, URLs, Figma exports, or existing product.
+              </p>
+              <p className="mt-3 text-[15px] leading-relaxed text-neutral-600">
+                Surface adapters carry the same judgment into web and mobile UI, social
+                carousels, slide decks, documents, reports, posters, and covers.
+              </p>
+              <Link href="/architecture" className="mt-6 inline-flex items-center gap-1.5 rounded-xl bg-neutral-900 px-5 py-3 text-[14px] font-bold text-white hover:bg-black">
+                Explore the engine <ArrowRight size={14} />
+              </Link>
+            </div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/styleseed-architecture.svg" alt="StyleSeed engine architecture" className="w-full rounded-2xl border border-neutral-200 bg-white" />
+          </div>
+        </section>
+
         {/* Get started — the first thing a visitor needs: how to use it */}
         <section id="get-started" className="scroll-mt-20 border-t border-neutral-200 bg-neutral-900 text-white">
           <div className="mx-auto max-w-6xl px-6 py-16">
@@ -153,7 +181,7 @@ export default function HomePage() {
                 <code className="font-mono text-[13px] text-violet-300">/ss-build</code> can only
                 <em> run</em> once installed. Then your lock persists in{" "}
                 <code className="font-mono text-[13px] text-neutral-300">STYLESEED.md</code> (no drift),
-                and every screen is scored and fixed before you see it. All 19 skills, universally —
+                and every artifact is scored and visually checked before you see it. All 20 skills, universally —
                 Claude Code, Codex, Cursor, Gemini CLI &amp; 12+ more.
               </p>
               <div className="mt-4 space-y-1.5">
@@ -164,17 +192,19 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Restyle gallery — same product, six presets, proof of distinctiveness */}
+        {/* Restyle gallery — aesthetic profiles, separate from functional output grammars */}
         <section className="border-t border-neutral-900 bg-neutral-950 text-white">
           <div className="mx-auto max-w-6xl px-6 py-20">
             <div className="text-[11px] font-bold uppercase tracking-widest text-violet-300">
               One engine, many looks
             </div>
             <h2 className="mt-2 max-w-3xl text-[clamp(28px,4vw,40px)] font-bold leading-tight tracking-tight">
-              Same product. Six presets. One <code className="rounded bg-white/10 px-1.5 py-0.5 font-mono text-[0.85em] text-violet-200">/ss-restyle</code> away.
+              Same product. Six aesthetic profiles. One <code className="rounded bg-white/10 px-1.5 py-0.5 font-mono text-[0.85em] text-violet-200">/ss-restyle</code> away.
             </h2>
             <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-neutral-400">
-              Distinctive isn&rsquo;t a coat of paint. Each preset is a coherent coordinate across the
+              Profiles coordinate radius, density, color, weight, motion, type, and one signature
+              move. The selected output grammar still owns the product job and composition — a
+              technical profile cannot turn a shop into an observability console. Distinctive isn&rsquo;t a coat of paint. Each profile is a coherent coordinate across the
               dial axes — radius, density, color, weight, motion, plus a font and a signature move —
               so every look reads <em>designed</em>, never generic. Trend gimmicks (glass, neumorphism)
               are deliberately left out.
@@ -214,7 +244,7 @@ export default function HomePage() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/rules-blueprint.svg"
-              alt="A StyleSeed UI card annotated with the design rule behind each decision — numbers 2:1, one accent, content in cards, one corner radius, never color alone, real states."
+              alt="A StyleSeed UI annotated with the design rule behind each decision — deliberate hierarchy, stable color roles, coherent geometry, accessible signals, and real states."
               width={1200}
               height={680}
               className="mt-8 w-full rounded-2xl border border-neutral-200 bg-white"

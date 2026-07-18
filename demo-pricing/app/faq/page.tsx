@@ -39,7 +39,7 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "I applied StyleSeed but the design still looks bad / colors are random / there's no key color — what do I do?",
-    a: "Consistency comes from constraints, and the one-paste prompt is the least-constrained path: the agent reads a summary once and improvises. Fix it in five steps. 1) Plan first — in Claude Code press Shift+Tab for Plan Mode and lock the decisions before any code. 2) Pin one key color (a brand hex, or pick a skin like Linear/Stripe/Toss) — “one accent, everything else greyscale.” 3) Point the agent at the full rules: “read styleseed-demo.vercel.app/llms-full.txt,” not just llms.txt. 4) Install the rule files (CLAUDE.md / AGENTS.md / .cursorrules) into the repo so they're re-read every prompt — a one-shot URL read drifts. 5) Run /ss-review or /ss-score and iterate; the reference demo wasn't one-shot either.",
+    a: "Consistency comes from constraints, and the one-paste prompt is the least-constrained path. Fix it in five steps. 1) Select the output grammar and surface adapter before code. 2) Lock a primary action color and define stable roles for any additional hues. 3) If you have references that StyleSeed does not model, run /ss-reference instead of copying them. 4) Install the rule files so they are re-read every prompt. 5) Run /ss-score, then render and inspect with /ss-verify; the reference demo was not one-shot either.",
   },
   {
     q: "Why does the same prompt give a great result one time and a generic one the next?",

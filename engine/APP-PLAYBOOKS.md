@@ -5,9 +5,10 @@ Design judgment has **two axes**:
 1. **App domain** — *what kind of product is this?* (this file)
 2. **Page type** — *what kind of screen is this?* (`PAGE-TYPES.md`)
 
-The 74 rules in `DESIGN-LANGUAGE.md` are **universal** — they always apply. These
-playbooks tell the AI **how to bias the dials** for a domain: a fintech app and a
-social app can both have a "dashboard," but they should not look the same.
+These playbooks are a **domain-bias layer**, applied after the core judgment, output grammar,
+and surface adapter. They tell the AI how to tune a domain: a fintech app and a social app can
+both have a dashboard, but they should not look the same. Contextual recipes in
+`DESIGN-LANGUAGE.md` apply only when they fit the selected grammar.
 
 ## How to read a playbook
 
@@ -15,17 +16,16 @@ Each domain sets positions on six dials, plus signature patterns and traps:
 
 | Dial | What it decides |
 |------|-----------------|
-| **Color strategy** | how much restraint vs. energy; what the single accent signals |
+| **Color strategy** | how much restraint vs. energy; what the primary and stable role colors signal |
 | **Density** | airy vs. packed — how much information per screen |
 | **Typography weight** | numbers / text / imagery — where the eye is meant to land |
 | **Motion seed** | the default personality (see `engine/motion`) |
 | **Signature patterns** | the 2–3 components that define the domain |
 | **Anti-patterns** | domain-specific "never do this" |
 
-> **The rules still win.** No #000, one accent, content-in-cards, 2:1 numbers,
-> ≤8% shadows, visual rhythm — these hold in *every* domain. Playbooks only move
-> the dials *within* the rules. When a playbook and a Golden Rule seem to
-> conflict, the Golden Rule wins (see `DESIGN-LANGUAGE.md` §Prohibition Rules).
+> **The composition still wins.** Core invariants such as deliberate hierarchy, stable tokens,
+> accessibility, and cross-artifact coherence always hold. Cards, number ratios, shadow levels,
+> and color-role counts are contextual decisions owned by the selected grammar and adapter.
 
 `/ss-setup` already asks for the app type — load the matching playbook before
 scaffolding, and re-read it from `/ss-page`.
@@ -225,4 +225,5 @@ scaffolding, and re-read it from `/ss-page`.
 
 Pick the closest two and blend. Most apps are a primary domain + a secondary
 behavior (e.g. a fintech app with a social feed → fintech restraint for money,
-social liveliness *only* in the feed). The Golden Rules still bound everything.
+social liveliness *only* in the feed). The core judgment and effective output grammar still
+bound everything.

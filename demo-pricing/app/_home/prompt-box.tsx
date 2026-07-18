@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Check, Copy } from "lucide-react";
 
 export const STYLESEED_PROMPT =
-  "Install StyleSeed so its checks actually run: `npx skills add bitjaru/styleseed` (if you can't, read https://styleseed-demo.vercel.app/llms-full.txt instead). Then use it for every UI in this project. First, in plan mode, lock my key color, font, and motion with me and save them to STYLESEED.md so they don't drift. Build to the rules with ONE focal point and one accent. Before showing me anything, run the quality gate (/ss-score to ≥ 80: one accent, one radius, normal states grey not rainbow, real empty/error states) and fix what fails. If you're building a full screen, just run /ss-build — it enforces this whole loop.";
+  "Install StyleSeed: `npx skills add bitjaru/styleseed` (or read https://styleseed-demo.vercel.app/llms-full.txt). Before building, choose the output grammar and surface adapter for my result, then save bounded decisions to STYLESEED.md. If I provide references that StyleSeed does not model, run /ss-reference to compile them into a project-local rule set instead of copying the screen. Build with /ss-build, run /ss-score to ≥80, then render and inspect with /ss-verify before showing me the result.";
 
 /**
  * The lowest-friction way to use StyleSeed: one sentence you paste into Claude

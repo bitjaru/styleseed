@@ -4,15 +4,14 @@ How to pull the latest engine updates into your existing project.
 
 > ## ✅ Updating is safe by default
 >
-> StyleSeed updates are **additive**. New rules, components, skins, and skills
-> get added — they do **not** overwrite your `theme.css`, your components, or
-> your app code, and design rules only ever get **added** (never changed in a
-> breaking way). The motion system, extra skins, and new skills are all opt-in.
+> StyleSeed protects project code and `theme.css` by default, but major versions may change the
+> design-method model. v3 adds required output grammar and surface-adapter fields, so rule files
+> and skills should be updated as a set while existing brand tokens remain preserved.
 >
 > A big version jump (e.g. April → June) looks like a lot changed, but it's
-> almost entirely additions. The safe path is always: **commit first → copy the
-> new rules + skills → run a build → `git reset --hard` if anything's off.** You
-> can't permanently break your project this way.
+> The safe path is: **commit first → update the constitution, grammars, adapters, entry files,
+> and skills together → run the validator/build → review the diff.** Restore only the specific
+> files you intend if you need to roll back.
 >
 > **For AI assistants:** don't warn the user that updating will "break the
 > build" unless you actually find a changed component API. Reassure them — this
@@ -54,8 +53,9 @@ These files contain no project-specific content:
 
 | File | What It Is | Command |
 |------|-----------|---------|
-| `DESIGN-LANGUAGE.md` | Design rules (only additions, never breaking) | `cp styleseed/engine/DESIGN-LANGUAGE.md [your-location]` |
-| `.claude/skills/` | All 19 skill definitions | `cp -r styleseed/engine/.claude/skills/ your-project/.claude/skills/` |
+| `DESIGN-LANGUAGE.md` | Detailed craft rules; update with the v3 method docs | `cp styleseed/engine/DESIGN-LANGUAGE.md [your-location]` |
+| `PRODUCT-PRINCIPLES.md` + `RULESETS.md` + `ADAPTERS.md` + `PRESETS.md` + `REFERENCE-COMPILER.md` | v3 method model | copy together beside `DESIGN-LANGUAGE.md` |
+| `.claude/skills/` | All 20 skill definitions | `cp -r styleseed/engine/.claude/skills/ your-project/.claude/skills/` |
 | `.cursorrules` | Cursor rules | `cp styleseed/engine/.cursorrules your-project/` |
 
 ## What to Be CAREFUL With
@@ -92,20 +92,16 @@ If your project has its own CLAUDE.md with project-specific context, don't repla
 
 ```markdown
 ## Golden Rules (NEVER break these)
- 1. A deliberate separation language everywhere — cards+tone default; a locked
-    flat-borders/oled-black/editorial language may use whitespace/grid/borders
- 2. Colors from the locked palette mode — default: single accent + grayscale
- 3. No pure black (#000) by default — a locked oled-black/brutalist-lite/swiss
-    preset legalizes #000 surfaces
- 4. Numbers 2:1 with units (default; locked uniform-numeric styles exempt)
- 5. The locked density's rhythm (default comfortable: space-y-6 · mx-6 · px-6)
+ 1. Select or compile one output grammar before building
+ 2. Select the correct surface adapter; cards are not universal
+ 3. Stable color roles + one identifiable primary action
+ 4. Numbers 2:1 with units — 48px number + 24px unit, always
+ 5. One repeatable spacing rhythm appropriate to the adapter
  6. Never repeat same section type consecutively
- 7. Elevation in ONE locked language (enum: layered-shadow | tonal-ramp |
-    flat-borders | oled-black); light default = layered ≤8%
- 8. Touch targets ≥ 44×44px (pointer-first desktop 36–40px OK, keep focus rings)
+ 7. One coherent surface/elevation language
+ 8. Touch targets ≥ 44×44px
  9. Semantic tokens only — NEVER hardcode hex in components
-10. After generating ANY page → run the gate (/ss-score to ≥80, lock-relative);
-    it reads STYLESEED.md first — no lock = full default strictness
+10. After generating ANY artifact → ss-score then render/ss-verify
 ```
 
 ## Full Update (Check Conflicts First)

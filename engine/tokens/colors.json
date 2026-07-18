@@ -2,7 +2,7 @@
   "$description": "StyleSeed - Color Tokens",
   "brand": {
     "primary": {
-      "value": "#721FE5",
+      "value": "#3182F6",
       "description": "Main brand accent color (purple)"
     },
     "dark": {

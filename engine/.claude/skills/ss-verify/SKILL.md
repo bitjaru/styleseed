@@ -1,11 +1,16 @@
 ---
 name: ss-verify
-description: The VISUAL gate — render the UI, screenshot it, and score what you actually SEE, not what the code says. Catches the tells that only show up in pixels (dead whitespace, cramping, a hero that doesn't dominate, fonts that didn't load, real rendered color, the squint "does this look AI-made" test) — the things /ss-score can't read from source. Renders empty/loading/error states too, then fixes and re-renders until it passes. Use as the final gate on any screen you can render.
-argument-hint: "[route or file] [--surface mobile|desktop]  — e.g. \"/dashboard --surface desktop\""
+description: The VISUAL gate — render a UI or visual artifact through its surface adapter, inspect the actual pixels, then fix and re-render until it passes the composed StyleSeed rule set.
+argument-hint: "[route, file, artifact manifest, or export directory]"
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash
 ---
 
 # Verify (look at it, don't just read it)
+
+First resolve the effective rule set from `PRODUCT-PRINCIPLES.md`, `RULESETS.md`, the selected
+built-in or reference-compiled grammar, `ADAPTERS.md`, domain/page, optional `PRESETS.md` profile, and
+`STYLESEED.md`. Judge pixels against that composed method. A lock value cannot excuse a core
+failure, and a profile cannot replace the output grammar.
 
 `/ss-score` reads the **code** and scores it. But some of the worst "AI-made" tells never appear
 in source — they only exist in **pixels**: a hero that doesn't actually dominate, a lower third
@@ -28,9 +33,14 @@ sufficient; pixel-clean is the real bar.
   if you didn't actually see a screenshot.**
 - A quick pre-commit pass → `/ss-lint`. `/ss-verify` is heavier (it boots a renderer).
 
-## Step 1 — Render it
+## Step 1 — Render it through the active adapter
 
-Get a real screenshot. In priority order:
+For `social-carousel`, `slide-deck`, `document-report`, or `single-frame`, use the companion
+renderer and open every required exported frame/page at readable resolution. Verify dimensions,
+crop/safe zones, font availability, asset placement, and the export manifest. Do not force a
+browser workflow onto a PIL, slide, PDF, or image renderer.
+
+For `product-ui`, get a real screenshot in priority order:
 
 **A. Running project (Next / Vite / etc.) — the normal case.**
 1. Start the dev server in the background (`npm run dev` / `pnpm dev` / framework command); wait
@@ -62,19 +72,12 @@ the component with realistic props, then screenshot that.
 
 ## Step 2 — Score what you SEE (the visual gate)
 
-Look at the image and run the StyleSeed gate **perceptually** — and **judge against the lock**:
-read `STYLESEED.md` first, because what "reads AI-generated" depends on the locked look. Pill
-controls are the locked personality under `warm-dtc` (not a tell); hard borders are the style
-under `brutalist-lite`; a serif reading column is correct under `editorial`. The tells below are
-the *unlocked-default* signatures — the combination of generic choices nobody locked.
-**If there is NO lock, judge at full default strictness** (pill+generic-sans IS a tell,
-serif-paper IS dated, borders-as-separation on light IS flat) and say so in the report —
-same fallback rule as `/ss-score` Step 0:
+Look at the image and run the StyleSeed gate **perceptually**. These are the checks that need
+eyes, not source:
 
 ```
 □ Squint test    — blur your focus / imagine it at 50%. Does it still read "AI-generated"?
-                   (bland gradient, pill button + generic sans WITH no locked pill personality,
-                   icon-chip row, even flat grid) → FAIL
+                   (bland gradient, pill button + generic sans, icon-chip row, even flat grid) → FAIL
 □ Focal          — does ONE element actually dominate at a glance? If your eye lands nowhere,
                    or on an all-even grid, the focal point failed regardless of what code intended
 □ Balance        — dead whitespace (a lower third of empty), or cramped/colliding elements?
@@ -89,11 +92,14 @@ same fallback rule as `/ss-score` Step 0:
                    misalignments that read as "sloppy" but pass a code check
 □ Type scale fit — on desktop, does the body text look too small for the canvas? does the hero
                    feel undersized? (the surface-scale tell, judged by eye)
+□ Grammar fit   — does the screen visually serve the selected grammar's user job, attention
+                   model, composition, density, action hierarchy, and characteristic tells?
+                   Would the same layout still appear if the product changed? If yes, FAIL
 □ Motion (if any) — capture before/after or a mid-transition frame; is it purposeful, or the
                    "cheap fade/bounce on everything" tell? does it block the first read?
 ```
 
-## Step 3 — Render the STATES too (not just the happy path)
+## Step 3 — Render states or sequence variants too
 
 The happy-path screenshot hides the most common real-world failure: **no empty / loading / error
 state.** Where the surface has a data view, render those variants (a query param, a mock, a
@@ -101,15 +107,21 @@ forced prop, or temporarily emptying the data) and screenshot each. A blank whit
 data" is a fail you can only catch by *looking* at the empty state. (Static marketing pages with
 no data surface → N/A, note it.)
 
+For sequential artifacts, inspect the cover/first frame, every content frame, and close/CTA as
+a set: continuity, progression, one message per frame, repeated-template fatigue, source labels,
+folios, and safe-zone survival. For documents/decks, inspect every page/slide plus a representative
+thumbnail or overview view.
+
 ## Step 4 — Fix, re-render, repeat
 
 For each visual failure, fix the code, then **re-render and look again** — don't assume the fix
 worked from the diff (the whole point is that code ≠ pixels). Loop up to ~3×. Present only when
-the screenshot passes, with the final image, a one-line "fixed: …", and the gate result.
+the screenshot passes, with the final image, the effective rule set, a one-line "fixed: …", and
+the gate result.
 
 ## Rules
 
-- **You must actually see a screenshot.** No render, no visual verdict — fall back to `/ss-score`
+- **You must actually see the rendered artifact.** No render, no visual verdict — fall back to `/ss-score`
   and say the visual gate was skipped. Never fabricate "looks good."
 - **Re-render after every fix.** The reason this skill exists is that source and pixels diverge;
   verifying a visual fix by reading the diff defeats it.

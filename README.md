@@ -4,9 +4,9 @@
 
 # StyleSeed
 
-### Your AI writes UI that looks like an AI wrote it.<br />StyleSeed is the design engine that fixes that.
+### Your AI can render almost anything.<br />StyleSeed teaches it which design method to use.
 
-<sub>Design judgment for Claude Code · Codex · Cursor · vibe coding — so the output stops looking generated.</sub>
+<sub>Output grammars + reference compiler + designer judgment for Claude Code · Codex · Cursor · vibe coding.</sub>
 
 <br />
 
@@ -25,7 +25,9 @@
 [![▶ Motion Gallery](https://img.shields.io/badge/▶_Motion_Gallery-Live-8B5CF6?style=for-the-badge&logoColor=white)](https://styleseed-demo.vercel.app/motion)
 
 ![74 design rules](https://badgen.net/badge/rules/74/8B5CF6)
-![19 skills](https://badgen.net/badge/skills/19/6C5CE7)
+![20 skills](https://badgen.net/badge/skills/20/6C5CE7)
+![8 output grammars](https://badgen.net/badge/grammars/8/2563EB)
+![5 adapters](https://badgen.net/badge/adapters/5/0F766E)
 ![7 brand skins](https://badgen.net/badge/skins/7/6C5CE7)
 [![GitHub stars](https://badgen.net/github/stars/bitjaru/styleseed)](https://github.com/bitjaru/styleseed/stargazers)
 [![License](https://badgen.net/github/license/bitjaru/styleseed)](https://github.com/bitjaru/styleseed/blob/main/LICENSE)
@@ -33,16 +35,29 @@
 
 <br />
 
-**Every design-AI skill makes your UI *coherent*. StyleSeed also fights the *generic-AI look* — and enforces it.**
+**StyleSeed fixes the design method — not one Toss-like aesthetic.**
 
 **Judgment, not data** — how designers *think*, not a palette collection &nbsp;·&nbsp;
+**Right grammar for the result** — consumer service, operations, technical, editorial,
+commerce, institutional, marketing, or sequential story &nbsp;·&nbsp;
+**References become rules** — `/ss-reference` compiles screenshots, URLs, Figma, or an existing
+UI into an evidence-backed project grammar &nbsp;·&nbsp;
+**Beyond web UI** — adapters for product UI, social carousels, decks, documents, and graphics &nbsp;·&nbsp;
 **Fights the AI tells** — the default indigo, the icon-chip cliché, template layouts, rainbow lists &nbsp;·&nbsp;
-**A scored Quality Gate** — reviews + fixes to ≥80/100 *before you see it* &nbsp;·&nbsp;
+**Auxiliary proof gates** — code score + rendered pixel verification before you see it &nbsp;·&nbsp;
 **Every agent** — ships `CLAUDE.md` + `AGENTS.md` + `.cursorrules` &nbsp;·&nbsp;
 **A design lock that stops drift** &nbsp;·&nbsp;
 **Free & MIT**
 
 <br />
+
+<a href="engine/ARCHITECTURE.md">
+  <img src="assets/styleseed-architecture.svg" width="900" alt="StyleSeed engine architecture: intent and references become output grammars, combine with surface adapters and bounded project choices, then pass code and pixel gates" />
+</a>
+
+<sub>Core judgment × output grammar × surface adapter × domain/page × optional profile. [Read the architecture →](engine/ARCHITECTURE.md)</sub>
+
+<br /><br />
 
 <img src="showcase/v26-compare.png" width="840" alt="Same product, same prompt — only the rules changed. Hero: default indigo gradient text, sparkle badge and a placeholder mock vs a chosen emerald accent with the real product panel as the focal point. How-it-works: three identical icon-chip cards vs a hairline-joined numbered flow that reads designed." />
 
@@ -58,7 +73,7 @@
 
 <br />
 
-[Get Started](#get-started-in-30-seconds) · [Engine + Skins](#how-it-works-engine--skins) · [Motion](#named-motion-system) · [Skills](#15-ai-powered-skills) · [Wiki](../../wiki) · [한국어](README-KR.md)
+[Get Started](#get-started-in-30-seconds) · [Architecture](engine/ARCHITECTURE.md) · [Engine + Skins](#how-it-works-engine--skins) · [Motion](#named-motion-system) · [Skills](#20-ai-powered-skills) · [Wiki](../../wiki) · [한국어](README-KR.md)
 
 <br />
 
@@ -71,7 +86,7 @@
 **The fastest way — paste this one sentence** into Claude Code, Codex, Cursor, or any AI agent. It installs StyleSeed *and* runs the whole loop:
 
 ```
-Install StyleSeed so its checks actually run: `npx skills add bitjaru/styleseed` (if you can't, read https://styleseed-demo.vercel.app/llms-full.txt instead). Then use it for every UI in this project. First, in plan mode, lock my key color, font, and motion with me and save them to STYLESEED.md so they don't drift. Build to the rules with ONE focal point and one accent. Before showing me anything, run the quality gate (`/ss-score` in Claude Code, `$ss-score` in Codex) to ≥ 80 and fix what fails. For a full screen, run `/ss-build` in Claude Code or `$ss-build` in Codex — it enforces this whole loop.
+Install StyleSeed: `npx skills add bitjaru/styleseed` (or read https://styleseed-demo.vercel.app/llms-full.txt). Before building, choose the output grammar and surface adapter for my result, then save bounded decisions to STYLESEED.md. If I provide references that StyleSeed does not model, run `/ss-reference` in Claude Code or `$ss-reference` in Codex to compile them into a project-local rule set instead of copying the screen. Build with `/ss-build` or `$ss-build`, run the code gate to ≥80, then render and inspect with `/ss-verify` or `$ss-verify` before showing me the result.
 ```
 
 **Why the prompt installs first:** the quality gate is the step that makes output stop looking generic — but the `ss-score` and `ss-build` skills can only *run* if they are installed. Point an agent at the rules-URL alone and the "gate" degrades to an honor-system self-check it usually skips. Installing makes the loop real: the lock persists in `STYLESEED.md` (no drift), and the gate actually scores and fixes before you see anything. Can't install? The URL still teaches the rules — just weaker. Works with **Claude Code (`CLAUDE.md`), Codex / Amp / Gemini CLI (`AGENTS.md`), and Cursor (`.cursorrules`)** — StyleSeed ships all three. (Planning first is what keeps the result from looking random — see [Troubleshooting](#troubleshooting--i-applied-styleseed-but-the-ui-still-looks-bad).)
@@ -94,12 +109,12 @@ agent  ▸  ✓ 88/100 — one accent, grey normal states, real empty/error stat
 > plain markdown (`CLAUDE.md` / `AGENTS.md` / `DESIGN-LANGUAGE.md`), so the prompt above —
 > or just copying those files in — is 90% of StyleSeed with nothing to approve.
 
-**Want the 19 `ss-*` agent skills too** (optional automation: setup wizard, review, score)?
+**Want the 20 `ss-*` agent skills too** (optional automation: grammar compiler, setup, build, review, score)?
 
 ```bash
 npx skills add bitjaru/styleseed
 ```
-Installs all 19 skills into Claude Code, Codex, Cursor, Gemini CLI, Amp and more. Then run `/ss-setup` in Claude Code or `$ss-setup` in Codex (you can also choose it from Codex's `/skills` picker). Your agent may ask you to approve tools on first use. No install possible? The rules alone still do the core work.
+Installs all 20 skills into Claude Code, Codex, Cursor, Gemini CLI, Amp and more. Then run `/ss-setup` in Claude Code or `$ss-setup` in Codex (you can also choose it from Codex's `/skills` picker). Your agent may ask you to approve tools on first use. No install possible? The rules alone still do the core work.
 
 **Your agent, its exact path:**
 
@@ -120,7 +135,9 @@ Installs all 19 skills into Claude Code, Codex, Cursor, Gemini CLI, Amp and more
 - You asked **Claude Code** or **Cursor** to build a dashboard and it came out amateur-looking
 - You're **vibe coding** a SaaS app and don't want to hire a designer
 - You use **shadcn/ui** but the output still feels generic
-- You want **Toss-style** refinement without reverse-engineering it yourself
+- You want Toss-like consumer refinement **only where that grammar fits**, not on every output
+- You make social carousels, decks, reports, covers, or other vibe-coded visual artifacts
+- You have references and want their repeatable design language extracted instead of cloned
 - You're building a **Claude Code skill** or **Cursor rules** setup for design
 - You ship fast with AI and need professional UI that doesn't look AI-generated
 
@@ -181,7 +198,8 @@ Design data is the paint. Design judgment is knowing where to put it.
 
 **[See the before/after →](https://styleseed-demo.vercel.app/why)** — the same dashboard brief, generated generically vs. with the 74 rules applied. Every fix annotated with the rule behind it.
 
-StyleSeed is a **design engine** — 74 visual rules, 48 components, a named motion system, and 19 agent skills that teach LLMs the judgment, not just the data:
+StyleSeed is a **design-method engine** — 74 craft rules, 8 output grammars, 5 surface
+adapters, 48 components, a reference compiler, a named motion system, and 20 agent skills:
 
 ```
 "The most refined black isn't #000 — it's #2A2A2A"
@@ -329,11 +347,12 @@ came out polished because it was built with the full rules in context and iterat
 `/ss-review` — not one-shot. Recreate those conditions:
 
 1. **Plan first.** In Claude Code press <kbd>Shift</kbd>+<kbd>Tab</kbd> to enter **Plan Mode**, then decide the design **one step at a time, with full context**, before any code is written. This is the single biggest fix.
-2. **Pin one key color.** Give the agent a brand hex — or pick a skin (Linear / Stripe / Toss / …). The rule is *one accent, everything else greyscale.* No key color = the "random colors" look.
+2. **Select the output grammar, adapter, and primary action color.** Additional hues need stable
+   semantic, categorical, editorial, or brand roles. No role = random color drift.
 3. **Point it at the full rules,** not the summary: `read https://styleseed-demo.vercel.app/llms-full.txt` (the short `llms.txt` is an index, not the 74 rules).
 4. **Lock the decisions in a file.** Run `/ss-setup` (or just ask the agent to "write a `STYLESEED.md` design lock"). It records your skin, key color, radius, and motion in `STYLESEED.md` at the repo root, and the rules tell the agent to **obey it on every prompt** — so the design stops being "different every time." This is the single strongest fix for inconsistency. (Also install `CLAUDE.md` / `AGENTS.md` / `.cursorrules` so the rules themselves are re-read every prompt.)
 5. **Be specific:** *"Build a dashboard in the Linear skin, one blue accent, Snap motion, following StyleSeed's rules"* beats *"build a dashboard."*
-6. **Check & iterate.** Run `/ss-review` or `/ss-score`, or tell it: *"self-check coherence — one radius, one accent, real empty/loading/error states — and fix violations."* If it drifts: *"re-read CLAUDE.md and fix the coherence violations."*
+6. **Check & iterate.** Run `/ss-review` or `/ss-score`, or tell it: *"self-check the effective grammar — coherent geometry, stable color roles, real empty/loading/error states — and fix violations."* If it drifts: *"re-read CLAUDE.md and fix the coherence violations."*
 
 > **More constraints = less variance.** Plan mode + a pinned key color + installed rules + a review pass is the difference between "looks generated" and "looks designed."
 
@@ -360,7 +379,7 @@ stop looking AI-made.
 ┌─────────────────────────────────────────────────┐
 │  StyleSeed Engine (brand-agnostic)              │
 │                                                 │
-│  74 rules · 48 components · 19 skills · motion  │
+│  74 rules · 8 grammars · 5 adapters · 20 skills │
 │  Layout · Composition · Typography · UX · A11y  │
 └──────────────────────┬──────────────────────────┘
                        │
@@ -376,7 +395,7 @@ stop looking AI-made.
 - 74 visual design rules (layout, composition, rhythm, forbidden patterns)
 - 48 React components (32 primitives + 16 patterns)
 - A named motion system (5 seeds + a copy-paste keyword library)
-- 19 cross-agent skills (setup, UI, motion, UX, accessibility)
+- 20 cross-agent skills (reference compiler, setup, UI, motion, UX, accessibility)
 - Works with ANY color palette
 
 **Skin** = what your app looks like (visual identity)
@@ -455,7 +474,7 @@ engine/
 ├── CLAUDE.md                 # AI reads this automatically
 ├── AGENTS.md                 # Codex and other AGENTS.md-compatible agents
 ├── DESIGN-LANGUAGE.md        # 74 visual design rules (brand-agnostic)
-├── .claude/skills/           # 19 canonical skills (Claude: /ss-*)
+├── .claude/skills/           # 20 canonical skills (Claude: /ss-*, Codex: $ss-*)
 │   ├── ss-setup/             #   Interactive setup wizard
 │   ├── ss-page/              #   Scaffold pages
 │   ├── ss-component/         #   Generate components
@@ -482,15 +501,16 @@ engine/
 └── scaffold/                 # Vite 6 + React 18 starter
 ```
 
-## 15 AI-Powered Skills
+## 20 AI-Powered Skills
 
 ### Setup
 | Skill | What It Does |
 |-------|-------------|
 | `/ss-build` | **The whole loop, enforced** — lock the look → build → score → fix to ≥80 → *then* show. Use this instead of building UI free-hand |
+| `/ss-reference` | **Compile references into a project grammar** — evidence, confidence, semantic tokens, anti-patterns, and a transfer validation artifact |
 | `/ss-dial` | Turn one axis up/down deterministically — `density denser`, `radius sharper`, `color more-muted`, `weight bolder`. Moves many tokens together, keeps the guardrails, re-gates |
 | `/ss-restyle` | Re-style to a named aesthetic — `swiss` · `editorial` · `technical` · `warm-dtc` · `minimal-mono` · `brutalist-lite`. A coherent coordinate, not a stacked filter |
-| `/ss-setup` | **Interactive wizard** — pick skin, brand color, font, generates first page |
+| `/ss-setup` | **Interactive wizard** — select output grammar + adapter, then bounded brand/profile values |
 
 ### UI — Build It Right
 | Skill | What It Does |
@@ -565,7 +585,7 @@ React 18 · TypeScript · Tailwind CSS v4 · Radix UI · Vite 6 · Lucide Icons 
 |---|---|---|---|---|---|
 | Components | ✅ 48 | ✅ 50+ | ✅ | ✅ | ❌ |
 | Design **judgment** (when to use what) | ✅ 74 rules | ❌ | ❌ | Partial | ❌ |
-| Claude Code / Cursor integration | ✅ 19 skills | ❌ | ❌ | ❌ | — |
+| Claude Code / Cursor integration | ✅ 20 skills | ❌ | ❌ | ❌ | — |
 | Brand skins (Toss, Stripe, Linear...) | ✅ | ❌ | ❌ | ❌ | ❌ |
 | Price | Free (MIT) | Free | $299+ | Free | — |
 | Works *with* AI coding tools | ✅ | Indirect | Indirect | Indirect | — |

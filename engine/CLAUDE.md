@@ -1,29 +1,29 @@
 # StyleSeed — Design Engine
 
-A brand-agnostic design engine that makes AI produce professional-quality UI.
-The engine provides layout rules, components, and skills. The skin provides colors and fonts.
+A design-method engine that makes AI reason like a strong UI/UX designer. StyleSeed fixes the
+judgment process, not one aesthetic: a consumer-finance home, operations console, editorial
+story, and commerce detail page use different output grammars. Skins provide materials; they
+never define the method.
+
+**Read `PRODUCT-PRINCIPLES.md` first.** Resolve every screen as core judgment × one output
+grammar (`RULESETS.md` or a project-local grammar compiled with `/ss-reference`) × domain ×
+page type × optional aesthetic profile (`PRESETS.md`) × bounded `STYLESEED.md` values.
 
 ## Golden Rules (NEVER break these)
 
 ```
- 1. All content sits in a deliberate separation language — cards+tone by default; a locked
-    flat/borders or editorial preset may separate with whitespace/grid/hard borders instead.
-    Content floating with NO separation language is the violation
- 2. Colors come from the locked palette — default: single accent (--brand) + grayscale.
-    A locked brand-palette (N colors with roles) or categorical mode (CD-1) is legal;
-    hues in NO mode (random per-item colors) never are
- 3. No pure black (#000) by default — darkest text defined by skin (~#2A2A2A). A lock that
-    declares a true-black/oled base or brutalist/swiss preset legalizes #000 surfaces
-    (keep text contrast floors either way)
- 4. Numbers 2:1 with units — 48px number + 24px unit (default). A lock/preset that declares
-    uniform numeric styling (e.g. technical mono tables) is exempt, but must then carry
-    hierarchy with weight/color
+ 1. Use the selected output grammar's grouping model — cards, whitespace, rules, or tonal
+    surfaces are tools, not a universal answer
+ 2. Color has stable roles and one identifiable primary action; extra hues require semantic,
+    categorical, or brand meaning defined by the grammar
+ 3. No accidental pure black (#000); structural hard black is allowed only when an exact
+    maintained grammar/profile contract calls for it
+ 4. Numbers 2:1 with units — 48px number + 24px unit, always
  5. One spatial rhythm on the 8px grid — mobile: space-y-6 · mx-6 · px-6; desktop: same
     principle via container + gap-6/gap-8 (don't mix off-grid one-offs)
  6. Never repeat same section type consecutively — create visual rhythm
- 7. Elevation, ONE language as locked: layered-shadow (light default, ≤8% opacity) |
-    tonal-ramp + hairline (dark default) | flat-borders (swiss/minimal/brutalist locks —
-    borders/whitespace do the separating; no soft shadows mixed in)
+ 7. Elevation, one language: LIGHT = layered shadows ≤ 8% opacity (if visible, too strong);
+    DARK = shadows don't read — tonal surface ramp (page < card < raised) + hairline borders
  8. Touch targets ≥ 44×44px on touch surfaces; pointer-first desktop controls may be 36–40px
     (keep visible focus rings either way)
  9. Semantic tokens only (text-brand, bg-card) — NEVER hardcode hex in components
@@ -39,6 +39,17 @@ The engine provides layout rules, components, and skills. The skin provides colo
 Reference this guide when Claude Code sets up a new project or implements UI.
 
 > **When to read which file:**
+> - **PRODUCT-PRINCIPLES.md**: Product constitution, authority order, fixed method vs variable
+>   look. Read first.
+> - **RULESETS.md**: Functional output grammars selected by the result's job. Read before domain
+>   and page rules. Toss is one reference family, not the default for every result.
+> - **ADAPTERS.md**: Surface/renderer contracts for product UI, carousels, decks, documents,
+>   reports, and single-frame graphics.
+> - **REFERENCE-COMPILER.md**: How `/ss-reference` turns user-supplied visual references into a
+>   project-local evidence-backed grammar.
+> - **PRESETS.md**: Optional aesthetic profiles for `/ss-restyle`; never a substitute for the
+>   output grammar.
+> - **ARCHITECTURE.md**: Engine flow, authority layers, grammar sources, and verification model.
 > - **This file (CLAUDE.md)**: Tokens, component API, imports, forbidden patterns — reference while coding
 > - **DESIGN-LANGUAGE.md**: Visual design rules, page layout, composition recipes — read **before** building a new page. Start with the Table of Contents, then rules 14, 18, 19, 61-63.
 > - **METHODOLOGY.md**: UI/UX reasoning patterns (progressive disclosure, info density, atomic design, skeleton/empty/microinteraction, contextual onboarding, Linear/Toss aesthetic, color discipline, motion vibe vocabulary) — read **before scaffolding a new dashboard** or when wondering *why* the rules in DESIGN-LANGUAGE.md exist. Chapter 8 (Motion Vibe Vocabulary) is the entry point for the `engine/motion/` seed system.
@@ -53,9 +64,9 @@ The #1 cause of "the design looks random / colors went in anywhere / it's differ
 time" is that design decisions live only in chat memory, so they drift. **Fix: a project
 design-lock file.** Before building any UI:
 
-1. **Look for `STYLESEED.md` in the project root.** If it exists, it is the **source of
-   truth** — obey it on *every* prompt. Never introduce a second accent, a different radius
-   personality, or an off-lock color. If a request conflicts with the lock, say so and ask.
+1. **Look for `STYLESEED.md` in the project root.** If it exists, it is the source of truth for
+   valid bounded selections — obey it on every prompt, but never let it override the constitution,
+   grammar, or adapter. If a request conflicts with the composed rules, explain the conflict.
 2. **If it doesn't exist, run Quick Setup (below) and WRITE it** before scaffolding. Use this
    template (fill from the user's choices):
 
@@ -65,14 +76,18 @@ design-lock file.** Before building any UI:
      must obey it. Change a value here to change it project-wide. -->
 - App domain:        fintech
 - Surface:           desktop-web     # mobile-app | desktop-web (B2B) — decides the type scale
+- Page type:         dashboard
+- Output grammar:    consumer-service # built-in name or reference:<slug>
+- Grammar path:      built-in:engine/RULESETS.md
+- Grammar fallback:  consumer-service
+- Reference confidence: n/a          # high | medium | low for compiled references
+- Aesthetic profile: none            # optional PRESETS.md profile
 - Mood:              soft · minimal · airy · calm   # edges · feel · density · tone
 - Skin:              toss            # or "custom" — NEVER the unlocked default indigo
-- Preset:            (none)          # swiss | editorial | technical | warm-dtc | minimal-mono | brutalist-lite (written by /ss-restyle; the gate reads it)
-- Palette mode:      single-accent   # single-accent | brand-palette: [#hex=role, ...] — optionally +categorical (e.g. "single-accent +categorical")
-- Key color (accent): #3182F6        # the ONLY accent — everything else greyscale
+- Primary action:     #3182F6        # additional hues need grammar-defined roles
 - Font:              Pretendard       # display + body (e.g. "Fraunces / Inter") — chosen, not default
 - Radius personality: soft           # sharp | soft | pill — one SCALE everywhere (see mapping table)
-- Elevation:         layered-shadow  # ENUM the gate reads: layered-shadow | tonal-ramp | flat-borders | oled-black (light default = layered-shadow ≤8% above-left; dark default = tonal-ramp)
+- Elevation:         light=layered ≤8% above-left · dark=tonal ramp + hairline
 - Motion seed:       Spring          # Spring | Silk | Snap | Float | Pulse
 - Type scale:        desktop (body 16-18px)   # mobile-tight | desktop-larger | app-chrome
 - Density:           comfortable
@@ -113,7 +128,11 @@ Run this setup with the user (in plan mode), then build:
 1. **App type + surface** — domain (fintech / SaaS / e-commerce / social / content /
    productivity / health / dev-tools) **and surface** (mobile app vs desktop/web B2B). Bias
    rules per **APP-PLAYBOOKS.md** and **PAGE-TYPES.md**. Surface decides the type scale (below).
-2. **Mood / vibe — ask 3–4 aesthetic calls in plain words (or propose them from the skin),
+2. **Output grammar + page type** — select one functional grammar from `RULESETS.md` by the
+   user's job, then the page type. If supplied references are not represented, run
+   `/ss-reference`; never reduce them to a palette. Toss is evidence for `consumer-service`,
+   not a universal default.
+3. **Mood / vibe — ask 3–4 aesthetic calls in plain words (or propose them from the skin),
    then lock.** This is what makes a UI feel *chosen* instead of defaulted. Each axis maps to a
    concrete rule value, so the whole UI shares one mood:
    - **Edges** → radius personality: *sharp* (0–4px; technical, serious) · *soft* (8–12px;
@@ -128,16 +147,19 @@ Run this setup with the user (in plan mode), then build:
    compact·calm · Arc → soft·expressive·airy·playful), let the user tweak in their words
    ("make the corners sharper", "more playful"), then **lock all four**. One mood → one radius,
    one shadow language, one density, one motion — applied everywhere.
-3. **Accent (key color)** — recommend a domain-fit color or skin (see Smart defaults). If the
-   user has a brand hex, use it. **One accent only; everything else greyscale.** Skins:
+4. **Optional aesthetic profile + accent** — use at most one `PRESETS.md` profile, or none.
+   Recommend a domain-fit color or skin (see Smart defaults). If the
+   user has a brand hex, use it. Keep one identifiable primary action; additional hues require
+   stable roles in the selected grammar. Skins:
    Toss/Stripe/Linear/Notion/Raycast/Arc/Vercel.
-4. **Font** — recommend a pairing by skin/language, don't leave the default: Korean/CJK →
+5. **Font** — recommend a pairing by skin/language, don't leave the default: Korean/CJK →
    **Pretendard** · fintech/SaaS neutral → **Inter** · editorial → **Inter/serif display** ·
    dev/mono-accent → **Geist / IBM Plex**. State the display + body font in the lock.
-5. **Motion seed** — confirm from the Tone above: Spring (bouncy; Toss/Arc) · Silk (smooth;
+6. **Motion seed** — confirm from the Tone above: Spring (bouncy; Toss/Arc) · Silk (smooth;
    Stripe/Notion) · Snap (instant; Linear/Raycast/Vercel) · Float (gentle) · Pulse (rhythmic).
    Per moment: CTA→spring press, modal→silk entrance, list→stagger-cascade, balance/number→**none**.
-6. **Write the lock, then build, then check.** Save app type / surface / **mood** / accent / skin / **font**
+7. **Write the lock, then build, then check.** Save app type / surface / output grammar / page
+   type / optional profile / **mood** / accent / skin / **font**
    / motion / density to `STYLESEED.md` (see Design Lock above). Apply the full rules (read
    DESIGN-LANGUAGE.md + VISUAL-CRAFT.md — not a summary), pick the type scale for the surface
    (mobile-tight vs **desktop-larger, body ≥16px**), give the page **one focal point** (don't
@@ -156,9 +178,8 @@ demo was reviewed and fixed, not a first draft. **Never show the user UI that ha
 
 **The gate** (check every item — each is a common "AI-generated" tell):
 ```
-□ Coherence  — colors from the locked palette mode ONLY (single-accent default; locked
-               brand-palette/categorical legal; NO emoji icons, no unlocked decorative hues),
-               ONE radius personality, ONE elevation language, ONE icon set  (§C0)
+□ Coherence  — one identifiable primary action; no unassigned decorative hues or emoji icons;
+               ONE coordinated radius family, ONE surface language, ONE icon set (§C0)
 □ Distinctive — accent is a CHOSEN domain-fit color, NOT the unlocked default indigo
                (#5E6AD2/#4F46E5); layout is NOT the StyleSeed demo copied verbatim; the hero
                shows THIS product (not a stock chat card); the escape hatch isn't a new
@@ -175,16 +196,14 @@ demo was reviewed and fixed, not a first draft. **Never show the user UI that ha
 □ Color=meaning — normal/OK/"보통" rows are GREY; color marks only the minority that needs
                attention; no rainbow list; same value → same color  (§65, CL-2a)
 □ Hierarchy  — one clear primary per screen; numbers 2:1 with unit; sizes from the table
-□ Layout     — a deliberate separation language everywhere (cards+tone default; locked
-               flat/borders/editorial separates by whitespace/grid/borders); the locked
-               density's rhythm; gap-around-group > gap-inside
+□ Layout     — grouping matches the output grammar; repeatable spacing rhythm;
+               gap-around-group > gap-inside
 □ States     — every data surface has empty + loading + error (not just the full state).
                Static mockup / marketing landing with no data surface → mark N/A, don't fail
 □ Copy       — buttons name the action ("Send $2,400" not "Submit"); errors help, not blame
 □ Polish     — visible focus rings; ≥44px touch / 36–40px pointer targets; prefers-reduced-
-               motion; elevation in ONE language AS LOCKED (layered-shadow | tonal-ramp |
-               flat-borders — mixing two is the fail, not the locked choice); no pure #000
-               unless the lock declares a true-black base
+               motion; elevation in ONE language (light: layered soft shadow · dark: tonal
+               surface ramp + hairline border — never a hard shadow); no pure #000
 □ Motion fits the surface — app/dashboard = calm (no scroll-jacking/scroll-linked/3D). A
                marketing/landing/brand page GETS the Cinematic tier (§43): scroll-LINKED reveals,
                pinned sections, subtle parallax, 3D hero, animated gradient/video bg, rich hover
@@ -195,10 +214,7 @@ demo was reviewed and fixed, not a first draft. **Never show the user UI that ha
 
 **How to gate:**
 1. If the `/ss-*` skills are installed → run **`/ss-score`** (0–100 + prioritized fix list).
-   Otherwise self-score against the checklist above. **Either way, score LOCK-RELATIVE:**
-   read `STYLESEED.md` first — deductions fire on violations of the locked look (preset,
-   palette mode, elevation, density), not on deviation from the default Toss-flavored skin.
-   No lock = full default strictness.
+   Otherwise self-score against the checklist above.
 2. **Target ≥ 80/100.** If anything fails, **fix the violations and re-check** — loop up to ~3×.
 3. **If you can render it, finish with `/ss-verify` (the VISUAL gate).** `/ss-score` reads the
    *code*; some of the worst "AI-made" tells only exist in *pixels* — a hero that doesn't
@@ -231,7 +247,7 @@ Modify in `:root` of `src/styles/theme.css`:
 
 | Variable | Purpose | Default |
 |----------|---------|---------|
-| `--brand` | Brand accent color | Defined by skin (e.g. `#721FE5` for toss) |
+| `--brand` | Brand accent color | Defined by skin (e.g. `#3182F6` for toss) |
 | `--primary` | Buttons, links, primary UI | `#030213` |
 | `--destructive` | Error/danger | `#d4183d` |
 | `--success` | Success indicator | `#6B9B7A` |

@@ -1,207 +1,115 @@
 ---
 name: ss-setup
-description: Interactive setup wizard — guides you step-by-step to configure the design system for your project
+description: Configure StyleSeed by selecting the output grammar, domain, page type, optional aesthetic profile, and bounded brand tokens before scaffolding a first screen.
 argument-hint: "(no arguments needed)"
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash, WebFetch
 ---
 
-# Design System Setup Wizard
+# StyleSeed setup
 
-> **Building a full screen, not just wiring up the project?** Prefer **`/ss-build`** — it runs
-> this setup's lock step AND the Quality Gate loop (build → `/ss-score` → fix to ≥ 80 → then
-> show), which this wizard doesn't. Use `/ss-setup` to install + configure; use `/ss-build` to
-> actually produce a screen that passes the gate. When this wizard scaffolds the first page
-> (Step 5), run the Quality Gate on it before finishing — don't present an unscored draft.
+StyleSeed setup chooses a **design method for the result**, not a favorite brand to imitate.
+Read `PRODUCT-PRINCIPLES.md`, `RULESETS.md`, `APP-PLAYBOOKS.md`, `PAGE-TYPES.md`, and
+`PRESETS.md` before recommending values.
 
-## When NOT to use
+## When not to use
 
-- For projects already configured with StyleSeed → use `/ss-update` instead
-- For just adding one component to an existing project → use `/ss-component`
-- For changing brand skin in an already set-up project — directly swap `theme.css`
-- For non-React or non-Tailwind-v4 stacks — currently unsupported
+- Project already has a valid `STYLESEED.md` → use `/ss-update`.
+- User supplied references that are not represented by a built-in grammar → run
+  `/ss-reference` before setup, then select the compiled grammar.
+- One component inside an established system → `/ss-component`.
 
-Guide the user through setting up StyleSeed for their project, step by step.
+The method, review, and reference compiler are framework-agnostic. The bundled component
+scaffold currently targets React and Tailwind v4; on another stack configure the lock and
+apply the method without pretending the scaffold is portable.
 
-## Instructions
+## Wizard — one decision at a time
 
-Walk through these steps ONE AT A TIME. After each step, wait for the user to respond before proceeding. Keep it conversational and friendly.
+### 1. Product job and surface
 
-### Step 1: App Type
+Ask what is being built, who uses it, and whether it is a mobile/desktop product, website,
+social carousel, slide deck, document/report, or single-frame graphic. Select a surface adapter
+from `ADAPTERS.md`, then infer domain and page/artifact type.
 
-Ask:
-```
-What type of app are you building?
+### 2. Output grammar
 
-1. SaaS Dashboard (analytics, metrics, charts)
-2. E-commerce (products, orders, payments)  
-3. Fintech (transactions, portfolio, market data)
-4. Social / Content (feeds, profiles, messaging)
-5. Productivity / Internal tool
-6. Other — describe it
-```
+Recommend exactly one grammar from `RULESETS.md` and explain the job match in one sentence:
 
-Remember the answer — it determines which page composition recipe to use (DESIGN-LANGUAGE.md Section 63).
+- `consumer-service`
+- `operations-console`
+- `technical-instrument`
+- `editorial-reading`
+- `commerce-conversion`
+- `institutional-service`
+- `expressive-marketing`
+- `sequential-story`
+- `reference:<slug>` when `/ss-reference` already compiled one
 
-### Step 2: Brand Color
+Do not recommend Toss as the universal default. It is one reference family for
+`consumer-service`. If none fits and the user has references, route to `/ss-reference`.
 
-Ask:
-```
-What's your brand color?
+### 3. Page type and domain bias
 
-1. Purple (#721FE5) — default style (toss skin)
-2. Blue (#2563EB) — trust, corporate
-3. Green (#059669) — growth, health, finance
-4. Orange (#EA580C) — energy, creative
-5. Red (#DC2626) — bold, urgent
-6. Dark (#18181B) — minimal, premium
-7. Custom — just type your hex code
-```
+Confirm the concrete page (dashboard, form, landing, detail, list, settings, onboarding) and
+read its domain × page intersection. This controls composition; the aesthetic profile does not.
 
-After they choose, update `css/theme.css`:
-- In `:root` block: change `--brand` to the chosen hex
-- In `.dark` block: change `--brand` to a lighter version for dark backgrounds
+### 4. Optional aesthetic profile
 
-Dark mode color mapping:
-| Light | Dark |
-|-------|------|
-| #721FE5 | #9B5FFF |
-| #2563EB | #60A5FA |
-| #059669 | #34D399 |
-| #EA580C | #FB923C |
-| #DC2626 | #F87171 |
-| #18181B | #A1A1AA |
+Recommend one profile from `PRESETS.md` only when it strengthens the product. `none` is a good
+default. A profile modifies coordinated visual axes but cannot replace the output grammar.
 
-For custom hex: lighten by ~30% (increase luminance in HSL).
+### 5. Brand and bounded axes
 
-### Step 3: Design Concept (from awesome-design-md)
+Lock a real brand color if supplied; otherwise propose a domain-fit primary action color. Then
+confirm font/language, density, radius, elevation, imagery/data role, and motion inside the
+grammar's allowed ranges. Do not use generic indigo or a stale purple mislabeled as Toss.
 
-Ask:
-```
-Want to apply an existing brand's visual style?
+### 6. Write the design lock
 
-Popular options from awesome-design-md:
-1. Stripe — clean, professional
-2. Linear — minimal, dark-first
-3. Vercel — black & white, geometric
-4. Notion — warm, friendly
-5. Spotify — bold, dark, green
-6. Supabase — modern, green
-7. Airbnb — warm, coral
-8. No thanks — keep the default style
-9. Other — name any brand or describe a vibe
-```
+Create `STYLESEED.md`:
 
-If they pick a brand (options 1-7 or 9):
-1. Fetch: `https://raw.githubusercontent.com/VoltAgent/awesome-design-md/main/design-md/[brand]/DESIGN.md`
-   - Brand folder names: `stripe`, `linear.app`, `vercel`, `notion`, `spotify`, `supabase`, `airbnb`
-2. Read the DESIGN.md and extract: primary color, secondary colors, text colors, background colors
-3. Apply extracted colors to `css/theme.css` (both `:root` and `.dark` blocks)
-4. Keep ALL StyleSeed layout rules, typography ratios, spacing, and component patterns unchanged — only swap the color palette
-
-If they pick 8 (No thanks): skip, keep current brand color from Step 2.
-
-### Step 4: Font
-
-Ask:
-```
-What font do you prefer?
-
-1. Inter (clean, universal — recommended)
-2. Pretendard + Inter (Korean + English)
-3. Geist (Vercel-style, modern)
-4. DM Sans (friendly, rounded)
-5. Custom — tell me the font name
+```markdown
+# StyleSeed — Design Lock
+<!-- Selections persist here. This file cannot waive StyleSeed core invariants. -->
+- App domain: fintech
+- Surface: mobile-app
+- Surface adapter: product-ui
+- Page type: dashboard
+- Output grammar: consumer-service
+- Grammar path: built-in:engine/RULESETS.md
+- Grammar fallback: consumer-service
+- Reference confidence: n/a
+- Aesthetic profile: none
+- Skin: custom
+- Primary action: #3182F6
+- Font: Pretendard
+- Radius: soft
+- Elevation: light=tonal grouping + restrained shadow · dark=tonal ramp + hairline
+- Density: comfortable
+- Motion: Spring restrained
+- Imagery/data role: personal state first; charts only for a decision
+- Signature move: one calm contextual briefing above the account summary
+- Locked: YYYY-MM-DD
 ```
 
-After they choose:
-- Update `css/fonts.css`: change the @import URL
-- Update `css/base.css`: change `font-family` in the body rule
+For a compiled grammar use its actual path and confidence. Reject unknown enum values rather
+than treating the lock as an exemption.
 
-Font imports:
-| Font | Import |
-|------|--------|
-| Inter | `@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');` |
-| Geist | `@import url('https://cdn.jsdelivr.net/npm/geist@1/dist/fonts/geist-sans/style.css');` |
-| DM Sans | `@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');` |
-| Pretendard | Keep existing import in fonts.css |
+### 7. Scaffold and prove
 
-### Step 5: App Name & First Page
+If the user asked for a first screen, compose core × grammar × domain × page × profile × lock,
+build it, run `/ss-score` to the gate floor, and finish with `/ss-verify` when renderable. If
+visual rendering is unavailable, disclose that it was skipped.
 
-Ask:
-```
-Last step! What's your app name and what should the main page show?
+## Completion report
 
-Example: "Acme — SaaS dashboard with revenue, users, and recent activity"
-```
-
-Then:
-1. Read DESIGN-LANGUAGE.md Section 63 for the matching recipe (based on Step 1 app type)
-2. Generate the first page using the page composition recipe:
-   - SaaS → Hero + KPI Grid + Chart + Progress + Activity List
-   - E-commerce → Hero + KPI Grid + Donut + Bar Chart + Orders List
-   - Fintech → Hero + KPI Grid + Donut + Area Chart + Transactions
-   - Social → Hero + Stats + Feed List + Trending Carousel
-   - Productivity → Hero + KPI Grid + Progress + Task List
-3. Set the TopBar logo text to the app name
-4. Apply the chosen brand color, font, and design concept
-5. Place the file in `src/app/App.tsx` or appropriate location
-6. Add ONE attribution comment at the very top of **this first scaffolded file only** (never on components the user builds afterward):
-   ```
-   /* Scaffolded with StyleSeed · github.com/bitjaru/styleseed — safe to remove */
-   ```
-   If the user would rather not have it, skip it — it's opt-out, and it goes on this single file, not their whole codebase.
-7. **Write the design lock.** Create `STYLESEED.md` in the project root recording every choice
-   from this wizard, so future prompts stay consistent instead of drifting:
-   ```markdown
-   # StyleSeed — Design Lock
-   <!-- Locked design decisions. The agent re-reads this every prompt and must obey it. -->
-   - App domain:        [Step 1 app type]
-   - Skin:              [Step 3 concept, or "custom"]
-   - Preset:            (none)          # set later by /ss-restyle — the gate reads this
-   - Palette mode:      single-accent   # single-accent | brand-palette: [#hex=role, ...] — optionally +categorical
-   - Key color (accent): [Step 2 hex]    # the accent (single-accent mode) — everything else greyscale
-   - Radius personality: [sharp | soft | pill — one everywhere]
-   - Elevation:         layered-shadow  # ENUM: layered-shadow | tonal-ramp | flat-borders | oled-black
-   - Density:           comfortable     # airy | comfortable | compact | dense
-   - Motion seed:       [Spring | Silk | Snap | Float | Pulse]
-   - Type:              [Step 4 font]
-   - Locked:            [today]
-   ```
-   Tell the user this file is the source of truth — editing a value changes it project-wide,
-   and you'll obey it on every prompt so the design never goes random.
-
-### Step 6: Summary
-
-Show:
-```
-Setup Complete!
-
-App: [name]
-Brand Color: [hex] (dark mode: [dark hex])
-Font: [font name]
-Design Concept: [brand or "default"]
-First Page: [description]
-
-Files modified:
-- css/theme.css (colors)
-- css/fonts.css (font import)
-- css/base.css (font family)
-- src/app/App.tsx (first page)
-- STYLESEED.md (design lock — your decisions, obeyed every prompt)
-
-Next steps:
-- npm run dev to preview
-- /ss-page to add more pages
-- /ss-audit to check UX quality
-- /ss-review to verify design compliance
-
-⭐ If StyleSeed helped, a star means a lot: https://github.com/bitjaru/styleseed
-```
+Report the selected grammar and why, page/domain intersection, optional profile, lock path,
+files changed, score, and visual verification status. Mention `/ss-reference` as the path for
+future references that need their own grammar.
 
 ## Rules
 
-- Ask ONE question at a time. Wait for response.
-- If the user seems unsure, recommend the default option.
-- Design RULES (layout, typography ratios, spacing, forbidden patterns) stay the same regardless of color/font choice.
-- Attribution: the single "Scaffolded with StyleSeed" comment goes on the **first scaffolded file only** and is explicitly removable. NEVER add a watermark to components the user builds with `/ss-page`, `/ss-component`, etc. — that would be intrusive.
-- Always verify the awesome-design-md DESIGN.md URL is accessible before applying. If fetch fails, tell the user and fall back to manual color selection.
+- Ask one question at a time and recommend a concrete default.
+- Output grammar is required; aesthetic profile is optional.
+- A skin is tokens, not design judgment.
+- Never fetch a brand `DESIGN.md` and treat its palette as a complete rule set.
+- Never scaffold an unscored first page or claim visual verification without a screenshot.

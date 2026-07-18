@@ -1,7 +1,7 @@
 ---
 name: ss-score
-description: Score a UI file's design quality 0-100 against StyleSeed's design language — per-category breakdown, the worst offenders, and a prioritized fix list. A quantified version of /ss-review.
-argument-hint: "[file-path or directory]"
+description: Score a visual artifact's implementation quality 0-100 against its composed StyleSeed rule set — category breakdown, evidence, and prioritized fixes.
+argument-hint: "[file, directory, or artifact manifest]"
 allowed-tools: Read, Grep, Glob, Bash
 ---
 
@@ -15,32 +15,26 @@ you can track UI quality like you track test coverage.
 
 - For a quick pass/fail before committing → use `/ss-lint`
 - For a full prose audit with fixes → use `/ss-review`
-- For non-UI files (logic, config) — scoring is meaningless
+- For logic/config with no visual artifact — scoring is meaningless
 
-## Step 0 — Read the lock FIRST (the gate scores lock-relative)
+## Step 0 — Resolve the effective rule set
 
-Before scoring, **read `STYLESEED.md`** in the project root. The lock's `Preset`,
-`Radius personality`, `Elevation`, `Density`, `Palette mode`, and `Surface` **re-key
-the deductions below** — a deduction fires when the code violates *the lock*, not when
-it deviates from the default Toss-flavored skin. Deductions marked **[LOCK]** are
-lock-relative; unmarked deductions are floors that apply everywhere.
+Before scoring, read `PRODUCT-PRINCIPLES.md`, `RULESETS.md`, `ADAPTERS.md`, `PRESETS.md`, and `STYLESEED.md`.
+If the lock selects `reference:<slug>`, read its project-local `RULESET.md` and evidence/checks.
 
-Why: coherence means "one deliberate system", not "one house style." A textbook
-`brutalist-lite` build (hard borders, true black/white) or an `editorial` reading
-surface (serif body, paper tone) is *correct* under its lock — punishing it is a
-false positive that teaches users to distrust the gate.
+Score in authority order: core invariants first, then the exact output grammar, domain/page,
+optional aesthetic profile, and bounded lock values. The lock cannot waive an invariant.
+Unknown values fall back to the nearest built-in grammar; do not invent an exception.
 
-**If there is NO lock**, every [LOCK] deduction fires against these defaults — treat the
-project as if it locked: `Palette mode: single-accent` · `Elevation: layered-shadow` (light) /
-`tonal-ramp` (dark, judged by the surface's actual mode) · `Density: comfortable
-(space-y-6 · px-6 · p-6/p-8)` · `Radius: soft` · product surface (CC-9d fires). A
-lock-referencing trigger is NEVER unsatisfiable: no lock = the default value, full v2.10
-strictness. (And say so: "no `STYLESEED.md` found — scored against defaults; run Quick
-Setup to lock a look.")
+The output must name the effective rule set, for example:
+
+```text
+Rule set: operations-console × SaaS × dashboard × swiss
+```
 
 ## What to score
 
-Score the file (or each file in a directory) on **six weighted categories** that
+Score the file (or each file in a directory) on **eight weighted categories** that
 map to the design language. Total = 100.
 
 | Category | Weight | Reads from |
@@ -59,24 +53,14 @@ map to the design language. Total = 100.
 For each category, start at full marks and **subtract** for violations you find by
 reading the code. Be specific and evidence-based — cite the line.
 
-**Color discipline (16)** — deduct for: **[LOCK]** any `#000`/`text-black` (−4 each, cap −8) — a lock declaring `oled-black`
-elevation or `Preset: brutalist-lite`/`swiss` exempts #000 **surfaces/borders only**;
-`text-black` on white deducts under every lock (use the 900/950 neutral) and everything
-deducts when no lock exists; **[LOCK]** hues
-outside the effective palette mode used decoratively (−5) — the lock's `Palette mode` decides
-what's legal: `single-accent` (one accent + greys) · `brand-palette: [...]` (N named colors
-with assigned roles, Duolingo/M3-style — each hue must be listed IN the lock) · the
-`+categorical` flag (stackable on either mode: CD-1 category hues on rows/tags/labels,
-consistent mapping, ~6–8 cap). **No lock = `single-accent`. A mode counts only if the lock
-literally declares it** — "these hues encode category" is not a defense unless
-`+categorical` is in the lock file; **decorative hues** (gold stars, rainbow category dots,
-a different hue per card) outside the effective mode (−3, on top of the −5 when both apply); **emoji used as UI icons** (multi-color, breaks any palette) (−5); **a
-normal/OK/"보통" state shown in a *severity* color** instead of neutral grey (−4 — category
-coloring per CD-1/CL-2a is not a severity violation); **severity color on most/every row**
-(no hierarchy) (−4); hardcoded hex where a semantic token exists (−2 each, cap −6); status
-conveyed by color alone (−4); **the unlocked default indigo (`#5E6AD2`/`#4F46E5`) used as the
-accent** instead of a chosen domain-fit color (−4 — this one is never excused by a lock:
-locking the default indigo *is* the tell).
+**Color discipline (16)** — deduct for: accidental `#000`/`text-black` outside a profile or
+grammar contract that explicitly uses hard black structurally (−4 each, cap −8); competing
+decorative emphasis hues (−5); **emoji used as UI icons** (−5); **a normal/OK/"보통" state shown in a status color** instead of
+neutral grey (−4); **status color on most/every row** (no severity hierarchy) (−4);
+**decorative hues** (gold stars, rainbow category dots) instead of accent/grey (−3);
+hardcoded hex where a semantic token exists (−2 each, cap −6); status conveyed by color
+alone (−4); **the unlocked default indigo (`#5E6AD2`/`#4F46E5`) used as the accent** instead of
+a chosen domain-fit color (−4).
 
 **Distinctiveness (10)** — a coherent screen can still read "AI-generated." Deduct for: the
 **icon-chip cliché** — a generic Lucide line-icon in an identical pale-tinted rounded-square,
@@ -85,15 +69,11 @@ repeated for every feature/step (−4, §CC-9b); the **StyleSeed demo layout cop
 point** — an all-even grid of same-weight, centered, evenly-spaced cards (−3); the hero shows a
 stock/placeholder visual instead of *this* product (−3); the **escape hatch as a new uniform**
 (§CC-9c) — ghost 01/02/03 index numbers on every section, or identical uppercase-overline +
-big-number cards repeated with no variation (−2); **[LOCK] distinctive-but-dated** (§CC-9d) —
-full beige/paper page base, serif body text, dark-heavy blocks that read "brochure" not
-"2026 product" (−3) — fires on ANY surface when no lock declares an editorial/reading identity (no lock = fires,
-as v2.10); a locked `editorial`/reading surface legalizes serif body + a paper-toned canvas,
-and is instead gated on reading craft (measure 50–75ch, line-height ≥1.5, contrast). Cap −10.
+big-number cards repeated with no variation (−2); **distinctive-but-dated** (§CC-9d) — full
+beige/paper page base, serif body text on a product surface, dark-heavy blocks that read
+"brochure" not "2026 product" (−3). Cap −10.
 
-**Hierarchy & typography (16)** — deduct for: **[LOCK]** number/unit not ~2:1 (−4 — the
-Toss-signature default; a lock/preset that declares uniform numeric styling, e.g. technical
-mono tables, is exempt — check hierarchy comes from weight/color instead); font
+**Hierarchy & typography (16)** — deduct for: number/unit not ~2:1 (−4); font
 sizes off the Font Size table / `text-[var(--…)]` for size (−5); everything the
 same weight, no clear primary (−5); cramped or wrong line-height on body (−3);
 **body < 16px on a desktop/web B2B surface** (tight mobile scale on a wide screen) (−4 —
@@ -101,28 +81,15 @@ but dense-data chrome is exempt: chart ticks, mono SHAs/timestamps, table metada
 12–13px are correct; and dashboard app-chrome h1 at 22–24px is correct, not a violation
 of the marketing 40–56px headline scale).
 
-**Layout & rhythm (12)** — deduct for: **[LOCK]** no separation language at all (−6) —
-"separation" is whatever the lock's `Elevation` declares: cards+tone (default), whitespace+
-grid (swiss/editorial/minimal), or hard borders (brutalist). Content floating with *no*
-deliberate separation is the violation, not the absence of cards specifically; a locked
-`editorial`/reading surface with a bare text column and a proper measure is correct. **[LOCK]**
-spacing off the effective density's rhythm (−3) — the locked `Density` position (ss-dial
-ramp: airy `space-y-10/p-8` · comfortable `space-y-6/p-6·p-8` · compact `space-y-4/p-4/gap-4`
-· dense `space-y-4/p-4/gap-3`) is the grid; **no lock = comfortable**, so unlocked `px-4`/
-`px-8`-as-gutter deviations deduct exactly as v2.10; ONE position per project — mixing ramp
-positions across screens is the violation even though each is individually legal; same section type repeated in a
-row (−4); mixed off-scale one-offs (7/13/19px values on any density) (−3).
+**Layout & rhythm (12)** — deduct for: grouping that contradicts the selected grammar (−6):
+`operations-console` needs explicit functional groups, while `editorial-reading` should not be
+forced into cards; arbitrary off-scale spacing (−3); same section type repeated without purpose
+(−4); no discernible proximity rhythm (−3).
 
-**Cards & elevation (10)** — the effective elevation language decides (lock enum:
-`layered-shadow` | `tonal-ramp` | `flat-borders` | `oled-black`; no lock → `layered-shadow`
-on light surfaces, `tonal-ramp` on dark — judge the surface's actual mode). Deduct for:
-**[LOCK]** borders doing the separation work under an effective `layered-shadow` language
-(−4 — fires on every unlocked light-mode surface, exactly as v2.10); under `flat-borders`/
-`oled-black`/`tonal-ramp`, borders ARE the language — don't deduct, but check ONE border
-weight everywhere (§C0); **[LOCK]** shadows over the effective cap (default ~8%, absolute
-ceiling 15% unless a lock explicitly raises it with a stated value) or drop shadows in dark
-mode (−4); **[LOCK]** no separation at all in the effective language (−5) — tone-flat is a
-violation under `layered-shadow`, correct under `flat-borders`.
+**Cards & elevation (10)** — deduct for mixed or task-inappropriate surface language. Hairlines,
+flat grouping, tonal ramps, or restrained shadows are valid only when the selected grammar/profile
+uses them coherently. Deduct mixed border/shadow languages (−4), visibly heavy or directionally
+inconsistent shadows (−4), or missing group/surface separation where the grammar requires it (−5).
 
 **States & a11y (18)** — deduct for: missing empty/loading/error state on a data
 surface (−5 each, cap −10 — a static mockup or marketing landing with NO data surface is
@@ -155,26 +122,26 @@ Clamp each category at 0. Sum to a total.
 ## Output format
 
 ```
-## Design Score: 67 / 100   (src/app/Dashboard.tsx)
-Lock: none found — scored against defaults (run Quick Setup to lock a look)
+## Design Score: 70 / 100   (src/app/Dashboard.tsx)
+Rule set: operations-console × product-ui × SaaS × dashboard × swiss
 
-█████████████░░░░░░░  D+
+████████████████░░░░░░  C-
 
-Color discipline      10/16   ▓▓░░  #000 headings (l.12,40); orange+blue+green accents (l.28-34)
-Hierarchy & typography 12/16  ▓▓▓░  number/unit 1:1 on hero (l.18)
+Color discipline      11/16   ▓▓▓░  competing orange+blue emphasis hues (l.28-34)
+Hierarchy & typography 13/16  ▓▓▓▓  number/unit 1:1 on hero (l.18)
 Layout & rhythm         9/12  ▓▓▓░  two identical KPI rows (l.22-31)
-Cards & elevation       6/10  ▓▓░░  1px borders doing separation on light, no lock (l.22)
+Cards & elevation       8/10  ▓▓░░  mixed border + floating-shadow language (l.22)
 States & a11y          11/18  ▓▓░░  no empty/loading state; focus ring missing (l.55)
 Motion & interaction    4/6   ▓▓▓░  default fade, not a named seed
-Coherence               8/12  ▓▓░░  sharp cards (l.22) + pill buttons (l.48) (§C0)
-Distinctiveness         7/10  ▓▓▓░  icon-chip row repeated per feature (l.60-78)
+Coherence               6/12  ▓▓░░  sharp cards (l.22) + pill buttons (l.48); 3 accent hues (§C0)
+Distinctiveness          8/10  ▓▓▓░  all-even KPI grid weakens the operational focal panel
 
 ### Fix first (highest score gain)
 1. Add empty + loading states to the orders list       → +7 states (§71)
 2. Unify radius (pick soft 8-12px) + collapse to one accent → +9 coherence+color (§C0, §2)
 3. Drop the 1px borders, use tone + ≤8% shadow         → +4 cards  (§7)
 
-Re-score after: ~88 / 100.
+Re-score after: ~92 / 100.
 ```
 
 Use letter bands: 90+ A · 80-89 B · 70-79 C · 60-69 D · <60 F.

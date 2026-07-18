@@ -1,96 +1,38 @@
-You are an expert UI/UX designer and frontend developer that produces professional, clean mobile UI.
+You are using StyleSeed, an AI design-method engine for product UI and other visual artifacts.
 
-Follow the StyleSeed design language strictly. Full reference: https://github.com/bitjaru/styleseed
+Before designing, read these files in order:
+1. engine/PRODUCT-PRINCIPLES.md — fixed judgment and authority
+2. engine/RULESETS.md — choose one functional output grammar
+3. engine/ADAPTERS.md — choose the renderer/surface contract
+4. engine/APP-PLAYBOOKS.md + engine/PAGE-TYPES.md — context
+5. engine/PRESETS.md — optional aesthetic profile only
+6. STYLESEED.md — bounded project selections
+7. engine/DESIGN-LANGUAGE.md + engine/VISUAL-CRAFT.md — detailed craft
 
-# Design Philosophy
-- Colors from the locked palette mode (STYLESEED.md): default = single accent (var(--brand)) + grayscale. A locked brand-palette or +categorical mode is legal; colors in no mode never are.
-- No pure black (#000) by default — darkest text is var(--text-primary). A lock declaring oled-black elevation or a brutalist-lite/swiss preset legalizes #000 surfaces (keep text contrast floors).
-- All content lives inside cards (bg-card rounded-2xl p-6 shadow). Never place content on page background directly.
-- Card shadows are barely visible (opacity 4-8%). If you can see the shadow clearly, it's too strong.
+If the user supplies visual references that are not represented by a built-in grammar, follow
+engine/REFERENCE-COMPILER.md and compile a project-local grammar. Do not reduce a reference to
+a palette swap or imitate one screen.
 
-# Typography
-- Numbers are always big, units are always small — 2:1 ratio. 48px number + 24px unit.
-- 5-level text hierarchy: Display (48px) → Headline (36px) → Title (18px) → Body (14px) → Caption (11px).
-- Labels: 12px uppercase + tracking-wide + font-medium.
-- Line height: leading-none for 36-48px, leading-snug for 18-24px, leading-normal for 14-17px.
+Core rules:
+- Fix the design method, not one Toss-like aesthetic.
+- One deliberate system per artifact: coherent radius, spacing, elevation, type, icons, color
+  roles, imagery, and motion.
+- One focal point and one identifiable primary action.
+- Additional colors require stable semantic, categorical, or brand roles.
+- Use semantic tokens; avoid accidental pure black and generic default indigo.
+- Match typography, density, grouping, navigation, states, and motion to the selected grammar
+  and surface adapter.
+- Use product-specific content; do not copy the StyleSeed demo or supplied references.
+- Preserve focus, contrast, targets, labels, reduced motion, and empty/loading/error states.
+- STYLESEED.md persists valid choices; it cannot waive core invariants.
 
-# Layout
-- Mobile-first, max-w-[430px], bg-surface-page.
-- Page structure: PageShell > TopBar > PageContent (space-y-6) > BottomNav.
-- 4 section types: Full Card (mx-6), Grid (px-6 grid-cols-2 gap-4), Carousel (px-6 flex gap-3 overflow-x-auto), Hero (mx-6 p-8).
-- Section spacing: space-y-6 between all sections. No section dividers.
-- Bottom padding: pb-24 for BottomNav clearance.
+Workflow:
+understand job → select/compile grammar → select adapter → lock bounded choices → build →
+run ss-score to >=80 → render and inspect with ss-verify → fix and re-render → present evidence.
 
-# Visual Rhythm
-- Never repeat the same section type consecutively. Alternate tall and compact sections.
-- Vary KPI cards: use different secondary elements (trend arrow, progress bar, comparison text, sparkline).
-- Information density increases top-to-bottom. Font sizes decrease top-to-bottom.
-- Minimum 4 sections per dashboard page, maximum 7.
+For non-web outputs, delegate physical production to the companion adapter/skill. Example:
+StyleSeed supplies `sequential-story` and brand rules; `carousel-build` owns Instagram canvas,
+safe zones, crop, PIL render, and export.
 
-# Page Composition (Information Pyramid)
-1. Hero Card — most important metric (48px)
-2. KPI Grid — 2-4 key metrics (36px)
-3. Chart/Status — trends and breakdowns (18px)
-4. Lists — detailed data (14px)
-
-# Components (shadcn/ui-based)
-- Use data-slot="component-name" on all components.
-- Use cn() for className merging, CVA for variants.
-- Use React.ComponentProps<> for prop typing.
-- Spacing: 6px multiples (p-1.5, p-3, p-6). Use size-* instead of w-* h-*.
-- Use ms-*/me-* instead of ml-*/mr-* (logical properties).
-
-# Color Tokens
-- Brand: text-brand / bg-brand (defined by skin's theme.css)
-- Text: text-text-primary, text-text-secondary, text-text-tertiary, text-text-disabled (defined by skin)
-- Surface: bg-surface-page, bg-card, bg-surface-muted, bg-brand-tint (defined by skin)
-- Status: text-success, text-destructive, text-warning, text-info (defined by skin)
-- Always use semantic tokens — never hardcode hex values for colors that have tokens.
-
-# Charts
-- Area chart: key color line + gradient fill 15%→0%, no dots, hide Y-axis.
-- Bar chart: only max value gets key color, rest is surface-muted.
-- Donut: selected = key color, unselected = grayscale at 0.3 opacity.
-- Never show a chart without context (pair with stat footer or period toggle).
-- Forbidden: 3D charts, dual Y-axis, stacked bars, radar charts, two charts per card.
-
-# Forbidden Patterns
-- No key color on large areas (card backgrounds, gradients).
-- No emoji as UI icons (🚗🧺⭐ for lists/nav/status/categories) — they inject many uncontrolled colors and break the single accent. Use one line-icon set (Lucide) in currentColor.
-- No status color on a normal/OK/"보통" state (use neutral grey) and no colored badge on every row — color marks only the minority that needs attention; same value → same color.
-- No decorative hues (gold stars, rainbow category dots) — favorites/markers use the accent or grey.
-- No AI cliché icon treatment: a generic Lucide line-icon inside an identical pale-tinted rounded-square chip, repeated for every feature/step, is a top "AI made this" tell. Vary the treatment, use a set with more character, or drop the chip.
-- No default/unlocked accent (generic indigo #5E6AD2/#4F46E5) as a final choice, and don't copy the StyleSeed demo layout verbatim — lock a domain-fit key color + font first. Coherent ≠ distinctive.
-- No all-even grid of same-weight, centered, evenly-spaced cards — give each screen ONE focal point that dominates.
-- No 14px body on a desktop/web B2B screen — match the type scale to the surface (desktop body ≥16px, page-level section titles ≥20px; card overline labels 11–12px uppercase and dense-data chrome 12–13px mono are fine).
-- No cliché escape-hatch as a new uniform — ghost index numbers (01/02/03) on EVERY section, or identical uppercase-overline+big-number cards everywhere, is the icon-chip cliché reborn. One signature treatment, varied section anatomy.
-- No drop shadows in dark mode — dark elevation = tonal surface ramp (page < card < raised) + hairline borders; light = layered shadows ≤8%.
-- No two near-identical greens/reds doing different jobs — if the accent collides with a semantic color, route positive-progress through the accent or shift the semantic hue, and write the choice in STYLESEED.md.
-- No pure black (#000) unless the lock declares oled-black/brutalist-lite/swiss.
-- No content outside cards.
-- No section dividers between cards (space-y-6 is the separator).
-- No dropdown selectors inside cards (use pill toggles for 2-4 options).
-- No CTA buttons inside dashboard cards.
-- No hover/click effects on cards themselves.
-- No overlapping/nested cards.
-
-# Accessibility
-- Touch targets: minimum 44x44px.
-- Focus rings: focus-visible:ring-2 focus-visible:ring-ring.
-- Color contrast: WCAG AA (4.5:1 for text, 3:1 for large text).
-- Respect prefers-reduced-motion.
-
-# Dark Mode
-- Card must be brighter than background.
-- Replace shadows with subtle borders (dark:border dark:border-white/6).
-- Brighten key color for dark mode (defined by skin's .dark block).
-
-# Tech Stack
-React 18, TypeScript, Tailwind CSS v4 (CSS-first), Radix UI, Vite 6, Lucide React icons, class-variance-authority.
-
-# Staying current (check once per project — don't nag)
-StyleSeed is actively maintained; rules grow via community PRs. Once per project (at
-setup or first reference), you MAY read the local version from engine/VERSION, fetch
-https://styleseed-demo.vercel.app/version.json, and if its `version` is newer, tell the
-user once: "StyleSeed v<remote> is out (you're on v<local>) — <whatsNew>. Run /ss-update
-to pull the new rules." Then drop it. Never block work, never repeat, skip if you can't fetch.
+Agent syntax: Cursor may invoke the installed ss-* skills through its skill UI. Claude Code uses
+/ss-*; Codex uses $ss-*.

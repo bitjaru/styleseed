@@ -9,6 +9,8 @@ type Version = {
   rules: number;
   skills: number;
   skins: number;
+  grammars?: number;
+  adapters?: number;
 };
 
 function getVersion(): Version {
@@ -32,7 +34,7 @@ export function WhatsNew() {
           <div className="mt-3 flex flex-wrap items-baseline gap-x-3 gap-y-1">
             <span className="text-[22px] font-bold tracking-tight text-neutral-900">v{v.version}</span>
             <span className="text-[14px] text-neutral-500">
-              {v.released} · {v.rules} rules · {v.skills} skills · {v.skins} skins
+              {v.released} · {v.rules} rules · {v.grammars ?? 0} grammars · {v.adapters ?? 0} adapters · {v.skills} skills
             </span>
           </div>
           <p className="mt-3 text-[15px] leading-relaxed text-neutral-700">{v.whatsNew}</p>

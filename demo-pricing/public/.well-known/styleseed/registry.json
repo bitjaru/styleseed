@@ -1,7 +1,7 @@
 {
   "$schema": "https://styleseed-demo.vercel.app/.well-known/styleseed/registry.schema.json",
   "version": "2",
-  "generated": "2026-07-16T07:02:02.171Z",
+  "generated": "2026-07-18T12:15:54.272Z",
   "repository": "https://github.com/bitjaru/styleseed",
   "counts": {
     "components": 48,
@@ -1064,8 +1064,8 @@
       "id": "toss",
       "name": "Toss",
       "description": "Korean fintech super-app — clean, minimal, data-focused",
-      "brand": "#721FE5",
-      "brandDark": "#9B5FFF",
+      "brand": "#3182F6",
+      "brandDark": "#4593FC",
       "font": "Pretendard, Inter, system-ui, sans-serif",
       "source": "original",
       "themeUrl": "https://raw.githubusercontent.com/bitjaru/styleseed/main/skins/toss/theme.css"

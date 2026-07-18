@@ -11,7 +11,7 @@ const inter = Inter({
 const SITE_URL = "https://styleseed-demo.vercel.app";
 const SITE_NAME = "StyleSeed";
 const SITE_DESC =
-  "Design engine for vibe coding — it teaches Claude Code, Codex, and Cursor design judgment (74 rules), not just components. A drop-in React design system with 7 brand skins and a named motion system. MIT licensed.";
+  "AI design-method engine for vibe coding — 8 output grammars, 5 surface adapters, and a reference compiler that turns screenshots, URLs, Figma, or existing UI into evidence-backed design rules. MIT licensed.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -106,11 +106,11 @@ export default function RootLayout({
         operatingSystem: "Web",
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
         license: "https://opensource.org/licenses/MIT",
-        softwareVersion: "2.3.0",
-        programmingLanguage: ["TypeScript", "React"],
+        softwareVersion: "3.0.0",
+        programmingLanguage: ["Markdown", "TypeScript", "React", "Python"],
         codeRepository: "https://github.com/bitjaru/styleseed",
         keywords:
-          "design system for AI, Claude Code, Cursor, Codex, design rules, AI UI, vibe coding, design judgment",
+          "design method for AI, Claude Code, Cursor, Codex, output grammars, reference compiler, AI UI, carousel design, vibe coding, design judgment",
         sameAs: SAME_AS,
       },
       {

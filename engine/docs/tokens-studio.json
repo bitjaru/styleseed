@@ -3,7 +3,7 @@
     "color": {
       "brand": {
         "primary": {
-          "$value": "#721FE5",
+          "$value": "#3182F6",
           "$type": "color",
           "$description": "Main brand accent color (purple)"
         },

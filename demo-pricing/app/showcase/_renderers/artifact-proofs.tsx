@@ -8,68 +8,71 @@ type ArtifactProps = { skin: string; seed: SeedId };
 export function SignalCarousel(_: ArtifactProps) {
   const frames = [
     <div key="hook" className="flex h-full flex-col justify-between bg-[#F4EFE5] p-[8%] text-[#191919]">
-      <div className="flex items-center justify-between text-[clamp(8px,1vw,12px)] font-bold uppercase tracking-[0.18em]">
-        <span>Signal / 01</span><span>Attention field notes</span>
+      <div className="flex items-center justify-between gap-[4cqw] text-[4cqw] font-bold uppercase tracking-[0.18em]">
+        <span>Signal / 01</span><span className="text-right">Field notes</span>
       </div>
       <div>
-        <div className="text-[clamp(74px,12vw,148px)] font-black leading-[0.68] tracking-[-0.1em] text-[#F04B36]">7</div>
-        <h2 className="mt-[8%] max-w-[9ch] text-[clamp(23px,3.2vw,42px)] font-black leading-[0.92] tracking-[-0.05em]">
+        <div className="text-[42cqw] font-black leading-[0.68] tracking-[-0.1em] text-[#F04B36]">7</div>
+        <h2 className="mt-[8%] max-w-[10ch] text-[10.8cqw] font-black leading-[0.92] tracking-[-0.05em]">
           Your attention does not need another system.
         </h2>
       </div>
-      <div className="flex items-end justify-between border-t border-[#191919] pt-[5%] text-[clamp(8px,1vw,12px)] font-semibold">
-        <span>It needs seven quiet minutes.</span><ArrowDown size={16} />
+      <div className="flex items-end justify-between gap-[4cqw] border-t border-[#191919] pt-[5%] text-[3.7cqw] font-semibold">
+        <span>It needs seven quiet minutes.</span><ArrowDown className="size-[5cqw] shrink-0" />
       </div>
     </div>,
     <div key="friction" className="flex h-full flex-col bg-[#191919] p-[8%] text-[#F4EFE5]">
-      <div className="text-[clamp(8px,1vw,12px)] font-bold uppercase tracking-[0.18em] text-[#F04B36]">The friction</div>
+      <div className="text-[4cqw] font-bold uppercase tracking-[0.18em] text-[#F04B36]">The friction</div>
       <div className="mt-auto">
         <div className="mb-[8%] h-1 w-full bg-white/15">
           <div className="h-full w-[78%] bg-[#F04B36]" />
         </div>
-        <p className="text-[clamp(24px,3.6vw,46px)] font-black leading-[0.95] tracking-[-0.05em]">
+        <p className="text-[10.8cqw] font-black leading-[0.95] tracking-[-0.05em]">
           We switch tasks <span className="text-[#F04B36]">before the thought settles.</span>
         </p>
-        <p className="mt-[8%] max-w-[24ch] text-[clamp(10px,1.2vw,15px)] leading-relaxed text-white/60">
-          The recovery cost is invisible, so we blame motivation instead of interruption.
+        <p className="mt-[8%] max-w-[24ch] text-[4.4cqw] leading-relaxed text-white/60">
+          The recovery cost stays invisible.
         </p>
       </div>
     </div>,
     <div key="reset" className="relative flex h-full flex-col overflow-hidden bg-[#F04B36] p-[8%] text-[#191919]">
-      <div className="absolute -right-[16%] top-[8%] size-[70%] rounded-full border-[clamp(18px,4vw,48px)] border-[#F4EFE5]/35" />
-      <div className="relative text-[clamp(8px,1vw,12px)] font-bold uppercase tracking-[0.18em]">The reset</div>
+      <div className="absolute -right-[16%] top-[8%] size-[70%] rounded-full border-[12cqw] border-[#F4EFE5]/35" />
+      <div className="relative text-[4cqw] font-bold uppercase tracking-[0.18em]">The reset</div>
       <div className="relative mt-auto">
-        <div className="text-[clamp(40px,6vw,72px)] font-black leading-none tracking-[-0.07em]">01</div>
-        <h2 className="mt-[4%] text-[clamp(23px,3.3vw,44px)] font-black leading-[0.94] tracking-[-0.05em]">
-          Close every tab you will not use now.
+        <div className="text-[23cqw] font-black leading-none tracking-[-0.07em]">01</div>
+        <h2 className="mt-[4%] text-[10.8cqw] font-black leading-[0.94] tracking-[-0.05em]">
+          Close every tab you do not need now.
         </h2>
-        <p className="mt-[7%] text-[clamp(10px,1.2vw,15px)] font-semibold">One window. One task. Seven minutes.</p>
+        <p className="mt-[7%] text-[4.2cqw] font-semibold">One window. One task. Seven minutes.</p>
       </div>
     </div>,
     <div key="close" className="flex h-full flex-col justify-between bg-[#DDE8FF] p-[8%] text-[#17233D]">
-      <div className="flex items-center gap-2 text-[clamp(8px,1vw,12px)] font-bold uppercase tracking-[0.18em]">
-        <Circle size={10} fill="#F04B36" strokeWidth={0} /> Keep this
+      <div className="flex items-center gap-[3cqw] text-[4cqw] font-bold uppercase tracking-[0.18em]">
+        <Circle className="size-[4cqw]" fill="#F04B36" strokeWidth={0} /> Keep this
       </div>
       <div>
-        <p className="max-w-[10ch] text-[clamp(25px,3.6vw,48px)] font-black leading-[0.95] tracking-[-0.05em]">
+        <p className="max-w-[10ch] text-[10.8cqw] font-black leading-[0.95] tracking-[-0.05em]">
           Protect a small beginning, not a perfect day.
         </p>
       </div>
-      <div className="flex items-center justify-between border-t border-[#17233D]/30 pt-[5%] text-[clamp(8px,1vw,12px)] font-bold">
-        <span>Save for the next noisy hour</span><ArrowUpRight size={16} />
+      <div className="flex items-center justify-between gap-[4cqw] border-t border-[#17233D]/30 pt-[5%] text-[3.5cqw] font-bold">
+        <span>Save for the next noisy hour</span><ArrowUpRight className="size-[5cqw] shrink-0" />
       </div>
     </div>,
   ];
 
   return (
-    <div className="min-h-[640px] bg-[#DDD8CE] p-5 sm:p-8">
+    <div className="bg-[#DDD8CE] p-5 sm:p-8">
       <div className="mb-5 flex items-center justify-between text-[11px] font-bold uppercase tracking-[0.16em] text-black/55">
         <span>5-frame social carousel · 1080 × 1440</span>
         <span>Frames 1–4 previewed</span>
       </div>
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         {frames.map((frame, index) => (
-          <div key={index} className="aspect-[3/4] overflow-hidden shadow-[0_18px_35px_-22px_rgba(0,0,0,0.45)]">
+          <div
+            key={index}
+            className="aspect-[3/4] overflow-hidden [container-type:inline-size] shadow-[0_18px_35px_-22px_rgba(0,0,0,0.45)]"
+          >
             {frame}
           </div>
         ))}

@@ -49,8 +49,8 @@ export default function HomePage() {
     <>
       {/* Navigation */}
       <header className="sticky top-0 z-40 border-b border-neutral-200/60 bg-white/80 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3.5">
-          <Link href="/" className="flex items-center gap-2">
+        <div className="mx-auto flex max-w-[1280px] items-center justify-between gap-6 px-6 py-3.5">
+          <Link href="/" className="flex shrink-0 items-center gap-2">
             <div
               aria-hidden
               className="flex h-7 w-7 items-center justify-center rounded-md bg-neutral-900 text-[14px] font-bold text-white"
@@ -59,7 +59,7 @@ export default function HomePage() {
             </div>
             <span className="text-[15px] font-bold tracking-tight">StyleSeed</span>
           </Link>
-          <nav className="hidden items-center gap-6 text-[14px] font-semibold text-neutral-600 sm:flex">
+          <nav className="hidden min-w-0 items-center gap-5 text-[14px] font-semibold text-neutral-600 xl:flex">
             <a href="#get-started" className="hover:text-neutral-900">
               Get started
             </a>
@@ -81,29 +81,21 @@ export default function HomePage() {
             <Link href="/gallery" className="hover:text-neutral-900">
               Components
             </Link>
-            <a
-              href="https://github.com/bitjaru/styleseed"
-              className="hover:text-neutral-900"
-              target="_blank"
-              rel="noreferrer"
-            >
-              GitHub
-            </a>
           </nav>
-          <div className="flex items-center gap-2">
+          <div className="flex shrink-0 items-center gap-2">
             <a
               href="https://github.com/bitjaru/styleseed"
               target="_blank"
               rel="noreferrer"
               aria-label="Star StyleSeed on GitHub"
-              className="hidden items-center gap-1.5 rounded-md border border-neutral-200 bg-white px-2.5 py-1.5 text-[14px] font-bold text-neutral-700 transition-colors hover:border-neutral-900 sm:inline-flex"
+              className="hidden items-center gap-1.5 whitespace-nowrap rounded-md border border-neutral-200 bg-white px-2.5 py-1.5 text-[14px] font-bold text-neutral-700 transition-colors hover:border-neutral-900 lg:inline-flex"
             >
               Star on GitHub
               <GithubStarCount className="font-semibold text-neutral-500" />
             </a>
             <Link
               href="/showcase"
-              className="inline-flex items-center gap-1.5 rounded-md bg-neutral-900 px-3 py-1.5 text-[14px] font-bold text-white hover:bg-black"
+              className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-md bg-neutral-900 px-3 py-1.5 text-[14px] font-bold text-white hover:bg-black"
             >
               Browse showcase
               <ArrowRight size={13} />

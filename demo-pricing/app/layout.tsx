@@ -112,7 +112,7 @@ export default function RootLayout({
         codeRepository: "https://github.com/bitjaru/styleseed",
         publisher: { "@id": `${SITE_URL}/#organization` },
         isPartOf: { "@id": `${SITE_URL}/#website` },
-        dateModified: "2026-07-18",
+        dateModified: "2026-07-19",
         keywords:
           "design method for AI, Claude Code, Cursor, Codex, output grammars, reference compiler, AI UI, carousel design, vibe coding, design judgment",
         sameAs: SAME_AS,

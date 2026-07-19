@@ -2,12 +2,15 @@
 
 import { useState } from "react";
 import type { SeedId } from "@engine/motion";
+import type { SurfaceAdapter } from "@/lib/showcase";
 import { getRenderer } from "../_renderers";
 
 type Skin = { id: string; name: string; brand?: string };
 
 type Props = {
   entryId: string;
+  entryAdapter: SurfaceAdapter;
+  proof: "interactive" | "rendered-preview";
   defaultSkin: string;
   defaultSeed: SeedId;
   skins: Skin[];
@@ -19,6 +22,8 @@ const SEED_STORAGE = "styleseed-showcase-seed";
 
 export function ShowcaseFrame({
   entryId,
+  entryAdapter,
+  proof,
   defaultSkin,
   defaultSeed,
   skins,
@@ -48,18 +53,31 @@ export function ShowcaseFrame({
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200">
       <div className="flex flex-wrap items-center gap-x-6 gap-y-2 border-b border-gray-200 bg-gray-50 px-3 py-2">
-        <Toggle
-          label="Brand"
-          items={skins.map((s) => ({ id: s.id, name: s.name, color: s.brand }))}
-          active={skin}
-          onPick={pickSkin}
-        />
-        <Toggle
-          label="Motion"
-          items={seeds.map((s) => ({ id: s.id, name: s.name, tooltip: s.vibe }))}
-          active={seed}
-          onPick={(id) => pickSeed(id as SeedId)}
-        />
+        {proof === "interactive" ? (
+          <>
+            <Toggle
+              label="Brand"
+              items={skins.map((s) => ({ id: s.id, name: s.name, color: s.brand }))}
+              active={skin}
+              onPick={pickSkin}
+            />
+            <Toggle
+              label="Motion"
+              items={seeds.map((s) => ({ id: s.id, name: s.name, tooltip: s.vibe }))}
+              active={seed}
+              onPick={(id) => pickSeed(id as SeedId)}
+            />
+          </>
+        ) : (
+          <>
+            <span className="rounded-full bg-violet-100 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-violet-800">
+              Rendered concept preview
+            </span>
+            <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-gray-500">
+              Surface · {entryAdapter}
+            </span>
+          </>
+        )}
       </div>
       <div data-skin={skin} className="p-0">
         {render ? render(skin, seed) : <UnknownEntry id={entryId} />}

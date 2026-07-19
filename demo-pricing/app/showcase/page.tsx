@@ -123,8 +123,8 @@ export default function ShowcasePage() {
             </div>
             <div className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-200">
               <Metric value={entries.length} label="live builds" />
-              <Metric value={`${liveGrammars.length}/${OUTPUT_GRAMMARS.length}`} label="grammars proven" />
-              <Metric value={`${liveAdapters.length}/${SURFACE_ADAPTERS.length}`} label="adapters proven" />
+              <Metric value={`${liveGrammars.length}/${OUTPUT_GRAMMARS.length}`} label="grammars represented" />
+              <Metric value={`${liveAdapters.length}/${SURFACE_ADAPTERS.length}`} label="surfaces represented" />
               <Metric value={`${skinCount} × ${seedCount}`} label="skin / motion" />
             </div>
           </div>
@@ -141,11 +141,12 @@ export default function ShowcasePage() {
                 Honest coverage
               </p>
               <h2 id="adapter-coverage" className="mt-2 text-3xl font-bold tracking-tight">
-                Five surface contracts. One has live public proof today.
+                Five surface contracts. Every one is now visible.
               </h2>
               <p className="mt-3 text-[15px] leading-relaxed text-neutral-600">
-                StyleSeed v3 supports non-web artifacts at the engine level. The public showcase
-                marks them as engine-ready until a validated export is shipped—no fake examples.
+                Product UI examples remain interactive. The four non-web surfaces now have
+                composed artifact previews, clearly labeled until their native export harnesses
+                and production files ship.
               </p>
               <Link
                 href="/architecture"
@@ -156,26 +157,35 @@ export default function ShowcasePage() {
             </div>
             <div className="grid gap-3 sm:grid-cols-2">
               {SURFACE_ADAPTERS.map((adapter) => {
-                const isLive = liveAdapters.includes(adapter);
+                const hasInteractiveProof = adapter === "product-ui";
+                const isRepresented = liveAdapters.includes(adapter);
                 return (
                   <div key={adapter} className="rounded-2xl border border-neutral-200 bg-neutral-50 p-5">
                     <div className="flex items-center justify-between gap-3">
                       <h3 className="font-bold text-neutral-950">{ADAPTER_LABELS[adapter]}</h3>
                       <span
                         className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-[10px] font-bold uppercase tracking-[0.1em] ${
-                          isLive
+                          hasInteractiveProof
                             ? "bg-emerald-100 text-emerald-800"
-                            : "bg-amber-100 text-amber-800"
+                            : isRepresented
+                              ? "bg-violet-100 text-violet-800"
+                              : "bg-amber-100 text-amber-800"
                         }`}
                       >
-                        {isLive ? <Check size={11} /> : <FlaskConical size={11} />}
-                        {isLive ? "Live proof" : "Engine ready"}
+                        {hasInteractiveProof ? <Check size={11} /> : <FlaskConical size={11} />}
+                        {hasInteractiveProof
+                          ? "Interactive"
+                          : isRepresented
+                            ? "Concept preview"
+                            : "Engine ready"}
                       </span>
                     </div>
                     <p className="mt-2 text-[12px] leading-relaxed text-neutral-600">
                       {adapter === "product-ui"
-                        ? `${entries.length} inspectable web and mobile product builds.`
-                        : "Grammar and verification contract shipped; validated public artifact next."}
+                        ? `${entries.filter((entry) => entry.adapter === adapter).length} inspectable web and mobile product builds.`
+                        : isRepresented
+                          ? "A composed concept is inspectable now; native export validation remains explicit."
+                          : "Grammar and verification contract shipped; validated public artifact next."}
                     </p>
                   </div>
                 );

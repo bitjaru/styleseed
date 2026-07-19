@@ -43,6 +43,8 @@ export type ShowcaseEntry = {
   job: string;
   /** One identifying move that proves the grammar is more than a skin. */
   signature: string;
+  /** Whether the public artifact is interactive or a composed visual preview. */
+  proof?: "interactive" | "rendered-preview";
   /** Default skin to render when the user lands on the entry. */
   primarySkin: string;
   /** Default motion seed to render with. */

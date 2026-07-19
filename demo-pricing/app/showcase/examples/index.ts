@@ -14,3 +14,4 @@ import "./wallet";
 import "./food";
 import "./fitness";
 import "./music";
+import "./artifact-proofs";

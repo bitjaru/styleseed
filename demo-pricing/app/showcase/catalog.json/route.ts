@@ -13,6 +13,7 @@ export function GET() {
     outputGrammar: entry.grammar,
     surfaceAdapter: entry.adapter,
     signatureDecision: entry.signature,
+    proofLevel: entry.proof ?? "interactive",
     category: entry.category,
     aestheticSkin: entry.primarySkin,
     motionSeed: entry.primarySeed,

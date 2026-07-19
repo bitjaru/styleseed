@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { OutputGrammar, ShowcaseEntry } from "@/lib/showcase";
+import { ArtifactThumbnail } from "./_renderers/artifact-proofs";
 
 const GRAMMAR_LABELS: Record<OutputGrammar, string> = {
   "consumer-service": "Consumer service",
@@ -24,10 +25,15 @@ type ShowcaseBrowserProps = {
 export function ShowcaseBrowser({ entries, grammars }: ShowcaseBrowserProps) {
   const [activeGrammar, setActiveGrammar] = useState<OutputGrammar | "all">("all");
   const visibleEntries = useMemo(
-    () =>
-      activeGrammar === "all"
-        ? entries
-        : entries.filter((entry) => entry.grammar === activeGrammar),
+    () => {
+      const filtered =
+        activeGrammar === "all"
+          ? entries
+          : entries.filter((entry) => entry.grammar === activeGrammar);
+      return [...filtered].sort(
+        (a, b) => Number(b.proof === "rendered-preview") - Number(a.proof === "rendered-preview"),
+      );
+    },
     [activeGrammar, entries],
   );
 
@@ -78,16 +84,25 @@ export function ShowcaseBrowser({ entries, grammars }: ShowcaseBrowserProps) {
           >
             <article className="flex min-w-0 flex-1 flex-col">
               <div className="relative aspect-[16/10] overflow-hidden bg-neutral-100">
-                <Image
-                  src={`/showcase-hero/${entry.id}.png`}
-                  alt={`${entry.name} designed with the ${entry.grammar} grammar`}
-                  width={1440}
-                  height={900}
-                  className="h-full w-full object-cover object-top transition-transform duration-300 group-hover:scale-[1.025]"
-                />
+                {entry.proof === "rendered-preview" ? (
+                  <ArtifactThumbnail id={entry.id} />
+                ) : (
+                  <Image
+                    src={`/showcase-hero/${entry.id}.png`}
+                    alt={`${entry.name} designed with the ${entry.grammar} grammar`}
+                    width={1440}
+                    height={900}
+                    className="h-full w-full object-cover object-top transition-transform duration-300 group-hover:scale-[1.025]"
+                  />
+                )}
                 <span className="absolute left-3 top-3 rounded-full bg-neutral-950/85 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-white backdrop-blur-sm">
                   {GRAMMAR_LABELS[entry.grammar]}
                 </span>
+                {entry.proof === "rendered-preview" && (
+                  <span className="absolute right-3 top-3 rounded-full bg-violet-500 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-white">
+                    New v3 artifact
+                  </span>
+                )}
               </div>
               <div className="flex flex-1 flex-col border-t border-neutral-200 p-5">
                 <div className="flex items-baseline justify-between gap-3">

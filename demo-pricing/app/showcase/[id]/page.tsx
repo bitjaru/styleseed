@@ -23,7 +23,10 @@ export async function generateMetadata({
   if (!entry) return { title: "Not found" };
   const title = `${entry.name} — ${entry.grammar} AI design example`;
   const description = `${entry.job} See the live ${entry.adapter} build, design grammar, signature decision, skin, motion, and implementation rationale.`;
-  const image = `${BASE}/showcase-hero/${entry.id}.png`;
+  const image =
+    entry.proof === "rendered-preview"
+      ? `${BASE}/og/showcase.png`
+      : `${BASE}/showcase-hero/${entry.id}.png`;
   return {
     title,
     description,
@@ -69,7 +72,10 @@ export default async function ShowcaseDetailPage({
         url: `${BASE}/showcase/${entry.id}`,
         name: entry.name,
         description: entry.job,
-        image: `${BASE}/showcase-hero/${entry.id}.png`,
+        image:
+          entry.proof === "rendered-preview"
+            ? `${BASE}/og/showcase.png`
+            : `${BASE}/showcase-hero/${entry.id}.png`,
         author: { "@type": "Organization", name: "StyleSeed", url: BASE },
         isPartOf: { "@id": `${BASE}/showcase#builds` },
         about: [entry.grammar, entry.adapter, entry.category, entry.signature],
@@ -130,6 +136,8 @@ export default async function ShowcaseDetailPage({
 
         <ShowcaseFrame
           entryId={entry.id}
+          entryAdapter={entry.adapter}
+          proof={entry.proof ?? "interactive"}
           defaultSkin={entry.primarySkin}
           defaultSeed={entry.primarySeed}
           skins={skins}

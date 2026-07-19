@@ -14,6 +14,12 @@ import { WalletPage } from "./wallet";
 import { FoodPage } from "./food";
 import { FitnessPage } from "./fitness";
 import { MusicPage } from "./music";
+import {
+  FieldReport,
+  NightPoster,
+  OrbitDeck,
+  SignalCarousel,
+} from "./artifact-proofs";
 
 export type ShowcaseRenderer = (skin: string, seed: SeedId) => ReactNode;
 
@@ -34,6 +40,10 @@ export const renderers: Record<string, ShowcaseRenderer> = {
   food: (skin, seed) => <FoodPage skin={skin} seed={seed} />,
   fitness: (skin, seed) => <FitnessPage skin={skin} seed={seed} />,
   music: (skin, seed) => <MusicPage skin={skin} seed={seed} />,
+  "signal-carousel": (skin, seed) => <SignalCarousel skin={skin} seed={seed} />,
+  "orbit-deck": (skin, seed) => <OrbitDeck skin={skin} seed={seed} />,
+  "field-report": (skin, seed) => <FieldReport skin={skin} seed={seed} />,
+  "night-poster": (skin, seed) => <NightPoster skin={skin} seed={seed} />,
 };
 
 export function getRenderer(id: string): ShowcaseRenderer | undefined {

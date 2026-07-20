@@ -8,7 +8,32 @@
 
 <sub>Open-source design-method engine for Claude Code · Codex · Cursor — selects the right design grammar or derives one from references, locks project decisions, and verifies the rendered result.</sub>
 
+<br />
+<br />
+
+<a href="https://styleseed-demo.vercel.app/showcase">
+  <img src="showcase/v26-compare.png" width="720" alt="Same product, same prompt — left: default AI output, right: with StyleSeed rules locked" />
+</a>
+
+**Same product. Same prompt. Only the rules changed.**
+
 </div>
+
+## What it bans on sight
+
+The "AI-generated look" isn't bad luck — it's a list of nameable tells. StyleSeed ships **74 rules** that ban them, and a **0–100 scored gate** that blocks any screen under 80 from ever reaching you.
+
+| Banned | Why |
+|---|---|
+| Default indigo `#4F46E5` / `#5E6AD2` accent | the universal "an AI made this" color |
+| Emoji as UI icons 🚗 🧺 ⭐ | inject random colors, render differently per OS |
+| The icon-in-a-chip above every feature card | gen-1 AI tell — decoration pretending to be information |
+| All-even grid of same-weight centered cards | the #1 machine-composed tell: no focal point |
+| Pure `#000` backgrounds | a flat void — real dark UIs use layered ramps |
+| Font sizes outside one fixed table | size drift is why screens feel "off" but you can't say why |
+| Hardcoded hex in components | tokens only — otherwise the lock can't hold across screens |
+
+<sub>Banning the defaults isn't enough — agents converge on new uniforms once the old ones are blocked. That's why the rules come with an enforced score-then-fix loop, not a checklist. [What happens after install ↓](#what-happens-after-easy-start)</sub>
 
 ## Easy Start (30 seconds)
 

@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "id": "signal-carousel",
+  "canvas": {
+    "width": 1080,
+    "height": 1440,
+    "aspectRatio": "3:4"
+  },
+  "sequence": "hook → sourced evidence → action → reframe → CTA",
+  "renderer": "Playwright Chromium capture of the production Next.js export route",
+  "source": {
+    "title": "Why is it so hard to do my work? The challenge of attention residue when switching between work tasks",
+    "author": "Sophie Leroy",
+    "year": 2009,
+    "doi": "10.1016/j.obhdp.2009.04.002",
+    "url": "https://doi.org/10.1016/j.obhdp.2009.04.002"
+  },
+  "frames": [
+    {
+      "index": 1,
+      "file": "01-hook.png",
+      "role": "hook",
+      "width": 1080,
+      "height": 1440,
+      "bytes": 59856,
+      "sha256": "e62457807d9b7eb68eca3069f8487f80d1f63e728fd5c4eb430c5c3be49ec605"
+    },
+    {
+      "index": 2,
+      "file": "02-evidence.png",
+      "role": "sourced-evidence",
+      "width": 1080,
+      "height": 1440,
+      "bytes": 98988,
+      "sha256": "15be04311775e331efebfe23773e6996827fad9aafa445cf8faa098ac6ea8ad1"
+    },
+    {
+      "index": 3,
+      "file": "03-action.png",
+      "role": "action",
+      "width": 1080,
+      "height": 1440,
+      "bytes": 72145,
+      "sha256": "5b2f18c42846c4b382f0044c344e883962d104dc055808a08ac6335bb7719925"
+    },
+    {
+      "index": 4,
+      "file": "04-reframe.png",
+      "role": "reframe",
+      "width": 1080,
+      "height": 1440,
+      "bytes": 60903,
+      "sha256": "b3f3cba9c53e2584a0a9fab630957e290ec3411b4e37c27b328cf1667671f111"
+    },
+    {
+      "index": 5,
+      "file": "05-cta.png",
+      "role": "cta-and-attribution",
+      "width": 1080,
+      "height": 1440,
+      "bytes": 85602,
+      "sha256": "84b9bbc51f37b07df1badf763dc8342ca269f5956d0ec42f61980f7bd59e971a"
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 import "../examples";
-import { OUTPUT_GRAMMARS, SURFACE_ADAPTERS, listShowcase } from "@/lib/showcase";
+import { getShowcaseImagePath, OUTPUT_GRAMMARS, SURFACE_ADAPTERS, listShowcase } from "@/lib/showcase";
 
 export const dynamic = "force-static";
 
@@ -8,12 +8,14 @@ export function GET() {
     id: entry.id,
     name: entry.name,
     url: `https://styleseed-demo.vercel.app/showcase/${entry.id}`,
-    image: `https://styleseed-demo.vercel.app/showcase-hero/${entry.id}.png`,
+    image: `https://styleseed-demo.vercel.app${getShowcaseImagePath(entry)}`,
     userJob: entry.job,
     outputGrammar: entry.grammar,
     surfaceAdapter: entry.adapter,
     signatureDecision: entry.signature,
     proofLevel: entry.proof ?? "interactive",
+    sourcePath: entry.sourcePath ?? `app/showcase/examples/${entry.id}.tsx`,
+    reproduction: entry.reproduction,
     category: entry.category,
     aestheticSkin: entry.primarySkin,
     motionSeed: entry.primarySeed,

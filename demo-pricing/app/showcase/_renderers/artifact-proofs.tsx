@@ -1,84 +1,164 @@
 "use client";
 
+import Image from "next/image";
 import { ArrowDown, ArrowUpRight, Circle, Sparkles } from "lucide-react";
 import type { SeedId } from "@engine/motion";
 
 type ArtifactProps = { skin: string; seed: SeedId };
 
-export function SignalCarousel(_: ArtifactProps) {
-  const frames = [
-    <div key="hook" className="flex h-full flex-col justify-between bg-[#F4EFE5] p-[8%] text-[#191919]">
-      <div className="flex items-center justify-between gap-[3cqw] whitespace-nowrap text-[3.2cqw] font-bold uppercase tracking-[0.18em]">
-        <span>Signal / 01</span><span className="text-right">Field notes</span>
-      </div>
-      <div>
-        <div className="text-[31cqw] font-black leading-[0.72] tracking-[-0.1em] text-[#F04B36]">7</div>
-        <h2 className="mt-[6%] max-w-[11ch] text-[8.2cqw] font-black leading-[0.94] tracking-[-0.05em]">
-          Your attention does not need another system.
-        </h2>
-      </div>
-      <div className="flex items-end justify-between gap-[4cqw] border-t border-[#191919] pt-[5%] text-[3.2cqw] font-semibold">
-        <span>It needs seven quiet minutes.</span><ArrowDown className="size-[5cqw] shrink-0" />
-      </div>
-    </div>,
-    <div key="friction" className="flex h-full flex-col bg-[#191919] p-[8%] text-[#F4EFE5]">
-      <div className="text-[3.5cqw] font-bold uppercase tracking-[0.18em] text-[#F04B36]">The friction</div>
-      <div className="mt-auto">
-        <div className="mb-[6%] h-1 w-full bg-white/15">
-          <div className="h-full w-[78%] bg-[#F04B36]" />
-        </div>
-        <p className="text-[8.3cqw] font-black leading-[0.96] tracking-[-0.05em]">
-          We switch tasks <span className="text-[#F04B36]">before the thought settles.</span>
-        </p>
-        <p className="mt-[6%] max-w-[24ch] text-[3.7cqw] leading-relaxed text-white/60">
-          The recovery cost stays invisible.
-        </p>
-      </div>
-    </div>,
-    <div key="reset" className="relative flex h-full flex-col overflow-hidden bg-[#F04B36] p-[8%] text-[#191919]">
-      <div className="absolute -right-[16%] top-[8%] size-[70%] rounded-full border-[12cqw] border-[#F4EFE5]/35" />
-      <div className="relative text-[3.5cqw] font-bold uppercase tracking-[0.18em]">The reset</div>
-      <div className="relative mt-auto">
-        <div className="text-[18cqw] font-black leading-none tracking-[-0.07em]">01</div>
-        <h2 className="mt-[4%] text-[8.7cqw] font-black leading-[0.95] tracking-[-0.05em]">
-          Close every tab you do not need now.
-        </h2>
-        <p className="mt-[6%] text-[3.5cqw] font-semibold">One window. One task. Seven minutes.</p>
-      </div>
-    </div>,
-    <div key="close" className="flex h-full flex-col justify-between bg-[#DDE8FF] p-[8%] text-[#17233D]">
-      <div className="flex items-center gap-[3cqw] whitespace-nowrap text-[3.5cqw] font-bold uppercase tracking-[0.18em]">
-        <Circle className="size-[4cqw]" fill="#F04B36" strokeWidth={0} /> Keep this
-      </div>
-      <div>
-        <p className="max-w-[11ch] text-[8.8cqw] font-black leading-[0.96] tracking-[-0.05em]">
-          Protect a small beginning, not a perfect day.
-        </p>
-      </div>
-      <div className="flex items-center justify-between gap-[4cqw] border-t border-[#17233D]/30 pt-[5%] text-[3.2cqw] font-bold">
-        <span>Save for the next noisy hour</span><ArrowUpRight className="size-[5cqw] shrink-0" />
-      </div>
-    </div>,
-  ];
+export const SIGNAL_CAROUSEL_FRAMES = [
+  { file: "01-hook.png", alt: "Signal Reset frame 1: seven quiet minutes hook" },
+  { file: "02-evidence.png", alt: "Signal Reset frame 2: sourced attention residue evidence" },
+  { file: "03-action.png", alt: "Signal Reset frame 3: close every unnecessary tab action" },
+  { file: "04-reframe.png", alt: "Signal Reset frame 4: protect a small beginning reframe" },
+  { file: "05-cta.png", alt: "Signal Reset frame 5: save the seven-minute reset CTA" },
+] as const;
 
+export function SignalCarousel(_: ArtifactProps) {
   return (
     <div className="bg-[#DDD8CE] p-5 sm:p-8">
-      <div className="mb-5 flex items-center justify-between text-[11px] font-bold uppercase tracking-[0.16em] text-black/55">
-        <span>5-frame social carousel · 1080 × 1440</span>
-        <span>Frames 1–4 previewed</span>
+      <div className="mb-5 flex flex-wrap items-center justify-between gap-2 text-[11px] font-bold uppercase tracking-[0.16em] text-black/55">
+        <span>5 exported frames · 1080 × 1440</span>
+        <a
+          href="/showcase-artifacts/signal-carousel/manifest.json"
+          className="underline decoration-black/25 underline-offset-4 hover:text-black"
+        >
+          Inspect PNG manifest ↗
+        </a>
       </div>
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        {frames.map((frame, index) => (
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-5">
+        {SIGNAL_CAROUSEL_FRAMES.map((frame) => (
           <div
-            key={index}
-            className="aspect-[3/4] overflow-hidden [container-type:inline-size] shadow-[0_18px_35px_-22px_rgba(0,0,0,0.45)]"
+            key={frame.file}
+            className="aspect-[3/4] overflow-hidden shadow-[0_18px_35px_-22px_rgba(0,0,0,0.45)] last:col-span-2 last:mx-auto last:w-[calc(50%-6px)] sm:last:col-span-1 sm:last:mx-0 sm:last:w-auto"
           >
-            {frame}
+            <Image
+              src={`/showcase-artifacts/signal-carousel/${frame.file}`}
+              alt={frame.alt}
+              width={1080}
+              height={1440}
+              className="h-full w-full object-contain"
+              sizes="(min-width: 1280px) 210px, (min-width: 640px) 30vw, 46vw"
+            />
           </div>
         ))}
       </div>
     </div>
   );
+}
+
+export function SignalCarouselFrame({ frame }: { frame: number }) {
+  switch (frame) {
+    case 1:
+      return (
+        <div className="flex h-full flex-col justify-between bg-[#F4EFE5] px-[8%] pb-[20%] pt-[18%] text-[#191919]">
+          <div className="flex items-center justify-between gap-[3cqw] whitespace-nowrap text-[3.2cqw] font-bold uppercase tracking-[0.18em]">
+            <span>Signal / 01</span>
+            <span className="text-right">Field notes</span>
+          </div>
+          <div>
+            <div className="text-[31cqw] font-black leading-[0.72] tracking-[-0.1em] text-[#F04B36]">7</div>
+            <h2 className="mt-[6%] max-w-[11ch] text-[8.2cqw] font-black leading-[0.94] tracking-[-0.05em]">
+              Your attention does not need another system.
+            </h2>
+          </div>
+          <div className="flex items-end justify-between gap-[4cqw] border-t border-[#191919] pt-[5%] text-[3.2cqw] font-semibold">
+            <span>It needs seven quiet minutes.</span>
+            <ArrowDown className="size-[5cqw] shrink-0" />
+          </div>
+        </div>
+      );
+    case 2:
+      return (
+        <div className="flex h-full flex-col bg-[#191919] px-[8%] pb-[20%] pt-[18%] text-[#F4EFE5]">
+          <div className="flex items-center justify-between gap-[3cqw] whitespace-nowrap text-[3.2cqw] font-bold uppercase tracking-[0.18em] text-[#F04B36]">
+            <span>The evidence</span>
+            <span>02 / 05</span>
+          </div>
+          <div className="mt-auto">
+            <div className="mb-[6%] h-1 w-full bg-white/15">
+              <div className="h-full w-[78%] bg-[#F04B36]" />
+            </div>
+            <p className="text-[8.15cqw] font-black leading-[0.96] tracking-[-0.05em]">
+              Part of our attention can stay with the <span className="text-[#F04B36]">unfinished task.</span>
+            </p>
+            <p className="mt-[6%] max-w-[28ch] text-[3.5cqw] leading-relaxed text-white/65">
+              Task switching leaves attention residue, especially when the previous work is incomplete.
+            </p>
+            <p className="mt-[6%] border-t border-white/15 pt-[4%] text-[2.65cqw] font-semibold leading-relaxed text-white/45">
+              Source · Sophie Leroy, 2009 · Organizational Behavior and Human Decision Processes · doi:10.1016/j.obhdp.2009.04.002
+            </p>
+          </div>
+        </div>
+      );
+    case 3:
+      return (
+        <div className="relative flex h-full flex-col overflow-hidden bg-[#F04B36] px-[8%] pb-[20%] pt-[18%] text-[#191919]">
+          <div
+            className="absolute -right-[14%] top-[14%] z-0 size-[64%] rounded-full border-[10cqw]"
+            style={{ borderColor: "rgba(244,239,229,0.28)" }}
+          />
+          <div className="relative z-10 flex items-center justify-between gap-[3cqw] whitespace-nowrap text-[3.5cqw] font-bold uppercase tracking-[0.18em]">
+            <span>The reset</span>
+            <span>03 / 05</span>
+          </div>
+          <div className="relative z-10 mt-auto">
+            <div className="text-[18cqw] font-black leading-none tracking-[-0.07em]">01</div>
+            <h2 className="mt-[4%] text-[8.7cqw] font-black leading-[0.95] tracking-[-0.05em]">
+              Close every tab you do not need now.
+            </h2>
+            <p className="mt-[6%] text-[3.5cqw] font-semibold">One window. One task. Seven minutes.</p>
+          </div>
+        </div>
+      );
+    case 4:
+      return (
+        <div className="flex h-full flex-col justify-between bg-[#DDE8FF] px-[8%] pb-[20%] pt-[18%] text-[#17233D]">
+          <div className="flex items-center justify-between gap-[3cqw] whitespace-nowrap text-[3.5cqw] font-bold uppercase tracking-[0.18em]">
+            <span className="flex items-center gap-[3cqw]"><Circle className="size-[4cqw]" fill="#F04B36" strokeWidth={0} /> Keep this</span>
+            <span>04 / 05</span>
+          </div>
+          <div>
+            <p className="max-w-[11ch] text-[8.8cqw] font-black leading-[0.96] tracking-[-0.05em]">
+              Protect a small beginning, not a perfect day.
+            </p>
+          </div>
+          <div className="flex items-center justify-between gap-[4cqw] border-t border-[#17233D]/30 pt-[5%] text-[3.2cqw] font-bold">
+            <span>Save for the next noisy hour</span>
+            <ArrowUpRight className="size-[5cqw] shrink-0" />
+          </div>
+        </div>
+      );
+    case 5:
+      return (
+        <div className="flex h-full flex-col justify-between bg-[#17233D] px-[8%] pb-[20%] pt-[18%] text-[#DDE8FF]">
+          <div className="flex items-center justify-between gap-[3cqw] whitespace-nowrap text-[3.35cqw] font-bold uppercase tracking-[0.18em]">
+            <span>Signal / reset</span>
+            <span className="text-[#F04B36]">05 / 05</span>
+          </div>
+          <div>
+            <div className="mb-[8%] h-[1.2cqw] w-[28%] bg-[#F04B36]" />
+            <p className="max-w-[10ch] text-[10.2cqw] font-black leading-[0.94] tracking-[-0.055em]">
+              Seven minutes. One unfinished thought.
+            </p>
+            <p className="mt-[7%] max-w-[25ch] text-[3.8cqw] leading-relaxed text-[#DDE8FF]/65">
+              Keep the window small enough for your attention to return.
+            </p>
+          </div>
+          <div>
+            <div className="flex items-center justify-between gap-[4cqw] bg-[#F04B36] px-[5%] py-[4%] text-[3.6cqw] font-black text-[#191919]">
+              <span>Save this reset</span>
+              <ArrowUpRight className="size-[5cqw] shrink-0" />
+            </div>
+            <p className="mt-[5%] text-[2.65cqw] font-semibold leading-relaxed text-[#DDE8FF]/42">
+              Behavioral basis · Leroy, 2009 · Attention residue
+            </p>
+          </div>
+        </div>
+      );
+    default:
+      return null;
+  }
 }
 
 export function OrbitDeck(_: ArtifactProps) {

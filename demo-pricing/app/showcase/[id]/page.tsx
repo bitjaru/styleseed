@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import "../examples"; // side-effect: registers every entry
-import { getShowcase, listShowcase } from "@/lib/showcase";
+import { getShowcase, getShowcaseImagePath, listShowcase } from "@/lib/showcase";
 import { loadRegistry } from "@/lib/registry";
 import { seeds as motionSeeds, type SeedId } from "@engine/motion";
 import { ShowcaseFrame } from "./showcase-frame";
@@ -23,10 +23,7 @@ export async function generateMetadata({
   if (!entry) return { title: "Not found" };
   const title = `${entry.name} — ${entry.grammar} AI design example`;
   const description = `${entry.job} See the live ${entry.adapter} build, design grammar, signature decision, skin, motion, and implementation rationale.`;
-  const image =
-    entry.proof === "rendered-preview"
-      ? `${BASE}/og/showcase.png`
-      : `${BASE}/showcase-hero/${entry.id}.png`;
+  const image = `${BASE}${getShowcaseImagePath(entry)}`;
   return {
     title,
     description,
@@ -72,10 +69,7 @@ export default async function ShowcaseDetailPage({
         url: `${BASE}/showcase/${entry.id}`,
         name: entry.name,
         description: entry.job,
-        image:
-          entry.proof === "rendered-preview"
-            ? `${BASE}/og/showcase.png`
-            : `${BASE}/showcase-hero/${entry.id}.png`,
+        image: `${BASE}${getShowcaseImagePath(entry)}`,
         author: { "@type": "Organization", name: "StyleSeed", url: BASE },
         isPartOf: { "@id": `${BASE}/showcase#builds` },
         about: [entry.grammar, entry.adapter, entry.category, entry.signature],
@@ -162,15 +156,38 @@ export default async function ShowcaseDetailPage({
           <p>
             Source:{" "}
             <code className="font-mono">
-              app/showcase/examples/{entry.id}.tsx
-            </code>{" "}
-            · Recreate with{" "}
-            <code className="rounded bg-gray-100 px-1.5 py-0.5 font-mono">
-              /ss-page {entry.id}
+              {entry.sourcePath ?? `app/showcase/examples/${entry.id}.tsx`}
             </code>
-            {" "}with the <strong>{entry.grammar}</strong> grammar and{" "}
-            <strong>{entry.adapter}</strong> adapter.
+            {" "}· <strong>{entry.grammar}</strong> grammar × <strong>{entry.adapter}</strong> adapter
           </p>
+          <div className="mt-3 grid gap-2 sm:grid-cols-[auto_1fr] sm:items-center">
+            <span className="font-bold uppercase tracking-[0.1em] text-neutral-400">Claude Code</span>
+            <code className="w-fit rounded bg-gray-100 px-1.5 py-0.5 font-mono text-neutral-700">
+              {entry.reproduction?.claude ?? `/ss-build ${entry.id}`}
+            </code>
+            <span className="font-bold uppercase tracking-[0.1em] text-neutral-400">Codex</span>
+            <code className="w-fit rounded bg-gray-100 px-1.5 py-0.5 font-mono text-neutral-700">
+              {entry.reproduction?.codex ?? `$ss-build ${entry.id}`}
+            </code>
+            {entry.reproduction?.exportCommand && (
+              <>
+                <span className="font-bold uppercase tracking-[0.1em] text-neutral-400">Native export</span>
+                <span>
+                  <code className="w-fit rounded bg-gray-100 px-1.5 py-0.5 font-mono text-neutral-700">
+                    {entry.reproduction.exportCommand}
+                  </code>
+                  {entry.reproduction.manifestPath && (
+                    <a
+                      href={entry.reproduction.manifestPath}
+                      className="ml-2 inline-flex whitespace-nowrap font-semibold text-violet-700 hover:underline"
+                    >
+                      inspect manifest ↗
+                    </a>
+                  )}
+                </span>
+              </>
+            )}
+          </div>
         </footer>
       </div>
     </main>

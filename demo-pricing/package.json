@@ -7,6 +7,7 @@
     "dev": "next dev",
     "prebuild": "node scripts/build-llms.mjs",
     "build": "next build",
+    "export:signal-carousel": "node scripts/export-signal-carousel.mjs",
     "start": "next start"
   },
   "dependencies": {

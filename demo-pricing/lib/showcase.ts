@@ -21,6 +21,18 @@ export const SURFACE_ADAPTERS = [
 
 export type OutputGrammar = (typeof OUTPUT_GRAMMARS)[number];
 export type SurfaceAdapter = (typeof SURFACE_ADAPTERS)[number];
+export type ShowcaseProof = "interactive" | "rendered-preview" | "exported-artifact";
+
+export type ShowcaseReproduction = {
+  /** Exact Claude Code route for rebuilding this example. */
+  claude: string;
+  /** Exact Codex route for rebuilding this example. */
+  codex: string;
+  /** Deterministic repository command that produces the native artifact, when available. */
+  exportCommand?: string;
+  /** Public manifest for inspecting native dimensions and output files. */
+  manifestPath?: string;
+};
 
 /**
  * A showcase entry is metadata only — server-safe. The actual render
@@ -44,7 +56,13 @@ export type ShowcaseEntry = {
   /** One identifying move that proves the grammar is more than a skin. */
   signature: string;
   /** Whether the public artifact is interactive or a composed visual preview. */
-  proof?: "interactive" | "rendered-preview";
+  proof?: ShowcaseProof;
+  /** Public image used by metadata and the machine-readable showcase catalog. */
+  imagePath?: string;
+  /** Real implementation source, when it differs from the entry registry file. */
+  sourcePath?: string;
+  /** Agent-specific rebuild and export commands. */
+  reproduction?: ShowcaseReproduction;
   /** Default skin to render when the user lands on the entry. */
   primarySkin: string;
   /** Default motion seed to render with. */
@@ -70,4 +88,11 @@ export function listShowcase(): ShowcaseEntry[] {
 
 export function getShowcase(id: string): ShowcaseEntry | undefined {
   return _entries.find((e) => e.id === id);
+}
+
+export function getShowcaseImagePath(entry: ShowcaseEntry): string {
+  if (entry.imagePath) return entry.imagePath;
+  return (entry.proof ?? "interactive") === "interactive"
+    ? `/showcase-hero/${entry.id}.png`
+    : "/og/showcase.png";
 }

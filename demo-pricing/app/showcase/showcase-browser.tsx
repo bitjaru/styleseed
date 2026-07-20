@@ -30,8 +30,9 @@ export function ShowcaseBrowser({ entries, grammars }: ShowcaseBrowserProps) {
         activeGrammar === "all"
           ? entries
           : entries.filter((entry) => entry.grammar === activeGrammar);
+      const rank = { "exported-artifact": 2, "rendered-preview": 1, interactive: 0 } as const;
       return [...filtered].sort(
-        (a, b) => Number(b.proof === "rendered-preview") - Number(a.proof === "rendered-preview"),
+        (a, b) => rank[b.proof ?? "interactive"] - rank[a.proof ?? "interactive"],
       );
     },
     [activeGrammar, entries],
@@ -84,7 +85,7 @@ export function ShowcaseBrowser({ entries, grammars }: ShowcaseBrowserProps) {
           >
             <article className="flex min-w-0 flex-1 flex-col">
               <div className="relative aspect-[16/10] overflow-hidden bg-neutral-100">
-                {entry.proof === "rendered-preview" ? (
+                {(entry.proof ?? "interactive") !== "interactive" ? (
                   <ArtifactThumbnail id={entry.id} />
                 ) : (
                   <Image
@@ -98,9 +99,13 @@ export function ShowcaseBrowser({ entries, grammars }: ShowcaseBrowserProps) {
                 <span className="absolute left-3 top-3 rounded-full bg-neutral-950/85 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-white backdrop-blur-sm">
                   {GRAMMAR_LABELS[entry.grammar]}
                 </span>
-                {entry.proof === "rendered-preview" && (
-                  <span className="absolute right-3 top-3 rounded-full bg-violet-500 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-white">
-                    New v3 artifact
+                {entry.proof && entry.proof !== "interactive" && (
+                  <span
+                    className={`absolute right-3 top-3 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-white ${
+                      entry.proof === "exported-artifact" ? "bg-emerald-600" : "bg-violet-500"
+                    }`}
+                  >
+                    {entry.proof === "exported-artifact" ? "Exported artifact" : "New v3 artifact"}
                   </span>
                 )}
               </div>

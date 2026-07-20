@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { SeedId } from "@engine/motion";
-import type { SurfaceAdapter } from "@/lib/showcase";
+import type { ShowcaseProof, SurfaceAdapter } from "@/lib/showcase";
 import { getRenderer } from "../_renderers";
 
 type Skin = { id: string; name: string; brand?: string };
@@ -10,7 +10,7 @@ type Skin = { id: string; name: string; brand?: string };
 type Props = {
   entryId: string;
   entryAdapter: SurfaceAdapter;
-  proof: "interactive" | "rendered-preview";
+  proof: ShowcaseProof;
   defaultSkin: string;
   defaultSeed: SeedId;
   skins: Skin[];
@@ -70,8 +70,16 @@ export function ShowcaseFrame({
           </>
         ) : (
           <>
-            <span className="rounded-full bg-violet-100 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-violet-800">
-              Rendered concept preview
+            <span
+              className={`rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] ${
+                proof === "exported-artifact"
+                  ? "bg-emerald-100 text-emerald-800"
+                  : "bg-violet-100 text-violet-800"
+              }`}
+            >
+              {proof === "exported-artifact"
+                ? "Exported production artifact"
+                : "Rendered concept preview"}
             </span>
             <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-gray-500">
               Surface · {entryAdapter}

@@ -144,9 +144,9 @@ export default function ShowcasePage() {
                 Five surface contracts. Every one is now visible.
               </h2>
               <p className="mt-3 text-[15px] leading-relaxed text-neutral-600">
-                Product UI examples remain interactive. The four non-web surfaces now have
-                composed artifact previews, clearly labeled until their native export harnesses
-                and production files ship.
+                The social-carousel example now includes five native 1080×1440 exports. The
+                remaining non-web surfaces stay clearly labeled as concept previews until their
+                own export harnesses and production files ship.
               </p>
               <Link
                 href="/architecture"
@@ -159,33 +159,40 @@ export default function ShowcasePage() {
               {SURFACE_ADAPTERS.map((adapter) => {
                 const hasInteractiveProof = adapter === "product-ui";
                 const isRepresented = liveAdapters.includes(adapter);
+                const hasNativeExport = entries.some(
+                  (entry) => entry.adapter === adapter && entry.proof === "exported-artifact",
+                );
                 return (
                   <div key={adapter} className="rounded-2xl border border-neutral-200 bg-neutral-50 p-5">
                     <div className="flex items-center justify-between gap-3">
                       <h3 className="font-bold text-neutral-950">{ADAPTER_LABELS[adapter]}</h3>
                       <span
                         className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-[10px] font-bold uppercase tracking-[0.1em] ${
-                          hasInteractiveProof
+                          hasInteractiveProof || hasNativeExport
                             ? "bg-emerald-100 text-emerald-800"
                             : isRepresented
                               ? "bg-violet-100 text-violet-800"
                               : "bg-amber-100 text-amber-800"
                         }`}
                       >
-                        {hasInteractiveProof ? <Check size={11} /> : <FlaskConical size={11} />}
+                        {hasInteractiveProof || hasNativeExport ? <Check size={11} /> : <FlaskConical size={11} />}
                         {hasInteractiveProof
                           ? "Interactive"
-                          : isRepresented
-                            ? "Concept preview"
-                            : "Engine ready"}
+                          : hasNativeExport
+                            ? "Exported"
+                            : isRepresented
+                              ? "Concept preview"
+                              : "Engine ready"}
                       </span>
                     </div>
                     <p className="mt-2 text-[12px] leading-relaxed text-neutral-600">
                       {adapter === "product-ui"
                         ? `${entries.filter((entry) => entry.adapter === adapter).length} inspectable web and mobile product builds.`
-                        : isRepresented
-                          ? "A composed concept is inspectable now; native export validation remains explicit."
-                          : "Grammar and verification contract shipped; validated public artifact next."}
+                        : hasNativeExport
+                          ? "Five production-size PNG frames and an inspectable export manifest ship with the example."
+                          : isRepresented
+                            ? "A composed concept is inspectable now; native export validation remains explicit."
+                            : "Grammar and verification contract shipped; validated public artifact next."}
                     </p>
                   </div>
                 );

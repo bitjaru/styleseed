@@ -3,19 +3,30 @@ import { registerShowcase } from "@/lib/showcase";
 registerShowcase({
   id: "signal-carousel",
   name: "Signal Reset",
-  blurb: "A five-frame social explainer that turns one behavioral insight into a useful sequence.",
+  blurb: "A five-frame, source-backed social explainer that turns one behavioral insight into a useful reset.",
   category: "social explainer",
   grammar: "sequential-story",
   adapter: "social-carousel",
   job: "Understand why attention fragments and leave with one small reset worth trying today.",
-  signature: "The red thread crosses every frame while composition alternates between hook, evidence, and action.",
-  proof: "rendered-preview",
+  signature: "The red thread crosses all five exported frames while hook, evidence, action, reframe, and CTA each get a distinct composition.",
+  proof: "exported-artifact",
+  imagePath: "/showcase-artifacts/signal-carousel/01-hook.png",
+  sourcePath: "app/showcase/_renderers/artifact-proofs.tsx",
+  reproduction: {
+    claude: "/ss-build signal-carousel, then /carousel-build",
+    codex: "$ss-build signal-carousel, then npm run export:signal-carousel",
+    exportCommand: "npm run export:signal-carousel",
+    manifestPath: "/showcase-artifacts/signal-carousel/manifest.json",
+  },
   primarySkin: "linear",
   primarySeed: "snap",
   rationale: {
     design: ["One message per frame", "Stable red thread", "3:4 publishing canvas"],
-    methodology: ["Hook → evidence → action", "Sequence rhythm changes without losing continuity"],
-    motion: "Snap supports frame-to-frame progression; the preview keeps every frame readable without motion.",
+    methodology: [
+      "Hook → sourced evidence → action → reframe → CTA",
+      "Attention-residue claim cites Leroy (2009) instead of presenting editorial copy as proof",
+    ],
+    motion: "Snap supports frame-to-frame progression; every exported frame remains complete as a static artifact.",
   },
 });
 

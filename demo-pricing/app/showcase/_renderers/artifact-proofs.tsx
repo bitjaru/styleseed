@@ -37,6 +37,8 @@ export function SignalCarousel(_: ArtifactProps) {
               alt={frame.alt}
               width={1080}
               height={1440}
+              loading="eager"
+              unoptimized
               className="h-full w-full object-contain"
               sizes="(min-width: 1280px) 210px, (min-width: 640px) 30vw, 46vw"
             />

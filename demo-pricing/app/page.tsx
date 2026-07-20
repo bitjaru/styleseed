@@ -170,8 +170,8 @@ export default function HomePage() {
               <h3 className="mt-2 text-[17px] font-bold">The quality gate only runs when it&rsquo;s installed</h3>
               <p className="mt-1.5 text-[15px] leading-relaxed text-neutral-400">
                 Paste alone teaches the rules, but the step that strips the &ldquo;AI look&rdquo; is
-                the gate &mdash; and <code className="font-mono text-[13px] text-violet-300">/ss-score</code> /{" "}
-                <code className="font-mono text-[13px] text-violet-300">/ss-build</code> can only
+                the gate &mdash; and <code className="font-mono text-[13px] text-violet-300">ss-score</code> /{" "}
+                <code className="font-mono text-[13px] text-violet-300">ss-build</code> can only
                 <em> run</em> once installed. Then your lock persists in{" "}
                 <code className="font-mono text-[13px] text-neutral-300">STYLESEED.md</code> (no drift),
                 and every artifact is scored and visually checked before you see it. All 20 skills, universally —
@@ -179,7 +179,7 @@ export default function HomePage() {
               </p>
               <div className="mt-4 space-y-1.5">
                 <code className="block rounded-lg bg-black/40 px-3 py-2 font-mono text-[13px] text-neutral-100">npx skills add bitjaru/styleseed</code>
-                <code className="block rounded-lg bg-black/40 px-3 py-2 font-mono text-[13px]"><span className="text-neutral-400"># then, to build a screen: </span><span className="text-violet-300">/ss-build</span></code>
+                <code className="block rounded-lg bg-black/40 px-3 py-2 font-mono text-[13px]"><span className="text-neutral-400"># Claude Code: </span><span className="text-violet-300">/ss-build</span><span className="text-neutral-500"> · </span><span className="text-neutral-400">Codex: </span><span className="text-emerald-300">$ss-build</span></code>
               </div>
             </div>
           </div>
@@ -192,7 +192,7 @@ export default function HomePage() {
               One engine, many looks
             </div>
             <h2 className="mt-2 max-w-3xl text-[clamp(28px,4vw,40px)] font-bold leading-tight tracking-tight">
-              Same product. Six aesthetic profiles. One <code className="rounded bg-white/10 px-1.5 py-0.5 font-mono text-[0.85em] text-violet-200">/ss-restyle</code> away.
+              Same product. Six aesthetic profiles. One <code className="rounded bg-white/10 px-1.5 py-0.5 font-mono text-[0.85em] text-violet-200">ss-restyle</code> away.
             </h2>
             <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-neutral-400">
               Profiles coordinate radius, density, color, weight, motion, type, and one signature
@@ -213,7 +213,7 @@ export default function HomePage() {
             <div className="mt-6 flex flex-wrap gap-2">
               {["swiss", "editorial", "technical", "warm-dtc", "minimal-mono", "brutalist-lite"].map((p) => (
                 <code key={p} className="rounded-lg bg-white/[0.06] px-3 py-1.5 font-mono text-[13px] text-neutral-300 ring-1 ring-white/10">
-                  /ss-restyle {p}
+                  /ss-restyle {p} · $ss-restyle {p}
                 </code>
               ))}
             </div>

@@ -4,11 +4,11 @@ import { useState } from "react";
 import { Check, Copy } from "lucide-react";
 
 export const STYLESEED_PROMPT =
-  "Install StyleSeed: `npx skills add bitjaru/styleseed` (or read https://styleseed-demo.vercel.app/llms-full.txt). Before building, choose the output grammar and surface adapter for my result, then save bounded decisions to STYLESEED.md. If I provide references that StyleSeed does not model, run /ss-reference to compile them into a project-local rule set instead of copying the screen. Build with /ss-build, run /ss-score to ≥80, then render and inspect with /ss-verify before showing me the result.";
+  "Install StyleSeed: `npx skills add bitjaru/styleseed` (or read https://styleseed-demo.vercel.app/llms-full.txt). Use `/ss-*` in Claude Code or `$ss-*` in Codex; in other agents, use the installed skill picker. Before building, choose the output grammar and surface adapter for my result, then save bounded decisions to STYLESEED.md. If I provide references that StyleSeed does not model, run `/ss-reference` or `$ss-reference` to compile them into a project-local rule set instead of copying the screen. Build with `/ss-build` or `$ss-build`, run `/ss-score` or `$ss-score` to ≥80, then render and inspect with `/ss-verify` or `$ss-verify` before showing me the result.";
 
 /**
  * The lowest-friction way to use StyleSeed: one sentence you paste into Claude
- * Code / Cursor / any agent. Click to copy.
+ * Code / Codex / Cursor / any agent. Click to copy.
  */
 export function PromptBox({
   prompt = STYLESEED_PROMPT,

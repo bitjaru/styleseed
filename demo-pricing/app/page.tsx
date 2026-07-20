@@ -273,7 +273,7 @@ export default function HomePage() {
             <h2 className="mt-2 max-w-3xl text-[clamp(28px,4vw,40px)] font-bold leading-tight tracking-tight">
               Other design skills make your UI <span className="text-neutral-500">coherent.</span>
               <br />
-              StyleSeed is the only one that also fights the{" "}
+              StyleSeed also fights the{" "}
               <span className="text-violet-300">generic-AI look</span> — and enforces it.
             </h2>
             <div className="mt-9 overflow-x-auto">
@@ -320,9 +320,24 @@ export default function HomePage() {
                 layer <span className="font-semibold text-white">on top</span>: it names and bans the
                 generic-AI tells, scores every screen to a{" "}
                 <span className="font-semibold text-white">≥80 gate</span> and fixes it before you see it,
-                and locks your design decisions so they don&rsquo;t drift across prompts. Official gets you
-                coherent; StyleSeed keeps you from looking templated.
+                and locks your design decisions so they don&rsquo;t drift across prompts. The official
+                skill is strong at visual direction; StyleSeed carries that judgment across screens,
+                sessions, reference sets, and verification.
               </p>
+              <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2">
+                <Link
+                  href="/claude-code-ui-design"
+                  className="inline-flex items-center gap-1.5 text-[13px] font-bold text-violet-300 hover:underline"
+                >
+                  Read the Claude Code UI design workflow <ArrowRight size={13} />
+                </Link>
+                <Link
+                  href="/codex-ui-design"
+                  className="inline-flex items-center gap-1.5 text-[13px] font-bold text-emerald-300 hover:underline"
+                >
+                  Read the Codex UI design workflow <ArrowRight size={13} />
+                </Link>
+              </div>
             </div>
             <p className="mt-5 max-w-3xl text-[14px] leading-relaxed text-neutral-400">
               Also in the box: 7 brand skins from one <code className="rounded bg-white/10 px-1 font-mono text-[13px]">data-skin</code>{" "}
@@ -345,8 +360,7 @@ export default function HomePage() {
                   Showcase
                 </div>
                 <h2 className="mt-2 max-w-xl text-[36px] font-bold leading-tight tracking-tight text-neutral-900">
-                  {entries.length} reference builds · {entries.length * 7 * seedCount} live
-                  variants.
+                  {entries.length} examples · 8 grammars · 5 surfaces.
                 </h2>
                 <p className="mt-3 max-w-md text-[15px] text-neutral-600">
                   Not static templates — each one is the engine&rsquo;s output, re-skinning across 7

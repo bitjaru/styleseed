@@ -73,7 +73,7 @@ UI into an evidence-backed project grammar &nbsp;·&nbsp;
 
 <br />
 
-[Get Started](#get-started-in-30-seconds) · [Architecture](engine/ARCHITECTURE.md) · [Engine + Skins](#how-it-works-engine--skins) · [Motion](#named-motion-system) · [Skills](#20-ai-powered-skills) · [Wiki](../../wiki) · [한국어](README-KR.md)
+[Get Started](#get-started-in-30-seconds) · [Claude Code UI guide](https://styleseed-demo.vercel.app/claude-code-ui-design) · [Codex UI guide](https://styleseed-demo.vercel.app/codex-ui-design) · [Architecture](engine/ARCHITECTURE.md) · [Engine + Skins](#how-it-works-engine--skins) · [Motion](#named-motion-system) · [Skills](#20-ai-powered-skills) · [Wiki](../../wiki) · [한국어](README-KR.md)
 
 <br />
 

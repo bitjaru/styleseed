@@ -26,6 +26,8 @@ export const metadata: Metadata = {
     "vibe coding",
     "vibe coding design system",
     "Claude Code",
+    "Codex",
+    "Codex UI design",
     "Cursor",
     "shadcn alternative",
     "Tailwind UI",
@@ -112,7 +114,7 @@ export default function RootLayout({
         codeRepository: "https://github.com/bitjaru/styleseed",
         publisher: { "@id": `${SITE_URL}/#organization` },
         isPartOf: { "@id": `${SITE_URL}/#website` },
-        dateModified: "2026-07-19",
+        dateModified: "2026-07-20",
         keywords:
           "design method for AI, Claude Code, Cursor, Codex, output grammars, reference compiler, AI UI, carousel design, vibe coding, design judgment",
         sameAs: SAME_AS,
@@ -134,6 +136,8 @@ export default function RootLayout({
         publisher: { "@id": `${SITE_URL}/#organization` },
         inLanguage: "en",
         hasPart: [
+          { "@id": `${SITE_URL}/claude-code-ui-design#article` },
+          { "@id": `${SITE_URL}/codex-ui-design#article` },
           { "@id": `${SITE_URL}/showcase#page` },
           { "@id": `${SITE_URL}/architecture#page` },
         ],
@@ -150,7 +154,7 @@ export default function RootLayout({
         />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
         />
       </head>
       <body className="min-h-full">

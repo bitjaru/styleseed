@@ -55,11 +55,15 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "How do I give Claude Code, Codex, or Cursor a design system so it stops making ugly UI?",
-    a: "StyleSeed is that design system. It installs design rules the agent reads automatically (like a DESIGN.md it never forgets), plus 48 React components, 7 brand skins, a named motion system, and 15 /ss-* slash commands. It solves the “AI keeps forgetting my spacing, colors, and fonts” problem by making the rules persistent context the model re-reads every prompt.",
+    a: "StyleSeed is a design-method engine for that job. It installs rules the agent reads automatically, plus 8 output grammars, 5 surface adapters, 48 React components, 7 brand skins, a named motion system, and 20 ss-* skills. STYLESEED.md preserves bounded project decisions so Claude Code, Codex, or Cursor can re-read them instead of reinventing spacing, colors, type, and motion on every prompt.",
+  },
+  {
+    q: "Should I use StyleSeed or Anthropic's official frontend-design skill with Claude Code?",
+    a: "Use either or both based on the job. Anthropic's frontend-design skill is strong for choosing and executing a distinctive frontend direction. StyleSeed adds job-specific output grammars, persistent project decisions, reference compilation, a code score, and rendered pixel verification. They are complementary; StyleSeed is independent and is not an official Anthropic product.",
   },
   {
     q: "Does it work with Codex / AGENTS.md (not just Claude Code and Cursor)?",
-    a: "Yes. StyleSeed ships an AGENTS.md, so Codex, Amp, Gemini CLI, Windsurf, and any agent that follows the AGENTS.md convention read its design rules automatically — the same rules Claude Code gets from CLAUDE.md and Cursor gets from .cursorrules. It's agent-agnostic: any coding agent that reads a rules file can use it.",
+    a: "Yes. StyleSeed ships an AGENTS.md entry point plus a repository .agents/skills bridge for Codex-facing workflows. Codex uses $ss-* calls or its skills picker, while Claude Code uses /ss-* calls; both resolve to the same canonical design engine and project-local STYLESEED.md lock. A fresh agent session should be started after installation if skill discovery is stale.",
   },
   {
     q: "Installing the skills asks for permission or gets blocked — is that normal? Do I even need them?",

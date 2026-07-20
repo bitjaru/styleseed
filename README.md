@@ -4,9 +4,34 @@
 
 # StyleSeed
 
-### Your AI can render almost anything.<br />StyleSeed teaches it which design method to use.
+### Teach your AI fixed design judgment.<br />Not one fixed aesthetic.
 
-<sub>Output grammars + reference compiler + designer judgment for Claude Code · Codex · Cursor · vibe coding.</sub>
+<sub>Open-source design-method engine for Claude Code · Codex · Cursor — selects the right design grammar or derives one from references, locks project decisions, and verifies the rendered result.</sub>
+
+</div>
+
+## Easy Start (30 seconds)
+
+**1. Open your project in Claude Code, Codex, Cursor, or another coding agent.**
+
+**2. Paste this message:**
+
+```text
+Install StyleSeed with `npx skills add bitjaru/styleseed`, then set it up for this project. Ask what I am building and only the design choices you need. Save approved decisions to STYLESEED.md, choose the right output grammar or derive one from my references, and build with one clear focal point. Score the result to at least 80, then render and visually verify it before showing me. Use `/ss-*` in Claude Code or `$ss-*` in Codex; in other agents, use the installed skill picker.
+```
+
+**3. Approve the install, answer the short setup questions, and describe what you want to build.**
+StyleSeed handles the design lock, build, code gate, and visual check. No design-system knowledge required.
+
+| Agent | If you want to run it manually |
+|---|---|
+| **Claude Code** | `/ss-setup` → `/ss-build` |
+| **Codex** | `$ss-setup` → `$ss-build` or choose them from `/skills` |
+| **Cursor and others** | Paste the message above or use the installed skill picker |
+
+[Claude Code guide](https://styleseed-demo.vercel.app/claude-code-ui-design) · [Codex guide](https://styleseed-demo.vercel.app/codex-ui-design) · [See examples](https://styleseed-demo.vercel.app/showcase) · [Need help?](#troubleshooting--i-applied-styleseed-but-the-ui-still-looks-bad)
+
+<div align="center">
 
 <br />
 
@@ -73,7 +98,7 @@ UI into an evidence-backed project grammar &nbsp;·&nbsp;
 
 <br />
 
-[Get Started](#get-started-in-30-seconds) · [Claude Code UI guide](https://styleseed-demo.vercel.app/claude-code-ui-design) · [Codex UI guide](https://styleseed-demo.vercel.app/codex-ui-design) · [Architecture](engine/ARCHITECTURE.md) · [Engine + Skins](#how-it-works-engine--skins) · [Motion](#named-motion-system) · [Skills](#20-ai-powered-skills) · [Wiki](../../wiki) · [한국어](README-KR.md)
+[Easy Start](#easy-start-30-seconds) · [Claude Code UI guide](https://styleseed-demo.vercel.app/claude-code-ui-design) · [Codex UI guide](https://styleseed-demo.vercel.app/codex-ui-design) · [Architecture](engine/ARCHITECTURE.md) · [Engine + Skins](#how-it-works-engine--skins) · [Motion](#named-motion-system) · [Skills](#20-ai-powered-skills) · [Wiki](../../wiki) · [한국어](README-KR.md)
 
 <br />
 
@@ -81,13 +106,7 @@ UI into an evidence-backed project grammar &nbsp;·&nbsp;
 
 ---
 
-## Get started in 30 seconds
-
-**The fastest way — paste this one sentence** into Claude Code, Codex, Cursor, or any AI agent. It installs StyleSeed *and* runs the whole loop:
-
-```
-Install StyleSeed: `npx skills add bitjaru/styleseed` (or read https://styleseed-demo.vercel.app/llms-full.txt). Before building, choose the output grammar and surface adapter for my result, then save bounded decisions to STYLESEED.md. If I provide references that StyleSeed does not model, run `/ss-reference` in Claude Code or `$ss-reference` in Codex to compile them into a project-local rule set instead of copying the screen. Build with `/ss-build` or `$ss-build`, run the code gate to ≥80, then render and inspect with `/ss-verify` or `$ss-verify` before showing me the result.
-```
+## What happens after Easy Start
 
 **Why the prompt installs first:** the quality gate is the step that makes output stop looking generic — but the `ss-score` and `ss-build` skills can only *run* if they are installed. Point an agent at the rules-URL alone and the "gate" degrades to an honor-system self-check it usually skips. Installing makes the loop real: the lock persists in `STYLESEED.md` (no drift), and the gate actually scores and fixes before you see anything. Can't install? The URL still teaches the rules — just weaker. Works with **Claude Code (`CLAUDE.md`), Codex / Amp / Gemini CLI (`AGENTS.md`), and Cursor (`.cursorrules`)** — StyleSeed ships all three. (Planning first is what keeps the result from looking random — see [Troubleshooting](#troubleshooting--i-applied-styleseed-but-the-ui-still-looks-bad).)
 
@@ -255,7 +274,7 @@ Official gets you *coherent*. StyleSeed keeps you from looking *templated*. Run 
 
 ## Install by hand
 
-The fastest paths are at the top — [paste one prompt](#get-started-in-30-seconds), or `npx skills add bitjaru/styleseed`. To wire StyleSeed into an existing project manually, use one of the options below.
+The fastest path is at the top — [paste one prompt](#easy-start-30-seconds), or run `npx skills add bitjaru/styleseed`. To wire StyleSeed into an existing project manually, use one of the options below.
 
 > **New to this? Read top to bottom — every step matters.** The most common
 > mistake is expecting setup to work before the skill is installed. Claude
@@ -340,7 +359,7 @@ cp engine/.cursorrules your-project/.cursorrules
 ## Troubleshooting — "I applied StyleSeed but the UI still looks bad"
 
 The honest reason: **consistency comes from constraints.** If you used a bare *"apply StyleSeed"*
-prompt (without the plan-mode + key-color + quality-gate steps [the prompt above](#get-started-in-30-seconds)
+prompt (without the plan-mode + key-color + quality-gate steps [the prompt above](#easy-start-30-seconds)
 includes), the agent reads a summary once and improvises — so colors land at random and there's
 no key color. The reference demo ([styleseed-demo.vercel.app](https://styleseed-demo.vercel.app))
 came out polished because it was built with the full rules in context and iterated with

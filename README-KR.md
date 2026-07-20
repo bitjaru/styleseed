@@ -4,7 +4,34 @@
 
 # styleseed
 
-### 웹부터 캐러셀까지, 바이브코딩 산출물을 위한 AI 디자인 방법 엔진
+### AI에게 고정된 디자인 판단을 가르칩니다.<br />하나의 고정된 미학이 아니라.
+
+<sub>Claude Code · Codex · Cursor가 결과물에 맞는 디자인 문법을 선택하거나 레퍼런스를 새로운 문법으로 만들고, 프로젝트 결정을 고정해 일관된 결과를 만드는 오픈소스 디자인 방법 엔진</sub>
+
+</div>
+
+## 쉬운 시작 (30초)
+
+**1. 프로젝트를 Claude Code, Codex, Cursor 같은 코딩 에이전트에서 엽니다.**
+
+**2. 아래 문장을 그대로 붙여넣습니다:**
+
+```text
+StyleSeed를 `npx skills add bitjaru/styleseed`로 설치하고 이 프로젝트에 설정해줘. 내가 무엇을 만드는지와 꼭 필요한 디자인 선택만 물어봐. 승인한 결정은 STYLESEED.md에 저장하고, 결과물의 목적에 맞는 출력 문법을 선택하거나 내 레퍼런스를 새로운 문법으로 만들어. 하나의 명확한 초점을 가진 결과물을 만들고 코드 점수를 80점 이상으로 고친 뒤, 실제 화면을 렌더링하고 눈으로 검증한 다음 보여줘. Claude Code에서는 `/ss-*`, Codex에서는 `$ss-*`, 다른 에이전트에서는 설치된 스킬 선택기를 사용해.
+```
+
+**3. 설치를 승인하고, 짧은 설정 질문에 답한 뒤 만들고 싶은 것을 말합니다.**
+StyleSeed가 디자인 락, 빌드, 코드 검사, 실제 화면 검증을 진행합니다. 디자인 시스템을 미리 알 필요가 없습니다.
+
+| 에이전트 | 직접 실행하고 싶을 때 |
+|---|---|
+| **Claude Code** | `/ss-setup` → `/ss-build` |
+| **Codex** | `$ss-setup` → `$ss-build` 또는 `/skills`에서 선택 |
+| **Cursor 및 기타** | 위 문장을 붙여넣거나 설치된 스킬 선택기 사용 |
+
+[Claude Code 가이드](https://styleseed-demo.vercel.app/claude-code-ui-design) · [Codex 가이드](https://styleseed-demo.vercel.app/codex-ui-design) · [결과물 예시](https://styleseed-demo.vercel.app/showcase) · [상세 사용법](#상세-사용법)
+
+<div align="center">
 
 <br />
 
@@ -34,7 +61,7 @@
 
 <br /><br />
 
-[사용법](#사용법) · [엔진 구조](engine/ARCHITECTURE.md) · [왜-필요한가](#왜-필요한가) · [모션](#네임드-모션-시스템) · [AI-스킬-20개](#ai-스킬-20개) · [Wiki](../../wiki)
+[쉬운 시작](#쉬운-시작-30초) · [상세 사용법](#상세-사용법) · [엔진 구조](engine/ARCHITECTURE.md) · [왜-필요한가](#왜-필요한가) · [모션](#네임드-모션-시스템) · [AI-스킬-20개](#ai-스킬-20개) · [Wiki](../../wiki)
 
 <br />
 
@@ -111,9 +138,9 @@ Claude Code한테 "대시보드 만들어줘" 하면 보통 이런 결과가 나
 
 차이점? AI한테 **디자이너의 판단 기준**을 심어준 것.
 
-**[before/after 직접 보기 →](https://styleseed-demo.vercel.app/why)** — 같은 대시보드 브리프를, 일반 AI 출력 vs 69룰 적용으로 나란히. 각 차이가 어떤 룰 때문인지 주석까지.
+**[before/after 직접 보기 →](https://styleseed-demo.vercel.app/why)** — 같은 대시보드 브리프를, 일반 AI 출력 vs 74개 판단 룰 적용으로 나란히. 각 차이가 어떤 룰 때문인지 주석까지.
 
-## 사용법
+## 상세 사용법
 
 ### ⚡ 가장 빠른 방법: 한 문장 붙여넣기
 

@@ -262,9 +262,11 @@ export default function Gate() {
             <p className="mt-2 text-[15px] leading-relaxed text-neutral-700">
               The launch run adds a judge that is not one of the contestants, the app builders
               (v0, Bolt, Lovable), and two more conditions per agent — with StyleSeed rules, and
-              with the full enforced gate — so the board answers the real question:{" "}
-              <strong className="font-bold">how much of design quality is the tool, and how
-              much is the discipline you wrap around it?</strong>
+              with the full enforced gate. The point of this board isn&rsquo;t ranking tools —
+              it&rsquo;s the third column:{" "}
+              <strong className="font-bold">the same agents, wrapped in an enforced project
+              design system, and how far that closes the gap.</strong> Design quality isn&rsquo;t
+              the tool; it&rsquo;s the discipline you wrap around it.
             </p>
           </div>
 

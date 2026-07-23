@@ -70,9 +70,9 @@ export function Hero() {
           variants={item}
           className="mx-auto mt-6 max-w-xl text-[17px] leading-relaxed text-neutral-600"
         >
-          StyleSeed selects the right design grammar for the result — or compiles one from your
-          references — then makes the agent build with consistent designer judgment. Web UI,
-          mobile products, carousels, decks, documents, and more.
+          Your AI coding agent sets up the design system, a scored gate keeps the quality, and
+          the decisions live in your repo — designed-looking products without a design team.
+          Web UI, mobile products, carousels, decks, documents, and more.
         </motion.p>
 
         <motion.div

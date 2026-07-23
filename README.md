@@ -6,7 +6,7 @@
 
 ### Teach your AI fixed design judgment.<br />Not one fixed aesthetic.
 
-<sub>Open-source design-method engine for Claude Code · Codex · Cursor — selects the right design grammar or derives one from references, locks project decisions, and verifies the rendered result.</sub>
+<sub>Your AI coding agent sets up the design system, a scored gate keeps the quality, and the decisions live in your repo, maintained across screens and sessions — <b>designed-looking products without a design team</b>. Open source, for Claude Code · Codex · Cursor.</sub>
 
 <br />
 <br />

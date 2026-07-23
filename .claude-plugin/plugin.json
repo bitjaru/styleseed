@@ -3,7 +3,7 @@
   "name": "styleseed",
   "displayName": "StyleSeed",
   "version": "3.0.0",
-  "description": "An AI design-method engine with multiple output grammars, surface adapters, and a reference-to-rule-set compiler. Builds consistent UI, carousels, decks, documents, and visual artifacts with code and pixel verification.",
+  "description": "Your AI coding agent sets up the design system, a scored gate keeps the quality, and the decisions live in your repo — designed-looking products without a design team. Builds UI, carousels, decks, and documents with code and pixel verification.",
   "author": {
     "name": "bitjaru",
     "url": "https://github.com/bitjaru"

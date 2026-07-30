@@ -6,7 +6,7 @@ import { DOMAINS } from "@/lib/domains";
 import { SCREENS } from "@/lib/screens";
 
 const BASE = "https://styleseed-demo.vercel.app";
-const CONTENT_UPDATED = new Date("2026-07-20T00:00:00.000Z");
+const CONTENT_UPDATED = new Date("2026-07-27T00:00:00.000Z");
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes: MetadataRoute.Sitemap = [
@@ -18,6 +18,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE}/motion/guide`, lastModified: CONTENT_UPDATED, changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE}/why`, lastModified: CONTENT_UPDATED, changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE}/scorecard`, lastModified: CONTENT_UPDATED, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${BASE}/gate`, lastModified: CONTENT_UPDATED, changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE}/how-it-thinks`, lastModified: CONTENT_UPDATED, changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE}/architecture`, lastModified: CONTENT_UPDATED, changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE}/faq`, lastModified: CONTENT_UPDATED, changeFrequency: "monthly", priority: 0.8 },

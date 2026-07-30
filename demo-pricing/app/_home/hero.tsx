@@ -113,6 +113,13 @@ export function Hero() {
             See the engine architecture
             <ArrowRight size={14} />
           </Link>
+          <Link
+            href="/gate"
+            className="inline-flex items-center gap-1 text-[14px] font-semibold text-neutral-700 hover:underline"
+          >
+            See the 120-screen benchmark
+            <ArrowRight size={14} />
+          </Link>
         </motion.div>
 
         {/* visual proof — the same product, agent-defaults vs StyleSeed rules */}
@@ -132,6 +139,11 @@ export function Hero() {
             gate first.{" "}
             <Link href="/scorecard" className="font-semibold text-violet-600 hover:underline">
               See the receipt →
+            </Link>
+            {" "}Across the full benchmark, the enforced gate improved Codex and Claude Code by
+            5.3 points each.{" "}
+            <Link href="/gate" className="font-semibold text-violet-600 hover:underline">
+              Read BENCH-V1 →
             </Link>
           </figcaption>
         </motion.figure>

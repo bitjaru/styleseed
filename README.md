@@ -19,21 +19,7 @@
 
 </div>
 
-## What it bans on sight
-
-The "AI-generated look" isn't bad luck — it's a list of nameable tells. StyleSeed ships **74 rules** that ban them, and a **0–100 scored gate** that blocks any screen under 80 from ever reaching you.
-
-| Banned | Why |
-|---|---|
-| Default indigo `#4F46E5` / `#5E6AD2` accent | the universal "an AI made this" color |
-| Emoji as UI icons 🚗 🧺 ⭐ | inject random colors, render differently per OS |
-| The icon-in-a-chip above every feature card | gen-1 AI tell — decoration pretending to be information |
-| All-even grid of same-weight centered cards | the #1 machine-composed tell: no focal point |
-| Pure `#000` backgrounds | a flat void — real dark UIs use layered ramps |
-| Font sizes outside one fixed table | size drift is why screens feel "off" but you can't say why |
-| Hardcoded hex in components | tokens only — otherwise the lock can't hold across screens |
-
-<sub>Banning the defaults isn't enough — agents converge on new uniforms once the old ones are blocked. That's why the rules come with an enforced score-then-fix loop, not a checklist. [What happens after install ↓](#what-happens-after-easy-start)</sub>
+**Measured on 120 rendered benchmark cells:** the enforced gate improved both Codex and Claude Code by **+5.3 points**. Raw rules alone were inconsistent (Codex +1.6, Claude Code −3.7), which is why StyleSeed ships a render → score → revise loop—not a prompt dump. **[Read BENCH-V1 and inspect the raw evidence →](https://styleseed-demo.vercel.app/gate)**
 
 ## Easy Start (30 seconds)
 
@@ -55,6 +41,22 @@ StyleSeed handles the design lock, build, code gate, and visual check. No design
 | **Cursor and others** | Paste the message above or use the installed skill picker |
 
 [Claude Code guide](https://styleseed-demo.vercel.app/claude-code-ui-design) · [Codex guide](https://styleseed-demo.vercel.app/codex-ui-design) · [See examples](https://styleseed-demo.vercel.app/showcase) · [Need help?](#troubleshooting--i-applied-styleseed-but-the-ui-still-looks-bad)
+
+## What it bans on sight
+
+The "AI-generated look" isn't bad luck — it's a list of nameable tells. StyleSeed ships **74 rules** that ban them, and a **0–100 scored gate** that blocks any screen under 80 from ever reaching you.
+
+| Banned | Why |
+|---|---|
+| Default indigo `#4F46E5` / `#5E6AD2` accent | the universal "an AI made this" color |
+| Emoji as UI icons 🚗 🧺 ⭐ | inject random colors, render differently per OS |
+| The icon-in-a-chip above every feature card | gen-1 AI tell — decoration pretending to be information |
+| All-even grid of same-weight centered cards | the #1 machine-composed tell: no focal point |
+| Pure `#000` backgrounds | a flat void — real dark UIs use layered ramps |
+| Font sizes outside one fixed table | size drift is why screens feel "off" but you can't say why |
+| Hardcoded hex in components | tokens only — otherwise the lock can't hold across screens |
+
+<sub>Banning the defaults isn't enough — agents converge on new uniforms once the old ones are blocked. That's why the rules come with an enforced score-then-fix loop, not a checklist. [What happens after install ↓](#what-happens-after-easy-start)</sub>
 
 <div align="center">
 

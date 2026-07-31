@@ -3,6 +3,31 @@
 All notable changes to StyleSeed. Agents can check the latest version at
 [version.json](https://styleseed-demo.vercel.app/version.json) and run `/ss-update`.
 
+## [3.1.0] — 2026-07-31
+
+**Theme: compile the method; do not flood the model.** StyleSeed now resolves a project lock
+into one small, deterministic rule bundle instead of asking every agent to read the roughly
+220KB full handbook for every visual task.
+
+### Added
+- `/ss-resolve` for Claude Code, Codex, Cursor, and generic agents. It selects core judgment,
+  one output grammar, one surface adapter, domain/page context, an optional profile, bounded
+  project values, and the new compact craft baseline.
+- `.styleseed/effective-rules.md` plus `.styleseed/manifest.json`, including selection,
+  per-source hashes, bundle hash, byte size, and a deterministic `--check` drift gate.
+- A generated machine-readable context catalog with 8 grammars, 5 adapters, 12 domains,
+  7 page types, 6 optional profiles, and agent-specific execution contracts.
+- Registry v3 context discovery at `/.well-known/styleseed/context-catalog.json`.
+- Engine validation that performs a real resolver compile and hash-check in a temporary project.
+
+### Changed
+- `ss-build`, `ss-score`, `ss-review`, `ss-lint`, and `ss-verify` consume the compiled bundle
+  first. Full handbook reads are reserved for a named unresolved ambiguity.
+- `llms.txt` is now the portable agent router. `llms-full.txt` remains available only as an
+  archive/debug mirror.
+- Easy Start, Claude/Codex/Cursor instructions, README, architecture, plugin metadata, and demo
+  now expose the same 21-skill compiled-context workflow.
+
 ## [3.0.0] — 2026-07-18
 
 **Theme: fixed design judgment, multiple output languages.** StyleSeed no longer treats its

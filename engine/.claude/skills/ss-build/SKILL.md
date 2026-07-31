@@ -12,23 +12,21 @@ of design judgment.
 
 ## Step 1 — Establish the rule set before code
 
-Read `PRODUCT-PRINCIPLES.md` and `ADAPTERS.md`. If `STYLESEED.md` exists, validate its values and referenced
-grammar. If it does not, run `/ss-setup` and write it before UI code.
+If `STYLESEED.md` does not exist, run `/ss-setup` and write it before UI code. If the user
+supplied a visual reference that the selected built-in grammar does not capture, run
+`/ss-reference` first. Never reduce an unfamiliar reference to a palette swap.
 
-If the user supplied a visual reference that the selected built-in grammar does not capture,
-run `/ss-reference` first. Never reduce an unfamiliar reference to a palette swap.
+Then invoke `/ss-resolve` (Claude Code) or `$ss-resolve` (Codex), or run its bundled
+`scripts/resolve-context.mjs --project-root . --from-lock STYLESEED.md --agent <agent>`.
+Read `.styleseed/effective-rules.md` and preserve `.styleseed/manifest.json` as the provenance
+record. Do not load `llms-full.txt` after resolution succeeds.
 
 ## Step 2 — Compose, do not improvise
 
-Read and combine in authority order:
-
-1. core invariants in `PRODUCT-PRINCIPLES.md`;
-2. selected built-in grammar in `RULESETS.md`, or compiled `RULESET.md`;
-3. selected surface adapter in `ADAPTERS.md` and its companion renderer contract;
-4. matching `APP-PLAYBOOKS.md` domain and `PAGE-TYPES.md` page/artifact type;
-5. optional aesthetic profile in `PRESETS.md`;
-6. bounded values in `STYLESEED.md`;
-7. detailed craft in `DESIGN-LANGUAGE.md` and `VISUAL-CRAFT.md`.
+The compiled bundle already composes the authority order: core invariants → selected grammar →
+surface adapter → domain/page → optional profile → bounded lock → craft baseline. Use the
+manifest selection and source hashes to detect drift. Open a full source document only when the
+bundle points to a genuine ambiguity; do not reassemble the handbook ad hoc.
 
 Before code, state the effective rule set in one line, for example:
 

@@ -2,8 +2,8 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "styleseed",
   "displayName": "StyleSeed",
-  "version": "3.0.0",
-  "description": "Your AI coding agent sets up the design system, a scored gate keeps the quality, and the decisions live in your repo — designed-looking products without a design team. Builds UI, carousels, decks, and documents with code and pixel verification.",
+  "version": "3.1.0",
+  "description": "Open-source design-method engine for Claude Code, Codex, and Cursor. Compiles a project lock into targeted rules, then builds and verifies UI, carousels, decks, documents, and graphics.",
   "author": {
     "name": "bitjaru",
     "url": "https://github.com/bitjaru"

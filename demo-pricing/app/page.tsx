@@ -111,7 +111,7 @@ export default function HomePage() {
         <section className="border-t border-neutral-200 bg-[#F7F7FB]">
           <div className="mx-auto grid max-w-6xl items-center gap-10 px-6 py-20 lg:grid-cols-[0.85fr_1.4fr]">
             <div>
-              <div className="text-[11px] font-bold uppercase tracking-widest text-violet-600">New in v3</div>
+              <div className="text-[11px] font-bold uppercase tracking-widest text-violet-600">New in v3.1</div>
               <h2 className="mt-2 text-[clamp(28px,4vw,42px)] font-bold leading-tight tracking-tight">
                 One method.<br />Many output grammars.
               </h2>
@@ -122,7 +122,9 @@ export default function HomePage() {
               </p>
               <p className="mt-3 text-[15px] leading-relaxed text-neutral-600">
                 Surface adapters carry the same judgment into web and mobile UI, social
-                carousels, slide decks, documents, reports, posters, and covers.
+                carousels, slide decks, documents, reports, posters, and covers. The new
+                context compiler gives each agent only its selected 10–20KB method plus a
+                source-hash manifest.
               </p>
               <Link href="/architecture" className="mt-6 inline-flex items-center gap-1.5 rounded-xl bg-neutral-900 px-5 py-3 text-[14px] font-bold text-white hover:bg-black">
                 Explore the engine <ArrowRight size={14} />
@@ -143,8 +145,8 @@ export default function HomePage() {
                   The fastest way is one sentence.
                 </h2>
                 <p className="mt-2 max-w-xl text-[15px] text-neutral-400">
-                  No install required. Paste this into Claude Code, Codex, Cursor, or any AI agent and it reads
-                  the rules and applies them to whatever you build next.
+                  Paste once. It installs the full workflow when allowed, or uses the portable
+                  agent router when installation is unavailable.
                 </p>
               </div>
               <a
@@ -174,12 +176,12 @@ export default function HomePage() {
                 <code className="font-mono text-[13px] text-violet-300">ss-build</code> can only
                 <em> run</em> once installed. Then your lock persists in{" "}
                 <code className="font-mono text-[13px] text-neutral-300">STYLESEED.md</code> (no drift),
-                and every artifact is scored and visually checked before you see it. All 20 skills, universally —
+                and every artifact is compiled, scored, and visually checked before you see it. All 21 skills, universally —
                 Claude Code, Codex, Cursor, Gemini CLI &amp; 12+ more.
               </p>
               <div className="mt-4 space-y-1.5">
                 <code className="block rounded-lg bg-black/40 px-3 py-2 font-mono text-[13px] text-neutral-100">npx skills add bitjaru/styleseed</code>
-                <code className="block rounded-lg bg-black/40 px-3 py-2 font-mono text-[13px]"><span className="text-neutral-400"># Claude Code: </span><span className="text-violet-300">/ss-build</span><span className="text-neutral-500"> · </span><span className="text-neutral-400">Codex: </span><span className="text-emerald-300">$ss-build</span></code>
+                <code className="block rounded-lg bg-black/40 px-3 py-2 font-mono text-[13px]"><span className="text-neutral-400"># Claude Code: </span><span className="text-violet-300">/ss-resolve → /ss-build</span><span className="text-neutral-500"> · </span><span className="text-neutral-400">Codex: </span><span className="text-emerald-300">$ss-resolve → $ss-build</span></code>
               </div>
             </div>
           </div>

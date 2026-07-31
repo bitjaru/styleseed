@@ -127,15 +127,23 @@ For CLAUDE.md (Golden Rules):
 - theme.css — say "Your theme.css (skin) is untouched."
 - components/ — say "Your components are untouched. Run `/ss-lint` to check compliance."
 
+**Recompile the project context:**
+- If `STYLESEED.md` exists, run the installed `ss-resolve/scripts/resolve-context.mjs` with
+  `--project-root . --from-lock STYLESEED.md --agent <agent>`.
+- Run the same command with `--check` and require a zero exit status.
+- Report the new bundle hash from `.styleseed/manifest.json`; do not point the user at
+  `llms-full.txt`.
+
 ### Step 5: Summary
 
 ```
 Update complete!
 
-✅ Skills: 12 (added X new)
+✅ Skills: 21 (added X new)
 ✅ .cursorrules: added
 ✅ DESIGN-LANGUAGE.md: updated to latest
 ✅ Golden Rules: added to CLAUDE.md
+✅ Effective context: recompiled and hash-checked
 
 Not touched:
 - theme.css (your skin)

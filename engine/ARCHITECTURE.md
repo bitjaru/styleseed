@@ -14,14 +14,15 @@ flowchart LR
   R[User references<br/>images · URLs · existing UI] --> C[Reference compiler]
   C --> D[Project-local grammar<br/>evidence · confidence · tokens · checks]
   B --> E[Built-in output grammar]
-  D --> F[Rule composer]
+  D --> F[Context compiler<br/>ss-resolve]
   E --> F
   P[Core judgment<br/>non-negotiable] --> F
   S[Surface adapter<br/>canvas · renderer · export] --> F
   X[Domain + page type] --> F
   Y[Optional style profile] --> F
   L[STYLESEED.md<br/>bounded selections] --> F
-  F --> G[Agent build method]
+  F --> K[Effective rule bundle<br/>manifest + source hashes]
+  K --> G[Agent build method]
   G --> H[Code gate<br/>ss-score]
   H -->|fix loop| G
   H --> I[Pixel gate<br/>ss-verify]
@@ -40,7 +41,8 @@ flowchart LR
 | Domain + page playbooks | Contextual composition bias | content/order/detail decisions | grammar identity |
 | Aesthetic profile | Coordinated look adjustment | radius, density, tone, motion within bounds | task structure |
 | Design lock | Persist selected values | known enums and project tokens | invent exceptions or waive rules |
-| Build skills | Apply the composed method | implementation | self-certify without evidence |
+| Context compiler | Emit the selected method with provenance | deterministic bundle + manifest | silently invent or merge unknown IDs |
+| Build skills | Apply the compiled method | implementation | self-certify without evidence |
 | Score + verify | Detect code and pixel drift | fixes needed to comply | redefine the chosen method |
 
 ## Grammar sources
@@ -59,13 +61,12 @@ twelve-axis schema, cites evidence and confidence, and writes a project-local gr
 `.styleseed/rulesets/`. A transfer screen proves that the result is a reusable language rather
 than a clone of one source screen.
 
-## Runtime composition
+## Runtime compilation
 
-The rule composer resolves conflicts by authority, then hands one effective rule set to the
-agent:
+`ss-resolve` resolves conflicts by authority and writes one effective rule set for the agent:
 
 ```text
-effectiveRules = constrain(
+effectiveRules, manifest = compile(
   coreJudgment,
   outputGrammar,
   surfaceAdapter,
@@ -76,8 +77,14 @@ effectiveRules = constrain(
 )
 ```
 
-The design lock stores selections; it is not executable policy. A value outside the grammar's
-range is rejected or replaced by the nearest safe fallback.
+The default output is `.styleseed/effective-rules.md` plus `.styleseed/manifest.json`. A typical
+built-in selection is 10–20KB, while `llms-full.txt` remains an archive/debug mirror. The
+manifest records the exact selection, source hashes, bundle hash, and byte size; `--check`
+fails when the stored bundle no longer matches its sources or lock.
+
+The design lock stores selections; it is not executable policy. Unknown grammar, adapter,
+domain, page, or profile IDs are rejected. Project-local reference grammars require a maintained
+built-in fallback.
 
 ## Non-web outputs
 

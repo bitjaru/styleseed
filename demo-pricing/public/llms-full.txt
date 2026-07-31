@@ -1,7 +1,7 @@
 # StyleSeed — Full Context
 
 Source: github.com/bitjaru/styleseed (constitution + grammars + adapters + compiler + craft)
-Generated: 2026-07-18T12:15:54.261Z
+Generated: 2026-07-31T03:37:38.393Z
 
 ---
 
@@ -97,6 +97,68 @@ drift, but they never choose or rewrite the design philosophy after the fact.
 
 ---
 
+# StyleSeed Compact Craft Baseline
+
+This is the small, task-independent craft layer used by the Context Compiler. It preserves
+the highest-leverage rules without injecting the full design handbook into every agent turn.
+The selected output grammar, adapter, domain, page type, profile, and project lock narrow these
+defaults. `PRODUCT-PRINCIPLES.md` remains the higher authority.
+
+## Coherence
+
+- Choose one coordinated family for radius, elevation, borders, icon style, typography, motion,
+  control heights, and interaction states. Encode each family as semantic tokens and reuse it.
+- A coherent system may contain multiple component shapes and colors, but every variation must
+  have a repeated role. Local decoration is not a role.
+- Preserve strengths and already-set project decisions. Do not restyle unrelated surfaces while
+  fixing one screen.
+
+## Hierarchy and composition
+
+- Give every screen one dominant user decision or reading promise. Supporting content must recede
+  through scale, position, contrast, density, or disclosure—not random color.
+- Proximity communicates grouping: space around a group should normally be at least twice the
+  space within it. Repeated sections need deliberate variation in height, density, or composition.
+- Use real product content and evidence. Placeholder dashboards, fake metrics, stock chat panels,
+  and equal card walls make otherwise clean work look generic.
+- Keep prose near 50–75 characters per line. Let data surfaces use width, but bound any reading
+  column inside them.
+
+## Spacing and type
+
+- Start from `{4, 8, 12, 16, 24, 32, 40, 48, 64, 80, 96}` and use off-scale values only for a
+  documented optical correction.
+- Default body text to 16px on general surfaces. Dense desktop UI may use 13–14px for metadata,
+  table chrome, timestamps, or identifiers; decisions and explanatory copy stay readable.
+- Use no more than two type families and one intentional weight ramp. Use tabular numerals for
+  money, tables, timers, and comparable metrics.
+- Tighten leading as type grows: body about 1.5, headings 1.2–1.35, display 1.0–1.2.
+
+## Components and interaction
+
+- Use the lightest separation that works: whitespace, then tone, then hairline, then shadow.
+  Do not combine a visible border and floating shadow without a functional reason.
+- Buttons, inputs, and selects in one context share a height. Touch surfaces provide at least
+  44px targets; pointer-first dense desktop controls may be smaller when still operable.
+- Labels remain visible. Errors name the problem and recovery and never rely on color alone.
+- Use one icon family, fill mode, and stroke family. Do not use emoji as application chrome.
+- Loading, empty, error, success, disabled, and permission states preserve layout and provide a
+  useful next action where the surface owns data or mutation.
+
+## Color, accessibility, and motion
+
+- Use semantic tokens. Keep one identifiable primary action while allowing stable semantic,
+  categorical, or brand roles required by the selected grammar.
+- Body text targets WCAG AA contrast; large text and meaningful graphics meet their applicable
+  threshold. Focus is visible, controls have names, and keyboard order follows visual order.
+- Motion uses one duration/easing family, communicates state or sequence, and never delays the
+  first read or an action. Provide a complete reduced-motion result.
+- Inspect the real render at the target viewport. Source review cannot certify optical balance,
+  font loading, crop, responsive transformation, or visual states.
+
+
+---
+
 # StyleSeed Engine Architecture
 
 StyleSeed converts product intent and visual evidence into an enforceable design method for
@@ -113,14 +175,15 @@ flowchart LR
   R[User references<br/>images · URLs · existing UI] --> C[Reference compiler]
   C --> D[Project-local grammar<br/>evidence · confidence · tokens · checks]
   B --> E[Built-in output grammar]
-  D --> F[Rule composer]
+  D --> F[Context compiler<br/>ss-resolve]
   E --> F
   P[Core judgment<br/>non-negotiable] --> F
   S[Surface adapter<br/>canvas · renderer · export] --> F
   X[Domain + page type] --> F
   Y[Optional style profile] --> F
   L[STYLESEED.md<br/>bounded selections] --> F
-  F --> G[Agent build method]
+  F --> K[Effective rule bundle<br/>manifest + source hashes]
+  K --> G[Agent build method]
   G --> H[Code gate<br/>ss-score]
   H -->|fix loop| G
   H --> I[Pixel gate<br/>ss-verify]
@@ -139,7 +202,8 @@ flowchart LR
 | Domain + page playbooks | Contextual composition bias | content/order/detail decisions | grammar identity |
 | Aesthetic profile | Coordinated look adjustment | radius, density, tone, motion within bounds | task structure |
 | Design lock | Persist selected values | known enums and project tokens | invent exceptions or waive rules |
-| Build skills | Apply the composed method | implementation | self-certify without evidence |
+| Context compiler | Emit the selected method with provenance | deterministic bundle + manifest | silently invent or merge unknown IDs |
+| Build skills | Apply the compiled method | implementation | self-certify without evidence |
 | Score + verify | Detect code and pixel drift | fixes needed to comply | redefine the chosen method |
 
 ## Grammar sources
@@ -158,13 +222,12 @@ twelve-axis schema, cites evidence and confidence, and writes a project-local gr
 `.styleseed/rulesets/`. A transfer screen proves that the result is a reusable language rather
 than a clone of one source screen.
 
-## Runtime composition
+## Runtime compilation
 
-The rule composer resolves conflicts by authority, then hands one effective rule set to the
-agent:
+`ss-resolve` resolves conflicts by authority and writes one effective rule set for the agent:
 
 ```text
-effectiveRules = constrain(
+effectiveRules, manifest = compile(
   coreJudgment,
   outputGrammar,
   surfaceAdapter,
@@ -175,8 +238,14 @@ effectiveRules = constrain(
 )
 ```
 
-The design lock stores selections; it is not executable policy. A value outside the grammar's
-range is rejected or replaced by the nearest safe fallback.
+The default output is `.styleseed/effective-rules.md` plus `.styleseed/manifest.json`. A typical
+built-in selection is 10–20KB, while `llms-full.txt` remains an archive/debug mirror. The
+manifest records the exact selection, source hashes, bundle hash, and byte size; `--check`
+fails when the stored bundle no longer matches its sources or lock.
+
+The design lock stores selections; it is not executable policy. Unknown grammar, adapter,
+domain, page, or profile IDs are rejected. Project-local reference grammars require a maintained
+built-in fallback.
 
 ## Non-web outputs
 
@@ -415,7 +484,19 @@ they cannot override core judgment.
 | `document-report` | PDF, DOCX, long-form reports | document/PDF renderer |
 | `single-frame` | posters, covers, social cards, thumbnails | image/SVG/canvas renderer |
 
-## `social-carousel` integration
+## `product-ui`
+
+- **Canvas:** responsive viewports declared in the design lock; verify at least one narrow and
+  one wide target when both are in scope.
+- **Primitives:** semantic HTML and project-native components. Preserve framework conventions,
+  routes, state, and real content rather than replacing the application with a mock.
+- **States:** loading, empty, error, success, disabled, focus, and responsive navigation are part
+  of the artifact when the screen owns those behaviors.
+- **Export:** source code plus reproducible dev/build commands and screenshot paths.
+- **QA:** run project checks, render the real route, inspect target viewports and important states,
+  and record what could not be exercised.
+
+## `social-carousel`
 
 Use `sequential-story` unless another grammar clearly owns the content. The installed Claude
 `carousel-build` skill is the canonical companion when available:
@@ -442,6 +523,41 @@ Recommended lock additions:
 
 Do not duplicate the renderer's rapidly changing platform measurements inside a visual grammar.
 The adapter/companion owns them; StyleSeed owns the visual judgment applied within them.
+
+## `slide-deck`
+
+- **Canvas:** use the presentation renderer's declared aspect ratio and safe area. Assume distance
+  viewing; body copy that works on a web page is usually too small or dense on a slide.
+- **Sequence:** one claim per slide, visible narrative progression, and deliberate alternation
+  between statement, evidence, comparison, and action.
+- **Assets:** use real charts, diagrams, screenshots, and cited imagery. Never use a text-heavy
+  card grid as a substitute for a presentation.
+- **Export:** editable deck plus rendered PDF or page images.
+- **QA:** render every slide, inspect overflow and contrast, and compare repeated masters,
+  alignment, folios, and speaker-facing information.
+
+## `document-report`
+
+- **Canvas:** paginated output with explicit paper size, margins, headers/footers, and print-safe
+  color. Reading measure and page breaks take priority over app-like chrome.
+- **Structure:** title and executive summary establish the decision; headings, figures, tables,
+  notes, and appendices expose evidence at the right depth.
+- **Assets:** captions and sources remain attached to figures and tables. Repeated components use
+  document styles rather than local formatting.
+- **Export:** editable source plus visually verified PDF.
+- **QA:** render every page and inspect widows/orphans, clipped tables, broken links, page numbers,
+  accessibility structure, and cross-page consistency.
+
+## `single-frame`
+
+- **Canvas:** declare exact dimensions, crop variants, safe zones, and intended viewing distance.
+- **Composition:** one dominant message and one supporting action or proof. The frame must work
+  without surrounding caption text unless the publishing contract says otherwise.
+- **Assets:** logos, product imagery, and text are deterministic and legible. Generated imagery
+  must not supply final logos or critical text.
+- **Export:** source plus final PNG/JPEG/SVG variants and an asset manifest.
+- **QA:** inspect at native size and thumbnail size, verify crop variants, contrast, text safety,
+  and platform compression risk.
 
 ## Adding adapters
 
@@ -558,9 +674,10 @@ judgment process, not one aesthetic: a consumer-finance home, operations console
 story, and commerce detail page use different output grammars. Skins provide materials; they
 never define the method.
 
-**Read `PRODUCT-PRINCIPLES.md` first.** Resolve every screen as core judgment × one output
-grammar (`RULESETS.md` or a project-local grammar compiled with `/ss-reference`) × domain ×
-page type × optional aesthetic profile (`PRESETS.md`) × bounded `STYLESEED.md` values.
+**Run `/ss-resolve` first.** It compiles the project lock into
+`.styleseed/effective-rules.md` plus a hash-verifiable manifest. Build from that small bundle
+instead of loading the full handbook. Resolve every screen as core judgment × one output
+grammar (built-in or `/ss-reference`) × adapter × domain/page × optional profile × lock.
 
 ## Golden Rules (NEVER break these)
 
@@ -592,6 +709,8 @@ page type × optional aesthetic profile (`PRESETS.md`) × bounded `STYLESEED.md`
 Reference this guide when Claude Code sets up a new project or implements UI.
 
 > **When to read which file:**
+> - **`.styleseed/effective-rules.md`**: The default implementation context. Generate it with
+>   `/ss-resolve`; do not load `llms-full.txt` after it resolves.
 > - **PRODUCT-PRINCIPLES.md**: Product constitution, authority order, fixed method vs variable
 >   look. Read first.
 > - **RULESETS.md**: Functional output grammars selected by the result's job. Read before domain

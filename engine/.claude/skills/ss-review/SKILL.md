@@ -7,10 +7,10 @@ allowed-tools: Read, Grep, Glob
 
 # UI Design Review
 
-First resolve the effective rule set from `PRODUCT-PRINCIPLES.md`, `RULESETS.md` or the compiled
-grammar, `ADAPTERS.md`, domain/page, optional `PRESETS.md` profile, and `STYLESEED.md`. Review
-task fitness and grammar coherence before framework conventions. For non-web artifacts, replace
-React/Tailwind-only checks with the active adapter's render/export checks.
+Read `.styleseed/effective-rules.md` and `.styleseed/manifest.json`. If missing or stale, invoke
+`/ss-resolve` or `$ss-resolve` from `STYLESEED.md` first. Review task fitness and grammar
+coherence before framework conventions. For non-web artifacts, replace React/Tailwind-only
+checks with the active adapter's render/export checks.
 
 ## When NOT to use
 

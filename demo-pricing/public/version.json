@@ -1,12 +1,12 @@
 {
-  "version": "3.0.0",
-  "released": "2026-07-18",
+  "version": "3.1.0",
+  "released": "2026-07-31",
   "rules": 74,
-  "skills": 20,
+  "skills": 21,
   "skins": 7,
   "grammars": 8,
   "adapters": 5,
-  "whatsNew": "StyleSeed v3 fixes the design method, not one Toss-like look: 8 job-specific output grammars, 5 surface adapters for UI and non-web artifacts, and /ss-reference to compile screenshots, URLs, Figma, or existing UI into evidence-backed project rule sets. The build loop now requires both code score and rendered pixel verification.",
+  "whatsNew": "StyleSeed v3.1 adds /ss-resolve: a deterministic context compiler that turns STYLESEED.md into a targeted 10–20KB effective rule bundle and source-hash manifest for Claude Code, Codex, Cursor, and other agents. llms.txt now routes agents into that compiled path; llms-full.txt remains archive/debug context.",
   "update": "Claude Code: /ss-update. Codex: $ss-update. Or run: npx skills add bitjaru/styleseed",
   "changelog": "https://github.com/bitjaru/styleseed/releases",
   "repo": "https://github.com/bitjaru/styleseed"

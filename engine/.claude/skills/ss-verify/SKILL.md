@@ -7,10 +7,9 @@ allowed-tools: Read, Write, Edit, Grep, Glob, Bash
 
 # Verify (look at it, don't just read it)
 
-First resolve the effective rule set from `PRODUCT-PRINCIPLES.md`, `RULESETS.md`, the selected
-built-in or reference-compiled grammar, `ADAPTERS.md`, domain/page, optional `PRESETS.md` profile, and
-`STYLESEED.md`. Judge pixels against that composed method. A lock value cannot excuse a core
-failure, and a profile cannot replace the output grammar.
+Read `.styleseed/effective-rules.md` and `.styleseed/manifest.json`; invoke `/ss-resolve` or
+`$ss-resolve` first when they are missing or stale. Judge pixels against that compiled method.
+A lock value cannot excuse a core failure, and a profile cannot replace the output grammar.
 
 `/ss-score` reads the **code** and scores it. But some of the worst "AI-made" tells never appear
 in source — they only exist in **pixels**: a hero that doesn't actually dominate, a lower third

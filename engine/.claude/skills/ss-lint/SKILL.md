@@ -7,10 +7,10 @@ allowed-tools: Read, Grep, Glob, Bash
 
 # Design Lint (Quick Check)
 
-Read `PRODUCT-PRINCIPLES.md`, the selected output grammar, `ADAPTERS.md`, and `STYLESEED.md`
-before classifying a match. Lint detects deterministic drift; it must not flag an exact
-grammar/profile/adapter contract as a violation or let an arbitrary lock value create an
-exception.
+Read `.styleseed/effective-rules.md` and `.styleseed/manifest.json`; invoke `/ss-resolve` or
+`$ss-resolve` first when they are missing or stale. Lint detects deterministic drift; it must
+not flag an exact grammar/profile/adapter contract as a violation or let an arbitrary lock
+value create an exception.
 
 ## When NOT to use
 

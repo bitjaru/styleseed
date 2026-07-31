@@ -14,7 +14,7 @@ import {
 const BASE = "https://styleseed-demo.vercel.app";
 const URL = `${BASE}/claude-code-ui-design`;
 const DESCRIPTION =
-  "A practical, evidence-backed workflow for making Claude Code generate polished, consistent UI: choose a design grammar, persist decisions, build, score, render, and visually verify.";
+  "A practical, evidence-backed workflow for making Claude Code generate polished, consistent UI: choose a design grammar, compile targeted context, build, score, render, and visually verify.";
 
 export const metadata: Metadata = {
   title: "How to make Claude Code generate better UI design",
@@ -64,7 +64,7 @@ const FAQ = [
   },
   {
     q: "Will StyleSeed keep the same design across later Claude Code sessions?",
-    a: "Yes. Setup writes the selected grammar, adapter, tokens, density, type, motion, and signature move to STYLESEED.md. Installed Claude Code rules read that project-local lock on later visual tasks, so valid decisions persist instead of being reinvented prompt by prompt.",
+    a: "Yes. Setup writes the selected grammar, adapter, tokens, density, type, motion, and signature move to STYLESEED.md. ss-resolve compiles that lock into .styleseed/effective-rules.md plus a source-hash manifest, so later sessions reuse the same bounded method instead of reinventing it prompt by prompt.",
   },
   {
     q: "Can it learn a design language from my references?",
@@ -94,13 +94,13 @@ const STEPS = [
   },
   {
     n: "04",
-    title: "Build with real product content",
-    body: "Use the selected method to organize attention, information, action, and feedback. Components implement those decisions; they do not choose the design philosophy.",
+    title: "Compile only the active method",
+    body: "Run /ss-resolve. It emits a small effective rule bundle and source-hash manifest, so Claude Code gets the selected method without loading the roughly 220KB full handbook.",
   },
   {
     n: "05",
-    title: "Score, render, and inspect",
-    body: "Run the code gate, fix the highest-value failures, render at required viewports, inspect actual pixels, and repeat until hierarchy, rhythm, crop, states, and grammar fit hold.",
+    title: "Build, score, render, inspect",
+    body: "Build with real content, run the code gate, fix the highest-value failures, then inspect actual pixels until hierarchy, rhythm, crop, states, and grammar fit hold.",
   },
 ];
 
@@ -115,7 +115,7 @@ export default function ClaudeCodeUiDesignPage() {
         headline: "How to make Claude Code generate better UI design",
         description: DESCRIPTION,
         datePublished: "2026-07-20",
-        dateModified: "2026-07-20",
+        dateModified: "2026-07-31",
         author: { "@id": `${BASE}/#organization` },
         publisher: { "@id": `${BASE}/#organization` },
         isPartOf: { "@id": `${BASE}/#website` },
@@ -198,7 +198,7 @@ export default function ClaudeCodeUiDesignPage() {
               Short answer
             </p>
             <p className="mt-2 text-[16px] font-semibold leading-relaxed">
-              Context → grammar → design lock → real content → code score → pixel inspection.
+              Context → grammar → design lock → compiled bundle → code score → pixel inspection.
               StyleSeed makes that sequence reusable in Claude Code.
             </p>
           </div>
@@ -272,6 +272,8 @@ export default function ClaudeCodeUiDesignPage() {
             <span className="text-neutral-500">$</span> npx skills add bitjaru/styleseed
             <br />
             <span className="text-neutral-500">$</span> /ss-setup
+            <br />
+            <span className="text-neutral-500">$</span> /ss-resolve
             <br />
             <span className="text-neutral-500">$</span> /ss-build
             <br />

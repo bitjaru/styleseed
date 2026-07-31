@@ -4,7 +4,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 
 const BASE = "https://styleseed-demo.vercel.app";
 const DESCRIPTION =
-  "How StyleSeed composes fixed AI design judgment, eight output grammars, five surface adapters, project references, and code plus pixel verification.";
+  "How StyleSeed compiles fixed AI design judgment, eight output grammars, five surface adapters, and project choices into a small source-hashed context before code and pixel verification.";
 
 export const metadata: Metadata = {
   title: "StyleSeed engine architecture — AI design grammar compiler",
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "article",
     url: `${BASE}/architecture`,
-    title: "StyleSeed v3 engine architecture",
+    title: "StyleSeed v3.1 engine architecture",
     description: DESCRIPTION,
     siteName: "StyleSeed",
     images: [
@@ -28,13 +28,13 @@ export const metadata: Metadata = {
         url: `${BASE}/og/styleseed-og.png`,
         width: 1200,
         height: 630,
-        alt: "StyleSeed v3 design grammar engine architecture diagram",
+        alt: "StyleSeed v3.1 design grammar and context compiler architecture diagram",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "StyleSeed v3 engine architecture",
+    title: "StyleSeed v3.1 engine architecture",
     description: DESCRIPTION,
     images: [`${BASE}/og/styleseed-og.png`],
   },
@@ -45,7 +45,8 @@ const layers = [
   ["Output grammar", "Consumer service, operations, technical, editorial, commerce, institutional, marketing, or sequential story."],
   ["Surface adapter", "Web/mobile, carousel, slide deck, document/report, or single-frame renderer contract."],
   ["Reference compiler", "Turns screenshots, URLs, Figma exports, or an existing UI into a local grammar with evidence and confidence."],
-  ["Build method", "Composes grammar × surface × domain × artifact × optional style profile × bounded lock."],
+  ["Context compiler", "ss-resolve emits only the selected 10–20KB method plus a manifest of selections, source hashes, and bundle hash."],
+  ["Build method", "The agent implements real product content from effective-rules.md instead of reassembling the full handbook."],
   ["Auxiliary gates", "Code scoring finds structural drift; pixel verification catches what only appears after rendering."],
 ];
 
@@ -57,11 +58,11 @@ export default function ArchitecturePage() {
         "@type": "TechArticle",
         "@id": `${BASE}/architecture#page`,
         url: `${BASE}/architecture`,
-        headline: "StyleSeed v3 engine architecture",
+        headline: "StyleSeed v3.1 engine architecture",
         description: DESCRIPTION,
         image: `${BASE}/styleseed-architecture.svg`,
         datePublished: "2026-07-18",
-        dateModified: "2026-07-18",
+        dateModified: "2026-07-31",
         author: { "@type": "Organization", name: "StyleSeed", url: BASE },
         isPartOf: { "@id": `${BASE}/#website` },
         about: [
@@ -69,6 +70,7 @@ export default function ArchitecturePage() {
           "output grammars",
           "surface adapters",
           "reference compiler",
+          "context compiler",
         ],
       },
       {
@@ -97,14 +99,15 @@ export default function ArchitecturePage() {
           <ArrowLeft size={14} /> Home
         </Link>
         <div className="mt-12 max-w-3xl">
-          <div className="text-[11px] font-bold uppercase tracking-widest text-violet-600">Engine architecture · v3</div>
+          <div className="text-[11px] font-bold uppercase tracking-widest text-violet-600">Engine architecture · v3.1</div>
           <h1 className="mt-3 text-[clamp(38px,6vw,64px)] font-bold leading-[1.03] tracking-tight">
             Fixed judgment.<br />Multiple design languages.
           </h1>
           <p className="mt-5 max-w-2xl text-[17px] leading-relaxed text-neutral-600">
             StyleSeed no longer treats a Toss-like product aesthetic as the answer to every
             result. It selects the functional grammar the artifact needs, or compiles one from
-            the user&rsquo;s references, then hands it to the right renderer.
+            the user&rsquo;s references. Then <code>ss-resolve</code> hands the agent only the
+            selected method and a source-hash manifest before the right renderer takes over.
           </p>
         </div>
 

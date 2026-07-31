@@ -15,7 +15,7 @@ import {
 const BASE = "https://styleseed-demo.vercel.app";
 const URL = `${BASE}/codex-ui-design`;
 const DESCRIPTION =
-  "A practical workflow for making Codex generate polished, consistent UI with AGENTS.md, reusable skills, project-local design decisions, code scoring, and rendered visual verification.";
+  "A practical workflow for making Codex generate polished, consistent UI with AGENTS.md, targeted context compilation, project-local design decisions, code scoring, and rendered visual verification.";
 
 export const metadata: Metadata = {
   title: "How to make Codex generate better UI design",
@@ -72,13 +72,13 @@ const WORKFLOW = [
   },
   {
     n: "04",
-    title: "Build with the saved decisions",
-    body: "Run $ss-build with real content. Components implement the selected hierarchy, rhythm, density, type, color roles, motion, and signature move.",
+    title: "Compile the selected context",
+    body: "Run $ss-resolve. Codex reads a small .styleseed/effective-rules.md bundle, while the manifest pins the exact selection and source hashes.",
   },
   {
     n: "05",
-    title: "Inspect code and actual pixels",
-    body: "Run $ss-score, fix the highest-value failures, then use $ss-verify to render required viewports. Repeat until both the code gate and the visible result hold.",
+    title: "Build, inspect code and pixels",
+    body: "Run $ss-build with real content, score the implementation, then use $ss-verify to render required viewports. Repeat until both the code gate and visible result hold.",
   },
 ];
 
@@ -86,6 +86,7 @@ const MAPPING = [
   ["Durable repository guidance", "AGENTS.md"],
   ["Reusable Codex workflows", ".agents/skills/ss-*"],
   ["Approved project decisions", "STYLESEED.md"],
+  ["Compiled active context", "$ss-resolve"],
   ["Build the selected method", "$ss-build"],
   ["Deterministic code gate", "$ss-score ≥80"],
   ["Rendered visual gate", "$ss-verify"],
@@ -103,7 +104,7 @@ const FAQ = [
   },
   {
     q: "Will later Codex sessions keep the same design decisions?",
-    a: "Yes, when setup writes the approved grammar, adapter, tokens, density, type, motion, and signature move to STYLESEED.md. Repository guidance tells later sessions to read that lock before visual work instead of inventing a new direction.",
+    a: "Yes. Setup writes approved decisions to STYLESEED.md, and $ss-resolve compiles them into .styleseed/effective-rules.md plus a source-hash manifest. Repository guidance tells later sessions to resolve and read that bounded context instead of inventing a new direction.",
   },
   {
     q: "How does StyleSeed handle updates in Codex?",
@@ -126,7 +127,7 @@ export default function CodexUiDesignPage() {
         headline: "How to make Codex generate better UI design",
         description: DESCRIPTION,
         datePublished: "2026-07-20",
-        dateModified: "2026-07-20",
+        dateModified: "2026-07-31",
         author: { "@id": `${BASE}/#organization` },
         publisher: { "@id": `${BASE}/#organization` },
         isPartOf: { "@id": `${BASE}/#website` },
@@ -194,7 +195,7 @@ export default function CodexUiDesignPage() {
           <div className="border-l-4 border-emerald-600 pl-5">
             <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-emerald-700">Short answer</p>
             <p className="mt-2 text-[16px] font-semibold leading-relaxed">
-              AGENTS.md → grammar → STYLESEED.md → $ss-build → $ss-score → $ss-verify.
+              AGENTS.md → grammar → STYLESEED.md → $ss-resolve → $ss-build → $ss-verify.
             </p>
           </div>
         </div>
@@ -247,6 +248,7 @@ export default function CodexUiDesignPage() {
           <div className="overflow-x-auto bg-[#171717] p-5 font-mono text-[13px] leading-relaxed text-neutral-100">
             <span className="text-neutral-500">$</span> npx skills add bitjaru/styleseed<br />
             <span className="text-neutral-500">$</span> $ss-setup<br />
+            <span className="text-neutral-500">$</span> $ss-resolve<br />
             <span className="text-neutral-500">$</span> $ss-build<br />
             <span className="text-neutral-500">$</span> $ss-score<br />
             <span className="text-neutral-500">$</span> $ss-verify
@@ -278,7 +280,8 @@ export default function CodexUiDesignPage() {
             <h2 className="text-xl font-black">Codex로 UI를 예쁘고 일관되게 만드는 법</h2>
             <p className="mt-3 text-[15px] leading-relaxed text-neutral-700">
               저장소의 AGENTS.md에 디자인 방법을 두고, 프로젝트 결정을 STYLESEED.md에
-              고정한 뒤, $ss-score와 $ss-verify로 코드와 실제 화면을 함께 검사합니다.
+              고정한 뒤, $ss-resolve로 필요한 규칙만 컴파일하고 $ss-score와
+              $ss-verify로 코드와 실제 화면을 함께 검사합니다.
               StyleSeed는 이 과정을 Codex가 다시 사용할 수 있는 작업 흐름으로 제공합니다.
             </p>
           </div>

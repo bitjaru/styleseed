@@ -6,18 +6,15 @@ tools that read `AGENTS.md`. Claude Code uses `CLAUDE.md`; Cursor uses `.cursorr
 StyleSeed fixes **how an agent judges design**, not one Toss-like aesthetic. It applies to web
 and mobile products, social carousels, slide decks, documents/reports, and single-frame graphics.
 
-## Read in authority order
+## Resolve only the context this artifact needs
 
-1. `PRODUCT-PRINCIPLES.md` — fixed judgment and authority boundary.
-2. `RULESETS.md` — select one functional output grammar.
-3. `ADAPTERS.md` — select the renderer/surface contract.
-4. A project-local `.styleseed/rulesets/<slug>/RULESET.md` when selected.
-5. `APP-PLAYBOOKS.md` + `PAGE-TYPES.md` — domain and page/artifact bias.
-6. `PRESETS.md` — optional aesthetic profile only.
-7. `STYLESEED.md` — bounded project selections.
-8. `DESIGN-LANGUAGE.md` + `VISUAL-CRAFT.md` + `UX-WRITING.md` — detailed craft.
+Invoke `$ss-resolve` from `STYLESEED.md`, then read `.styleseed/effective-rules.md` and keep
+`.styleseed/manifest.json`. The deterministic resolver composes core → grammar → adapter →
+domain/page → optional profile → lock → craft baseline and records source hashes. Do not load
+`llms-full.txt` after a bundle resolves successfully.
 
-See `ARCHITECTURE.md` for the full system. When instructions conflict, the earlier layer wins.
+Use `$ss-resolve --list` when selecting IDs. Open the full source handbook only when the
+compiled bundle identifies a genuine ambiguity. See `ARCHITECTURE.md` for the full system.
 
 ## Composition model
 
@@ -81,17 +78,18 @@ render scripts. A valid lock resembles:
 ```
 
 For non-web output add adapter fields such as canvas, artifact type, renderer, and safe-zone
-contract. Unknown values fall back to the nearest maintained grammar; they are not exemptions.
+contract. Unknown values are resolver errors; they are not exemptions.
 
 ## Setup and reference routing
 
 1. Understand the user, job, domain, artifact, platform, and primary decision.
-2. Select one output grammar from `RULESETS.md` and one adapter from `ADAPTERS.md`.
+2. Use `$ss-resolve --list` to select one output grammar and one adapter.
 3. If supplied references are not represented, use `$ss-reference` and
    `REFERENCE-COMPILER.md`. Never reduce a reference to a palette swap or clone its protected
    assets, text, or trademarked arrangement.
 4. Select domain/page bias and at most one optional aesthetic profile.
-5. Confirm bounded brand/type/density/radius/elevation/imagery/motion values and write the lock.
+5. Confirm bounded brand/type/density/radius/elevation/imagery/motion values, write the lock,
+   then run `$ss-resolve` and read the effective bundle before implementation.
 
 Reference compilation produces evidence, confidence, tokens, anti-patterns, adapter metadata,
 and a transfer validation artifact under `.styleseed/rulesets/<slug>/`.
@@ -126,9 +124,9 @@ and export. Verification opens every exported frame.
 
 ## Skill invocation
 
-- Claude Code: `/ss-build`, `/ss-reference`, `/ss-score`, `/ss-verify`, etc.
-- Codex: `$ss-build`, `$ss-reference`, `$ss-score`, `$ss-verify`, or the `/skills` picker.
-- The canonical 20 skills live in `engine/.claude/skills`; repository `.agents/skills` is a
+- Claude Code: `/ss-resolve`, `/ss-build`, `/ss-reference`, `/ss-score`, `/ss-verify`, etc.
+- Codex: `$ss-resolve`, `$ss-build`, `$ss-reference`, `$ss-score`, `$ss-verify`, or the `/skills` picker.
+- The canonical 21 skills live in `engine/.claude/skills`; repository `.agents/skills` is a
   symlink to that directory so agent implementations cannot drift.
 
 ## Staying current

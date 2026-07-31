@@ -5,9 +5,10 @@ judgment process, not one aesthetic: a consumer-finance home, operations console
 story, and commerce detail page use different output grammars. Skins provide materials; they
 never define the method.
 
-**Read `PRODUCT-PRINCIPLES.md` first.** Resolve every screen as core judgment × one output
-grammar (`RULESETS.md` or a project-local grammar compiled with `/ss-reference`) × domain ×
-page type × optional aesthetic profile (`PRESETS.md`) × bounded `STYLESEED.md` values.
+**Run `/ss-resolve` first.** It compiles the project lock into
+`.styleseed/effective-rules.md` plus a hash-verifiable manifest. Build from that small bundle
+instead of loading the full handbook. Resolve every screen as core judgment × one output
+grammar (built-in or `/ss-reference`) × adapter × domain/page × optional profile × lock.
 
 ## Golden Rules (NEVER break these)
 
@@ -39,6 +40,8 @@ page type × optional aesthetic profile (`PRESETS.md`) × bounded `STYLESEED.md`
 Reference this guide when Claude Code sets up a new project or implements UI.
 
 > **When to read which file:**
+> - **`.styleseed/effective-rules.md`**: The default implementation context. Generate it with
+>   `/ss-resolve`; do not load `llms-full.txt` after it resolves.
 > - **PRODUCT-PRINCIPLES.md**: Product constitution, authority order, fixed method vs variable
 >   look. Read first.
 > - **RULESETS.md**: Functional output grammars selected by the result's job. Read before domain

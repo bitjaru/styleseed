@@ -11,7 +11,7 @@ rules, skills, components, skins, and generated demo artifacts in sync.
   `demo-pricing/AGENTS.md` applies to the Next.js demo.
 - Read `engine/PRODUCT-PRINCIPLES.md`, `engine/RULESETS.md`, `engine/ADAPTERS.md`, and
   `engine/ARCHITECTURE.md` before changing product behavior.
-- Treat `engine/.claude/skills/` as the canonical source for all 20 StyleSeed
+- Treat `engine/.claude/skills/` as the canonical source for all 21 StyleSeed
   skills. `.agents/skills` is a repository-scoped Codex symlink to that same
   directory; never create a second copy of a skill there.
 - Claude Code invokes a skill as `/ss-setup`, `/ss-build`, and so on. Codex
@@ -20,7 +20,7 @@ rules, skills, components, skins, and generated demo artifacts in sync.
 ## Generated files
 
 `demo-pricing/scripts/build-llms.mjs` regenerates the public agent index,
-registry, skin bundle, engine mirrors, and `llms-full.txt`. Edit the source in
+registry, context catalog, skin bundle, engine mirrors, and `llms.txt`/`llms-full.txt`. Edit the source in
 `engine/` or `skins/`, then run the generator; do not hand-edit generated
 copies as the source of truth.
 

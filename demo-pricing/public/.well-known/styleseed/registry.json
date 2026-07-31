@@ -1,15 +1,73 @@
 {
   "$schema": "https://styleseed-demo.vercel.app/.well-known/styleseed/registry.schema.json",
-  "version": "2",
-  "generated": "2026-07-18T12:15:54.272Z",
+  "version": "3",
+  "generated": "2026-07-31T03:37:38.407Z",
   "repository": "https://github.com/bitjaru/styleseed",
   "counts": {
+    "skills": 21,
+    "grammars": 8,
+    "adapters": 5,
+    "domains": 12,
+    "pages": 7,
+    "profiles": 6,
     "components": 48,
     "byType": {
       "ui": 32,
       "pattern": 16
     },
     "skins": 7
+  },
+  "context": {
+    "resolverSkill": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-resolve/SKILL.md",
+    "catalogUrl": "https://styleseed-demo.vercel.app/.well-known/styleseed/context-catalog.json",
+    "grammarIds": [
+      "consumer-service",
+      "operations-console",
+      "technical-instrument",
+      "editorial-reading",
+      "commerce-conversion",
+      "institutional-service",
+      "expressive-marketing",
+      "sequential-story"
+    ],
+    "adapterIds": [
+      "product-ui",
+      "social-carousel",
+      "slide-deck",
+      "document-report",
+      "single-frame"
+    ],
+    "domainIds": [
+      "fintech",
+      "saas",
+      "ecommerce",
+      "social",
+      "content",
+      "productivity",
+      "health",
+      "education",
+      "developer-tools",
+      "marketplace",
+      "booking",
+      "ai-assistant"
+    ],
+    "pageIds": [
+      "dashboard",
+      "form",
+      "landing",
+      "detail",
+      "list",
+      "settings",
+      "onboarding"
+    ],
+    "profileIds": [
+      "swiss",
+      "editorial",
+      "technical",
+      "warm-dtc",
+      "minimal-mono",
+      "brutalist-lite"
+    ]
   },
   "components": [
     {

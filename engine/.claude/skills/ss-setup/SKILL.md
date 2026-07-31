@@ -8,8 +8,8 @@ allowed-tools: Read, Write, Edit, Grep, Glob, Bash, WebFetch
 # StyleSeed setup
 
 StyleSeed setup chooses a **design method for the result**, not a favorite brand to imitate.
-Read `PRODUCT-PRINCIPLES.md`, `RULESETS.md`, `APP-PLAYBOOKS.md`, `PAGE-TYPES.md`, and
-`PRESETS.md` before recommending values.
+Use `/ss-resolve --list` (Claude Code) or `$ss-resolve --list` (Codex) to inspect the supported
+grammar, adapter, domain, page, and profile IDs without loading the full handbook.
 
 ## When not to use
 
@@ -96,15 +96,25 @@ than treating the lock as an exemption.
 
 ### 7. Scaffold and prove
 
-If the user asked for a first screen, compose core × grammar × domain × page × profile × lock,
-build it, run `/ss-score` to the gate floor, and finish with `/ss-verify` when renderable. If
-visual rendering is unavailable, disclose that it was skipped.
+Compile the selected method before code:
+
+```bash
+node <installed-ss-resolve>/scripts/resolve-context.mjs \
+  --project-root . --from-lock STYLESEED.md --agent claude
+```
+
+Use `--agent codex` in Codex. The resolver writes `.styleseed/effective-rules.md` and a
+hash-verifiable `.styleseed/manifest.json`. Read the effective bundle, not `llms-full.txt`.
+
+If the user asked for a first screen, build from that bundle, run `/ss-score` to the gate floor,
+and finish with `/ss-verify` when renderable. If visual rendering is unavailable, disclose that
+it was skipped.
 
 ## Completion report
 
 Report the selected grammar and why, page/domain intersection, optional profile, lock path,
-files changed, score, and visual verification status. Mention `/ss-reference` as the path for
-future references that need their own grammar.
+compiled bundle and manifest paths, files changed, score, and visual verification status.
+Mention `/ss-reference` as the path for future references that need their own grammar.
 
 ## Rules
 

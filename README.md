@@ -28,7 +28,7 @@
 **2. Paste this message:**
 
 ```text
-Install StyleSeed with `npx skills add bitjaru/styleseed`, then set it up for this project. Ask what I am building and only the design choices you need. Save approved decisions to STYLESEED.md, choose the right output grammar or derive one from my references, and build with one clear focal point. Score the result to at least 80, then render and visually verify it before showing me. Use `/ss-*` in Claude Code or `$ss-*` in Codex; in other agents, use the installed skill picker.
+Install StyleSeed with `npx skills add bitjaru/styleseed`, then set it up for this project. Ask what I am building and only the design choices you need. Save approved decisions to STYLESEED.md, choose the right output grammar or derive one from my references, then run `/ss-resolve` in Claude Code or `$ss-resolve` in Codex and build from `.styleseed/effective-rules.md`. Build with one clear focal point, score the result to at least 80, then render and visually verify it before showing me. In other agents, use the installed skill picker.
 ```
 
 **3. Approve the install, answer the short setup questions, and describe what you want to build.**
@@ -77,7 +77,7 @@ The "AI-generated look" isn't bad luck — it's a list of nameable tells. StyleS
 [![▶ Motion Gallery](https://img.shields.io/badge/▶_Motion_Gallery-Live-8B5CF6?style=for-the-badge&logoColor=white)](https://styleseed-demo.vercel.app/motion)
 
 ![74 design rules](https://badgen.net/badge/rules/74/8B5CF6)
-![20 skills](https://badgen.net/badge/skills/20/6C5CE7)
+![21 skills](https://badgen.net/badge/skills/21/6C5CE7)
 ![8 output grammars](https://badgen.net/badge/grammars/8/2563EB)
 ![5 adapters](https://badgen.net/badge/adapters/5/0F766E)
 ![7 brand skins](https://badgen.net/badge/skins/7/6C5CE7)
@@ -94,6 +94,8 @@ The "AI-generated look" isn't bad luck — it's a list of nameable tells. StyleS
 commerce, institutional, marketing, or sequential story &nbsp;·&nbsp;
 **References become rules** — `/ss-reference` compiles screenshots, URLs, Figma, or an existing
 UI into an evidence-backed project grammar &nbsp;·&nbsp;
+**Only the context you need** — `/ss-resolve` compiles the chosen method into a small,
+hash-verifiable project bundle &nbsp;·&nbsp;
 **Beyond web UI** — adapters for product UI, social carousels, decks, documents, and graphics &nbsp;·&nbsp;
 **Fights the AI tells** — the default indigo, the icon-chip cliché, template layouts, rainbow lists &nbsp;·&nbsp;
 **Auxiliary proof gates** — code score + rendered pixel verification before you see it &nbsp;·&nbsp;
@@ -125,7 +127,7 @@ UI into an evidence-backed project grammar &nbsp;·&nbsp;
 
 <br />
 
-[Easy Start](#easy-start-30-seconds) · [Claude Code UI guide](https://styleseed-demo.vercel.app/claude-code-ui-design) · [Codex UI guide](https://styleseed-demo.vercel.app/codex-ui-design) · [Architecture](engine/ARCHITECTURE.md) · [Engine + Skins](#how-it-works-engine--skins) · [Motion](#named-motion-system) · [Skills](#20-ai-powered-skills) · [Wiki](../../wiki) · [한국어](README-KR.md)
+[Easy Start](#easy-start-30-seconds) · [Claude Code UI guide](https://styleseed-demo.vercel.app/claude-code-ui-design) · [Codex UI guide](https://styleseed-demo.vercel.app/codex-ui-design) · [Architecture](engine/ARCHITECTURE.md) · [Engine + Skins](#how-it-works-engine--skins) · [Motion](#named-motion-system) · [Skills](#21-ai-powered-skills) · [Wiki](../../wiki) · [한국어](README-KR.md)
 
 <br />
 
@@ -135,7 +137,14 @@ UI into an evidence-backed project grammar &nbsp;·&nbsp;
 
 ## What happens after Easy Start
 
-**Why the prompt installs first:** the quality gate is the step that makes output stop looking generic — but the `ss-score` and `ss-build` skills can only *run* if they are installed. Point an agent at the rules-URL alone and the "gate" degrades to an honor-system self-check it usually skips. Installing makes the loop real: the lock persists in `STYLESEED.md` (no drift), and the gate actually scores and fixes before you see anything. Can't install? The URL still teaches the rules — just weaker. Works with **Claude Code (`CLAUDE.md`), Codex / Amp / Gemini CLI (`AGENTS.md`), and Cursor (`.cursorrules`)** — StyleSeed ships all three. (Planning first is what keeps the result from looking random — see [Troubleshooting](#troubleshooting--i-applied-styleseed-but-the-ui-still-looks-bad).)
+**Why the prompt installs first:** the context compiler and quality gates can only *run* when the
+skills are installed. Installing turns `STYLESEED.md` into a small source-hashed rule bundle,
+then actually scores and fixes the result before you see it. Without installation,
+[`llms.txt`](https://styleseed-demo.vercel.app/llms.txt) still tells any agent how StyleSeed is
+structured and where its machine-readable catalog lives, but compilation and gates become a
+weaker manual path. Works with **Claude Code (`CLAUDE.md`), Codex / Amp / Gemini CLI
+(`AGENTS.md`), and Cursor (`.cursorrules`)** — StyleSeed ships all three. (Planning first is what
+keeps the result from looking random — see [Troubleshooting](#troubleshooting--i-applied-styleseed-but-the-ui-still-looks-bad).)
 
 **What your agent actually does with StyleSeed loaded:**
 
@@ -151,16 +160,24 @@ agent  ▸  ✓ 88/100 — one accent, grey normal states, real empty/error stat
 
 **The `STYLESEED.md` lock is the anti-drift mechanic.** Your skin, key color, radius, and motion get written once and the rules make every agent re-read and obey them on *every* prompt — so the design stops being different each session. The Quality Gate then self-reviews and fixes the UI (rainbow lists, two accents, missing states) *before* you ever see it — and it can [retrofit an old generic build](#already-built-something-generic-retrofit-it) too.
 
-> **The rules are the product — and they need zero install or permissions.** They're
-> plain markdown (`CLAUDE.md` / `AGENTS.md` / `DESIGN-LANGUAGE.md`), so the prompt above —
-> or just copying those files in — is 90% of StyleSeed with nothing to approve.
+> **The method stays open and portable.** The sources are plain markdown; installation adds the
+> deterministic context compiler, manifest, and executable gates. If installation is unavailable,
+> [`llms.txt`](https://styleseed-demo.vercel.app/llms.txt) gives any agent the portable routing
+> contract, but it cannot provide the same reproducible local compile by itself.
 
-**Want the 20 `ss-*` agent skills too** (optional automation: grammar compiler, setup, build, review, score)?
+**Want the 21 `ss-*` agent skills too** (optional automation: context resolver, grammar compiler, setup, build, review, score)?
 
 ```bash
 npx skills add bitjaru/styleseed
 ```
-Installs all 20 skills into Claude Code, Codex, Cursor, Gemini CLI, Amp and more. Then run `/ss-setup` in Claude Code or `$ss-setup` in Codex (you can also choose it from Codex's `/skills` picker). Your agent may ask you to approve tools on first use. No install possible? The rules alone still do the core work.
+Installs all 21 canonical `ss-*` workflow skills into Claude Code, Codex, Cursor, Gemini CLI,
+Amp and more (the repository also exposes a standalone lightweight review skill). Then run
+`/ss-setup` → `/ss-resolve` in Claude Code or `$ss-setup` → `$ss-resolve` in Codex (you can
+also choose them from Codex's `/skills` picker). The resolver writes a targeted
+`.styleseed/effective-rules.md` bundle plus a source-hash manifest, so the agent does not need
+the 220KB full handbook for every task. Your agent may ask you to approve tools on first use.
+No install possible? Read [`llms.txt`](https://styleseed-demo.vercel.app/llms.txt) for the
+portable routing contract.
 
 **Your agent, its exact path:**
 
@@ -395,7 +412,9 @@ came out polished because it was built with the full rules in context and iterat
 1. **Plan first.** In Claude Code press <kbd>Shift</kbd>+<kbd>Tab</kbd> to enter **Plan Mode**, then decide the design **one step at a time, with full context**, before any code is written. This is the single biggest fix.
 2. **Select the output grammar, adapter, and primary action color.** Additional hues need stable
    semantic, categorical, editorial, or brand roles. No role = random color drift.
-3. **Point it at the full rules,** not the summary: `read https://styleseed-demo.vercel.app/llms-full.txt` (the short `llms.txt` is an index, not the 74 rules).
+3. **Compile only the selected rules:** run `/ss-resolve` or `$ss-resolve`, then make the agent
+   read `.styleseed/effective-rules.md`. The manifest pins selections and hashes. Use
+   `llms-full.txt` only to debug an unresolved source ambiguity.
 4. **Lock the decisions in a file.** Run `/ss-setup` (or just ask the agent to "write a `STYLESEED.md` design lock"). It records your skin, key color, radius, and motion in `STYLESEED.md` at the repo root, and the rules tell the agent to **obey it on every prompt** — so the design stops being "different every time." This is the single strongest fix for inconsistency. (Also install `CLAUDE.md` / `AGENTS.md` / `.cursorrules` so the rules themselves are re-read every prompt.)
 5. **Be specific:** *"Build a dashboard in the Linear skin, one blue accent, Snap motion, following StyleSeed's rules"* beats *"build a dashboard."*
 6. **Check & iterate.** Run `/ss-review` or `/ss-score`, or tell it: *"self-check the effective grammar — coherent geometry, stable color roles, real empty/loading/error states — and fix violations."* If it drifts: *"re-read CLAUDE.md and fix the coherence violations."*
@@ -425,7 +444,7 @@ stop looking AI-made.
 ┌─────────────────────────────────────────────────┐
 │  StyleSeed Engine (brand-agnostic)              │
 │                                                 │
-│  74 rules · 8 grammars · 5 adapters · 20 skills │
+│  74 rules · 8 grammars · 5 adapters · 21 skills │
 │  Layout · Composition · Typography · UX · A11y  │
 └──────────────────────┬──────────────────────────┘
                        │
@@ -441,7 +460,7 @@ stop looking AI-made.
 - 74 visual design rules (layout, composition, rhythm, forbidden patterns)
 - 48 React components (32 primitives + 16 patterns)
 - A named motion system (5 seeds + a copy-paste keyword library)
-- 20 cross-agent skills (reference compiler, setup, UI, motion, UX, accessibility)
+- 21 cross-agent skills (context compiler, reference compiler, setup, UI, motion, UX, accessibility)
 - Works with ANY color palette
 
 **Skin** = what your app looks like (visual identity)
@@ -547,11 +566,12 @@ engine/
 └── scaffold/                 # Vite 6 + React 18 starter
 ```
 
-## 20 AI-Powered Skills
+## 21 AI-Powered Skills
 
 ### Setup
 | Skill | What It Does |
 |-------|-------------|
+| `/ss-resolve` | **Compile only the active context** — lock → grammar + adapter + domain/page + profile + craft baseline → small bundle + source-hash manifest |
 | `/ss-build` | **The whole loop, enforced** — lock the look → build → score → fix to ≥80 → *then* show. Use this instead of building UI free-hand |
 | `/ss-reference` | **Compile references into a project grammar** — evidence, confidence, semantic tokens, anti-patterns, and a transfer validation artifact |
 | `/ss-dial` | Turn one axis up/down deterministically — `density denser`, `radius sharper`, `color more-muted`, `weight bolder`. Moves many tokens together, keeps the guardrails, re-gates |
@@ -631,7 +651,7 @@ React 18 · TypeScript · Tailwind CSS v4 · Radix UI · Vite 6 · Lucide Icons 
 |---|---|---|---|---|---|
 | Components | ✅ 48 | ✅ 50+ | ✅ | ✅ | ❌ |
 | Design **judgment** (when to use what) | ✅ 74 rules | ❌ | ❌ | Partial | ❌ |
-| Claude Code / Cursor integration | ✅ 20 skills | ❌ | ❌ | ❌ | — |
+| Claude Code / Cursor integration | ✅ 21 skills | ❌ | ❌ | ❌ | — |
 | Brand skins (Toss, Stripe, Linear...) | ✅ | ❌ | ❌ | ❌ | ❌ |
 | Price | Free (MIT) | Free | $299+ | Free | — |
 | Works *with* AI coding tools | ✅ | Indirect | Indirect | Indirect | — |

@@ -19,12 +19,13 @@ you can track UI quality like you track test coverage.
 
 ## Step 0 — Resolve the effective rule set
 
-Before scoring, read `PRODUCT-PRINCIPLES.md`, `RULESETS.md`, `ADAPTERS.md`, `PRESETS.md`, and `STYLESEED.md`.
-If the lock selects `reference:<slug>`, read its project-local `RULESET.md` and evidence/checks.
+Before scoring, read `.styleseed/effective-rules.md` and `.styleseed/manifest.json`. If they are
+missing or `ss-resolve --check` reports drift, invoke `/ss-resolve` or `$ss-resolve` from the
+project lock first. Only fall back to the source handbook when no project lock exists.
 
 Score in authority order: core invariants first, then the exact output grammar, domain/page,
 optional aesthetic profile, and bounded lock values. The lock cannot waive an invariant.
-Unknown values fall back to the nearest built-in grammar; do not invent an exception.
+Unknown values are a resolver error; do not invent an exception.
 
 The output must name the effective rule set, for example:
 

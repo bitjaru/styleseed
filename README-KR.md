@@ -88,7 +88,7 @@ StyleSeed가 디자인 락, 빌드, 코드 검사, 실제 화면 검증을 진�
 
 <br /><br />
 
-[쉬운 시작](#쉬운-시작-30초) · [상세 사용법](#상세-사용법) · [엔진 구조](engine/ARCHITECTURE.md) · [왜-필요한가](#왜-필요한가) · [모션](#네임드-모션-시스템) · [AI-스킬-20개](#ai-스킬-20개) · [Wiki](../../wiki)
+[쉬운 시작](#쉬운-시작-30초) · [상세 사용법](#상세-사용법) · [엔진 구조](engine/ARCHITECTURE.md) · [왜-필요한가](#왜-필요한가) · [모션](#네임드-모션-시스템) · [AI-스킬-21개](#ai-스킬-21개) · [Wiki](../../wiki)
 
 <br />
 
@@ -116,7 +116,7 @@ StyleSeed가 디자인 락, 빌드, 코드 검사, 실제 화면 검증을 진�
 디자인 데이터는 물감이에요. 디자인 판단은 물감을 어디에 칠해야 할지 아는 겁니다.
 
 StyleSeed는 **디자인 방법 엔진**입니다. 74개 시각 룰, 8개 출력 문법, 5개 서피스
-어댑터, 레퍼런스 컴파일러, 48개 컴포넌트, 20개 에이전트 스킬이 LLM에게 데이터가
+어댑터, 컨텍스트·레퍼런스 컴파일러, 48개 컴포넌트, 21개 `ss-*` 워크플로우 스킬이 LLM에게 데이터가
 아니라 판단을 가르칩니다:
 
 ```
@@ -128,7 +128,7 @@ StyleSeed는 **디자인 방법 엔진**입니다. 74개 시각 룰, 8개 출력
 "카드와 배경의 분리가 어떤 테두리보다 중요하다"
 ```
 
-이런 룰은 아무도 안 써놓습니다. 프로 디자이너의 수년 경험에 녹아있어서 외부인한테 안 보이고, 그래서 LLM한테도 안 보입니다. StyleSeed는 이걸 써놓고, 6개 카테고리 (컬러 규율, 공간 리듬, 정보 위계, 그림자/elevation, 컴포넌트 변주, 모션/피드백) 로 정리해서 마크다운 한 파일로 Claude한테 건네줍니다.
+이런 룰은 아무도 안 써놓습니다. 프로 디자이너의 수년 경험에 녹아있어서 외부인한테 안 보이고, 그래서 LLM한테도 안 보입니다. StyleSeed는 이 판단을 문법·어댑터·도메인·페이지·프로필로 나누고, 프로젝트가 선택한 부분만 10–20KB 규칙 번들로 컴파일해 Claude Code와 Codex에 건넵니다. 전체 핸드북을 매번 프롬프트에 붓지 않습니다.
 
 핵심 판단은 **브랜드 독립적**이지만 모든 결과물에 같은 배치를 강제하지 않습니다.
 `Core judgment × Output grammar × Surface adapter × Domain/Page × optional Style profile`로
@@ -174,12 +174,18 @@ Claude Code한테 "대시보드 만들어줘" 하면 보통 이런 결과가 나
 Claude Code·Codex·Cursor 등 아무 AI 에이전트에 이 한 문장을 붙여넣으면 됩니다 — **설치 + 전체 루프를 한 번에**:
 
 ```
-Install StyleSeed so its checks actually run: `npx skills add bitjaru/styleseed` (if you can't, read https://styleseed-demo.vercel.app/llms-full.txt instead). Then use it for every visual artifact in this project. First, choose the output grammar and surface adapter, then lock the project’s color roles, type, geometry, and motion with me in STYLESEED.md so they don't drift. Build with ONE focal point and only stable, named color roles. Before showing me anything, run the quality gate (`/ss-score` in Claude Code, `$ss-score` in Codex) to ≥ 80 and fix what fails. For a full artifact, run `/ss-build` in Claude Code or `$ss-build` in Codex — it enforces this whole loop.
+Install StyleSeed so its checks actually run: `npx skills add bitjaru/styleseed` (if you can't, read https://styleseed-demo.vercel.app/llms.txt instead). Then use it for every visual artifact in this project. First, choose the output grammar and surface adapter, lock the project’s color roles, type, geometry, and motion with me in STYLESEED.md, then run `/ss-resolve` in Claude Code or `$ss-resolve` in Codex and build from `.styleseed/effective-rules.md`. Build with ONE focal point and only stable, named color roles. Before showing me anything, run the quality gate (`/ss-score` or `$ss-score`) to ≥ 80 and fix what fails, then render and inspect with `/ss-verify` or `$ss-verify`.
 ```
 
-> 💡 **왜 설치부터 시키나:** 결과가 "AI스러움"을 벗는 결정적 단계는 **퀄리티 게이트**인데, `ss-score`·`ss-build`는 **스킬이 설치돼 있어야 실제로 돌아갑니다.** URL만 읽히면 게이트가 "자가채점(대충 넘어감)"으로 전락해요. 설치하면 락이 `STYLESEED.md`에 **저장돼 안 흔들리고**, 게이트가 진짜로 채점·수정한 뒤에 보여줍니다. 설치가 안 되면 URL로도 규칙은 배우지만 더 약합니다.
+> 💡 **왜 설치부터 시키나:** `ss-resolve` 컨텍스트 컴파일러와 `ss-score`·`ss-build`
+> 게이트는 **스킬이 설치돼 있어야 실제로 돌아갑니다.** 설치하면 `STYLESEED.md`가 작은
+> 출처 해시 규칙 번들로 컴파일되고, 게이트가 진짜로 채점·수정합니다. 설치가 안 되면
+> `llms.txt`의 포터블 라우팅과 공개 카탈로그를 쓸 수 있지만 컴파일·게이트는 수동 경로라
+> 재현성이 더 약합니다.
 
-설치 후 Claude Code에서는 `/ss-build`, Codex에서는 `$ss-build`를 실행하세요. Codex의 `/skills` 목록에서도 선택할 수 있습니다.
+설치 후 Claude Code에서는 `/ss-resolve` → `/ss-build`, Codex에서는 `$ss-resolve` →
+`$ss-build`를 실행하세요. 선택된 규칙만 작은 번들로 컴파일되고 출처 해시가
+`.styleseed/manifest.json`에 남습니다. Codex의 `/skills` 목록에서도 선택할 수 있습니다.
 
 ### 방법 1: 인터랙티브 설정 (추천)
 
@@ -270,7 +276,7 @@ AI 코딩 도구는 기능적인 UI를 잘 만듭니다. 하지만 **기능적 �
 | **CSS 테마** | Tailwind CSS v4 구현체 |
 | **컴포넌트** | UI 프리미티브 32개 + 패턴 컴포넌트 16개 |
 | **모션** | 네임드 시드 5종 + 복사-붙여넣기 키워드 라이브러리 |
-| **AI 스킬** | Claude Code·Codex 공용 워크플로우 20개 |
+| **AI 스킬** | Claude Code·Codex 공용 워크플로우 21개 |
 
 ### 이런 규칙이 차이를 만듭니다
 
@@ -296,14 +302,15 @@ AI 코딩 도구는 기능적인 UI를 잘 만듭니다. 하지만 **기능적 �
 
 이건 수십 개 규칙 중 6개. [전체 디자인 언어 보기 →](engine/DESIGN-LANGUAGE.md)
 
-## AI 스킬 20개
+## AI 스킬 21개
 
-스킬을 복사하면 **에이전트 스킬 20개**를 쓸 수 있습니다 — 문법 컴파일 · 빌드 · 스타일 · UI · 모션 · UX:
+스킬을 복사하면 **에이전트 스킬 21개**를 쓸 수 있습니다 — 컨텍스트 컴파일 · 문법 컴파일 · 빌드 · 스타일 · UI · 모션 · UX:
 
 ### 빌드 & 스타일 — 데모처럼 만들기
 
 | 스킬 | 기능 |
 |------|------|
+| `/ss-resolve` | STYLESEED.md의 선택값만 10–20KB 규칙 번들과 출처 해시 manifest로 컴파일 |
 | `/ss-build` | **화면 하나를 데모 방식 그대로** — 락 → 빌드 → 게이트(≥80) → 수정 후에만 보여줌. UI는 프리핸드 말고 이걸로 |
 | `/ss-reference` | 이미지·URL·Figma·기존 UI를 근거·신뢰도·토큰·금지규칙이 있는 프로젝트 전용 룰셋으로 컴파일 |
 | `/ss-setup` | 출력 문법·서피스 어댑터·도메인·아티팩트와 제한된 브랜드 값을 설정 |
@@ -366,7 +373,7 @@ AI 코딩 도구는 기능적인 UI를 잘 만듭니다. 하지만 **기능적 �
 | **역할** | 브랜드 토큰 (피부) | 디자인 감각 (뇌) |
 | **AI에게 가르치는 것** | 어떤 색/폰트를 쓸지 | 어떻게 디자이너처럼 생각할지 |
 | **컴포넌트** | 없음 | 48개 |
-| **AI 스킬** | 없음 | 20개 |
+| **AI 스킬** | 없음 | 21개 |
 | **레이아웃 규칙** | 없음 | 섹션 타입, 정보 피라미드, 시각적 리듬 |
 | **금지 패턴** | 없음 | 수십 개의 "이러면 안 됨" 규칙 |
 
@@ -413,7 +420,7 @@ import { spring } from "@engine/motion";
 |---|---|---|---|---|---|
 | 컴포넌트 | ✅ 48개 | ✅ 50+ | ✅ | ✅ | ❌ |
 | 디자인 **판단 기준** (언제 뭘 쓸지) | ✅ 74개 룰 | ❌ | ❌ | 일부 | ❌ |
-| Claude Code / Cursor 통합 | ✅ 20개 스킬 | ❌ | ❌ | ❌ | — |
+| Claude Code / Cursor 통합 | ✅ 21개 스킬 | ❌ | ❌ | ❌ | — |
 | 브랜드 스킨 (Toss, Stripe, Linear...) | ✅ | ❌ | ❌ | ❌ | ❌ |
 | 가격 | 무료 (MIT) | 무료 | $299+ | 무료 | — |
 | AI 코딩툴과 *함께* 동작 | ✅ | 간접 | 간접 | 간접 | — |

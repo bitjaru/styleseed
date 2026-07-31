@@ -10,7 +10,7 @@ import { GithubStarCount } from "./github-star-count";
 
 const STATS = [
   { value: "74", label: "design rules" },
-  { value: "20", label: "AI skills" },
+  { value: "21", label: "AI skills" },
   { value: "8", label: "output grammars" },
   { value: "5", label: "surface adapters" },
 ];

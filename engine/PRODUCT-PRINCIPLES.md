@@ -19,6 +19,7 @@ Core judgment
   × one surface adapter from ADAPTERS.md
   × one domain playbook from APP-PLAYBOOKS.md
   × one page type from PAGE-TYPES.md
+  × one brand recipe from BRAND-RECIPES.md
   × optional aesthetic profile from PRESETS.md
   × bounded project tokens from STYLESEED.md
 = the rules for this screen
@@ -33,10 +34,12 @@ When instructions disagree, use this order:
    project-local grammar compiled by `REFERENCE-COMPILER.md`.
 3. **Surface adapter** — the renderer contract and physical constraints in `ADAPTERS.md`.
 4. **Domain playbook** and **page/artifact type**.
-5. **Aesthetic profile** — an optional coordinated restyle from `PRESETS.md`.
-6. **Design lock** — records selections and bounded project parameters.
-7. **Skins and components** — implementation material, not sources of judgment.
-8. **Score and visual verification** — evidence that the method was applied.
+5. **Brand recipe** — a reusable morphology and component-selection contract from
+   `BRAND-RECIPES.md`.
+6. **Aesthetic profile** — an optional coordinated restyle from `PRESETS.md`.
+7. **Design lock** — records selections and bounded project parameters.
+8. **Skins and components** — implementation material, not sources of judgment.
+9. **Score and visual verification** — evidence that the method was applied.
 
 `STYLESEED.md` is persistence, not permission. An arbitrary value in the lock never turns
 a violation into a sound design decision. Unknown values fall back to the nearest maintained
@@ -66,7 +69,7 @@ These apply to every grammar, profile, domain, page, skin, and agent:
 The lock may select only inputs the engine understands:
 
 - domain, surface adapter, page/artifact type, and one output grammar;
-- one optional aesthetic profile and one skin or semantic token set;
+- one maintained brand recipe, one optional aesthetic profile, and one skin or semantic token set;
 - primary action/accent, type pairing, density, radius, elevation, imagery, and motion values
   inside the selected grammar's allowed ranges;
 - one product-specific signature move that still obeys the invariants;

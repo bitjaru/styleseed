@@ -9,7 +9,7 @@ allowed-tools: Read, Grep, Glob, Bash
 
 Read `.styleseed/effective-rules.md` and `.styleseed/manifest.json`; invoke `/ss-resolve` or
 `$ss-resolve` first when they are missing or stale. Lint detects deterministic drift; it must
-not flag an exact grammar/profile/adapter contract as a violation or let an arbitrary lock
+not flag an exact grammar/recipe/profile/adapter contract as a violation or let an arbitrary lock
 value create an exception.
 
 ## When NOT to use
@@ -85,6 +85,11 @@ grep -n 'className={`' [file]
 ```
 **Violation:** Template literal className
 **Fix:** Use `cn()` for all className composition
+
+### 9. Universal Soft-card Drift
+Search for repeated `rounded-2xl`, `shadow-[var(--shadow-card)]`, and `mx-6` in pattern files.
+Flag the combination when the selected recipe is not `calm-consumer`.
+**Fix:** use `ss-pattern-surface`, `ss-page-gutter`, and the other recipe-aware helper classes.
 
 ## Output Format
 

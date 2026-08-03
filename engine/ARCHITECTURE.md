@@ -19,6 +19,7 @@ flowchart LR
   P[Core judgment<br/>non-negotiable] --> F
   S[Surface adapter<br/>canvas · renderer · export] --> F
   X[Domain + page type] --> F
+  Z[Brand recipe<br/>morphology · components] --> F
   Y[Optional style profile] --> F
   L[STYLESEED.md<br/>bounded selections] --> F
   F --> K[Effective rule bundle<br/>manifest + source hashes]
@@ -39,6 +40,7 @@ flowchart LR
 | Surface adapter | Translate method into an artifact/render contract | canvas, safe zones, export, surface QA | visual authority or product judgment |
 | Reference compiler | Derive a local grammar from evidence | local rules with confidence | global built-ins or protected assets |
 | Domain + page playbooks | Contextual composition bias | content/order/detail decisions | grammar identity |
+| Brand recipe | Apply reusable morphology and component selection | geometry, containment, controls, collections | grammar job, protected brand assets, or accessibility |
 | Aesthetic profile | Coordinated look adjustment | radius, density, tone, motion within bounds | task structure |
 | Design lock | Persist selected values | known enums and project tokens | invent exceptions or waive rules |
 | Context compiler | Emit the selected method with provenance | deterministic bundle + manifest | silently invent or merge unknown IDs |
@@ -72,6 +74,7 @@ effectiveRules, manifest = compile(
   surfaceAdapter,
   domainPlaybook,
   pageType,
+  brandRecipe,
   optionalStyleProfile,
   boundedDesignLock
 )
@@ -83,7 +86,7 @@ manifest records the exact selection, source hashes, bundle hash, and byte size;
 fails when the stored bundle no longer matches its sources or lock.
 
 The design lock stores selections; it is not executable policy. Unknown grammar, adapter,
-domain, page, or profile IDs are rejected. Project-local reference grammars require a maintained
+domain, page, recipe, or profile IDs are rejected. Project-local reference grammars require a maintained
 built-in fallback.
 
 ## Non-web outputs
@@ -109,5 +112,7 @@ Both gates return to the build loop. Neither gate is the design engine; the comp
 
 - Add a new built-in grammar only after the promotion rule in `RULESETS.md` passes.
 - Use `/ss-reference` for project-specific or emerging languages.
+- Add a brand recipe only when reusable morphology is supported by independent sources and
+  transfer tests; never add a company clone.
 - Add a new aesthetic profile only when it is a full coordinated axis contract, not a mood word.
 - Keep components and skins downstream. They implement a decision; they do not decide.

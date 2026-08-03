@@ -2,7 +2,7 @@
 
 This is the small, task-independent craft layer used by the Context Compiler. It preserves
 the highest-leverage rules without injecting the full design handbook into every agent turn.
-The selected output grammar, adapter, domain, page type, profile, and project lock narrow these
+The selected output grammar, adapter, domain, page type, brand recipe, profile, and project lock narrow these
 defaults. `PRODUCT-PRINCIPLES.md` remains the higher authority.
 
 ## Coherence

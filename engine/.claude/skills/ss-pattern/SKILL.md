@@ -1,6 +1,6 @@
 ---
 name: ss-pattern
-description: Generate a composed UI pattern (card layout, list, form section, grid, etc.) using design system primitives
+description: Generate a composed UI pattern from the active StyleSeed grammar and brand recipe using existing primitives.
 argument-hint: "[pattern-type] [description]"
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash
 ---
@@ -20,12 +20,12 @@ Description: $ARGUMENTS
 ## Available Pattern Types
 
 ### Layout Patterns
-- **card-section**: Card with title + content inside page section (`mx-6`)
-- **grid-2col**: 2-column grid of cards (`grid grid-cols-2 gap-4 px-6`)
-- **scroll-horizontal**: Horizontal scrolling card list (`flex gap-3 overflow-x-auto scrollbar-hide`)
-- **list-section**: Vertical list of items inside a card
-- **form-section**: Form with labeled inputs in a card
-- **stat-grid**: Grid of StatCard components
+- **focal-summary**: one dominant state, briefing, artifact, or decision
+- **panel-section**: aligned workbench panel with related controls and evidence
+- **flat-step**: public-service task step with explicit labels, help, and recovery
+- **reading-section**: bounded prose, figure, caption, quote, or source group without app cards
+- **resource-collection**: rows, table, grid, or sequence selected by the recipe and user job
+- **canvas-tools**: focused artifact/canvas with quiet supporting tool groups
 
 ### Data Display Patterns
 - **data-table**: Table with header and rows
@@ -40,20 +40,24 @@ Description: $ARGUMENTS
 
 ## Instructions
 
-1. Read the design system reference:
-   - `CLAUDE.md` for conventions
+1. Read `.styleseed/effective-rules.md` and `.styleseed/manifest.json`. Resolve first when stale.
+   Then inspect:
    - `components/ui/` for available primitives
    - `components/patterns/` for existing patterns
 
 2. Compose the pattern from existing components — DO NOT recreate primitives.
 
-3. Follow the design system layout rules:
-   - Cards: `bg-card rounded-2xl p-6 shadow-[var(--shadow-card)]`
-   - Section wrapper: `mx-6` for horizontal margin
-   - Section title: `text-foreground font-bold text-[18px] mb-4`
-   - List gap: `space-y-3`
-   - Grid gap: `gap-4`
+3. Follow the selected recipe rather than one default card language:
+   - Use `ss-pattern-surface` only when containment is earned.
+   - Use `ss-page-gutter` or `ss-page-padding` instead of hardcoded universal gutters.
+   - Use `ss-pattern-inset`, `ss-pattern-control`, and `ss-pattern-icon` for recipe-aware shape.
+   - Public-service and editorial recipes usually prefer flat flow, rules, and whitespace.
+   - Enterprise/developer recipes prefer aligned panels, rows, tables, and compact controls.
+   - Calm-consumer may use soft groups; expressive-brand must add a product-specific composition.
 
 4. Use semantic tokens for all visual properties.
 
 5. Make the pattern a reusable component with props for dynamic content.
+
+6. Run `/ss-score` and verify that the pattern has a functional relationship to its page
+   instead of being an isolated pretty card.

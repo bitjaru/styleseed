@@ -20,8 +20,8 @@ function SegmentedControl({
     <div
       data-slot="segmented-control"
       className={cn(
-        "flex items-center bg-surface-muted w-full",
-        size === "sm" ? "p-0.5 gap-0.5 rounded-lg" : "p-1 gap-1 rounded-xl",
+        "ss-pattern-control flex items-center bg-surface-muted w-full",
+        size === "sm" ? "p-0.5 gap-0.5" : "p-1 gap-1",
         className,
       )}
       {...props}
@@ -33,10 +33,10 @@ function SegmentedControl({
             key={index}
             onClick={() => onChange?.(index)}
             className={cn(
-              "flex-1 flex items-center justify-center font-medium transition-all duration-150",
+              "ss-pattern-control flex-1 flex items-center justify-center font-medium transition-all duration-150",
               size === "sm"
-                ? "h-7 text-[12px] rounded-md"
-                : "h-9 text-[14px] rounded-lg",
+                ? "h-7 text-[12px]"
+                : "h-9 text-[14px]",
               isActive
                 ? "bg-card text-text-primary shadow-[var(--shadow-card)]"
                 : "bg-transparent text-text-disabled",

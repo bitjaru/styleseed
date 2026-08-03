@@ -79,7 +79,7 @@ Compare:
 - DESIGN-LANGUAGE.md rule count + Table of Contents
 - Skills present in `.claude/skills/` vs upstream (don't hardcode a count — list the diff)
 - Whether `CLAUDE.md`, `AGENTS.md`, and `.cursorrules` exist (ship all three)
-- New engine docs (VISUAL-CRAFT.md, APP-PLAYBOOKS.md, PAGE-TYPES.md)
+- New engine docs (VISUAL-CRAFT.md, APP-PLAYBOOKS.md, PAGE-TYPES.md, BRAND-RECIPES.md)
 
 ### Step 3: Report & Ask
 

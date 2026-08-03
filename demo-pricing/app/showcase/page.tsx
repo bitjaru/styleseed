@@ -134,6 +134,28 @@ export default function ShowcasePage() {
       <div className="mx-auto max-w-6xl px-6 py-14">
         <ShowcaseBrowser entries={entries} grammars={OUTPUT_GRAMMARS} />
 
+        <section className="mt-16 grid gap-8 border border-neutral-200 bg-neutral-50 p-8 lg:grid-cols-[1fr_auto] lg:items-center">
+          <div>
+            <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-fuchsia-700">
+              New morphology layer
+            </p>
+            <h2 className="mt-2 text-3xl font-bold tracking-tight">
+              A grammar no longer implies one visual shape.
+            </h2>
+            <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-neutral-600">
+              Nine brand recipes now change containment, geometry, controls, collections,
+              density, and motion independently from the token skin. Compare the same module
+              across every recipe before choosing one for your lock.
+            </p>
+          </div>
+          <Link
+            href="/recipes"
+            className="inline-flex items-center justify-center gap-1.5 bg-neutral-950 px-5 py-3 text-sm font-bold text-white hover:bg-black"
+          >
+            Compare recipes <ArrowRight size={14} />
+          </Link>
+        </section>
+
         <section className="mt-20 border-t border-neutral-200 pt-12" aria-labelledby="adapter-coverage">
           <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr]">
             <div>

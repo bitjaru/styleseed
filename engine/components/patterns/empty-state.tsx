@@ -27,7 +27,7 @@ function EmptyState({
       {...props}
     >
       {Icon && (
-        <div className="size-8 rounded-xl bg-surface-muted flex items-center justify-center mb-3">
+        <div className="size-8 ss-pattern-icon flex items-center justify-center mb-3">
           <Icon className="size-4 text-text-tertiary" strokeWidth={1.5} />
         </div>
       )}

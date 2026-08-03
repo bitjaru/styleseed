@@ -23,11 +23,11 @@ Review the file: **$ARGUMENTS**
 
 ## Checklist
 
-### 1. Design Token Compliance
+### 1. Design Token and Recipe Compliance
 - [ ] No hardcoded hex colors (use semantic tokens: `text-foreground`, `bg-brand`, etc.)
 - [ ] No hardcoded px spacing in Tailwind (use `p-6` not `p-[24px]`)
-- [ ] Shadows use CSS variables (`shadow-[var(--shadow-card)]`)
-- [ ] Border radius follows the scale (`rounded-md`, `rounded-lg`, `rounded-2xl`)
+- [ ] Pattern geometry/elevation uses the selected recipe or explicit semantic variables
+- [ ] No hardcoded universal `rounded-2xl + shadow + mx-6` language across unrelated recipes
 
 ### 2. Component Conventions
 - [ ] Uses `data-slot` attribute
@@ -46,10 +46,11 @@ Review the file: **$ARGUMENTS**
 - [ ] Images have `alt` text
 - [ ] Form inputs have associated labels
 
-### 4. Mobile Best Practices
+### 4. Surface Best Practices
 - [ ] No horizontal overflow
 - [ ] Touch-friendly spacing between interactive elements
-- [ ] Safe area insets handled for notched devices
+- [ ] Mobile safe area insets handled when the adapter requires them
+- [ ] Desktop density/type and non-web canvas/export rules follow the selected adapter
 - [ ] Text sizes >= 12px for readability
 - [ ] Scrollable containers have `-webkit-overflow-scrolling: touch`
 
@@ -59,7 +60,7 @@ Review the file: **$ARGUMENTS**
 - [ ] Heavy components are code-split
 
 ### 6. Typography
-- [ ] Uses the Pretendard/Inter font stack
+- [ ] Uses the locked type family and recipe-fit type roles
 - [ ] Font sizes from the 14-step scale (10-48px, see CLAUDE.md)
 - [ ] Proper font weights (400, 500, 600, 700)
 - [ ] Display text (36-48px): `leading-none` + `tracking-[-0.02em]`
@@ -69,8 +70,8 @@ Review the file: **$ARGUMENTS**
 - [ ] No `line-height: 1.5` on display/heading text (too loose)
 
 ### 7. Spacing Consistency
-- [ ] All spacing values are multiples of 6px (p-1.5, p-3, p-6, etc.)
-- [ ] No arbitrary spacing (p-5=20px, gap-3.5=14px are violations)
+- [ ] Spacing uses one maintained token scale and the selected recipe's major rhythm
+- [ ] Off-scale values have an optical, canvas, or platform reason
 - [ ] Uses `size-*` shorthand instead of `w-* h-*`
 - [ ] Uses `ms-*/me-*` instead of `ml-*/mr-*` (logical properties)
 - [ ] Motion transitions use design tokens (`duration-[var(--duration-fast)]`)

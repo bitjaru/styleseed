@@ -26,7 +26,7 @@ function BriefingCarousel({
   return (
     <div
       data-slot="briefing-carousel"
-      className={cn("px-6", className)}
+      className={cn("ss-page-padding", className)}
       {...props}
     >
       {title && (
@@ -40,7 +40,7 @@ function BriefingCarousel({
           return (
             <div
               key={index}
-              className="flex-shrink-0 bg-card rounded-2xl p-6 shadow-[var(--shadow-card)]"
+              className="flex-shrink-0 ss-pattern-surface"
               style={{ width: cardWidth }}
             >
               <div className="mb-4">

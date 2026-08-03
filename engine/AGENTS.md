@@ -10,7 +10,7 @@ and mobile products, social carousels, slide decks, documents/reports, and singl
 
 Invoke `$ss-resolve` from `STYLESEED.md`, then read `.styleseed/effective-rules.md` and keep
 `.styleseed/manifest.json`. The deterministic resolver composes core → grammar → adapter →
-domain/page → optional profile → lock → craft baseline and records source hashes. Do not load
+domain/page → brand recipe → optional profile → lock → craft baseline and records source hashes. Do not load
 `llms-full.txt` after a bundle resolves successfully.
 
 Use `$ss-resolve --list` when selecting IDs. Open the full source handbook only when the
@@ -23,6 +23,7 @@ core judgment
 × output grammar (built-in or reference-compiled)
 × surface adapter
 × domain + page/artifact type
+× brand recipe (morphology + component selection)
 × optional aesthetic profile
 × bounded STYLESEED.md values
 = effective rules for the artifact
@@ -30,6 +31,8 @@ core judgment
 
 Toss is evidence for `consumer-service`, not the StyleSeed default. Aesthetic profiles such as
 `swiss` or `technical` coordinate appearance; they do not replace functional output grammar.
+Brand recipes such as `enterprise-workbench` or `editorial-authority` change geometry,
+containment, controls, and collection patterns without cloning the companies in their lineage.
 
 ## Core invariants
 
@@ -64,6 +67,7 @@ render scripts. A valid lock resembles:
 - Grammar path: built-in:engine/RULESETS.md
 - Grammar fallback: consumer-service
 - Reference confidence: n/a
+- Brand recipe: calm-consumer
 - Aesthetic profile: none
 - Skin: custom
 - Primary action: #3182F6
@@ -87,8 +91,9 @@ contract. Unknown values are resolver errors; they are not exemptions.
 3. If supplied references are not represented, use `$ss-reference` and
    `REFERENCE-COMPILER.md`. Never reduce a reference to a palette swap or clone its protected
    assets, text, or trademarked arrangement.
-4. Select domain/page bias and at most one optional aesthetic profile.
-5. Confirm bounded brand/type/density/radius/elevation/imagery/motion values, write the lock,
+4. Select one brand recipe from `BRAND-RECIPES.md`; use `auto` only when its grammar mapping fits.
+5. Select domain/page bias and at most one optional aesthetic profile.
+6. Confirm bounded brand/type/density/radius/elevation/imagery/motion values, write the lock,
    then run `$ss-resolve` and read the effective bundle before implementation.
 
 Reference compilation produces evidence, confidence, tokens, anti-patterns, adapter metadata,

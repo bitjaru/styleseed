@@ -25,7 +25,7 @@ function ListItem({
     <div
       data-slot="list-item"
       className={cn(
-        "flex items-center justify-between p-5 rounded-xl bg-surface-subtle",
+        "flex items-center justify-between p-5 ss-pattern-inset bg-surface-subtle",
         className,
       )}
       {...props}

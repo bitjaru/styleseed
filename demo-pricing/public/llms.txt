@@ -22,6 +22,7 @@ handbook.
 - Adapters: `product-ui` · `social-carousel` · `slide-deck` · `document-report` · `single-frame`
 - Domains: `fintech` · `saas` · `ecommerce` · `social` · `content` · `productivity` · `health` · `education` · `developer-tools` · `marketplace` · `booking` · `ai-assistant`
 - Pages: `dashboard` · `form` · `landing` · `detail` · `list` · `settings` · `onboarding`
+- Brand recipes: `auto` · `calm-consumer` · `native-mobile` · `enterprise-workbench` · `developer-platform` · `commerce-operator` · `public-service` · `creative-professional` · `editorial-authority` · `expressive-brand`
 - Optional profiles: `none` · `swiss` · `editorial` · `technical` · `warm-dtc` · `minimal-mono` · `brutalist-lite`
 
 If supplied references do not fit a maintained grammar, use `ss-reference` to compile a

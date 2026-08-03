@@ -24,7 +24,7 @@ function NewsCard({
     <div
       data-slot="news-card"
       className={cn(
-        "bg-card rounded-2xl p-5 shadow-[var(--shadow-card)]",
+        "ss-pattern-surface",
         onClick && "cursor-pointer active:bg-surface-subtle transition-colors duration-150",
         className,
       )}

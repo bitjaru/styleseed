@@ -117,36 +117,38 @@ New-user experience that respects the user's attention.
 
 ---
 
-## 6. The Linear / Toss Aesthetic
+## 6. Morphology Before Brand Styling
 
-Minimal, clean, deliberately quiet. Today's dominant SaaS visual language.
+A polished interface is not one dominant SaaS aesthetic. Consumer, enterprise, developer,
+public-service, editorial, creative, commerce, and campaign products need different geometry,
+containment, controls, collections, density, and motion.
 
-### Linear principles
-- **8px spacing scale** — 8, 16, 32, 64 multiples for consistency
-- **Modular components** unconstrained by traditional grid layouts
-- **Keyboard-first navigation** for power-user efficiency
-- **Minimum visual noise** — hairline borders, flat surfaces, generous whitespace
+### Separate the decisions
 
-### Toss principles
-- **One decision per screen** — minimize cognitive load
-- **Big typography** — core numbers large, ancillary info small
-- **Generous whitespace** — between cards, between sections
-- **Blue gradient CTA** — clear action affordance
-- **Transparent border + shadow separation** — cards separated by tone, not lines
+- **Output grammar:** the user job, attention model, information order, and action hierarchy.
+- **Brand recipe:** the reusable morphology that implements that grammar.
+- **Aesthetic profile:** an optional coordinated adjustment such as swiss or editorial.
+- **Skin:** semantic color and type tokens.
 
-### Common aesthetic
-- Flat surfaces (no gradient backgrounds)
-- Hairline 0.5px borders or shadow-based separation
-- Generous whitespace
-- 14–16px base text
+Changing a skin without changing morphology is a palette swap. Changing every surface to rounded
+cards is template drift. `BRAND-RECIPES.md` prevents both by selecting patterns such as:
 
-**Cross-reference:** Golden rules 2 (single accent), 3 (no pure black), 7 (shadows ≤ 8% opacity), 61–63 (spacing). Toss and Stripe skins under `skins/` are the closest realizations.
+- aligned panels, tables, and rectangular controls for an enterprise workbench;
+- hairlines, compact rows, and mono evidence for a developer platform;
+- flat high-contrast steps and explicit labels for a public service;
+- reading measure, rules, captions, and whitespace for editorial authority;
+- soft groups and one reassuring summary for a calm consumer service.
+
+Brand names in recipe lineage document research. They are not templates or assets to copy.
+
+**Cross-reference:** `BRAND-RECIPES.md`, `RULESETS.md`, and `PRODUCT-PRINCIPLES.md`.
 
 ---
 
 ## 7. Color Discipline
 
-A bounded palette where every color has a job. The "polished" feeling of Linear, Stripe, Toss, Notion all share this discipline — they never invent a new color for a new component.
+A bounded palette where every color has a job. Strong systems across many product categories
+share this discipline — they do not invent a new color for every component.
 
 ### The underlying theories
 

@@ -28,13 +28,13 @@ function StatCard({
     <div
       data-slot="stat-card"
       className={cn(
-        "bg-card rounded-2xl p-6 shadow-[var(--shadow-card)]",
+        "ss-pattern-surface",
         className,
       )}
       {...props}
     >
       <div className="flex items-center gap-2 mb-3">
-        <div className="size-7 rounded-lg bg-brand/10 flex items-center justify-center">
+        <div className="size-7 ss-pattern-icon flex items-center justify-center">
           <Icon className="size-4 text-brand" strokeWidth={2} />
         </div>
         <p className="text-[12px] text-text-secondary font-medium uppercase tracking-[0.05em]">

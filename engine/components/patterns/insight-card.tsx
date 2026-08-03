@@ -25,16 +25,16 @@ function InsightCard({
     <div
       data-slot="insight-card"
       className={cn(
-        "mx-6 rounded-2xl p-6 shadow-[var(--shadow-card)]",
+        "ss-page-gutter ss-pattern-surface",
         variant === "highlighted"
           ? "bg-brand-tint border border-brand/20"
-          : "bg-card",
+          : "",
         className,
       )}
       {...props}
     >
       {Icon && (
-        <div className="size-8 rounded-xl bg-brand/10 flex items-center justify-center mb-3">
+        <div className="size-8 ss-pattern-icon flex items-center justify-center mb-3">
           <Icon className="size-[18px] text-brand" strokeWidth={2} />
         </div>
       )}
@@ -51,7 +51,7 @@ function InsightCard({
           {tags.map((tag, i) => (
             <span
               key={i}
-              className="inline-flex items-center gap-1 px-2.5 py-1 bg-surface-muted rounded-full text-[11px] font-medium text-text-secondary"
+              className="inline-flex items-center gap-1 px-2.5 py-1 bg-surface-muted ss-pattern-control text-[11px] font-medium text-text-secondary"
             >
               {tag.icon && <tag.icon className="size-3" />}
               {tag.label}

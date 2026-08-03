@@ -9,7 +9,7 @@ allowed-tools: Read, Write, Edit, Grep, Glob, Bash
 
 Read `.styleseed/effective-rules.md` and `.styleseed/manifest.json`; invoke `/ss-resolve` or
 `$ss-resolve` first when they are missing or stale. Judge pixels against that compiled method.
-A lock value cannot excuse a core failure, and a profile cannot replace the output grammar.
+A lock value cannot excuse a core failure, and a recipe/profile cannot replace the output grammar.
 
 `/ss-score` reads the **code** and scores it. But some of the worst "AI-made" tells never appear
 in source — they only exist in **pixels**: a hero that doesn't actually dominate, a lower third
@@ -93,6 +93,8 @@ eyes, not source:
                    feel undersized? (the surface-scale tell, judged by eye)
 □ Grammar fit   — does the screen visually serve the selected grammar's user job, attention
                    model, composition, density, action hierarchy, and characteristic tells?
+□ Recipe fit    — do geometry, containment, controls, collections, navigation, density, and
+                   motion visibly match the selected recipe rather than the old universal soft-card look?
                    Would the same layout still appear if the product changed? If yes, FAIL
 □ Motion (if any) — capture before/after or a mid-transition frame; is it purposeful, or the
                    "cheap fade/bounce on everything" tell? does it block the first read?

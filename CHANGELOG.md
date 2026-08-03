@@ -3,6 +3,37 @@
 All notable changes to StyleSeed. Agents can check the latest version at
 [version.json](https://styleseed-demo.vercel.app/version.json) and run `/ss-update`.
 
+## [3.2.0] — 2026-07-31
+
+**Theme: one method, multiple real morphologies.** The engine already selected different
+functional grammars, but the bundled pattern library still converged on the original
+Toss-flavored rounded-card language. StyleSeed now separates the product job, reusable shape
+language, and brand tokens.
+
+### Added
+- `BRAND-RECIPES.md` with nine maintained morphology contracts: calm consumer, native mobile,
+  enterprise workbench, developer platform, commerce operator, public service, creative
+  professional, editorial authority, and expressive brand.
+- Official-source lineage for Carbon, Fluent, Atlassian, Primer, GOV.UK, Apple HIG, Spectrum,
+  and Polaris-derived research. Brand names document evidence only; protected assets,
+  trademarked arrangements, and company clones are explicitly excluded.
+- `Brand recipe:` in `STYLESEED.md`, `--recipe <id|auto>` in `ss-resolve`, deterministic
+  grammar-to-recipe defaults, recipe provenance in the manifest, and nine contracts in the
+  machine-readable context catalog.
+- Registry v4 recipe discovery with IDs, source URL, full contract, and digest.
+- `/recipes`, a public comparison of the same working module across all nine morphologies.
+- `engine/css/recipes.css` plus a typed `StyleSeedRecipe` helper.
+
+### Changed
+- The authority stack is now core → grammar → adapter → domain/page → brand recipe → optional
+  profile → lock → craft baseline.
+- Bundled card, chart, list, navigation, shell, and empty-state patterns consume recipe
+  variables for gutters, padding, radius, borders, elevation, controls, and icon treatment
+  instead of hardcoding `mx-6`, `rounded-2xl`, shadows, and pills.
+- `ss-setup`, `ss-build`, `ss-score`, Claude Code, Codex/AGENTS, Cursor, README, Easy Start,
+  architecture, sitemap, agent router, and demo copy now expose the same recipe layer.
+- `METHODOLOGY.md` replaces “The Linear / Toss Aesthetic” with morphology-first reasoning.
+
 ## [3.1.0] — 2026-07-31
 
 **Theme: compile the method; do not flood the model.** StyleSeed now resolves a project lock

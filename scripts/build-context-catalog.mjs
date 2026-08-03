@@ -20,6 +20,7 @@ const adapters = read("ADAPTERS.md");
 const domains = read("APP-PLAYBOOKS.md");
 const pages = read("PAGE-TYPES.md");
 const presets = read("PRESETS.md");
+const recipes = read("BRAND-RECIPES.md");
 
 const grammarIds = [
   "consumer-service",
@@ -93,8 +94,20 @@ const profileIds = [
   "brutalist-lite",
 ];
 
+const recipeIds = [
+  "calm-consumer",
+  "native-mobile",
+  "enterprise-workbench",
+  "developer-platform",
+  "commerce-operator",
+  "public-service",
+  "creative-professional",
+  "editorial-authority",
+  "expressive-brand",
+];
+
 const catalog = {
-  schemaVersion: 1,
+  schemaVersion: 2,
   engineVersion: read("VERSION"),
   generatedFrom: [
     "PRODUCT-PRINCIPLES.md",
@@ -103,6 +116,7 @@ const catalog = {
     "ADAPTERS.md",
     "APP-PLAYBOOKS.md",
     "PAGE-TYPES.md",
+    "BRAND-RECIPES.md",
     "PRESETS.md",
   ],
   core: read("PRODUCT-PRINCIPLES.md"),
@@ -129,6 +143,12 @@ const catalog = {
     Object.entries(pageHeadings).map(([id, heading]) => [
       id,
       section(pages, heading, /\n## /),
+    ]),
+  ),
+  recipes: Object.fromEntries(
+    recipeIds.map((id) => [
+      id,
+      section(recipes, `## \`${id}\``, /\n## `/),
     ]),
   ),
   profiles: Object.fromEntries(profileIds.map((id) => [id, tableRow(presets, id)])),
@@ -165,5 +185,5 @@ const catalog = {
 mkdirSync(dirname(out), { recursive: true });
 writeFileSync(out, `${JSON.stringify(catalog, null, 2)}\n`);
 console.log(
-  `StyleSeed context catalog: ${grammarIds.length} grammars · ${adapterIds.length} adapters · ${Object.keys(domainHeadings).length} domains · ${Object.keys(pageHeadings).length} pages · ${profileIds.length} profiles`,
+  `StyleSeed context catalog: ${grammarIds.length} grammars · ${adapterIds.length} adapters · ${Object.keys(domainHeadings).length} domains · ${Object.keys(pageHeadings).length} pages · ${recipeIds.length} recipes · ${profileIds.length} profiles`,
 );

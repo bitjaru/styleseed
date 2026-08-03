@@ -1,6 +1,6 @@
 ---
 name: ss-build
-description: Build a screen with StyleSeed's composed design method — choose or compile an output grammar, apply domain/page/profile/lock constraints, then run the code and pixel gates before presenting.
+description: Build a screen with StyleSeed's composed design method — choose or compile an output grammar, apply a brand recipe plus domain/page/profile/lock constraints, then run the code and pixel gates before presenting.
 argument-hint: "[what to build]"
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash, WebFetch
 ---
@@ -24,14 +24,14 @@ record. Do not load `llms-full.txt` after resolution succeeds.
 ## Step 2 — Compose, do not improvise
 
 The compiled bundle already composes the authority order: core invariants → selected grammar →
-surface adapter → domain/page → optional profile → bounded lock → craft baseline. Use the
+surface adapter → domain/page → brand recipe → optional profile → bounded lock → craft baseline. Use the
 manifest selection and source hashes to detect drift. Open a full source document only when the
 bundle points to a genuine ambiguity; do not reassemble the handbook ad hoc.
 
 Before code, state the effective rule set in one line, for example:
 
 ```text
-operations-console × SaaS × dashboard × swiss × locked brand tokens
+operations-console × SaaS × dashboard × enterprise-workbench × swiss × locked brand tokens
 ```
 
 Resolve conflicts by authority. A profile or lock cannot waive task fitness, coherence, or
@@ -43,6 +43,8 @@ accessibility.
 - Establish one focal point; avoid equal-weight template grids.
 - Use the grammar's composition, density, type, color, surface, imagery/data, action, state,
   responsive, and motion contracts.
+- Use the recipe's containment, geometry, control, collection, and navigation morphology.
+  Set `data-styleseed-recipe="<id>"` on the artifact root when using bundled pattern components.
 - Use product-specific content and evidence. Never copy the StyleSeed demo or a reference screen.
 - Implement loading, empty, error, focus, reduced-motion, and responsive behavior where relevant.
 
@@ -71,7 +73,8 @@ Report:
 ## Rules
 
 - Grammar before code; code gate after build; pixel gate last.
-- Output grammar is functional. Aesthetic profile is optional and never substitutes for it.
+- Output grammar is functional. Brand recipe is morphological. Aesthetic profile is optional.
+  Neither substitutes for the grammar or permits a brand clone.
 - The primary action must remain identifiable; additional color is permitted only where the
   grammar gives it stable semantic or categorical meaning.
 - Re-read the lock and grammar on every UI change.

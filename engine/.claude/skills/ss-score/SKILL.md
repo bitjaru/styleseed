@@ -24,13 +24,13 @@ missing or `ss-resolve --check` reports drift, invoke `/ss-resolve` or `$ss-reso
 project lock first. Only fall back to the source handbook when no project lock exists.
 
 Score in authority order: core invariants first, then the exact output grammar, domain/page,
-optional aesthetic profile, and bounded lock values. The lock cannot waive an invariant.
+brand recipe, optional aesthetic profile, and bounded lock values. The lock cannot waive an invariant.
 Unknown values are a resolver error; do not invent an exception.
 
 The output must name the effective rule set, for example:
 
 ```text
-Rule set: operations-console × SaaS × dashboard × swiss
+Rule set: operations-console × SaaS × dashboard × enterprise-workbench × swiss
 ```
 
 ## What to score
@@ -82,9 +82,10 @@ but dense-data chrome is exempt: chart ticks, mono SHAs/timestamps, table metada
 12–13px are correct; and dashboard app-chrome h1 at 22–24px is correct, not a violation
 of the marketing 40–56px headline scale).
 
-**Layout & rhythm (12)** — deduct for: grouping that contradicts the selected grammar (−6):
+**Layout & rhythm (12)** — deduct for: grouping that contradicts the selected grammar or recipe (−6):
 `operations-console` needs explicit functional groups, while `editorial-reading` should not be
-forced into cards; arbitrary off-scale spacing (−3); same section type repeated without purpose
+forced into cards; `enterprise-workbench` needs aligned panels/rows while `public-service`
+needs flat step flow; arbitrary off-scale spacing (−3); same section type repeated without purpose
 (−4); no discernible proximity rhythm (−3).
 
 **Cards & elevation (10)** — deduct for mixed or task-inappropriate surface language. Hairlines,
@@ -124,7 +125,7 @@ Clamp each category at 0. Sum to a total.
 
 ```
 ## Design Score: 70 / 100   (src/app/Dashboard.tsx)
-Rule set: operations-console × product-ui × SaaS × dashboard × swiss
+Rule set: operations-console × product-ui × SaaS × dashboard × enterprise-workbench × swiss
 
 ████████████████░░░░░░  C-
 

@@ -28,7 +28,7 @@
 **2. Paste this message:**
 
 ```text
-Install StyleSeed with `npx skills add bitjaru/styleseed`, then set it up for this project. Ask what I am building and only the design choices you need. Save approved decisions to STYLESEED.md, choose the right output grammar or derive one from my references, then run `/ss-resolve` in Claude Code or `$ss-resolve` in Codex and build from `.styleseed/effective-rules.md`. Build with one clear focal point, score the result to at least 80, then render and visually verify it before showing me. In other agents, use the installed skill picker.
+Install StyleSeed with `npx skills add bitjaru/styleseed`, then set it up for this project. Ask what I am building and only the design choices you need. Choose the right output grammar and one brand recipe for morphology—not a company clone—or derive a local grammar from my references. Save approved decisions to STYLESEED.md, then run `/ss-resolve` in Claude Code or `$ss-resolve` in Codex and build from `.styleseed/effective-rules.md`. Build with one clear focal point, score the result to at least 80, then render and visually verify it before showing me. In other agents, use the installed skill picker.
 ```
 
 **3. Approve the install, answer the short setup questions, and describe what you want to build.**
@@ -66,9 +66,11 @@ The "AI-generated look" isn't bad luck — it's a list of nameable tells. StyleS
   <img src="showcase/demo.gif" width="560" alt="Same chat UI morphing across Toss, Raycast, and Arc brand skins" />
 </a>
 
-**One component. Three brand DNAs.** Same chat UI morphing across Toss · Raycast · Arc — colors, radius, motion, shadows, gradients all driven by StyleSeed tokens. Just a `data-skin` attribute.
+**One component. Three token skins.** Same chat UI morphing across Toss · Raycast · Arc-inspired
+token sets. A skin changes color and type material; a StyleSeed brand recipe changes the actual
+geometry, containment, controls, collections, density, and motion.
 
-<sub>Skins are *inspired-by* token sets — brand-flavored color/radius/shadow/motion values, not recreations of those companies' design languages. The layer that restructures the actual design is the presets (`/ss-restyle`, below).</sub>
+<sub>Skins are *inspired-by* token sets, not recreations. [Compare the nine structural recipes →](https://styleseed-demo.vercel.app/recipes)</sub>
 
 <br />
 
@@ -80,6 +82,7 @@ The "AI-generated look" isn't bad luck — it's a list of nameable tells. StyleS
 ![21 skills](https://badgen.net/badge/skills/21/6C5CE7)
 ![8 output grammars](https://badgen.net/badge/grammars/8/2563EB)
 ![5 adapters](https://badgen.net/badge/adapters/5/0F766E)
+![9 brand recipes](https://badgen.net/badge/recipes/9/DB2777)
 ![7 brand skins](https://badgen.net/badge/skins/7/6C5CE7)
 [![GitHub stars](https://badgen.net/github/stars/bitjaru/styleseed)](https://github.com/bitjaru/styleseed/stargazers)
 [![License](https://badgen.net/github/license/bitjaru/styleseed)](https://github.com/bitjaru/styleseed/blob/main/LICENSE)
@@ -92,6 +95,8 @@ The "AI-generated look" isn't bad luck — it's a list of nameable tells. StyleS
 **Judgment, not data** — how designers *think*, not a palette collection &nbsp;·&nbsp;
 **Right grammar for the result** — consumer service, operations, technical, editorial,
 commerce, institutional, marketing, or sequential story &nbsp;·&nbsp;
+**Real morphology choices** — nine brand recipes change structure and component selection,
+not just palette &nbsp;·&nbsp;
 **References become rules** — `/ss-reference` compiles screenshots, URLs, Figma, or an existing
 UI into an evidence-backed project grammar &nbsp;·&nbsp;
 **Only the context you need** — `/ss-resolve` compiles the chosen method into a small,
@@ -109,7 +114,7 @@ hash-verifiable project bundle &nbsp;·&nbsp;
   <img src="assets/styleseed-architecture.svg" width="900" alt="StyleSeed engine architecture: intent and references become output grammars, combine with surface adapters and bounded project choices, then pass code and pixel gates" />
 </a>
 
-<sub>Core judgment × output grammar × surface adapter × domain/page × optional profile. [Read the architecture →](engine/ARCHITECTURE.md)</sub>
+<sub>Core judgment × output grammar × surface adapter × domain/page × brand recipe × optional profile. [Read the architecture →](engine/ARCHITECTURE.md)</sub>
 
 <br /><br />
 
@@ -127,7 +132,7 @@ hash-verifiable project bundle &nbsp;·&nbsp;
 
 <br />
 
-[Easy Start](#easy-start-30-seconds) · [Claude Code UI guide](https://styleseed-demo.vercel.app/claude-code-ui-design) · [Codex UI guide](https://styleseed-demo.vercel.app/codex-ui-design) · [Architecture](engine/ARCHITECTURE.md) · [Engine + Skins](#how-it-works-engine--skins) · [Motion](#named-motion-system) · [Skills](#21-ai-powered-skills) · [Wiki](../../wiki) · [한국어](README-KR.md)
+[Easy Start](#easy-start-30-seconds) · [Claude Code UI guide](https://styleseed-demo.vercel.app/claude-code-ui-design) · [Codex UI guide](https://styleseed-demo.vercel.app/codex-ui-design) · [Brand recipes](https://styleseed-demo.vercel.app/recipes) · [Architecture](engine/ARCHITECTURE.md) · [Engine + Recipes + Skins](#how-it-works-engine--recipes--skins) · [Motion](#named-motion-system) · [Skills](#21-ai-powered-skills) · [Wiki](../../wiki) · [한국어](README-KR.md)
 
 <br />
 
@@ -355,11 +360,11 @@ Codex:       $ss-setup   # or open /skills and choose ss-setup
 ```
 
 The wizard then walks you through:
-1. App type (SaaS, e-commerce, fintech...)
-2. Brand color or pick a skin (Toss, Stripe, Linear, Vercel, Notion...)
-3. Or fetch any brand from [awesome-design-md](https://github.com/VoltAgent/awesome-design-md) (58+ brands)
-4. Font preference
-5. Generates your first page automatically
+1. Product job, surface, and output grammar
+2. One of nine brand recipes for morphology (`enterprise-workbench`, `public-service`, etc.)
+3. Brand color or a custom/built-in token skin
+4. Font, density, motion, and one signature move
+5. A compiled rule bundle, first build, score, and rendered verification
 
 > Don't see the skills? For Claude Code, check `.claude/skills/` and use the
 > `/ss-` prefix. For Codex, check `.agents/skills/`, open `/skills`, or invoke
@@ -438,7 +443,7 @@ The rules got stronger in [v2.5.0](https://github.com/bitjaru/styleseed/releases
 screen that passed the old bar may score lower now — that's the point. Fixing it is what makes it
 stop looking AI-made.
 
-## How It Works: Engine + Skins
+## How It Works: Engine + Recipes + Skins
 
 ```
 ┌─────────────────────────────────────────────────┐
@@ -448,7 +453,12 @@ stop looking AI-made.
 │  Layout · Composition · Typography · UX · A11y  │
 └──────────────────────┬──────────────────────────┘
                        │
-              Pick a skin ↓
+             Pick a recipe ↓
+                       │
+  calm · native · enterprise · developer · commerce
+  public service · creative · editorial · expressive
+                       │
+               Apply a skin ↓
                        │
     ┌──────┬──────┬──────┬──────┬──────┬─────────┐
     │ Toss │Stripe│Linear│Vercel│Notion│ 58 more │
@@ -456,14 +466,20 @@ stop looking AI-made.
     └──────┴──────┴──────┴──────┴──────┴─────────┘
 ```
 
-**Engine** = how your app is structured (design intelligence)
+**Engine** = how the artifact is judged (design intelligence)
 - 74 visual design rules (layout, composition, rhythm, forbidden patterns)
 - 48 React components (32 primitives + 16 patterns)
 - A named motion system (5 seeds + a copy-paste keyword library)
 - 21 cross-agent skills (context compiler, reference compiler, setup, UI, motion, UX, accessibility)
 - Works with ANY color palette
 
-**Skin** = what your app looks like (visual identity)
+**Brand recipe** = how the artifact is shaped (morphology)
+- 9 maintained choices in [`BRAND-RECIPES.md`](engine/BRAND-RECIPES.md)
+- Changes containment, radius/border/elevation, navigation, controls, collections, density,
+  responsive behavior, and motion
+- Carries source lineage without official logos, assets, fonts, copy, or trademarked arrangements
+
+**Skin** = semantic color and type material (visual identity)
 - Just a `theme.css` file with color variables
 - 7 built-in skins: Toss, Stripe, Linear, Notion, Raycast, Arc, Vercel
 - 58+ more available from [awesome-design-md](https://github.com/VoltAgent/awesome-design-md)
@@ -571,12 +587,12 @@ engine/
 ### Setup
 | Skill | What It Does |
 |-------|-------------|
-| `/ss-resolve` | **Compile only the active context** — lock → grammar + adapter + domain/page + profile + craft baseline → small bundle + source-hash manifest |
+| `/ss-resolve` | **Compile only the active context** — lock → grammar + adapter + domain/page + brand recipe + profile + craft baseline → small bundle + source-hash manifest |
 | `/ss-build` | **The whole loop, enforced** — lock the look → build → score → fix to ≥80 → *then* show. Use this instead of building UI free-hand |
 | `/ss-reference` | **Compile references into a project grammar** — evidence, confidence, semantic tokens, anti-patterns, and a transfer validation artifact |
 | `/ss-dial` | Turn one axis up/down deterministically — `density denser`, `radius sharper`, `color more-muted`, `weight bolder`. Moves many tokens together, keeps the guardrails, re-gates |
 | `/ss-restyle` | Re-style to a named aesthetic — `swiss` · `editorial` · `technical` · `warm-dtc` · `minimal-mono` · `brutalist-lite`. A coherent coordinate, not a stacked filter |
-| `/ss-setup` | **Interactive wizard** — select output grammar + adapter, then bounded brand/profile values |
+| `/ss-setup` | **Interactive wizard** — select output grammar + adapter + brand recipe, then bounded brand/profile values |
 
 ### UI — Build It Right
 | Skill | What It Does |

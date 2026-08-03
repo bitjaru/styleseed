@@ -111,9 +111,9 @@ export default function HomePage() {
         <section className="border-t border-neutral-200 bg-[#F7F7FB]">
           <div className="mx-auto grid max-w-6xl items-center gap-10 px-6 py-20 lg:grid-cols-[0.85fr_1.4fr]">
             <div>
-              <div className="text-[11px] font-bold uppercase tracking-widest text-violet-600">New in v3.1</div>
+              <div className="text-[11px] font-bold uppercase tracking-widest text-violet-600">New in v3.2</div>
               <h2 className="mt-2 text-[clamp(28px,4vw,42px)] font-bold leading-tight tracking-tight">
-                One method.<br />Many output grammars.
+                One method.<br />Many real morphologies.
               </h2>
               <p className="mt-4 text-[15px] leading-relaxed text-neutral-600">
                 Toss-like consumer UI is one researched language, not the universal answer.
@@ -121,14 +121,18 @@ export default function HomePage() {
                 your screenshots, URLs, Figma exports, or existing product.
               </p>
               <p className="mt-3 text-[15px] leading-relaxed text-neutral-600">
-                Surface adapters carry the same judgment into web and mobile UI, social
-                carousels, slide decks, documents, reports, posters, and covers. The new
-                context compiler gives each agent only its selected 10–20KB method plus a
-                source-hash manifest.
+                Nine brand recipes now change geometry, containment, controls, collections,
+                density, and motion—not just color. Surface adapters carry the same judgment
+                into web and mobile UI, carousels, decks, reports, posters, and covers.
               </p>
-              <Link href="/architecture" className="mt-6 inline-flex items-center gap-1.5 rounded-xl bg-neutral-900 px-5 py-3 text-[14px] font-bold text-white hover:bg-black">
-                Explore the engine <ArrowRight size={14} />
-              </Link>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <Link href="/recipes" className="inline-flex items-center gap-1.5 rounded-xl bg-neutral-900 px-5 py-3 text-[14px] font-bold text-white hover:bg-black">
+                  Compare 9 recipes <ArrowRight size={14} />
+                </Link>
+                <Link href="/architecture" className="inline-flex items-center gap-1.5 rounded-xl border border-neutral-300 bg-white px-5 py-3 text-[14px] font-bold text-neutral-900 hover:border-neutral-950">
+                  Engine architecture
+                </Link>
+              </div>
             </div>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/styleseed-architecture.svg" alt="StyleSeed engine architecture" className="w-full rounded-2xl border border-neutral-200 bg-white" />

@@ -19,9 +19,10 @@ Description: $ARGUMENTS
 
 ## Instructions
 
-1. First, read the design system seed for context:
-   - Read `CLAUDE.md` for component conventions
+1. First, read the compiled design method:
+   - Read `.styleseed/effective-rules.md` and `.styleseed/manifest.json`; resolve if stale
    - Read `css/theme.css` for available design tokens
+   - Read `css/recipes.css` for morphology variables and helper classes
    - Read `components/ui/button.tsx` as a reference pattern
 
 2. Follow these conventions strictly:
@@ -35,9 +36,9 @@ Description: $ARGUMENTS
 
 3. Design token usage:
    - Colors: `text-foreground`, `bg-card`, `text-brand`, `text-muted-foreground`, `border-border`
-   - Shadows: `shadow-[var(--shadow-card)]`, `shadow-[var(--shadow-elevated)]`
-   - Radius: `rounded-md`, `rounded-lg`, `rounded-2xl`
-   - Spacing: multiples of 6px (`p-1.5`, `p-3`, `p-6`)
+   - Pattern surfaces: `ss-pattern-surface`; insets/controls/icons use the matching `ss-*` class
+   - Primitives use the project token scale; do not hardcode one radius or shadow personality
+   - Spacing follows one repeatable selected-recipe rhythm
    - Motion: `duration-[var(--duration-fast)]`, `ease-[var(--ease-default)]`
 
 4. Typography rules:

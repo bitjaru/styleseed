@@ -14,7 +14,7 @@ Numbers are defaults, not dogma — but don't deviate without a reason.
 > and **PAGE-TYPES.md** (screen bias).
 >
 > **Priority:** `PRODUCT-PRINCIPLES.md` → output grammar (`RULESETS.md` or compiled) →
-> `ADAPTERS.md` → domain/page → optional profile → bounded lock. This file refines craft within
+> `ADAPTERS.md` → domain/page → brand recipe → optional profile → bounded lock. This file refines craft within
 > that composed method; it never overrides it.
 
 ---

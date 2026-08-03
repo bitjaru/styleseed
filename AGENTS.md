@@ -9,7 +9,8 @@ rules, skills, components, skins, and generated demo artifacts in sync.
 - Read `engine/AGENTS.md` for the cross-agent design rules.
 - Read the relevant nested guide before editing its subtree. In particular,
   `demo-pricing/AGENTS.md` applies to the Next.js demo.
-- Read `engine/PRODUCT-PRINCIPLES.md`, `engine/RULESETS.md`, `engine/ADAPTERS.md`, and
+- Read `engine/PRODUCT-PRINCIPLES.md`, `engine/RULESETS.md`, `engine/ADAPTERS.md`,
+  `engine/BRAND-RECIPES.md`, and
   `engine/ARCHITECTURE.md` before changing product behavior.
 - Treat `engine/.claude/skills/` as the canonical source for all 21 StyleSeed
   skills. `.agents/skills` is a repository-scoped Codex symlink to that same

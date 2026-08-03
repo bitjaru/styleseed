@@ -12,7 +12,7 @@ both have a dashboard, but they should not look the same. Contextual recipes in
 
 ## How to read a playbook
 
-Each domain sets positions on six dials, plus signature patterns and traps:
+Each domain sets positions on seven dials, plus signature patterns and traps:
 
 | Dial | What it decides |
 |------|-----------------|
@@ -20,6 +20,7 @@ Each domain sets positions on six dials, plus signature patterns and traps:
 | **Density** | airy vs. packed — how much information per screen |
 | **Typography weight** | numbers / text / imagery — where the eye is meant to land |
 | **Motion seed** | the default personality (see `engine/motion`) |
+| **Brand recipe** | the default morphology from `BRAND-RECIPES.md` |
 | **Signature patterns** | the 2–3 components that define the domain |
 | **Anti-patterns** | domain-specific "never do this" |
 
@@ -49,7 +50,8 @@ scaffolding, and re-read it from `/ss-page`.
 - **Anti-patterns:** playful/rainbow palettes, gradients on amounts, fake
   precision (`$8,400.0000`), shadows that float cards "off the page," motion that
   delays seeing a balance.
-- **Skin:** Toss, Stripe.
+- **Brand recipe:** `calm-consumer`; use `native-mobile` for a platform-first utility.
+- **Skin material:** custom brand tokens; Toss and Stripe remain optional token references.
 
 ## 2. SaaS / B2B Dashboard / Analytics
 
@@ -66,7 +68,8 @@ scaffolding, and re-read it from `/ss-page`.
   grid, filterable list/table, segmented control, RankedList.
 - **Anti-patterns:** decorative motion, oversized hero numbers that waste space,
   6 accent colors in a chart legend, modal-heavy flows (prefer inline).
-- **Skin:** Linear, Vercel.
+- **Brand recipe:** `enterprise-workbench`; use `developer-platform` for technical evidence.
+- **Skin material:** custom brand tokens; Linear and Vercel remain optional token references.
 
 ## 3. E-commerce / Retail
 
@@ -84,7 +87,9 @@ scaffolding, and re-read it from `/ss-page`.
 - **Anti-patterns:** burying the CTA, more than one primary action on a PDP,
   shouty discount colors everywhere (dilutes urgency), motion that blocks adding
   to cart.
-- **Skin:** Arc, Toss.
+- **Brand recipe:** `commerce-operator` for merchant/product operations; `calm-consumer` for a
+  lightweight consumer purchase flow.
+- **Skin material:** custom brand tokens; Arc and Toss remain optional token references.
 
 ## 4. Social / Community / Feed
 
@@ -100,7 +105,8 @@ scaffolding, and re-read it from `/ss-page`.
   actions, like-burst, bottom-sheet composer, story rail.
 - **Anti-patterns:** heavy chrome that competes with user content, slow entrance
   on a feed (kills scroll), engagement bait colors, inconsistent avatar shapes.
-- **Skin:** custom warm accent; Arc.
+- **Brand recipe:** `native-mobile` for app-first feeds; `expressive-brand` for creator surfaces.
+- **Skin material:** custom warm accent; Arc remains an optional token reference.
 
 ## 5. Content / Media / News / Blog / Docs
 
@@ -115,7 +121,8 @@ scaffolding, and re-read it from `/ss-page`.
   pull quotes, related-content rail, code blocks (for docs).
 - **Anti-patterns:** full-width body text, decorative motion mid-article, multiple
   accents, cramped line-height, autoplaying anything.
-- **Skin:** Notion, Vercel.
+- **Brand recipe:** `editorial-authority`.
+- **Skin material:** custom editorial tokens; Notion and Vercel remain optional token references.
 
 ## 6. Productivity / Tools / Workspace
 
@@ -130,7 +137,8 @@ scaffolding, and re-read it from `/ss-page`.
   palette, list/board toggle, inline edit, segmented control, keyboard hints.
 - **Anti-patterns:** slow motion on frequent actions, modal overload, decorative
   color, hiding power features behind too much progressive disclosure.
-- **Skin:** Linear, Notion, Vercel.
+- **Brand recipe:** `creative-professional` or `developer-platform` by task.
+- **Skin material:** custom brand tokens; Linear, Notion, and Vercel remain optional references.
 
 ## 7. Health / Wellness / Fitness
 
@@ -145,7 +153,8 @@ scaffolding, and re-read it from `/ss-page`.
   touch targets (≥44px, often bigger), weekly history.
 - **Anti-patterns:** dense data dumps, alarming colors for normal states, tiny
   targets, jittery motion, shame-y empty states.
-- **Skin:** custom soft accent; Toss.
+- **Brand recipe:** `calm-consumer`; use `native-mobile` for tracking and capture.
+- **Skin material:** custom soft accent; Toss remains an optional token reference.
 
 ## 8. Education / Learning / Courses
 
@@ -159,7 +168,8 @@ scaffolding, and re-read it from `/ss-page`.
   next-action CTA, achievement/streak, empty→first-lesson onboarding.
 - **Anti-patterns:** showing the whole curriculum at once (overwhelm), unclear
   next step, punishing empty/incomplete states, no sense of progress.
-- **Skin:** Notion, Arc.
+- **Brand recipe:** `calm-consumer` for learners; `editorial-authority` for reading-heavy courses.
+- **Skin material:** custom learning tokens; Notion and Arc remain optional references.
 
 ## 9. Developer Tools / Infra / API
 
@@ -174,7 +184,8 @@ scaffolding, and re-read it from `/ss-page`.
   command palette, key-value config, dark base.
 - **Anti-patterns:** flashy motion (reads as unserious to devs), light-only
   themes, decorative gradients, hiding the CLI/copy affordance.
-- **Skin:** Raycast, Vercel, Linear.
+- **Brand recipe:** `developer-platform`.
+- **Skin material:** custom technical tokens; Raycast, Vercel, and Linear remain optional references.
 
 ## 10. Marketplace / Listings (two-sided)
 
@@ -188,7 +199,8 @@ scaffolding, and re-read it from `/ss-page`.
   map/list toggle, detail with sticky action, reviews, verified badge.
 - **Anti-patterns:** untrustworthy density (too much, too fast), weak rating/trust
   signals, more than one primary action, buried contact/CTA.
-- **Skin:** Stripe, Notion.
+- **Brand recipe:** `commerce-operator`.
+- **Skin material:** custom marketplace tokens; Stripe and Notion remain optional references.
 
 ## 11. Booking / Travel / Reservations
 
@@ -202,7 +214,8 @@ scaffolding, and re-read it from `/ss-page`.
   booking with progress, map, price summary, confirmation.
 - **Anti-patterns:** hidden total/fees, unclear current step, jarring motion mid-
   booking, tiny date controls, anxiety-inducing scarcity spam.
-- **Skin:** Arc, Notion.
+- **Brand recipe:** `commerce-operator`; use `native-mobile` for an app-first itinerary.
+- **Skin material:** custom travel tokens; Arc and Notion remain optional references.
 
 ## 12. AI / Chat / Assistant
 
@@ -217,7 +230,9 @@ scaffolding, and re-read it from `/ss-page`.
   send, prompt suggestions, copy-on-message, minimal top bar.
 - **Anti-patterns:** heavy chrome around the chat, flashy motion on every token,
   cramped reading width, burying the input, multiple accents.
-- **Skin:** Raycast, Notion.
+- **Brand recipe:** `creative-professional` for workbench assistants; `calm-consumer` for simple
+  personal assistants.
+- **Skin material:** custom assistant tokens; Raycast and Notion remain optional references.
 
 ---
 

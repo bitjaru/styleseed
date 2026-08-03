@@ -31,7 +31,7 @@ function HeroCard({
     <div
       data-slot="hero-card"
       className={cn(
-        "mx-6 rounded-2xl bg-card p-8 shadow-[var(--shadow-card)] relative overflow-hidden",
+        "ss-page-gutter ss-pattern-surface relative overflow-hidden",
         className,
       )}
       {...props}
@@ -50,7 +50,7 @@ function HeroCard({
 
       <div className="relative z-10">
         <div className="flex items-center gap-2 mb-3">
-          <div className="size-8 rounded-xl bg-brand/10 flex items-center justify-center">
+          <div className="size-8 ss-pattern-icon flex items-center justify-center">
             <Icon className="size-[18px] text-brand" strokeWidth={2} />
           </div>
           <p className="text-[12px] text-text-secondary font-medium uppercase tracking-[0.05em]">

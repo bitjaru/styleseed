@@ -1,12 +1,13 @@
 {
-  "version": "3.1.0",
+  "version": "3.2.0",
   "released": "2026-07-31",
   "rules": 74,
   "skills": 21,
   "skins": 7,
   "grammars": 8,
   "adapters": 5,
-  "whatsNew": "StyleSeed v3.1 adds /ss-resolve: a deterministic context compiler that turns STYLESEED.md into a targeted 10–20KB effective rule bundle and source-hash manifest for Claude Code, Codex, Cursor, and other agents. llms.txt now routes agents into that compiled path; llms-full.txt remains archive/debug context.",
+  "recipes": 9,
+  "whatsNew": "StyleSeed v3.2 adds nine brand recipes that change geometry, containment, controls, collections, density, and motion independently from token skins. The context compiler now resolves grammar × surface × recipe, bundled pattern components are recipe-aware, and /recipes shows the same module across every morphology.",
   "update": "Claude Code: /ss-update. Codex: $ss-update. Or run: npx skills add bitjaru/styleseed",
   "changelog": "https://github.com/bitjaru/styleseed/releases",
   "repo": "https://github.com/bitjaru/styleseed"

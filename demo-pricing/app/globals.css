@@ -2,6 +2,7 @@
 @source "../.engine/components";
 @source "../.engine/motion";
 @import "./skins.css";
+@import "../.engine/css/recipes.css";
 
 html, body {
   background: var(--background);

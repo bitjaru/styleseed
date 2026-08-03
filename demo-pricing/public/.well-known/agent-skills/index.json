@@ -18,16 +18,16 @@
     {
       "name": "ss-build",
       "type": "skill-md",
-      "description": "Build a screen with StyleSeed's composed design method — choose or compile an output grammar, apply domain/page/profile/lock constraints, then run the code and pixel gates before presenting.",
+      "description": "Build a screen with StyleSeed's composed design method — choose or compile an output grammar, apply a brand recipe plus domain/page/profile/lock constraints, then run the code and pixel gates before presenting.",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-build/SKILL.md",
-      "digest": "sha256:153f2ce4f93bdcac1781570adc853efa68fc671fba6e4923ca7f1fa57c808725"
+      "digest": "sha256:eff30179976f676cc35a2eed1e0a66133a83e27fc5fb2053b247aecfac6c6b38"
     },
     {
       "name": "ss-component",
       "type": "skill-md",
       "description": "Generate a new UI component following the StyleSeed design conventions",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-component/SKILL.md",
-      "digest": "sha256:837cc52db59b95b56e3f334cd299b86af48c869662082725c798c7ee94747d40"
+      "digest": "sha256:98246d71036d5ba177a65611d61275c5c11d7e774b053bc944fdb63f7d60c694"
     },
     {
       "name": "ss-copy",
@@ -62,7 +62,7 @@
       "type": "skill-md",
       "description": "Quick automated lint — detects common design system violations in seconds",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-lint/SKILL.md",
-      "digest": "sha256:f0e2bfcc4dfa896f1b27025154695e3de35fce9417decad98af6206d81e31ce3"
+      "digest": "sha256:bab3262fc273dec411acde8417b97b6df5ffbbd7f6fc871c74314c829b8c2ed0"
     },
     {
       "name": "ss-motion",
@@ -74,16 +74,16 @@
     {
       "name": "ss-page",
       "type": "skill-md",
-      "description": "Scaffold a new mobile page/screen using the StyleSeed layout patterns",
+      "description": "Scaffold a new product page or screen from the compiled StyleSeed output grammar, surface adapter, brand recipe, and project lock.",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-page/SKILL.md",
-      "digest": "sha256:aaddb3d1eae944e75a3fba68a3ce1ff89bf6494aba7e4c4b2a1461b7896aae03"
+      "digest": "sha256:9bf063da296951a4e783a1a3f8924a85506db28502a14a5d041d648e9b248e9c"
     },
     {
       "name": "ss-pattern",
       "type": "skill-md",
-      "description": "Generate a composed UI pattern (card layout, list, form section, grid, etc.) using design system primitives",
+      "description": "Generate a composed UI pattern from the active StyleSeed grammar and brand recipe using existing primitives.",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-pattern/SKILL.md",
-      "digest": "sha256:4070dcb6f931837630ee96de96829287958ed583ab67144a3f9cfadd2a9f13b5"
+      "digest": "sha256:1bd4d31cd3660977a5590f4d3aad7fe5e2851922fd050949802741915f50cad7"
     },
     {
       "name": "ss-reference",
@@ -95,9 +95,9 @@
     {
       "name": "ss-resolve",
       "type": "skill-md",
-      "description": "Compile a small, deterministic StyleSeed rule bundle for one agent, output grammar, surface adapter, domain, page type, and optional profile. Use before setup or build, when STYLESEED.md changes, when updating StyleSeed, or whenever an agent would otherwise load the full rule handbook.",
+      "description": "Compile a small, deterministic StyleSeed rule bundle for one agent, output grammar, surface adapter, domain, page type, brand recipe, and optional profile. Use before setup or build, when STYLESEED.md changes, when updating StyleSeed, or whenever an agent would otherwise load the full rule handbook.",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-resolve/SKILL.md",
-      "digest": "sha256:812847e357a32b142948e4ff4adf3dd215482f49c5ddc16a23ac208aa1cf8255"
+      "digest": "sha256:cbee0c514a35f432e682aa2300a3f839fcbfa87ddd9fe8bf1c3f15913779bcc2"
     },
     {
       "name": "ss-restyle",
@@ -111,21 +111,21 @@
       "type": "skill-md",
       "description": "Review UI code for design system compliance, accessibility, and best practices",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-review/SKILL.md",
-      "digest": "sha256:71af7fff0c297880844290fb528a465b287b4a61d260fab010cfd800b2827f4b"
+      "digest": "sha256:ad42bc6890a1e31b59c5728544a736d72f387fa817815f84bcfb1689265666e0"
     },
     {
       "name": "ss-score",
       "type": "skill-md",
       "description": "Score a visual artifact's implementation quality 0-100 against its composed StyleSeed rule set — category breakdown, evidence, and prioritized fixes.",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-score/SKILL.md",
-      "digest": "sha256:7ee493132931dd30908def0b0b2a86512cb81ad1966cc6b0189a3eec8c4a2f8e"
+      "digest": "sha256:5fe852129f91fa55b571460f11234ba57d69706803ddd33ba2622210769db859"
     },
     {
       "name": "ss-setup",
       "type": "skill-md",
-      "description": "Configure StyleSeed by selecting the output grammar, domain, page type, optional aesthetic profile, and bounded brand tokens before scaffolding a first screen.",
+      "description": "Configure StyleSeed by selecting the output grammar, domain, page type, brand recipe, optional aesthetic profile, and bounded brand tokens before scaffolding a first screen.",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-setup/SKILL.md",
-      "digest": "sha256:4a6e39d621609f1fb3d3a87bd908c974ac9768226a372edaf431b75b934c13d7"
+      "digest": "sha256:bd9ff7b66d77b24884e551db14aeeed26a2479c995ede242c07e6a8718ed2ab8"
     },
     {
       "name": "ss-tokens",
@@ -139,14 +139,14 @@
       "type": "skill-md",
       "description": "Update StyleSeed engine in your project — analyzes what's outdated and updates safely",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-update/SKILL.md",
-      "digest": "sha256:ff461d34557bf1b55e97fac60289d44ec07c170914f55d7d2fe764febf29e58f"
+      "digest": "sha256:799772e2c3b7b4a2964c609293afc6f37e45fdfe73fddc2e737ba769322192f6"
     },
     {
       "name": "ss-verify",
       "type": "skill-md",
       "description": "The VISUAL gate — render a UI or visual artifact through its surface adapter, inspect the actual pixels, then fix and re-render until it passes the composed StyleSeed rule set.",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-verify/SKILL.md",
-      "digest": "sha256:0c4625d43ed345e3ba1e81fe81f83cf7ca40105bc7d7426ed8fe69af69140a7e"
+      "digest": "sha256:0a4cc89acd6c83707b695082e2572c34b8ce53efdb7409662d101f938edd86eb"
     }
   ]
 }

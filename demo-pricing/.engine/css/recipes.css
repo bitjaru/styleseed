@@ -1,0 +1,174 @@
+/*
+ * StyleSeed brand recipes control morphology, not brand color.
+ * Put data-styleseed-recipe="<id>" on the artifact root. The neutral fallback
+ * intentionally avoids making the original soft-card language universal.
+ */
+:root {
+  --ss-page-gutter: 20px;
+  --ss-section-gap: 24px;
+  --ss-surface-radius: 10px;
+  --ss-surface-border-width: 1px;
+  --ss-surface-shadow: none;
+  --ss-surface-padding: 20px;
+  --ss-inset-radius: 6px;
+  --ss-control-radius: 6px;
+  --ss-icon-radius: 6px;
+  --ss-icon-background: var(--surface-muted);
+}
+
+[data-styleseed-recipe="calm-consumer"] {
+  --ss-page-gutter: 24px;
+  --ss-section-gap: 24px;
+  --ss-surface-radius: 20px;
+  --ss-surface-border-width: 0px;
+  --ss-surface-shadow: var(--shadow-card);
+  --ss-surface-padding: 24px;
+  --ss-inset-radius: 12px;
+  --ss-control-radius: 999px;
+  --ss-icon-radius: 10px;
+  --ss-icon-background: color-mix(in srgb, var(--brand) 10%, transparent);
+}
+
+[data-styleseed-recipe="native-mobile"] {
+  --ss-page-gutter: 20px;
+  --ss-section-gap: 20px;
+  --ss-surface-radius: 16px;
+  --ss-surface-border-width: 0px;
+  --ss-surface-shadow: none;
+  --ss-surface-padding: 20px;
+  --ss-inset-radius: 12px;
+  --ss-control-radius: 12px;
+  --ss-icon-radius: 999px;
+  --ss-icon-background: var(--surface-muted);
+}
+
+[data-styleseed-recipe="enterprise-workbench"] {
+  --ss-page-gutter: 24px;
+  --ss-section-gap: 16px;
+  --ss-surface-radius: 4px;
+  --ss-surface-border-width: 1px;
+  --ss-surface-shadow: none;
+  --ss-surface-padding: 20px;
+  --ss-inset-radius: 2px;
+  --ss-control-radius: 3px;
+  --ss-icon-radius: 2px;
+  --ss-icon-background: var(--surface-muted);
+}
+
+[data-styleseed-recipe="developer-platform"] {
+  --ss-page-gutter: 20px;
+  --ss-section-gap: 16px;
+  --ss-surface-radius: 6px;
+  --ss-surface-border-width: 1px;
+  --ss-surface-shadow: none;
+  --ss-surface-padding: 16px;
+  --ss-inset-radius: 4px;
+  --ss-control-radius: 5px;
+  --ss-icon-radius: 4px;
+  --ss-icon-background: transparent;
+}
+
+[data-styleseed-recipe="commerce-operator"] {
+  --ss-page-gutter: 24px;
+  --ss-section-gap: 20px;
+  --ss-surface-radius: 12px;
+  --ss-surface-border-width: 1px;
+  --ss-surface-shadow: none;
+  --ss-surface-padding: 20px;
+  --ss-inset-radius: 8px;
+  --ss-control-radius: 8px;
+  --ss-icon-radius: 6px;
+  --ss-icon-background: var(--surface-muted);
+}
+
+[data-styleseed-recipe="public-service"] {
+  --ss-page-gutter: 24px;
+  --ss-section-gap: 32px;
+  --ss-surface-radius: 0px;
+  --ss-surface-border-width: 0px;
+  --ss-surface-shadow: none;
+  --ss-surface-padding: 0px;
+  --ss-inset-radius: 0px;
+  --ss-control-radius: 0px;
+  --ss-icon-radius: 0px;
+  --ss-icon-background: transparent;
+}
+
+[data-styleseed-recipe="creative-professional"] {
+  --ss-page-gutter: 16px;
+  --ss-section-gap: 12px;
+  --ss-surface-radius: 6px;
+  --ss-surface-border-width: 1px;
+  --ss-surface-shadow: none;
+  --ss-surface-padding: 16px;
+  --ss-inset-radius: 4px;
+  --ss-control-radius: 5px;
+  --ss-icon-radius: 4px;
+  --ss-icon-background: var(--surface-muted);
+}
+
+[data-styleseed-recipe="editorial-authority"] {
+  --ss-page-gutter: 24px;
+  --ss-section-gap: 40px;
+  --ss-surface-radius: 0px;
+  --ss-surface-border-width: 0px;
+  --ss-surface-shadow: none;
+  --ss-surface-padding: 0px;
+  --ss-inset-radius: 0px;
+  --ss-control-radius: 2px;
+  --ss-icon-radius: 0px;
+  --ss-icon-background: transparent;
+}
+
+[data-styleseed-recipe="expressive-brand"] {
+  --ss-page-gutter: clamp(20px, 4vw, 48px);
+  --ss-section-gap: clamp(32px, 6vw, 80px);
+  --ss-surface-radius: 16px;
+  --ss-surface-border-width: 1px;
+  --ss-surface-shadow: 0 24px 70px -42px rgb(0 0 0 / 45%);
+  --ss-surface-padding: clamp(20px, 3vw, 40px);
+  --ss-inset-radius: 10px;
+  --ss-control-radius: 10px;
+  --ss-icon-radius: 8px;
+  --ss-icon-background: transparent;
+}
+
+.ss-page-gutter {
+  margin-inline: var(--ss-page-gutter);
+}
+
+.ss-page-padding {
+  padding-inline: var(--ss-page-gutter);
+}
+
+.ss-pattern-stack {
+  gap: var(--ss-section-gap);
+}
+
+.ss-component-surface {
+  border: var(--ss-surface-border-width) solid var(--border, var(--surface-muted));
+  border-radius: var(--ss-surface-radius);
+  background: var(--card);
+  box-shadow: var(--ss-surface-shadow);
+}
+
+.ss-pattern-surface {
+  border: var(--ss-surface-border-width) solid var(--border, var(--surface-muted));
+  border-radius: var(--ss-surface-radius);
+  background: var(--card);
+  box-shadow: var(--ss-surface-shadow);
+  padding: var(--ss-surface-padding);
+}
+
+.ss-pattern-inset {
+  border-radius: var(--ss-inset-radius);
+}
+
+.ss-pattern-control {
+  border-radius: var(--ss-control-radius);
+}
+
+.ss-pattern-icon {
+  border-radius: var(--ss-icon-radius);
+  background: var(--ss-icon-background);
+}

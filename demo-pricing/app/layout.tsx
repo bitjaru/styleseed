@@ -11,7 +11,7 @@ const inter = Inter({
 const SITE_URL = "https://styleseed-demo.vercel.app";
 const SITE_NAME = "StyleSeed";
 const SITE_DESC =
-  "AI design-method engine for vibe coding — 8 output grammars, 5 surface adapters, and a reference compiler that turns screenshots, URLs, Figma, or existing UI into evidence-backed design rules. MIT licensed.";
+  "AI design-method engine for vibe coding — 8 output grammars, 9 brand recipes, 5 surface adapters, and a reference compiler that turns screenshots, URLs, Figma, or existing UI into evidence-backed design rules. MIT licensed.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -109,12 +109,12 @@ export default function RootLayout({
         operatingSystem: "Web",
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
         license: "https://opensource.org/licenses/MIT",
-        softwareVersion: "3.0.0",
+        softwareVersion: "3.2.0",
         programmingLanguage: ["Markdown", "TypeScript", "React", "Python"],
         codeRepository: "https://github.com/bitjaru/styleseed",
         publisher: { "@id": `${SITE_URL}/#organization` },
         isPartOf: { "@id": `${SITE_URL}/#website` },
-        dateModified: "2026-07-20",
+        dateModified: "2026-07-31",
         keywords:
           "design method for AI, Claude Code, Cursor, Codex, output grammars, reference compiler, AI UI, carousel design, vibe coding, design judgment",
         sameAs: SAME_AS,
@@ -140,6 +140,7 @@ export default function RootLayout({
           { "@id": `${SITE_URL}/codex-ui-design#article` },
           { "@id": `${SITE_URL}/showcase#page` },
           { "@id": `${SITE_URL}/architecture#page` },
+          { "@id": `${SITE_URL}/recipes#page` },
         ],
       },
     ],

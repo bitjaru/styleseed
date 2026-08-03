@@ -8,6 +8,7 @@ const root = resolve(here, '..')
 const engineDir = resolve(root, '../engine')
 const skillsDir = resolve(engineDir, '.claude/skills')
 const componentsDir = resolve(engineDir, 'components')
+const engineCssDir = resolve(engineDir, 'css')
 const skinsDir = resolve(root, '../skins')
 const publicDir = resolve(root, 'public')
 const wellKnownAgent = resolve(publicDir, '.well-known/agent-skills')
@@ -67,6 +68,7 @@ const productPrinciples = readOpt('PRODUCT-PRINCIPLES.md')
 const craftBaseline = readOpt('CRAFT-BASELINE.md')
 const ruleSets = readOpt('RULESETS.md')
 const adapters = readOpt('ADAPTERS.md')
+const brandRecipes = readOpt('BRAND-RECIPES.md')
 const presets = readOpt('PRESETS.md')
 const referenceCompiler = readOpt('REFERENCE-COMPILER.md')
 const architecture = readOpt('ARCHITECTURE.md')
@@ -84,6 +86,7 @@ writeFileSync(
     (architecture ? architecture + '\n\n---\n\n' : '') +
     (ruleSets ? ruleSets + '\n\n---\n\n' : '') +
     (adapters ? adapters + '\n\n---\n\n' : '') +
+    (brandRecipes ? brandRecipes + '\n\n---\n\n' : '') +
     (presets ? presets + '\n\n---\n\n' : '') +
     (referenceCompiler ? referenceCompiler + '\n\n---\n\n' : '') +
     claude +
@@ -146,6 +149,7 @@ const grammarIds = Object.keys(contextCatalog.grammars)
 const adapterIds = Object.keys(contextCatalog.adapters)
 const domainIds = Object.keys(contextCatalog.domains)
 const pageIds = Object.keys(contextCatalog.pages)
+const recipeIds = Object.keys(contextCatalog.recipes)
 const profileIds = Object.keys(contextCatalog.profiles)
 const versionJsonPath = resolve(publicDir, 'version.json')
 const currentVersionJson = JSON.parse(readFileSync(versionJsonPath, 'utf8'))
@@ -158,6 +162,7 @@ writeFileSync(
       skills: skills.length,
       grammars: grammarIds.length,
       adapters: adapterIds.length,
+      recipes: recipeIds.length,
     },
     null,
     2,
@@ -188,6 +193,7 @@ handbook.
 - Adapters: ${adapterIds.map((id) => `\`${id}\``).join(' · ')}
 - Domains: ${domainIds.map((id) => `\`${id}\``).join(' · ')}
 - Pages: ${pageIds.map((id) => `\`${id}\``).join(' · ')}
+- Brand recipes: \`auto\` · ${recipeIds.map((id) => `\`${id}\``).join(' · ')}
 - Optional profiles: \`none\` · ${profileIds.map((id) => `\`${id}\``).join(' · ')}
 
 If supplied references do not fit a maintained grammar, use \`ss-reference\` to compile a
@@ -338,12 +344,20 @@ const skinsManifest = skinFolders.map((id) => {
   }
 })
 
+const recipeManifest = recipeIds.map((id) => ({
+  id,
+  source: 'engine/BRAND-RECIPES.md',
+  sourceUrl: `${REPO_RAW}/engine/BRAND-RECIPES.md`,
+  contract: contextCatalog.recipes[id],
+  digest: 'sha256:' + createHash('sha256').update(contextCatalog.recipes[id]).digest('hex'),
+}))
+
 writeFileSync(
   resolve(wellKnownSeed, 'registry.json'),
   JSON.stringify(
     {
       $schema: 'https://styleseed-demo.vercel.app/.well-known/styleseed/registry.schema.json',
-      version: '3',
+      version: '4',
       generated: new Date().toISOString(),
       repository: 'https://github.com/bitjaru/styleseed',
       counts: {
@@ -352,6 +366,7 @@ writeFileSync(
         adapters: adapterIds.length,
         domains: domainIds.length,
         pages: pageIds.length,
+        recipes: recipeIds.length,
         profiles: profileIds.length,
         components: components.length,
         byType: {
@@ -367,9 +382,11 @@ writeFileSync(
         adapterIds,
         domainIds,
         pageIds,
+        recipeIds,
         profileIds,
       },
       components,
+      recipes: recipeManifest,
       skins: skinsManifest,
     },
     null,
@@ -449,6 +466,9 @@ writeFileSync(resolve(root, 'app/skins.css'), skinsCss)
 const engineMirror = resolve(root, '.engine')
 rmSync(engineMirror, { recursive: true, force: true })
 cpSync(componentsDir, resolve(engineMirror, 'components'), { recursive: true })
+if (existsSync(engineCssDir)) {
+  cpSync(engineCssDir, resolve(engineMirror, 'css'), { recursive: true })
+}
 const motionDir = resolve(engineDir, 'motion')
 if (existsSync(motionDir)) {
   cpSync(motionDir, resolve(engineMirror, 'motion'), { recursive: true })
@@ -462,4 +482,5 @@ console.log(
 )
 console.log(`✓ wrote app/skins.css (${skinBlocks.length} skin blocks + @theme inline)`)
 console.log(`✓ mirrored engine/components → .engine/components`)
+if (existsSync(engineCssDir)) console.log(`✓ mirrored engine/css → .engine/css`)
 if (existsSync(motionDir)) console.log(`✓ mirrored engine/motion → .engine/motion`)

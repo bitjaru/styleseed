@@ -19,7 +19,7 @@ function SectionCard({
     <div
       data-slot="section-card"
       className={cn(
-        "mx-6 bg-card rounded-2xl p-6 shadow-[var(--shadow-card)]",
+        "ss-page-gutter ss-pattern-surface",
         className,
       )}
       {...props}

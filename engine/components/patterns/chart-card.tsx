@@ -33,7 +33,7 @@ function ChartCard({
     <div
       data-slot="chart-card"
       className={cn(
-        "mx-6 bg-card rounded-2xl p-6 shadow-[var(--shadow-card)]",
+        "ss-page-gutter ss-pattern-surface",
         className,
       )}
       {...props}
@@ -49,13 +49,13 @@ function ChartCard({
         </div>
 
         {periods && (
-          <div className="flex gap-1 bg-surface-muted p-1 rounded-full">
+          <div className="flex gap-1 bg-surface-muted p-1 ss-pattern-control">
             {periods.map((period) => (
               <button
                 key={period}
                 onClick={() => onPeriodChange?.(period)}
                 className={cn(
-                  "px-4 py-1.5 text-[11px] font-semibold rounded-full transition-all",
+                  "px-4 py-1.5 text-[11px] font-semibold ss-pattern-control transition-all",
                   activePeriod === period
                     ? "bg-brand text-white shadow-sm"
                     : "text-text-tertiary",

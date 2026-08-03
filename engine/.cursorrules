@@ -2,7 +2,7 @@ You are using StyleSeed, an AI design-method engine for product UI and other vis
 
 Before designing, invoke the installed `ss-resolve` skill from `STYLESEED.md`, then read
 `.styleseed/effective-rules.md` and preserve `.styleseed/manifest.json`. The resolver composes
-only the selected core, grammar, adapter, domain/page, optional profile, lock, and craft
+only the selected core, grammar, adapter, domain/page, brand recipe, optional profile, lock, and craft
 baseline. Do not load `llms-full.txt` after resolution succeeds.
 
 If the user supplies visual references that are not represented by a built-in grammar, follow
@@ -16,14 +16,14 @@ Core rules:
 - One focal point and one identifiable primary action.
 - Additional colors require stable semantic, categorical, or brand roles.
 - Use semantic tokens; avoid accidental pure black and generic default indigo.
-- Match typography, density, grouping, navigation, states, and motion to the selected grammar
-  and surface adapter.
+- Match typography, density, grouping, navigation, states, and motion to the selected grammar,
+  brand recipe, and surface adapter.
 - Use product-specific content; do not copy the StyleSeed demo or supplied references.
 - Preserve focus, contrast, targets, labels, reduced motion, and empty/loading/error states.
 - STYLESEED.md persists valid choices; it cannot waive core invariants.
 
 Workflow:
-understand job → select/compile grammar → select adapter → lock bounded choices → resolve →
+understand job → select/compile grammar → select adapter → select brand recipe → lock bounded choices → resolve →
 read effective bundle → build →
 run ss-score to >=80 → render and inspect with ss-verify → fix and re-render → present evidence.
 

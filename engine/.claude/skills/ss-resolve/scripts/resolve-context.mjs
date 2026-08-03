@@ -46,6 +46,7 @@ Options:
   --adapter <id>
   --domain <id|none>
   --page <id|none>
+  --recipe <id|auto>
   --profile <id|none>
   --fallback <built-in grammar id>   required for reference grammars without lock fallback
   --from-lock <path>
@@ -67,6 +68,7 @@ function parseLock(path) {
     "Page type": "page",
     "Output grammar": "grammar",
     "Grammar fallback": "fallback",
+    "Brand recipe": "recipe",
     "Aesthetic profile": "profile",
   };
   for (const line of text.split(/\r?\n/)) {
@@ -116,6 +118,7 @@ if (args.list) {
         adapters: Object.keys(catalog.adapters),
         domains: Object.keys(catalog.domains),
         pages: Object.keys(catalog.pages),
+        recipes: ["auto", ...Object.keys(catalog.recipes)],
         profiles: ["none", ...Object.keys(catalog.profiles)],
       },
       null,
@@ -133,6 +136,7 @@ const grammar = choose(args, lock, "grammar");
 const adapter = choose(args, lock, "adapter");
 const domain = choose(args, lock, "domain", "none");
 const page = choose(args, lock, "page", "none");
+const requestedRecipe = choose(args, lock, "recipe", "auto");
 const profile = choose(args, lock, "profile", "none");
 const fallback = choose(args, lock, "fallback");
 
@@ -144,6 +148,7 @@ if (!catalog.agents[agent]) {
 
 let grammarContent;
 let grammarSource = `built-in:${grammar}`;
+let recipeGrammar = grammar;
 if (grammar.startsWith("reference:")) {
   const slug = grammar.slice("reference:".length);
   if (!/^[a-z0-9][a-z0-9-]*$/.test(slug)) throw new Error(`Invalid reference grammar slug: ${slug}`);
@@ -159,15 +164,32 @@ if (grammar.startsWith("reference:")) {
   if (!fallback) {
     throw new Error("Reference grammars require --fallback or a Grammar fallback value in STYLESEED.md.");
   }
+  recipeGrammar = fallback;
   const fallbackContent = requireId("grammars", fallback, "fallback grammar");
   grammarContent = `${fallbackContent}\n\n## Project-local reference grammar override\n\n${referenceContent}${referenceChecks}`;
 } else {
   grammarContent = requireId("grammars", grammar, "grammar");
 }
 
+const autoRecipeByGrammar = {
+  "consumer-service": "calm-consumer",
+  "operations-console": "enterprise-workbench",
+  "technical-instrument": "developer-platform",
+  "editorial-reading": "editorial-authority",
+  "commerce-conversion": "commerce-operator",
+  "institutional-service": "public-service",
+  "expressive-marketing": "expressive-brand",
+  "sequential-story": "creative-professional",
+};
+const recipe = requestedRecipe === "auto" ? autoRecipeByGrammar[recipeGrammar] : requestedRecipe;
+if (!recipe) {
+  throw new Error(`No automatic brand recipe for grammar "${recipeGrammar}". Pass --recipe.`);
+}
+
 const adapterContent = requireId("adapters", adapter, "adapter");
 const domainContent = requireId("domains", domain, "domain");
 const pageContent = requireId("pages", page, "page");
+const recipeContent = requireId("recipes", recipe, "brand recipe");
 const profileContent = requireId("profiles", profile, "profile");
 
 const selected = {
@@ -178,6 +200,8 @@ const selected = {
   adapter,
   domain,
   page,
+  recipe,
+  recipeSelection: requestedRecipe,
   profile,
 };
 
@@ -188,6 +212,7 @@ const sections = [
   ["adapter", adapterContent],
   ...(domainContent ? [["domain", domainContent]] : []),
   ...(pageContent ? [["page", pageContent]] : []),
+  ["recipe", recipeContent],
   ...(profileContent ? [["profile", profileContent]] : []),
   ...(lock.text ? [["lock", `## Project design lock\n\n${lock.text}`]] : []),
   ["craft", catalog.craft],
@@ -204,9 +229,10 @@ const bundle = [
   `- Surface adapter: ${adapter}`,
   `- Domain: ${domain}`,
   `- Page type: ${page}`,
+  `- Brand recipe: ${recipe}${requestedRecipe === "auto" ? " (auto)" : ""}`,
   `- Aesthetic profile: ${profile}`,
   "",
-  "Read this bundle before implementation. The agent execution contract is operational; method authority then runs core → grammar → adapter → domain/page → profile → lock → compact craft baseline, with the earlier method layer winning conflicts. Run the code gate and rendered visual gate.",
+  "Read this bundle before implementation. The agent execution contract is operational; method authority then runs core → grammar → adapter → domain/page → brand recipe → profile → lock → compact craft baseline, with the earlier method layer winning conflicts. Run the code gate and rendered visual gate.",
   "",
   ...sections.flatMap(([, content]) => [content, "", "---", ""]),
 ].join("\n").replace(/\n---\n\s*$/, "\n");
@@ -255,7 +281,7 @@ mkdirSync(outDir, { recursive: true });
 writeFileSync(bundlePath, bundle);
 writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
 console.log(
-  `StyleSeed ${catalog.engineVersion}: ${grammar} × ${adapter} × ${domain} × ${page} × ${profile}`,
+  `StyleSeed ${catalog.engineVersion}: ${grammar} × ${adapter} × ${domain} × ${page} × ${recipe} × ${profile}`,
 );
 console.log(`wrote ${bundlePath} (${Buffer.byteLength(bundle)} bytes, sha256:${bundleHash})`);
 console.log(`wrote ${manifestPath}`);

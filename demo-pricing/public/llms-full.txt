@@ -1,7 +1,7 @@
 # StyleSeed — Full Context
 
 Source: github.com/bitjaru/styleseed (constitution + grammars + adapters + compiler + craft)
-Generated: 2026-07-31T03:37:38.393Z
+Generated: 2026-07-31T06:33:41.753Z
 
 ---
 
@@ -26,6 +26,7 @@ Core judgment
   × one surface adapter from ADAPTERS.md
   × one domain playbook from APP-PLAYBOOKS.md
   × one page type from PAGE-TYPES.md
+  × one brand recipe from BRAND-RECIPES.md
   × optional aesthetic profile from PRESETS.md
   × bounded project tokens from STYLESEED.md
 = the rules for this screen
@@ -40,10 +41,12 @@ When instructions disagree, use this order:
    project-local grammar compiled by `REFERENCE-COMPILER.md`.
 3. **Surface adapter** — the renderer contract and physical constraints in `ADAPTERS.md`.
 4. **Domain playbook** and **page/artifact type**.
-5. **Aesthetic profile** — an optional coordinated restyle from `PRESETS.md`.
-6. **Design lock** — records selections and bounded project parameters.
-7. **Skins and components** — implementation material, not sources of judgment.
-8. **Score and visual verification** — evidence that the method was applied.
+5. **Brand recipe** — a reusable morphology and component-selection contract from
+   `BRAND-RECIPES.md`.
+6. **Aesthetic profile** — an optional coordinated restyle from `PRESETS.md`.
+7. **Design lock** — records selections and bounded project parameters.
+8. **Skins and components** — implementation material, not sources of judgment.
+9. **Score and visual verification** — evidence that the method was applied.
 
 `STYLESEED.md` is persistence, not permission. An arbitrary value in the lock never turns
 a violation into a sound design decision. Unknown values fall back to the nearest maintained
@@ -73,7 +76,7 @@ These apply to every grammar, profile, domain, page, skin, and agent:
 The lock may select only inputs the engine understands:
 
 - domain, surface adapter, page/artifact type, and one output grammar;
-- one optional aesthetic profile and one skin or semantic token set;
+- one maintained brand recipe, one optional aesthetic profile, and one skin or semantic token set;
 - primary action/accent, type pairing, density, radius, elevation, imagery, and motion values
   inside the selected grammar's allowed ranges;
 - one product-specific signature move that still obeys the invariants;
@@ -101,7 +104,7 @@ drift, but they never choose or rewrite the design philosophy after the fact.
 
 This is the small, task-independent craft layer used by the Context Compiler. It preserves
 the highest-leverage rules without injecting the full design handbook into every agent turn.
-The selected output grammar, adapter, domain, page type, profile, and project lock narrow these
+The selected output grammar, adapter, domain, page type, brand recipe, profile, and project lock narrow these
 defaults. `PRODUCT-PRINCIPLES.md` remains the higher authority.
 
 ## Coherence
@@ -180,6 +183,7 @@ flowchart LR
   P[Core judgment<br/>non-negotiable] --> F
   S[Surface adapter<br/>canvas · renderer · export] --> F
   X[Domain + page type] --> F
+  Z[Brand recipe<br/>morphology · components] --> F
   Y[Optional style profile] --> F
   L[STYLESEED.md<br/>bounded selections] --> F
   F --> K[Effective rule bundle<br/>manifest + source hashes]
@@ -200,6 +204,7 @@ flowchart LR
 | Surface adapter | Translate method into an artifact/render contract | canvas, safe zones, export, surface QA | visual authority or product judgment |
 | Reference compiler | Derive a local grammar from evidence | local rules with confidence | global built-ins or protected assets |
 | Domain + page playbooks | Contextual composition bias | content/order/detail decisions | grammar identity |
+| Brand recipe | Apply reusable morphology and component selection | geometry, containment, controls, collections | grammar job, protected brand assets, or accessibility |
 | Aesthetic profile | Coordinated look adjustment | radius, density, tone, motion within bounds | task structure |
 | Design lock | Persist selected values | known enums and project tokens | invent exceptions or waive rules |
 | Context compiler | Emit the selected method with provenance | deterministic bundle + manifest | silently invent or merge unknown IDs |
@@ -233,6 +238,7 @@ effectiveRules, manifest = compile(
   surfaceAdapter,
   domainPlaybook,
   pageType,
+  brandRecipe,
   optionalStyleProfile,
   boundedDesignLock
 )
@@ -244,7 +250,7 @@ manifest records the exact selection, source hashes, bundle hash, and byte size;
 fails when the stored bundle no longer matches its sources or lock.
 
 The design lock stores selections; it is not executable policy. Unknown grammar, adapter,
-domain, page, or profile IDs are rejected. Project-local reference grammars require a maintained
+domain, page, recipe, or profile IDs are rejected. Project-local reference grammars require a maintained
 built-in fallback.
 
 ## Non-web outputs
@@ -270,6 +276,8 @@ Both gates return to the build loop. Neither gate is the design engine; the comp
 
 - Add a new built-in grammar only after the promotion rule in `RULESETS.md` passes.
 - Use `/ss-reference` for project-specific or emerging languages.
+- Add a brand recipe only when reusable morphology is supported by independent sources and
+  transfer tests; never add a company clone.
 - Add a new aesthetic profile only when it is a full coordinated axis contract, not a mood word.
 - Keep components and skins downstream. They implement a decision; they do not decide.
 
@@ -568,6 +576,265 @@ failure modes, and prove the exported artifact can be visually inspected.
 
 ---
 
+# StyleSeed Brand Recipes
+
+A brand recipe is a maintained **morphology contract**: geometry, containment, density,
+navigation, controls, data treatment, and motion. It changes what an agent selects and how the
+pieces are composed. It is not a color skin, a component clone, or permission to imitate a
+company's protected assets.
+
+```text
+output grammar = what job and attention structure the result needs
+brand recipe   = what reusable shape language implements that structure
+style profile  = an optional coordinated aesthetic adjustment
+skin           = semantic color and type tokens
+```
+
+Choose one recipe after the output grammar. `auto` selects the maintained mapping for the
+grammar; an explicit recipe is useful when the product category and brand posture need a
+different morphology. A recipe may narrow component choices but cannot override the grammar,
+surface adapter, accessibility, or project-local reference evidence.
+
+## Selection guide
+
+| Recipe | Best for | Reference families | Characteristic morphology |
+|---|---|---|---|
+| `calm-consumer` | personal finance, health, benefits, friendly utilities | Toss, Wise, consumer-service research | soft grouping, one reassuring summary, sparse actions |
+| `native-mobile` | iOS/Android-first utilities and focused mobile tasks | Apple HIG, platform conventions | content-first chrome, reachable controls, adaptive system patterns |
+| `enterprise-workbench` | B2B operations, admin, analytics, workflow | Carbon, Fluent, Atlassian | aligned panels, compact controls, visible structure, dense evidence |
+| `developer-platform` | developer tools, infrastructure, repositories | Primer, Linear/Vercel research | hairlines, compact rows, mono evidence, restrained dark layers |
+| `commerce-operator` | merchant admin, catalog, fulfillment, support | Shopify Polaris, commerce research | task queues, resource rows, contextual actions, operational status |
+| `public-service` | government, regulated forms, consequential services | GOV.UK Design System, USWDS | flat high-contrast flow, explicit labels, one step at a time |
+| `creative-professional` | creation tools, media workflows, pro editing | Adobe Spectrum | focused canvas, tool groups, platform scale, quiet utility chrome |
+| `editorial-authority` | reports, journalism, research, documentation | editorial systems, public-content guidance | type-led hierarchy, reading measure, rules and whitespace over cards |
+| `expressive-brand` | launches, campaigns, portfolios, social stories | independent brand and campaign systems | signature composition, display type, controlled contrast and motion |
+
+## Auto selection
+
+| Output grammar | Default recipe |
+|---|---|
+| `consumer-service` | `calm-consumer` |
+| `operations-console` | `enterprise-workbench` |
+| `technical-instrument` | `developer-platform` |
+| `editorial-reading` | `editorial-authority` |
+| `commerce-conversion` | `commerce-operator` |
+| `institutional-service` | `public-service` |
+| `expressive-marketing` | `expressive-brand` |
+| `sequential-story` | `creative-professional` |
+
+The defaults are starting points, not product-category stereotypes. For example, a mobile
+warehouse tool can use `operations-console × native-mobile`, and a research launch can use
+`expressive-marketing × editorial-authority`.
+
+## Required recipe contract
+
+Every built-in recipe defines:
+
+1. best-fit jobs and compatible grammars;
+2. containment and page-shell model;
+3. radius, border, elevation, and spacing behavior;
+4. typography and icon behavior;
+5. navigation, controls, collection, and data morphology;
+6. motion and responsive behavior;
+7. one characteristic move to require;
+8. anti-patterns and protected details to reject;
+9. evidence lineage and official source URLs.
+
+## `calm-consumer`
+
+- **Best fit:** personal state, reassurance, benefits, lightweight health, and short recurring
+  tasks. Strong with `consumer-service`; usable for a gentle `commerce-conversion`.
+- **Containment:** tonal groups and a few soft cards. One summary may float; secondary rows
+  should not become an equal card wall.
+- **Geometry:** 12–20px outer radius, smaller nested radius, restrained shadow or tonal
+  separation, comfortable 20–24px gutters.
+- **Type/icons:** friendly sans, plain-language values, simple line icons without repeated
+  tinted icon chips.
+- **Controls/collections:** reachable primary action, short rows or grouped sections, pill
+  controls only for true compact choices.
+- **Motion:** immediate and reassuring; spring may be restrained; consequential values do not
+  count theatrically.
+- **Characteristic move:** one calm contextual briefing connected to the user's current state.
+- **Reject:** copying Toss layouts, every service as a rounded card, blue as an automatic brand,
+  cute language in serious states, or chips as decoration.
+- **Lineage:** StyleSeed consumer-service research; brand examples are evidence, not sources to
+  copy.
+
+## `native-mobile`
+
+- **Best fit:** focused mobile utilities, capture, communication, media, and one-handed tasks.
+  Compatible with any grammar whose primary surface is a mobile app.
+- **Containment:** content is primary; navigation and controls recede into platform-familiar
+  bars, sheets, lists, and grouped regions.
+- **Geometry:** platform-aware radii and materials, 16–20px screen gutters, touch targets at
+  least 44px, no desktop card grid squeezed into a phone.
+- **Type/icons:** dynamic type and platform conventions; system symbols when licensed for the
+  target platform, otherwise one consistent open icon family.
+- **Controls/collections:** few visible controls, secondary actions disclosed nearby, common
+  gestures have visible alternatives, important actions remain reachable.
+- **Motion/responsive:** adapt to orientation, dark mode, text scaling, and device insets;
+  transitions preserve spatial continuity.
+- **Characteristic move:** one content-first task with controls concentrated in the reachable
+  middle or lower region.
+- **Reject:** decorative glass imitation, copying Apple assets, invisible gesture-only actions,
+  tiny targets, or a web navbar pretending to be native.
+- **Lineage:** [Apple Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines).
+
+## `enterprise-workbench`
+
+- **Best fit:** admin, analytics, operations, collaboration, and multi-step B2B work. Strong
+  with `operations-console`.
+- **Containment:** persistent shell, aligned panels, toolbars, tables, and detail regions.
+  Group by work relationship; use card grids sparingly.
+- **Geometry:** 0–8px radius, 1px boundaries or tonal layers, minimal floating shadow, 16–24px
+  page rhythm on an explicit grid.
+- **Type/icons:** neutral UI sans, tabular numbers, compact labels, one functional icon family.
+- **Controls/collections:** rectangular controls, visible filters, bulk actions, dense rows,
+  comparison tables, and preserved loading geometry.
+- **Motion/responsive:** fast state changes; panels reflow or collapse by task priority rather
+  than merely shrinking.
+- **Characteristic move:** one operational focal panel connected directly to an actionable
+  queue or evidence table.
+- **Reject:** identical KPI cards, oversized mobile typography on desktop, decorative
+  gradients, hidden scope controls, or floating shadows on every panel.
+- **Lineage:** [IBM Carbon 2x Grid](https://carbondesignsystem.com/elements/2x-grid/overview/),
+  [Microsoft Fluent 2](https://fluent2.microsoft.design/design-principles),
+  [Atlassian foundations](https://atlassian.design/foundations).
+
+## `developer-platform`
+
+- **Best fit:** repositories, observability, infrastructure, APIs, and security. Strong with
+  `technical-instrument`; usable for technical `operations-console`.
+- **Containment:** stable shell, compact toolbars, hairline-separated rows, code/evidence
+  regions, and contextual drill-down.
+- **Geometry:** 4–8px radius, hairline borders, little or no shadow, compact 12–20px rhythm.
+- **Type/icons:** sans for UI; mono only for identifiers, timestamps, logs, commands, and aligned
+  numeric evidence. Icons are small and functional.
+- **Controls/collections:** rectangular or lightly rounded controls, status-aware tables,
+  timelines, command palettes, and copyable evidence.
+- **Motion/responsive:** near-instant, non-blocking, time-aware; live/paused state is explicit.
+- **Characteristic move:** one inspectable evidence region that connects status to diagnosis.
+- **Reject:** terminal cosplay, neon telemetry, mono body copy, rounded feature-card grids, or
+  animation that competes with live data.
+- **Lineage:** [GitHub Primer foundations](https://primer.style/product/getting-started/foundations/)
+  and [Primer pattern guidance](https://primer.style/product/contribute/design/).
+
+## `commerce-operator`
+
+- **Best fit:** merchant admin, inventory, orders, fulfillment, customer support, and complex
+  purchase operations. Strong with `operations-console` and `commerce-conversion`.
+- **Containment:** resource index → filters → actionable rows → contextual detail. Cards group
+  merchant decisions, not every datum.
+- **Geometry:** 8–12px radius, clear boundaries, moderate density, restrained elevation for
+  overlays and temporary context only.
+- **Type/icons:** highly scannable labels and values; product imagery is evidence; status text
+  accompanies semantic color.
+- **Controls/collections:** filter bars, resource tables/lists, contextual actions, variant and
+  fulfillment state, reversible mutations.
+- **Motion/responsive:** preserve selection and filters; mobile promotes the current task and
+  moves secondary columns into detail.
+- **Characteristic move:** a resource row or order state exposes the next operational action
+  without opening a decorative card.
+- **Reject:** promotional rainbow admin UI, buried costs or constraints, ambiguous statuses,
+  equal-weight analytics tiles, or urgency dark patterns.
+- **Lineage:** [Shopify Polaris](https://polaris-react.shopify.com/) and StyleSeed commerce
+  research. Reuse concepts, not Shopify trade dress.
+
+## `public-service`
+
+- **Best fit:** eligibility, applications, regulated forms, healthcare workflows, and civic
+  services. Strong with `institutional-service`.
+- **Containment:** flat document flow, bounded reading measure, explicit sections, one step at a
+  time, review, confirmation, and recovery.
+- **Geometry:** 0–4px radius, strong visible boundaries, no decorative shadow, generous vertical
+  separation, high-contrast focus.
+- **Type/icons:** robust sans, plain language, adjacent labels/help, icons never replace critical
+  words.
+- **Controls/collections:** rectangular buttons and inputs, clear legends, summaries and error
+  links, preserved entered data, reference number on completion.
+- **Motion/responsive:** minimal and non-essential; layout survives zoom, reflow, text scaling,
+  keyboard, and assistive technology.
+- **Characteristic move:** the current task and its requirements are more visually prominent
+  than the organization brand.
+- **Reject:** low-contrast minimalism, novelty navigation, hidden prerequisites, rounded app
+  cards, altered control meanings, or motion that makes the workflow feel unstable.
+- **Lineage:** [GOV.UK patterns](https://design-system.service.gov.uk/patterns/) and
+  [community principles](https://design-system.service.gov.uk/community/community-principles/).
+
+## `creative-professional`
+
+- **Best fit:** creation, editing, asset management, media, and expert cross-platform tools.
+  Compatible with `operations-console`, `technical-instrument`, and `sequential-story`.
+- **Containment:** focused canvas or artifact, quiet utility chrome, named tool groups, inspectors,
+  and progressive disclosure.
+- **Geometry:** 4–8px radius, crisp boundaries, restrained layers, density adapts between
+  pointer and touch.
+- **Type/icons:** rational, compact, internationalizable labels; icons support trained use but
+  critical actions retain text or discoverable labels.
+- **Controls/collections:** toolbars, property panels, asset grids, contextual controls, and
+  explicit selection state.
+- **Motion/responsive:** desktop and mobile scale independently while sharing one language;
+  motion explains selection, mode, and spatial change.
+- **Characteristic move:** the user's work occupies the focal field while tools form a
+  disciplined supporting frame.
+- **Reject:** decoration around the canvas, one scale stretched across all inputs, unlabeled
+  mystery tools, or copying Adobe product chrome.
+- **Lineage:** [Adobe Spectrum principles](https://spectrum.adobe.com/page/principles/) and
+  [platform scale](https://spectrum.adobe.com/page/platform-scale/).
+
+## `editorial-authority`
+
+- **Best fit:** journalism, reports, research, policy, and documentation. Strong with
+  `editorial-reading`; usable for evidence-heavy `expressive-marketing`.
+- **Containment:** type, whitespace, rules, captions, and bounded columns replace app cards.
+  Chrome recedes after orientation.
+- **Geometry:** 0–4px radius, hairline rules, little or no shadow, generous section rhythm and
+  45–90 character reading measures.
+- **Type/icons:** deliberate display/body roles, serif optional and role-specific, captions and
+  sources remain attached to evidence.
+- **Controls/collections:** calm inline actions, table of contents, footnotes, save/share,
+  figures, pull quotes, and related context after the narrative.
+- **Motion/responsive:** reading position and disclosure only; narrow screens preserve hierarchy
+  and source relationships rather than stacking arbitrary cards.
+- **Characteristic move:** an authoritative opening promise followed by inspectable evidence.
+- **Reject:** dashboard chrome around prose, every section in a card, overly wide measure, serif
+  everywhere, fake print texture, or interruption-heavy interactions.
+- **Lineage:** StyleSeed editorial research and public-content accessibility guidance.
+
+## `expressive-brand`
+
+- **Best fit:** campaigns, launches, portfolios, brand pages, posters, and social stories.
+  Strong with `expressive-marketing` and `sequential-story`.
+- **Containment:** section form varies with the narrative; proof, product media, and display type
+  create rhythm instead of a repeated feature-card template.
+- **Geometry:** project-specific and intentionally consistent; one signature geometry may be
+  sharp, soft, or sculptural, but nested and control shapes stay coherent.
+- **Type/icons:** distinctive display hierarchy plus readable body; commissioned or licensed
+  imagery carries identity more than generic icons.
+- **Controls/collections:** one identifiable CTA, product demonstrations, outcomes, and examples;
+  repeated collections earn their repetition.
+- **Motion/responsive:** cinematic choreography is allowed when native scroll remains under user
+  control and reduced motion yields a complete result.
+- **Characteristic move:** one product-specific visual mechanism that could not be swapped into
+  an unrelated landing page.
+- **Reject:** generic gradient headlines, equal three-card rows, fake metrics, scroll-jacking,
+  copied campaign compositions, or motion that substitutes for a proposition.
+- **Lineage:** independent brand/campaign research; compile supplied references with
+  `ss-reference` when a particular visual language matters.
+
+## Legal and promotion boundary
+
+- Reference-family names document provenance; never present a recipe as official, endorsed, or
+  pixel-compatible with those systems.
+- Do not redistribute protected logos, proprietary icons, fonts, illustrations, product copy,
+  screenshots, or trademarked arrangements.
+- A project-local reference grammar remains the correct path for a specific brand. Promote it to
+  a built-in recipe only after multiple independent sources and transfer tests prove that the
+  morphology is reusable and not a clone.
+
+
+---
+
 # StyleSeed Aesthetic Profiles
 
 Profiles are optional coordinated **aesthetic coordinates** used by `/ss-restyle`. They are
@@ -677,7 +944,8 @@ never define the method.
 **Run `/ss-resolve` first.** It compiles the project lock into
 `.styleseed/effective-rules.md` plus a hash-verifiable manifest. Build from that small bundle
 instead of loading the full handbook. Resolve every screen as core judgment × one output
-grammar (built-in or `/ss-reference`) × adapter × domain/page × optional profile × lock.
+grammar (built-in or `/ss-reference`) × adapter × domain/page × brand recipe × optional
+profile × lock.
 
 ## Golden Rules (NEVER break these)
 
@@ -688,12 +956,13 @@ grammar (built-in or `/ss-reference`) × adapter × domain/page × optional prof
     categorical, or brand meaning defined by the grammar
  3. No accidental pure black (#000); structural hard black is allowed only when an exact
     maintained grammar/profile contract calls for it
- 4. Numbers 2:1 with units — 48px number + 24px unit, always
- 5. One spatial rhythm on the 8px grid — mobile: space-y-6 · mx-6 · px-6; desktop: same
-    principle via container + gap-6/gap-8 (don't mix off-grid one-offs)
+ 4. Prominent numbers distinguish value and unit clearly; the selected grammar and recipe
+    decide whether that relationship is 2:1, compact/tabular, or prose-like
+ 5. One repeatable spatial rhythm, normally built from an 8px major unit with smaller detail
+    increments when needed; gutters and density come from the selected recipe, not mx-6 everywhere
  6. Never repeat same section type consecutively — create visual rhythm
- 7. Elevation, one language: LIGHT = layered shadows ≤ 8% opacity (if visible, too strong);
-    DARK = shadows don't read — tonal surface ramp (page < card < raised) + hairline borders
+ 7. Elevation, one language selected by the recipe: flat rules, hairlines, tonal layers, or
+    restrained shadows; never mix them casually. Dark surfaces favor tonal levels + hairlines
  8. Touch targets ≥ 44×44px on touch surfaces; pointer-first desktop controls may be 36–40px
     (keep visible focus rings either way)
  9. Semantic tokens only (text-brand, bg-card) — NEVER hardcode hex in components
@@ -717,6 +986,8 @@ Reference this guide when Claude Code sets up a new project or implements UI.
 >   and page rules. Toss is one reference family, not the default for every result.
 > - **ADAPTERS.md**: Surface/renderer contracts for product UI, carousels, decks, documents,
 >   reports, and single-frame graphics.
+> - **BRAND-RECIPES.md**: Reusable morphology and component-selection contracts. Recipes change
+>   geometry, containment, controls, and collections without cloning the brands in their lineage.
 > - **REFERENCE-COMPILER.md**: How `/ss-reference` turns user-supplied visual references into a
 >   project-local evidence-backed grammar.
 > - **PRESETS.md**: Optional aesthetic profiles for `/ss-restyle`; never a substitute for the
@@ -753,6 +1024,7 @@ design-lock file.** Before building any UI:
 - Grammar path:      built-in:engine/RULESETS.md
 - Grammar fallback:  consumer-service
 - Reference confidence: n/a          # high | medium | low for compiled references
+- Brand recipe:     calm-consumer    # BRAND-RECIPES.md id; use auto only when mapping fits
 - Aesthetic profile: none            # optional PRESETS.md profile
 - Mood:              soft · minimal · airy · calm   # edges · feel · density · tone
 - Skin:              toss            # or "custom" — NEVER the unlocked default indigo
@@ -786,12 +1058,12 @@ the user, holding full context** — showing a tiny preview/recommendation for e
 of questions. Tell the user: *"Let's lock the look first — key color, font, motion — then I build."*
 
 **Smart defaults — recommend, don't just ask (never fall back to the generic default):**
-Infer from the product name, domain, language, and copy, then propose ONE default the user can
-accept with a tap. Examples: Korean + fintech/regulation/trust → **Toss skin, `#3182F6`** ·
-premium SaaS → **Stripe** · dev-tool/dark → **Linear** · editorial/docs → **Notion** ·
-**e-commerce / consumer / lifestyle → a WARM accent** (terracotta `#C14E24`, coral, amber-brown —
-not another cool blue; cool palettes read corporate on consumer surfaces) · health/calm →
-a desaturated green-teal (e.g. `#0D9488`).
+Infer from the product job, surface, density, content, and language, then propose ONE recipe
+the user can accept with a tap. Examples: personal finance → `calm-consumer` · desktop B2B →
+`enterprise-workbench` · dev tool → `developer-platform` · merchant operations →
+`commerce-operator` · regulated form → `public-service` · creation tool →
+`creative-professional` · research/report → `editorial-authority` · campaign →
+`expressive-brand`. Choose the primary action color separately from the recipe.
 **The unlocked default accent (`#5E6AD2`/`#4F46E5` generic indigo) is FORBIDDEN as a final
 choice** — if nothing else is chosen, pick a domain-fit skin, never the bare default.
 
@@ -804,7 +1076,10 @@ Run this setup with the user (in plan mode), then build:
    user's job, then the page type. If supplied references are not represented, run
    `/ss-reference`; never reduce them to a palette. Toss is evidence for `consumer-service`,
    not a universal default.
-3. **Mood / vibe — ask 3–4 aesthetic calls in plain words (or propose them from the skin),
+3. **Brand recipe** — select one morphology from `BRAND-RECIPES.md`. `auto` uses the maintained
+   grammar mapping. An explicit recipe changes containment, geometry, navigation, controls, and
+   collections; it never copies protected brand details or selects the palette.
+4. **Mood / vibe — ask 3–4 aesthetic calls in plain words (or propose them from the recipe),
    then lock.** This is what makes a UI feel *chosen* instead of defaulted. Each axis maps to a
    concrete rule value, so the whole UI shares one mood:
    - **Edges** → radius personality: *sharp* (0–4px; technical, serious) · *soft* (8–12px;
@@ -815,23 +1090,24 @@ Run this setup with the user (in plan mode), then build:
      (dense, data-heavy)
    - **Tone** → motion + saturation: *calm/trustworthy* (Silk/Snap, desaturated) ·
      *energetic/playful* (Spring/Pulse, saturated)
-   Propose a default from the skin (Toss → soft·minimal·airy·calm · Linear → sharp·minimal·
-   compact·calm · Arc → soft·expressive·airy·playful), let the user tweak in their words
+   Propose a default from the recipe (`calm-consumer` → soft·minimal·airy·calm ·
+   `developer-platform` → sharp·minimal·compact·calm · `expressive-brand` →
+   project-specific·expressive·airy), let the user tweak in their words
    ("make the corners sharper", "more playful"), then **lock all four**. One mood → one radius,
    one shadow language, one density, one motion — applied everywhere.
-4. **Optional aesthetic profile + accent** — use at most one `PRESETS.md` profile, or none.
+5. **Optional aesthetic profile + accent** — use at most one `PRESETS.md` profile, or none.
    Recommend a domain-fit color or skin (see Smart defaults). If the
    user has a brand hex, use it. Keep one identifiable primary action; additional hues require
    stable roles in the selected grammar. Skins:
    Toss/Stripe/Linear/Notion/Raycast/Arc/Vercel.
-5. **Font** — recommend a pairing by skin/language, don't leave the default: Korean/CJK →
+6. **Font** — recommend a pairing by recipe/language, don't leave the default: Korean/CJK →
    **Pretendard** · fintech/SaaS neutral → **Inter** · editorial → **Inter/serif display** ·
    dev/mono-accent → **Geist / IBM Plex**. State the display + body font in the lock.
-6. **Motion seed** — confirm from the Tone above: Spring (bouncy; Toss/Arc) · Silk (smooth;
+7. **Motion seed** — confirm from the Tone above: Spring (bouncy consumer/expressive) · Silk (smooth;
    Stripe/Notion) · Snap (instant; Linear/Raycast/Vercel) · Float (gentle) · Pulse (rhythmic).
    Per moment: CTA→spring press, modal→silk entrance, list→stagger-cascade, balance/number→**none**.
-7. **Write the lock, then build, then check.** Save app type / surface / output grammar / page
-   type / optional profile / **mood** / accent / skin / **font**
+8. **Write the lock, then build, then check.** Save app type / surface / output grammar / page
+   type / brand recipe / optional profile / **mood** / accent / skin / **font**
    / motion / density to `STYLESEED.md` (see Design Lock above). Apply the full rules (read
    DESIGN-LANGUAGE.md + VISUAL-CRAFT.md — not a summary), pick the type scale for the surface
    (mobile-tight vs **desktop-larger, body ≥16px**), give the page **one focal point** (don't
@@ -4467,7 +4743,7 @@ Numbers are defaults, not dogma — but don't deviate without a reason.
 > and **PAGE-TYPES.md** (screen bias).
 >
 > **Priority:** `PRODUCT-PRINCIPLES.md` → output grammar (`RULESETS.md` or compiled) →
-> `ADAPTERS.md` → domain/page → optional profile → bounded lock. This file refines craft within
+> `ADAPTERS.md` → domain/page → brand recipe → optional profile → bounded lock. This file refines craft within
 > that composed method; it never overrides it.
 
 ---

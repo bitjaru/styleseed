@@ -28,7 +28,7 @@
 **2. 아래 문장을 그대로 붙여넣습니다:**
 
 ```text
-StyleSeed를 `npx skills add bitjaru/styleseed`로 설치하고 이 프로젝트에 설정해줘. 내가 무엇을 만드는지와 꼭 필요한 디자인 선택만 물어봐. 승인한 결정은 STYLESEED.md에 저장하고, 결과물의 목적에 맞는 출력 문법을 선택하거나 내 레퍼런스를 새로운 문법으로 만들어. 하나의 명확한 초점을 가진 결과물을 만들고 코드 점수를 80점 이상으로 고친 뒤, 실제 화면을 렌더링하고 눈으로 검증한 다음 보여줘. Claude Code에서는 `/ss-*`, Codex에서는 `$ss-*`, 다른 에이전트에서는 설치된 스킬 선택기를 사용해.
+StyleSeed를 `npx skills add bitjaru/styleseed`로 설치하고 이 프로젝트에 설정해줘. 내가 무엇을 만드는지와 꼭 필요한 디자인 선택만 물어봐. 결과물의 목적에 맞는 출력 문법과 형태 언어를 정하는 브랜드 레시피 하나를 선택하되 특정 회사를 복제하지 마. 내 레퍼런스가 기존 문법에 없으면 프로젝트 전용 문법으로 만들어. 승인한 결정은 STYLESEED.md에 저장하고, 하나의 명확한 초점을 가진 결과물을 만든 뒤 코드 점수를 80점 이상으로 고쳐. 실제 화면을 렌더링하고 눈으로 검증한 다음 보여줘. Claude Code에서는 `/ss-*`, Codex에서는 `$ss-*`, 다른 에이전트에서는 설치된 스킬 선택기를 사용해.
 ```
 
 **3. 설치를 승인하고, 짧은 설정 질문에 답한 뒤 만들고 싶은 것을 말합니다.**
@@ -72,7 +72,9 @@ StyleSeed가 디자인 락, 빌드, 코드 검사, 실제 화면 검증을 진�
 &nbsp;
 [![▶ 프라이싱 데모 열기](https://img.shields.io/badge/▶_Pricing_Demo-Live-6C5CE7?style=for-the-badge&logoColor=white)](https://styleseed-demo.vercel.app/pricing)
 
-**같은 컴포넌트. 3개 브랜드 DNA.** Toss · Raycast · Arc — 색감·라운드·모션·그림자·그라데이션이 전부 StyleSeed 토큰으로 morph. 코드 분기 없이 `data-skin` 속성 하나로.
+**같은 컴포넌트. 3개 토큰 스킨.** Toss · Raycast · Arc-inspired 스킨은 색과
+타입 재료를 바꿉니다. 실제 구조·컨트롤·컬렉션·밀도·모션은 별도의 브랜드 레시피가
+바꿉니다. **[9개 형태 언어 비교 →](https://styleseed-demo.vercel.app/recipes)**
 
 <br />
 
@@ -131,7 +133,7 @@ StyleSeed는 **디자인 방법 엔진**입니다. 74개 시각 룰, 8개 출력
 이런 룰은 아무도 안 써놓습니다. 프로 디자이너의 수년 경험에 녹아있어서 외부인한테 안 보이고, 그래서 LLM한테도 안 보입니다. StyleSeed는 이 판단을 문법·어댑터·도메인·페이지·프로필로 나누고, 프로젝트가 선택한 부분만 10–20KB 규칙 번들로 컴파일해 Claude Code와 Codex에 건넵니다. 전체 핸드북을 매번 프롬프트에 붓지 않습니다.
 
 핵심 판단은 **브랜드 독립적**이지만 모든 결과물에 같은 배치를 강제하지 않습니다.
-`Core judgment × Output grammar × Surface adapter × Domain/Page × optional Style profile`로
+`Core judgment × Output grammar × Surface adapter × Domain/Page × Brand recipe × optional Style profile`로
 합성합니다. 자세한 흐름은 [엔진 구조도와 기술문서](engine/ARCHITECTURE.md)에 정리했습니다.
 
 <div align="center">
@@ -174,7 +176,7 @@ Claude Code한테 "대시보드 만들어줘" 하면 보통 이런 결과가 나
 Claude Code·Codex·Cursor 등 아무 AI 에이전트에 이 한 문장을 붙여넣으면 됩니다 — **설치 + 전체 루프를 한 번에**:
 
 ```
-Install StyleSeed so its checks actually run: `npx skills add bitjaru/styleseed` (if you can't, read https://styleseed-demo.vercel.app/llms.txt instead). Then use it for every visual artifact in this project. First, choose the output grammar and surface adapter, lock the project’s color roles, type, geometry, and motion with me in STYLESEED.md, then run `/ss-resolve` in Claude Code or `$ss-resolve` in Codex and build from `.styleseed/effective-rules.md`. Build with ONE focal point and only stable, named color roles. Before showing me anything, run the quality gate (`/ss-score` or `$ss-score`) to ≥ 80 and fix what fails, then render and inspect with `/ss-verify` or `$ss-verify`.
+Install StyleSeed so its checks actually run: `npx skills add bitjaru/styleseed` (if you can't, read https://styleseed-demo.vercel.app/llms.txt instead). Then use it for every visual artifact in this project. First, choose the output grammar, surface adapter, and one brand recipe for morphology without cloning a company. Lock color roles, type, geometry, and motion with me in STYLESEED.md, then run `/ss-resolve` in Claude Code or `$ss-resolve` in Codex and build from `.styleseed/effective-rules.md`. Build with ONE focal point and only stable, named color roles. Before showing me anything, run the quality gate (`/ss-score` or `$ss-score`) to ≥ 80 and fix what fails, then render and inspect with `/ss-verify` or `$ss-verify`.
 ```
 
 > 💡 **왜 설치부터 시키나:** `ss-resolve` 컨텍스트 컴파일러와 `ss-score`·`ss-build`
@@ -310,10 +312,10 @@ AI 코딩 도구는 기능적인 UI를 잘 만듭니다. 하지만 **기능적 �
 
 | 스킬 | 기능 |
 |------|------|
-| `/ss-resolve` | STYLESEED.md의 선택값만 10–20KB 규칙 번들과 출처 해시 manifest로 컴파일 |
+| `/ss-resolve` | STYLESEED.md에서 문법·어댑터·브랜드 레시피 등 선택값만 10–20KB 규칙 번들과 출처 해시 manifest로 컴파일 |
 | `/ss-build` | **화면 하나를 데모 방식 그대로** — 락 → 빌드 → 게이트(≥80) → 수정 후에만 보여줌. UI는 프리핸드 말고 이걸로 |
 | `/ss-reference` | 이미지·URL·Figma·기존 UI를 근거·신뢰도·토큰·금지규칙이 있는 프로젝트 전용 룰셋으로 컴파일 |
-| `/ss-setup` | 출력 문법·서피스 어댑터·도메인·아티팩트와 제한된 브랜드 값을 설정 |
+| `/ss-setup` | 출력 문법·서피스 어댑터·9개 브랜드 레시피·도메인·아티팩트와 제한된 브랜드 값을 설정 |
 | `/ss-dial` | 디자인 축 하나를 결정론적으로 올리고/내리기 (density·radius·color 등 7축) |
 | `/ss-restyle` | 프리셋으로 룩 전체 교체 (swiss · editorial · technical · warm-dtc · minimal-mono · brutalist-lite) |
 | `/ss-verify` | **비주얼 게이트** — 렌더 → 스크린샷을 직접 보고 픽셀 기준 채점 (폰트 미로딩, 죽은 여백, 포컬 부재) |
@@ -412,7 +414,9 @@ import { spring } from "@engine/motion";
 | **[notion / raycast / arc / vercel](skins/)** | 그 외 내장 스킨 |
 | **[58+ 더보기](skins/_from-awesome-design-md/)** | awesome-design-md의 모든 브랜드 (`/ss-setup`로 자동 변환) |
 
-> 스킨은 *inspired-by* 토큰 세트입니다 — 그 브랜드 느낌의 색·반경·그림자·모션 값이지, 해당 회사 디자인 언어의 재현이 아닙니다. 디자인 구조 자체를 바꾸는 건 프리셋(`/ss-restyle`)의 몫입니다.
+> 스킨은 *inspired-by* 토큰 세트입니다. 색과 타입 재료를 제공합니다. 디자인 구조
+> 자체를 바꾸는 것은 [`BRAND-RECIPES.md`](engine/BRAND-RECIPES.md)의 9개 레시피이며,
+> 프리셋(`/ss-restyle`)은 그 위에서 선택적으로 미감을 조정합니다.
 
 ## StyleSeed vs 대안
 

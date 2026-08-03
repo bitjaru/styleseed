@@ -26,7 +26,7 @@ function RankedList({
     <div
       data-slot="ranked-list"
       className={cn(
-        "mx-6 bg-card rounded-2xl p-6 shadow-[var(--shadow-card)]",
+        "ss-page-gutter ss-pattern-surface",
         className,
       )}
       {...props}
@@ -40,7 +40,7 @@ function RankedList({
           <div
             key={item.rank}
             className={cn(
-              "flex items-center justify-between p-5 rounded-xl transition-all",
+              "flex items-center justify-between p-5 ss-pattern-inset transition-all",
               item.isHighlighted
                 ? "bg-brand-tint border-2 border-brand"
                 : "bg-surface-subtle",
@@ -49,7 +49,7 @@ function RankedList({
             <div className="flex items-center gap-4">
               <div
                 className={cn(
-                  "size-8 rounded-lg flex items-center justify-center text-[12px] font-bold",
+                  "size-8 ss-pattern-icon flex items-center justify-center text-[12px] font-bold",
                   item.isHighlighted
                     ? "bg-brand text-white"
                     : "bg-surface-muted text-text-tertiary",

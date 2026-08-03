@@ -25,7 +25,7 @@ assert(skills.some((entry) => entry.name === "ss-resolve"), "ss-resolve is missi
 const bridge = resolve(root, ".agents/skills");
 assert(existsSync(bridge) && lstatSync(bridge).isSymbolicLink(), ".agents/skills must be the canonical symlink");
 
-for (const file of ["PRODUCT-PRINCIPLES.md", "CRAFT-BASELINE.md", "RULESETS.md", "ADAPTERS.md", "PRESETS.md", "REFERENCE-COMPILER.md", "ARCHITECTURE.md"]) {
+for (const file of ["PRODUCT-PRINCIPLES.md", "CRAFT-BASELINE.md", "RULESETS.md", "ADAPTERS.md", "BRAND-RECIPES.md", "PRESETS.md", "REFERENCE-COMPILER.md", "ARCHITECTURE.md"]) {
   assert(existsSync(resolve(root, "engine", file)), `missing engine/${file}`);
 }
 
@@ -38,6 +38,11 @@ const adapterText = read("engine/ADAPTERS.md");
 const adapterIds = [...adapterText.matchAll(/^\| `([^`]+)` \|/gm)].map((match) => match[1]);
 assert(adapterIds.length === 5, `expected 5 adapters, found ${adapterIds.length}`);
 assert(publicVersion.adapters === adapterIds.length, `version.json adapters ${publicVersion.adapters} != ${adapterIds.length}`);
+
+const recipeText = read("engine/BRAND-RECIPES.md");
+const recipeIds = [...recipeText.matchAll(/^## `([^`]+)`/gm)].map((match) => match[1]);
+assert(recipeIds.length === 9, `expected 9 brand recipes, found ${recipeIds.length}: ${recipeIds.join(", ")}`);
+assert(publicVersion.recipes === recipeIds.length, `version.json recipes ${publicVersion.recipes} != ${recipeIds.length}`);
 
 const build = read("engine/.claude/skills/ss-build/SKILL.md");
 assert(build.includes("/ss-score") && build.includes("/ss-verify"), "ss-build must require score and verify");
@@ -69,13 +74,15 @@ assert(Object.keys(catalog.grammars).length === 8, "context catalog grammar coun
 assert(Object.keys(catalog.adapters).length === 5, "context catalog adapter count drifted");
 assert(Object.keys(catalog.domains).length === 12, "context catalog domain count drifted");
 assert(Object.keys(catalog.pages).length === 7, "context catalog page count drifted");
+assert(Object.keys(catalog.recipes).length === 9, "context catalog recipe count drifted");
 assert(Object.keys(catalog.profiles).length === 6, "context catalog profile count drifted");
 const publicCatalog = JSON.parse(read("demo-pricing/public/.well-known/styleseed/context-catalog.json"));
 assert(JSON.stringify(publicCatalog) === JSON.stringify(catalog), "public context catalog differs from canonical catalog");
 const registry = JSON.parse(read("demo-pricing/public/.well-known/styleseed/registry.json"));
-assert(registry.version === "3", `expected registry v3, found ${registry.version}`);
+assert(registry.version === "4", `expected registry v4, found ${registry.version}`);
 assert(registry.counts.skills === skills.length, "registry skill count drifted");
-assert(registry.counts.grammars === 8 && registry.counts.adapters === 5, "registry context counts drifted");
+assert(registry.counts.grammars === 8 && registry.counts.adapters === 5 && registry.counts.recipes === 9, "registry context counts drifted");
+assert(registry.recipes.length === 9, "registry recipe manifest drifted");
 const llms = read("demo-pricing/public/llms.txt");
 assert(llms.includes("Invoke `/ss-resolve` or `$ss-resolve`"), "llms.txt does not route through ss-resolve");
 assert(llms.includes("archive/debug mirror, not the"), "llms.txt must demote llms-full to archive/debug");
@@ -90,6 +97,7 @@ try {
 - Page type: dashboard
 - Output grammar: operations-console
 - Grammar fallback: operations-console
+- Brand recipe: enterprise-workbench
 - Aesthetic profile: swiss
 - Primary action: #0F766E
 `,
@@ -100,6 +108,7 @@ try {
   if (run.status === 0) {
     const manifest = JSON.parse(readFileSync(resolve(smokeRoot, ".styleseed/manifest.json"), "utf8"));
     assert(manifest.selection.grammar === "operations-console", "resolver selected the wrong grammar");
+    assert(manifest.selection.recipe === "enterprise-workbench", "resolver selected the wrong recipe");
     assert(manifest.bundle.bytes >= 5000 && manifest.bundle.bytes <= 30000, `resolver bundle is ${manifest.bundle.bytes} bytes`);
     assert(/^[0-9a-f]{64}$/.test(manifest.bundle.sha256), "resolver bundle hash is invalid");
     const check = spawnSync(process.execPath, [resolver, "--project-root", smokeRoot, "--from-lock", "STYLESEED.md", "--agent", "codex", "--check"], { encoding: "utf8" });
@@ -122,6 +131,7 @@ try {
 - Page type: dashboard
 - Output grammar: reference:reference-smoke
 - Grammar fallback: operations-console
+- Brand recipe: auto
 - Aesthetic profile: none
 `,
     );
@@ -150,4 +160,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log(`StyleSeed ${version}: 8 grammars · 5 adapters · 21 skills · context compiler verified`);
+console.log(`StyleSeed ${version}: 8 grammars · 9 recipes · 5 adapters · 21 skills · context compiler verified`);

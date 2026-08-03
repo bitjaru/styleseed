@@ -36,7 +36,7 @@ function ConfirmModal({
     >
       <div
         className={cn(
-          "bg-card rounded-2xl p-5 mx-4 max-w-sm w-full shadow-[var(--shadow-modal)]",
+          "ss-component-surface p-5 mx-4 max-w-sm w-full",
           className,
         )}
         onClick={(e) => e.stopPropagation()}
@@ -55,18 +55,18 @@ function ConfirmModal({
             </div>
           </div>
 
-          {/* Buttons — 토스 규칙: 좌측=닫기, 우측=확인 */}
+          {/* Actions follow the selected recipe's control geometry. */}
           <div className="flex gap-2 w-full">
             <button
               onClick={onCancel}
-              className="flex-1 h-11 rounded-full text-[16px] font-semibold border border-brand text-brand bg-card active:bg-brand/8 transition-colors duration-150"
+              className="ss-pattern-control flex-1 h-11 text-[16px] font-semibold border border-brand text-brand bg-card active:bg-brand/8 transition-colors duration-150"
             >
               {cancelText}
             </button>
             <button
               onClick={onConfirm}
               className={cn(
-                "flex-1 h-11 rounded-full text-[16px] font-semibold text-white active:opacity-85 transition-colors duration-150",
+                "ss-pattern-control flex-1 h-11 text-[16px] font-semibold text-white active:opacity-85 transition-colors duration-150",
                 variant === "destructive" ? "bg-destructive" : "bg-brand",
               )}
             >

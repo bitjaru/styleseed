@@ -8,7 +8,8 @@ never define the method.
 **Run `/ss-resolve` first.** It compiles the project lock into
 `.styleseed/effective-rules.md` plus a hash-verifiable manifest. Build from that small bundle
 instead of loading the full handbook. Resolve every screen as core judgment × one output
-grammar (built-in or `/ss-reference`) × adapter × domain/page × optional profile × lock.
+grammar (built-in or `/ss-reference`) × adapter × domain/page × brand recipe × optional
+profile × lock.
 
 ## Golden Rules (NEVER break these)
 
@@ -19,12 +20,13 @@ grammar (built-in or `/ss-reference`) × adapter × domain/page × optional prof
     categorical, or brand meaning defined by the grammar
  3. No accidental pure black (#000); structural hard black is allowed only when an exact
     maintained grammar/profile contract calls for it
- 4. Numbers 2:1 with units — 48px number + 24px unit, always
- 5. One spatial rhythm on the 8px grid — mobile: space-y-6 · mx-6 · px-6; desktop: same
-    principle via container + gap-6/gap-8 (don't mix off-grid one-offs)
+ 4. Prominent numbers distinguish value and unit clearly; the selected grammar and recipe
+    decide whether that relationship is 2:1, compact/tabular, or prose-like
+ 5. One repeatable spatial rhythm, normally built from an 8px major unit with smaller detail
+    increments when needed; gutters and density come from the selected recipe, not mx-6 everywhere
  6. Never repeat same section type consecutively — create visual rhythm
- 7. Elevation, one language: LIGHT = layered shadows ≤ 8% opacity (if visible, too strong);
-    DARK = shadows don't read — tonal surface ramp (page < card < raised) + hairline borders
+ 7. Elevation, one language selected by the recipe: flat rules, hairlines, tonal layers, or
+    restrained shadows; never mix them casually. Dark surfaces favor tonal levels + hairlines
  8. Touch targets ≥ 44×44px on touch surfaces; pointer-first desktop controls may be 36–40px
     (keep visible focus rings either way)
  9. Semantic tokens only (text-brand, bg-card) — NEVER hardcode hex in components
@@ -48,6 +50,8 @@ Reference this guide when Claude Code sets up a new project or implements UI.
 >   and page rules. Toss is one reference family, not the default for every result.
 > - **ADAPTERS.md**: Surface/renderer contracts for product UI, carousels, decks, documents,
 >   reports, and single-frame graphics.
+> - **BRAND-RECIPES.md**: Reusable morphology and component-selection contracts. Recipes change
+>   geometry, containment, controls, and collections without cloning the brands in their lineage.
 > - **REFERENCE-COMPILER.md**: How `/ss-reference` turns user-supplied visual references into a
 >   project-local evidence-backed grammar.
 > - **PRESETS.md**: Optional aesthetic profiles for `/ss-restyle`; never a substitute for the
@@ -84,6 +88,7 @@ design-lock file.** Before building any UI:
 - Grammar path:      built-in:engine/RULESETS.md
 - Grammar fallback:  consumer-service
 - Reference confidence: n/a          # high | medium | low for compiled references
+- Brand recipe:     calm-consumer    # BRAND-RECIPES.md id; use auto only when mapping fits
 - Aesthetic profile: none            # optional PRESETS.md profile
 - Mood:              soft · minimal · airy · calm   # edges · feel · density · tone
 - Skin:              toss            # or "custom" — NEVER the unlocked default indigo
@@ -117,12 +122,12 @@ the user, holding full context** — showing a tiny preview/recommendation for e
 of questions. Tell the user: *"Let's lock the look first — key color, font, motion — then I build."*
 
 **Smart defaults — recommend, don't just ask (never fall back to the generic default):**
-Infer from the product name, domain, language, and copy, then propose ONE default the user can
-accept with a tap. Examples: Korean + fintech/regulation/trust → **Toss skin, `#3182F6`** ·
-premium SaaS → **Stripe** · dev-tool/dark → **Linear** · editorial/docs → **Notion** ·
-**e-commerce / consumer / lifestyle → a WARM accent** (terracotta `#C14E24`, coral, amber-brown —
-not another cool blue; cool palettes read corporate on consumer surfaces) · health/calm →
-a desaturated green-teal (e.g. `#0D9488`).
+Infer from the product job, surface, density, content, and language, then propose ONE recipe
+the user can accept with a tap. Examples: personal finance → `calm-consumer` · desktop B2B →
+`enterprise-workbench` · dev tool → `developer-platform` · merchant operations →
+`commerce-operator` · regulated form → `public-service` · creation tool →
+`creative-professional` · research/report → `editorial-authority` · campaign →
+`expressive-brand`. Choose the primary action color separately from the recipe.
 **The unlocked default accent (`#5E6AD2`/`#4F46E5` generic indigo) is FORBIDDEN as a final
 choice** — if nothing else is chosen, pick a domain-fit skin, never the bare default.
 
@@ -135,7 +140,10 @@ Run this setup with the user (in plan mode), then build:
    user's job, then the page type. If supplied references are not represented, run
    `/ss-reference`; never reduce them to a palette. Toss is evidence for `consumer-service`,
    not a universal default.
-3. **Mood / vibe — ask 3–4 aesthetic calls in plain words (or propose them from the skin),
+3. **Brand recipe** — select one morphology from `BRAND-RECIPES.md`. `auto` uses the maintained
+   grammar mapping. An explicit recipe changes containment, geometry, navigation, controls, and
+   collections; it never copies protected brand details or selects the palette.
+4. **Mood / vibe — ask 3–4 aesthetic calls in plain words (or propose them from the recipe),
    then lock.** This is what makes a UI feel *chosen* instead of defaulted. Each axis maps to a
    concrete rule value, so the whole UI shares one mood:
    - **Edges** → radius personality: *sharp* (0–4px; technical, serious) · *soft* (8–12px;
@@ -146,23 +154,24 @@ Run this setup with the user (in plan mode), then build:
      (dense, data-heavy)
    - **Tone** → motion + saturation: *calm/trustworthy* (Silk/Snap, desaturated) ·
      *energetic/playful* (Spring/Pulse, saturated)
-   Propose a default from the skin (Toss → soft·minimal·airy·calm · Linear → sharp·minimal·
-   compact·calm · Arc → soft·expressive·airy·playful), let the user tweak in their words
+   Propose a default from the recipe (`calm-consumer` → soft·minimal·airy·calm ·
+   `developer-platform` → sharp·minimal·compact·calm · `expressive-brand` →
+   project-specific·expressive·airy), let the user tweak in their words
    ("make the corners sharper", "more playful"), then **lock all four**. One mood → one radius,
    one shadow language, one density, one motion — applied everywhere.
-4. **Optional aesthetic profile + accent** — use at most one `PRESETS.md` profile, or none.
+5. **Optional aesthetic profile + accent** — use at most one `PRESETS.md` profile, or none.
    Recommend a domain-fit color or skin (see Smart defaults). If the
    user has a brand hex, use it. Keep one identifiable primary action; additional hues require
    stable roles in the selected grammar. Skins:
    Toss/Stripe/Linear/Notion/Raycast/Arc/Vercel.
-5. **Font** — recommend a pairing by skin/language, don't leave the default: Korean/CJK →
+6. **Font** — recommend a pairing by recipe/language, don't leave the default: Korean/CJK →
    **Pretendard** · fintech/SaaS neutral → **Inter** · editorial → **Inter/serif display** ·
    dev/mono-accent → **Geist / IBM Plex**. State the display + body font in the lock.
-6. **Motion seed** — confirm from the Tone above: Spring (bouncy; Toss/Arc) · Silk (smooth;
+7. **Motion seed** — confirm from the Tone above: Spring (bouncy consumer/expressive) · Silk (smooth;
    Stripe/Notion) · Snap (instant; Linear/Raycast/Vercel) · Float (gentle) · Pulse (rhythmic).
    Per moment: CTA→spring press, modal→silk entrance, list→stagger-cascade, balance/number→**none**.
-7. **Write the lock, then build, then check.** Save app type / surface / output grammar / page
-   type / optional profile / **mood** / accent / skin / **font**
+8. **Write the lock, then build, then check.** Save app type / surface / output grammar / page
+   type / brand recipe / optional profile / **mood** / accent / skin / **font**
    / motion / density to `STYLESEED.md` (see Design Lock above). Apply the full rules (read
    DESIGN-LANGUAGE.md + VISUAL-CRAFT.md — not a summary), pick the type scale for the surface
    (mobile-tight vs **desktop-larger, body ≥16px**), give the page **one focal point** (don't

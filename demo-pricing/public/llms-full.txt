@@ -1,7 +1,7 @@
 # StyleSeed — Full Context
 
 Source: github.com/bitjaru/styleseed (constitution + grammars + adapters + compiler + craft)
-Generated: 2026-07-31T06:33:41.753Z
+Generated: 2026-08-06T04:08:32.701Z
 
 ---
 
@@ -27,6 +27,7 @@ Core judgment
   × one domain playbook from APP-PLAYBOOKS.md
   × one page type from PAGE-TYPES.md
   × one brand recipe from BRAND-RECIPES.md
+  × one semantic palette recipe from PALETTE-RECIPES.md
   × optional aesthetic profile from PRESETS.md
   × bounded project tokens from STYLESEED.md
 = the rules for this screen
@@ -43,10 +44,12 @@ When instructions disagree, use this order:
 4. **Domain playbook** and **page/artifact type**.
 5. **Brand recipe** — a reusable morphology and component-selection contract from
    `BRAND-RECIPES.md`.
-6. **Aesthetic profile** — an optional coordinated restyle from `PRESETS.md`.
-7. **Design lock** — records selections and bounded project parameters.
-8. **Skins and components** — implementation material, not sources of judgment.
-9. **Score and visual verification** — evidence that the method was applied.
+6. **Palette recipe** — semantic color roles and surface relationships from
+   `PALETTE-RECIPES.md`.
+7. **Aesthetic profile** — an optional coordinated restyle from `PRESETS.md`.
+8. **Design lock** — records selections and bounded project parameters.
+9. **Skins and components** — implementation material, not sources of judgment.
+10. **Score and visual verification** — evidence that the method was applied.
 
 `STYLESEED.md` is persistence, not permission. An arbitrary value in the lock never turns
 a violation into a sound design decision. Unknown values fall back to the nearest maintained
@@ -76,7 +79,8 @@ These apply to every grammar, profile, domain, page, skin, and agent:
 The lock may select only inputs the engine understands:
 
 - domain, surface adapter, page/artifact type, and one output grammar;
-- one maintained brand recipe, one optional aesthetic profile, and one skin or semantic token set;
+- one maintained brand recipe, one semantic palette recipe, one optional aesthetic profile, and
+  one skin or project token implementation;
 - primary action/accent, type pairing, density, radius, elevation, imagery, and motion values
   inside the selected grammar's allowed ranges;
 - one product-specific signature move that still obeys the invariants;
@@ -184,6 +188,7 @@ flowchart LR
   S[Surface adapter<br/>canvas · renderer · export] --> F
   X[Domain + page type] --> F
   Z[Brand recipe<br/>morphology · components] --> F
+  Q[Palette recipe<br/>semantic roles · asset anchors] --> F
   Y[Optional style profile] --> F
   L[STYLESEED.md<br/>bounded selections] --> F
   F --> K[Effective rule bundle<br/>manifest + source hashes]
@@ -192,7 +197,10 @@ flowchart LR
   H -->|fix loop| G
   H --> I[Pixel gate<br/>ss-verify]
   I -->|fix + re-render| G
-  I --> J[Designed output<br/>score + visual evidence]
+  I --> T[Temporal gate<br/>record · frames · interrupt]
+  T -->|fix + re-record| G
+  T --> U[Human acceptance<br/>named reviewer]
+  U --> J[Designed output<br/>code · visual · temporal evidence]
 ```
 
 ## Layers and authority
@@ -205,6 +213,7 @@ flowchart LR
 | Reference compiler | Derive a local grammar from evidence | local rules with confidence | global built-ins or protected assets |
 | Domain + page playbooks | Contextual composition bias | content/order/detail decisions | grammar identity |
 | Brand recipe | Apply reusable morphology and component selection | geometry, containment, controls, collections | grammar job, protected brand assets, or accessibility |
+| Palette recipe | Bind semantic color roles to the job and generated-media brief | maintained role values or validated project overrides | contrast, status meaning, or independent hierarchy |
 | Aesthetic profile | Coordinated look adjustment | radius, density, tone, motion within bounds | task structure |
 | Design lock | Persist selected values | known enums and project tokens | invent exceptions or waive rules |
 | Context compiler | Emit the selected method with provenance | deterministic bundle + manifest | silently invent or merge unknown IDs |
@@ -239,6 +248,7 @@ effectiveRules, manifest = compile(
   domainPlaybook,
   pageType,
   brandRecipe,
+  paletteRecipe,
   optionalStyleProfile,
   boundedDesignLock
 )
@@ -250,8 +260,8 @@ manifest records the exact selection, source hashes, bundle hash, and byte size;
 fails when the stored bundle no longer matches its sources or lock.
 
 The design lock stores selections; it is not executable policy. Unknown grammar, adapter,
-domain, page, recipe, or profile IDs are rejected. Project-local reference grammars require a maintained
-built-in fallback.
+domain, page, recipe, palette, or profile IDs are rejected. Project-local reference grammars
+require a maintained built-in fallback.
 
 ## Non-web outputs
 
@@ -262,15 +272,18 @@ example, StyleSeed supplies the `sequential-story` grammar and brand system whil
 
 ## Verification model
 
-StyleSeed uses two auxiliary gates because source correctness and rendered quality fail in
-different ways:
+Every renderable artifact uses two auxiliary gates because source correctness and rendered
+quality fail in different ways:
 
 - `ss-score` reads implementation evidence: tokens, hierarchy, states, semantics, coherence,
   and characteristic grammar tells.
 - `ss-verify` renders the result and checks pixels: actual focal dominance, type loading,
   balance, optical rhythm, responsive behavior, and state rendering.
 
-Both gates return to the build loop. Neither gate is the design engine; the composed method is.
+Both gates return to the build loop. Interactive Studio runs add a temporal gate for actual
+recording, interruption, and reduced motion, followed by named human acceptance. A static output
+may mark temporal as not applicable, but it may not fabricate motion evidence. None of the gates
+is the design engine; the composed method is.
 
 ## Extension boundary
 
@@ -278,6 +291,8 @@ Both gates return to the build loop. Neither gate is the design engine; the comp
 - Use `/ss-reference` for project-specific or emerging languages.
 - Add a brand recipe only when reusable morphology is supported by independent sources and
   transfer tests; never add a company clone.
+- Add a palette recipe only when its semantic role pairs pass deterministic contrast checks and
+  its hierarchy survives both light/dark context and generated-media use.
 - Add a new aesthetic profile only when it is a full coordinated axis contract, not a mood word.
 - Keep components and skins downstream. They implement a decision; they do not decide.
 
@@ -835,6 +850,270 @@ Every built-in recipe defines:
 
 ---
 
+# StyleSeed Palette Recipes
+
+A palette recipe is a semantic color relationship for one product posture. It is not a list of
+fashionable hex values. It defines how the content canvas, navigation chrome, surfaces, text,
+actions, focus, status, and generated media work together.
+
+```text
+brand recipe   = morphology and component selection
+palette recipe = semantic color roles and surface relationships
+skin           = project implementation of color + type tokens
+```
+
+Studio recommends one palette recipe per creative direction. The selected palette becomes a
+bounded project input; brand colors may replace its anchors only after the same role and contrast
+checks pass.
+
+## Evidence and method
+
+- [Material 3 color roles](https://m3.material.io/styles/color/roles) separates color values from
+  their UI roles.
+- [Carbon color](https://carbondesignsystem.com/elements/color/overview/) uses neutral layering,
+  role-based tokens, interaction states, and distinct light/dark layer logic.
+- [Adobe Spectrum color](https://spectrum.adobe.com/page/color-system/) treats semantic meaning as
+  a system and requires a text or icon cue alongside color.
+- [GitHub Primer color primitives](https://primer.style/product/primitives/color/) demonstrates
+  theme-specific values behind stable product primitives.
+- [WCAG 2.2 contrast guidance](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html)
+  requires 4.5:1 for normal text and 3:1 for large text; StyleSeed validates its normal-text pairs
+  at 4.5:1 and focus against the canvas at 3:1.
+
+The built-in values are starting points, not claims about a company palette or a forecast of a
+color trend. “Current” styling comes from surface relationships, controlled contrast moments,
+image material, and product-specific usage—not from copying an annual color.
+
+### 2026 signal scan
+
+The recipe set also checks current visual signals without turning them into UI law:
+
+- [WGSN + Coloro's 2026 forecast](https://www.wgsn.com/de/node/2129) highlights restorative
+  deep teal; `quiet-mineral` uses a restrained blue-green action family against warm neutrals.
+- [WGSN + Coloro S/S 26](https://www.wgsn.com/cs/node/1955) spans urgent brights, earthy/offbeat
+  naturals, and calming tinted tones. StyleSeed distributes those postures across separate
+  recipes instead of mixing them into one rainbow interface.
+- [Adobe's 2026 Creative Trends](https://blog.adobe.com/en/publish/2026/01/08/how-creators-leveraging-adobe-2026-creative-trends)
+  points toward tactile, emotionally legible, locally specific imagery with functional value.
+  Those signals shape each recipe's generated-media anchors and avoid list, not essential UI text.
+
+Trend evidence can influence an expressive anchor or image brief. It never overrides semantic
+roles, product hierarchy, contrast, or the selected grammar.
+
+## Required semantic roles
+
+Every palette in `engine/color/palettes.json` supplies:
+
+- `background`, `surface`, `chrome`;
+- `foreground`, `mutedForeground`, `chromeForeground`;
+- `border`, `primary`, `primaryForeground`, `accent`, `accentForeground`, `focus`;
+- `success`, `successForeground`, `warning`, `warningForeground`, `danger`, `dangerForeground`.
+
+Required checks:
+
+- foreground and muted foreground on background;
+- foreground on surface;
+- chrome foreground on navigation chrome;
+- foreground pairs for primary, accent, success, warning, and danger;
+- focus against background and surface;
+- no semantic status communicated by color alone.
+
+## Built-in recipes
+
+| ID | Posture | Typical use |
+|---|---|---|
+| `quiet-mineral` | warm neutral, restrained green | calm consumer, health, benefits, personal utility |
+| `deep-lime-studio` | dark canvas, high-energy lime | creative tools, focused work, launch prototype |
+| `cobalt-instrument` | cool technical neutral, cobalt action | developer tools, data, operations |
+| `warm-clay-commerce` | warm paper, burnt-orange action | commerce, hospitality, service brands |
+| `civic-blue` | explicit blue shell, sober neutral canvas | public services, regulated workflows |
+| `editorial-ink` | paper, ink, controlled red | editorial, research, reports |
+| `signal-coral` | pale warm canvas, coral signal | expressive launches and social products |
+| `nocturne-violet` | deep violet layers, mint secondary | media, AI, experimental professional tools |
+
+## Recommendation contract
+
+For each direction state:
+
+1. palette recipe ID and product reason;
+2. navigation chrome ↔ content canvas relationship;
+3. primary/action usage and maximum visual share;
+4. semantic status mapping and non-color cue;
+5. generated-image anchor colors and colors to avoid;
+6. contrast validation result and any project override requiring revalidation.
+
+Do not recommend a palette from mood words alone. Use the product job, brand posture, content
+density, light/dark environment, image/data role, and selected brand recipe.
+
+
+---
+
+# StyleSeed Studio Pipeline
+
+StyleSeed Studio turns a product brief into a directed, interactive, and reviewable UI concept.
+It extends StyleSeed's fixed design judgment into creative direction, generated media, interaction
+scenes, and a prototype-first showcase reel. The pipeline is for client work and product
+exploration where a static screen is not enough.
+
+## Product boundary
+
+StyleSeed owns the decisions, manifests, provenance, and verification. Image and video models are
+replaceable renderers. A provider result never becomes the design method merely because it looks
+fashionable.
+
+The pipeline must produce a working interface before it produces a promotional reel. Generated
+video may supply ambient footage, texture, or an optional transition plate; it may not conceal a
+non-functional interaction behind a pre-rendered animation.
+
+## Vertical-slice flow
+
+```text
+brief + constraints
+  → reference scout (structure · navigation · signature · motion · asset language)
+  → three creative directions (native · signature · experimental)
+  → human selection gate
+  → interaction scenes + generated-media jobs
+  → working prototype
+  → code gate + pixel gate + temporal gate
+  → prototype-first showcase reel
+  → human acceptance + archived evidence
+```
+
+Every run lives at `.styleseed/studio/<run-id>/`. `run.json` records the stage and points to the
+separate human-readable and machine-readable artifacts.
+
+## Stage contracts
+
+### 1. Briefed
+
+Capture the user's job, audience, primary action, platform, surface, content, brand constraints,
+delivery target, and explicit non-goals. A vague request such as “make it trendy” is not a usable
+brief until the product job and interaction moment are known.
+
+### 2. Directed
+
+Collect references into roles rather than a moodboard pile:
+
+| Role | Question |
+|---|---|
+| Structure | What organizes the screen and its attention? |
+| Navigation | How are product chrome and content canvas distinguished? |
+| Signature | Which one memorable move belongs to this product? |
+| Motion | Which objects persist, transform, enter, or exit? |
+| Asset language | What imagery, texture, illustration, or footage supports the UI? |
+
+Compile exactly three directions against the same product job:
+
+- `native`: platform-familiar, lower-risk, restrained signature;
+- `signature`: a distinctive product-owned composition and interaction;
+- `experimental`: a higher-expression transfer test with explicit cost and risk.
+
+Each direction specifies composition, navigation chrome, type, a semantic palette recipe, generated asset
+strategy, motion logic, signature move, trade-offs, and the StyleSeed grammar/recipe it uses.
+
+### 3. Selected
+
+Do not silently average directions or build all three to completion. Record the selected direction,
+decision maker, timestamp, and rationale. Preserve rejected directions so the decision remains
+auditable.
+
+### 4. Planned
+
+Compile the selected direction into two executable plans.
+
+#### Interaction scene
+
+An interaction scene is a state transition, not an animation adjective:
+
+```text
+trigger · from state · to state · continuity objects · entering objects · exiting objects
+feedback · interruption/cancel behavior · reduced-motion behavior · renderer target
+```
+
+Navigation must define the relationship between `navigation chrome` and `content canvas`, including
+resting, selected, scrolling, overlay, and compact states when they apply.
+
+#### Media job
+
+Every generated asset or clip records:
+
+```text
+role · kind · provider capability · prompt · inputs · output · status
+source/provenance · usage rights note · fallback · consuming scene
+```
+
+Prefer code-native CSS/SVG for interface geometry and icons. Use raster generation for imagery,
+texture, illustration, and product/scene material. Use video generation for ambient or narrative
+media that cannot be expressed as a real UI transition. Never ask an image model to render final UI
+copy that must remain editable and accessible.
+
+### 5. Built
+
+Build the selected direction as a working prototype. The primary path, navigation, back/cancel
+behavior, loading/error state where relevant, responsive target, and reduced-motion alternative
+must be executable. Store the prototype path or URL in `run.json`.
+
+### 6. Verified
+
+All four gates must pass:
+
+1. **Code:** build/type/lint plus StyleSeed score.
+2. **Visual:** actual screenshots at locked viewports and states.
+3. **Temporal:** actual prototype recording, start/mid/end frames, interrupt/cancel, and reduced motion.
+4. **Human:** named reviewer accepts the selected direction and the working result.
+
+The showcase reel is assembled after the working prototype passes. Keep a shot manifest that says
+which shots are real prototype recordings and which, if any, are generated media.
+
+## Creativity without random collage
+
+Novelty comes from controlled recombination:
+
+```text
+one product job
+× one selected output grammar
+× one brand recipe
+× one semantic palette recipe
+× one navigation chrome model
+× one signature interaction
+× one asset language
+= one coherent direction
+```
+
+Change at least two structural axes between directions. Merely swapping palette, radius, or motion
+seed does not create a new direction. Do not copy a company's protected assets, logo, copy, or
+trademarked arrangement. References provide evidence for transferable principles.
+
+## Provider adapter boundary
+
+Studio asks for capabilities, not vendor names:
+
+- `raster-generate`, `raster-edit`, `raster-cutout`;
+- `video-generate`, `image-to-video`, `video-edit`;
+- `prototype-record`, `frame-extract`, `reel-compose`.
+
+An agent maps those capabilities to available local tools. If no provider is available, keep the
+job `blocked`; do not fabricate an output path or mark the run verified. All generated files must be
+copied into the project run and retain prompt and provider provenance.
+
+## External-work acceptance package
+
+For client or outsourced work, deliver:
+
+- the brief and classified reference list;
+- all three directions and the recorded selection;
+- the effective StyleSeed rules and interaction scenes;
+- prompts, inputs, outputs, provenance, and rights notes for media jobs;
+- runnable prototype source and URL/path;
+- screenshots and prototype-first reel;
+- gate results, unresolved risks, and reviewer acceptance.
+
+The package is the reusable asset. A polished MP4 without these artifacts is not a completed Studio
+run.
+
+
+---
+
 # StyleSeed Aesthetic Profiles
 
 Profiles are optional coordinated **aesthetic coordinates** used by `/ss-restyle`. They are
@@ -944,7 +1223,7 @@ never define the method.
 **Run `/ss-resolve` first.** It compiles the project lock into
 `.styleseed/effective-rules.md` plus a hash-verifiable manifest. Build from that small bundle
 instead of loading the full handbook. Resolve every screen as core judgment × one output
-grammar (built-in or `/ss-reference`) × adapter × domain/page × brand recipe × optional
+grammar (built-in or `/ss-reference`) × adapter × domain/page × brand recipe × palette recipe × optional
 profile × lock.
 
 ## Golden Rules (NEVER break these)
@@ -988,6 +1267,10 @@ Reference this guide when Claude Code sets up a new project or implements UI.
 >   reports, and single-frame graphics.
 > - **BRAND-RECIPES.md**: Reusable morphology and component-selection contracts. Recipes change
 >   geometry, containment, controls, and collections without cloning the brands in their lineage.
+> - **PALETTE-RECIPES.md**: Semantic canvas, chrome, action, status, focus, and generated-media
+>   color relationships. Built-ins pass deterministic contrast checks; project overrides revalidate.
+> - **STUDIO-PIPELINE.md**: Three-direction creative development, human selection, interaction
+>   scenes, generated-media jobs, real prototype recording, and temporal acceptance.
 > - **REFERENCE-COMPILER.md**: How `/ss-reference` turns user-supplied visual references into a
 >   project-local evidence-backed grammar.
 > - **PRESETS.md**: Optional aesthetic profiles for `/ss-restyle`; never a substitute for the
@@ -1025,6 +1308,7 @@ design-lock file.** Before building any UI:
 - Grammar fallback:  consumer-service
 - Reference confidence: n/a          # high | medium | low for compiled references
 - Brand recipe:     calm-consumer    # BRAND-RECIPES.md id; use auto only when mapping fits
+- Palette recipe:   quiet-mineral    # PALETTE-RECIPES.md id; use auto only when mapping fits
 - Aesthetic profile: none            # optional PRESETS.md profile
 - Mood:              soft · minimal · airy · calm   # edges · feel · density · tone
 - Skin:              toss            # or "custom" — NEVER the unlocked default indigo
@@ -1063,7 +1347,8 @@ the user can accept with a tap. Examples: personal finance → `calm-consumer` �
 `enterprise-workbench` · dev tool → `developer-platform` · merchant operations →
 `commerce-operator` · regulated form → `public-service` · creation tool →
 `creative-professional` · research/report → `editorial-authority` · campaign →
-`expressive-brand`. Choose the primary action color separately from the recipe.
+`expressive-brand`. Then recommend one semantic palette recipe from the product job, brand
+recipe, density, environment, and image/data role; do not choose from a mood word alone.
 **The unlocked default accent (`#5E6AD2`/`#4F46E5` generic indigo) is FORBIDDEN as a final
 choice** — if nothing else is chosen, pick a domain-fit skin, never the bare default.
 
@@ -1079,7 +1364,11 @@ Run this setup with the user (in plan mode), then build:
 3. **Brand recipe** — select one morphology from `BRAND-RECIPES.md`. `auto` uses the maintained
    grammar mapping. An explicit recipe changes containment, geometry, navigation, controls, and
    collections; it never copies protected brand details or selects the palette.
-4. **Mood / vibe — ask 3–4 aesthetic calls in plain words (or propose them from the recipe),
+4. **Palette recipe** — choose one maintained system from `PALETTE-RECIPES.md`, or `auto` when
+   the recipe mapping fits. It binds canvas, surface, navigation chrome, text, primary action,
+   status, focus, and generated-media anchors. Brand overrides must keep the role and rerun
+   deterministic contrast validation.
+5. **Mood / vibe — ask 3–4 aesthetic calls in plain words (or propose them from the recipe),
    then lock.** This is what makes a UI feel *chosen* instead of defaulted. Each axis maps to a
    concrete rule value, so the whole UI shares one mood:
    - **Edges** → radius personality: *sharp* (0–4px; technical, serious) · *soft* (8–12px;
@@ -1095,19 +1384,19 @@ Run this setup with the user (in plan mode), then build:
    project-specific·expressive·airy), let the user tweak in their words
    ("make the corners sharper", "more playful"), then **lock all four**. One mood → one radius,
    one shadow language, one density, one motion — applied everywhere.
-5. **Optional aesthetic profile + accent** — use at most one `PRESETS.md` profile, or none.
+6. **Optional aesthetic profile + accent** — use at most one `PRESETS.md` profile, or none.
    Recommend a domain-fit color or skin (see Smart defaults). If the
    user has a brand hex, use it. Keep one identifiable primary action; additional hues require
    stable roles in the selected grammar. Skins:
    Toss/Stripe/Linear/Notion/Raycast/Arc/Vercel.
-6. **Font** — recommend a pairing by recipe/language, don't leave the default: Korean/CJK →
+7. **Font** — recommend a pairing by recipe/language, don't leave the default: Korean/CJK →
    **Pretendard** · fintech/SaaS neutral → **Inter** · editorial → **Inter/serif display** ·
    dev/mono-accent → **Geist / IBM Plex**. State the display + body font in the lock.
-7. **Motion seed** — confirm from the Tone above: Spring (bouncy consumer/expressive) · Silk (smooth;
+8. **Motion seed** — confirm from the Tone above: Spring (bouncy consumer/expressive) · Silk (smooth;
    Stripe/Notion) · Snap (instant; Linear/Raycast/Vercel) · Float (gentle) · Pulse (rhythmic).
    Per moment: CTA→spring press, modal→silk entrance, list→stagger-cascade, balance/number→**none**.
-8. **Write the lock, then build, then check.** Save app type / surface / output grammar / page
-   type / brand recipe / optional profile / **mood** / accent / skin / **font**
+9. **Write the lock, then build, then check.** Save app type / surface / output grammar / page
+   type / brand recipe / palette recipe / optional profile / **mood** / accent / skin / **font**
    / motion / density to `STYLESEED.md` (see Design Lock above). Apply the full rules (read
    DESIGN-LANGUAGE.md + VISUAL-CRAFT.md — not a summary), pick the type scale for the surface
    (mobile-tight vs **desktop-larger, body ≥16px**), give the page **one focal point** (don't

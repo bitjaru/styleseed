@@ -28,7 +28,7 @@
 **2. Paste this message:**
 
 ```text
-Install StyleSeed with `npx skills add bitjaru/styleseed`, then set it up for this project. Ask what I am building and only the design choices you need. Choose the right output grammar and one brand recipe for morphology—not a company clone—or derive a local grammar from my references. Save approved decisions to STYLESEED.md, then run `/ss-resolve` in Claude Code or `$ss-resolve` in Codex and build from `.styleseed/effective-rules.md`. Build with one clear focal point, score the result to at least 80, then render and visually verify it before showing me. In other agents, use the installed skill picker.
+Install StyleSeed with `npx skills add bitjaru/styleseed`, then set it up for this project. Ask what I am building and only the design choices you need. Choose the right output grammar, brand recipe, and semantic palette—or derive a local grammar from my references. For a full concept with three directions, image/video jobs, and a working interaction reel, use `/ss-studio` in Claude Code or `$ss-studio` in Codex. Otherwise resolve the approved direction with `/ss-resolve` or `$ss-resolve`, build with one clear focal point, score to at least 80, then render and visually verify it before showing me.
 ```
 
 **3. Approve the install, answer the short setup questions, and describe what you want to build.**
@@ -36,8 +36,8 @@ StyleSeed handles the design lock, build, code gate, and visual check. No design
 
 | Agent | If you want to run it manually |
 |---|---|
-| **Claude Code** | `/ss-setup` → `/ss-build` |
-| **Codex** | `$ss-setup` → `$ss-build` or choose them from `/skills` |
+| **Claude Code** | `/ss-studio` for exploration, or `/ss-setup` → `/ss-build` for a decided screen |
+| **Codex** | `$ss-studio` for exploration, or `$ss-setup` → `$ss-build` from `/skills` |
 | **Cursor and others** | Paste the message above or use the installed skill picker |
 
 [Claude Code guide](https://styleseed-demo.vercel.app/claude-code-ui-design) · [Codex guide](https://styleseed-demo.vercel.app/codex-ui-design) · [See examples](https://styleseed-demo.vercel.app/showcase) · [Need help?](#troubleshooting--i-applied-styleseed-but-the-ui-still-looks-bad)
@@ -79,10 +79,11 @@ geometry, containment, controls, collections, density, and motion.
 [![▶ Motion Gallery](https://img.shields.io/badge/▶_Motion_Gallery-Live-8B5CF6?style=for-the-badge&logoColor=white)](https://styleseed-demo.vercel.app/motion)
 
 ![74 design rules](https://badgen.net/badge/rules/74/8B5CF6)
-![21 skills](https://badgen.net/badge/skills/21/6C5CE7)
+![22 skills](https://badgen.net/badge/skills/22/6C5CE7)
 ![8 output grammars](https://badgen.net/badge/grammars/8/2563EB)
 ![5 adapters](https://badgen.net/badge/adapters/5/0F766E)
 ![9 brand recipes](https://badgen.net/badge/recipes/9/DB2777)
+![8 palette recipes](https://badgen.net/badge/palettes/8/D56A45)
 ![7 brand skins](https://badgen.net/badge/skins/7/6C5CE7)
 [![GitHub stars](https://badgen.net/github/stars/bitjaru/styleseed)](https://github.com/bitjaru/styleseed/stargazers)
 [![License](https://badgen.net/github/license/bitjaru/styleseed)](https://github.com/bitjaru/styleseed/blob/main/LICENSE)
@@ -97,6 +98,10 @@ geometry, containment, controls, collections, density, and motion.
 commerce, institutional, marketing, or sequential story &nbsp;·&nbsp;
 **Real morphology choices** — nine brand recipes change structure and component selection,
 not just palette &nbsp;·&nbsp;
+**Semantic palette recipes** — eight contrast-checked systems bind canvas, chrome, actions,
+status, focus, and generated-media anchors &nbsp;·&nbsp;
+**Studio pipeline** — three directions, human selection, interaction scenes, image/video jobs,
+working prototype, and a prototype-first reel &nbsp;·&nbsp;
 **References become rules** — `/ss-reference` compiles screenshots, URLs, Figma, or an existing
 UI into an evidence-backed project grammar &nbsp;·&nbsp;
 **Only the context you need** — `/ss-resolve` compiles the chosen method into a small,
@@ -114,7 +119,7 @@ hash-verifiable project bundle &nbsp;·&nbsp;
   <img src="assets/styleseed-architecture.svg" width="900" alt="StyleSeed engine architecture: intent and references become output grammars, combine with surface adapters and bounded project choices, then pass code and pixel gates" />
 </a>
 
-<sub>Core judgment × output grammar × surface adapter × domain/page × brand recipe × optional profile. [Read the architecture →](engine/ARCHITECTURE.md)</sub>
+<sub>Core judgment × output grammar × surface adapter × domain/page × brand recipe × palette recipe × optional profile. [Read the architecture →](engine/ARCHITECTURE.md)</sub>
 
 <br /><br />
 
@@ -132,7 +137,7 @@ hash-verifiable project bundle &nbsp;·&nbsp;
 
 <br />
 
-[Easy Start](#easy-start-30-seconds) · [Claude Code UI guide](https://styleseed-demo.vercel.app/claude-code-ui-design) · [Codex UI guide](https://styleseed-demo.vercel.app/codex-ui-design) · [Brand recipes](https://styleseed-demo.vercel.app/recipes) · [Architecture](engine/ARCHITECTURE.md) · [Engine + Recipes + Skins](#how-it-works-engine--recipes--skins) · [Motion](#named-motion-system) · [Skills](#21-ai-powered-skills) · [Wiki](../../wiki) · [한국어](README-KR.md)
+[Easy Start](#easy-start-30-seconds) · [Studio](https://styleseed-demo.vercel.app/studio) · [Palettes](https://styleseed-demo.vercel.app/palettes) · [Claude Code UI guide](https://styleseed-demo.vercel.app/claude-code-ui-design) · [Codex UI guide](https://styleseed-demo.vercel.app/codex-ui-design) · [Brand recipes](https://styleseed-demo.vercel.app/recipes) · [Architecture](engine/ARCHITECTURE.md) · [Engine + Recipes + Skins](#how-it-works-engine--recipes--skins) · [Motion](#named-motion-system) · [Skills](#22-ai-powered-skills) · [Wiki](../../wiki) · [한국어](README-KR.md)
 
 <br />
 
@@ -170,12 +175,12 @@ agent  ▸  ✓ 88/100 — one accent, grey normal states, real empty/error stat
 > [`llms.txt`](https://styleseed-demo.vercel.app/llms.txt) gives any agent the portable routing
 > contract, but it cannot provide the same reproducible local compile by itself.
 
-**Want the 21 `ss-*` agent skills too** (optional automation: context resolver, grammar compiler, setup, build, review, score)?
+**Want the 22 `ss-*` agent skills too** (optional automation: Studio, context resolver, grammar compiler, setup, build, review, score)?
 
 ```bash
 npx skills add bitjaru/styleseed
 ```
-Installs all 21 canonical `ss-*` workflow skills into Claude Code, Codex, Cursor, Gemini CLI,
+Installs all 22 canonical `ss-*` workflow skills into Claude Code, Codex, Cursor, Gemini CLI,
 Amp and more (the repository also exposes a standalone lightweight review skill). Then run
 `/ss-setup` → `/ss-resolve` in Claude Code or `$ss-setup` → `$ss-resolve` in Codex (you can
 also choose them from Codex's `/skills` picker). The resolver writes a targeted
@@ -449,7 +454,7 @@ stop looking AI-made.
 ┌─────────────────────────────────────────────────┐
 │  StyleSeed Engine (brand-agnostic)              │
 │                                                 │
-│  74 rules · 8 grammars · 5 adapters · 21 skills │
+│  74 rules · 8 grammars · 5 adapters · 22 skills │
 │  Layout · Composition · Typography · UX · A11y  │
 └──────────────────────┬──────────────────────────┘
                        │
@@ -470,14 +475,19 @@ stop looking AI-made.
 - 74 visual design rules (layout, composition, rhythm, forbidden patterns)
 - 48 React components (32 primitives + 16 patterns)
 - A named motion system (5 seeds + a copy-paste keyword library)
-- 21 cross-agent skills (context compiler, reference compiler, setup, UI, motion, UX, accessibility)
-- Works with ANY color palette
+- 22 cross-agent skills (Studio, context compiler, reference compiler, setup, UI, motion, UX, accessibility)
+- 8 maintained semantic palette recipes, with validated project overrides
 
 **Brand recipe** = how the artifact is shaped (morphology)
 - 9 maintained choices in [`BRAND-RECIPES.md`](engine/BRAND-RECIPES.md)
 - Changes containment, radius/border/elevation, navigation, controls, collections, density,
   responsive behavior, and motion
 - Carries source lineage without official logos, assets, fonts, copy, or trademarked arrangements
+
+**Palette recipe** = how color roles relate (semantic hierarchy)
+- 8 maintained choices in [`PALETTE-RECIPES.md`](engine/PALETTE-RECIPES.md)
+- Binds canvas, surface, navigation chrome, text, action, status, focus, and generated-media anchors
+- Every required text/action/focus pair passes deterministic contrast validation
 
 **Skin** = semantic color and type material (visual identity)
 - Just a `theme.css` file with color variables
@@ -582,11 +592,12 @@ engine/
 └── scaffold/                 # Vite 6 + React 18 starter
 ```
 
-## 21 AI-Powered Skills
+## 22 AI-Powered Skills
 
 ### Setup
 | Skill | What It Does |
 |-------|-------------|
+| `/ss-studio` | **Run creative direction end to end** — role-based references → three directions → human selection → interaction/media plans → working prototype → temporal and visual evidence |
 | `/ss-resolve` | **Compile only the active context** — lock → grammar + adapter + domain/page + brand recipe + profile + craft baseline → small bundle + source-hash manifest |
 | `/ss-build` | **The whole loop, enforced** — lock the look → build → score → fix to ≥80 → *then* show. Use this instead of building UI free-hand |
 | `/ss-reference` | **Compile references into a project grammar** — evidence, confidence, semantic tokens, anti-patterns, and a transfer validation artifact |
@@ -667,7 +678,7 @@ React 18 · TypeScript · Tailwind CSS v4 · Radix UI · Vite 6 · Lucide Icons 
 |---|---|---|---|---|---|
 | Components | ✅ 48 | ✅ 50+ | ✅ | ✅ | ❌ |
 | Design **judgment** (when to use what) | ✅ 74 rules | ❌ | ❌ | Partial | ❌ |
-| Claude Code / Cursor integration | ✅ 21 skills | ❌ | ❌ | ❌ | — |
+| Claude Code / Cursor integration | ✅ 22 skills | ❌ | ❌ | ❌ | — |
 | Brand skins (Toss, Stripe, Linear...) | ✅ | ❌ | ❌ | ❌ | ❌ |
 | Price | Free (MIT) | Free | $299+ | Free | — |
 | Works *with* AI coding tools | ✅ | Indirect | Indirect | Indirect | — |

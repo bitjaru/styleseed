@@ -10,9 +10,9 @@ rules, skills, components, skins, and generated demo artifacts in sync.
 - Read the relevant nested guide before editing its subtree. In particular,
   `demo-pricing/AGENTS.md` applies to the Next.js demo.
 - Read `engine/PRODUCT-PRINCIPLES.md`, `engine/RULESETS.md`, `engine/ADAPTERS.md`,
-  `engine/BRAND-RECIPES.md`, and
+  `engine/BRAND-RECIPES.md`, `engine/PALETTE-RECIPES.md`, and
   `engine/ARCHITECTURE.md` before changing product behavior.
-- Treat `engine/.claude/skills/` as the canonical source for all 21 StyleSeed
+- Treat `engine/.claude/skills/` as the canonical source for all 22 StyleSeed
   skills. `.agents/skills` is a repository-scoped Codex symlink to that same
   directory; never create a second copy of a skill there.
 - Claude Code invokes a skill as `/ss-setup`, `/ss-build`, and so on. Codex
@@ -27,7 +27,8 @@ copies as the source of truth.
 
 ## Verification
 
-- Every engine change: run `node scripts/validate-engine.mjs` and `git diff --check`.
+- Every engine change: run `node scripts/validate-palettes.mjs`,
+  `node scripts/validate-engine.mjs`, and `git diff --check`.
 - Engine, skin, component, registry, or demo changes: run `npm run build` from
   `demo-pricing/`, then run `git diff --check` from the repository root.
 - The demo build fetches Google Fonts and may require network access.

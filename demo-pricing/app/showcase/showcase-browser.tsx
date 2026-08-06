@@ -105,7 +105,7 @@ export function ShowcaseBrowser({ entries, grammars }: ShowcaseBrowserProps) {
                       entry.proof === "exported-artifact" ? "bg-emerald-600" : "bg-violet-500"
                     }`}
                   >
-                    {entry.proof === "exported-artifact" ? "Exported artifact" : "New v3 artifact"}
+                    {entry.proof === "exported-artifact" ? "Exported artifact" : "Rendered preview"}
                   </span>
                 )}
               </div>

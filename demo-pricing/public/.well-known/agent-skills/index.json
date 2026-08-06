@@ -95,9 +95,9 @@
     {
       "name": "ss-resolve",
       "type": "skill-md",
-      "description": "Compile a small, deterministic StyleSeed rule bundle for one agent, output grammar, surface adapter, domain, page type, brand recipe, and optional profile. Use before setup or build, when STYLESEED.md changes, when updating StyleSeed, or whenever an agent would otherwise load the full rule handbook.",
+      "description": "Compile a small, deterministic StyleSeed rule bundle for one agent, output grammar, surface adapter, domain, page type, brand recipe, palette recipe, and optional profile. Use before setup or build, when STYLESEED.md changes, when updating StyleSeed, or whenever an agent would otherwise load the full rule handbook.",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-resolve/SKILL.md",
-      "digest": "sha256:cbee0c514a35f432e682aa2300a3f839fcbfa87ddd9fe8bf1c3f15913779bcc2"
+      "digest": "sha256:54cd41fcf9a75afa848426dbf9bc0d5e1f0bea871108881f29a4a822190e5eff"
     },
     {
       "name": "ss-restyle",
@@ -123,9 +123,16 @@
     {
       "name": "ss-setup",
       "type": "skill-md",
-      "description": "Configure StyleSeed by selecting the output grammar, domain, page type, brand recipe, optional aesthetic profile, and bounded brand tokens before scaffolding a first screen.",
+      "description": "Configure StyleSeed by selecting the output grammar, domain, page type, brand recipe, semantic palette recipe, optional aesthetic profile, and bounded brand tokens before scaffolding a first screen.",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-setup/SKILL.md",
-      "digest": "sha256:bd9ff7b66d77b24884e551db14aeeed26a2479c995ede242c07e6a8718ed2ab8"
+      "digest": "sha256:e71683e6dede2b41459217dc9613700d8e846c991b539289860d9e0f16aa0f18"
+    },
+    {
+      "name": "ss-studio",
+      "type": "skill-md",
+      "description": "Turn a product brief and optional references into three distinct creative directions, a human-selected StyleSeed interaction plan, generated image/video asset jobs, a working UI prototype, and a verified prototype-first showcase reel. Use for client concepts, app interaction exploration, trendy but coherent UI direction, reference discovery and synthesis, or any request that needs more than one static screen.",
+      "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-studio/SKILL.md",
+      "digest": "sha256:edcced30ec6c7d0355b549a808a6e2c9ad5c8482bf5e6bdbbc5c87fcc1d59240"
     },
     {
       "name": "ss-tokens",

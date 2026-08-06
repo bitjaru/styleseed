@@ -1,0 +1,4 @@
+interface:
+  display_name: "StyleSeed Studio"
+  short_description: "Turn briefs into directed UI prototypes and motion reels"
+  default_prompt: "Use $ss-studio to turn this product brief into three creative directions with semantic palette recommendations, a human-selected interactive prototype, generated image/video jobs, and a verified prototype-first showcase reel."

@@ -8,7 +8,7 @@ never define the method.
 **Run `/ss-resolve` first.** It compiles the project lock into
 `.styleseed/effective-rules.md` plus a hash-verifiable manifest. Build from that small bundle
 instead of loading the full handbook. Resolve every screen as core judgment × one output
-grammar (built-in or `/ss-reference`) × adapter × domain/page × brand recipe × optional
+grammar (built-in or `/ss-reference`) × adapter × domain/page × brand recipe × palette recipe × optional
 profile × lock.
 
 ## Golden Rules (NEVER break these)
@@ -52,6 +52,10 @@ Reference this guide when Claude Code sets up a new project or implements UI.
 >   reports, and single-frame graphics.
 > - **BRAND-RECIPES.md**: Reusable morphology and component-selection contracts. Recipes change
 >   geometry, containment, controls, and collections without cloning the brands in their lineage.
+> - **PALETTE-RECIPES.md**: Semantic canvas, chrome, action, status, focus, and generated-media
+>   color relationships. Built-ins pass deterministic contrast checks; project overrides revalidate.
+> - **STUDIO-PIPELINE.md**: Three-direction creative development, human selection, interaction
+>   scenes, generated-media jobs, real prototype recording, and temporal acceptance.
 > - **REFERENCE-COMPILER.md**: How `/ss-reference` turns user-supplied visual references into a
 >   project-local evidence-backed grammar.
 > - **PRESETS.md**: Optional aesthetic profiles for `/ss-restyle`; never a substitute for the
@@ -89,6 +93,7 @@ design-lock file.** Before building any UI:
 - Grammar fallback:  consumer-service
 - Reference confidence: n/a          # high | medium | low for compiled references
 - Brand recipe:     calm-consumer    # BRAND-RECIPES.md id; use auto only when mapping fits
+- Palette recipe:   quiet-mineral    # PALETTE-RECIPES.md id; use auto only when mapping fits
 - Aesthetic profile: none            # optional PRESETS.md profile
 - Mood:              soft · minimal · airy · calm   # edges · feel · density · tone
 - Skin:              toss            # or "custom" — NEVER the unlocked default indigo
@@ -127,7 +132,8 @@ the user can accept with a tap. Examples: personal finance → `calm-consumer` �
 `enterprise-workbench` · dev tool → `developer-platform` · merchant operations →
 `commerce-operator` · regulated form → `public-service` · creation tool →
 `creative-professional` · research/report → `editorial-authority` · campaign →
-`expressive-brand`. Choose the primary action color separately from the recipe.
+`expressive-brand`. Then recommend one semantic palette recipe from the product job, brand
+recipe, density, environment, and image/data role; do not choose from a mood word alone.
 **The unlocked default accent (`#5E6AD2`/`#4F46E5` generic indigo) is FORBIDDEN as a final
 choice** — if nothing else is chosen, pick a domain-fit skin, never the bare default.
 
@@ -143,7 +149,11 @@ Run this setup with the user (in plan mode), then build:
 3. **Brand recipe** — select one morphology from `BRAND-RECIPES.md`. `auto` uses the maintained
    grammar mapping. An explicit recipe changes containment, geometry, navigation, controls, and
    collections; it never copies protected brand details or selects the palette.
-4. **Mood / vibe — ask 3–4 aesthetic calls in plain words (or propose them from the recipe),
+4. **Palette recipe** — choose one maintained system from `PALETTE-RECIPES.md`, or `auto` when
+   the recipe mapping fits. It binds canvas, surface, navigation chrome, text, primary action,
+   status, focus, and generated-media anchors. Brand overrides must keep the role and rerun
+   deterministic contrast validation.
+5. **Mood / vibe — ask 3–4 aesthetic calls in plain words (or propose them from the recipe),
    then lock.** This is what makes a UI feel *chosen* instead of defaulted. Each axis maps to a
    concrete rule value, so the whole UI shares one mood:
    - **Edges** → radius personality: *sharp* (0–4px; technical, serious) · *soft* (8–12px;
@@ -159,19 +169,19 @@ Run this setup with the user (in plan mode), then build:
    project-specific·expressive·airy), let the user tweak in their words
    ("make the corners sharper", "more playful"), then **lock all four**. One mood → one radius,
    one shadow language, one density, one motion — applied everywhere.
-5. **Optional aesthetic profile + accent** — use at most one `PRESETS.md` profile, or none.
+6. **Optional aesthetic profile + accent** — use at most one `PRESETS.md` profile, or none.
    Recommend a domain-fit color or skin (see Smart defaults). If the
    user has a brand hex, use it. Keep one identifiable primary action; additional hues require
    stable roles in the selected grammar. Skins:
    Toss/Stripe/Linear/Notion/Raycast/Arc/Vercel.
-6. **Font** — recommend a pairing by recipe/language, don't leave the default: Korean/CJK →
+7. **Font** — recommend a pairing by recipe/language, don't leave the default: Korean/CJK →
    **Pretendard** · fintech/SaaS neutral → **Inter** · editorial → **Inter/serif display** ·
    dev/mono-accent → **Geist / IBM Plex**. State the display + body font in the lock.
-7. **Motion seed** — confirm from the Tone above: Spring (bouncy consumer/expressive) · Silk (smooth;
+8. **Motion seed** — confirm from the Tone above: Spring (bouncy consumer/expressive) · Silk (smooth;
    Stripe/Notion) · Snap (instant; Linear/Raycast/Vercel) · Float (gentle) · Pulse (rhythmic).
    Per moment: CTA→spring press, modal→silk entrance, list→stagger-cascade, balance/number→**none**.
-8. **Write the lock, then build, then check.** Save app type / surface / output grammar / page
-   type / brand recipe / optional profile / **mood** / accent / skin / **font**
+9. **Write the lock, then build, then check.** Save app type / surface / output grammar / page
+   type / brand recipe / palette recipe / optional profile / **mood** / accent / skin / **font**
    / motion / density to `STYLESEED.md` (see Design Lock above). Apply the full rules (read
    DESIGN-LANGUAGE.md + VISUAL-CRAFT.md — not a summary), pick the type scale for the surface
    (mobile-tight vs **desktop-larger, body ≥16px**), give the page **one focal point** (don't

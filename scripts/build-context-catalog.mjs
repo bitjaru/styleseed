@@ -21,6 +21,7 @@ const domains = read("APP-PLAYBOOKS.md");
 const pages = read("PAGE-TYPES.md");
 const presets = read("PRESETS.md");
 const recipes = read("BRAND-RECIPES.md");
+const palettes = JSON.parse(read("color/palettes.json"));
 
 const grammarIds = [
   "consumer-service",
@@ -107,7 +108,7 @@ const recipeIds = [
 ];
 
 const catalog = {
-  schemaVersion: 2,
+  schemaVersion: 3,
   engineVersion: read("VERSION"),
   generatedFrom: [
     "PRODUCT-PRINCIPLES.md",
@@ -117,6 +118,8 @@ const catalog = {
     "APP-PLAYBOOKS.md",
     "PAGE-TYPES.md",
     "BRAND-RECIPES.md",
+    "PALETTE-RECIPES.md",
+    "color/palettes.json",
     "PRESETS.md",
   ],
   core: read("PRODUCT-PRINCIPLES.md"),
@@ -149,6 +152,24 @@ const catalog = {
     recipeIds.map((id) => [
       id,
       section(recipes, `## \`${id}\``, /\n## `/),
+    ]),
+  ),
+  palettes: Object.fromEntries(
+    palettes.map((palette) => [
+      palette.id,
+      [
+        `### ${palette.id}`,
+        "",
+        `- Name: ${palette.name}`,
+        `- Mode: ${palette.mode}`,
+        `- Best for: ${palette.bestFor}`,
+        `- Recipe bias: ${palette.recipeBias.join(", ")}`,
+        `- Semantic roles: ${Object.entries(palette.roles).map(([role, value]) => `${role}=${value}`).join(" · ")}`,
+        `- Usage: ${palette.usage}`,
+        `- Generated-media anchors: ${palette.assetBrief.anchors.join(", ")}`,
+        `- Avoid in generated media: ${palette.assetBrief.avoid.join(", ")}`,
+        "- Re-run deterministic contrast validation after any project override.",
+      ].join("\n"),
     ]),
   ),
   profiles: Object.fromEntries(profileIds.map((id) => [id, tableRow(presets, id)])),
@@ -185,5 +206,5 @@ const catalog = {
 mkdirSync(dirname(out), { recursive: true });
 writeFileSync(out, `${JSON.stringify(catalog, null, 2)}\n`);
 console.log(
-  `StyleSeed context catalog: ${grammarIds.length} grammars · ${adapterIds.length} adapters · ${Object.keys(domainHeadings).length} domains · ${Object.keys(pageHeadings).length} pages · ${recipeIds.length} recipes · ${profileIds.length} profiles`,
+  `StyleSeed context catalog: ${grammarIds.length} grammars · ${adapterIds.length} adapters · ${Object.keys(domainHeadings).length} domains · ${Object.keys(pageHeadings).length} pages · ${recipeIds.length} recipes · ${palettes.length} palettes · ${profileIds.length} profiles`,
 );

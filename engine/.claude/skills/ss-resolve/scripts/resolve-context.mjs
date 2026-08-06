@@ -47,6 +47,7 @@ Options:
   --domain <id|none>
   --page <id|none>
   --recipe <id|auto>
+  --palette <id|auto>
   --profile <id|none>
   --fallback <built-in grammar id>   required for reference grammars without lock fallback
   --from-lock <path>
@@ -69,6 +70,7 @@ function parseLock(path) {
     "Output grammar": "grammar",
     "Grammar fallback": "fallback",
     "Brand recipe": "recipe",
+    "Palette recipe": "palette",
     "Aesthetic profile": "profile",
   };
   for (const line of text.split(/\r?\n/)) {
@@ -119,6 +121,7 @@ if (args.list) {
         domains: Object.keys(catalog.domains),
         pages: Object.keys(catalog.pages),
         recipes: ["auto", ...Object.keys(catalog.recipes)],
+        palettes: ["auto", ...Object.keys(catalog.palettes)],
         profiles: ["none", ...Object.keys(catalog.profiles)],
       },
       null,
@@ -137,6 +140,7 @@ const adapter = choose(args, lock, "adapter");
 const domain = choose(args, lock, "domain", "none");
 const page = choose(args, lock, "page", "none");
 const requestedRecipe = choose(args, lock, "recipe", "auto");
+const requestedPalette = choose(args, lock, "palette", "auto");
 const profile = choose(args, lock, "profile", "none");
 const fallback = choose(args, lock, "fallback");
 
@@ -186,10 +190,27 @@ if (!recipe) {
   throw new Error(`No automatic brand recipe for grammar "${recipeGrammar}". Pass --recipe.`);
 }
 
+const autoPaletteByRecipe = {
+  "calm-consumer": "quiet-mineral",
+  "native-mobile": "quiet-mineral",
+  "enterprise-workbench": "cobalt-instrument",
+  "developer-platform": "cobalt-instrument",
+  "commerce-operator": "warm-clay-commerce",
+  "public-service": "civic-blue",
+  "creative-professional": "deep-lime-studio",
+  "editorial-authority": "editorial-ink",
+  "expressive-brand": "signal-coral",
+};
+const palette = requestedPalette === "auto" ? autoPaletteByRecipe[recipe] : requestedPalette;
+if (!palette) {
+  throw new Error(`No automatic palette recipe for brand recipe "${recipe}". Pass --palette.`);
+}
+
 const adapterContent = requireId("adapters", adapter, "adapter");
 const domainContent = requireId("domains", domain, "domain");
 const pageContent = requireId("pages", page, "page");
 const recipeContent = requireId("recipes", recipe, "brand recipe");
+const paletteContent = requireId("palettes", palette, "palette recipe");
 const profileContent = requireId("profiles", profile, "profile");
 
 const selected = {
@@ -202,6 +223,8 @@ const selected = {
   page,
   recipe,
   recipeSelection: requestedRecipe,
+  palette,
+  paletteSelection: requestedPalette,
   profile,
 };
 
@@ -213,6 +236,7 @@ const sections = [
   ...(domainContent ? [["domain", domainContent]] : []),
   ...(pageContent ? [["page", pageContent]] : []),
   ["recipe", recipeContent],
+  ["palette", paletteContent],
   ...(profileContent ? [["profile", profileContent]] : []),
   ...(lock.text ? [["lock", `## Project design lock\n\n${lock.text}`]] : []),
   ["craft", catalog.craft],
@@ -230,9 +254,10 @@ const bundle = [
   `- Domain: ${domain}`,
   `- Page type: ${page}`,
   `- Brand recipe: ${recipe}${requestedRecipe === "auto" ? " (auto)" : ""}`,
+  `- Palette recipe: ${palette}${requestedPalette === "auto" ? " (auto)" : ""}`,
   `- Aesthetic profile: ${profile}`,
   "",
-  "Read this bundle before implementation. The agent execution contract is operational; method authority then runs core → grammar → adapter → domain/page → brand recipe → profile → lock → compact craft baseline, with the earlier method layer winning conflicts. Run the code gate and rendered visual gate.",
+  "Read this bundle before implementation. The agent execution contract is operational; method authority then runs core → grammar → adapter → domain/page → brand recipe → palette recipe → profile → lock → compact craft baseline, with the earlier method layer winning conflicts. Run the code gate and rendered visual gate.",
   "",
   ...sections.flatMap(([, content]) => [content, "", "---", ""]),
 ].join("\n").replace(/\n---\n\s*$/, "\n");
@@ -281,7 +306,7 @@ mkdirSync(outDir, { recursive: true });
 writeFileSync(bundlePath, bundle);
 writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
 console.log(
-  `StyleSeed ${catalog.engineVersion}: ${grammar} × ${adapter} × ${domain} × ${page} × ${recipe} × ${profile}`,
+  `StyleSeed ${catalog.engineVersion}: ${grammar} × ${adapter} × ${domain} × ${page} × ${recipe} × ${palette} × ${profile}`,
 );
 console.log(`wrote ${bundlePath} (${Buffer.byteLength(bundle)} bytes, sha256:${bundleHash})`);
 console.log(`wrote ${manifestPath}`);

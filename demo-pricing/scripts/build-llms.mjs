@@ -9,6 +9,7 @@ const engineDir = resolve(root, '../engine')
 const skillsDir = resolve(engineDir, '.claude/skills')
 const componentsDir = resolve(engineDir, 'components')
 const engineCssDir = resolve(engineDir, 'css')
+const engineColorDir = resolve(engineDir, 'color')
 const skinsDir = resolve(root, '../skins')
 const publicDir = resolve(root, 'public')
 const wellKnownAgent = resolve(publicDir, '.well-known/agent-skills')
@@ -69,6 +70,8 @@ const craftBaseline = readOpt('CRAFT-BASELINE.md')
 const ruleSets = readOpt('RULESETS.md')
 const adapters = readOpt('ADAPTERS.md')
 const brandRecipes = readOpt('BRAND-RECIPES.md')
+const paletteRecipes = readOpt('PALETTE-RECIPES.md')
+const studioPipeline = readOpt('STUDIO-PIPELINE.md')
 const presets = readOpt('PRESETS.md')
 const referenceCompiler = readOpt('REFERENCE-COMPILER.md')
 const architecture = readOpt('ARCHITECTURE.md')
@@ -87,6 +90,8 @@ writeFileSync(
     (ruleSets ? ruleSets + '\n\n---\n\n' : '') +
     (adapters ? adapters + '\n\n---\n\n' : '') +
     (brandRecipes ? brandRecipes + '\n\n---\n\n' : '') +
+    (paletteRecipes ? paletteRecipes + '\n\n---\n\n' : '') +
+    (studioPipeline ? studioPipeline + '\n\n---\n\n' : '') +
     (presets ? presets + '\n\n---\n\n' : '') +
     (referenceCompiler ? referenceCompiler + '\n\n---\n\n' : '') +
     claude +
@@ -150,6 +155,7 @@ const adapterIds = Object.keys(contextCatalog.adapters)
 const domainIds = Object.keys(contextCatalog.domains)
 const pageIds = Object.keys(contextCatalog.pages)
 const recipeIds = Object.keys(contextCatalog.recipes)
+const paletteIds = Object.keys(contextCatalog.palettes)
 const profileIds = Object.keys(contextCatalog.profiles)
 const versionJsonPath = resolve(publicDir, 'version.json')
 const currentVersionJson = JSON.parse(readFileSync(versionJsonPath, 'utf8'))
@@ -163,6 +169,7 @@ writeFileSync(
       grammars: grammarIds.length,
       adapters: adapterIds.length,
       recipes: recipeIds.length,
+      palettes: paletteIds.length,
     },
     null,
     2,
@@ -179,7 +186,8 @@ keeps project decisions reproducible.
 
 1. Install the skills: \`npx skills add bitjaru/styleseed\`
 2. Create or confirm \`STYLESEED.md\` with \`/ss-setup\` in Claude Code or \`$ss-setup\` in Codex.
-3. Invoke \`/ss-resolve\` or \`$ss-resolve\`.
+3. For a full creative-direction run, invoke \`/ss-studio\` or \`$ss-studio\`; for an
+   already-decided direction, invoke \`/ss-resolve\` or \`$ss-resolve\` directly.
 4. Read \`.styleseed/effective-rules.md\`; preserve \`.styleseed/manifest.json\`.
 5. Build with \`ss-build\`, score to at least 80, then render and inspect with \`ss-verify\`.
 
@@ -194,6 +202,7 @@ handbook.
 - Domains: ${domainIds.map((id) => `\`${id}\``).join(' · ')}
 - Pages: ${pageIds.map((id) => `\`${id}\``).join(' · ')}
 - Brand recipes: \`auto\` · ${recipeIds.map((id) => `\`${id}\``).join(' · ')}
+- Palette recipes: \`auto\` · ${paletteIds.map((id) => `\`${id}\``).join(' · ')}
 - Optional profiles: \`none\` · ${profileIds.map((id) => `\`${id}\``).join(' · ')}
 
 If supplied references do not fit a maintained grammar, use \`ss-reference\` to compile a
@@ -245,6 +254,8 @@ job-specific grammars, targeted context compilation, reference compilation, and 
 - Claude Code UI guide: https://styleseed-demo.vercel.app/claude-code-ui-design
 - Codex UI guide: https://styleseed-demo.vercel.app/codex-ui-design
 - Architecture: https://styleseed-demo.vercel.app/architecture
+- Semantic palettes: https://styleseed-demo.vercel.app/palettes
+- Studio: https://styleseed-demo.vercel.app/studio
 - Showcase: https://styleseed-demo.vercel.app/showcase
 - Source: https://github.com/bitjaru/styleseed
 - Full archive/debug context: https://styleseed-demo.vercel.app/llms-full.txt
@@ -352,12 +363,20 @@ const recipeManifest = recipeIds.map((id) => ({
   digest: 'sha256:' + createHash('sha256').update(contextCatalog.recipes[id]).digest('hex'),
 }))
 
+const paletteManifest = paletteIds.map((id) => ({
+  id,
+  source: 'engine/color/palettes.json',
+  sourceUrl: `${REPO_RAW}/engine/color/palettes.json`,
+  contract: contextCatalog.palettes[id],
+  digest: 'sha256:' + createHash('sha256').update(contextCatalog.palettes[id]).digest('hex'),
+}))
+
 writeFileSync(
   resolve(wellKnownSeed, 'registry.json'),
   JSON.stringify(
     {
       $schema: 'https://styleseed-demo.vercel.app/.well-known/styleseed/registry.schema.json',
-      version: '4',
+      version: '5',
       generated: new Date().toISOString(),
       repository: 'https://github.com/bitjaru/styleseed',
       counts: {
@@ -367,6 +386,7 @@ writeFileSync(
         domains: domainIds.length,
         pages: pageIds.length,
         recipes: recipeIds.length,
+        palettes: paletteIds.length,
         profiles: profileIds.length,
         components: components.length,
         byType: {
@@ -383,10 +403,12 @@ writeFileSync(
         domainIds,
         pageIds,
         recipeIds,
+        paletteIds,
         profileIds,
       },
       components,
       recipes: recipeManifest,
+      palettes: paletteManifest,
       skins: skinsManifest,
     },
     null,
@@ -473,14 +495,18 @@ const motionDir = resolve(engineDir, 'motion')
 if (existsSync(motionDir)) {
   cpSync(motionDir, resolve(engineMirror, 'motion'), { recursive: true })
 }
+if (existsSync(engineColorDir)) {
+  cpSync(engineColorDir, resolve(engineMirror, 'color'), { recursive: true })
+}
 
 console.log(`✓ wrote public/llms-full.txt (${(claude.length + designLang.length) / 1024 | 0} KB)`)
 console.log(`✓ wrote public/llms.txt (targeted resolver route)`)
 console.log(`✓ wrote public/.well-known/agent-skills/index.json (${skills.length} skills)`)
 console.log(
-  `✓ wrote public/.well-known/styleseed/registry.json (${grammarIds.length} grammars, ${adapterIds.length} adapters, ${components.length} components, ${skinsManifest.length} skins)`,
+  `✓ wrote public/.well-known/styleseed/registry.json (${grammarIds.length} grammars, ${adapterIds.length} adapters, ${paletteIds.length} palettes, ${components.length} components, ${skinsManifest.length} skins)`,
 )
 console.log(`✓ wrote app/skins.css (${skinBlocks.length} skin blocks + @theme inline)`)
 console.log(`✓ mirrored engine/components → .engine/components`)
 if (existsSync(engineCssDir)) console.log(`✓ mirrored engine/css → .engine/css`)
 if (existsSync(motionDir)) console.log(`✓ mirrored engine/motion → .engine/motion`)
+if (existsSync(engineColorDir)) console.log(`✓ mirrored engine/color → .engine/color`)

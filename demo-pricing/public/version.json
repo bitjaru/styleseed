@@ -1,14 +1,15 @@
 {
-  "version": "3.2.0",
-  "released": "2026-07-31",
+  "version": "4.0.0",
+  "released": "2026-08-06",
   "rules": 74,
-  "skills": 21,
+  "skills": 22,
   "skins": 7,
   "grammars": 8,
   "adapters": 5,
   "recipes": 9,
-  "whatsNew": "StyleSeed v3.2 adds nine brand recipes that change geometry, containment, controls, collections, density, and motion independently from token skins. The context compiler now resolves grammar × surface × recipe, bundled pattern components are recipe-aware, and /recipes shows the same module across every morphology.",
+  "whatsNew": "StyleSeed v4.0 adds Studio: three creative directions, a human selection gate, interaction scenes, provider-neutral image/video jobs, a working prototype, and temporal verification. Eight semantic palette recipes now bind UI roles and generated-media anchors with deterministic contrast checks.",
   "update": "Claude Code: /ss-update. Codex: $ss-update. Or run: npx skills add bitjaru/styleseed",
   "changelog": "https://github.com/bitjaru/styleseed/releases",
-  "repo": "https://github.com/bitjaru/styleseed"
+  "repo": "https://github.com/bitjaru/styleseed",
+  "palettes": 8
 }

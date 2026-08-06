@@ -111,26 +111,29 @@ export default function HomePage() {
         <section className="border-t border-neutral-200 bg-[#F7F7FB]">
           <div className="mx-auto grid max-w-6xl items-center gap-10 px-6 py-20 lg:grid-cols-[0.85fr_1.4fr]">
             <div>
-              <div className="text-[11px] font-bold uppercase tracking-widest text-violet-600">New in v3.2</div>
+              <div className="text-[11px] font-bold uppercase tracking-widest text-violet-600">New in v4.0</div>
               <h2 className="mt-2 text-[clamp(28px,4vw,42px)] font-bold leading-tight tracking-tight">
-                One method.<br />Many real morphologies.
+                Direction, color, motion.<br />One working scene.
               </h2>
               <p className="mt-4 text-[15px] leading-relaxed text-neutral-600">
-                Toss-like consumer UI is one researched language, not the universal answer.
-                StyleSeed now selects the grammar for the job — and can compile a new one from
-                your screenshots, URLs, Figma exports, or existing product.
+                Studio turns a brief into three structurally different directions, requires a
+                human selection, then compiles interaction scenes, image and video jobs, and a
+                working prototype before it records the showcase reel.
               </p>
               <p className="mt-3 text-[15px] leading-relaxed text-neutral-600">
-                Nine brand recipes now change geometry, containment, controls, collections,
-                density, and motion—not just color. Surface adapters carry the same judgment
-                into web and mobile UI, carousels, decks, reports, posters, and covers.
+                Eight semantic palette recipes recommend refined canvas, chrome, action, status,
+                focus, and generated-media colors for the product job. Every required pair is
+                contrast-checked; color does not replace the selected design grammar.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
-                <Link href="/recipes" className="inline-flex items-center gap-1.5 rounded-xl bg-neutral-900 px-5 py-3 text-[14px] font-bold text-white hover:bg-black">
-                  Compare 9 recipes <ArrowRight size={14} />
+                <Link href="/studio" className="inline-flex items-center gap-1.5 rounded-xl bg-neutral-900 px-5 py-3 text-[14px] font-bold text-white hover:bg-black">
+                  Open Studio workbench <ArrowRight size={14} />
                 </Link>
                 <Link href="/architecture" className="inline-flex items-center gap-1.5 rounded-xl border border-neutral-300 bg-white px-5 py-3 text-[14px] font-bold text-neutral-900 hover:border-neutral-950">
                   Engine architecture
+                </Link>
+                <Link href="/palettes" className="inline-flex items-center gap-1.5 rounded-xl border border-neutral-300 bg-white px-5 py-3 text-[14px] font-bold text-neutral-900 hover:border-neutral-950">
+                  Browse 8 palettes
                 </Link>
               </div>
             </div>
@@ -180,7 +183,7 @@ export default function HomePage() {
                 <code className="font-mono text-[13px] text-violet-300">ss-build</code> can only
                 <em> run</em> once installed. Then your lock persists in{" "}
                 <code className="font-mono text-[13px] text-neutral-300">STYLESEED.md</code> (no drift),
-                and every artifact is compiled, scored, and visually checked before you see it. All 21 skills, universally —
+                and every artifact is compiled, scored, and visually checked before you see it. All 22 skills, universally —
                 Claude Code, Codex, Cursor, Gemini CLI &amp; 12+ more.
               </p>
               <div className="mt-4 space-y-1.5">

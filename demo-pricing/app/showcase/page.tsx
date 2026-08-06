@@ -14,7 +14,7 @@ import { ShowcaseBrowser } from "./showcase-browser";
 const BASE = "https://styleseed-demo.vercel.app";
 const OG = `${BASE}/og/showcase.png`;
 const SHOW_DESC =
-  "Explore StyleSeed v3 through live, inspectable builds organized by output grammar, user job, surface adapter, skin, and motion. See why each AI-generated result was designed that way.";
+  "Explore StyleSeed v4 through live, inspectable builds organized by output grammar, creative direction, semantic palette, surface adapter, and motion—including a working interaction Studio run.";
 
 export const metadata: Metadata = {
   title: "AI design grammar showcase — live StyleSeed builds",
@@ -32,14 +32,14 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: `${BASE}/showcase`,
-    title: "StyleSeed v3 showcase — design grammar in working outputs",
+    title: "StyleSeed v4 showcase — design grammar in working outputs",
     description: SHOW_DESC,
     siteName: "StyleSeed",
     images: [{ url: OG, width: 1280, height: 640, alt: "StyleSeed output grammar showcase" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "StyleSeed v3 design grammar showcase",
+    title: "StyleSeed v4 design grammar showcase",
     description: SHOW_DESC,
     images: [OG],
   },
@@ -111,7 +111,7 @@ export default function ShowcasePage() {
           <div className="mt-10 grid gap-8 lg:grid-cols-[1fr_360px] lg:items-end">
             <div>
               <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-violet-600">
-                StyleSeed v3 · evidence, not templates
+                StyleSeed v4 · evidence, not templates
               </p>
               <h1 className="mt-3 max-w-4xl text-[clamp(42px,7vw,72px)] font-bold leading-[0.98] tracking-[-0.045em]">
                 See how the method changes with the job.
@@ -132,6 +132,43 @@ export default function ShowcasePage() {
       </section>
 
       <div className="mx-auto max-w-6xl px-6 py-14">
+        <Link
+          href="/studio"
+          className="group mb-14 grid overflow-hidden rounded-[28px] bg-[#0B0D0F] text-white shadow-[0_28px_80px_-42px_rgba(0,0,0,0.75)] lg:grid-cols-[1fr_0.9fr]"
+        >
+          <div className="p-7 sm:p-10">
+            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#B8FF5A]">New v4 working artifact · Focus OS</p>
+            <h2 className="mt-4 max-w-xl text-[clamp(32px,5vw,54px)] font-semibold leading-[0.95] tracking-[-0.05em]">
+              Three directions.<br />One reversible scene.
+            </h2>
+            <p className="mt-5 max-w-lg text-[14px] leading-relaxed text-white/52">
+              Compare native, signature, and experimental structures; inspect their semantic
+              palettes and media jobs; then run the actual task-card-to-focus-controller transition.
+            </p>
+            <span className="mt-7 inline-flex items-center gap-1.5 text-sm font-bold text-[#B8FF5A]">
+              Open Studio workbench <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
+            </span>
+          </div>
+          <div className="relative min-h-[350px] overflow-hidden border-t border-white/10 bg-[#15191D] p-6 lg:border-l lg:border-t-0">
+            <div className="absolute -right-16 -top-20 size-64 rounded-full bg-[#B8FF5A]/18 blur-3xl" />
+            <div className="relative mx-auto w-full max-w-[310px] rounded-[34px] border border-white/20 bg-black p-2 shadow-2xl">
+              <div className="min-h-[330px] rounded-[27px] bg-[#0B0D0F] p-5">
+                <div className="flex items-center justify-between text-[8px] font-bold"><span>9:41</span><span className="rounded-full bg-white/10 px-2 py-1">Focus OS</span></div>
+                <p className="mt-10 text-[8px] font-bold uppercase tracking-[0.16em] text-white/35">Monday · Priority field</p>
+                <h3 className="mt-2 max-w-[220px] text-[27px] font-semibold leading-[0.95] tracking-[-0.055em]">Protect one meaningful hour.</h3>
+                <div className="relative mt-6 overflow-hidden rounded-[22px] bg-[#262C31] p-5">
+                  <div className="absolute -right-8 -top-10 size-32 rounded-full bg-[#B8FF5A]/55 blur-2xl" />
+                  <p className="relative mt-14 text-[9px] text-white/40">Priority session</p>
+                  <p className="relative mt-1 text-[17px] font-semibold leading-tight">Shape the launch narrative</p>
+                </div>
+                <div className="mx-auto mt-5 flex h-11 w-[74%] items-center justify-around rounded-full bg-[#262C31]">
+                  {["#B8FF5A", "#7AA7FF", "#F5F4ED"].map((color) => <span key={color} className="size-2.5 rounded-full" style={{ background: color }} />)}
+                </div>
+              </div>
+            </div>
+          </div>
+        </Link>
+
         <ShowcaseBrowser entries={entries} grammars={OUTPUT_GRAMMARS} />
 
         <section className="mt-16 grid gap-8 border border-neutral-200 bg-neutral-50 p-8 lg:grid-cols-[1fr_auto] lg:items-center">

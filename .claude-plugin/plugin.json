@@ -2,8 +2,8 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "styleseed",
   "displayName": "StyleSeed",
-  "version": "3.2.0",
-  "description": "Open-source design-method engine for Claude Code, Codex, and Cursor. Compiles grammar, surface, and brand-recipe choices into targeted rules, then builds and verifies UI, carousels, decks, documents, and graphics.",
+  "version": "4.0.0",
+  "description": "Open-source design-method engine for Claude Code, Codex, and Cursor. Directs three concepts, compiles grammar, morphology, and semantic palette choices, plans generated media, then builds and verifies working UI and non-web artifacts.",
   "author": {
     "name": "bitjaru",
     "url": "https://github.com/bitjaru"

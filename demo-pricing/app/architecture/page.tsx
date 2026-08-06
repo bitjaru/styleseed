@@ -4,7 +4,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 
 const BASE = "https://styleseed-demo.vercel.app";
 const DESCRIPTION =
-  "How StyleSeed compiles fixed AI design judgment, eight output grammars, nine brand recipes, five surface adapters, and project choices into a small source-hashed context before code and pixel verification.";
+  "How StyleSeed Studio turns a brief into three directions, then compiles fixed AI design judgment, output grammar, morphology, semantic palette, generated-media plans, and interaction scenes before code, pixel, temporal, and human verification.";
 
 export const metadata: Metadata = {
   title: "StyleSeed engine architecture — AI design grammar compiler",
@@ -15,12 +15,14 @@ export const metadata: Metadata = {
     "reference to design system",
     "vibe coding design method",
     "StyleSeed architecture",
+    "AI interaction design pipeline",
+    "semantic color palette system",
   ],
   alternates: { canonical: `${BASE}/architecture` },
   openGraph: {
     type: "article",
     url: `${BASE}/architecture`,
-    title: "StyleSeed v3.2 engine architecture",
+    title: "StyleSeed v4.0 engine architecture",
     description: DESCRIPTION,
     siteName: "StyleSeed",
     images: [
@@ -28,13 +30,13 @@ export const metadata: Metadata = {
         url: `${BASE}/og/styleseed-og.png`,
         width: 1200,
         height: 630,
-        alt: "StyleSeed v3.2 design grammar, brand recipe, and context compiler architecture diagram",
+        alt: "StyleSeed v4.0 creative direction, semantic palette, interaction, media, and context compiler architecture diagram",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "StyleSeed v3.2 engine architecture",
+    title: "StyleSeed v4.0 engine architecture",
     description: DESCRIPTION,
     images: [`${BASE}/og/styleseed-og.png`],
   },
@@ -45,10 +47,12 @@ const layers = [
   ["Output grammar", "Consumer service, operations, technical, editorial, commerce, institutional, marketing, or sequential story."],
   ["Surface adapter", "Web/mobile, carousel, slide deck, document/report, or single-frame renderer contract."],
   ["Brand recipe", "Nine reusable morphologies change containment, geometry, controls, collections, density, and motion without cloning a company."],
+  ["Palette recipe", "Eight semantic systems bind canvas, chrome, action, status, focus, and generated-media anchors with deterministic contrast checks."],
   ["Reference compiler", "Turns screenshots, URLs, Figma exports, or an existing UI into a local grammar with evidence and confidence."],
+  ["Studio director", "Produces native, signature, and experimental directions, records human selection, then compiles interaction scenes and image/video jobs."],
   ["Context compiler", "ss-resolve emits only the selected 10–20KB method plus a manifest of selections, source hashes, and bundle hash."],
   ["Build method", "The agent implements real product content from effective-rules.md instead of reassembling the full handbook."],
-  ["Auxiliary gates", "Code scoring finds structural drift; pixel verification catches what only appears after rendering."],
+  ["Evidence gates", "Code and pixel checks find structural and rendered drift; temporal evidence proves the interaction, and a named human accepts the result."],
 ];
 
 export default function ArchitecturePage() {
@@ -59,11 +63,11 @@ export default function ArchitecturePage() {
         "@type": "TechArticle",
         "@id": `${BASE}/architecture#page`,
         url: `${BASE}/architecture`,
-        headline: "StyleSeed v3.2 engine architecture",
+        headline: "StyleSeed v4.0 engine architecture",
         description: DESCRIPTION,
         image: `${BASE}/styleseed-architecture.svg`,
         datePublished: "2026-07-18",
-        dateModified: "2026-07-31",
+        dateModified: "2026-08-06",
         author: { "@type": "Organization", name: "StyleSeed", url: BASE },
         isPartOf: { "@id": `${BASE}/#website` },
         about: [
@@ -71,6 +75,9 @@ export default function ArchitecturePage() {
           "output grammars",
           "surface adapters",
           "brand recipes",
+          "semantic palettes",
+          "interaction scenes",
+          "generated media",
           "reference compiler",
           "context compiler",
         ],
@@ -101,7 +108,7 @@ export default function ArchitecturePage() {
           <ArrowLeft size={14} /> Home
         </Link>
         <div className="mt-12 max-w-3xl">
-          <div className="text-[11px] font-bold uppercase tracking-widest text-violet-600">Engine architecture · v3.2</div>
+          <div className="text-[11px] font-bold uppercase tracking-widest text-violet-600">Engine architecture · v4.0</div>
           <h1 className="mt-3 text-[clamp(38px,6vw,64px)] font-bold leading-[1.03] tracking-tight">
             Fixed judgment.<br />Multiple design languages.
           </h1>
@@ -109,7 +116,9 @@ export default function ArchitecturePage() {
             StyleSeed no longer treats a Toss-like product aesthetic as the answer to every
             result. It selects the functional grammar the artifact needs, or compiles one from
             the user&rsquo;s references. A separate brand recipe selects morphology rather than
-            color. Then <code>ss-resolve</code> hands the agent only the
+            color. A palette recipe binds semantic color roles and generated-media anchors. Studio
+            adds three directed concepts, a human decision, and executable interaction/media plans.
+            Then <code>ss-resolve</code> hands the agent only the
             selected method and a source-hash manifest before the right renderer takes over.
           </p>
         </div>
@@ -128,14 +137,15 @@ export default function ArchitecturePage() {
         </section>
 
         <section className="mt-8 border border-neutral-200 bg-white p-8 md:p-10">
-          <div className="text-[11px] font-bold uppercase tracking-widest text-emerald-700">Grammar → recipe → skin</div>
+          <div className="text-[11px] font-bold uppercase tracking-widest text-emerald-700">Grammar → morphology → palette → skin</div>
           <h2 className="mt-3 text-[clamp(26px,4vw,38px)] font-bold tracking-tight">
-            Job, morphology, and brand material stay separate.
+            Job, morphology, semantic color, and brand material stay separate.
           </h2>
           <p className="mt-3 max-w-3xl text-[15px] leading-relaxed text-neutral-600">
             The grammar owns attention and information order. The recipe owns geometry,
-            containment, controls, and collection patterns. The skin owns semantic colors and
-            type tokens. This prevents a new palette from pretending to be a new design system.
+            containment, controls, and collection patterns. The palette owns role relationships
+            and contrast. The skin implements project-specific colors and type tokens. This keeps
+            a fashionable swatch from pretending to be a complete design system.
           </p>
           <Link href="/recipes" className="mt-6 inline-flex items-center gap-1.5 font-bold text-violet-700 hover:underline">
             Compare all nine recipes <ArrowRight size={14} />

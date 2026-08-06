@@ -1,6 +1,6 @@
 ---
 name: ss-setup
-description: Configure StyleSeed by selecting the output grammar, domain, page type, brand recipe, optional aesthetic profile, and bounded brand tokens before scaffolding a first screen.
+description: Configure StyleSeed by selecting the output grammar, domain, page type, brand recipe, semantic palette recipe, optional aesthetic profile, and bounded brand tokens before scaffolding a first screen.
 argument-hint: "(no arguments needed)"
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash, WebFetch
 ---
@@ -9,7 +9,7 @@ allowed-tools: Read, Write, Edit, Grep, Glob, Bash, WebFetch
 
 StyleSeed setup chooses a **design method for the result**, not a favorite brand to imitate.
 Use `/ss-resolve --list` (Claude Code) or `$ss-resolve --list` (Codex) to inspect the supported
-grammar, adapter, domain, page, recipe, and profile IDs without loading the full handbook.
+grammar, adapter, domain, page, recipe, palette, and profile IDs without loading the full handbook.
 
 ## When not to use
 
@@ -59,18 +59,25 @@ fits. Use an explicit recipe when the product needs a different geometry, contai
 navigation, control, or collection language. A recipe is not a company clone and does not
 select colors.
 
-### 5. Optional aesthetic profile
+### 5. Palette recipe
+
+Recommend one semantic palette from `PALETTE-RECIPES.md`. Use `auto` when its maintained recipe
+mapping fits. An explicit palette must still preserve semantic roles, surface/chrome separation,
+status cues, and validated contrast. Palette selection is not permission to recolor every surface.
+
+### 6. Optional aesthetic profile
 
 Recommend one profile from `PRESETS.md` only when it strengthens the product. `none` is a good
 default. A profile modifies coordinated visual axes but cannot replace the output grammar.
 
-### 6. Brand and bounded axes
+### 7. Brand and bounded axes
 
-Lock a real brand color if supplied; otherwise propose a domain-fit primary action color. Then
+Lock a real brand color if supplied; otherwise start from the selected palette's primary role. Then
 confirm font/language, density, radius, elevation, imagery/data role, and motion inside the
-grammar's allowed ranges. Do not use generic indigo or a stale purple mislabeled as Toss.
+grammar's allowed ranges. Revalidate semantic pairs after a brand override. Do not use generic
+indigo or a stale purple mislabeled as Toss.
 
-### 7. Write the design lock
+### 8. Write the design lock
 
 Create `STYLESEED.md`:
 
@@ -86,6 +93,7 @@ Create `STYLESEED.md`:
 - Grammar fallback: consumer-service
 - Reference confidence: n/a
 - Brand recipe: calm-consumer
+- Palette recipe: quiet-mineral
 - Aesthetic profile: none
 - Skin: custom
 - Primary action: #3182F6
@@ -102,7 +110,7 @@ Create `STYLESEED.md`:
 For a compiled grammar use its actual path and confidence. Reject unknown enum values rather
 than treating the lock as an exemption.
 
-### 8. Scaffold and prove
+### 9. Scaffold and prove
 
 Compile the selected method before code:
 
@@ -120,7 +128,8 @@ it was skipped.
 
 ## Completion report
 
-Report the selected grammar and why, page/domain intersection, brand recipe, optional profile, lock path,
+Report the selected grammar and why, page/domain intersection, brand recipe, palette recipe,
+optional profile, lock path,
 compiled bundle and manifest paths, files changed, score, and visual verification status.
 Mention `/ss-reference` as the path for future references that need their own grammar.
 
@@ -129,6 +138,7 @@ Mention `/ss-reference` as the path for future references that need their own gr
 - Ask one question at a time and recommend a concrete default.
 - Output grammar is required; aesthetic profile is optional.
 - Brand recipe is required; `auto` resolves to a concrete maintained recipe.
+- Palette recipe is required; `auto` resolves to a contrast-verified semantic palette.
 - A skin is tokens, not design judgment.
 - Never fetch a brand `DESIGN.md` and treat its palette as a complete rule set.
 - Never scaffold an unscored first page or claim visual verification without a screenshot.

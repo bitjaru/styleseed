@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900" role="img" aria-labelledby="title desc">
   <title id="title">StyleSeed engine architecture</title>
-  <desc id="desc">Product intent and user references flow into built-in or compiled output grammars, combine with a reusable brand recipe and surface adapter, then a context compiler emits a small effective rule bundle and source-hash manifest before build, code score, and pixel verification loops.</desc>
+  <desc id="desc">Product intent and references flow through a three-direction Studio selection, then output grammar, surface adapter, brand recipe, semantic palette, and project choices compile into effective rules before working prototype, code, pixel, temporal, and human verification.</desc>
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#F7F7FB"/><stop offset="1" stop-color="#EEF4FF"/></linearGradient>
     <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="8" stdDeviation="14" flood-color="#172033" flood-opacity=".08"/></filter>
@@ -11,7 +11,7 @@
   </defs>
   <rect width="1440" height="900" rx="32" fill="url(#bg)"/>
   <text class="t h" x="80" y="75">StyleSeed engine architecture</text>
-  <text class="t sub" x="80" y="108">Fixed judgment, multiple grammars and morphologies, deterministic context compilation, and two auxiliary gates.</text>
+  <text class="t sub" x="80" y="108">Fixed judgment, directed concepts, semantic palettes, working interactions, and four evidence gates.</text>
 
   <text class="t k violet" x="80" y="170">01 · UNDERSTAND</text>
   <rect class="box" x="80" y="190" width="250" height="135" rx="18"/>
@@ -21,10 +21,10 @@
   <text class="t bh" x="105" y="388">User references</text>
   <text class="t bd" x="105" y="417">Screenshots · URLs · Figma</text><text class="t bd" x="105" y="440">Existing product · moodboard</text><text class="t bd" x="105" y="463">Observed, never name-inferred</text>
 
-  <text class="t k blue" x="405" y="170">02 · SELECT OR COMPILE</text>
+  <text class="t k blue" x="405" y="170">02 · DIRECT + SELECT</text>
   <rect class="box" x="405" y="190" width="285" height="135" rx="18"/>
-  <text class="t bh" x="430" y="228">Built-in output grammar</text>
-  <text class="t bd" x="430" y="257">Consumer · operations · technical</text><text class="t bd" x="430" y="280">Editorial · commerce · institutional</text><text class="t bd" x="430" y="303">Expressive marketing</text>
+  <text class="t bh" x="430" y="228">Studio director</text>
+  <text class="t bd" x="430" y="257">Native · signature · experimental</text><text class="t bd" x="430" y="280">Palette + navigation + interaction</text><text class="t bd" x="430" y="303">Human selection before build</text>
   <rect x="405" y="350" width="285" height="190" rx="18" fill="#172033" filter="url(#shadow)"/>
   <text class="t bh inverse-title" x="430" y="390">Reference compiler</text>
   <text class="bd inverse-body" x="430" y="421">Observe → measure → cluster</text><text class="bd inverse-body" x="430" y="446">Resolve conflicts → abstract</text><text class="bd inverse-body" x="430" y="471">Evidence + confidence + tokens</text>
@@ -32,29 +32,30 @@
 
   <text class="t k green" x="765" y="170">03 · COMPILE CONTEXT</text>
   <rect class="box" x="765" y="190" width="300" height="410" rx="22"/>
-  <rect x="790" y="218" width="250" height="55" rx="12" fill="#EDE9FE"/><text class="t bh" x="810" y="252">Core judgment</text>
-  <text class="t" x="915" y="302" font-size="22" font-weight="700" text-anchor="middle">×</text>
-  <rect x="790" y="318" width="250" height="55" rx="12" fill="#DBEAFE"/><text class="t bh" x="810" y="352">Output grammar</text>
-  <text class="t" x="915" y="402" font-size="22" font-weight="700" text-anchor="middle">×</text>
-  <rect x="790" y="408" width="250" height="45" rx="12" fill="#D1FAE5"/><text class="t" x="810" y="436" font-size="16" font-weight="750">Surface adapter + domain</text>
-  <rect x="790" y="463" width="250" height="40" rx="10" fill="#FCE7F3"/><text class="t" x="810" y="488" font-size="14" font-weight="700">Brand recipe · morphology</text>
-  <rect x="790" y="513" width="250" height="35" rx="10" fill="#FEF3C7"/><text class="t" x="810" y="536" font-size="13" font-weight="650">Page + optional style profile</text>
-  <rect x="790" y="558" width="250" height="22" rx="8" fill="#F3F4F6"/><text class="t" x="810" y="574" font-size="11" font-weight="650">ss-resolve → bundle + manifest</text>
+  <rect x="790" y="216" width="250" height="46" rx="12" fill="#EDE9FE"/><text class="t bh" x="810" y="246">Core judgment</text>
+  <rect x="790" y="276" width="250" height="46" rx="12" fill="#DBEAFE"/><text class="t bh" x="810" y="306">Output grammar</text>
+  <rect x="790" y="336" width="250" height="42" rx="12" fill="#D1FAE5"/><text class="t" x="810" y="363" font-size="15" font-weight="750">Adapter + domain/page</text>
+  <rect x="790" y="392" width="250" height="40" rx="10" fill="#FCE7F3"/><text class="t" x="810" y="417" font-size="14" font-weight="700">Brand recipe · morphology</text>
+  <rect x="790" y="446" width="250" height="40" rx="10" fill="#FFE4D6"/><text class="t" x="810" y="471" font-size="14" font-weight="700">Palette recipe · semantic roles</text>
+  <rect x="790" y="500" width="250" height="35" rx="10" fill="#FEF3C7"/><text class="t" x="810" y="523" font-size="13" font-weight="650">Optional profile + design lock</text>
+  <rect x="790" y="551" width="250" height="26" rx="8" fill="#F3F4F6"/><text class="t" x="810" y="569" font-size="11" font-weight="650">ss-resolve → bundle + manifest</text>
 
   <text class="t k amber" x="1140" y="170">04 · BUILD + PROVE</text>
-  <rect class="box" x="1140" y="190" width="220" height="90" rx="18"/>
-  <text class="t bh" x="1165" y="228">Agent builds</text><text class="t bd" x="1165" y="255">reads effective-rules.md</text>
-  <rect class="box" x="1140" y="325" width="220" height="90" rx="18"/>
-  <text class="t bh" x="1165" y="363">Code gate</text><text class="t bd" x="1165" y="390">ss-score · implementation</text>
-  <rect class="box" x="1140" y="460" width="220" height="90" rx="18"/>
-  <text class="t bh" x="1165" y="498">Pixel gate</text><text class="t bd" x="1165" y="525">ss-verify · rendered output</text>
+  <rect class="box" x="1140" y="190" width="220" height="72" rx="18"/>
+  <text class="t bh" x="1165" y="221">Working prototype</text><text class="t bd" x="1165" y="245">real navigation + scene</text>
+  <rect class="box" x="1140" y="286" width="220" height="72" rx="18"/>
+  <text class="t bh" x="1165" y="317">Code gate</text><text class="t bd" x="1165" y="341">ss-score · implementation</text>
+  <rect class="box" x="1140" y="382" width="220" height="72" rx="18"/>
+  <text class="t bh" x="1165" y="413">Pixel gate</text><text class="t bd" x="1165" y="437">ss-verify · rendered output</text>
+  <rect class="box" x="1140" y="478" width="220" height="72" rx="18"/>
+  <text class="t bh" x="1165" y="509">Temporal gate</text><text class="t bd" x="1165" y="533">record · frames · interrupt</text>
 
-  <path class="line" d="M330 255H405"/><path class="line" d="M330 418H405"/><path class="line" d="M690 258H765"/><path class="line" d="M690 445H765"/><path class="line" d="M1065 395H1100V235H1140"/><path class="line" d="M1250 280V325"/><path class="line" d="M1250 415V460"/>
-  <path class="loop" d="M1140 370H1100V615H1250V555"/>
+  <path class="line" d="M330 255H405"/><path class="line" d="M330 418H405"/><path class="line" d="M690 258H765"/><path class="line" d="M690 445H765"/><path class="line" d="M1065 395H1100V226H1140"/><path class="line" d="M1250 262V286"/><path class="line" d="M1250 358V382"/><path class="line" d="M1250 454V478"/>
+  <path class="loop" d="M1140 514H1100V615H1250V555"/>
 
   <rect x="80" y="650" width="1280" height="165" rx="22" fill="white" stroke="#D9DEEA"/>
-  <text class="t k muted" x="110" y="690">AUTHORITY BOUNDARY</text>
-  <text class="t bh" x="110" y="728">The lock stores decisions. It does not create permission.</text>
-  <text class="t bd" x="110" y="758">A grammar may vary coordinated axes. It cannot waive coherence, accessibility, semantic meaning, or task fitness.</text>
-  <text class="t bd" x="110" y="785">Score and verification find drift; they never redefine the design philosophy after the build.</text>
+  <text class="t k muted" x="110" y="690">HUMAN + AUTHORITY BOUNDARY</text>
+  <text class="t bh" x="110" y="728">A human selects the direction and accepts the working result.</text>
+  <text class="t bd" x="110" y="758">The lock stores decisions; it cannot waive coherence, accessibility, semantic meaning, provenance, or task fitness.</text>
+  <text class="t bd" x="110" y="785">Generated media supports the interface. It never fakes an interaction that the prototype cannot perform.</text>
 </svg>

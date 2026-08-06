@@ -3,6 +3,31 @@
 All notable changes to StyleSeed. Agents can check the latest version at
 [version.json](https://styleseed-demo.vercel.app/version.json) and run `/ss-update`.
 
+## [4.0.0] — 2026-08-06
+
+**Theme: from design rules to directed, working scenes.** StyleSeed now handles the creative
+direction step that precedes implementation, while keeping human selection and real prototype
+evidence ahead of generated media.
+
+### Added
+- `/ss-studio`, a durable run workflow from brief and role-classified references to exactly three
+  directions, human selection, interaction scenes, media jobs, prototype, reel, and acceptance.
+- `STUDIO-PIPELINE.md` with provider-neutral image/video capabilities and a prototype-first
+  temporal verification contract.
+- Eight semantic palette recipes for calm consumer, creative studio, technical instrument,
+  commerce, public service, editorial, expressive, and immersive dark work.
+- Deterministic WCAG checks for required text, action, status, and focus color pairs.
+- `/studio`, an interactive vertical slice that lets users switch directions, inspect their
+  palettes and media briefs, and run a reversible navigation-to-session transformation.
+
+### Changed
+- Context compilation now resolves grammar × adapter × domain/page × brand recipe × palette ×
+  optional profile, with palette provenance in the manifest and public registry v5.
+- Agent instructions, machine-readable discovery, Easy Start, architecture, sitemap, metadata,
+  and demo copy now expose Studio and palettes consistently across Claude Code and Codex.
+- Visual verification is joined by temporal evidence for interaction work: actual recording,
+  start/mid/end frames, interruption, and reduced-motion behavior.
+
 ## [3.2.0] — 2026-07-31
 
 **Theme: one method, multiple real morphologies.** The engine already selected different

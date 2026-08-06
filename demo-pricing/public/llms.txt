@@ -8,7 +8,8 @@ keeps project decisions reproducible.
 
 1. Install the skills: `npx skills add bitjaru/styleseed`
 2. Create or confirm `STYLESEED.md` with `/ss-setup` in Claude Code or `$ss-setup` in Codex.
-3. Invoke `/ss-resolve` or `$ss-resolve`.
+3. For a full creative-direction run, invoke `/ss-studio` or `$ss-studio`; for an
+   already-decided direction, invoke `/ss-resolve` or `$ss-resolve` directly.
 4. Read `.styleseed/effective-rules.md`; preserve `.styleseed/manifest.json`.
 5. Build with `ss-build`, score to at least 80, then render and inspect with `ss-verify`.
 
@@ -23,6 +24,7 @@ handbook.
 - Domains: `fintech` · `saas` · `ecommerce` · `social` · `content` · `productivity` · `health` · `education` · `developer-tools` · `marketplace` · `booking` · `ai-assistant`
 - Pages: `dashboard` · `form` · `landing` · `detail` · `list` · `settings` · `onboarding`
 - Brand recipes: `auto` · `calm-consumer` · `native-mobile` · `enterprise-workbench` · `developer-platform` · `commerce-operator` · `public-service` · `creative-professional` · `editorial-authority` · `expressive-brand`
+- Palette recipes: `auto` · `quiet-mineral` · `deep-lime-studio` · `cobalt-instrument` · `warm-clay-commerce` · `civic-blue` · `editorial-ink` · `signal-coral` · `nocturne-violet`
 - Optional profiles: `none` · `swiss` · `editorial` · `technical` · `warm-dtc` · `minimal-mono` · `brutalist-lite`
 
 If supplied references do not fit a maintained grammar, use `ss-reference` to compile a
@@ -74,6 +76,8 @@ job-specific grammars, targeted context compilation, reference compilation, and 
 - Claude Code UI guide: https://styleseed-demo.vercel.app/claude-code-ui-design
 - Codex UI guide: https://styleseed-demo.vercel.app/codex-ui-design
 - Architecture: https://styleseed-demo.vercel.app/architecture
+- Semantic palettes: https://styleseed-demo.vercel.app/palettes
+- Studio: https://styleseed-demo.vercel.app/studio
 - Showcase: https://styleseed-demo.vercel.app/showcase
 - Source: https://github.com/bitjaru/styleseed
 - Full archive/debug context: https://styleseed-demo.vercel.app/llms-full.txt

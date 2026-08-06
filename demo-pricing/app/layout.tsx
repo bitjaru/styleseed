@@ -11,7 +11,7 @@ const inter = Inter({
 const SITE_URL = "https://styleseed-demo.vercel.app";
 const SITE_NAME = "StyleSeed";
 const SITE_DESC =
-  "AI design-method engine for vibe coding — 8 output grammars, 9 brand recipes, 5 surface adapters, and a reference compiler that turns screenshots, URLs, Figma, or existing UI into evidence-backed design rules. MIT licensed.";
+  "Open-source AI design-method engine for Claude Code, Codex, and Cursor — three directed concepts, 8 output grammars, 9 brand recipes, 8 semantic palettes, generated-media plans, and verified working interactions.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -33,6 +33,10 @@ export const metadata: Metadata = {
     "Tailwind UI",
     "framer motion presets",
     "AI design",
+    "AI UI color palette",
+    "AI interaction design",
+    "Claude Code design skill",
+    "Codex design skill",
     "Toss design",
     "design tokens",
     "디자인 시스템",
@@ -109,14 +113,14 @@ export default function RootLayout({
         operatingSystem: "Web",
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
         license: "https://opensource.org/licenses/MIT",
-        softwareVersion: "3.2.0",
+        softwareVersion: "4.0.0",
         programmingLanguage: ["Markdown", "TypeScript", "React", "Python"],
         codeRepository: "https://github.com/bitjaru/styleseed",
         publisher: { "@id": `${SITE_URL}/#organization` },
         isPartOf: { "@id": `${SITE_URL}/#website` },
-        dateModified: "2026-07-31",
+        dateModified: "2026-08-06",
         keywords:
-          "design method for AI, Claude Code, Cursor, Codex, output grammars, reference compiler, AI UI, carousel design, vibe coding, design judgment",
+          "design method for AI, Claude Code, Cursor, Codex, output grammars, semantic palette, interaction design, generated media, reference compiler, AI UI, carousel design, vibe coding, design judgment",
         sameAs: SAME_AS,
       },
       {
@@ -141,6 +145,8 @@ export default function RootLayout({
           { "@id": `${SITE_URL}/showcase#page` },
           { "@id": `${SITE_URL}/architecture#page` },
           { "@id": `${SITE_URL}/recipes#page` },
+          { "@id": `${SITE_URL}/studio#page` },
+          { "@id": `${SITE_URL}/palettes#page` },
         ],
       },
     ],

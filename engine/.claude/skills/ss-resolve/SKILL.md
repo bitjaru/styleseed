@@ -1,6 +1,6 @@
 ---
 name: ss-resolve
-description: Compile a small, deterministic StyleSeed rule bundle for one agent, output grammar, surface adapter, domain, page type, brand recipe, and optional profile. Use before setup or build, when STYLESEED.md changes, when updating StyleSeed, or whenever an agent would otherwise load the full rule handbook.
+description: Compile a small, deterministic StyleSeed rule bundle for one agent, output grammar, surface adapter, domain, page type, brand recipe, palette recipe, and optional profile. Use before setup or build, when STYLESEED.md changes, when updating StyleSeed, or whenever an agent would otherwise load the full rule handbook.
 ---
 
 # Resolve effective StyleSeed context
@@ -32,11 +32,13 @@ node <installed-ss-resolve>/scripts/resolve-context.mjs \
   --domain saas \
   --page dashboard \
   --recipe enterprise-workbench \
+  --palette cobalt-instrument \
   --profile swiss
 ```
 
 Use `--list` to print supported IDs. `--recipe auto` maps the selected grammar to a maintained
-default; pass an explicit recipe when the product needs a different morphology. The default
+default; `--palette auto` maps that recipe to a contrast-verified semantic palette. Pass explicit
+values when the product needs a different morphology or color posture. The default
 output directory is `.styleseed/` in the
 project root. For a project-local reference grammar, pass `reference:<slug>` and ensure
 `.styleseed/rulesets/<slug>/RULESET.md` exists.

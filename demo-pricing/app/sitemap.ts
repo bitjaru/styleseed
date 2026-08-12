@@ -6,7 +6,7 @@ import { DOMAINS } from "@/lib/domains";
 import { SCREENS } from "@/lib/screens";
 
 const BASE = "https://styleseed-demo.vercel.app";
-const CONTENT_UPDATED = new Date("2026-08-06T00:00:00.000Z");
+const CONTENT_UPDATED = new Date("2026-08-12T00:00:00.000Z");
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes: MetadataRoute.Sitemap = [

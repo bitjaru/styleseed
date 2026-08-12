@@ -20,7 +20,7 @@ flowchart LR
   S[Surface adapter<br/>canvas · renderer · export] --> F
   X[Domain + page type] --> F
   Z[Brand recipe<br/>morphology · components] --> F
-  Q[Palette recipe<br/>semantic roles · asset anchors] --> F
+  Q[Palette engine<br/>posture · key color · OKLCH · role graph] --> F
   Y[Optional style profile] --> F
   L[STYLESEED.md<br/>bounded selections] --> F
   F --> K[Effective rule bundle<br/>manifest + source hashes]
@@ -45,7 +45,7 @@ flowchart LR
 | Reference compiler | Derive a local grammar from evidence | local rules with confidence | global built-ins or protected assets |
 | Domain + page playbooks | Contextual composition bias | content/order/detail decisions | grammar identity |
 | Brand recipe | Apply reusable morphology and component selection | geometry, containment, controls, collections | grammar job, protected brand assets, or accessibility |
-| Palette recipe | Bind semantic color roles to the job and generated-media brief | maintained role values or validated project overrides | contrast, status meaning, or independent hierarchy |
+| Palette engine | Bind semantic roles to the job; derive ramps, companions, surfaces, and media anchors from a key color | posture, bounded generation inputs, validated project output | contrast, status meaning, or independent hierarchy |
 | Aesthetic profile | Coordinated look adjustment | radius, density, tone, motion within bounds | task structure |
 | Design lock | Persist selected values | known enums and project tokens | invent exceptions or waive rules |
 | Context compiler | Emit the selected method with provenance | deterministic bundle + manifest | silently invent or merge unknown IDs |
@@ -125,5 +125,7 @@ is the design engine; the composed method is.
   transfer tests; never add a company clone.
 - Add a palette recipe only when its semantic role pairs pass deterministic contrast checks and
   its hierarchy survives both light/dark context and generated-media use.
+- Change the palette generator only with deterministic matrix tests across hues, light/dark modes,
+  perceptual characters, gamut boundaries, and semantic contrast pairs.
 - Add a new aesthetic profile only when it is a full coordinated axis contract, not a mood word.
 - Keep components and skins downstream. They implement a decision; they do not decide.

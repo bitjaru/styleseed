@@ -5,10 +5,12 @@ import {
   existsSync,
   mkdirSync,
   readFileSync,
+  rmSync,
   writeFileSync,
 } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { generatePalette } from "../../../../color/generator.mjs";
 
 const skillDir = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const catalog = JSON.parse(
@@ -48,6 +50,11 @@ Options:
   --page <id|none>
   --recipe <id|auto>
   --palette <id|auto>
+  --key-color <hex>                 derive roles and ramps from this product color
+  --palette-character calm|balanced|vivid|deep
+  --palette-mode light|dark
+  --palette-harmony auto|tonal|adjacent|contrast
+  --surface-temperature neutral|warm|cool
   --profile <id|none>
   --fallback <built-in grammar id>   required for reference grammars without lock fallback
   --from-lock <path>
@@ -71,6 +78,12 @@ function parseLock(path) {
     "Grammar fallback": "fallback",
     "Brand recipe": "recipe",
     "Palette recipe": "palette",
+    "Key color": "keyColor",
+    "Primary action": "keyColor",
+    "Palette character": "paletteCharacter",
+    "Palette mode": "paletteMode",
+    "Palette harmony": "paletteHarmony",
+    "Surface temperature": "surfaceTemperature",
     "Aesthetic profile": "profile",
   };
   for (const line of text.split(/\r?\n/)) {
@@ -141,6 +154,11 @@ const domain = choose(args, lock, "domain", "none");
 const page = choose(args, lock, "page", "none");
 const requestedRecipe = choose(args, lock, "recipe", "auto");
 const requestedPalette = choose(args, lock, "palette", "auto");
+const keyColor = args["key-color"] ?? lock.values.keyColor ?? null;
+const paletteCharacter = args["palette-character"] ?? lock.values.paletteCharacter ?? null;
+const paletteMode = args["palette-mode"] ?? lock.values.paletteMode ?? null;
+const paletteHarmony = args["palette-harmony"] ?? lock.values.paletteHarmony ?? "auto";
+const surfaceTemperature = args["surface-temperature"] ?? lock.values.surfaceTemperature ?? null;
 const profile = choose(args, lock, "profile", "none");
 const fallback = choose(args, lock, "fallback");
 
@@ -210,8 +228,48 @@ const adapterContent = requireId("adapters", adapter, "adapter");
 const domainContent = requireId("domains", domain, "domain");
 const pageContent = requireId("pages", page, "page");
 const recipeContent = requireId("recipes", recipe, "brand recipe");
-const paletteContent = requireId("palettes", palette, "palette recipe");
+let paletteContent = requireId("palettes", palette, "palette recipe");
 const profileContent = requireId("profiles", profile, "profile");
+
+const paletteDefaultsByRecipe = {
+  "calm-consumer": { character: "calm", temperature: "neutral" },
+  "native-mobile": { character: "balanced", temperature: "neutral" },
+  "enterprise-workbench": { character: "balanced", temperature: "cool" },
+  "developer-platform": { character: "deep", temperature: "cool" },
+  "commerce-operator": { character: "balanced", temperature: "warm" },
+  "public-service": { character: "calm", temperature: "neutral" },
+  "creative-professional": { character: "vivid", temperature: "neutral" },
+  "editorial-authority": { character: "deep", temperature: "warm" },
+  "expressive-brand": { character: "vivid", temperature: "warm" },
+};
+const recipeMode = paletteContent.match(/^- Mode:\s*(light|dark)$/m)?.[1] ?? "light";
+const paletteDefaults = paletteDefaultsByRecipe[recipe] ?? { character: "balanced", temperature: "neutral" };
+const generatedPalette = keyColor ? generatePalette({
+  keyColor,
+  mode: paletteMode ?? recipeMode,
+  character: paletteCharacter ?? paletteDefaults.character,
+  harmony: paletteHarmony,
+  temperature: surfaceTemperature ?? paletteDefaults.temperature,
+}) : null;
+
+if (generatedPalette) {
+  paletteContent = [
+    paletteContent,
+    "",
+    "## Generated semantic palette override",
+    "",
+    `- Key color: ${generatedPalette.input.keyColor}`,
+    `- Mode: ${generatedPalette.input.mode}`,
+    `- Character: ${generatedPalette.input.character}`,
+    `- Harmony: ${generatedPalette.input.harmony}`,
+    `- Surface temperature: ${generatedPalette.input.temperature}`,
+    `- Semantic roles: ${Object.entries(generatedPalette.roles).map(([role, value]) => `${role}=${value}`).join(" · ")}`,
+    `- Contrast gates: ${generatedPalette.contrast.map((item) => `${item.foreground}/${item.background}=${item.ratio}:1`).join(" · ")}`,
+    "- Allocation: 60% canvas/surfaces · 30% chrome/type/structure · at most 10% primary and accent emphasis combined.",
+    "- This override replaces the recipe hex values while preserving its product posture and semantic restrictions.",
+    "- Components consume semantic roles. Raw ramp values remain reference tokens.",
+  ].join("\n");
+}
 
 const selected = {
   agent,
@@ -225,6 +283,7 @@ const selected = {
   recipeSelection: requestedRecipe,
   palette,
   paletteSelection: requestedPalette,
+  paletteGeneration: generatedPalette ? generatedPalette.input : null,
   profile,
 };
 
@@ -255,6 +314,7 @@ const bundle = [
   `- Page type: ${page}`,
   `- Brand recipe: ${recipe}${requestedRecipe === "auto" ? " (auto)" : ""}`,
   `- Palette recipe: ${palette}${requestedPalette === "auto" ? " (auto)" : ""}`,
+  ...(generatedPalette ? [`- Generated palette: ${generatedPalette.input.keyColor} · ${generatedPalette.input.mode} · ${generatedPalette.input.character} · ${generatedPalette.input.harmony}`] : []),
   `- Aesthetic profile: ${profile}`,
   "",
   "Read this bundle before implementation. The agent execution contract is operational; method authority then runs core → grammar → adapter → domain/page → brand recipe → palette recipe → profile → lock → compact craft baseline, with the earlier method layer winning conflicts. Run the code gate and rendered visual gate.",
@@ -280,6 +340,8 @@ const manifest = {
 const outDir = resolve(projectRoot, args["out-dir"] ?? ".styleseed");
 const bundlePath = resolve(outDir, "effective-rules.md");
 const manifestPath = resolve(outDir, "manifest.json");
+const palettePath = resolve(outDir, "palette.json");
+const paletteCssPath = resolve(outDir, "palette.css");
 
 if (args.check) {
   if (!existsSync(manifestPath)) {
@@ -305,8 +367,16 @@ if (args.stdout) {
 mkdirSync(outDir, { recursive: true });
 writeFileSync(bundlePath, bundle);
 writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+if (generatedPalette) {
+  writeFileSync(palettePath, `${JSON.stringify(generatedPalette, null, 2)}\n`);
+  writeFileSync(paletteCssPath, `${generatedPalette.css}\n`);
+} else {
+  rmSync(palettePath, { force: true });
+  rmSync(paletteCssPath, { force: true });
+}
 console.log(
   `StyleSeed ${catalog.engineVersion}: ${grammar} × ${adapter} × ${domain} × ${page} × ${recipe} × ${palette} × ${profile}`,
 );
 console.log(`wrote ${bundlePath} (${Buffer.byteLength(bundle)} bytes, sha256:${bundleHash})`);
 console.log(`wrote ${manifestPath}`);
+if (generatedPalette) console.log(`wrote ${palettePath} and ${paletteCssPath}`);

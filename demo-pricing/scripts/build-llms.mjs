@@ -232,6 +232,8 @@ job-specific grammars, targeted context compilation, reference compilation, and 
 - One coherent system for geometry, spacing, type, elevation, icons, color roles, imagery, and motion.
 - One focal point and one identifiable primary action.
 - Additional color requires a stable semantic, categorical, editorial, data, or brand role.
+- A supplied key color is compiled through the OKLCH Palette Engine into ramps, semantic roles,
+  accessible foregrounds, and media anchors; the eight recipes are maintained postures, not limits.
 - Product-specific content replaces copied demos and generic templates.
 - Focus, contrast, targets, labels, reduced motion, and useful states remain intact.
 - \`STYLESEED.md\` persists valid bounded choices; it cannot waive core invariants.
@@ -370,13 +372,26 @@ const paletteManifest = paletteIds.map((id) => ({
   contract: contextCatalog.palettes[id],
   digest: 'sha256:' + createHash('sha256').update(contextCatalog.palettes[id]).digest('hex'),
 }))
+const paletteEngineSource = readFileSync(resolve(engineColorDir, 'generator.mjs'), 'utf-8')
+const paletteEngineManifest = {
+  id: 'styleseed-palette-engine',
+  version: '1.0.0',
+  colorSpace: 'OKLCH',
+  targetGamut: 'sRGB',
+  inputs: ['keyColor', 'mode', 'character', 'harmony', 'temperature'],
+  outputs: ['primaryRamp', 'accentRamp', 'semanticRoles', 'contrastEvidence', 'css', 'assetBrief'],
+  source: 'engine/color/generator.mjs',
+  sourceUrl: `${REPO_RAW}/engine/color/generator.mjs`,
+  cliUrl: `${REPO_RAW}/engine/color/generate-palette.mjs`,
+  digest: 'sha256:' + createHash('sha256').update(paletteEngineSource).digest('hex'),
+}
 
 writeFileSync(
   resolve(wellKnownSeed, 'registry.json'),
   JSON.stringify(
     {
       $schema: 'https://styleseed-demo.vercel.app/.well-known/styleseed/registry.schema.json',
-      version: '5',
+      version: '6',
       generated: new Date().toISOString(),
       repository: 'https://github.com/bitjaru/styleseed',
       counts: {
@@ -404,11 +419,13 @@ writeFileSync(
         pageIds,
         recipeIds,
         paletteIds,
+        paletteEngine: paletteEngineManifest,
         profileIds,
       },
       components,
       recipes: recipeManifest,
       palettes: paletteManifest,
+      paletteEngine: paletteEngineManifest,
       skins: skinsManifest,
     },
     null,

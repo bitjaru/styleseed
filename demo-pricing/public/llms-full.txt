@@ -1,7 +1,7 @@
 # StyleSeed — Full Context
 
 Source: github.com/bitjaru/styleseed (constitution + grammars + adapters + compiler + craft)
-Generated: 2026-08-06T04:08:32.701Z
+Generated: 2026-08-12T02:21:39.382Z
 
 ---
 
@@ -27,7 +27,7 @@ Core judgment
   × one domain playbook from APP-PLAYBOOKS.md
   × one page type from PAGE-TYPES.md
   × one brand recipe from BRAND-RECIPES.md
-  × one semantic palette recipe from PALETTE-RECIPES.md
+  × one semantic palette posture plus an optional key-color generation from PALETTE-RECIPES.md
   × optional aesthetic profile from PRESETS.md
   × bounded project tokens from STYLESEED.md
 = the rules for this screen
@@ -44,8 +44,8 @@ When instructions disagree, use this order:
 4. **Domain playbook** and **page/artifact type**.
 5. **Brand recipe** — a reusable morphology and component-selection contract from
    `BRAND-RECIPES.md`.
-6. **Palette recipe** — semantic color roles and surface relationships from
-   `PALETTE-RECIPES.md`.
+6. **Palette system** — a maintained semantic posture plus deterministic key-color generation,
+   role mapping, gamut handling, and contrast correction from `PALETTE-RECIPES.md`.
 7. **Aesthetic profile** — an optional coordinated restyle from `PRESETS.md`.
 8. **Design lock** — records selections and bounded project parameters.
 9. **Skins and components** — implementation material, not sources of judgment.
@@ -79,8 +79,8 @@ These apply to every grammar, profile, domain, page, skin, and agent:
 The lock may select only inputs the engine understands:
 
 - domain, surface adapter, page/artifact type, and one output grammar;
-- one maintained brand recipe, one semantic palette recipe, one optional aesthetic profile, and
-  one skin or project token implementation;
+- one maintained brand recipe, one semantic palette posture, optional bounded key-color generation,
+  one optional aesthetic profile, and one skin or project token implementation;
 - primary action/accent, type pairing, density, radius, elevation, imagery, and motion values
   inside the selected grammar's allowed ranges;
 - one product-specific signature move that still obeys the invariants;
@@ -188,7 +188,7 @@ flowchart LR
   S[Surface adapter<br/>canvas · renderer · export] --> F
   X[Domain + page type] --> F
   Z[Brand recipe<br/>morphology · components] --> F
-  Q[Palette recipe<br/>semantic roles · asset anchors] --> F
+  Q[Palette engine<br/>posture · key color · OKLCH · role graph] --> F
   Y[Optional style profile] --> F
   L[STYLESEED.md<br/>bounded selections] --> F
   F --> K[Effective rule bundle<br/>manifest + source hashes]
@@ -213,7 +213,7 @@ flowchart LR
 | Reference compiler | Derive a local grammar from evidence | local rules with confidence | global built-ins or protected assets |
 | Domain + page playbooks | Contextual composition bias | content/order/detail decisions | grammar identity |
 | Brand recipe | Apply reusable morphology and component selection | geometry, containment, controls, collections | grammar job, protected brand assets, or accessibility |
-| Palette recipe | Bind semantic color roles to the job and generated-media brief | maintained role values or validated project overrides | contrast, status meaning, or independent hierarchy |
+| Palette engine | Bind semantic roles to the job; derive ramps, companions, surfaces, and media anchors from a key color | posture, bounded generation inputs, validated project output | contrast, status meaning, or independent hierarchy |
 | Aesthetic profile | Coordinated look adjustment | radius, density, tone, motion within bounds | task structure |
 | Design lock | Persist selected values | known enums and project tokens | invent exceptions or waive rules |
 | Context compiler | Emit the selected method with provenance | deterministic bundle + manifest | silently invent or merge unknown IDs |
@@ -293,6 +293,8 @@ is the design engine; the composed method is.
   transfer tests; never add a company clone.
 - Add a palette recipe only when its semantic role pairs pass deterministic contrast checks and
   its hierarchy survives both light/dark context and generated-media use.
+- Change the palette generator only with deterministic matrix tests across hues, light/dark modes,
+  perceptual characters, gamut boundaries, and semantic contrast pairs.
 - Add a new aesthetic profile only when it is a full coordinated axis contract, not a mood word.
 - Keep components and skins downstream. They implement a decision; they do not decide.
 
@@ -862,9 +864,52 @@ palette recipe = semantic color roles and surface relationships
 skin           = project implementation of color + type tokens
 ```
 
-Studio recommends one palette recipe per creative direction. The selected palette becomes a
-bounded project input; brand colors may replace its anchors only after the same role and contrast
-checks pass.
+Studio recommends one palette recipe per creative direction. The recipe is a maintained product
+posture, not a closed swatch list. When a project supplies a key color, the Palette Engine keeps
+that posture but recompiles its ramps and semantic roles from the key.
+
+```text
+key color + light/dark environment
+→ OKLCH normalization + sRGB gamut mapping
+→ perceptual character (calm / balanced / vivid / deep)
+→ companion candidate scoring
+→ primitive ramps
+→ semantic role graph
+→ WCAG text/action/focus correction
+→ JSON + CSS + generated-media anchors
+```
+
+## Generation model
+
+Use `engine/color/generate-palette.mjs` directly, `$ss-tokens generate color`, or persist the
+same inputs in `STYLESEED.md` and run `$ss-resolve`:
+
+```bash
+node engine/color/generate-palette.mjs \
+  --key-color "#5B5BD6" \
+  --mode light \
+  --character calm \
+  --harmony auto \
+  --temperature cool \
+  --out .styleseed/palette.json
+```
+
+- **Character precedes harmony.** Lightness and chroma determine calm, intensity, depth, and
+  legibility more reliably than complementary or triadic hue geometry alone.
+- **Key hue is preserved.** Out-of-gamut colors reduce chroma at fixed lightness and hue instead
+  of clipping RGB channels and shifting identity.
+- **Companions are scored.** Candidate hues are evaluated for distance from the key and reserved
+  success, warning, and danger families. `auto` changes its search envelope by character.
+- **Roles are derived.** Reference ramps feed stable semantic tokens; components never consume
+  arbitrary swatches directly.
+- **Contrast corrects the result.** Text/fill and focus pairs are checked after role mapping. A
+  failing fill moves in lightness while retaining its hue identity.
+- **Allocation stays bounded.** Canvas and surfaces dominate, structural color supports, and
+  primary plus companion emphasis stays near ten percent of the rendered field.
+
+The deterministic output records inputs, normalized OKLCH, chosen accent logic, ramps, semantic
+roles, contrast evidence, generated-media anchors, and CSS variables. The eight built-ins remain
+tested defaults and useful fallbacks for projects without a real key color.
 
 ## Evidence and method
 
@@ -942,8 +987,9 @@ For each direction state:
 5. generated-image anchor colors and colors to avoid;
 6. contrast validation result and any project override requiring revalidation.
 
-Do not recommend a palette from mood words alone. Use the product job, brand posture, content
-density, light/dark environment, image/data role, and selected brand recipe.
+Do not recommend a palette from mood words or hue-wheel geometry alone. Use the product job,
+brand posture, perceptual character, content density, light/dark environment, image/data role,
+and selected brand recipe. If a key color exists, generate and inspect the actual role system.
 
 
 ---

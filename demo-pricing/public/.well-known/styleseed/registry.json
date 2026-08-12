@@ -1,7 +1,7 @@
 {
   "$schema": "https://styleseed-demo.vercel.app/.well-known/styleseed/registry.schema.json",
-  "version": "5",
-  "generated": "2026-08-06T04:08:32.717Z",
+  "version": "6",
+  "generated": "2026-08-12T02:21:39.397Z",
   "repository": "https://github.com/bitjaru/styleseed",
   "counts": {
     "skills": 22,
@@ -83,6 +83,31 @@
       "signal-coral",
       "nocturne-violet"
     ],
+    "paletteEngine": {
+      "id": "styleseed-palette-engine",
+      "version": "1.0.0",
+      "colorSpace": "OKLCH",
+      "targetGamut": "sRGB",
+      "inputs": [
+        "keyColor",
+        "mode",
+        "character",
+        "harmony",
+        "temperature"
+      ],
+      "outputs": [
+        "primaryRamp",
+        "accentRamp",
+        "semanticRoles",
+        "contrastEvidence",
+        "css",
+        "assetBrief"
+      ],
+      "source": "engine/color/generator.mjs",
+      "sourceUrl": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/color/generator.mjs",
+      "cliUrl": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/color/generate-palette.mjs",
+      "digest": "sha256:b66ee274ddefbd8a8e4ab6bebeb35d5474e772bd05174e592b16ba41bf81e131"
+    },
     "profileIds": [
       "swiss",
       "editorial",
@@ -1214,6 +1239,31 @@
       "digest": "sha256:4fb41f1dcf2a239c3e5586faed60ebf5e12134df517b079375965e451be3289a"
     }
   ],
+  "paletteEngine": {
+    "id": "styleseed-palette-engine",
+    "version": "1.0.0",
+    "colorSpace": "OKLCH",
+    "targetGamut": "sRGB",
+    "inputs": [
+      "keyColor",
+      "mode",
+      "character",
+      "harmony",
+      "temperature"
+    ],
+    "outputs": [
+      "primaryRamp",
+      "accentRamp",
+      "semanticRoles",
+      "contrastEvidence",
+      "css",
+      "assetBrief"
+    ],
+    "source": "engine/color/generator.mjs",
+    "sourceUrl": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/color/generator.mjs",
+    "cliUrl": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/color/generate-palette.mjs",
+    "digest": "sha256:b66ee274ddefbd8a8e4ab6bebeb35d5474e772bd05174e592b16ba41bf81e131"
+  },
   "skins": [
     {
       "id": "arc",

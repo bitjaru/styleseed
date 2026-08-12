@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, Check } from "lucide-react";
 import { PALETTE_RECIPES } from "@engine/color";
+import { PaletteLab } from "./palette-lab";
 
 const BASE = "https://styleseed-demo.vercel.app";
 const DESC =
-  "Eight StyleSeed semantic color palette recipes for AI-generated UI: job-based canvas, chrome, action, status, focus, and generated-media colors with deterministic contrast checks.";
+  "Generate a refined semantic UI palette from any key color with OKLCH ramps, character-aware companions, surface roles, and deterministic contrast checks; or start from eight maintained StyleSeed recipes.";
 
 export const metadata: Metadata = {
   title: "Semantic color palettes for AI-generated UI",
@@ -46,7 +47,7 @@ export default function PalettesPage() {
     name: "StyleSeed semantic palette recipes",
     url: `${BASE}/palettes`,
     description: DESC,
-    dateModified: "2026-08-06",
+    dateModified: "2026-08-12",
     isPartOf: { "@id": `${BASE}/#website` },
     mainEntity: {
       "@type": "ItemList",
@@ -71,17 +72,17 @@ export default function PalettesPage() {
           </Link>
           <div className="mt-12 grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
             <div>
-              <p className="text-[11px] font-bold uppercase tracking-[0.19em] text-[#A64005]">Semantic color system · 8 maintained recipes</p>
+              <p className="text-[11px] font-bold uppercase tracking-[0.19em] text-[#A64005]">Semantic color generator · OKLCH · deterministic contrast</p>
               <h1 className="mt-4 max-w-4xl text-[clamp(46px,7vw,88px)] font-semibold leading-[0.91] tracking-[-0.06em]">
-                Choose color by job,
-                <br />not by mood alone.
+                Start with one color.
+                <br />Derive the system.
               </h1>
             </div>
             <div>
               <p className="max-w-xl text-[16px] leading-relaxed text-black/58">
-                Each recipe binds the content canvas, navigation chrome, text, actions, status,
-                focus, and generated-media anchors. StyleSeed recommends one from the selected
-                grammar and morphology; project colors can override it only after revalidation.
+                Pick a key color, then let perceptual character, contrast, role allocation, and
+                product context determine the surfaces, companion accent, text, focus, and status
+                colors. The recipes below are useful starting postures—not a closed swatch list.
               </p>
               <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-[12px] font-semibold text-black/55">
                 {["Normal text ≥ 4.5:1", "Focus ≥ 3:1", "Color never acts alone"].map((item) => (
@@ -93,7 +94,13 @@ export default function PalettesPage() {
         </div>
       </section>
 
+      <PaletteLab />
+
       <section className="mx-auto max-w-[1280px] px-5 py-8 sm:px-8 sm:py-12">
+        <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
+          <div><p className="text-[10px] font-bold uppercase tracking-[0.14em] text-black/35">Maintained starting postures</p><h2 className="mt-2 text-3xl font-semibold tracking-[-0.04em]">Eight recipes, unlimited derived systems.</h2></div>
+          <p className="max-w-md text-xs leading-relaxed text-black/48">A recipe supplies job and hierarchy defaults. A project key color recompiles its actual ramps and semantic roles.</p>
+        </div>
         <div className="grid gap-4 md:grid-cols-2">
           {PALETTE_RECIPES.map((palette, index) => (
             <article key={palette.id} className="overflow-hidden border border-black/16 bg-[#FFFDF8]">

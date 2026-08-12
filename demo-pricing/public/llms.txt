@@ -54,6 +54,8 @@ job-specific grammars, targeted context compilation, reference compilation, and 
 - One coherent system for geometry, spacing, type, elevation, icons, color roles, imagery, and motion.
 - One focal point and one identifiable primary action.
 - Additional color requires a stable semantic, categorical, editorial, data, or brand role.
+- A supplied key color is compiled through the OKLCH Palette Engine into ramps, semantic roles,
+  accessible foregrounds, and media anchors; the eight recipes are maintained postures, not limits.
 - Product-specific content replaces copied demos and generic templates.
 - Focus, contrast, targets, labels, reduced motion, and useful states remain intact.
 - `STYLESEED.md` persists valid bounded choices; it cannot waive core invariants.

@@ -10,9 +10,52 @@ palette recipe = semantic color roles and surface relationships
 skin           = project implementation of color + type tokens
 ```
 
-Studio recommends one palette recipe per creative direction. The selected palette becomes a
-bounded project input; brand colors may replace its anchors only after the same role and contrast
-checks pass.
+Studio recommends one palette recipe per creative direction. The recipe is a maintained product
+posture, not a closed swatch list. When a project supplies a key color, the Palette Engine keeps
+that posture but recompiles its ramps and semantic roles from the key.
+
+```text
+key color + light/dark environment
+→ OKLCH normalization + sRGB gamut mapping
+→ perceptual character (calm / balanced / vivid / deep)
+→ companion candidate scoring
+→ primitive ramps
+→ semantic role graph
+→ WCAG text/action/focus correction
+→ JSON + CSS + generated-media anchors
+```
+
+## Generation model
+
+Use `engine/color/generate-palette.mjs` directly, `$ss-tokens generate color`, or persist the
+same inputs in `STYLESEED.md` and run `$ss-resolve`:
+
+```bash
+node engine/color/generate-palette.mjs \
+  --key-color "#5B5BD6" \
+  --mode light \
+  --character calm \
+  --harmony auto \
+  --temperature cool \
+  --out .styleseed/palette.json
+```
+
+- **Character precedes harmony.** Lightness and chroma determine calm, intensity, depth, and
+  legibility more reliably than complementary or triadic hue geometry alone.
+- **Key hue is preserved.** Out-of-gamut colors reduce chroma at fixed lightness and hue instead
+  of clipping RGB channels and shifting identity.
+- **Companions are scored.** Candidate hues are evaluated for distance from the key and reserved
+  success, warning, and danger families. `auto` changes its search envelope by character.
+- **Roles are derived.** Reference ramps feed stable semantic tokens; components never consume
+  arbitrary swatches directly.
+- **Contrast corrects the result.** Text/fill and focus pairs are checked after role mapping. A
+  failing fill moves in lightness while retaining its hue identity.
+- **Allocation stays bounded.** Canvas and surfaces dominate, structural color supports, and
+  primary plus companion emphasis stays near ten percent of the rendered field.
+
+The deterministic output records inputs, normalized OKLCH, chosen accent logic, ramps, semantic
+roles, contrast evidence, generated-media anchors, and CSS variables. The eight built-ins remain
+tested defaults and useful fallbacks for projects without a real key color.
 
 ## Evidence and method
 
@@ -90,5 +133,6 @@ For each direction state:
 5. generated-image anchor colors and colors to avoid;
 6. contrast validation result and any project override requiring revalidation.
 
-Do not recommend a palette from mood words alone. Use the product job, brand posture, content
-density, light/dark environment, image/data role, and selected brand recipe.
+Do not recommend a palette from mood words or hue-wheel geometry alone. Use the product job,
+brand posture, perceptual character, content density, light/dark environment, image/data role,
+and selected brand recipe. If a key color exists, generate and inspect the actual role system.

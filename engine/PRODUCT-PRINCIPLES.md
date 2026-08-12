@@ -20,7 +20,7 @@ Core judgment
   × one domain playbook from APP-PLAYBOOKS.md
   × one page type from PAGE-TYPES.md
   × one brand recipe from BRAND-RECIPES.md
-  × one semantic palette recipe from PALETTE-RECIPES.md
+  × one semantic palette posture plus an optional key-color generation from PALETTE-RECIPES.md
   × optional aesthetic profile from PRESETS.md
   × bounded project tokens from STYLESEED.md
 = the rules for this screen
@@ -37,8 +37,8 @@ When instructions disagree, use this order:
 4. **Domain playbook** and **page/artifact type**.
 5. **Brand recipe** — a reusable morphology and component-selection contract from
    `BRAND-RECIPES.md`.
-6. **Palette recipe** — semantic color roles and surface relationships from
-   `PALETTE-RECIPES.md`.
+6. **Palette system** — a maintained semantic posture plus deterministic key-color generation,
+   role mapping, gamut handling, and contrast correction from `PALETTE-RECIPES.md`.
 7. **Aesthetic profile** — an optional coordinated restyle from `PRESETS.md`.
 8. **Design lock** — records selections and bounded project parameters.
 9. **Skins and components** — implementation material, not sources of judgment.
@@ -72,8 +72,8 @@ These apply to every grammar, profile, domain, page, skin, and agent:
 The lock may select only inputs the engine understands:
 
 - domain, surface adapter, page/artifact type, and one output grammar;
-- one maintained brand recipe, one semantic palette recipe, one optional aesthetic profile, and
-  one skin or project token implementation;
+- one maintained brand recipe, one semantic palette posture, optional bounded key-color generation,
+  one optional aesthetic profile, and one skin or project token implementation;
 - primary action/accent, type pairing, density, radius, elevation, imagery, and motion values
   inside the selected grammar's allowed ranges;
 - one product-specific signature move that still obeys the invariants;

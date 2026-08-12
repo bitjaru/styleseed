@@ -98,8 +98,9 @@ geometry, containment, controls, collections, density, and motion.
 commerce, institutional, marketing, or sequential story &nbsp;·&nbsp;
 **Real morphology choices** — nine brand recipes change structure and component selection,
 not just palette &nbsp;·&nbsp;
-**Semantic palette recipes** — eight contrast-checked systems bind canvas, chrome, actions,
-status, focus, and generated-media anchors &nbsp;·&nbsp;
+**Generative palette engine** — any key color becomes OKLCH ramps, context-fit surfaces,
+a scored companion, semantic roles, contrast evidence, CSS tokens, and media anchors; eight
+recipes remain maintained product postures &nbsp;·&nbsp;
 **Studio pipeline** — three directions, human selection, interaction scenes, image/video jobs,
 working prototype, and a prototype-first reel &nbsp;·&nbsp;
 **References become rules** — `/ss-reference` compiles screenshots, URLs, Figma, or an existing

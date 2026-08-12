@@ -11,7 +11,7 @@ const inter = Inter({
 const SITE_URL = "https://styleseed-demo.vercel.app";
 const SITE_NAME = "StyleSeed";
 const SITE_DESC =
-  "Open-source AI design-method engine for Claude Code, Codex, and Cursor — three directed concepts, 8 output grammars, 9 brand recipes, 8 semantic palettes, generated-media plans, and verified working interactions.";
+  "Open-source AI design-method engine for Claude Code, Codex, and Cursor — directed concepts, 8 output grammars, 9 brand recipes, a key-color OKLCH palette generator, generated-media plans, and verified working interactions.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -118,7 +118,7 @@ export default function RootLayout({
         codeRepository: "https://github.com/bitjaru/styleseed",
         publisher: { "@id": `${SITE_URL}/#organization` },
         isPartOf: { "@id": `${SITE_URL}/#website` },
-        dateModified: "2026-08-06",
+        dateModified: "2026-08-12",
         keywords:
           "design method for AI, Claude Code, Cursor, Codex, output grammars, semantic palette, interaction design, generated media, reference compiler, AI UI, carousel design, vibe coding, design judgment",
         sameAs: SAME_AS,

@@ -68,7 +68,7 @@ const coreFiles = [
 ];
 for (const path of coreFiles) {
   const text = read(path);
-  for (const forbidden of ["Palette mode", "brand-palette", "lock-relative", "#721FE5"]) {
+  for (const forbidden of ["brand-palette", "lock-relative", "#721FE5"]) {
     assert(!text.includes(forbidden), `${path} contains stale law: ${forbidden}`);
   }
 }
@@ -82,14 +82,22 @@ assert(Object.keys(catalog.pages).length === 7, "context catalog page count drif
 assert(Object.keys(catalog.recipes).length === 9, "context catalog recipe count drifted");
 assert(Object.keys(catalog.palettes).length === 8, "context catalog palette count drifted");
 assert(Object.keys(catalog.profiles).length === 6, "context catalog profile count drifted");
+const paletteGenerator = read("engine/color/generator.mjs");
+assert(paletteGenerator.includes("export function generatePalette"), "palette generator export missing");
+assert(paletteGenerator.includes('colorSpace: "OKLCH"'), "palette generator must declare OKLCH");
+const resolverSource = read("engine/.claude/skills/ss-resolve/scripts/resolve-context.mjs");
+assert(resolverSource.includes('--key-color'), "resolver key-color input missing");
+assert(resolverSource.includes('"palette.json"'), "resolver generated palette output missing");
 const publicCatalog = JSON.parse(read("demo-pricing/public/.well-known/styleseed/context-catalog.json"));
 assert(JSON.stringify(publicCatalog) === JSON.stringify(catalog), "public context catalog differs from canonical catalog");
 const registry = JSON.parse(read("demo-pricing/public/.well-known/styleseed/registry.json"));
-assert(registry.version === "5", `expected registry v5, found ${registry.version}`);
+assert(registry.version === "6", `expected registry v6, found ${registry.version}`);
 assert(registry.counts.skills === skills.length, "registry skill count drifted");
 assert(registry.counts.grammars === 8 && registry.counts.adapters === 5 && registry.counts.recipes === 9 && registry.counts.palettes === 8, "registry context counts drifted");
 assert(registry.recipes.length === 9, "registry recipe manifest drifted");
 assert(registry.palettes.length === 8, "registry palette manifest drifted");
+assert(registry.paletteEngine?.colorSpace === "OKLCH", "registry palette engine metadata missing");
+assert(registry.paletteEngine?.digest === registry.context?.paletteEngine?.digest, "registry palette engine digest drifted");
 const llms = read("demo-pricing/public/llms.txt");
 assert(llms.includes("invoke `/ss-studio` or `$ss-studio`") && llms.includes("`/ss-resolve` or `$ss-resolve` directly"), "llms.txt does not route through Studio and ss-resolve");
 assert(llms.includes("archive/debug mirror, not the"), "llms.txt must demote llms-full to archive/debug");

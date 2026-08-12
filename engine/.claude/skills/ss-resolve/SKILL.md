@@ -33,6 +33,11 @@ node <installed-ss-resolve>/scripts/resolve-context.mjs \
   --page dashboard \
   --recipe enterprise-workbench \
   --palette cobalt-instrument \
+  --key-color "#175CD3" \
+  --palette-character balanced \
+  --palette-mode light \
+  --palette-harmony auto \
+  --surface-temperature cool \
   --profile swiss
 ```
 
@@ -42,6 +47,11 @@ values when the product needs a different morphology or color posture. The defau
 output directory is `.styleseed/` in the
 project root. For a project-local reference grammar, pass `reference:<slug>` and ensure
 `.styleseed/rulesets/<slug>/RULESET.md` exists.
+
+When a key color is present in flags or the lock, the resolver uses the shared OKLCH generator and
+writes `.styleseed/palette.json` plus `.styleseed/palette.css`. The manifest records the generation
+inputs. The maintained recipe still supplies product posture and semantic restrictions; its fixed
+hex values become fallbacks rather than overriding the generated system.
 
 Do not load `llms-full.txt` after a bundle resolves successfully. Load a larger source document
 only when the bundle names an unresolved ambiguity that requires it.

@@ -97,7 +97,7 @@
       "type": "skill-md",
       "description": "Compile a small, deterministic StyleSeed rule bundle for one agent, output grammar, surface adapter, domain, page type, brand recipe, palette recipe, and optional profile. Use before setup or build, when STYLESEED.md changes, when updating StyleSeed, or whenever an agent would otherwise load the full rule handbook.",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-resolve/SKILL.md",
-      "digest": "sha256:54cd41fcf9a75afa848426dbf9bc0d5e1f0bea871108881f29a4a822190e5eff"
+      "digest": "sha256:9dd7f57db5dcc366e26616da5ada863e8b95a9a55411729fdc93ca7d7d1e0406"
     },
     {
       "name": "ss-restyle",
@@ -125,7 +125,7 @@
       "type": "skill-md",
       "description": "Configure StyleSeed by selecting the output grammar, domain, page type, brand recipe, semantic palette recipe, optional aesthetic profile, and bounded brand tokens before scaffolding a first screen.",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-setup/SKILL.md",
-      "digest": "sha256:e71683e6dede2b41459217dc9613700d8e846c991b539289860d9e0f16aa0f18"
+      "digest": "sha256:fd25cbebb6d32e2c9f7c30f089d0b8f11019954e7c2c9c3896a0f49960b3e9ed"
     },
     {
       "name": "ss-studio",
@@ -137,9 +137,9 @@
     {
       "name": "ss-tokens",
       "type": "skill-md",
-      "description": "View, add, or modify design tokens in the StyleSeed design system",
+      "description": "Generate an accessible semantic palette from a key color, or view, add, and modify StyleSeed design tokens. Use when a user supplies a brand color, asks which colors combine well, needs light/dark theme roles, or needs token files for implementation.",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-tokens/SKILL.md",
-      "digest": "sha256:d4ac2068396be59d00274540af97a3d6d4d8ed88dec8324324f4c96c59b2e18e"
+      "digest": "sha256:8abcad6d579b52942512cd8bfd50cd6ae387e492961e60852000a2783412c3c3"
     },
     {
       "name": "ss-update",

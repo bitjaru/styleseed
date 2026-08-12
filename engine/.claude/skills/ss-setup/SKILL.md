@@ -63,7 +63,10 @@ select colors.
 
 Recommend one semantic palette from `PALETTE-RECIPES.md`. Use `auto` when its maintained recipe
 mapping fits. An explicit palette must still preserve semantic roles, surface/chrome separation,
-status cues, and validated contrast. Palette selection is not permission to recolor every surface.
+status cues, and validated contrast. The recipe is a product posture, not a finite swatch list.
+When the user supplies a key color, select perceptual character, light/dark environment, surface
+temperature, and accent relationship; `$ss-resolve` then derives the actual OKLCH ramps and roles.
+Palette selection is not permission to recolor every surface.
 
 ### 6. Optional aesthetic profile
 
@@ -72,9 +75,11 @@ default. A profile modifies coordinated visual axes but cannot replace the outpu
 
 ### 7. Brand and bounded axes
 
-Lock a real brand color if supplied; otherwise start from the selected palette's primary role. Then
-confirm font/language, density, radius, elevation, imagery/data role, and motion inside the
-grammar's allowed ranges. Revalidate semantic pairs after a brand override. Do not use generic
+Lock a real brand color if supplied; otherwise start from the selected palette's primary role. For
+a supplied key, recommend `calm|balanced|vivid|deep` from the product posture rather than asking for
+an unbounded mood word. Then confirm light/dark mode, `neutral|warm|cool` surfaces, and
+`auto|tonal|adjacent|contrast` accent relationship. Confirm font/language, density, radius,
+elevation, imagery/data role, and motion inside the grammar's allowed ranges. Do not use generic
 indigo or a stale purple mislabeled as Toss.
 
 ### 8. Write the design lock
@@ -94,6 +99,11 @@ Create `STYLESEED.md`:
 - Reference confidence: n/a
 - Brand recipe: calm-consumer
 - Palette recipe: quiet-mineral
+- Key color: #3182F6
+- Palette character: calm
+- Palette mode: light
+- Palette harmony: auto
+- Surface temperature: neutral
 - Aesthetic profile: none
 - Skin: custom
 - Primary action: #3182F6

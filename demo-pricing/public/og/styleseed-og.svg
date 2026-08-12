@@ -26,7 +26,7 @@
   <text x="72" y="458" fill="#6B7280" font-size="19" font-weight="500">so the output stops looking generated.</text>
 
   <!-- footer -->
-  <text x="72" y="556" fill="#374151" font-size="15" font-weight="700">74 rules · 15 skills · 7 brand skins · MIT</text>
+  <text x="72" y="556" fill="#374151" font-size="15" font-weight="700">74 rules · 23 skills · 7 brand skins · MIT</text>
   <text x="72" y="582" fill="#9CA3AF" font-size="14" font-weight="600">github.com/bitjaru/styleseed</text>
 
   <!-- right: the "designed" result card -->

@@ -74,5 +74,5 @@
   <!-- ===== bottom thesis ===== -->
   <line x1="360" y1="556" x2="840" y2="556" stroke="#E5E7EB" stroke-width="1"/>
   <text x="600" y="596" text-anchor="middle" fill="#374151" font-size="18" font-weight="600">Other repos hand your AI <tspan fill="#9CA3AF">components</tspan>. StyleSeed hands it the <tspan fill="#111827" font-weight="800">judgment</tspan>.</text>
-  <text x="600" y="626" text-anchor="middle" fill="#9CA3AF" font-size="13" font-weight="600" letter-spacing="0.5">74 rules · 15 AI skills · 7 brand skins · MIT — github.com/bitjaru/styleseed</text>
+  <text x="600" y="626" text-anchor="middle" fill="#9CA3AF" font-size="13" font-weight="600" letter-spacing="0.5">74 rules · 23 AI skills · 7 brand skins · MIT — github.com/bitjaru/styleseed</text>
 </svg>

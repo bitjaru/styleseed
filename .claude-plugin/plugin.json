@@ -3,7 +3,7 @@
   "name": "styleseed",
   "displayName": "StyleSeed",
   "version": "4.0.0",
-  "description": "Open-source design-method engine for Claude Code, Codex, and Cursor. Directs three concepts, compiles grammar, morphology, and semantic palette choices, plans generated media, then builds and verifies working UI and non-web artifacts.",
+  "description": "Open-source design-method engine for Claude Code, Codex, and Cursor. Directs concepts, compiles grammar, morphology, and semantic palette choices, builds and verifies artifacts, and can capture human-approved design lessons through a privacy-minimized local workflow.",
   "author": {
     "name": "bitjaru",
     "url": "https://github.com/bitjaru"
@@ -22,7 +22,8 @@
     "accessibility",
     "claude-code",
     "cursor",
-    "codex"
+    "codex",
+    "mcp"
   ],
   "skills": [
     "./engine/.claude/skills"

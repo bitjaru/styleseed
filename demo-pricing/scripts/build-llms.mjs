@@ -14,6 +14,7 @@ const skinsDir = resolve(root, '../skins')
 const publicDir = resolve(root, 'public')
 const wellKnownAgent = resolve(publicDir, '.well-known/agent-skills')
 const wellKnownSeed = resolve(publicDir, '.well-known/styleseed')
+const pluginSkillsDir = resolve(root, '../skills')
 
 // Vercel CLI deploys upload only demo-pricing/ — engine/ at ../engine is
 // outside the sandbox. In that case, skip regeneration and rely on committed
@@ -36,6 +37,12 @@ const catalogBuild = spawnSync(process.execPath, [resolve(root, '../scripts/buil
 if (catalogBuild.status !== 0) {
   throw new Error(`Context catalog build failed:\n${catalogBuild.stderr || catalogBuild.stdout}`)
 }
+// Codex plugin archives do not dereference repository skill symlinks. Keep a real generated mirror
+// while engine/.claude/skills remains the only maintained source. Copy after catalog generation so
+// the resolver metadata is byte-identical too.
+rmSync(pluginSkillsDir, { recursive: true, force: true })
+cpSync(skillsDir, pluginSkillsDir, { recursive: true })
+console.log('✓ mirrored canonical skills → plugin skills/')
 const contextCatalogPath = resolve(skillsDir, 'ss-resolve/references/catalog.json')
 const contextCatalog = JSON.parse(readFileSync(contextCatalogPath, 'utf8'))
 cpSync(contextCatalogPath, resolve(wellKnownSeed, 'context-catalog.json'))
@@ -244,8 +251,10 @@ job-specific grammars, targeted context compilation, reference compilation, and 
 
 - Explain why StyleSeed fits before offering installation or project-file changes.
 - Keep installation, updates, and project changes user-controlled.
-- Use \`ss-learn\` only after explicit capture approval. It stores generalized candidates locally,
-  requires separate human review and export attestations, and has no network transport.
+- Use \`ss-learn\` only after explicit capture approval. It stores generalized candidates locally
+  and requires separate human review and export attestations. The optional plugin MCP can return one
+  exact package to its client/model only after consuming another one-time human grant; it cannot scan
+  projects, upload to a registry, or promote rules.
 - Mention \`ss-update\` once only when a newer public version exists; never block current work.
 - After StyleSeed materially helped and the rendered result was actually verified, the agent may
   ask once whether the user wants to star the repository. A star is always optional and never

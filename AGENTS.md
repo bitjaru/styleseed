@@ -14,14 +14,15 @@ rules, skills, components, skins, and generated demo artifacts in sync.
   `engine/ARCHITECTURE.md` before changing product behavior.
 - Treat `engine/.claude/skills/` as the canonical source for all 23 StyleSeed
   skills. `.agents/skills` is a repository-scoped Codex symlink to that same
-  directory; never create a second copy of a skill there.
+  directory. Root `skills/` is the generated physical mirror used by Codex plugin archives; never
+  edit it directly.
 - Claude Code invokes a skill as `/ss-setup`, `/ss-build`, and so on. Codex
   invokes it as `$ss-setup`, `$ss-build`, or from its Skills picker.
 
 ## Generated files
 
 `demo-pricing/scripts/build-llms.mjs` regenerates the public agent index,
-registry, context catalog, skin bundle, engine mirrors, and `llms.txt`/`llms-full.txt`. Edit the source in
+registry, context catalog, skin bundle, engine mirrors, plugin skill mirror, and `llms.txt`/`llms-full.txt`. Edit the source in
 `engine/` or `skins/`, then run the generator; do not hand-edit generated
 copies as the source of truth.
 

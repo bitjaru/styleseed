@@ -36,6 +36,8 @@ flowchart LR
   U -->|explicit capture only| V[Local learning candidate<br/>generalized · privacy-minimized]
   V --> W[Separate human review]
   W -->|explicit export only| X2[Local share package<br/>no transport]
+  X2 -->|one-time grant| M[Local MCP bridge]
+  M -->|grant consumed| N[Connected client/model<br/>exposure disclosed]
 ```
 
 ## Layers and authority

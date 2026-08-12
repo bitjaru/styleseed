@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "styleseed-learning": {
+      "command": "node",
+      "args": [
+        "./mcp/styleseed-learning-server.mjs"
+      ],
+      "cwd": "."
+    }
+  }
+}

@@ -139,7 +139,8 @@ and export. Verification opens every exported frame.
 - Claude Code: `/ss-resolve`, `/ss-build`, `/ss-reference`, `/ss-score`, `/ss-verify`, etc.
 - Codex: `$ss-studio`, `$ss-resolve`, `$ss-build`, `$ss-reference`, `$ss-score`, `$ss-verify`, or the `/skills` picker.
 - The canonical 23 skills live in `engine/.claude/skills`; repository `.agents/skills` is a
-  symlink to that directory so agent implementations cannot drift.
+  symlink to that directory. Repository `skills/` is a generated physical mirror for Codex plugin
+  archives and must remain byte-identical to the canonical directory.
 
 ## Staying current
 

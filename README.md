@@ -636,8 +636,18 @@ engine/
 `/ss-learn` is deliberately opt-in and local-only. It records a generalized lesson only after a
 person asks for capture, then requires a separate human decision before acceptance and another
 approval before preparing a share package. Source code, prompts, screenshots, URLs, identities,
-brand tokens, and arbitrary extra fields are rejected. v1 has no upload transport and never changes
-core rules automatically.
+brand tokens, and arbitrary extra fields are rejected. The optional bundled MCP bridge cannot scan
+a project: it can return one exact approved package only after a separate one-time grant, which it
+consumes before the package becomes visible to the connected client/model. Neither the CLI nor MCP
+bridge uploads to a registry or changes core rules automatically.
+
+### Codex plugin package
+
+The repository now includes a validated `.codex-plugin/plugin.json`, the same 23 canonical skills,
+and the local approval-gated MCP bridge. This is the package boundary for local testing and future
+plugin-directory publishing; the public directory release is not claimed until an installed build
+is independently verified there. `npx skills add bitjaru/styleseed` remains the portable released
+installation path today.
 
 ### Example Workflow
 

@@ -100,4 +100,5 @@ StyleSeed may preserve a design lesson only when a person explicitly asks it to 
 accepted correction. The stored candidate contains generalized conditions, counterexamples, and
 measured evidence—not source code, prompts, screenshots, brand tokens, product identity, or user
 content. Local review and export approval are separate decisions. Preparing a package does not
-transmit it, and no candidate may automatically modify project or core rules.
+transmit it. Returning it through MCP requires another one-time human grant and must be reported as
+client/model exposure. No candidate may automatically modify project or core rules.

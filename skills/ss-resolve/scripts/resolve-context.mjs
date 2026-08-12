@@ -1,0 +1,384 @@
+#!/usr/bin/env node
+
+import { createHash } from "node:crypto";
+import {
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+import { generatePalette } from "../../../../color/generator.mjs";
+
+const skillDir = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+const catalog = JSON.parse(
+  readFileSync(resolve(skillDir, "references/catalog.json"), "utf8"),
+);
+
+function parseArgs(argv) {
+  const out = {};
+  for (let index = 0; index < argv.length; index += 1) {
+    const value = argv[index];
+    if (!value.startsWith("--")) throw new Error(`Unexpected argument: ${value}`);
+    const key = value.slice(2);
+    if (["list", "stdout", "check", "help"].includes(key)) {
+      out[key] = true;
+      continue;
+    }
+    const next = argv[index + 1];
+    if (!next || next.startsWith("--")) throw new Error(`Missing value for --${key}`);
+    out[key] = next;
+    index += 1;
+  }
+  return out;
+}
+
+function help() {
+  return `StyleSeed Context Compiler
+
+Usage:
+  resolve-context.mjs --from-lock STYLESEED.md --agent codex
+  resolve-context.mjs --grammar <id> --adapter <id> [options]
+
+Options:
+  --agent claude|codex|cursor|generic
+  --grammar <built-in id|reference:slug>
+  --adapter <id>
+  --domain <id|none>
+  --page <id|none>
+  --recipe <id|auto>
+  --palette <id|auto>
+  --key-color <hex>                 derive roles and ramps from this product color
+  --palette-character calm|balanced|vivid|deep
+  --palette-mode light|dark
+  --palette-harmony auto|tonal|adjacent|contrast
+  --surface-temperature neutral|warm|cool
+  --profile <id|none>
+  --fallback <built-in grammar id>   required for reference grammars without lock fallback
+  --from-lock <path>
+  --project-root <path>
+  --out-dir <path>                   default: .styleseed
+  --stdout                           print bundle without writing
+  --check                            exit 2 when the existing bundle hash has drifted
+  --list                             print supported IDs
+`;
+}
+
+function parseLock(path) {
+  if (!path || !existsSync(path)) return { text: "", values: {} };
+  const text = readFileSync(path, "utf8").trim();
+  const values = {};
+  const keys = {
+    "App domain": "domain",
+    "Surface adapter": "adapter",
+    "Page type": "page",
+    "Output grammar": "grammar",
+    "Grammar fallback": "fallback",
+    "Brand recipe": "recipe",
+    "Palette recipe": "palette",
+    "Key color": "keyColor",
+    "Primary action": "keyColor",
+    "Palette character": "paletteCharacter",
+    "Palette mode": "paletteMode",
+    "Palette harmony": "paletteHarmony",
+    "Surface temperature": "surfaceTemperature",
+    "Aesthetic profile": "profile",
+  };
+  for (const line of text.split(/\r?\n/)) {
+    const match = line.match(/^\s*-\s+([^:]+):\s*(.+?)\s*$/);
+    if (!match) continue;
+    const key = keys[match[1]];
+    if (key) values[key] = match[2].replace(/\s+#.*$/, "").trim();
+  }
+  return { text, values };
+}
+
+function choose(args, lock, key, fallback) {
+  return args[key] ?? lock.values[key] ?? fallback;
+}
+
+function requireId(group, id, label) {
+  if (id === "none") return null;
+  const value = catalog[group][id];
+  if (!value) {
+    throw new Error(
+      `Unknown ${label} "${id}". Supported: ${Object.keys(catalog[group]).join(", ")}`,
+    );
+  }
+  return value;
+}
+
+function digest(value) {
+  return createHash("sha256").update(value).digest("hex");
+}
+
+function sourceEntry(id, content) {
+  return { id, sha256: digest(content), bytes: Buffer.byteLength(content) };
+}
+
+const args = parseArgs(process.argv.slice(2));
+if (args.help) {
+  console.log(help());
+  process.exit(0);
+}
+
+if (args.list) {
+  console.log(
+    JSON.stringify(
+      {
+        agents: Object.keys(catalog.agents),
+        grammars: Object.keys(catalog.grammars),
+        adapters: Object.keys(catalog.adapters),
+        domains: Object.keys(catalog.domains),
+        pages: Object.keys(catalog.pages),
+        recipes: ["auto", ...Object.keys(catalog.recipes)],
+        palettes: ["auto", ...Object.keys(catalog.palettes)],
+        profiles: ["none", ...Object.keys(catalog.profiles)],
+      },
+      null,
+      2,
+    ),
+  );
+  process.exit(0);
+}
+
+const projectRoot = resolve(args["project-root"] ?? process.cwd());
+const lockPath = resolve(projectRoot, args["from-lock"] ?? "STYLESEED.md");
+const lock = parseLock(lockPath);
+const agent = choose(args, lock, "agent", "generic");
+const grammar = choose(args, lock, "grammar");
+const adapter = choose(args, lock, "adapter");
+const domain = choose(args, lock, "domain", "none");
+const page = choose(args, lock, "page", "none");
+const requestedRecipe = choose(args, lock, "recipe", "auto");
+const requestedPalette = choose(args, lock, "palette", "auto");
+const keyColor = args["key-color"] ?? lock.values.keyColor ?? null;
+const paletteCharacter = args["palette-character"] ?? lock.values.paletteCharacter ?? null;
+const paletteMode = args["palette-mode"] ?? lock.values.paletteMode ?? null;
+const paletteHarmony = args["palette-harmony"] ?? lock.values.paletteHarmony ?? "auto";
+const surfaceTemperature = args["surface-temperature"] ?? lock.values.surfaceTemperature ?? null;
+const profile = choose(args, lock, "profile", "none");
+const fallback = choose(args, lock, "fallback");
+
+if (!grammar) throw new Error("Missing output grammar. Pass --grammar or use --from-lock.");
+if (!adapter) throw new Error("Missing surface adapter. Pass --adapter or use --from-lock.");
+if (!catalog.agents[agent]) {
+  throw new Error(`Unknown agent "${agent}". Supported: ${Object.keys(catalog.agents).join(", ")}`);
+}
+
+let grammarContent;
+let grammarSource = `built-in:${grammar}`;
+let recipeGrammar = grammar;
+if (grammar.startsWith("reference:")) {
+  const slug = grammar.slice("reference:".length);
+  if (!/^[a-z0-9][a-z0-9-]*$/.test(slug)) throw new Error(`Invalid reference grammar slug: ${slug}`);
+  const rulePath = resolve(projectRoot, ".styleseed/rulesets", slug, "RULESET.md");
+  if (!existsSync(rulePath)) throw new Error(`Missing reference grammar: ${rulePath}`);
+  const referenceContent = readFileSync(rulePath, "utf8").trim();
+  const checksPath = resolve(projectRoot, ".styleseed/rulesets", slug, "checks.md");
+  let referenceChecks = "";
+  if (existsSync(checksPath)) {
+    referenceChecks = `\n\n## Reference grammar checks\n\n${readFileSync(checksPath, "utf8").trim()}`;
+  }
+  grammarSource = `project:${rulePath.slice(projectRoot.length + 1)}`;
+  if (!fallback) {
+    throw new Error("Reference grammars require --fallback or a Grammar fallback value in STYLESEED.md.");
+  }
+  recipeGrammar = fallback;
+  const fallbackContent = requireId("grammars", fallback, "fallback grammar");
+  grammarContent = `${fallbackContent}\n\n## Project-local reference grammar override\n\n${referenceContent}${referenceChecks}`;
+} else {
+  grammarContent = requireId("grammars", grammar, "grammar");
+}
+
+const autoRecipeByGrammar = {
+  "consumer-service": "calm-consumer",
+  "operations-console": "enterprise-workbench",
+  "technical-instrument": "developer-platform",
+  "editorial-reading": "editorial-authority",
+  "commerce-conversion": "commerce-operator",
+  "institutional-service": "public-service",
+  "expressive-marketing": "expressive-brand",
+  "sequential-story": "creative-professional",
+};
+const recipe = requestedRecipe === "auto" ? autoRecipeByGrammar[recipeGrammar] : requestedRecipe;
+if (!recipe) {
+  throw new Error(`No automatic brand recipe for grammar "${recipeGrammar}". Pass --recipe.`);
+}
+
+const autoPaletteByRecipe = {
+  "calm-consumer": "quiet-mineral",
+  "native-mobile": "quiet-mineral",
+  "enterprise-workbench": "cobalt-instrument",
+  "developer-platform": "cobalt-instrument",
+  "commerce-operator": "warm-clay-commerce",
+  "public-service": "civic-blue",
+  "creative-professional": "deep-lime-studio",
+  "editorial-authority": "editorial-ink",
+  "expressive-brand": "signal-coral",
+};
+const palette = requestedPalette === "auto" ? autoPaletteByRecipe[recipe] : requestedPalette;
+if (!palette) {
+  throw new Error(`No automatic palette recipe for brand recipe "${recipe}". Pass --palette.`);
+}
+
+const adapterContent = requireId("adapters", adapter, "adapter");
+const domainContent = requireId("domains", domain, "domain");
+const pageContent = requireId("pages", page, "page");
+const recipeContent = requireId("recipes", recipe, "brand recipe");
+let paletteContent = requireId("palettes", palette, "palette recipe");
+const profileContent = requireId("profiles", profile, "profile");
+
+const paletteDefaultsByRecipe = {
+  "calm-consumer": { character: "calm", temperature: "neutral" },
+  "native-mobile": { character: "balanced", temperature: "neutral" },
+  "enterprise-workbench": { character: "balanced", temperature: "cool" },
+  "developer-platform": { character: "deep", temperature: "cool" },
+  "commerce-operator": { character: "balanced", temperature: "warm" },
+  "public-service": { character: "calm", temperature: "neutral" },
+  "creative-professional": { character: "vivid", temperature: "neutral" },
+  "editorial-authority": { character: "deep", temperature: "warm" },
+  "expressive-brand": { character: "vivid", temperature: "warm" },
+};
+const recipeMode = paletteContent.match(/^- Mode:\s*(light|dark)$/m)?.[1] ?? "light";
+const paletteDefaults = paletteDefaultsByRecipe[recipe] ?? { character: "balanced", temperature: "neutral" };
+const generatedPalette = keyColor ? generatePalette({
+  keyColor,
+  mode: paletteMode ?? recipeMode,
+  character: paletteCharacter ?? paletteDefaults.character,
+  harmony: paletteHarmony,
+  temperature: surfaceTemperature ?? paletteDefaults.temperature,
+}) : null;
+
+if (generatedPalette) {
+  paletteContent = [
+    paletteContent,
+    "",
+    "## Generated semantic palette override",
+    "",
+    `- Key color: ${generatedPalette.input.keyColor}`,
+    `- Mode: ${generatedPalette.input.mode}`,
+    `- Character: ${generatedPalette.input.character}`,
+    `- Harmony: ${generatedPalette.input.harmony}`,
+    `- Surface temperature: ${generatedPalette.input.temperature}`,
+    `- Semantic roles: ${Object.entries(generatedPalette.roles).map(([role, value]) => `${role}=${value}`).join(" · ")}`,
+    `- Contrast gates: ${generatedPalette.contrast.map((item) => `${item.foreground}/${item.background}=${item.ratio}:1`).join(" · ")}`,
+    "- Allocation: 60% canvas/surfaces · 30% chrome/type/structure · at most 10% primary and accent emphasis combined.",
+    "- This override replaces the recipe hex values while preserving its product posture and semantic restrictions.",
+    "- Components consume semantic roles. Raw ramp values remain reference tokens.",
+  ].join("\n");
+}
+
+const selected = {
+  agent,
+  grammar,
+  grammarSource,
+  fallback: fallback ?? null,
+  adapter,
+  domain,
+  page,
+  recipe,
+  recipeSelection: requestedRecipe,
+  palette,
+  paletteSelection: requestedPalette,
+  paletteGeneration: generatedPalette ? generatedPalette.input : null,
+  profile,
+};
+
+const sections = [
+  ["agent-execution", catalog.agents[agent]],
+  ["core", catalog.core],
+  ["grammar", grammarContent],
+  ["adapter", adapterContent],
+  ...(domainContent ? [["domain", domainContent]] : []),
+  ...(pageContent ? [["page", pageContent]] : []),
+  ["recipe", recipeContent],
+  ["palette", paletteContent],
+  ...(profileContent ? [["profile", profileContent]] : []),
+  ...(lock.text ? [["lock", `## Project design lock\n\n${lock.text}`]] : []),
+  ["craft", catalog.craft],
+];
+
+const bundle = [
+  "# StyleSeed Effective Rule Bundle",
+  "",
+  "<!-- Generated by ss-resolve. Do not hand-edit; update STYLESEED.md or resolver inputs. -->",
+  "",
+  `- Engine: ${catalog.engineVersion}`,
+  `- Engine revision: ${catalog.engineRevision ?? "legacy-unknown"}`,
+  `- Agent: ${agent}`,
+  `- Output grammar: ${grammar}`,
+  `- Surface adapter: ${adapter}`,
+  `- Domain: ${domain}`,
+  `- Page type: ${page}`,
+  `- Brand recipe: ${recipe}${requestedRecipe === "auto" ? " (auto)" : ""}`,
+  `- Palette recipe: ${palette}${requestedPalette === "auto" ? " (auto)" : ""}`,
+  ...(generatedPalette ? [`- Generated palette: ${generatedPalette.input.keyColor} · ${generatedPalette.input.mode} · ${generatedPalette.input.character} · ${generatedPalette.input.harmony}`] : []),
+  `- Aesthetic profile: ${profile}`,
+  "",
+  "Read this bundle before implementation. The agent execution contract is operational; method authority then runs core → grammar → adapter → domain/page → brand recipe → palette recipe → profile → lock → compact craft baseline, with the earlier method layer winning conflicts. Run the code gate and rendered visual gate.",
+  "",
+  ...sections.flatMap(([, content]) => [content, "", "---", ""]),
+].join("\n").replace(/\n---\n\s*$/, "\n");
+
+const bundleHash = digest(bundle);
+const sources = sections.map(([id, content]) => sourceEntry(id, content));
+const manifest = {
+  schemaVersion: 1,
+  engineVersion: catalog.engineVersion,
+  engineRevision: catalog.engineRevision ?? null,
+  generatedAt: new Date().toISOString(),
+  selection: selected,
+  bundle: {
+    path: ".styleseed/effective-rules.md",
+    sha256: bundleHash,
+    bytes: Buffer.byteLength(bundle),
+  },
+  sources,
+};
+
+const outDir = resolve(projectRoot, args["out-dir"] ?? ".styleseed");
+const bundlePath = resolve(outDir, "effective-rules.md");
+const manifestPath = resolve(outDir, "manifest.json");
+const palettePath = resolve(outDir, "palette.json");
+const paletteCssPath = resolve(outDir, "palette.css");
+
+if (args.check) {
+  if (!existsSync(manifestPath)) {
+    console.error("StyleSeed context drift: manifest is missing.");
+    process.exit(2);
+  }
+  const previous = JSON.parse(readFileSync(manifestPath, "utf8"));
+  if (previous.bundle?.sha256 !== bundleHash) {
+    console.error(
+      `StyleSeed context drift: ${previous.bundle?.sha256 ?? "missing"} -> ${bundleHash}`,
+    );
+    process.exit(2);
+  }
+  console.log(`StyleSeed context current: ${bundleHash}`);
+  process.exit(0);
+}
+
+if (args.stdout) {
+  process.stdout.write(bundle);
+  process.exit(0);
+}
+
+mkdirSync(outDir, { recursive: true });
+writeFileSync(bundlePath, bundle);
+writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+if (generatedPalette) {
+  writeFileSync(palettePath, `${JSON.stringify(generatedPalette, null, 2)}\n`);
+  writeFileSync(paletteCssPath, `${generatedPalette.css}\n`);
+} else {
+  rmSync(palettePath, { force: true });
+  rmSync(paletteCssPath, { force: true });
+}
+console.log(
+  `StyleSeed ${catalog.engineVersion}: ${grammar} × ${adapter} × ${domain} × ${page} × ${recipe} × ${palette} × ${profile}`,
+);
+console.log(`wrote ${bundlePath} (${Buffer.byteLength(bundle)} bytes, sha256:${bundleHash})`);
+console.log(`wrote ${manifestPath}`);
+if (generatedPalette) console.log(`wrote ${palettePath} and ${paletteCssPath}`);

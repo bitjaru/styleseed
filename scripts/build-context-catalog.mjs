@@ -37,18 +37,28 @@ const topLevelDistributionFiles = readdirSync(engine, { withFileTypes: true })
   .filter((entry) => entry.isFile())
   .map((entry) => entry.name)
   .filter((name) => name === ".cursorrules" || name === "VERSION" || name.endsWith(".md"));
-const distributionPaths = [
+const engineDistributionPaths = [
   ...topLevelDistributionFiles,
   ...walkFiles(resolve(engine, ".claude/skills"), ".claude/skills")
     .filter((path) => path !== ".claude/skills/ss-resolve/references/catalog.json"),
   ...walkFiles(resolve(engine, "color"), "color"),
 ].sort();
-const distributionFiles = distributionPaths.map((path) => {
-  const content = readFileSync(resolve(engine, path));
+const pluginDistributionPaths = [
+  ".claude-plugin/plugin.json",
+  ".codex-plugin/plugin.json",
+  ".mcp.json",
+  ...walkFiles(resolve(root, "mcp"), "mcp"),
+].sort();
+const distributionSources = [
+  ...engineDistributionPaths.map((path) => ({ path, absolute: resolve(engine, path) })),
+  ...pluginDistributionPaths.map((path) => ({ path: `root/${path}`, absolute: resolve(root, path) })),
+];
+const distributionFiles = distributionSources.map(({ path, absolute }) => {
+  const content = readFileSync(absolute);
   return {
     path,
     sha256: createHash("sha256").update(content).digest("hex"),
-    bytes: statSync(resolve(engine, path)).size,
+    bytes: statSync(absolute).size,
   };
 });
 const engineRevision = `sha256:${createHash("sha256")

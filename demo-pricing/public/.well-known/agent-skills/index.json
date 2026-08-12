@@ -62,7 +62,7 @@
       "type": "skill-md",
       "description": "Capture a human-approved UI design lesson as a privacy-minimized local StyleSeed candidate, review it, and prepare an opt-in share package without transmitting project code, prompts, screenshots, or brand data. Use when a person asks StyleSeed to remember, learn from, generalize, review, or prepare a reusable rule from an accepted design correction.",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-learn/SKILL.md",
-      "digest": "sha256:5dafba7f81586d93fc13e5cef82d83abc617dfe285f84e9a9c993980174878db"
+      "digest": "sha256:689f7eb21888bf293d31205cf02a13d564bce94d3e70320b6be2cc88bbc14c77"
     },
     {
       "name": "ss-lint",

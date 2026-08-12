@@ -1,0 +1,154 @@
+---
+name: ss-setup
+description: Configure StyleSeed by selecting the output grammar, domain, page type, brand recipe, semantic palette recipe, optional aesthetic profile, and bounded brand tokens before scaffolding a first screen.
+argument-hint: "(no arguments needed)"
+allowed-tools: Read, Write, Edit, Grep, Glob, Bash, WebFetch
+---
+
+# StyleSeed setup
+
+StyleSeed setup chooses a **design method for the result**, not a favorite brand to imitate.
+Use `/ss-resolve --list` (Claude Code) or `$ss-resolve --list` (Codex) to inspect the supported
+grammar, adapter, domain, page, recipe, palette, and profile IDs without loading the full handbook.
+
+## When not to use
+
+- Project already has a valid `STYLESEED.md` → use `/ss-update`.
+- User supplied references that are not represented by a built-in grammar → run
+  `/ss-reference` before setup, then select the compiled grammar.
+- One component inside an established system → `/ss-component`.
+
+The method, review, and reference compiler are framework-agnostic. The bundled component
+scaffold currently targets React and Tailwind v4; on another stack configure the lock and
+apply the method without pretending the scaffold is portable.
+
+## Wizard — one decision at a time
+
+### 1. Product job and surface
+
+Ask what is being built, who uses it, and whether it is a mobile/desktop product, website,
+social carousel, slide deck, document/report, or single-frame graphic. Select a surface adapter
+from `ADAPTERS.md`, then infer domain and page/artifact type.
+
+### 2. Output grammar
+
+Recommend exactly one grammar from `RULESETS.md` and explain the job match in one sentence:
+
+- `consumer-service`
+- `operations-console`
+- `technical-instrument`
+- `editorial-reading`
+- `commerce-conversion`
+- `institutional-service`
+- `expressive-marketing`
+- `sequential-story`
+- `reference:<slug>` when `/ss-reference` already compiled one
+
+Do not recommend Toss as the universal default. It is one reference family for
+`consumer-service`. If none fits and the user has references, route to `/ss-reference`.
+
+### 3. Page type and domain bias
+
+Confirm the concrete page (dashboard, form, landing, detail, list, settings, onboarding) and
+read its domain × page intersection. This controls composition; the aesthetic profile does not.
+
+### 4. Brand recipe
+
+Recommend one morphology from `BRAND-RECIPES.md`. Use `auto` when the maintained grammar mapping
+fits. Use an explicit recipe when the product needs a different geometry, containment,
+navigation, control, or collection language. A recipe is not a company clone and does not
+select colors.
+
+### 5. Palette recipe
+
+Recommend one semantic palette from `PALETTE-RECIPES.md`. Use `auto` when its maintained recipe
+mapping fits. An explicit palette must still preserve semantic roles, surface/chrome separation,
+status cues, and validated contrast. The recipe is a product posture, not a finite swatch list.
+When the user supplies a key color, select perceptual character, light/dark environment, surface
+temperature, and accent relationship; `$ss-resolve` then derives the actual OKLCH ramps and roles.
+Palette selection is not permission to recolor every surface.
+
+### 6. Optional aesthetic profile
+
+Recommend one profile from `PRESETS.md` only when it strengthens the product. `none` is a good
+default. A profile modifies coordinated visual axes but cannot replace the output grammar.
+
+### 7. Brand and bounded axes
+
+Lock a real brand color if supplied; otherwise start from the selected palette's primary role. For
+a supplied key, recommend `calm|balanced|vivid|deep` from the product posture rather than asking for
+an unbounded mood word. Then confirm light/dark mode, `neutral|warm|cool` surfaces, and
+`auto|tonal|adjacent|contrast` accent relationship. Confirm font/language, density, radius,
+elevation, imagery/data role, and motion inside the grammar's allowed ranges. Do not use generic
+indigo or a stale purple mislabeled as Toss.
+
+### 8. Write the design lock
+
+Create `STYLESEED.md`:
+
+```markdown
+# StyleSeed — Design Lock
+<!-- Selections persist here. This file cannot waive StyleSeed core invariants. -->
+- App domain: fintech
+- Surface: mobile-app
+- Surface adapter: product-ui
+- Page type: dashboard
+- Output grammar: consumer-service
+- Grammar path: built-in:engine/RULESETS.md
+- Grammar fallback: consumer-service
+- Reference confidence: n/a
+- Brand recipe: calm-consumer
+- Palette recipe: quiet-mineral
+- Key color: #3182F6
+- Palette character: calm
+- Palette mode: light
+- Palette harmony: auto
+- Surface temperature: neutral
+- Aesthetic profile: none
+- Skin: custom
+- Primary action: #3182F6
+- Font: Pretendard
+- Radius: soft
+- Elevation: light=tonal grouping + restrained shadow · dark=tonal ramp + hairline
+- Density: comfortable
+- Motion: Spring restrained
+- Imagery/data role: personal state first; charts only for a decision
+- Signature move: one calm contextual briefing above the account summary
+- Locked: YYYY-MM-DD
+```
+
+For a compiled grammar use its actual path and confidence. Reject unknown enum values rather
+than treating the lock as an exemption.
+
+### 9. Scaffold and prove
+
+Compile the selected method before code:
+
+```bash
+node <installed-ss-resolve>/scripts/resolve-context.mjs \
+  --project-root . --from-lock STYLESEED.md --agent claude
+```
+
+Use `--agent codex` in Codex. The resolver writes `.styleseed/effective-rules.md` and a
+hash-verifiable `.styleseed/manifest.json`. Read the effective bundle, not `llms-full.txt`.
+
+If the user asked for a first screen, build from that bundle, run `/ss-score` to the gate floor,
+and finish with `/ss-verify` when renderable. If visual rendering is unavailable, disclose that
+it was skipped.
+
+## Completion report
+
+Report the selected grammar and why, page/domain intersection, brand recipe, palette recipe,
+optional profile, lock path,
+compiled bundle and manifest paths, files changed, score, and visual verification status.
+Mention `/ss-reference` as the path for future references that need their own grammar.
+
+## Rules
+
+- Ask one question at a time and recommend a concrete default.
+- Output grammar is required; aesthetic profile is optional.
+- Brand recipe is required; `auto` resolves to a concrete maintained recipe.
+- Palette recipe is required; `auto` resolves to a contrast-verified semantic palette.
+- A skin is tokens, not design judgment.
+- Never fetch a brand `DESIGN.md` and treat its palette as a complete rule set.
+- Never scaffold an unscored first page or claim visual verification without a screenshot.

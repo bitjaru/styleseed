@@ -7,7 +7,7 @@ engine as one coherent payload.
 
 - `engineVersion` is the published release line, such as `4.0.0`.
 - `engineRevision` is a SHA-256 digest of the exact maintained method docs, 23 canonical skills,
-  provider entry material, and palette engine files.
+  provider/plugin entry material, the local MCP bridge, and palette engine files.
 
 A version match alone does not prove that an installation is current. A rule or skill fix on the
 same release line changes `engineRevision` and must still be detected.

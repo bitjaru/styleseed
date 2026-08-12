@@ -13,6 +13,9 @@ All notable changes to StyleSeed. Agents can check the latest version at
 - A fail-closed privacy contract: raw project material is rejected, local learning files are ignored
   from Git, accepted candidates require separate review and export attestations, and v1 prepares a
   local package without any network transport or automatic rule promotion.
+- A Codex plugin package plus a dependency-free local MCP bridge. The bridge exposes no project
+  discovery tool and returns one exact approved package only after consuming a separate one-time
+  human grant; client/model exposure is explicit and no registry submission is implemented.
 
 ## [4.0.0] — 2026-08-06
 

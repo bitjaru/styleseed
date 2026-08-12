@@ -5,6 +5,7 @@ dist/
 .env
 .env.*
 .lazyweb/
+.local-marketplace/
 
 # Promo & blog (local only)
 showcase/PROMO*.md

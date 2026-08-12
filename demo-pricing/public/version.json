@@ -11,5 +11,7 @@
   "update": "Claude Code: /ss-update. Codex: $ss-update. Or run: npx skills add bitjaru/styleseed",
   "changelog": "https://github.com/bitjaru/styleseed/releases",
   "repo": "https://github.com/bitjaru/styleseed",
-  "palettes": 8
+  "palettes": 8,
+  "revision": "sha256:5fa343a229051a647aff9b38d6df3a3580dbd3149fe026dfd5052515acf6283f",
+  "revisionFiles": 55
 }

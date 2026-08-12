@@ -1,7 +1,7 @@
 # StyleSeed — Full Context
 
 Source: github.com/bitjaru/styleseed (constitution + grammars + adapters + compiler + craft)
-Generated: 2026-08-12T02:21:39.382Z
+Generated: 2026-08-12T11:02:25.331Z
 
 ---
 

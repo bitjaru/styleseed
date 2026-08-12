@@ -1,7 +1,7 @@
 {
   "$schema": "https://styleseed-demo.vercel.app/.well-known/styleseed/registry.schema.json",
   "version": "6",
-  "generated": "2026-08-12T02:21:39.397Z",
+  "generated": "2026-08-12T11:02:25.339Z",
   "repository": "https://github.com/bitjaru/styleseed",
   "counts": {
     "skills": 22,
@@ -20,6 +20,8 @@
     "skins": 7
   },
   "context": {
+    "engineVersion": "4.0.0",
+    "engineRevision": "sha256:5fa343a229051a647aff9b38d6df3a3580dbd3149fe026dfd5052515acf6283f",
     "resolverSkill": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-resolve/SKILL.md",
     "catalogUrl": "https://styleseed-demo.vercel.app/.well-known/styleseed/context-catalog.json",
     "grammarIds": [

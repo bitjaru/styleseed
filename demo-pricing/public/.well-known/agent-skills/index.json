@@ -144,9 +144,9 @@
     {
       "name": "ss-update",
       "type": "skill-md",
-      "description": "Update StyleSeed engine in your project — analyzes what's outdated and updates safely",
+      "description": "Check and update an existing StyleSeed installation by exact rule/skill revision, preserve project-owned design decisions, then recompile and verify the effective bundle.",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-update/SKILL.md",
-      "digest": "sha256:799772e2c3b7b4a2964c609293afc6f37e45fdfe73fddc2e737ba769322192f6"
+      "digest": "sha256:11cdc0c9b9c01af75e3845349cfb68f9a7a73930dc2ef1b7268eec9f62b61451"
     },
     {
       "name": "ss-verify",

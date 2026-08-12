@@ -13,6 +13,8 @@ const plugin = JSON.parse(read(".claude-plugin/plugin.json"));
 const publicVersion = JSON.parse(read("demo-pricing/public/version.json"));
 assert(plugin.version === version, `plugin version ${plugin.version} != ${version}`);
 assert(publicVersion.version === version, `public version ${publicVersion.version} != ${version}`);
+assert(JSON.stringify(plugin.skills) === JSON.stringify(["./engine/.claude/skills"]), "plugin must expose only the canonical skill directory");
+assert(!existsSync(resolve(root, "skills/styleseed-design-review/SKILL.md")), "legacy standalone review skill must not compete with ss-score");
 
 const skillsDir = resolve(root, "engine/.claude/skills");
 const skills = readdirSync(skillsDir, { withFileTypes: true })
@@ -75,6 +77,12 @@ for (const path of coreFiles) {
 
 const catalog = JSON.parse(read("engine/.claude/skills/ss-resolve/references/catalog.json"));
 assert(catalog.engineVersion === version, `context catalog ${catalog.engineVersion} != ${version}`);
+assert(/^sha256:[0-9a-f]{64}$/.test(catalog.engineRevision), "context catalog engine revision is invalid");
+assert(Array.isArray(catalog.distributionFiles) && catalog.distributionFiles.length >= 40, "context catalog distribution manifest is incomplete");
+assert(catalog.distributionFiles.some((file) => file.path === ".claude/skills/ss-update/scripts/check-update.mjs"), "distribution manifest omits the update checker");
+assert(!catalog.distributionFiles.some((file) => file.path.endsWith("ss-resolve/references/catalog.json")), "distribution revision must not hash its generated catalog");
+assert(publicVersion.revision === catalog.engineRevision, "version.json revision differs from the canonical catalog");
+assert(publicVersion.revisionFiles === catalog.distributionFiles.length, "version.json revision file count drifted");
 assert(Object.keys(catalog.grammars).length === 8, "context catalog grammar count drifted");
 assert(Object.keys(catalog.adapters).length === 5, "context catalog adapter count drifted");
 assert(Object.keys(catalog.domains).length === 12, "context catalog domain count drifted");
@@ -98,6 +106,8 @@ assert(registry.recipes.length === 9, "registry recipe manifest drifted");
 assert(registry.palettes.length === 8, "registry palette manifest drifted");
 assert(registry.paletteEngine?.colorSpace === "OKLCH", "registry palette engine metadata missing");
 assert(registry.paletteEngine?.digest === registry.context?.paletteEngine?.digest, "registry palette engine digest drifted");
+assert(registry.context?.engineVersion === version, "registry engine version drifted");
+assert(registry.context?.engineRevision === catalog.engineRevision, "registry engine revision drifted");
 const llms = read("demo-pricing/public/llms.txt");
 assert(llms.includes("invoke `/ss-studio` or `$ss-studio`") && llms.includes("`/ss-resolve` or `$ss-resolve` directly"), "llms.txt does not route through Studio and ss-resolve");
 assert(llms.includes("archive/debug mirror, not the"), "llms.txt must demote llms-full to archive/debug");
@@ -126,8 +136,34 @@ try {
     assert(manifest.selection.grammar === "operations-console", "resolver selected the wrong grammar");
     assert(manifest.selection.recipe === "enterprise-workbench", "resolver selected the wrong recipe");
     assert(manifest.selection.palette === "cobalt-instrument", "resolver selected the wrong palette");
+    assert(manifest.engineRevision === catalog.engineRevision, "resolver manifest omitted the engine revision");
     assert(manifest.bundle.bytes >= 5000 && manifest.bundle.bytes <= 30000, `resolver bundle is ${manifest.bundle.bytes} bytes`);
     assert(/^[0-9a-f]{64}$/.test(manifest.bundle.sha256), "resolver bundle hash is invalid");
+    const updateChecker = resolve(root, "engine/.claude/skills/ss-update/scripts/check-update.mjs");
+    const remoteVersionPath = resolve(smokeRoot, "remote-version.json");
+    writeFileSync(remoteVersionPath, JSON.stringify({ version, revision: catalog.engineRevision }));
+    const currentUpdate = spawnSync(process.execPath, [updateChecker, "--project-root", smokeRoot, "--remote", remoteVersionPath, "--json"], { encoding: "utf8" });
+    assert(currentUpdate.status === 0, `update checker current probe failed: ${currentUpdate.stderr || currentUpdate.stdout}`);
+    if (currentUpdate.status === 0) {
+      assert(JSON.parse(currentUpdate.stdout).status === "current", "update checker failed to prove a matching revision");
+    }
+    writeFileSync(remoteVersionPath, JSON.stringify({ version, revision: `sha256:${"f".repeat(64)}` }));
+    const sameVersionUpdate = spawnSync(process.execPath, [updateChecker, "--project-root", smokeRoot, "--remote", remoteVersionPath, "--json"], { encoding: "utf8" });
+    assert(sameVersionUpdate.status === 0, `update checker same-version probe failed: ${sameVersionUpdate.stderr || sameVersionUpdate.stdout}`);
+    if (sameVersionUpdate.status === 0) {
+      assert(JSON.parse(sameVersionUpdate.stdout).status === "update-available", "same-version revision drift must require an update");
+    }
+    const legacySkillDir = resolve(smokeRoot, ".agents/skills/styleseed-design-review");
+    mkdirSync(legacySkillDir, { recursive: true });
+    writeFileSync(resolve(legacySkillDir, "SKILL.md"), "---\nname: styleseed-design-review\n---\nlegacy reviewer\n");
+    writeFileSync(remoteVersionPath, JSON.stringify({ version, revision: catalog.engineRevision }));
+    const legacyConflict = spawnSync(process.execPath, [updateChecker, "--project-root", smokeRoot, "--remote", remoteVersionPath, "--json"], { encoding: "utf8" });
+    assert(legacyConflict.status === 0, `update checker legacy probe failed: ${legacyConflict.stderr || legacyConflict.stdout}`);
+    if (legacyConflict.status === 0) {
+      const legacyResult = JSON.parse(legacyConflict.stdout);
+      assert(legacyResult.status === "legacy-skill-conflict", "retired standalone reviewer must be reported as a conflict");
+      assert(legacyResult.legacyConflicts.length === 1, "legacy conflict report must include the retired skill path");
+    }
     const check = spawnSync(process.execPath, [resolver, "--project-root", smokeRoot, "--from-lock", "STYLESEED.md", "--agent", "codex", "--check"], { encoding: "utf8" });
     assert(check.status === 0, `ss-resolve hash check failed: ${check.stderr || check.stdout}`);
     writeFileSync(resolve(smokeRoot, "STYLESEED.md"), readFileSync(resolve(smokeRoot, "STYLESEED.md"), "utf8").replace("#0F766E", "#C14E24"));

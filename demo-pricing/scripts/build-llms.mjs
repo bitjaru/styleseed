@@ -41,8 +41,8 @@ const contextCatalog = JSON.parse(readFileSync(contextCatalogPath, 'utf8'))
 cpSync(contextCatalogPath, resolve(wellKnownSeed, 'context-catalog.json'))
 
 // ============================================================
-// 0. version.json — keep `version` synced with engine/VERSION so agents
-//    using StyleSeed can check whether they're on the latest rules.
+// 0. version.json — keep the release version and exact distribution revision
+//    synced so same-version rule/skill changes cannot be missed.
 // ============================================================
 const versionFile = resolve(engineDir, 'VERSION')
 if (existsSync(versionFile)) {
@@ -165,6 +165,8 @@ writeFileSync(
     {
       ...currentVersionJson,
       version: contextCatalog.engineVersion,
+      revision: contextCatalog.engineRevision,
+      revisionFiles: contextCatalog.distributionFiles.length,
       skills: skills.length,
       grammars: grammarIds.length,
       adapters: adapterIds.length,
@@ -411,6 +413,8 @@ writeFileSync(
         skins: skinsManifest.length,
       },
       context: {
+        engineVersion: contextCatalog.engineVersion,
+        engineRevision: contextCatalog.engineRevision,
         resolverSkill: `${REPO_RAW}/engine/.claude/skills/ss-resolve/SKILL.md`,
         catalogUrl: 'https://styleseed-demo.vercel.app/.well-known/styleseed/context-catalog.json',
         grammarIds,

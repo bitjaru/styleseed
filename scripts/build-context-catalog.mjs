@@ -1,4 +1,5 @@
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -22,6 +23,37 @@ const pages = read("PAGE-TYPES.md");
 const presets = read("PRESETS.md");
 const recipes = read("BRAND-RECIPES.md");
 const palettes = JSON.parse(read("color/palettes.json"));
+
+function walkFiles(directory, prefix = "") {
+  return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+    const relative = prefix ? `${prefix}/${entry.name}` : entry.name;
+    const absolute = resolve(directory, entry.name);
+    if (entry.isDirectory()) return walkFiles(absolute, relative);
+    return entry.isFile() ? [relative] : [];
+  });
+}
+
+const topLevelDistributionFiles = readdirSync(engine, { withFileTypes: true })
+  .filter((entry) => entry.isFile())
+  .map((entry) => entry.name)
+  .filter((name) => name === ".cursorrules" || name === "VERSION" || name.endsWith(".md"));
+const distributionPaths = [
+  ...topLevelDistributionFiles,
+  ...walkFiles(resolve(engine, ".claude/skills"), ".claude/skills")
+    .filter((path) => path !== ".claude/skills/ss-resolve/references/catalog.json"),
+  ...walkFiles(resolve(engine, "color"), "color"),
+].sort();
+const distributionFiles = distributionPaths.map((path) => {
+  const content = readFileSync(resolve(engine, path));
+  return {
+    path,
+    sha256: createHash("sha256").update(content).digest("hex"),
+    bytes: statSync(resolve(engine, path)).size,
+  };
+});
+const engineRevision = `sha256:${createHash("sha256")
+  .update(distributionFiles.map((file) => `${file.path}\0${file.sha256}\n`).join(""))
+  .digest("hex")}`;
 
 const grammarIds = [
   "consumer-service",
@@ -110,6 +142,8 @@ const recipeIds = [
 const catalog = {
   schemaVersion: 3,
   engineVersion: read("VERSION"),
+  engineRevision,
+  distributionFiles,
   generatedFrom: [
     "PRODUCT-PRINCIPLES.md",
     "CRAFT-BASELINE.md",

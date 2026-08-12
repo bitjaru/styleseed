@@ -25,7 +25,6 @@
     "codex"
   ],
   "skills": [
-    "./skills/",
     "./engine/.claude/skills"
   ]
 }

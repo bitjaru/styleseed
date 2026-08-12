@@ -44,7 +44,7 @@ StyleSeed handles the design lock, build, code gate, and visual check. No design
 
 ## What it bans on sight
 
-The "AI-generated look" isn't bad luck — it's a list of nameable tells. StyleSeed ships **74 rules** that ban them, and a **0–100 scored gate** that blocks any screen under 80 from ever reaching you.
+The "AI-generated look" isn't bad luck — it's a list of nameable tells. StyleSeed ships **74 rules** that ban them, and a **0–100 scored gate** that tells an installed agent to revise screens below 80 before presentation. The gate is enforced when the StyleSeed build workflow is actually invoked; a markdown file alone cannot block delivery.
 
 | Banned | Why |
 |---|---|
@@ -163,13 +163,13 @@ keeps the result from looking random — see [Troubleshooting](#troubleshooting-
 you    ▸  build me a billing settings page
 agent  ▸  (plan mode) key color? for billing I'd go deep teal — #0F766E, mood: sharp · calm ·
           trustworthy (not the default indigo). Motion: Snap. ok?  ▸ y
-agent  ▸  ✓ wrote STYLESEED.md — skin, accent, font, radius, motion locked, re-read every prompt
+agent  ▸  ✓ wrote STYLESEED.md — skin, accent, font, radius, motion locked for project-scoped visual work
 agent  ▸  building… running the quality gate before I show you anything
 gate   ▸  ✗ two accent colors   ✗ "normal" rows colored   ✗ no empty state   → fixing
 agent  ▸  ✓ 88/100 — one accent, grey normal states, real empty/error states. here's the page.
 ```
 
-**The `STYLESEED.md` lock is the anti-drift mechanic.** Your skin, key color, radius, and motion get written once and the rules make every agent re-read and obey them on *every* prompt — so the design stops being different each session. The Quality Gate then self-reviews and fixes the UI (rainbow lists, two accents, missing states) *before* you ever see it — and it can [retrofit an old generic build](#already-built-something-generic-retrofit-it) too.
+**The `STYLESEED.md` lock is the anti-drift mechanic.** Your skin, key color, radius, and motion get written once. Installed project instructions and StyleSeed skills re-read it for visual work, so those decisions can survive new screens and sessions. When the build workflow runs, the Quality Gate reviews and fixes the UI (rainbow lists, two accents, missing states) before presentation — and it can [retrofit an old generic build](#already-built-something-generic-retrofit-it) too.
 
 > **The method stays open and portable.** The sources are plain markdown; installation adds the
 > deterministic context compiler, manifest, and executable gates. If installation is unavailable,
@@ -426,7 +426,7 @@ came out polished because it was built with the full rules in context and iterat
 3. **Compile only the selected rules:** run `/ss-resolve` or `$ss-resolve`, then make the agent
    read `.styleseed/effective-rules.md`. The manifest pins selections and hashes. Use
    `llms-full.txt` only to debug an unresolved source ambiguity.
-4. **Lock the decisions in a file.** Run `/ss-setup` (or just ask the agent to "write a `STYLESEED.md` design lock"). It records your skin, key color, radius, and motion in `STYLESEED.md` at the repo root, and the rules tell the agent to **obey it on every prompt** — so the design stops being "different every time." This is the single strongest fix for inconsistency. (Also install `CLAUDE.md` / `AGENTS.md` / `.cursorrules` so the rules themselves are re-read every prompt.)
+4. **Lock the decisions in a file.** Run `/ss-setup` (or just ask the agent to "write a `STYLESEED.md` design lock"). It records your skin, key color, radius, and motion in `STYLESEED.md` at the repo root. Install the provider's project entry (`CLAUDE.md`, `AGENTS.md`, or `.cursorrules`) or invoke the installed StyleSeed skill so visual tasks actually read the lock. This is the single strongest fix for inconsistency.
 5. **Be specific:** *"Build a dashboard in the Linear skin, one blue accent, Snap motion, following StyleSeed's rules"* beats *"build a dashboard."*
 6. **Check & iterate.** Run `/ss-review` or `/ss-score`, or tell it: *"self-check the effective grammar — coherent geometry, stable color roles, real empty/loading/error states — and fix violations."* If it drifts: *"re-read CLAUDE.md and fix the coherence violations."*
 
@@ -753,22 +753,19 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the full rule format and quality chec
 
 ## Updating
 
-Already using StyleSeed? Quick update (always safe):
+Already using StyleSeed? Check the exact rule/skill revision first:
 
 ```bash
-# Pull latest
-cd styleseed && git pull
-
-# Update design rules + skills (safe — no project-specific content)
-cp styleseed/engine/DESIGN-LANGUAGE.md your-project/.claude/DESIGN-LANGUAGE.md
-# Claude Code
-cp -r styleseed/engine/.claude/skills/ your-project/.claude/skills/
-# Codex
-mkdir -p your-project/.agents/skills
-cp -r styleseed/engine/.claude/skills/* your-project/.agents/skills/
+# Claude Code: /ss-update
+# Codex: $ss-update
 ```
 
-**Don't overwrite:** your `theme.css` (brand colors), `CLAUDE.md` (if project-specific), or customized components.
+`ss-update` compares the installed `engineRevision`, the revision recorded in
+`.styleseed/manifest.json`, and the published revision. A matching `4.0.0` version alone is not
+enough. Refresh through the original install channel, then re-resolve and inspect the bundle diff.
+
+**Preserved by the update contract:** `STYLESEED.md`, app code, tokens, assets, customized
+components, and project-owned `AGENTS.md` / `CLAUDE.md` / `.cursorrules`.
 
 Full guide: [engine/UPDATE.md](engine/UPDATE.md)
 

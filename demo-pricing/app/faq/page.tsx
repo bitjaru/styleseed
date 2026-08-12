@@ -35,11 +35,11 @@ export const metadata: Metadata = {
 const FAQ: { q: string; a: string }[] = [
   {
     q: "My app looks generic / AI-generated — how do I fix it?",
-    a: "StyleSeed fixes generic, “AI-slop” UI by giving Claude Code, Codex, and Cursor 74 design rules they read automatically — covering color discipline, spacing rhythm, hierarchy, elevation, and motion. Instead of defaulting to slate neutrals and 8px radius on everything, your output stops looking generated and starts looking designed. It's MIT-licensed and free.",
+    a: "StyleSeed fixes generic, “AI-slop” UI with 74 design rules covering color discipline, spacing rhythm, hierarchy, elevation, and motion. Install the project entry or invoke the installed StyleSeed workflow so Claude Code, Codex, or Cursor actually loads those rules for visual work. Instead of defaulting to slate neutrals and 8px radius on everything, the workflow pushes the output toward one intentional system. It's MIT-licensed and free.",
   },
   {
     q: "I applied StyleSeed but the design still looks bad / colors are random / there's no key color — what do I do?",
-    a: "Consistency comes from constraints, and the one-paste prompt is the least-constrained path. Fix it in five steps. 1) Select the output grammar and surface adapter before code. 2) Lock a primary action color and define stable roles for any additional hues. 3) If you have references that StyleSeed does not model, run /ss-reference instead of copying them. 4) Install the rule files so they are re-read every prompt. 5) Run /ss-score, then render and inspect with /ss-verify; the reference demo was not one-shot either.",
+    a: "Consistency comes from constraints, and the one-paste prompt is the least-constrained path. Fix it in five steps. 1) Select the output grammar and surface adapter before code. 2) Lock a primary action color and define stable roles for any additional hues. 3) If you have references that StyleSeed does not model, run /ss-reference instead of copying them. 4) Install the provider's project entry or invoke the installed StyleSeed skill so visual work reads STYLESEED.md. 5) Run /ss-score, then render and inspect with /ss-verify; the reference demo was not one-shot either.",
   },
   {
     q: "Why does the same prompt give a great result one time and a generic one the next?",
@@ -55,7 +55,7 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "How do I give Claude Code, Codex, or Cursor a design system so it stops making ugly UI?",
-    a: "StyleSeed is a design-method engine for that job. It installs rules the agent reads automatically, plus 8 output grammars, 5 surface adapters, 48 React components, 7 brand skins, a named motion system, and 20 ss-* skills. STYLESEED.md preserves bounded project decisions so Claude Code, Codex, or Cursor can re-read them instead of reinventing spacing, colors, type, and motion on every prompt.",
+    a: "StyleSeed is a design-method engine for that job. It ships 8 output grammars, 5 surface adapters, 48 React components, 7 brand skins, a named motion system, and 22 canonical ss-* skills. STYLESEED.md preserves bounded project decisions; installed project instructions and StyleSeed skills re-read it for visual work instead of reinventing spacing, colors, type, and motion.",
   },
   {
     q: "Should I use StyleSeed or Anthropic's official frontend-design skill with Claude Code?",
@@ -91,7 +91,7 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "How do I stop my UI from looking like a template?",
-    a: "StyleSeed replaces template defaults with intentional, branded choices: a committed radius, a saturated accent, a display+body font pairing, and a coherence rule that keeps every screen on the same decisions. Because these are rules the agent reads on every prompt, the whole app stays consistent instead of reverting to template-grade defaults screen by screen.",
+    a: "StyleSeed replaces template defaults with intentional, branded choices: a committed radius, a stable action color, a deliberate type pairing, and a coherence rule. STYLESEED.md keeps those decisions in the repo; the installed project entry or StyleSeed workflow must load the lock for later visual tasks so new screens do not silently revert to template defaults.",
   },
   {
     q: "I'm vibe coding without a designer — how do I get good-looking UI?",

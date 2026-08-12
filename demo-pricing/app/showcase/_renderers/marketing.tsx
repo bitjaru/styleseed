@@ -28,7 +28,7 @@ const FEATURES = [
   {
     icon: Code2,
     title: "AI-ready",
-    desc: "74 design rules + 15 slash skills that Claude Code, Codex, and Cursor read automatically.",
+    desc: "74 design rules + 22 canonical skills that installed agent workflows load for visual work.",
   },
 ];
 

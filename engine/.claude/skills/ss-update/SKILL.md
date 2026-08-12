@@ -1,184 +1,138 @@
 ---
 name: ss-update
-description: Update StyleSeed engine in your project — analyzes what's outdated and updates safely
+description: Check and update an existing StyleSeed installation by exact rule/skill revision, preserve project-owned design decisions, then recompile and verify the effective bundle.
 argument-hint: "(no arguments needed)"
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash
 ---
 
-# StyleSeed Update Assistant
+# StyleSeed update
 
-## When NOT to use
+Update the **engine payload**, not the user's product UI. A release version describes a published
+line; `engineRevision` identifies the exact maintained rules, skills, entry docs, and palette
+engine. Two installs with the same release version are not proven equal until their revisions
+match.
 
-- For first-time setup → use `/ss-setup`
-- For just one new component or skin — copy that file manually
-- For projects that have heavily diverged from upstream — manual diff review first
-- Updating the engine is separate from re-designing your UI. Steps 1–5 update engine files only;
-  if you want an old generic build re-done to the new standard, that's **Step 6 (Retrofit)**.
+## When not to use
 
-Automatically detect and update StyleSeed files in the current project.
+- First installation → `/ss-setup` or `$ss-setup`.
+- One new screen or component → `/ss-build`, `/ss-page`, or `/ss-component`.
+- A redesign of old UI → update first, then offer the optional retrofit step below.
+- A heavily forked StyleSeed payload → stop after the dry-run report and request a manual diff.
 
-## Reassure the user first
+## Ownership boundary
 
-Updating is **safe and reversible**. Updates are additive — new rules,
-components, skins, and skills get added; your `theme.css`, your components, and
-your app code are never overwritten, and design rules only ever get added (never
-changed in a breaking way). A big version jump looks like a lot changed, but
-it's almost all additions. **Do NOT warn the user that the build will break**
-unless you actually find a changed component/import API. Tell them: commit first,
-copy the new rules + skills, run a build, and `git reset --hard` if anything is
-off — they can't permanently break their project.
+StyleSeed owns installed `ss-*` skill payloads and compiled `.styleseed/effective-rules.md`.
+The project owns `STYLESEED.md`, application code, components, tokens, assets, and any existing
+`AGENTS.md`, `CLAUDE.md`, or Cursor instructions. Never overwrite project-owned files merely to
+update StyleSeed.
 
-## Instructions
+An update may change design-method behavior, especially across major versions. It is reversible
+through the user's version control, but it is not correct to promise that every update is
+additive or non-breaking.
 
-### Step 1: Detect Current Setup
+## Step 1 — Read-only revision check
 
-Scan the project to find where StyleSeed files are:
+From the user's project root, run the bundled checker by its installed path:
 
 ```bash
-# Find DESIGN-LANGUAGE.md
-find . -name "DESIGN-LANGUAGE.md" -not -path "*/node_modules/*"
-
-# Find CLAUDE.md
-find . -name "CLAUDE.md" -not -path "*/node_modules/*"
-
-# Find skills (ss-* is current; ui-*/ux-* are legacy names to migrate from)
-find . -path "*/.claude/skills/ss-*" -o -path "*/.claude/skills/ui-*" -o -path "*/.claude/skills/ux-*" | head -20
-
-# Find theme.css
-find . -name "theme.css" -not -path "*/node_modules/*"
-
-# Find .cursorrules
-find . -name ".cursorrules"
+node <installed-ss-update>/scripts/check-update.mjs --project-root . --json
 ```
 
-Report what was found and where.
+Interpret the result exactly:
 
-### Step 2: Check StyleSeed Version
+- `current` — installed and published revisions match; stop unless the user explicitly wants a
+  reinstall.
+- `update-available` — refresh the installed payload even when the semantic versions match.
+- `project-bundle-stale` — skills are current; skip reinstall and re-resolve the project.
+- `legacy-skill-conflict` — the retired standalone seven-category reviewer remains beside the
+  canonical skills. Show its path and hash; remove it only after confirming it is not a
+  project-modified skill.
+- `remote-revision-unavailable` — version-only evidence cannot prove currency. Report the
+  boundary and do not say “up to date.”
 
-**Fast check first** — compare the local version to the published one without cloning:
-```bash
-# local marker (may be absent on older installs)
-cat engine/VERSION 2>/dev/null || cat VERSION 2>/dev/null || echo "unknown"
-# latest published version + what's new
-curl -s https://styleseed-demo.vercel.app/version.json
-```
-If the local version already matches `version.json`'s `version`, tell the user they're
-up to date and stop. Otherwise report `whatsNew` and continue.
+Also inspect `git status --short`. Do not modify files during this step.
 
-Then clone/pull to actually diff the files:
-```bash
-if [ -d "/tmp/styleseed" ]; then
-  cd /tmp/styleseed && git pull
-else
-  git clone https://github.com/bitjaru/styleseed.git /tmp/styleseed
-fi
-```
+## Step 2 — Report the update boundary
 
-Compare:
-- `engine/VERSION` (or `version.json`) vs the local copy — the source of truth
-- DESIGN-LANGUAGE.md rule count + Table of Contents
-- Skills present in `.claude/skills/` vs upstream (don't hardcode a count — list the diff)
-- Whether `CLAUDE.md`, `AGENTS.md`, and `.cursorrules` exist (ship all three)
-- New engine docs (VISUAL-CRAFT.md, APP-PLAYBOOKS.md, PAGE-TYPES.md, BRAND-RECIPES.md)
+Before changing anything, report:
 
-### Step 3: Report & Ask
-
-Show the user what needs updating:
-
-```
-StyleSeed Update Report:
-
-Current state:
-- DESIGN-LANGUAGE.md: [location] — [old/current version indicator]
-- Skills: [count] found (latest: 12)
-- Golden Rules: [yes/no]
-- .cursorrules: [yes/no]
-
-Recommended updates:
-1. ✅ [safe] Update skills (X → 12)
-2. ✅ [safe] Add .cursorrules
-3. ⚠️ [review] Update DESIGN-LANGUAGE.md ([old line count] → [new line count])
-4. ⚠️ [merge] Add Golden Rules to CLAUDE.md (won't overwrite existing content)
-
-Shall I proceed? (I'll ask before each ⚠️ item)
+```text
+StyleSeed update report
+- Installed: <version> @ <revision>
+- Published: <version> @ <revision>
+- Project bundle: <version/revision or not resolved>
+- Project worktree: clean | has existing changes
+- Will refresh: canonical ss-* skill payloads
+- Will preserve: STYLESEED.md, app code, components, tokens, assets, project instructions
+- Requires review: compiled rule-bundle diff and any copied legacy engine docs
 ```
 
-### Step 4: Execute Updates
+If the worktree has unrelated changes, preserve them. Recommend a commit or backup before a
+method update, but do not use destructive reset/checkout commands as an update strategy.
 
-For each update, in order:
+## Step 3 — Refresh through the original install channel
 
-**Always safe (do without asking):**
-- Copy skills: `cp -r /tmp/styleseed/engine/.claude/skills/ .claude/skills/`
-- Copy .cursorrules (if not exists): `cp /tmp/styleseed/engine/.cursorrules .cursorrules`
+Use the same channel that installed StyleSeed:
 
-**Ask before doing:**
+- Agent Skills CLI installation: run `npx skills add bitjaru/styleseed` and select the same
+  project/provider scope. The repository exposes exactly the canonical 22 `ss-*` skills.
+- Claude/plugin or another provider marketplace: use that provider's normal update action.
+- Vendored source checkout: fetch the intended tag or commit, review the diff, and update the
+  canonical engine as a set. Do not mix files from two revisions.
 
-For DESIGN-LANGUAGE.md:
-- Show diff summary: how many new rules, what sections added
-- Ask: "Update DESIGN-LANGUAGE.md? (Y/N)"
-- If yes: copy to the detected location
+Do not implement an update with a blind recursive copy into an existing skills directory. The
+installer must reconcile the managed payload; project-owned files stay outside that operation.
 
-For CLAUDE.md (Golden Rules):
-- Check if Golden Rules section already exists
-- If not: ask "Add Golden Rules section to your CLAUDE.md? This adds 10 lines at the top. Your existing content stays untouched."
-- If yes: insert Golden Rules after the first heading
+If this skill was invoked only to inspect availability, stop before the external refresh and
+present the report.
 
-**Never touch:**
-- theme.css — say "Your theme.css (skin) is untouched."
-- components/ — say "Your components are untouched. Run `/ss-lint` to check compliance."
+## Step 4 — Prove the installed revision
 
-**Recompile the project context:**
-- If `STYLESEED.md` exists, run the installed `ss-resolve/scripts/resolve-context.mjs` with
-  `--project-root . --from-lock STYLESEED.md --agent <agent>`.
-- Run the same command with `--check` and require a zero exit status.
-- Report the new bundle hash from `.styleseed/manifest.json`; do not point the user at
-  `llms-full.txt`.
+Run the new checker's path again. Require the installed and published `engineRevision` values to
+match before describing the engine as current. A matching version string by itself is not proof.
 
-### Step 5: Summary
+If the installed payload still reports the old revision, stop. Do not recompile the project from
+a mixed or unproven installation.
 
-```
-Update complete!
+## Step 5 — Recompile the project context
 
-✅ Skills: 21 (added X new)
-✅ .cursorrules: added
-✅ DESIGN-LANGUAGE.md: updated to latest
-✅ Golden Rules: added to CLAUDE.md
-✅ Effective context: recompiled and hash-checked
+When `STYLESEED.md` exists:
 
-Not touched:
-- theme.css (your skin)
-- components/ (your code)
+1. Run the installed `ss-resolve/scripts/resolve-context.mjs` with
+   `--project-root . --from-lock STYLESEED.md --agent <agent>`.
+2. Inspect the diff for `.styleseed/effective-rules.md`, `.styleseed/manifest.json`, and generated
+   palette files. The manifest must record the new `engineRevision`.
+3. Run the same command with `--check`; require exit status 0.
+4. Report the old and new bundle hashes. Do not use `llms-full.txt` as the project context.
 
-Next: run /ss-lint on your pages to check for rule violations.
-```
+The design lock persists selections, but a new engine revision may correctly change the compiled
+method around those selections. Present that diff instead of hiding it.
 
-### Step 6: Retrofit existing UI (optional but recommended) — "re-do a generic old build"
+## Step 6 — Check legacy copied docs
 
-Updating the rules doesn't re-design screens you already built with an older StyleSeed. If the
-user says their existing UI still looks generic/"AI-made" (default indigo, icon-chip cliché,
-tight desktop type, no focal point, no design lock), offer to **retrofit it to the new standard**.
-This is the migration path for anyone who built before the distinctiveness rules existed:
+Older projects may contain copied `DESIGN-LANGUAGE.md`, `PRODUCT-PRINCIPLES.md`, `RULESETS.md`,
+or provider entry files. Detect and report them. Do not overwrite project `AGENTS.md`,
+`CLAUDE.md`, or `.cursorrules`; recommend replacing only an identifiable StyleSeed-managed block
+or removing stale duplicate method files after review.
 
-1. **Write a design lock if missing.** Check for `STYLESEED.md` at the project root. If absent,
-   run **Quick Setup** (CLAUDE.md) *now* with the user — pin **mood** (edges/feel/density/tone),
-   a **domain-fit key color** (NOT the default indigo), a **chosen font**, and the **surface**
-   (mobile vs desktop type scale). Write the lock. Existing generic builds almost always never
-   had a lock — this is the biggest fix.
-2. **Re-score the key screens.** Run **`/ss-score`** on the main pages. The new rubric flags
-   exactly the old-build tells: default-indigo accent, the icon-chip cliché (§CC-9b), body <16px
-   on desktop, no focal point, demo layout copied verbatim, missing states.
-3. **Apply the fixes.** Run **`/ss-review`** (or `/ss-review --fix`) screen by screen to retint to
-   the locked key color, replace the uniform icon chips, bump the desktop type scale, and create a
-   focal point. Re-score to **≥ 80**. Do the highest-traffic screen first.
-4. **Report the before/after score** so the upgrade is visible (e.g. "landing 63 → 88").
+## Optional retrofit
 
-Frame it honestly: the rules got stronger, so a screen that passed the old bar may score lower
-now — that's the point; fixing it is what makes it stop looking AI-made.
+Updating the engine does not redesign existing screens. If the user wants a retrofit:
 
-## Important
+1. confirm or create `STYLESEED.md`;
+2. re-score the highest-traffic screen against the new effective bundle;
+3. apply approved fixes with `/ss-review` or `$ss-review`;
+4. render and inspect with `/ss-verify` or `$ss-verify`;
+5. report before/after evidence without claiming the old score was measured when it was not.
 
-- NEVER overwrite theme.css
-- NEVER overwrite a project-specific CLAUDE.md — only MERGE the Golden Rules section
-- NEVER overwrite components without explicit user approval
-- Always show what will change before changing it
-- If unsure, ask the user
+## Completion report
+
+Separate these states:
+
+- installed revision: verified | not verified;
+- project bundle: recompiled and hash-checked | stale | not present;
+- application code: unchanged | explicitly retrofitted;
+- code gate: passed | not run;
+- visual gate: passed from inspected render | not run.
+
+Never call installation, compilation, a build, or a score a visual verification.

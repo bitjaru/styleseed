@@ -33,6 +33,9 @@ flowchart LR
   T -->|fix + re-record| G
   T --> U[Human acceptance<br/>named reviewer]
   U --> J[Designed output<br/>code · visual · temporal evidence]
+  U -->|explicit capture only| V[Local learning candidate<br/>generalized · privacy-minimized]
+  V --> W[Separate human review]
+  W -->|explicit export only| X2[Local share package<br/>no transport]
 ```
 
 ## Layers and authority
@@ -51,6 +54,7 @@ flowchart LR
 | Context compiler | Emit the selected method with provenance | deterministic bundle + manifest | silently invent or merge unknown IDs |
 | Build skills | Apply the compiled method | implementation | self-certify without evidence |
 | Score + verify | Detect code and pixel drift | fixes needed to comply | redefine the chosen method |
+| Local learning | Preserve a generalized, human-approved correction as candidate evidence | local capture, review, and opt-in packaging | scan projects, transmit raw material, or rewrite core rules automatically |
 
 ## Grammar sources
 
@@ -129,3 +133,6 @@ is the design engine; the composed method is.
   perceptual characters, gamut boundaries, and semantic contrast pairs.
 - Add a new aesthetic profile only when it is a full coordinated axis contract, not a mood word.
 - Keep components and skins downstream. They implement a decision; they do not decide.
+- Treat `ss-learn` output as candidate evidence only. Promote it to team or core rules only after
+  independent-project repetition, counterexamples, accessibility and grammar regressions, benchmark
+  evidence, and named maintainer approval.

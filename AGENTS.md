@@ -12,7 +12,7 @@ rules, skills, components, skins, and generated demo artifacts in sync.
 - Read `engine/PRODUCT-PRINCIPLES.md`, `engine/RULESETS.md`, `engine/ADAPTERS.md`,
   `engine/BRAND-RECIPES.md`, `engine/PALETTE-RECIPES.md`, and
   `engine/ARCHITECTURE.md` before changing product behavior.
-- Treat `engine/.claude/skills/` as the canonical source for all 22 StyleSeed
+- Treat `engine/.claude/skills/` as the canonical source for all 23 StyleSeed
   skills. `.agents/skills` is a repository-scoped Codex symlink to that same
   directory; never create a second copy of a skill there.
 - Claude Code invokes a skill as `/ss-setup`, `/ss-build`, and so on. Codex

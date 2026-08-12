@@ -79,7 +79,7 @@ geometry, containment, controls, collections, density, and motion.
 [![▶ Motion Gallery](https://img.shields.io/badge/▶_Motion_Gallery-Live-8B5CF6?style=for-the-badge&logoColor=white)](https://styleseed-demo.vercel.app/motion)
 
 ![74 design rules](https://badgen.net/badge/rules/74/8B5CF6)
-![22 skills](https://badgen.net/badge/skills/22/6C5CE7)
+![23 skills](https://badgen.net/badge/skills/23/6C5CE7)
 ![8 output grammars](https://badgen.net/badge/grammars/8/2563EB)
 ![5 adapters](https://badgen.net/badge/adapters/5/0F766E)
 ![9 brand recipes](https://badgen.net/badge/recipes/9/DB2777)
@@ -138,7 +138,7 @@ hash-verifiable project bundle &nbsp;·&nbsp;
 
 <br />
 
-[Easy Start](#easy-start-30-seconds) · [Studio](https://styleseed-demo.vercel.app/studio) · [Palettes](https://styleseed-demo.vercel.app/palettes) · [Claude Code UI guide](https://styleseed-demo.vercel.app/claude-code-ui-design) · [Codex UI guide](https://styleseed-demo.vercel.app/codex-ui-design) · [Brand recipes](https://styleseed-demo.vercel.app/recipes) · [Architecture](engine/ARCHITECTURE.md) · [Engine + Recipes + Skins](#how-it-works-engine--recipes--skins) · [Motion](#named-motion-system) · [Skills](#22-ai-powered-skills) · [Wiki](../../wiki) · [한국어](README-KR.md)
+[Easy Start](#easy-start-30-seconds) · [Studio](https://styleseed-demo.vercel.app/studio) · [Palettes](https://styleseed-demo.vercel.app/palettes) · [Claude Code UI guide](https://styleseed-demo.vercel.app/claude-code-ui-design) · [Codex UI guide](https://styleseed-demo.vercel.app/codex-ui-design) · [Brand recipes](https://styleseed-demo.vercel.app/recipes) · [Architecture](engine/ARCHITECTURE.md) · [Engine + Recipes + Skins](#how-it-works-engine--recipes--skins) · [Motion](#named-motion-system) · [Skills](#23-ai-powered-skills) · [Wiki](../../wiki) · [한국어](README-KR.md)
 
 <br />
 
@@ -176,13 +176,13 @@ agent  ▸  ✓ 88/100 — one accent, grey normal states, real empty/error stat
 > [`llms.txt`](https://styleseed-demo.vercel.app/llms.txt) gives any agent the portable routing
 > contract, but it cannot provide the same reproducible local compile by itself.
 
-**Want the 22 `ss-*` agent skills too** (optional automation: Studio, context resolver, grammar compiler, setup, build, review, score)?
+**Want the 23 `ss-*` agent skills too** (optional automation: Studio, context resolver, grammar compiler, setup, build, review, score, and private local learning)?
 
 ```bash
 npx skills add bitjaru/styleseed
 ```
-Installs all 22 canonical `ss-*` workflow skills into Claude Code, Codex, Cursor, Gemini CLI,
-Amp and more (the repository also exposes a standalone lightweight review skill). Then run
+Installs all 23 canonical `ss-*` workflow skills into Claude Code, Codex, Cursor, Gemini CLI,
+Amp and more. Then run
 `/ss-setup` → `/ss-resolve` in Claude Code or `$ss-setup` → `$ss-resolve` in Codex (you can
 also choose them from Codex's `/skills` picker). The resolver writes a targeted
 `.styleseed/effective-rules.md` bundle plus a source-hash manifest, so the agent does not need
@@ -273,7 +273,7 @@ Design data is the paint. Design judgment is knowing where to put it.
 **[See the before/after →](https://styleseed-demo.vercel.app/why)** — the same dashboard brief, generated generically vs. with the 74 rules applied. Every fix annotated with the rule behind it.
 
 StyleSeed is a **design-method engine** — 74 craft rules, 8 output grammars, 5 surface
-adapters, 48 components, a reference compiler, a named motion system, and 20 agent skills:
+adapters, 48 components, a reference compiler, a named motion system, and 23 agent skills:
 
 ```
 "The most refined black isn't #000 — it's #2A2A2A"
@@ -455,7 +455,7 @@ stop looking AI-made.
 ┌─────────────────────────────────────────────────┐
 │  StyleSeed Engine (brand-agnostic)              │
 │                                                 │
-│  74 rules · 8 grammars · 5 adapters · 22 skills │
+│  74 rules · 8 grammars · 5 adapters · 23 skills │
 │  Layout · Composition · Typography · UX · A11y  │
 └──────────────────────┬──────────────────────────┘
                        │
@@ -476,7 +476,7 @@ stop looking AI-made.
 - 74 visual design rules (layout, composition, rhythm, forbidden patterns)
 - 48 React components (32 primitives + 16 patterns)
 - A named motion system (5 seeds + a copy-paste keyword library)
-- 22 cross-agent skills (Studio, context compiler, reference compiler, setup, UI, motion, UX, accessibility)
+- 23 cross-agent skills (Studio, context compiler, reference compiler, setup, UI, motion, UX, accessibility, private local learning)
 - 8 maintained semantic palette recipes, with validated project overrides
 
 **Brand recipe** = how the artifact is shaped (morphology)
@@ -566,7 +566,7 @@ engine/
 ├── CLAUDE.md                 # AI reads this automatically
 ├── AGENTS.md                 # Codex and other AGENTS.md-compatible agents
 ├── DESIGN-LANGUAGE.md        # 74 visual design rules (brand-agnostic)
-├── .claude/skills/           # 20 canonical skills (Claude: /ss-*, Codex: $ss-*)
+├── .claude/skills/           # 23 canonical skills (Claude: /ss-*, Codex: $ss-*)
 │   ├── ss-setup/             #   Interactive setup wizard
 │   ├── ss-page/              #   Scaffold pages
 │   ├── ss-component/         #   Generate components
@@ -578,6 +578,7 @@ engine/
 │   ├── ss-lint/              #   Quick violation scan
 │   ├── ss-score/             #   Score UI 0-100 + fix list
 │   ├── ss-update/            #   Pull latest engine
+│   ├── ss-learn/             #   Capture private, reviewed design lessons
 │   ├── ss-flow/              #   Design user flows
 │   ├── ss-audit/             #   UX heuristic evaluation
 │   ├── ss-copy/              #   Generate microcopy
@@ -593,7 +594,7 @@ engine/
 └── scaffold/                 # Vite 6 + React 18 starter
 ```
 
-## 22 AI-Powered Skills
+## 23 AI-Powered Skills
 
 ### Setup
 | Skill | What It Does |
@@ -620,6 +621,7 @@ engine/
 | `/ss-score` | Score UI quality 0-100 with a category breakdown + prioritized fix list (reads the code) |
 | `/ss-verify` | **The visual gate** — render the screen, screenshot it, score what you *see* (dead whitespace, unloaded fonts, no focal, blank empty states), fix + re-render |
 | `/ss-update` | Pull latest engine updates — analyzes your project and updates safely |
+| `/ss-learn` | Capture a human-approved correction as a privacy-minimized local candidate; prepare an opt-in package without transmitting it |
 
 ### UX — Design It Right (No Designer Needed)
 | Skill | What It Does |
@@ -628,6 +630,14 @@ engine/
 | `/ss-audit` | Nielsen's 10 usability heuristics evaluation |
 | `/ss-copy` | Generate UX microcopy (buttons, errors, empty states, toasts) |
 | `/ss-feedback` | Add loading/success/error/empty states to any component |
+
+### Learn from accepted corrections, not users
+
+`/ss-learn` is deliberately opt-in and local-only. It records a generalized lesson only after a
+person asks for capture, then requires a separate human decision before acceptance and another
+approval before preparing a share package. Source code, prompts, screenshots, URLs, identities,
+brand tokens, and arbitrary extra fields are rejected. v1 has no upload transport and never changes
+core rules automatically.
 
 ### Example Workflow
 
@@ -679,7 +689,7 @@ React 18 · TypeScript · Tailwind CSS v4 · Radix UI · Vite 6 · Lucide Icons 
 |---|---|---|---|---|---|
 | Components | ✅ 48 | ✅ 50+ | ✅ | ✅ | ❌ |
 | Design **judgment** (when to use what) | ✅ 74 rules | ❌ | ❌ | Partial | ❌ |
-| Claude Code / Cursor integration | ✅ 22 skills | ❌ | ❌ | ❌ | — |
+| Claude Code / Cursor integration | ✅ 23 skills | ❌ | ❌ | ❌ | — |
 | Brand skins (Toss, Stripe, Linear...) | ✅ | ❌ | ❌ | ❌ | ❌ |
 | Price | Free (MIT) | Free | $299+ | Free | — |
 | Works *with* AI coding tools | ✅ | Indirect | Indirect | Indirect | — |

@@ -93,3 +93,11 @@ understand the job → choose or compile a grammar → lock bounded decisions
 
 The build method is the product. Scoring and verification are auxiliary gates: they find
 drift, but they never choose or rewrite the design philosophy after the fact.
+
+## Learning without surveillance
+
+StyleSeed may preserve a design lesson only when a person explicitly asks it to capture an
+accepted correction. The stored candidate contains generalized conditions, counterexamples, and
+measured evidence—not source code, prompts, screenshots, brand tokens, product identity, or user
+content. Local review and export approval are separate decisions. Preparing a package does not
+transmit it, and no candidate may automatically modify project or core rules.

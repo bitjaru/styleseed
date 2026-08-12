@@ -1,7 +1,7 @@
 # StyleSeed — Full Context
 
 Source: github.com/bitjaru/styleseed (constitution + grammars + adapters + compiler + craft)
-Generated: 2026-08-12T11:02:25.331Z
+Generated: 2026-08-12T11:20:49.376Z
 
 ---
 
@@ -100,6 +100,14 @@ understand the job → choose or compile a grammar → lock bounded decisions
 
 The build method is the product. Scoring and verification are auxiliary gates: they find
 drift, but they never choose or rewrite the design philosophy after the fact.
+
+## Learning without surveillance
+
+StyleSeed may preserve a design lesson only when a person explicitly asks it to capture an
+accepted correction. The stored candidate contains generalized conditions, counterexamples, and
+measured evidence—not source code, prompts, screenshots, brand tokens, product identity, or user
+content. Local review and export approval are separate decisions. Preparing a package does not
+transmit it, and no candidate may automatically modify project or core rules.
 
 
 ---
@@ -201,6 +209,9 @@ flowchart LR
   T -->|fix + re-record| G
   T --> U[Human acceptance<br/>named reviewer]
   U --> J[Designed output<br/>code · visual · temporal evidence]
+  U -->|explicit capture only| V[Local learning candidate<br/>generalized · privacy-minimized]
+  V --> W[Separate human review]
+  W -->|explicit export only| X2[Local share package<br/>no transport]
 ```
 
 ## Layers and authority
@@ -219,6 +230,7 @@ flowchart LR
 | Context compiler | Emit the selected method with provenance | deterministic bundle + manifest | silently invent or merge unknown IDs |
 | Build skills | Apply the compiled method | implementation | self-certify without evidence |
 | Score + verify | Detect code and pixel drift | fixes needed to comply | redefine the chosen method |
+| Local learning | Preserve a generalized, human-approved correction as candidate evidence | local capture, review, and opt-in packaging | scan projects, transmit raw material, or rewrite core rules automatically |
 
 ## Grammar sources
 
@@ -297,6 +309,9 @@ is the design engine; the composed method is.
   perceptual characters, gamut boundaries, and semantic contrast pairs.
 - Add a new aesthetic profile only when it is a full coordinated axis contract, not a mood word.
 - Keep components and skins downstream. They implement a decision; they do not decide.
+- Treat `ss-learn` output as candidate evidence only. Promote it to team or core rules only after
+  independent-project repetition, counterexamples, accessibility and grammar regressions, benchmark
+  evidence, and named maintainer approval.
 
 
 ---

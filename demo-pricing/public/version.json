@@ -2,7 +2,7 @@
   "version": "4.0.0",
   "released": "2026-08-06",
   "rules": 74,
-  "skills": 22,
+  "skills": 23,
   "skins": 7,
   "grammars": 8,
   "adapters": 5,
@@ -12,6 +12,6 @@
   "changelog": "https://github.com/bitjaru/styleseed/releases",
   "repo": "https://github.com/bitjaru/styleseed",
   "palettes": 8,
-  "revision": "sha256:5fa343a229051a647aff9b38d6df3a3580dbd3149fe026dfd5052515acf6283f",
-  "revisionFiles": 55
+  "revision": "sha256:01bce07f2ad3b4b8f48e382566afe961af72abc9c70e987d5b193e269ec8a1e0",
+  "revisionFiles": 60
 }

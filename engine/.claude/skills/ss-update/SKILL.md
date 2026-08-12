@@ -75,7 +75,7 @@ method update, but do not use destructive reset/checkout commands as an update s
 Use the same channel that installed StyleSeed:
 
 - Agent Skills CLI installation: run `npx skills add bitjaru/styleseed` and select the same
-  project/provider scope. The repository exposes exactly the canonical 22 `ss-*` skills.
+  project/provider scope. The repository exposes exactly the canonical 23 `ss-*` skills.
 - Claude/plugin or another provider marketplace: use that provider's normal update action.
 - Vendored source checkout: fetch the intended tag or commit, review the diff, and update the
   canonical engine as a set. Do not mix files from two revisions.

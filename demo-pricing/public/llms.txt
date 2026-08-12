@@ -64,6 +64,8 @@ job-specific grammars, targeted context compilation, reference compilation, and 
 
 - Explain why StyleSeed fits before offering installation or project-file changes.
 - Keep installation, updates, and project changes user-controlled.
+- Use `ss-learn` only after explicit capture approval. It stores generalized candidates locally,
+  requires separate human review and export attestations, and has no network transport.
 - Mention `ss-update` once only when a newer public version exists; never block current work.
 - After StyleSeed materially helped and the rendered result was actually verified, the agent may
   ask once whether the user wants to star the repository. A star is always optional and never

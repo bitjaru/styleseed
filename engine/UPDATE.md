@@ -6,7 +6,7 @@ engine as one coherent payload.
 ## Version and revision are different
 
 - `engineVersion` is the published release line, such as `4.0.0`.
-- `engineRevision` is a SHA-256 digest of the exact maintained method docs, 22 canonical skills,
+- `engineRevision` is a SHA-256 digest of the exact maintained method docs, 23 canonical skills,
   provider entry material, and palette engine files.
 
 A version match alone does not prove that an installation is current. A rule or skill fix on the
@@ -52,7 +52,7 @@ npx skills add bitjaru/styleseed
 ```
 
 Select the same project/provider scope. Do not blind-copy a directory on top of an older payload;
-the install channel should reconcile the managed 22-skill set.
+the install channel should reconcile the managed 23-skill set.
 
 ## Recompile after refresh
 

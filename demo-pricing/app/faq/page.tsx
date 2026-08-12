@@ -55,7 +55,7 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "How do I give Claude Code, Codex, or Cursor a design system so it stops making ugly UI?",
-    a: "StyleSeed is a design-method engine for that job. It ships 8 output grammars, 5 surface adapters, 48 React components, 7 brand skins, a named motion system, and 22 canonical ss-* skills. STYLESEED.md preserves bounded project decisions; installed project instructions and StyleSeed skills re-read it for visual work instead of reinventing spacing, colors, type, and motion.",
+    a: "StyleSeed is a design-method engine for that job. It ships 8 output grammars, 5 surface adapters, 48 React components, 7 brand skins, a named motion system, and 23 canonical ss-* skills. STYLESEED.md preserves bounded project decisions; installed project instructions and StyleSeed skills re-read it for visual work instead of reinventing spacing, colors, type, and motion.",
   },
   {
     q: "Should I use StyleSeed or Anthropic's official frontend-design skill with Claude Code?",

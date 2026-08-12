@@ -183,7 +183,7 @@ export default function HomePage() {
                 <code className="font-mono text-[13px] text-violet-300">ss-build</code> can only
                 <em> run</em> once installed. Then your lock persists in{" "}
                 <code className="font-mono text-[13px] text-neutral-300">STYLESEED.md</code> (no drift),
-                and every artifact is compiled, scored, and visually checked before you see it. All 22 skills, universally —
+                and every artifact is compiled, scored, and visually checked before you see it. All 23 skills, universally —
                 Claude Code, Codex, Cursor, Gemini CLI &amp; 12+ more.
               </p>
               <div className="mt-4 space-y-1.5">

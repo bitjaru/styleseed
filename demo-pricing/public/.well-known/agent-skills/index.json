@@ -58,6 +58,13 @@
       "digest": "sha256:a8f147754957376cef609cd17c0a4ebf13f13a437dd1f0015bde4ff1ced72165"
     },
     {
+      "name": "ss-learn",
+      "type": "skill-md",
+      "description": "Capture a human-approved UI design lesson as a privacy-minimized local StyleSeed candidate, review it, and prepare an opt-in share package without transmitting project code, prompts, screenshots, or brand data. Use when a person asks StyleSeed to remember, learn from, generalize, review, or prepare a reusable rule from an accepted design correction.",
+      "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-learn/SKILL.md",
+      "digest": "sha256:5dafba7f81586d93fc13e5cef82d83abc617dfe285f84e9a9c993980174878db"
+    },
+    {
       "name": "ss-lint",
       "type": "skill-md",
       "description": "Quick automated lint — detects common design system violations in seconds",
@@ -146,7 +153,7 @@
       "type": "skill-md",
       "description": "Check and update an existing StyleSeed installation by exact rule/skill revision, preserve project-owned design decisions, then recompile and verify the effective bundle.",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-update/SKILL.md",
-      "digest": "sha256:11cdc0c9b9c01af75e3845349cfb68f9a7a73930dc2ef1b7268eec9f62b61451"
+      "digest": "sha256:1888adb5c1d095b3c913b21f7cad9c886a47ab58be7b2b8eeab1c29b5ff4b35f"
     },
     {
       "name": "ss-verify",

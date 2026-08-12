@@ -3,6 +3,17 @@
 All notable changes to StyleSeed. Agents can check the latest version at
 [version.json](https://styleseed-demo.vercel.app/version.json) and run `/ss-update`.
 
+## Unreleased
+
+### Added
+
+- `/ss-learn`, an opt-in local workflow that turns a human-approved design correction into a
+  generalized, content-addressed candidate with applicability, counterexamples, measured evidence,
+  and immutable review history.
+- A fail-closed privacy contract: raw project material is rejected, local learning files are ignored
+  from Git, accepted candidates require separate review and export attestations, and v1 prepares a
+  local package without any network transport or automatic rule promotion.
+
 ## [4.0.0] — 2026-08-06
 
 **Theme: from design rules to directed, working scenes.** StyleSeed now handles the creative

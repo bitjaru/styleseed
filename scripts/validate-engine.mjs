@@ -19,11 +19,12 @@ assert(!existsSync(resolve(root, "skills/styleseed-design-review/SKILL.md")), "l
 const skillsDir = resolve(root, "engine/.claude/skills");
 const skills = readdirSync(skillsDir, { withFileTypes: true })
   .filter((entry) => entry.isDirectory() && entry.name.startsWith("ss-") && existsSync(resolve(skillsDir, entry.name, "SKILL.md")));
-assert(skills.length === 22, `expected 22 canonical skills, found ${skills.length}`);
+assert(skills.length === 23, `expected 23 canonical skills, found ${skills.length}`);
 assert(publicVersion.skills === skills.length, `version.json skills ${publicVersion.skills} != ${skills.length}`);
 assert(skills.some((entry) => entry.name === "ss-reference"), "ss-reference is missing");
 assert(skills.some((entry) => entry.name === "ss-resolve"), "ss-resolve is missing");
 assert(skills.some((entry) => entry.name === "ss-studio"), "ss-studio is missing");
+assert(skills.some((entry) => entry.name === "ss-learn"), "ss-learn is missing");
 
 const bridge = resolve(root, ".agents/skills");
 assert(existsSync(bridge) && lstatSync(bridge).isSymbolicLink(), ".agents/skills must be the canonical symlink");
@@ -204,6 +205,91 @@ try {
   rmSync(smokeRoot, { recursive: true, force: true });
 }
 
+const learningRoot = mkdtempSync(join(tmpdir(), "styleseed-learn-"));
+try {
+  const learning = resolve(root, "engine/.claude/skills/ss-learn/scripts/learning.mjs");
+  const learningSource = read("engine/.claude/skills/ss-learn/scripts/learning.mjs");
+  assert(!/\bfetch\s*\(|node:https?|https?\.request|child_process/.test(learningSource), "ss-learn v1 must not contain a network or subprocess transport");
+  assert(existsSync(resolve(root, "engine/.claude/skills/ss-learn/references/candidate.schema.json")), "ss-learn candidate schema is missing");
+  assert(existsSync(resolve(root, "engine/.claude/skills/ss-learn/agents/openai.yaml")), "ss-learn Codex UI metadata is missing");
+
+  const init = spawnSync(process.execPath, [learning, "init", "--project-root", learningRoot], { encoding: "utf8" });
+  assert(init.status === 0, `ss-learn init failed: ${init.stderr || init.stdout}`);
+  assert(readFileSync(resolve(learningRoot, ".styleseed/learning/.gitignore"), "utf8") === "*\n!.gitignore\n", "ss-learn local records are not fail-closed from Git");
+  const inputPath = resolve(learningRoot, "candidate-input.json");
+  writeFileSync(inputPath, JSON.stringify({
+    schemaVersion: 1,
+    title: "Persistent navigation needs bounded focus continuity",
+    context: {
+      grammar: "operations-console",
+      adapter: "product-ui",
+      domain: "saas",
+      page: "dashboard",
+      recipe: "enterprise-workbench",
+      palette: "cobalt-instrument",
+      profile: "swiss",
+    },
+    learning: {
+      problem: "Replacing the full workspace during a focus transition removed task context and made reversal uncertain.",
+      intervention: "Transform one persistent navigation object while keeping the selected task identity and return state visible.",
+      rationale: "Continuity lowers reorientation cost while preserving a single focal action during the temporary mode.",
+      appliesWhen: ["A temporary mode narrows attention without changing the underlying task."],
+      avoidWhen: ["The destination is a separate task with no meaningful return state."],
+    },
+    evidence: {
+      beforeScore: 68,
+      afterScore: 84,
+      visualVerification: "verified",
+      repeatCount: 2,
+      artifactHashes: [`sha256:${"0".repeat(64)}`],
+    },
+  }, null, 2));
+  const capture = spawnSync(process.execPath, [learning, "capture", "--project-root", learningRoot, "--input", inputPath], { encoding: "utf8" });
+  assert(capture.status === 0, `ss-learn capture failed: ${capture.stderr || capture.stdout}`);
+  if (capture.status === 0) {
+    const captureResult = JSON.parse(capture.stdout);
+    const candidate = JSON.parse(readFileSync(captureResult.path, "utf8"));
+    assert(candidate.status === "draft", "ss-learn capture must remain draft before human review");
+    assert(candidate.privacy.networkTransmission === false, "ss-learn candidate must record zero transmission");
+    assert(candidate.engine.revision === catalog.engineRevision, "ss-learn candidate omitted the engine revision");
+    assert(/^sha256:[0-9a-f]{64}$/.test(candidate.recordHash), "ss-learn candidate record hash is invalid");
+
+    const prematureShare = spawnSync(process.execPath, [learning, "prepare-share", "--project-root", learningRoot, "--id", candidate.id, "--purpose", "team-registry", "--attestation", "APPROVE_LOCAL_EXPORT"], { encoding: "utf8" });
+    assert(prematureShare.status !== 0, "ss-learn must reject export before local review");
+    const review = spawnSync(process.execPath, [learning, "review", "--project-root", learningRoot, "--id", candidate.id, "--decision", "accepted", "--reviewer", "validator", "--reason", "The measured correction repeated and its applicability boundary is explicit.", "--attestation", "APPROVE_LOCAL_REVIEW"], { encoding: "utf8" });
+    assert(review.status === 0, `ss-learn review failed: ${review.stderr || review.stdout}`);
+    const repeatReview = spawnSync(process.execPath, [learning, "review", "--project-root", learningRoot, "--id", candidate.id, "--decision", "rejected", "--reviewer", "validator", "--reason", "A second decision must not rewrite the accepted record.", "--attestation", "APPROVE_LOCAL_REVIEW"], { encoding: "utf8" });
+    assert(repeatReview.status !== 0, "ss-learn must keep a final review immutable");
+    const prepared = spawnSync(process.execPath, [learning, "prepare-share", "--project-root", learningRoot, "--id", candidate.id, "--purpose", "team-registry", "--attestation", "APPROVE_LOCAL_EXPORT"], { encoding: "utf8" });
+    assert(prepared.status === 0, `ss-learn share preparation failed: ${prepared.stderr || prepared.stdout}`);
+    if (prepared.status === 0) {
+      const preparedResult = JSON.parse(prepared.stdout);
+      const share = JSON.parse(readFileSync(preparedResult.path, "utf8"));
+      const shareText = JSON.stringify(share);
+      assert(share.transmission.performed === false && share.transmission.transport === "none", "ss-learn package must not claim transmission");
+      assert(!shareText.includes("reviewer") && !shareText.includes(learningRoot), "ss-learn package leaked local review identity or path");
+      assert(/^sha256:[0-9a-f]{64}$/.test(share.packageHash), "ss-learn package hash is invalid");
+      assert(/^sha256:[0-9a-f]{64}$/.test(share.approval.localReviewHash), "ss-learn package omitted the local review hash");
+    }
+
+    const acceptedPath = resolve(learningRoot, ".styleseed/learning/candidates", `${candidate.id}.json`);
+    const tampered = JSON.parse(readFileSync(acceptedPath, "utf8"));
+    tampered.learning.rationale = "This unreviewed replacement must invalidate the captured design lesson before any other export.";
+    writeFileSync(acceptedPath, JSON.stringify(tampered));
+    const tamperedShare = spawnSync(process.execPath, [learning, "prepare-share", "--project-root", learningRoot, "--id", candidate.id, "--purpose", "community-candidate", "--attestation", "APPROVE_LOCAL_EXPORT"], { encoding: "utf8" });
+    assert(tamperedShare.status !== 0, "ss-learn must reject a candidate modified after capture");
+  }
+
+  const unsafePath = resolve(learningRoot, "unsafe-input.json");
+  const unsafeInput = JSON.parse(readFileSync(inputPath, "utf8"));
+  unsafeInput.learning.problem = "Contact design-owner@example.test because this correction includes private identity material.";
+  writeFileSync(unsafePath, JSON.stringify(unsafeInput));
+  const unsafeCapture = spawnSync(process.execPath, [learning, "capture", "--project-root", learningRoot, "--input", unsafePath], { encoding: "utf8" });
+  assert(unsafeCapture.status !== 0, "ss-learn privacy scanner must reject email addresses");
+} finally {
+  rmSync(learningRoot, { recursive: true, force: true });
+}
+
 const studioRoot = mkdtempSync(join(tmpdir(), "styleseed-studio-"));
 try {
   const studio = resolve(root, "engine/.claude/skills/ss-studio/scripts/studio-run.mjs");
@@ -250,7 +336,7 @@ try {
 }
 
 for (const path of ["README.md", "README-KR.md", "demo-pricing/app/_home/hero.tsx", "demo-pricing/app/page.tsx"]) {
-  assert(read(path).includes("22"), `${path} does not expose the 22-skill release`);
+  assert(read(path).includes("23"), `${path} does not expose the 23-skill release`);
 }
 
 if (failures.length) {
@@ -259,4 +345,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log(`StyleSeed ${version}: 8 grammars · 9 recipes · 8 palettes · 5 adapters · 22 skills · Studio + context compiler verified`);
+console.log(`StyleSeed ${version}: 8 grammars · 9 recipes · 8 palettes · 5 adapters · 23 skills · Studio + context compiler + private local learning verified`);

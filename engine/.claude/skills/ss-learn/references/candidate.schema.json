@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:styleseed:learning-candidate:v1",
+  "title": "StyleSeed local learning candidate",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "title", "context", "learning", "evidence"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "title": { "type": "string", "minLength": 8, "maxLength": 120 },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["grammar", "adapter", "domain", "page", "recipe", "palette", "profile"],
+      "properties": {
+        "grammar": { "type": "string" },
+        "adapter": { "type": "string" },
+        "domain": { "type": "string" },
+        "page": { "type": "string" },
+        "recipe": { "type": "string" },
+        "palette": { "type": "string" },
+        "profile": { "type": "string" }
+      }
+    },
+    "learning": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["problem", "intervention", "rationale", "appliesWhen", "avoidWhen"],
+      "properties": {
+        "problem": { "type": "string", "minLength": 12, "maxLength": 600 },
+        "intervention": { "type": "string", "minLength": 12, "maxLength": 600 },
+        "rationale": { "type": "string", "minLength": 12, "maxLength": 600 },
+        "appliesWhen": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "items": { "type": "string", "minLength": 4, "maxLength": 180 }
+        },
+        "avoidWhen": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "items": { "type": "string", "minLength": 4, "maxLength": 180 }
+        }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["beforeScore", "afterScore", "visualVerification", "repeatCount", "artifactHashes"],
+      "properties": {
+        "beforeScore": { "type": ["integer", "null"], "minimum": 0, "maximum": 100 },
+        "afterScore": { "type": ["integer", "null"], "minimum": 0, "maximum": 100 },
+        "visualVerification": { "enum": ["verified", "failed", "not-run"] },
+        "repeatCount": { "type": "integer", "minimum": 1, "maximum": 1000 },
+        "artifactHashes": {
+          "type": "array",
+          "maxItems": 12,
+          "items": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+        }
+      }
+    }
+  }
+}

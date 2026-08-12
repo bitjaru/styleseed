@@ -6,6 +6,9 @@ type Version = {
   version: string;
   released: string;
   whatsNew: string;
+  revision?: string;
+  revisionFiles?: number;
+  revisionReleased?: string;
   rules: number;
   skills: number;
   skins: number;
@@ -38,8 +41,17 @@ export function WhatsNew() {
               {v.released} · {v.rules} rules · {v.grammars ?? 0} grammars · {v.recipes ?? 0} recipes · {v.adapters ?? 0} adapters · {v.skills} skills
             </span>
           </div>
+          {v.revision ? (
+            <div className="mt-2 font-mono text-[12px] text-neutral-500">
+              Latest revision {v.revision.slice(0, 18)}… · {v.revisionFiles ?? 0} maintained files
+              {v.revisionReleased ? ` · ${v.revisionReleased}` : ""}
+            </div>
+          ) : null}
           <p className="mt-3 text-[15px] leading-relaxed text-neutral-700">{v.whatsNew}</p>
           <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-[14px] font-semibold">
+            <a href="/learn" className="inline-flex items-center gap-1 text-emerald-800 hover:text-emerald-950">
+              Private learning <ArrowRight size={13} />
+            </a>
             <a
               href="https://github.com/bitjaru/styleseed/releases"
               target="_blank"
@@ -57,7 +69,7 @@ export function WhatsNew() {
               Full changelog
             </a>
             <span className="text-neutral-500">
-              Update with <code className="rounded bg-neutral-200 px-1.5 py-0.5 text-[13px] text-neutral-800">/ss-update</code>
+              Update with <code className="rounded bg-neutral-200 px-1.5 py-0.5 text-[13px] text-neutral-800">/ss-update · $ss-update</code>
             </span>
           </div>
         </div>

@@ -11,7 +11,7 @@ const inter = Inter({
 const SITE_URL = "https://styleseed-demo.vercel.app";
 const SITE_NAME = "StyleSeed";
 const SITE_DESC =
-  "Open-source AI design-method engine for Claude Code, Codex, and Cursor — directed concepts, 8 output grammars, 9 brand recipes, a key-color OKLCH palette generator, generated-media plans, and verified working interactions.";
+  "Open-source AI design-method engine for Claude Code, Codex, and Cursor — directed concepts, semantic palettes, verified working interactions, privacy-minimized local learning, and revision-safe updates.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -37,6 +37,8 @@ export const metadata: Metadata = {
     "AI interaction design",
     "Claude Code design skill",
     "Codex design skill",
+    "AI design rule learning",
+    "privacy preserving design system",
     "Toss design",
     "design tokens",
     "디자인 시스템",
@@ -120,7 +122,7 @@ export default function RootLayout({
         isPartOf: { "@id": `${SITE_URL}/#website` },
         dateModified: "2026-08-12",
         keywords:
-          "design method for AI, Claude Code, Cursor, Codex, output grammars, semantic palette, interaction design, generated media, reference compiler, AI UI, carousel design, vibe coding, design judgment",
+          "design method for AI, Claude Code, Cursor, Codex, output grammars, semantic palette, interaction design, private local learning, revision-safe updates, reference compiler, AI UI, vibe coding, design judgment",
         sameAs: SAME_AS,
       },
       {
@@ -147,6 +149,7 @@ export default function RootLayout({
           { "@id": `${SITE_URL}/recipes#page` },
           { "@id": `${SITE_URL}/studio#page` },
           { "@id": `${SITE_URL}/palettes#page` },
+          { "@id": `${SITE_URL}/learn#article` },
         ],
       },
     ],

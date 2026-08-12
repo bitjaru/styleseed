@@ -7,6 +7,8 @@ All notable changes to StyleSeed. Agents can check the latest version at
 
 ### Added
 
+- Public v4 revision pages and copy for private local learning, one-time MCP exposure, exact
+  revision-aware updates, and the validated-but-not-yet-public Codex plugin package boundary.
 - `/ss-learn`, an opt-in local workflow that turns a human-approved design correction into a
   generalized, content-addressed candidate with applicability, counterexamples, measured evidence,
   and immutable review history.

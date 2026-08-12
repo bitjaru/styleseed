@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900" role="img" aria-labelledby="title desc">
   <title id="title">StyleSeed engine architecture</title>
-  <desc id="desc">Product intent and references flow through a three-direction Studio selection, then output grammar, surface adapter, brand recipe, semantic palette, and project choices compile into effective rules before working prototype, code, pixel, temporal, and human verification.</desc>
+  <desc id="desc">Product intent and references flow through Studio and context compilation before working prototype and evidence gates. Human-approved corrections may become private local candidates, while exact engine revisions keep updates detectable without overwriting project decisions.</desc>
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#F7F7FB"/><stop offset="1" stop-color="#EEF4FF"/></linearGradient>
     <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="8" stdDeviation="14" flood-color="#172033" flood-opacity=".08"/></filter>
@@ -11,7 +11,7 @@
   </defs>
   <rect width="1440" height="900" rx="32" fill="url(#bg)"/>
   <text class="t h" x="80" y="75">StyleSeed engine architecture</text>
-  <text class="t sub" x="80" y="108">Fixed judgment, directed concepts, semantic palettes, working interactions, and four evidence gates.</text>
+  <text class="t sub" x="80" y="108">Fixed judgment, directed concepts, private learning, exact revisions, and four evidence gates.</text>
 
   <text class="t k violet" x="80" y="170">01 · UNDERSTAND</text>
   <rect class="box" x="80" y="190" width="250" height="135" rx="18"/>
@@ -54,8 +54,9 @@
   <path class="loop" d="M1140 514H1100V615H1250V555"/>
 
   <rect x="80" y="650" width="1280" height="165" rx="22" fill="white" stroke="#D9DEEA"/>
-  <text class="t k muted" x="110" y="690">HUMAN + AUTHORITY BOUNDARY</text>
-  <text class="t bh" x="110" y="728">A human selects the direction and accepts the working result.</text>
-  <text class="t bd" x="110" y="758">The lock stores decisions; it cannot waive coherence, accessibility, semantic meaning, provenance, or task fitness.</text>
-  <text class="t bd" x="110" y="785">Generated media supports the interface. It never fakes an interaction that the prototype cannot perform.</text>
+  <text class="t k muted" x="110" y="685">HUMAN + AUTHORITY BOUNDARY</text>
+  <text class="t bh" x="110" y="720">A human selects the direction, accepts the result, and separately reviews any local lesson.</text>
+  <text class="t bd" x="110" y="750">ss-learn stores a privacy-minimized candidate only on request; it never scans, uploads, or promotes itself.</text>
+  <text class="t bd" x="110" y="775">engineRevision binds the maintained payload; ss-update preserves project-owned code, assets, tokens, and locks.</text>
+  <text class="t bd" x="110" y="800">The lock still cannot waive coherence, accessibility, semantic meaning, provenance, or task fitness.</text>
 </svg>

@@ -142,6 +142,59 @@ export default function HomePage() {
           </div>
         </section>
 
+        <section className="border-t border-neutral-200 bg-white">
+          <div className="mx-auto max-w-6xl px-6 py-20">
+            <div className="max-w-3xl">
+              <div className="text-[11px] font-bold uppercase tracking-widest text-emerald-700">Latest v4 revision</div>
+              <h2 className="mt-2 text-[clamp(28px,4vw,42px)] font-bold leading-tight tracking-tight">
+                The method can learn.<br />Updates stay exact.
+              </h2>
+              <p className="mt-4 text-[15px] leading-relaxed text-neutral-600">
+                A human-approved correction can now become a privacy-minimized local candidate.
+                Separately, every maintained engine payload carries an exact revision hash, so a
+                same-version rule or skill fix is still detectable without overwriting project code.
+              </p>
+            </div>
+
+            <div className="mt-9 grid gap-4 lg:grid-cols-3">
+              <article className="border border-neutral-200 bg-[#F4F6F3] p-6">
+                <div className="font-mono text-[11px] font-bold text-emerald-700">$ss-learn</div>
+                <h3 className="mt-5 text-xl font-bold tracking-tight">Human-approved learning</h3>
+                <p className="mt-2 text-[14px] leading-relaxed text-neutral-600">
+                  Capture only on request, review separately, strip project identity, and keep the
+                  result local. A candidate never edits team or core rules automatically.
+                </p>
+                <Link href="/learn" className="mt-5 inline-flex items-center gap-1.5 text-[14px] font-bold text-emerald-800 hover:underline">
+                  See the privacy boundary <ArrowRight size={14} />
+                </Link>
+              </article>
+              <article className="border border-neutral-200 bg-neutral-950 p-6 text-white">
+                <div className="font-mono text-[11px] font-bold text-violet-300">engineRevision</div>
+                <h3 className="mt-5 text-xl font-bold tracking-tight">Same version, exact payload</h3>
+                <p className="mt-2 text-[14px] leading-relaxed text-neutral-400">
+                  <code className="text-neutral-200">$ss-update</code> compares the installed,
+                  project-recorded, and published revision before refresh and re-resolution.
+                </p>
+                <Link href="/architecture" className="mt-5 inline-flex items-center gap-1.5 text-[14px] font-bold text-violet-300 hover:underline">
+                  Read the update architecture <ArrowRight size={14} />
+                </Link>
+              </article>
+              <article className="border border-neutral-200 bg-[#F7F7FB] p-6">
+                <div className="font-mono text-[11px] font-bold text-violet-700">Codex package</div>
+                <h3 className="mt-5 text-xl font-bold tracking-tight">23 skills, one approved bridge</h3>
+                <p className="mt-2 text-[14px] leading-relaxed text-neutral-600">
+                  The repository includes a validated Codex plugin package and a local MCP bridge.
+                  Public installation remains <code>npx skills add bitjaru/styleseed</code> until a
+                  plugin-directory release is independently verified.
+                </p>
+                <Link href="/codex-ui-design" className="mt-5 inline-flex items-center gap-1.5 text-[14px] font-bold text-violet-700 hover:underline">
+                  Open the Codex guide <ArrowRight size={14} />
+                </Link>
+              </article>
+            </div>
+          </div>
+        </section>
+
         {/* Get started — the first thing a visitor needs: how to use it */}
         <section id="get-started" className="scroll-mt-20 border-t border-neutral-200 bg-neutral-900 text-white">
           <div className="mx-auto max-w-6xl px-6 py-16">
@@ -573,6 +626,9 @@ export default function HomePage() {
             </Link>
             <Link href="/interactions" className="text-neutral-300 hover:text-white">
               Interaction gallery
+            </Link>
+            <Link href="/learn" className="text-neutral-300 hover:text-white">
+              Private learning
             </Link>
             <Link href="/gallery" className="text-neutral-300 hover:text-white">
               Component gallery

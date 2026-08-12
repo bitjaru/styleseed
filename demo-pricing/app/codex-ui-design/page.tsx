@@ -15,7 +15,7 @@ import {
 const BASE = "https://styleseed-demo.vercel.app";
 const URL = `${BASE}/codex-ui-design`;
 const DESCRIPTION =
-  "A practical workflow for making Codex generate polished, consistent UI with AGENTS.md, targeted context compilation, project-local design decisions, code scoring, and rendered visual verification.";
+  "A practical Codex UI workflow with AGENTS.md, targeted context compilation, private human-approved learning, exact revision updates, code scoring, and rendered visual verification.";
 
 export const metadata: Metadata = {
   title: "How to make Codex generate better UI design",
@@ -27,6 +27,8 @@ export const metadata: Metadata = {
     "Codex AGENTS.md design rules",
     "Codex design system",
     "Codex vibe coding UI",
+    "Codex design learning MCP",
+    "Codex plugin StyleSeed",
     "코덱스 UI 디자인",
     "Codex 예쁘게 코딩",
   ],
@@ -80,6 +82,11 @@ const WORKFLOW = [
     title: "Build, inspect code and pixels",
     body: "Run $ss-build with real content, score the implementation, then use $ss-verify to render required viewports. Repeat until both the code gate and visible result hold.",
   },
+  {
+    n: "06",
+    title: "Preserve an accepted correction",
+    body: "Only when a person asks, $ss-learn can turn the approved correction into a privacy-minimized local candidate. It never scans the project or promotes itself.",
+  },
 ];
 
 const MAPPING = [
@@ -90,7 +97,8 @@ const MAPPING = [
   ["Build the selected method", "$ss-build"],
   ["Deterministic code gate", "$ss-score ≥80"],
   ["Rendered visual gate", "$ss-verify"],
-  ["Intentional engine update", "$ss-update"],
+  ["Human-approved local lesson", "$ss-learn"],
+  ["Exact engine revision update", "$ss-update"],
 ];
 
 const FAQ = [
@@ -108,7 +116,15 @@ const FAQ = [
   },
   {
     q: "How does StyleSeed handle updates in Codex?",
-    a: "On the first StyleSeed use in a project, Codex may compare the local engine version with the public version endpoint. It only mentions $ss-update when a newer version exists, suggests it once, and never blocks the current task.",
+    a: "StyleSeed compares the installed engineRevision, the revision recorded in the project manifest, and the published revision. A same-version rule or skill fix is still detectable. $ss-update refreshes through the original install channel, re-resolves STYLESEED.md, and checks the result without replacing project-owned code, tokens, assets, or decisions.",
+  },
+  {
+    q: "Can Codex teach StyleSeed a design correction?",
+    a: "Only after an explicit human request. $ss-learn captures a generalized local candidate, requires a separate review, strips project identity from any prepared package, and never promotes the result automatically. The optional local MCP bridge consumes a one-time grant before one exact package becomes visible to the connected Codex client and model.",
+  },
+  {
+    q: "Can I install StyleSeed from the public Codex plugin directory?",
+    a: "Not yet. The repository includes a validated Codex plugin package with 23 skills and an approval-gated local MCP bridge, but public plugin-directory release is not claimed. Use npx skills add bitjaru/styleseed as the released portable installation path.",
   },
   {
     q: "Will StyleSeed ask me to star the repository?",
@@ -127,11 +143,11 @@ export default function CodexUiDesignPage() {
         headline: "How to make Codex generate better UI design",
         description: DESCRIPTION,
         datePublished: "2026-07-20",
-        dateModified: "2026-07-31",
+        dateModified: "2026-08-12",
         author: { "@id": `${BASE}/#organization` },
         publisher: { "@id": `${BASE}/#organization` },
         isPartOf: { "@id": `${BASE}/#website` },
-        about: ["OpenAI Codex", "AI-generated user interfaces", "AGENTS.md", "agent skills", "visual verification"],
+        about: ["OpenAI Codex", "AI-generated user interfaces", "AGENTS.md", "agent skills", "private design learning", "engine revisions", "visual verification"],
         citation: [
           "https://developers.openai.com/codex/use-cases",
           "https://github.com/bitjaru/styleseed",
@@ -202,7 +218,7 @@ export default function CodexUiDesignPage() {
       </section>
 
       <section className="mx-auto max-w-6xl px-6 py-16">
-        <div className="grid gap-px overflow-hidden border border-neutral-950/15 bg-neutral-950/15 lg:grid-cols-5">
+        <div className="grid gap-px overflow-hidden border border-neutral-950/15 bg-neutral-950/15 md:grid-cols-2 xl:grid-cols-6">
           {WORKFLOW.map((step) => (
             <article key={step.n} className="bg-[#FBFCFA] p-6">
               <div className="font-mono text-[11px] font-bold text-emerald-700">{step.n}</div>
@@ -241,7 +257,9 @@ export default function CodexUiDesignPage() {
           <h2 className="mt-3 text-4xl font-black leading-tight tracking-[-0.04em]">One engine. Codex-native calls.</h2>
           <p className="mt-4 text-sm leading-relaxed text-neutral-600">
             Installation and file changes stay user-controlled. Once approved, the repository
-            context and project lock let later Codex sessions reuse valid decisions.
+            context and project lock let later Codex sessions reuse valid decisions. The released
+            portable path is the Agent Skills CLI; the validated Codex plugin package remains a
+            local package boundary until a public directory release is independently verified.
           </p>
         </div>
         <div>
@@ -251,13 +269,14 @@ export default function CodexUiDesignPage() {
             <span className="text-neutral-500">$</span> $ss-resolve<br />
             <span className="text-neutral-500">$</span> $ss-build<br />
             <span className="text-neutral-500">$</span> $ss-score<br />
-            <span className="text-neutral-500">$</span> $ss-verify
+            <span className="text-neutral-500">$</span> $ss-verify<br />
+            <span className="text-neutral-500">$</span> $ss-learn <span className="text-neutral-500"># only after an accepted correction</span>
           </div>
           <div className="mt-4 grid gap-3 sm:grid-cols-4">
             <Signal icon={FileText} title="Repository-aware" body="AGENTS.md owns durable guidance." />
             <Signal icon={GitBranch} title="Reusable" body="STYLESEED.md carries decisions." />
-            <Signal icon={RefreshCw} title="Update-aware" body="Checks once and only when useful." />
-            <Signal icon={ShieldCheck} title="User-controlled" body="No install, update, or star is required." />
+            <Signal icon={RefreshCw} title="Revision-aware" body="Same-version fixes remain detectable." />
+            <Signal icon={ShieldCheck} title="Approval-gated" body="Learning, MCP exposure, and promotion stay separate." />
           </div>
         </div>
       </section>
@@ -281,8 +300,9 @@ export default function CodexUiDesignPage() {
             <p className="mt-3 text-[15px] leading-relaxed text-neutral-700">
               저장소의 AGENTS.md에 디자인 방법을 두고, 프로젝트 결정을 STYLESEED.md에
               고정한 뒤, $ss-resolve로 필요한 규칙만 컴파일하고 $ss-score와
-              $ss-verify로 코드와 실제 화면을 함께 검사합니다.
-              StyleSeed는 이 과정을 Codex가 다시 사용할 수 있는 작업 흐름으로 제공합니다.
+              $ss-verify로 코드와 실제 화면을 함께 검사합니다. 사람이 채택한 교정은 명시적으로
+              요청한 경우에만 $ss-learn의 로컬 후보가 되며, $ss-update는 버전뿐 아니라 정확한
+              revision을 비교합니다. StyleSeed는 이 과정을 Codex가 다시 사용할 수 있는 작업 흐름으로 제공합니다.
             </p>
           </div>
 

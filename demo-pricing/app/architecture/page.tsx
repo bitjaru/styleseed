@@ -4,7 +4,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 
 const BASE = "https://styleseed-demo.vercel.app";
 const DESCRIPTION =
-  "How StyleSeed Studio turns a brief into three directions, then compiles fixed AI design judgment, output grammar, morphology, semantic palette, generated-media plans, and interaction scenes before code, pixel, temporal, and human verification.";
+  "How StyleSeed compiles directed concepts, grammar, morphology, semantic color, and interaction plans; verifies the result; preserves human-approved lessons locally; and updates the exact engine revision without overwriting project decisions.";
 
 export const metadata: Metadata = {
   title: "StyleSeed engine architecture — AI design grammar compiler",
@@ -17,6 +17,8 @@ export const metadata: Metadata = {
     "StyleSeed architecture",
     "AI interaction design pipeline",
     "semantic color palette system",
+    "private AI design learning",
+    "revision-safe design system updates",
   ],
   alternates: { canonical: `${BASE}/architecture` },
   openGraph: {
@@ -53,6 +55,8 @@ const layers = [
   ["Context compiler", "ss-resolve emits only the selected 10–20KB method plus a manifest of selections, source hashes, and bundle hash."],
   ["Build method", "The agent implements real product content from effective-rules.md instead of reassembling the full handbook."],
   ["Evidence gates", "Code and pixel checks find structural and rendered drift; temporal evidence proves the interaction, and a named human accepts the result."],
+  ["Local learning", "ss-learn preserves an explicitly requested, human-approved correction as a privacy-minimized candidate; it cannot scan a project or promote itself."],
+  ["Revision ledger", "engineRevision hashes the maintained method, skills, plugin boundary, MCP bridge, and palette engine so same-version fixes remain detectable."],
 ];
 
 export default function ArchitecturePage() {
@@ -67,7 +71,7 @@ export default function ArchitecturePage() {
         description: DESCRIPTION,
         image: `${BASE}/styleseed-architecture.svg`,
         datePublished: "2026-07-18",
-        dateModified: "2026-08-06",
+        dateModified: "2026-08-12",
         author: { "@type": "Organization", name: "StyleSeed", url: BASE },
         isPartOf: { "@id": `${BASE}/#website` },
         about: [
@@ -78,6 +82,8 @@ export default function ArchitecturePage() {
           "semantic palettes",
           "interaction scenes",
           "generated media",
+          "private local learning",
+          "engine revision",
           "reference compiler",
           "context compiler",
         ],
@@ -118,8 +124,11 @@ export default function ArchitecturePage() {
             the user&rsquo;s references. A separate brand recipe selects morphology rather than
             color. A palette recipe binds semantic color roles and generated-media anchors. Studio
             adds three directed concepts, a human decision, and executable interaction/media plans.
-            Then <code>ss-resolve</code> hands the agent only the
-            selected method and a source-hash manifest before the right renderer takes over.
+            Then <code>ss-resolve</code> hands the agent only the selected method and a source-hash
+            manifest before the right renderer takes over. After a person accepts a correction,
+            <code> ss-learn</code> can preserve a generalized local candidate without turning it into
+            authority. The exact <code>engineRevision</code> makes later fixes detectable even when
+            the release line still says 4.0.0.
           </p>
         </div>
 
@@ -129,7 +138,7 @@ export default function ArchitecturePage() {
         <section className="mt-16 grid gap-4 md:grid-cols-2">
           {layers.map(([title, body], index) => (
             <article key={title} className="rounded-2xl bg-white p-6 ring-1 ring-neutral-200">
-              <div className="text-[11px] font-bold uppercase tracking-widest text-violet-600">0{index + 1}</div>
+              <div className="text-[11px] font-bold uppercase tracking-widest text-violet-600">{String(index + 1).padStart(2, "0")}</div>
               <h2 className="mt-2 text-[20px] font-bold">{title}</h2>
               <p className="mt-2 text-[15px] leading-relaxed text-neutral-600">{body}</p>
             </article>
@@ -166,6 +175,33 @@ export default function ArchitecturePage() {
           <a href="https://github.com/bitjaru/styleseed/blob/main/engine/ARCHITECTURE.md" className="mt-7 inline-flex items-center gap-1.5 rounded-xl bg-white px-5 py-3 text-[14px] font-bold text-neutral-950">
             Read the technical document <ArrowRight size={14} />
           </a>
+        </section>
+
+        <section className="mt-8 grid gap-4 lg:grid-cols-2">
+          <article className="border border-neutral-200 bg-white p-8 md:p-10">
+            <div className="text-[11px] font-bold uppercase tracking-widest text-emerald-700">Accepted result → candidate</div>
+            <h2 className="mt-3 text-[clamp(26px,4vw,36px)] font-bold tracking-tight">Learning stays local and reviewable.</h2>
+            <p className="mt-3 text-[15px] leading-relaxed text-neutral-600">
+              <code>ss-learn</code> runs only on explicit request. It rejects project code,
+              screenshots, prompts, identity, local paths, and brand secrets; records bounded
+              applicability and counterexamples; and requires separate review and export attestations.
+            </p>
+            <Link href="/learn" className="mt-6 inline-flex items-center gap-1.5 font-bold text-emerald-800 hover:underline">
+              Inspect the learning boundary <ArrowRight size={14} />
+            </Link>
+          </article>
+          <article className="border border-neutral-200 bg-white p-8 md:p-10">
+            <div className="text-[11px] font-bold uppercase tracking-widest text-violet-700">Version + revision</div>
+            <h2 className="mt-3 text-[clamp(26px,4vw,36px)] font-bold tracking-tight">Updates replace the engine, not the project.</h2>
+            <p className="mt-3 text-[15px] leading-relaxed text-neutral-600">
+              <code>ss-update</code> compares installed, project-recorded, and published revision
+              hashes. Refresh happens through the original install channel, then the lock is
+              re-resolved and checked. Project code, tokens, assets, and approved decisions stay owned by the project.
+            </p>
+            <a href="https://github.com/bitjaru/styleseed/blob/main/engine/UPDATE.md" className="mt-6 inline-flex items-center gap-1.5 font-bold text-violet-700 hover:underline">
+              Read the update contract <ArrowRight size={14} />
+            </a>
+          </article>
         </section>
       </div>
     </main>

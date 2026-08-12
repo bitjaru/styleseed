@@ -5,7 +5,7 @@ import { ArrowLeft, ArrowRight, Star } from "lucide-react";
 const BASE = "https://styleseed-demo.vercel.app";
 
 const description =
-  "Answers to the real questions developers ask when their AI-built app looks generic: how to make it look professional, stop looking like every shadcn app, look like Linear/Stripe, fix spacing/typography/colors, and give Claude Code, Codex, or Cursor design judgment.";
+  "Answers to the real questions developers ask about AI-built UI: design quality, persistent judgment, private local learning, revision-safe updates, and StyleSeed workflows for Claude Code, Codex, and Cursor.";
 
 export const metadata: Metadata = {
   title: "FAQ — making AI-built UI look designed, not generated",
@@ -18,6 +18,8 @@ export const metadata: Metadata = {
     "design system for claude code cursor",
     "improve spacing typography hierarchy",
     "free design tool for ai coding",
+    "private AI design learning",
+    "StyleSeed engine revision update",
   ],
   alternates: { canonical: `${BASE}/faq` },
   openGraph: {
@@ -64,6 +66,22 @@ const FAQ: { q: string; a: string }[] = [
   {
     q: "Does it work with Codex / AGENTS.md (not just Claude Code and Cursor)?",
     a: "Yes. StyleSeed ships an AGENTS.md entry point plus a repository .agents/skills bridge for Codex-facing workflows. Codex uses $ss-* calls or its skills picker, while Claude Code uses /ss-* calls; both resolve to the same canonical design engine and project-local STYLESEED.md lock. A fresh agent session should be started after installation if skill discovery is stale.",
+  },
+  {
+    q: "Can StyleSeed learn from corrections made by a designer?",
+    a: "Yes, but only as an explicit, local, human-reviewed workflow. $ss-learn turns an accepted correction into a generalized candidate with applicability, counterexamples, measured evidence, and limits. Capture, review, packaging, MCP exposure, and promotion are separate decisions; one candidate never becomes a team or core rule automatically.",
+  },
+  {
+    q: "Does $ss-learn upload my code, prompts, screenshots, or brand data?",
+    a: "No. The local learning contract rejects project code, prompt text, screenshots, URLs, identities, local paths, brand tokens, and arbitrary extra fields. It prepares a content-addressed local package without registry submission. An optional MCP bridge can reveal one exact approved package to the connected client and model only after consuming a separate one-time human grant.",
+  },
+  {
+    q: "Why can $ss-update find an update when the version is still 4.0.0?",
+    a: "StyleSeed tracks both engineVersion and engineRevision. The version names the release line; the revision hashes the exact maintained method, 23 skills, plugin boundary, MCP bridge, and palette engine. $ss-update compares installed, project-recorded, and published revisions, then refreshes the engine and re-resolves the project lock without replacing project-owned code or design decisions.",
+  },
+  {
+    q: "Is the StyleSeed Codex plugin available in a public plugin directory?",
+    a: "Not yet. The repository contains a validated Codex plugin package with the same 23 canonical skills and an approval-gated local MCP bridge, and that package has been tested locally. Public installation remains npx skills add bitjaru/styleseed until a plugin-directory build is independently verified and released there.",
   },
   {
     q: "Installing the skills asks for permission or gets blocked — is that normal? Do I even need them?",
@@ -132,7 +150,7 @@ export default function FaqPage() {
             Making AI-built UI look designed, not generated.
           </h1>
           <p className="mt-4 text-[16px] leading-relaxed text-neutral-600">
-            The real questions developers ask when their app looks generic — and the honest answers.
+            Design quality, durable decisions, private learning, updates, and the honest boundaries around each one.
           </p>
         </div>
       </section>

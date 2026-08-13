@@ -41,6 +41,13 @@ Date: 2026-08-13
   inspected recordings. Reduced-motion frames show complete content from the first recorded frame.
 - The capture runner now uses DOM/font readiness and primes lazy content before full-page screenshots,
   so external async requests do not deadlock the run and showcase images are part of the evidence.
+- Production deployment `dpl_jiUfbn5u232U6AGSMWFi7LZezMY9` completed from repository HEAD
+  `8e39e449768d57dd241def37aa83057c8989ff8b`. Vercel reported `READY` and aliased it to
+  `https://styleseed-demo.vercel.app`.
+- Public read-back returned HTTP 200 and contained the new hero headline, exact install command,
+  advanced prompt disclosure, Choose → Compile → Build → Prove sequence, and the named Impeccable
+  snapshot. The public agent-skill registry returned 23 skills, and a fresh 390×844 production
+  screenshot matched the locally inspected first viewport.
 - Production website build: 133 static/SSG routes generated with Next.js 16.2.3.
 - Core package: 75 files, 734645 payload bytes; deterministic archive SHA-256
   `61887a575966b186962e598f244ba2fcaaa8bb3a92c0fa75291e2de7ccd88c77`.
@@ -67,8 +74,8 @@ Date: 2026-08-13
 - The repository package validator passes. The host plugin-creator validator was found, but could not
   start because its local `PyYAML` dependency is absent; no dependency was installed, so that layer is
   `NOT VERIFIED`.
-- No version bump, release, benchmark run/publication, deployment, Slack post, or production read-back
-  was performed.
+- No version bump, package release, benchmark run/publication, or Slack post was performed. The web
+  production deployment and public read-back described above are verified separately.
 
 ## Next authorized sequence
 

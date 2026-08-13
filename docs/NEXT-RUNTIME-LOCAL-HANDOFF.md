@@ -30,7 +30,17 @@ Date: 2026-08-13
   0 deterministic hard errors, 38 advisory warnings, nine manually inspected PNG renders, and two
   inspected home recordings.
 - `site-docs`, `site-gate`, and `site-learn` pass all required gates. `site-home` correctly fails its
-  temporal gate because `prefers-reduced-motion` still receives the same blur/fade entrance.
+  prior `final-21937b8` temporal gate because it recorded the old blur/fade entrance. That failed
+  history remains intact. The newer `web002-final-3503d75` homepage run passes every gate.
+- WEB-002 now makes `npx skills add bitjaru/styleseed` the single filled hero action, moves the full
+  orchestration prompt into an advanced disclosure, and introduces the Choose → Compile → Build →
+  Prove product loop before secondary proof. Impeccable's named capability snapshot is source-linked
+  and dated in `demo-pricing/content/competitor-source.json`.
+- The final homepage run is bound to Git commit `8f643988dcb195ee3e747b39c562fadb0fc85421`, with
+  0 deterministic hard errors, a 91/100 manual code score, three inspected full-page renders, and two
+  inspected recordings. Reduced-motion frames show complete content from the first recorded frame.
+- The capture runner now uses DOM/font readiness and primes lazy content before full-page screenshots,
+  so external async requests do not deadlock the run and showcase images are part of the evidence.
 - Production website build: 133 static/SSG routes generated with Next.js 16.2.3.
 - Core package: 75 files, 734645 payload bytes; deterministic archive SHA-256
   `61887a575966b186962e598f244ba2fcaaa8bb3a92c0fa75291e2de7ccd88c77`.
@@ -46,13 +56,11 @@ Date: 2026-08-13
   being deleted or relabeled. New gate runs bind a Git commit, reject dirty implementation roots, and
   re-check source roots against the bound revision. `verify --all` keeps failed history visible while
   requiring at least one current passing run per artifact.
-- The current dogfood aggregate is `PARTIAL`: three artifacts pass, and `site-home` has no passing run
-  because the temporal verifier rejects its recorded reduced-motion failure. The evidence contract now
-  also rejects hard visual findings instead of treating their existence as a pass.
-- WEB-002 layout work did not start and none of its owner files were edited. A live Lazyweb MCP health
-  check reached the configured service but returned `FREE_MONTHLY_TOOL_QUOTA_EXHAUSTED`. The ticket
-  explicitly requires the current-page screenshot report and stops `PARTIAL` before UI edits when the
-  report is quota-blocked.
+- The current dogfood aggregate is `VERIFIED`: all four registered artifacts have at least one current
+  passing evidence run. Historical failed runs remain visible and are not relabeled.
+- Lazyweb was intentionally not used for WEB-002 after the maintainer explicitly overrode that route.
+  The implementation was judged against the compiled `site-home` StyleSeed bundle and fresh local
+  browser evidence instead.
 - SEC-050 host-owned, action-bound approval proof is undecided. Therefore SEC-060/070 and learning
   bridge success smoke remain blocked.
 - No clean local plugin install was performed; PKG-010 requires explicit install approval.
@@ -64,10 +72,7 @@ Date: 2026-08-13
 
 ## Next authorized sequence
 
-1. After Lazyweb quota is available, run the required current-screen report, implement WEB-002,
-   remove the recorded reduced-motion entrance failure, and bind a newly captured `site-home` run. Do
-   not reuse the baseline screenshots.
-2. Obtain explicit approval before PKG-010 install smoke, adding the missing validator dependency,
+1. Obtain explicit approval before PKG-010 install smoke, adding the missing validator dependency,
    version/release work, or deployment.
-3. Treat SEC-050 as a maintainer decision; do not enable or publish the learning bridge until its
+2. Treat SEC-050 as a maintainer decision; do not enable or publish the learning bridge until its
    host-owned proof contract and negative tests exist.

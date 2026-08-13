@@ -1,0 +1,52 @@
+{
+  "inspectionMethod": "Manual original-resolution pixel inspection of complete mobile, desktop, and reduced-motion full-page renders after preloading lazy images",
+  "renders": [
+    {
+      "id": "desktop-loaded",
+      "state": "loaded",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "path": ".styleseed/evidence/site-home/web002-final-3503d75/renders/desktop-loaded.png",
+      "sha256": "sha256:d4eafb95f8bf19581080f3eb75b36b9e1e6a43304cf780b55f05cbe10d3ce6bb",
+      "bytes": 4414387
+    },
+    {
+      "id": "mobile-loaded",
+      "state": "loaded",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "path": ".styleseed/evidence/site-home/web002-final-3503d75/renders/mobile-loaded.png",
+      "sha256": "sha256:29c5d1f097153037f232ecfb040a86b4809d84fc665bbb4b5c598a838cb48096",
+      "bytes": 2973185
+    },
+    {
+      "id": "mobile-reduced-motion",
+      "state": "reduced-motion",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "path": ".styleseed/evidence/site-home/web002-final-3503d75/renders/mobile-reduced-motion.png",
+      "sha256": "sha256:10cd86be3c273139fc9d608bc86bbea4489d9a7cde7529de8d6502bd951c7bd9",
+      "bytes": 2967484
+    }
+  ],
+  "findings": [
+    {
+      "severity": "note",
+      "message": "The 390px first viewport keeps the complete install command on one line, exposes copy before scroll, and begins the numbered product loop at the fold."
+    },
+    {
+      "severity": "note",
+      "message": "The 1440px first viewport shows the full Choose-to-Prove strip; the product comparison follows as the first substantial visual proof."
+    },
+    {
+      "severity": "note",
+      "message": "Full-page captures contain the real showcase thumbnails after lazy-content priming; no placeholder block or missing image was accepted as visual evidence."
+    }
+  ]
+}

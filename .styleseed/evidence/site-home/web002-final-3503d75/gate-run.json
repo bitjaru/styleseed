@@ -1,0 +1,56 @@
+{
+  "artifactId": "site-home",
+  "bundleBytes": 18481,
+  "bundleHash": "sha256:507f02e379fd7ac438f95d67b8d8b5838caaf114e0a41cd2ed7eabc9f6beae1d",
+  "bundlePath": ".styleseed/bundles/site-home.md",
+  "gates": {
+    "code": {
+      "attached": true,
+      "reportPath": ".styleseed/evidence/site-home/web002-final-3503d75/code.json",
+      "reportSha256": "sha256:fc47b43c8c9d1aee200fce3fd0f93600274703e72597746a30d93dfd9247c0b3",
+      "reportBytes": 1421
+    },
+    "deterministic": {
+      "attached": true,
+      "reportBytes": 7080,
+      "reportPath": ".styleseed/evidence/site-home/web002-final-3503d75/deterministic.json",
+      "reportSha256": "sha256:bc6553395b5d0d646a942d221b3d1df13239647ecb339c7c0338b4ed18e494d4"
+    },
+    "human": {
+      "attached": false,
+      "reportBytes": null,
+      "reportPath": null,
+      "reportSha256": null
+    },
+    "temporal": {
+      "attached": true,
+      "reportBytes": 695,
+      "reportPath": ".styleseed/evidence/site-home/web002-final-3503d75/temporal.json",
+      "reportSha256": "sha256:3e0e63c449850f864eec671e0ded9c3fc467557373fa1b57cd8d660691db68e6"
+    },
+    "visual": {
+      "attached": true,
+      "reportBytes": 1891,
+      "reportPath": ".styleseed/evidence/site-home/web002-final-3503d75/visual.json",
+      "reportSha256": "sha256:3830685a001388058c839a7e1c5a8543e4feefc0abfa4b3542f5ee03bf9fe913"
+    }
+  },
+  "implementation": {
+    "inventoryHash": "sha256:be8a2f6508d8286d200aeb24be36133e256f1754a1aea39edac16fb5861dee47",
+    "sourceRoots": [
+      "demo-pricing/app/page.tsx",
+      "demo-pricing/app/_home",
+      "demo-pricing/app/globals.css",
+      "demo-pricing/content/competitor-source.json"
+    ]
+  },
+  "manifestPath": ".styleseed/manifests/site-home.json",
+  "methodHash": "sha256:7118dddce1e2851c88c981a7b0214953a7c929e973889837eeafa8ed08373394",
+  "repositoryRevision": {
+    "commit": "8f643988dcb195ee3e747b39c562fadb0fc85421",
+    "vcs": "git"
+  },
+  "runId": "web002-final-3503d75",
+  "schemaVersion": 1,
+  "validationHash": "sha256:0ec7d75ee76c479b1107717acb8ae8411fdb1dfaeab57d3a8b8b3e098c7ee3de"
+}

@@ -32,8 +32,8 @@ Date: 2026-08-13
 - `site-docs`, `site-gate`, and `site-learn` pass all required gates. `site-home` correctly fails its
   temporal gate because `prefers-reduced-motion` still receives the same blur/fade entrance.
 - Production website build: 133 static/SSG routes generated with Next.js 16.2.3.
-- Core package: 75 files, 734295 payload bytes; deterministic archive SHA-256
-  `b52ae89cd0a879cf612320e8aa95be595c1159cd27b36351bdc42fa8fdc7db78`.
+- Core package: 75 files, 734645 payload bytes; deterministic archive SHA-256
+  `61887a575966b186962e598f244ba2fcaaa8bb3a92c0fa75291e2de7ccd88c77`.
 - Core engine revision: `sha256:b5312805a069ec2f0506136213591b402d78f54532660ba1702abc556ce33ab9`.
 - Optional learning contract revision:
   `sha256:7d09eb9527be5debf1e217f5fc69cf538e4e3911af1288ffcebbcd9886984e21`.

@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "artifacts": [
+    {
+      "id": "site-docs",
+      "config": "site-docs.json"
+    },
+    {
+      "id": "site-gate",
+      "config": "site-gate.json"
+    },
+    {
+      "id": "site-home",
+      "config": "site-home.json"
+    },
+    {
+      "id": "site-learn",
+      "config": "site-learn.json"
+    }
+  ]
+}

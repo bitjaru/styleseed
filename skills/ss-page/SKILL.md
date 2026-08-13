@@ -6,6 +6,9 @@ allowed-tools: Read, Write, Edit, Grep, Glob, Bash
 ---
 
 # Product Page Scaffolder
+## Registry-first artifact boundary
+
+When `.styleseed/project.json` and `.styleseed/artifacts/index.json` exist, resolve the requested artifact ID first, then read only `.styleseed/bundles/<artifact-id>.md` and `.styleseed/manifests/<artifact-id>.json`. Never fall back to the global legacy bundle for a registry project. Legacy projects may use `.styleseed/effective-rules.md` only when no registry exists.
 
 ## When NOT to use
 

@@ -9,16 +9,28 @@ Use the bundled `scripts/resolve-context.mjs`; do not hand-compose the rule stac
 
 1. Read `STYLESEED.md` when it exists. Confirm missing required selections with the user.
 2. Keep the working directory at the user's project root. Invoke the script by its installed
-   path; do not `cd` into the skill directory. Prefer `--from-lock STYLESEED.md`; explicit flags
-   override lock values.
-3. Read the emitted `.styleseed/effective-rules.md` before building.
-4. Preserve `.styleseed/manifest.json`. It records selections, source hashes, and the bundle hash
-   for updates and reproducibility.
+   path; do not `cd` into the skill directory.
+3. Legacy single-artifact projects should prefer `--from-lock STYLESEED.md`. Registry projects use
+   `.styleseed/project.json` plus `.styleseed/artifacts/*.json` and must resolve with `--artifact`
+   or `--all`; in registry mode, edit project-owned config instead of passing selection overrides.
+4. Read the emitted bundle before building: legacy writes `.styleseed/effective-rules.md`; registry
+   writes `.styleseed/bundles/<artifact-id>.md`.
+5. Preserve the manifest output: legacy uses `.styleseed/manifest.json`; registry uses
+   `.styleseed/manifests/<artifact-id>.json`.
 5. Use `--check` to detect context drift without rewriting files.
 
 ```bash
 node <installed-ss-resolve>/scripts/resolve-context.mjs \
   --from-lock STYLESEED.md \
+  --agent codex
+```
+
+Registry project:
+
+```bash
+node <installed-ss-resolve>/scripts/resolve-context.mjs \
+  --project-root . \
+  --artifact app-dashboard \
   --agent codex
 ```
 
@@ -46,7 +58,9 @@ default; `--palette auto` maps that recipe to a contrast-verified semantic palet
 values when the product needs a different morphology or color posture. The default
 output directory is `.styleseed/` in the
 project root. For a project-local reference grammar, pass `reference:<slug>` and ensure
-`.styleseed/rulesets/<slug>/RULESET.md` exists.
+`.styleseed/rulesets/<slug>/RULESET.md` exists. Registry projects require the full six-file
+reference contract: `RULESET.md`, `tokens.json`, `evidence.json`, `checks.md`,
+`reference-board.html`, and `adapter.json`.
 
 When a key color is present in flags or the lock, the resolver uses the shared OKLCH generator and
 writes `.styleseed/palette.json` plus `.styleseed/palette.css`. The manifest records the generation

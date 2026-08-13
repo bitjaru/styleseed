@@ -5,16 +5,16 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 const BASE = "https://styleseed-demo.vercel.app";
 const URL = `${BASE}/learn`;
 const DESCRIPTION =
-  "How StyleSeed turns a human-approved design correction into a privacy-minimized local candidate, requires a separate review, and exposes one exact package through a one-time MCP grant without automatic rule promotion.";
+  "How StyleSeed's repository-only learning extension turns a caller-attested correction into a privacy-minimized local candidate while staying outside the default/core install.";
 
 export const metadata: Metadata = {
-  title: "Private design learning — human-approved rules, not project surveillance",
+  title: "Private design learning — caller-attested rules, not project surveillance",
   description: DESCRIPTION,
   keywords: [
     "AI design rule learning",
     "private design system learning",
-    "human approved AI rules",
-    "Codex MCP design skill",
+    "caller attested AI rules",
+    "Codex design skill",
     "StyleSeed ss-learn",
     "privacy preserving design workflow",
   ],
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
         url: `${BASE}/og/styleseed-og.png`,
         width: 1200,
         height: 630,
-        alt: "StyleSeed private local learning and human approval workflow",
+        alt: "StyleSeed private local learning and caller-attested review workflow",
       },
     ],
   },
@@ -58,13 +58,13 @@ const STEPS = [
   {
     n: "03",
     title: "Review separately",
-    body: "A named human decision accepts or rejects the immutable draft. Preparing a share package requires another explicit attestation.",
+    body: "A caller-attested decision accepts or rejects the immutable draft. Preparing a share package requires another explicit attestation.",
     code: "$ss-learn review",
   },
   {
     n: "04",
     title: "Grant one exact read",
-    body: "The optional local MCP bridge checks the package path and content hash, consumes a one-time grant, then reveals that package to the connected client and model.",
+    body: "The prepared package stays local and untransmitted. The extension's development-only bridge remains disabled until a host-owned proof adapter is verified; enabling it would expose one exact package to the connected client and model after a one-time grant.",
     code: "one package · one grant",
   },
 ];
@@ -80,7 +80,7 @@ const FAQ = [
   },
   {
     q: "Is the MCP result private from the model?",
-    a: "No. The bridge itself has no network transport, but the exact approved package becomes visible to the connected client and model after the one-time grant is consumed. The workflow discloses that boundary before approval.",
+    a: "No. Today the prepared package stays local and untransmitted, and the repository-only bridge must remain disabled. If a verified host adapter later enables it, the exact approved package would become visible to the connected client and model after the one-time grant is consumed.",
   },
 ];
 
@@ -99,7 +99,7 @@ export default function LearnPage() {
         author: { "@id": `${BASE}/#organization` },
         publisher: { "@id": `${BASE}/#organization` },
         isPartOf: { "@id": `${BASE}/#website` },
-        about: ["human-approved design learning", "privacy-minimized candidates", "MCP", "design rule governance"],
+        about: ["caller-attested design learning", "privacy-minimized candidates", "local package boundary", "design rule governance"],
       },
       {
         "@type": "FAQPage",
@@ -133,15 +133,15 @@ export default function LearnPage() {
       <section className="border-b border-neutral-950/15">
         <div className="mx-auto max-w-6xl px-6 py-16 lg:py-24">
           <div className="text-[11px] font-black uppercase tracking-[0.18em] text-emerald-700">
-            New in the latest v4 revision · $ss-learn
+            Optional repository extension · not in the core install
           </div>
           <h1 className="mt-5 max-w-[14ch] text-[clamp(44px,7vw,80px)] font-black leading-[0.94] tracking-[-0.055em]">
             Learn from human judgment. Not private projects.
           </h1>
           <p className="mt-7 max-w-2xl text-[18px] leading-relaxed text-neutral-600">
             StyleSeed can preserve a correction that a person already accepted, turn it into a
-            bounded local candidate, and prepare one reviewed package. Capture, sharing, MCP
-            exposure, and core-rule promotion remain separate decisions.
+            bounded local candidate, and prepare one reviewed local package. Capture, sharing,
+            optional bridge exposure, and core-rule promotion remain separate decisions.
           </p>
         </div>
       </section>
@@ -209,7 +209,7 @@ export default function LearnPage() {
 
         <div className="mt-16 flex flex-wrap gap-3 border-t border-neutral-950/15 pt-10">
           <a
-            href="https://github.com/bitjaru/styleseed/tree/main/engine/.claude/skills/ss-learn"
+            href="https://github.com/bitjaru/styleseed/tree/main/extensions/learning/skills/ss-learn"
             className="inline-flex items-center gap-2 bg-neutral-950 px-5 py-3 text-sm font-bold text-white"
           >
             Inspect $ss-learn <ArrowRight size={14} />

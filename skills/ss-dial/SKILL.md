@@ -6,6 +6,9 @@ allowed-tools: Read, Write, Edit, Grep, Glob, Bash
 ---
 
 # Dial an axis
+## Registry-first artifact boundary
+
+When `.styleseed/project.json` and `.styleseed/artifacts/index.json` exist, resolve the requested artifact ID first, then read only `.styleseed/bundles/<artifact-id>.md` and `.styleseed/manifests/<artifact-id>.json`. Never fall back to the global legacy bundle for a registry project. Legacy projects may use `.styleseed/effective-rules.md` only when no registry exists.
 
 "Make it more minimal" is something you can just *say* — the model already reads plain
 language. A skill only earns its place where **one word must move many tokens at once, in a

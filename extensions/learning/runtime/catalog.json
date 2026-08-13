@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "engineVersion": "4.0.0",
+  "engineRevision": "sha256:b5312805a069ec2f0506136213591b402d78f54532660ba1702abc556ce33ab9",
+  "grammars": {
+    "commerce-conversion": true,
+    "consumer-service": true,
+    "editorial-reading": true,
+    "expressive-marketing": true,
+    "institutional-service": true,
+    "operations-console": true,
+    "sequential-story": true,
+    "technical-instrument": true
+  },
+  "adapters": {
+    "document-report": true,
+    "product-ui": true,
+    "single-frame": true,
+    "slide-deck": true,
+    "social-carousel": true
+  },
+  "domains": {
+    "ai-assistant": true,
+    "booking": true,
+    "content": true,
+    "developer-tools": true,
+    "ecommerce": true,
+    "education": true,
+    "fintech": true,
+    "health": true,
+    "marketplace": true,
+    "productivity": true,
+    "saas": true,
+    "social": true
+  },
+  "pages": {
+    "dashboard": true,
+    "detail": true,
+    "form": true,
+    "landing": true,
+    "list": true,
+    "onboarding": true,
+    "settings": true
+  },
+  "recipes": {
+    "calm-consumer": true,
+    "commerce-operator": true,
+    "creative-professional": true,
+    "developer-platform": true,
+    "editorial-authority": true,
+    "enterprise-workbench": true,
+    "expressive-brand": true,
+    "native-mobile": true,
+    "public-service": true
+  },
+  "palettes": {
+    "civic-blue": true,
+    "cobalt-instrument": true,
+    "deep-lime-studio": true,
+    "editorial-ink": true,
+    "nocturne-violet": true,
+    "quiet-mineral": true,
+    "signal-coral": true,
+    "warm-clay-commerce": true
+  },
+  "profiles": {
+    "brutalist-lite": true,
+    "editorial": true,
+    "minimal-mono": true,
+    "swiss": true,
+    "technical": true,
+    "warm-dtc": true
+  }
+}

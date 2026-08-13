@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "id": "site-docs",
+  "target": {
+    "kind": "route",
+    "locator": "/architecture"
+  },
+  "selection": {
+    "grammar": "editorial-reading",
+    "adapter": "product-ui",
+    "domain": "developer-tools",
+    "page": "detail",
+    "recipe": "editorial-authority",
+    "palette": "editorial-ink",
+    "profile": "none",
+    "fallback": null
+  },
+  "decisions": {
+    "primaryDecision": "Can the reader follow the architecture and guides without losing the main thread?",
+    "primaryAction": "Read the architecture path and continue into the relevant guide.",
+    "signatureMove": "Keep narrative documentation readable while preserving exact technical structure."
+  },
+  "implementation": {
+    "sourceRoots": [
+      "demo-pricing/app/architecture",
+      "demo-pricing/app/guides",
+      "demo-pricing/app/globals.css"
+    ],
+    "tokenFiles": [
+      "demo-pricing/app/globals.css",
+      "demo-pricing/app/skins.css"
+    ]
+  },
+  "validation": {
+    "scoreFloor": 80,
+    "requiredRenders": [
+      {
+        "id": "mobile-loaded",
+        "state": "loaded",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        }
+      },
+      {
+        "id": "desktop-loaded",
+        "state": "loaded",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        }
+      }
+    ],
+    "temporal": {
+      "required": false,
+      "scenarios": []
+    },
+    "humanAcceptance": false
+  }
+}

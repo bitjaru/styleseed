@@ -6,6 +6,9 @@ allowed-tools: Read, Write, Edit, Grep, Glob, Bash
 ---
 
 # UX Flow Designer
+## Registry-first artifact boundary
+
+When `.styleseed/project.json` and `.styleseed/artifacts/index.json` exist, resolve the requested artifact ID first, then read only `.styleseed/bundles/<artifact-id>.md` and `.styleseed/manifests/<artifact-id>.json`. Never fall back to the global legacy bundle for a registry project. Legacy projects may use `.styleseed/effective-rules.md` only when no registry exists.
 
 ## When NOT to use
 
@@ -28,24 +31,27 @@ Description: $ARGUMENTS
 
 ### Information Architecture
 - **Progressive Disclosure**: Show only what's needed at each step. Hide complexity behind logical drill-downs.
-- **Miller's Law**: Chunk information into groups of 5-9 items maximum.
-- **Hick's Law**: Minimize choices per screen. Fewer options = faster decisions.
+- **Cognitive load**: Chunk information around the user's decision; the resolved grammar and content
+  density decide the grouping rather than a universal item count.
+- **Hick's Law**: Minimize choices per screen while preserving the product's real task vocabulary.
 
 ### Navigation Patterns
 - **Hub & Spoke**: Dashboard → detail pages → back to dashboard (default for mobile apps)
 - **Linear Flow**: Step 1 → Step 2 → Step 3 (for forms, onboarding, checkout)
-- **Tab Navigation**: 3-5 top-level sections via BottomNav
+- **Navigation**: use the resolved surface adapter; BottomNav is only one possible mobile pattern.
 
 ### Screen Flow Rules
 - Every flow must have a **clear entry point** and **clear exit point**
-- Maximum **3 taps** to reach any key feature from the home screen
+- Key features should be reachable with an appropriate number of steps for the product and platform;
+  do not impose a universal tap count.
 - Back navigation must always be available (except root screens)
 - Error states must provide **recovery paths** (retry, go back, contact support)
 - Loading states must use skeleton screens (never spinners in cards)
 
 ### Page Composition (from DESIGN-LANGUAGE.md)
-- Follow the **Information Pyramid**: Hero → KPI Grid → Details → Lists
-- Each screen should answer ONE primary question
+- Follow the selected output grammar's information hierarchy; do not impose a Hero → KPI Grid →
+  Details → Lists template on unrelated products.
+- Each screen should answer ONE primary question when the task calls for it.
 - Above the fold: the most important metric or action
 - Use the 4 section types: Full Card (A), Grid (B), Carousel (C), Hero (D)
 
@@ -53,6 +59,6 @@ Description: $ARGUMENTS
    - **Flow diagram** in ASCII showing screen connections
    - **Screen inventory** listing each screen's purpose and key components
    - **Edge cases** (empty states, errors, loading) for each screen
-   - **Scaffolded pages** using `PageShell`, `TopBar`, `BottomNav` patterns
+   - **Scaffolded pages** using primitives selected by the artifact's adapter and grammar
 
 4. Generate the actual page files using `/ss-page` conventions.

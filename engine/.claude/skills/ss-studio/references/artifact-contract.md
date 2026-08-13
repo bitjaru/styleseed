@@ -3,6 +3,32 @@
 Use these fields exactly. Extra task-specific fields are allowed, but required fields may not be
 renamed.
 
+## `run.json`
+
+Registry-backed Studio runs are schema v2 and bind the current artifact:
+
+```json
+{
+  "schemaVersion": 2,
+  "id": "studio-run-id",
+  "title": "project or concept",
+  "stage": "briefed | directed | selected | planned | built | verified",
+  "surface": "mobile-app",
+  "platform": "web",
+  "artifactId": "app-dashboard",
+  "manifestPath": ".styleseed/manifests/app-dashboard.json",
+  "methodHash": "sha256:...",
+  "outputs": {
+    "prototype": "/app-dashboard",
+    "recording": ".styleseed/studio/studio-run-id/evidence/recordings/prototype.webm"
+  }
+}
+```
+
+`prototype` may be a route or local path. It is not evidence by itself. When temporal verification is
+required, `outputs.recording` must be a local regular file whose hash is inventoried by the evidence
+verifier.
+
 ## `references.json`
 
 ```json
@@ -121,15 +147,22 @@ renamed.
 
 ```json
 {
-  "gates": {
-    "code": "pending | pass | fail | blocked",
-    "visual": "pending | pass | fail | blocked",
-    "temporal": "pending | pass | fail | blocked",
-    "human": "pending | pass | fail | blocked"
+  "schemaVersion": 2,
+  "evidenceRunId": "gate-run-id or null",
+  "evidenceSummary": {
+    "schemaVersion": 1,
+    "status": "pass | fail",
+    "gates": {
+      "code": "pass | fail | blocked",
+      "visual": "pass | fail | blocked",
+      "temporal": "pass | fail | blocked",
+      "human": "pass | fail | blocked"
+    }
   },
-  "evidence": [{"gate": "visual", "path": "relative path", "note": "what it proves"}],
-  "reviewer": "name or null",
-  "acceptedAt": "ISO-8601 or null",
   "risks": []
 }
 ```
+
+`studio-run.mjs evidence --run <studio-run-id> --evidence-run <gate-run-id>` stores only the computed
+verifier summary. Manual `gate` updates may record `fail` or `blocked` progress notes, but only the
+evidence verifier may derive `pass`.

@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://styleseed.dev/schemas/gate-run.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "artifactId", "runId", "manifestPath", "bundlePath", "methodHash", "validationHash", "bundleHash", "bundleBytes", "implementation", "gates"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "artifactId": { "$ref": "../../ss-resolve/references/manifest.schema.json#/$defs/id" },
+    "runId": { "$ref": "../../ss-resolve/references/manifest.schema.json#/$defs/id" },
+    "manifestPath": { "type": "string" }, "bundlePath": { "type": "string" },
+    "methodHash": { "$ref": "../../ss-resolve/references/manifest.schema.json#/$defs/hash" },
+    "validationHash": { "$ref": "../../ss-resolve/references/manifest.schema.json#/$defs/hash" },
+    "bundleHash": { "$ref": "../../ss-resolve/references/manifest.schema.json#/$defs/hash" },
+    "bundleBytes": { "type": "integer", "minimum": 0 },
+    "implementation": { "type": "object", "additionalProperties": false, "required": ["sourceRoots", "inventoryHash"], "properties": { "sourceRoots": { "type": "array", "items": { "type": "string" } }, "inventoryHash": { "$ref": "../../ss-resolve/references/manifest.schema.json#/$defs/hash" } } },
+    "gates": { "type": "object" }
+  }
+}

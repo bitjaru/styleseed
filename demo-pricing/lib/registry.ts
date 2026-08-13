@@ -28,7 +28,7 @@ export type Skin = {
 
 export type Registry = {
   version: string;
-  generated: string;
+  generated?: string;
   repository: string;
   counts: {
     components: number;

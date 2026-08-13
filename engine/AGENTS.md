@@ -8,12 +8,17 @@ and mobile products, social carousels, slide decks, documents/reports, and singl
 
 ## Resolve only the context this artifact needs
 
+If `.styleseed/project.json` and `.styleseed/artifacts/index.json` exist, this is a registry project:
+resolve the named artifact first, then read its `.styleseed/bundles/<artifact-id>.md` and
+`.styleseed/manifests/<artifact-id>.json`. A registry-aware skill must never fall back to the legacy
+global bundle. The legacy `.styleseed/effective-rules.md` path is supported only when no registry exists.
+
 When the user still needs creative direction, generated media, or an interaction concept, invoke
 `$ss-studio` first. It produces three directions, pauses for human selection, then compiles scenes
 and media jobs before implementation. Use `$ss-resolve` directly when the direction is already set.
 
-Invoke `$ss-resolve` from `STYLESEED.md`, then read `.styleseed/effective-rules.md` and keep
-`.styleseed/manifest.json`. The deterministic resolver composes core → grammar → adapter →
+Invoke `$ss-resolve` from the selected artifact config or `STYLESEED.md`, then read the artifact-bound
+bundle and manifest and keep their provenance. The deterministic resolver composes core → grammar → adapter →
 domain/page → brand recipe → palette recipe → optional profile → lock → craft baseline and records source hashes. Do not load
 `llms-full.txt` after a bundle resolves successfully.
 

@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:styleseed:learning-candidate-record:v2",
+  "title": "StyleSeed local learning candidate record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["recordSchemaVersion", "schemaVersion", "title", "context", "learning", "evidence", "id", "status", "engine", "privacy", "reviews", "contentHash", "recordHash"],
+  "properties": {
+    "recordSchemaVersion": { "const": 2 },
+    "schemaVersion": { "const": 1 },
+    "title": { "type": "string", "minLength": 8, "maxLength": 120 },
+    "context": { "$ref": "candidate.schema.json#/properties/context" },
+    "learning": { "$ref": "candidate.schema.json#/properties/learning" },
+    "evidence": { "$ref": "candidate.schema.json#/properties/evidence" },
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{7,80}$" },
+    "status": { "enum": ["draft", "accepted", "rejected"] },
+    "engine": {
+      "type": "object", "additionalProperties": false,
+      "required": ["version", "revision", "learningContractVersion", "learningRevision"],
+      "properties": {
+        "version": { "type": "string", "minLength": 1 },
+        "revision": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+        "learningContractVersion": { "const": 2 },
+        "learningRevision": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+      }
+    },
+    "privacy": {
+      "type": "object", "additionalProperties": false,
+      "required": ["rawMaterialIntended", "networkTransmission", "scannerVersion", "scannerGuarantee"],
+      "properties": {
+        "rawMaterialIntended": { "const": false },
+        "networkTransmission": { "const": false },
+        "scannerVersion": { "const": 2 },
+        "scannerGuarantee": { "const": "guardrail-only" }
+      }
+    },
+    "reviews": { "type": "array", "maxItems": 1, "items": { "type": "object" } },
+    "reviewHash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "contentHash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "recordHash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+  }
+}

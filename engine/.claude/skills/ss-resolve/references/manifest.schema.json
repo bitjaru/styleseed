@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://styleseed.dev/schemas/manifest.schema.json",
+  "type": "object", "additionalProperties": false,
+  "required": ["schemaVersion", "artifactId", "engineVersion", "engineRevision", "distributionIntegrity", "selection", "inputs", "sources", "methodHash", "validationHash", "validationSlices", "bundle", "outputs"],
+  "properties": {
+    "schemaVersion": { "const": 2 }, "artifactId": { "$ref": "#/$defs/id" }, "engineVersion": { "type": "string" },
+    "engineRevision": { "$ref": "#/$defs/hash" }, "distributionIntegrity": { "enum": ["verified", "unverified"] },
+    "selection": { "type": "object" }, "inputs": { "type": "array", "items": { "$ref": "#/$defs/namedFile" } },
+    "sources": { "type": "array", "items": { "$ref": "#/$defs/namedFile" } }, "methodHash": { "$ref": "#/$defs/hash" },
+    "validationHash": { "$ref": "#/$defs/hash" },
+    "validationSlices": {
+      "type": "object", "additionalProperties": false,
+      "required": ["target", "implementation", "scoreFloor", "requiredRenders", "temporal", "humanAcceptance"],
+      "properties": {
+        "target": { "$ref": "#/$defs/hash" }, "implementation": { "$ref": "#/$defs/hash" },
+        "scoreFloor": { "$ref": "#/$defs/hash" }, "requiredRenders": { "$ref": "#/$defs/hash" },
+        "temporal": { "$ref": "#/$defs/hash" }, "humanAcceptance": { "$ref": "#/$defs/hash" }
+      }
+    },
+    "bundle": { "$ref": "#/$defs/file" }, "outputs": { "type": "array", "items": { "$ref": "#/$defs/file" } }
+  },
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,63}$" }, "hash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "file": { "type": "object", "additionalProperties": false, "required": ["path", "sha256", "bytes"], "properties": { "path": { "type": "string" }, "sha256": { "$ref": "#/$defs/hash" }, "bytes": { "type": "integer", "minimum": 0 } } },
+    "namedFile": { "type": "object", "additionalProperties": false, "required": ["id", "path", "sha256", "bytes"], "properties": { "id": { "type": "string" }, "path": { "type": "string" }, "sha256": { "$ref": "#/$defs/hash" }, "bytes": { "type": "integer", "minimum": 0 } } }
+  }
+}

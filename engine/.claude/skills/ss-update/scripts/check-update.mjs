@@ -4,6 +4,8 @@ import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { verifyDistribution } from "../../ss-resolve/scripts/distribution-integrity.mjs";
+import { inspectArtifactImpact } from "./artifact-impact.mjs";
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 
@@ -72,10 +74,10 @@ published revision. It is read-only and never updates project or skill files.`);
 const projectRoot = resolve(args["project-root"] ?? process.cwd());
 const remoteSource = args.remote ?? "https://styleseed-demo.vercel.app/version.json";
 const installed = firstJson([
-  resolve(scriptDir, "../../ss-resolve/references/catalog.json"),
   resolve(projectRoot, "engine/.claude/skills/ss-resolve/references/catalog.json"),
   resolve(projectRoot, ".claude/skills/ss-resolve/references/catalog.json"),
   resolve(projectRoot, ".agents/skills/ss-resolve/references/catalog.json"),
+  resolve(scriptDir, "../../ss-resolve/references/catalog.json"),
 ]);
 const projectManifest = firstJson([
   resolve(projectRoot, ".styleseed/manifest.json"),
@@ -100,15 +102,50 @@ const legacyConflicts = [
 const remote = await readRemote(remoteSource);
 
 const installedVersion = installed?.value.engineVersion ?? null;
-const installedRevision = installed?.value.engineRevision ?? null;
+const installedDeclaredRevision = installed?.value.distributions?.core?.revision ?? installed?.value.engineRevision ?? null;
 const projectVersion = projectManifest?.value.engineVersion ?? null;
 const projectRevision = projectManifest?.value.engineRevision ?? null;
 const remoteVersion = remote.version ?? null;
 const remoteRevision = remote.revision ?? null;
+const installedScriptPath = installed?.path
+  ? resolve(dirname(installed.path), "..", "..", "ss-update", "scripts", "check-update.mjs")
+  : null;
+const installedVerification = installed
+  ? (() => {
+    try {
+      return {
+        ...verifyDistribution({ catalog: installed.value, scriptPath: installedScriptPath }),
+        error: null,
+      };
+    } catch (error) {
+      return {
+        status: "unverified",
+        computedRevision: null,
+        mismatches: [],
+        error: error instanceof Error ? error.message : String(error),
+      };
+    }
+  })()
+  : null;
+const installedComputedRevision = installedVerification?.computedRevision ?? null;
+const installedRevision = installedComputedRevision ?? installedDeclaredRevision;
+const artifactImpact = inspectArtifactImpact({
+  projectRoot,
+  installedCatalog: installed?.value ?? null,
+});
 
 let status;
 let reason;
-if (!installedRevision && remoteRevision) {
+if (installed && installedVerification?.status === "unverified") {
+  status = "installed-revision-unverified";
+  reason = installedVerification.error ?? "The installed catalog cannot prove the staged core distribution bytes.";
+} else if (installedVerification?.status === "incomplete") {
+  status = "installed-revision-unverified";
+  reason = "The installed core distribution is missing required files, so its declared revision cannot be trusted.";
+} else if (installedVerification?.status === "tampered") {
+  status = "installed-revision-tampered";
+  reason = "Installed core distribution bytes differ from the catalog inventory, so the declared revision is not current.";
+} else if (!installedRevision && remoteRevision) {
   status = "update-available";
   reason = "The installed payload predates revision tracking; refresh it once to establish an exact baseline.";
 } else if (installedRevision && remoteRevision && installedRevision !== remoteRevision) {
@@ -138,7 +175,12 @@ const result = {
   installed: {
     version: installedVersion,
     revision: installedRevision,
+    declaredRevision: installedDeclaredRevision,
+    computedRevision: installedComputedRevision,
+    verificationStatus: installedVerification?.status ?? null,
     catalogPath: installed?.path ?? null,
+    mismatches: installedVerification?.mismatches ?? [],
+    verificationError: installedVerification?.error ?? null,
   },
   project: {
     version: projectVersion,
@@ -151,6 +193,7 @@ const result = {
     source: remoteSource,
   },
   legacyConflicts,
+  artifacts: artifactImpact.artifacts,
 };
 
 if (args.json) {

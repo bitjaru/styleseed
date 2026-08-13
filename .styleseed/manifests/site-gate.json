@@ -1,0 +1,135 @@
+{
+  "schemaVersion": 2,
+  "artifactId": "site-gate",
+  "engineVersion": "4.0.0",
+  "engineRevision": "sha256:b5312805a069ec2f0506136213591b402d78f54532660ba1702abc556ce33ab9",
+  "distributionIntegrity": "verified",
+  "selection": {
+    "agent": "codex",
+    "grammar": "technical-instrument",
+    "grammarSource": "built-in:technical-instrument",
+    "referenceContract": null,
+    "fallback": "technical-instrument",
+    "adapter": "product-ui",
+    "domain": "developer-tools",
+    "page": "detail",
+    "recipe": "developer-platform",
+    "recipeSelection": "developer-platform",
+    "palette": "cobalt-instrument",
+    "paletteSelection": "cobalt-instrument",
+    "paletteGeneration": {
+      "keyColor": "#0F766E",
+      "mode": "light",
+      "character": "balanced",
+      "harmony": "auto",
+      "temperature": "neutral"
+    },
+    "profile": "none"
+  },
+  "inputs": [
+    {
+      "id": "project",
+      "path": ".styleseed/project.json",
+      "sha256": "sha256:591e16ea41869e0ea997ce22abb38dd3de989329ed190e775b40c8f367734627",
+      "bytes": 734
+    },
+    {
+      "id": "artifact",
+      "path": ".styleseed/artifacts/site-gate.json",
+      "sha256": "sha256:9a44b2b0028887a226b650471c8a0184dc692cbaa8e265a66e1363562f1365b9",
+      "bytes": 1412
+    }
+  ],
+  "sources": [
+    {
+      "id": "agent-execution",
+      "path": "catalog:agents",
+      "sha256": "sha256:dfe4b0a2de36209ca50a04b39e35c248ac13fb8b059428fdb68a484cffc190cb",
+      "bytes": 329
+    },
+    {
+      "id": "core",
+      "path": "catalog:core",
+      "sha256": "sha256:6002465c13e879fb190387117049eb4484a3ce908c9f8af1648882c870194266",
+      "bytes": 5394
+    },
+    {
+      "id": "grammar",
+      "path": "built-in:technical-instrument",
+      "sha256": "sha256:d1c0daadd01bb0bd9c507edf377ecf1c5a1f906132711752557ed1318cf83dee",
+      "bytes": 903
+    },
+    {
+      "id": "adapter",
+      "path": "catalog:adapters/product-ui",
+      "sha256": "sha256:7b5b5c34b0b235dca329e6384ccb94c66ee65a348bbe7142277ae7bbda3c13b0",
+      "bytes": 714
+    },
+    {
+      "id": "domain",
+      "path": "catalog:domains/developer-tools",
+      "sha256": "sha256:75abbca1f53f589841658c4f596bc5b5fe4ea6f768cf72e0ddd078950668dd16",
+      "bytes": 849
+    },
+    {
+      "id": "page",
+      "path": "catalog:pages/detail",
+      "sha256": "sha256:0b4321abc5e338d444ee8ac569f6d03059e33eae2a70bfc5502876cf48b15fc7",
+      "bytes": 679
+    },
+    {
+      "id": "recipe",
+      "path": "catalog:recipes/developer-platform",
+      "sha256": "sha256:69854f65ad674e20973e08c03f95aaf6fe5a794a9c6fb6f696f6a9bd57a87053",
+      "bytes": 1216
+    },
+    {
+      "id": "palette",
+      "path": "catalog:palettes/cobalt-instrument",
+      "sha256": "sha256:9f9e0c00faea5ea054630bcf945ae88b8a60d472e51aee1ae36b6bb8454f9b4a",
+      "bytes": 2228
+    },
+    {
+      "id": "craft",
+      "path": "catalog:craft",
+      "sha256": "sha256:9f8b9c38d3ec1dc6d476a149b7c3502b27c51cbb55bce397a696b44335a22d21",
+      "bytes": 3564
+    }
+  ],
+  "methodHash": "sha256:07ec651169265a5a55a52cd5db02e595b766f1f9ba81dd25bbb7d54bf6d22d38",
+  "validationHash": "sha256:3462a1922e141bcb82dfd875e886dc8aae43a995ce0bc7958705594a9cf20e0c",
+  "validationSlices": {
+    "target": "sha256:8526c1b937ff04eca5240f675e31614b0d3d02eed712d32e98b6c1f569498f74",
+    "implementation": "sha256:44949fd5e91426cb7cac8caea3651631b537946e5e98df569aebbe03ebd1b855",
+    "scoreFloor": "sha256:48449a14a4ff7d79bb7a1b6f3d488eba397c36ef25634c111b49baf362511afc",
+    "requiredRenders": "sha256:e2cbc22ce7be59d23cd2e88d6fdbc576aa98f69928e4ff1e61fda02e15ccca2f",
+    "temporal": "sha256:c5ec5a78d8447626a8d2c39addbf2843320eb8e491b9e7c1e92927a135b06bba",
+    "humanAcceptance": "sha256:fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa"
+  },
+  "bundle": {
+    "kind": "bundle",
+    "path": ".styleseed/bundles/site-gate.md",
+    "sha256": "sha256:2f3eef3191895ecdf5a6b15f81bd86ab90a767413233813a60b94a181cf80175",
+    "bytes": 16799
+  },
+  "outputs": [
+    {
+      "kind": "bundle",
+      "path": ".styleseed/bundles/site-gate.md",
+      "sha256": "sha256:2f3eef3191895ecdf5a6b15f81bd86ab90a767413233813a60b94a181cf80175",
+      "bytes": 16799
+    },
+    {
+      "kind": "palette-json",
+      "path": ".styleseed/palettes/site-gate.json",
+      "sha256": "sha256:17831694629f48c0d196106353c98b063be8e6cbd38c87bfdd30216e3e0560ba",
+      "bytes": 5914
+    },
+    {
+      "kind": "palette-css",
+      "path": ".styleseed/palettes/site-gate.css",
+      "sha256": "sha256:0e068e77a9a959ec9587988c0bf0ec1d75b851838ff073819181f0d1ea8b5138",
+      "bytes": 1157
+    }
+  ]
+}

@@ -6,6 +6,9 @@ allowed-tools: Read, Write, Edit, Grep, Glob, Bash
 ---
 
 # Verify (look at it, don't just read it)
+## Registry-first artifact boundary
+
+When `.styleseed/project.json` and `.styleseed/artifacts/index.json` exist, resolve the requested artifact ID first, then read only `.styleseed/bundles/<artifact-id>.md` and `.styleseed/manifests/<artifact-id>.json`. Never fall back to the global legacy bundle for a registry project. Legacy projects may use `.styleseed/effective-rules.md` only when no registry exists.
 
 Read `.styleseed/effective-rules.md` and `.styleseed/manifest.json`; invoke `/ss-resolve` or
 `$ss-resolve` first when they are missing or stale. Judge pixels against that compiled method.

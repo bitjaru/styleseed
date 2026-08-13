@@ -1,7 +1,7 @@
 {
   "name": "styleseed",
   "version": "4.0.0",
-  "description": "A design-method engine with durable project rules, verification workflows, and privacy-minimized local design learning.",
+  "description": "A design-method engine with durable project rules, verification workflows, and reproducible UI workflows.",
   "author": {
     "name": "bitjaru",
     "url": "https://github.com/bitjaru"
@@ -14,15 +14,13 @@
     "ui",
     "design-review",
     "accessibility",
-    "codex",
-    "mcp"
+    "codex"
   ],
-  "skills": "./skills/",
-  "mcpServers": "./.mcp.json",
+  "skills": "./engine/.claude/skills/",
   "interface": {
     "displayName": "StyleSeed",
     "shortDescription": "Durable design judgment and verified UI workflows",
-    "longDescription": "Select or compile a design grammar, preserve bounded project decisions, build with a coherent visual method, verify the rendered result, and optionally capture human-approved lessons through a privacy-minimized local workflow.",
+    "longDescription": "Select or compile a design grammar, preserve bounded project decisions, build with a coherent visual method, and verify the rendered result.",
     "developerName": "bitjaru",
     "category": "Developer Tools",
     "capabilities": [
@@ -32,8 +30,7 @@
     "websiteURL": "https://styleseed-demo.vercel.app",
     "defaultPrompt": [
       "Set up StyleSeed and build this UI with a verified design method.",
-      "Audit this screen with StyleSeed and fix the highest-impact drift.",
-      "Capture this accepted correction as a private local design lesson."
+      "Audit this screen with StyleSeed and fix the highest-impact drift."
     ],
     "brandColor": "#6C5CE7",
     "screenshots": []

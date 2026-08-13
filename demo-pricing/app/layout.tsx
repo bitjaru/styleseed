@@ -11,7 +11,7 @@ const inter = Inter({
 const SITE_URL = "https://styleseed-demo.vercel.app";
 const SITE_NAME = "StyleSeed";
 const SITE_DESC =
-  "Open-source AI design-method engine for Claude Code, Codex, and Cursor — directed concepts, semantic palettes, verified working interactions, privacy-minimized local learning, and revision-safe updates.";
+  "Open-source AI design-method engine for Claude Code, Codex, and Cursor — directed concepts, semantic palettes, verified working interactions, privacy-minimized local learning with explicit limits, and revision-safe updates.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

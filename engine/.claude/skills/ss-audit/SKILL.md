@@ -6,6 +6,9 @@ allowed-tools: Read, Grep, Glob
 ---
 
 # UX Audit
+## Registry-first artifact boundary
+
+When `.styleseed/project.json` and `.styleseed/artifacts/index.json` exist, resolve the requested artifact ID first, then read only `.styleseed/bundles/<artifact-id>.md` and `.styleseed/manifests/<artifact-id>.json`. Never fall back to the global legacy bundle for a registry project. Legacy projects may use `.styleseed/effective-rules.md` only when no registry exists.
 
 ## When NOT to use
 
@@ -44,8 +47,8 @@ Target: **$ARGUMENTS**
 - [ ] Same action = same appearance everywhere
 - [ ] Color meanings are consistent (green=success, red=error, brand=active)
 - [ ] Text hierarchy follows the 5-level grayscale system
-- [ ] All cards use the same shadow, radius, padding
-- [ ] Spacing follows the 6px grid system
+- [ ] Surface treatment follows the resolved grammar and brand recipe
+- [ ] Spacing follows the resolved token scale and adapter constraints
 
 #### 5. Error Prevention
 - [ ] Destructive buttons are visually distinct (destructive variant)
@@ -54,22 +57,22 @@ Target: **$ARGUMENTS**
 - [ ] Input constraints are visible before errors occur (character limits, format hints)
 
 #### 6. Recognition Rather Than Recall
-- [ ] Labels on all icons (especially BottomNav)
+- [ ] Icon controls have accessible labels; navigation labels follow the selected adapter
 - [ ] Current state visible without memorization (active tab highlighted)
 - [ ] Recent/frequent items shown for quick access
 - [ ] Placeholder text shows expected format
 
 #### 7. Flexibility and Efficiency
-- [ ] Key actions reachable within 3 taps from home
-- [ ] Pull-to-refresh on data screens
+- [ ] Key actions are reachable through an appropriate product-specific path
+- [ ] Refresh behavior follows the platform adapter and the product's data semantics
 - [ ] Touch targets >= 44x44px (no tiny tap areas)
-- [ ] Frequently used actions in easy-to-reach zones (bottom of screen)
+- [ ] Frequently used actions are placed according to the resolved navigation adapter
 
 #### 8. Aesthetic and Minimalist Design
 - [ ] Each screen focuses on ONE primary task
 - [ ] No decorative elements that don't serve a purpose
 - [ ] Information pyramid respected (most important = biggest)
-- [ ] Card density follows the max-4-items rule
+- [ ] Card and collection density follows the resolved grammar and task complexity
 - [ ] No competing visual elements (one hero metric per page)
 
 #### 9. Help Users Recover from Errors
@@ -101,7 +104,7 @@ Target: **$ARGUMENTS**
 #### Safe Areas
 - [ ] Content not hidden behind notch/Dynamic Island
 - [ ] Bottom content not behind home indicator
-- [ ] BottomNav has `pb-safe` padding
+- [ ] Navigation surfaces respect the platform safe-area contract when one applies
 
 ### Dark Pattern Prevention
 - [ ] No forced bottom sheets on entry

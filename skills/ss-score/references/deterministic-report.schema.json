@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object", "additionalProperties": false,
+  "required": ["detectorRevision", "inventoryHash", "findings"],
+  "properties": { "detectorRevision": { "type": "string" }, "inventoryHash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }, "findings": { "type": "array" } }
+}

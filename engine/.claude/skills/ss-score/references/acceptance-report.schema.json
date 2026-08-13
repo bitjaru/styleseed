@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object", "additionalProperties": false,
+  "required": ["decision", "reviewerAlias", "reviewedAt", "evidenceHash", "note"],
+  "properties": { "decision": { "const": "accepted" }, "reviewerAlias": { "type": "string" }, "reviewedAt": { "type": "string" }, "evidenceHash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }, "note": { "type": "string" } }
+}

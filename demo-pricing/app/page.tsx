@@ -150,7 +150,7 @@ export default function HomePage() {
                 The method can learn.<br />Updates stay exact.
               </h2>
               <p className="mt-4 text-[15px] leading-relaxed text-neutral-600">
-                A human-approved correction can now become a privacy-minimized local candidate.
+                A caller-attested accepted correction can now become a privacy-minimized local candidate.
                 Separately, every maintained engine payload carries an exact revision hash, so a
                 same-version rule or skill fix is still detectable without overwriting project code.
               </p>
@@ -158,11 +158,12 @@ export default function HomePage() {
 
             <div className="mt-9 grid gap-4 lg:grid-cols-3">
               <article className="border border-neutral-200 bg-[#F4F6F3] p-6">
-                <div className="font-mono text-[11px] font-bold text-emerald-700">$ss-learn</div>
-                <h3 className="mt-5 text-xl font-bold tracking-tight">Human-approved learning</h3>
+                <div className="font-mono text-[11px] font-bold text-emerald-700">Optional extension</div>
+                <h3 className="mt-5 text-xl font-bold tracking-tight">Caller-attested local learning</h3>
                 <p className="mt-2 text-[14px] leading-relaxed text-neutral-600">
-                  Capture only on request, review separately, strip project identity, and keep the
-                  result local. A candidate never edits team or core rules automatically.
+                  Not included in the core install. Capture only on request, review separately, block known high-risk identity
+                  patterns, and keep the result local. This is a guardrail, not an anonymization
+                  guarantee; review the exact package before exposure.
                 </p>
                 <Link href="/learn" className="mt-5 inline-flex items-center gap-1.5 text-[14px] font-bold text-emerald-800 hover:underline">
                   See the privacy boundary <ArrowRight size={14} />
@@ -181,11 +182,12 @@ export default function HomePage() {
               </article>
               <article className="border border-neutral-200 bg-[#F7F7FB] p-6">
                 <div className="font-mono text-[11px] font-bold text-violet-700">Codex package</div>
-                <h3 className="mt-5 text-xl font-bold tracking-tight">23 skills, one approved bridge</h3>
+                <h3 className="mt-5 text-xl font-bold tracking-tight">23 core skills, no learning payload</h3>
                 <p className="mt-2 text-[14px] leading-relaxed text-neutral-600">
-                  The repository includes a validated Codex plugin package and a local MCP bridge.
-                  Public installation remains <code>npx skills add bitjaru/styleseed</code> until a
-                  plugin-directory release is independently verified.
+                  The repository includes a repository development Codex package boundary. The
+                  implemented default/core install contains neither ss-learn nor a learning MCP. Public installation
+                  remains <code>npx skills add bitjaru/styleseed</code> until a plugin-directory
+                  release is independently verified.
                 </p>
                 <Link href="/codex-ui-design" className="mt-5 inline-flex items-center gap-1.5 text-[14px] font-bold text-violet-700 hover:underline">
                   Open the Codex guide <ArrowRight size={14} />
@@ -236,8 +238,9 @@ export default function HomePage() {
                 <code className="font-mono text-[13px] text-violet-300">ss-build</code> can only
                 <em> run</em> once installed. Then your lock persists in{" "}
                 <code className="font-mono text-[13px] text-neutral-300">STYLESEED.md</code> (no drift),
-                and every artifact is compiled, scored, and visually checked before you see it. All 23 skills, universally —
-                Claude Code, Codex, Cursor, Gemini CLI &amp; 12+ more.
+                and when the StyleSeed workflow is invoked, it compiles the selected artifact and
+                records the checks and rendered evidence that actually ran before you see it. All 23
+                skills, universally — Claude Code, Codex, Cursor, Gemini CLI &amp; 12+ more.
               </p>
               <div className="mt-4 space-y-1.5">
                 <code className="block rounded-lg bg-black/40 px-3 py-2 font-mono text-[13px] text-neutral-100">npx skills add bitjaru/styleseed</code>

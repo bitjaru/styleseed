@@ -6,6 +6,9 @@ allowed-tools: Read, Write, Edit, Grep, Glob, Bash, WebFetch
 ---
 
 # Build with the composed StyleSeed method
+## Registry-first artifact boundary
+
+When `.styleseed/project.json` and `.styleseed/artifacts/index.json` exist, resolve the requested artifact ID first, then read only `.styleseed/bundles/<artifact-id>.md` and `.styleseed/manifests/<artifact-id>.json`. Never fall back to the global legacy bundle for a registry project. Legacy projects may use `.styleseed/effective-rules.md` only when no registry exists.
 
 The build method is the product. Score and screenshots are auxiliary evidence, not the source
 of design judgment.

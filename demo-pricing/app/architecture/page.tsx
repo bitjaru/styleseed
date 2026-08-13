@@ -4,7 +4,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 
 const BASE = "https://styleseed-demo.vercel.app";
 const DESCRIPTION =
-  "How StyleSeed compiles directed concepts, grammar, morphology, semantic color, and interaction plans; verifies the result; preserves human-approved lessons locally; and updates the exact engine revision without overwriting project decisions.";
+  "How StyleSeed compiles directed concepts, grammar, morphology, semantic color, and interaction plans; verifies the result; preserves caller-attested lessons locally; and updates the exact engine revision without overwriting project decisions.";
 
 export const metadata: Metadata = {
   title: "StyleSeed engine architecture — AI design grammar compiler",
@@ -54,9 +54,9 @@ const layers = [
   ["Studio director", "Produces native, signature, and experimental directions, records human selection, then compiles interaction scenes and image/video jobs."],
   ["Context compiler", "ss-resolve emits only the selected 10–20KB method plus a manifest of selections, source hashes, and bundle hash."],
   ["Build method", "The agent implements real product content from effective-rules.md instead of reassembling the full handbook."],
-  ["Evidence gates", "Code and pixel checks find structural and rendered drift; temporal evidence proves the interaction, and a named human accepts the result."],
-  ["Local learning", "ss-learn preserves an explicitly requested, human-approved correction as a privacy-minimized candidate; it cannot scan a project or promote itself."],
-  ["Revision ledger", "engineRevision hashes the maintained method, skills, plugin boundary, MCP bridge, and palette engine so same-version fixes remain detectable."],
+  ["Evidence gates", "Code and pixel checks find structural and rendered drift; temporal evidence proves the interaction, and acceptance is recorded only when that step actually ran."],
+  ["Local learning", "ss-learn preserves an explicitly requested, caller-attested correction as a privacy-minimized candidate; it cannot scan a project or promote itself."],
+  ["Revision ledger", "engineRevision hashes the maintained method, skills, plugin boundary, and palette engine so same-version fixes remain detectable."],
 ];
 
 export default function ArchitecturePage() {

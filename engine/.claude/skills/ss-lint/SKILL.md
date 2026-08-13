@@ -6,6 +6,25 @@ allowed-tools: Read, Grep, Glob, Bash
 ---
 
 # Design Lint (Quick Check)
+## Registry-first artifact boundary
+
+When `.styleseed/project.json` and `.styleseed/artifacts/index.json` exist, resolve the requested artifact ID first, then read only `.styleseed/bundles/<artifact-id>.md` and `.styleseed/manifests/<artifact-id>.json`. Never fall back to the global legacy bundle for a registry project. Legacy projects may use `.styleseed/effective-rules.md` only when no registry exists.
+
+## Canonical executable check
+
+For a reproducible, artifact-bound scan with machine-readable output, use:
+
+```bash
+node engine/.claude/skills/ss-score/scripts/styleseed-check.mjs scan \
+  --project-root . --artifact <artifact-id> --format json
+node engine/.claude/skills/ss-score/scripts/styleseed-check.mjs scan \
+  --project-root . --all --format sarif
+```
+
+The checker treats only contract, containment, manifest/hash, malformed-report, and required
+coverage failures as hard errors. Detector findings (`SS001`–`SS006`) remain warnings and include a
+stable file, line, evidence snippet, severity, and fix. Use `styleseed-check ... verify` to recompute
+the bound evidence run; do not turn a string or stale report into a pass.
 
 Read `.styleseed/effective-rules.md` and `.styleseed/manifest.json`; invoke `/ss-resolve` or
 `$ss-resolve` first when they are missing or stale. Lint detects deterministic drift; it must

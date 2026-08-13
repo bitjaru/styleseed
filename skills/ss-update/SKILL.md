@@ -6,6 +6,9 @@ allowed-tools: Read, Write, Edit, Grep, Glob, Bash
 ---
 
 # StyleSeed update
+## Registry-first artifact boundary
+
+When `.styleseed/project.json` and `.styleseed/artifacts/index.json` exist, resolve the requested artifact ID first, then read only `.styleseed/bundles/<artifact-id>.md` and `.styleseed/manifests/<artifact-id>.json`. Never fall back to the global legacy bundle for a registry project. Legacy projects may use `.styleseed/effective-rules.md` only when no registry exists.
 
 Update the **engine payload**, not the user's product UI. A release version describes a published
 line; `engineRevision` identifies the exact maintained rules, skills, entry docs, and palette
@@ -49,6 +52,21 @@ Interpret the result exactly:
   project-modified skill.
 - `remote-revision-unavailable` — version-only evidence cannot prove currency. Report the
   boundary and do not say “up to date.”
+
+For registry projects, also read the sorted `artifacts` array. Its status is computed from the
+current artifact contract, manifest, declared output bytes, and installed catalog every time:
+
+- `current` — method, validation contract, and output bytes still match;
+- `corrupt` — a declared bundle/palette is missing or its bytes do not match;
+- `method-changed` — recompile, then rerun every implementation/render evidence gate;
+- `validation-changed` — recompile only when reported, and rerun the gates marked `stale`;
+- `metadata-changed` — recompile for the installed engine metadata; unchanged visual evidence is
+  not invalidated by metadata alone;
+- `legacy` — migrate the artifact before claiming artifact-level currency.
+
+`changedInputs` names project-owned inputs whose current normalized bytes differ from the manifest.
+When prior validation details are unavailable, the checker fails closed by marking every potentially
+affected gate stale; it does not invent a precise field-level history from a digest.
 
 Also inspect `git status --short`. Do not modify files during this step.
 
@@ -96,7 +114,14 @@ a mixed or unproven installation.
 
 ## Step 5 — Recompile the project context
 
-When `STYLESEED.md` exists:
+For a registry project (`.styleseed/project.json` plus `.styleseed/artifacts/index.json`):
+
+1. Re-resolve each artifact whose result has `bundleRecompileRequired:true` with
+   `resolve-context.mjs --project-root . --artifact <id> --agent <agent>`.
+2. Run the same command with `--check` and require exit status 0.
+3. Preserve artifacts reported `current`; do not overwrite every bundle to update one artifact.
+
+For a legacy project, when `STYLESEED.md` exists:
 
 1. Run the installed `ss-resolve/scripts/resolve-context.mjs` with
    `--project-root . --from-lock STYLESEED.md --agent <agent>`.

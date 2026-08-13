@@ -37,23 +37,18 @@ const topLevelDistributionFiles = readdirSync(engine, { withFileTypes: true })
   .filter((entry) => entry.isFile())
   .map((entry) => entry.name)
   .filter((name) => name === ".cursorrules" || name === "VERSION" || name.endsWith(".md"));
-const engineDistributionPaths = [
-  ...topLevelDistributionFiles,
-  ...walkFiles(resolve(engine, ".claude/skills"), ".claude/skills")
-    .filter((path) => path !== ".claude/skills/ss-resolve/references/catalog.json"),
-  ...walkFiles(resolve(engine, "color"), "color"),
-].sort();
-const pluginDistributionPaths = [
-  ".claude-plugin/plugin.json",
+const coreDistributionPaths = [
   ".codex-plugin/plugin.json",
-  ".mcp.json",
-  ...walkFiles(resolve(root, "mcp"), "mcp"),
+  "LICENSE",
+  "SECURITY.md",
+  ...topLevelDistributionFiles.map((path) => `engine/${path}`),
+  ...walkFiles(resolve(engine, ".claude/skills"), "engine/.claude/skills")
+    .filter((path) => path !== "engine/.claude/skills/ss-resolve/references/catalog.json")
+    .filter((path) => !path.startsWith("engine/.claude/skills/ss-learn/")),
+  ...walkFiles(resolve(engine, "color"), "engine/color"),
 ].sort();
-const distributionSources = [
-  ...engineDistributionPaths.map((path) => ({ path, absolute: resolve(engine, path) })),
-  ...pluginDistributionPaths.map((path) => ({ path: `root/${path}`, absolute: resolve(root, path) })),
-];
-const distributionFiles = distributionSources.map(({ path, absolute }) => {
+const distributionFiles = coreDistributionPaths.map((path) => {
+  const absolute = resolve(root, path);
   const content = readFileSync(absolute);
   return {
     path,
@@ -64,6 +59,12 @@ const distributionFiles = distributionSources.map(({ path, absolute }) => {
 const engineRevision = `sha256:${createHash("sha256")
   .update(distributionFiles.map((file) => `${file.path}\0${file.sha256}\n`).join(""))
   .digest("hex")}`;
+const legacyDistributionFiles = distributionFiles.map((file) => ({
+  ...file,
+  path: file.path.startsWith("engine/")
+    ? file.path.slice("engine/".length)
+    : `root/${file.path}`,
+}));
 
 const grammarIds = [
   "consumer-service",
@@ -150,10 +151,16 @@ const recipeIds = [
 ];
 
 const catalog = {
-  schemaVersion: 3,
+  schemaVersion: 4,
   engineVersion: read("VERSION"),
   engineRevision,
-  distributionFiles,
+  distributions: {
+    core: {
+      revision: engineRevision,
+      files: distributionFiles,
+    },
+  },
+  distributionFiles: legacyDistributionFiles,
   generatedFrom: [
     "PRODUCT-PRINCIPLES.md",
     "CRAFT-BASELINE.md",

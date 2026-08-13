@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "id": "site-gate",
+  "target": {
+    "kind": "route",
+    "locator": "/gate"
+  },
+  "selection": {
+    "grammar": "technical-instrument",
+    "adapter": "product-ui",
+    "domain": "developer-tools",
+    "page": "detail",
+    "recipe": "developer-platform",
+    "palette": "cobalt-instrument",
+    "profile": "none",
+    "fallback": null
+  },
+  "decisions": {
+    "primaryDecision": "Does the visitor understand the score and verify gate as concrete evidence instead of a claim?",
+    "primaryAction": "Inspect the exact gate loop and evidence boundary.",
+    "signatureMove": "Present code gate and pixel gate as a deterministic proof flow with no fake verification."
+  },
+  "implementation": {
+    "sourceRoots": [
+      "demo-pricing/app/gate",
+      "demo-pricing/app/globals.css"
+    ],
+    "tokenFiles": [
+      "demo-pricing/app/globals.css",
+      "demo-pricing/app/skins.css"
+    ]
+  },
+  "validation": {
+    "scoreFloor": 80,
+    "requiredRenders": [
+      {
+        "id": "mobile-loaded",
+        "state": "loaded",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        }
+      },
+      {
+        "id": "desktop-loaded",
+        "state": "loaded",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        }
+      }
+    ],
+    "temporal": {
+      "required": false,
+      "scenarios": []
+    },
+    "humanAcceptance": false
+  }
+}

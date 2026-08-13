@@ -4,6 +4,9 @@ description: Turn a product brief and optional references into three distinct cr
 ---
 
 # Build a directed interactive concept
+## Registry-first artifact boundary
+
+When `.styleseed/project.json` and `.styleseed/artifacts/index.json` exist, resolve the requested artifact ID first, then read only `.styleseed/bundles/<artifact-id>.md` and `.styleseed/manifests/<artifact-id>.json`. Never fall back to the global legacy bundle for a registry project. Legacy projects may use `.styleseed/effective-rules.md` only when no registry exists.
 
 Run the full Studio pipeline. Do not reduce it to a moodboard, a static image, or a set of arbitrary
 motion effects.
@@ -18,6 +21,7 @@ Initialize a durable run:
 ```bash
 node <skill-dir>/scripts/studio-run.mjs init \
   --project-root . \
+  --artifact <artifact-id> \
   --name "<project or concept>" \
   --brief "<product job and desired interaction>" \
   --surface mobile-app \
@@ -27,6 +31,9 @@ node <skill-dir>/scripts/studio-run.mjs init \
 The command prints the run directory under `.styleseed/studio/`. Use the artifact schemas in
 `references/artifact-contract.md`. Use `references/provider-adapters.md` only when media generation
 or recording is required.
+
+If the project uses the artifact registry, `--artifact` is required and the run binds the current
+artifact manifest and method hash at init time.
 
 ## 1. Scout by role
 
@@ -113,25 +120,31 @@ node <skill-dir>/scripts/studio-run.mjs output \
 
 ## 6. Verify and deliver
 
-Run StyleSeed score and visual verification, then inspect temporal evidence: start/mid/end frames,
-interrupt/cancel behavior, and reduced motion. Record `code`, `visual`, `temporal`, and `human` gate
-statuses plus evidence paths in `verification.json`.
-
-Record each gate explicitly. A human pass requires a named reviewer:
+Run StyleSeed score and visual verification, then derive Studio verification from the evidence gate.
+The Studio evidence command stores only the computed verifier summary, and `advance --stage verified`
+reruns verification instead of trusting an earlier stored pass.
 
 ```bash
-node <skill-dir>/scripts/studio-run.mjs gate \
-  --project-root . --run <id> --gate temporal --status pass \
-  --evidence <path> --note "start, mid, end, cancel, and reduced motion inspected"
-node <skill-dir>/scripts/studio-run.mjs gate \
-  --project-root . --run <id> --gate human --status pass \
-  --reviewer "<name>" --evidence <path> --note "selected result accepted"
+node <skill-dir>/scripts/studio-run.mjs evidence \
+  --project-root . --run <id> --evidence-run <gate-run-id>
 ```
 
 ```bash
 node <skill-dir>/scripts/studio-run.mjs advance --project-root . --run <id> --stage verified
 node <skill-dir>/scripts/studio-run.mjs status --project-root . --run <id>
 ```
+
+`fail` and `blocked` remain useful progress states:
+
+```bash
+node <skill-dir>/scripts/studio-run.mjs gate \
+  --project-root . --run <id> --gate temporal --status blocked \
+  --note "recording still missing"
+```
+
+Do not use `gate --status pass`. Only the evidence verifier may derive `pass`. A prototype URL can
+locate the built prototype, but it is not evidence. When temporal verification is required, the
+recording must be a local hashed file.
 
 Deliver the complete run folder, runnable prototype, actual recording, and unresolved risks. A
 polished reel by itself is not a completed Studio run.

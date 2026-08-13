@@ -1,8 +1,6 @@
 # StyleSeed — Full Context
 
 Source: github.com/bitjaru/styleseed (constitution + grammars + adapters + compiler + craft)
-Generated: 2026-08-12T12:46:19.179Z
-
 ---
 
 # StyleSeed Product Constitution
@@ -217,6 +215,23 @@ flowchart LR
   M -->|grant consumed| N[Connected client/model<br/>exposure disclosed]
 ```
 
+## Artifact registry boundary
+
+For registry projects, `.styleseed/project.json` contains project-wide design DNA and
+`.styleseed/artifacts/index.json` names independent artifact contracts. Each artifact owns its target,
+implementation roots, validation contract, compiled bundle, manifest, and evidence run. A skill first
+resolves one artifact ID, verifies its manifest and actual output bytes, and reads only that artifact's
+bundle. The legacy `.styleseed/effective-rules.md` and `.styleseed/manifest.json` pair is a compatibility
+path for projects without a registry; it is never a fallback inside a registry project.
+
+The machine-readable `engine/skill-contracts.json` matrix records which skills consume a bundle, may
+select a grammar, may mutate project configuration, and which computed evidence level they may claim.
+`scripts/validate-skill-contracts.mjs` checks that matrix against the canonical skills before generation.
+
+Project instruction files are not silently rewritten. `scripts/write-managed-instructions.mjs` is dry-run
+by default and writes only with explicit `--write`; it preserves text outside the managed markers and
+refuses symlinks, hardlinks, malformed markers, and multiple managed blocks.
+
 ## Layers and authority
 
 | Layer | Responsibility | May change | May not change |
@@ -312,7 +327,8 @@ is the design engine; the composed method is.
   perceptual characters, gamut boundaries, and semantic contrast pairs.
 - Add a new aesthetic profile only when it is a full coordinated axis contract, not a mood word.
 - Keep components and skins downstream. They implement a decision; they do not decide.
-- Treat `ss-learn` output as candidate evidence only. Promote it to team or core rules only after
+- Treat optional `extensions/learning/` `ss-learn` output as candidate evidence only. The extension
+  is not part of the core install. Promote its output to team or core rules only after
   independent-project repetition, counterexamples, accessibility and grammar regressions, benchmark
   evidence, and named maintainer approval.
 

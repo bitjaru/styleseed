@@ -176,12 +176,12 @@ agent  ▸  ✓ 88/100 — one accent, grey normal states, real empty/error stat
 > [`llms.txt`](https://styleseed-demo.vercel.app/llms.txt) gives any agent the portable routing
 > contract, but it cannot provide the same reproducible local compile by itself.
 
-**Want the 23 `ss-*` agent skills too** (optional automation: Studio, context resolver, grammar compiler, setup, build, review, score, and private local learning)?
+**Want the 23 core agent skills too** (the `styleseed` router plus 22 `ss-*` workflows for Studio, context resolution, setup, build, review, score, and verification)?
 
 ```bash
 npx skills add bitjaru/styleseed
 ```
-Installs all 23 canonical `ss-*` workflow skills into Claude Code, Codex, Cursor, Gemini CLI,
+Installs all 23 canonical core workflow skills into Claude Code, Codex, Cursor, Gemini CLI,
 Amp and more. Then run
 `/ss-setup` → `/ss-resolve` in Claude Code or `$ss-setup` → `$ss-resolve` in Codex (you can
 also choose them from Codex's `/skills` picker). The resolver writes a targeted
@@ -566,7 +566,8 @@ engine/
 ├── CLAUDE.md                 # AI reads this automatically
 ├── AGENTS.md                 # Codex and other AGENTS.md-compatible agents
 ├── DESIGN-LANGUAGE.md        # 74 visual design rules (brand-agnostic)
-├── .claude/skills/           # 23 canonical skills (Claude: /ss-*, Codex: $ss-*)
+├── .claude/skills/           # 23 core skills: router + 22 ss-* workflows
+│   ├── styleseed/            #   Route a general request to one first workflow
 │   ├── ss-setup/             #   Interactive setup wizard
 │   ├── ss-page/              #   Scaffold pages
 │   ├── ss-component/         #   Generate components
@@ -578,7 +579,6 @@ engine/
 │   ├── ss-lint/              #   Quick violation scan
 │   ├── ss-score/             #   Score UI 0-100 + fix list
 │   ├── ss-update/            #   Pull latest engine
-│   ├── ss-learn/             #   Capture private, reviewed design lessons
 │   ├── ss-flow/              #   Design user flows
 │   ├── ss-audit/             #   UX heuristic evaluation
 │   ├── ss-copy/              #   Generate microcopy
@@ -594,11 +594,12 @@ engine/
 └── scaffold/                 # Vite 6 + React 18 starter
 ```
 
-## 23 AI-Powered Skills
+## 23 Core AI-Powered Skills
 
 ### Setup
 | Skill | What It Does |
 |-------|-------------|
+| `/styleseed` | **Route a general request** — resolve the current artifact and choose exactly one first StyleSeed workflow |
 | `/ss-studio` | **Run creative direction end to end** — role-based references → three directions → human selection → interaction/media plans → working prototype → temporal and visual evidence |
 | `/ss-resolve` | **Compile only the active context** — lock → grammar + adapter + domain/page + brand recipe + profile + craft baseline → small bundle + source-hash manifest |
 | `/ss-build` | **The whole loop, enforced** — lock the look → build → score → fix to ≥80 → *then* show. Use this instead of building UI free-hand |
@@ -621,7 +622,6 @@ engine/
 | `/ss-score` | Score UI quality 0-100 with a category breakdown + prioritized fix list (reads the code) |
 | `/ss-verify` | **The visual gate** — render the screen, screenshot it, score what you *see* (dead whitespace, unloaded fonts, no focal, blank empty states), fix + re-render |
 | `/ss-update` | Pull latest engine updates — analyzes your project and updates safely |
-| `/ss-learn` | Capture a human-approved correction as a privacy-minimized local candidate; prepare an opt-in package without transmitting it |
 
 ### UX — Design It Right (No Designer Needed)
 | Skill | What It Does |
@@ -631,23 +631,25 @@ engine/
 | `/ss-copy` | Generate UX microcopy (buttons, errors, empty states, toasts) |
 | `/ss-feedback` | Add loading/success/error/empty states to any component |
 
-### Learn from accepted corrections, not users
+### Optional repository-only learning extension
 
-`/ss-learn` is deliberately opt-in and local-only. It records a generalized lesson only after a
-person asks for capture, then requires a separate human decision before acceptance and another
-approval before preparing a share package. Source code, prompts, screenshots, URLs, identities,
-brand tokens, and arbitrary extra fields are rejected. The optional bundled MCP bridge cannot scan
-a project: it can return one exact approved package only after a separate one-time grant, which it
-consumes before the package becomes visible to the connected client/model. Neither the CLI nor MCP
-bridge uploads to a registry or changes core rules automatically.
+`/ss-learn` is not part of the 23-skill core or the public `npx skills add` path. Its source lives
+under `extensions/learning/` for security development and local contract testing. It records a generalized lesson only after a
+person asks for capture, then requires separate caller attestations before acceptance and before
+preparing a share package. Known high-risk identity patterns are blocked; this is a guardrail, not
+an anonymization guarantee; review the exact package before exposure. Source code, prompts,
+screenshots, URLs, brand tokens, and arbitrary extra fields are rejected. The prepared package
+stays local and untransmitted. The extension source includes a development-only bridge, but it must
+remain disabled until a host-owned proof adapter is verified. If it is ever enabled, one exact approved
+package would become visible to the connected client/model after a separate one-time grant. Neither the
+CLI nor the bridge uploads to a registry or changes core rules automatically.
 
 ### Codex plugin package
 
-The repository now includes a validated `.codex-plugin/plugin.json`, the same 23 canonical skills,
-and the local approval-gated MCP bridge. This is the package boundary for local testing and future
-plugin-directory publishing; the public directory release is not claimed until an installed build
-is independently verified there. `npx skills add bitjaru/styleseed` remains the portable released
-installation path today.
+The repository now includes a repository development `.codex-plugin/plugin.json` package boundary
+for local testing alongside the same 23 core skills. The implemented default/core install contains
+neither `ss-learn` nor a learning MCP. Public directory release is not verified. `npx skills add
+bitjaru/styleseed` remains the portable released installation path today.
 
 ### Example Workflow
 

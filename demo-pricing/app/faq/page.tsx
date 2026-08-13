@@ -57,7 +57,7 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "How do I give Claude Code, Codex, or Cursor a design system so it stops making ugly UI?",
-    a: "StyleSeed is a design-method engine for that job. It ships 8 output grammars, 5 surface adapters, 48 React components, 7 brand skins, a named motion system, and 23 canonical ss-* skills. STYLESEED.md preserves bounded project decisions; installed project instructions and StyleSeed skills re-read it for visual work instead of reinventing spacing, colors, type, and motion.",
+    a: "StyleSeed is a design-method engine for that job. Its core ships 8 output grammars, 5 surface adapters, 48 React components, 7 brand skins, a router, and 22 canonical ss-* workflows. STYLESEED.md preserves bounded project decisions; installed project instructions and StyleSeed skills re-read it for visual work instead of reinventing spacing, colors, type, and motion.",
   },
   {
     q: "Should I use StyleSeed or Anthropic's official frontend-design skill with Claude Code?",
@@ -69,19 +69,19 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "Can StyleSeed learn from corrections made by a designer?",
-    a: "Yes, but only as an explicit, local, human-reviewed workflow. $ss-learn turns an accepted correction into a generalized candidate with applicability, counterexamples, measured evidence, and limits. Capture, review, packaging, MCP exposure, and promotion are separate decisions; one candidate never becomes a team or core rule automatically.",
+    a: "An optional repository-only extension can, but it is not part of the core or public npx installation. With caller-attested review, $ss-learn turns an accepted correction into a generalized local candidate. Capture, review, packaging, bridge exposure, and promotion are separate decisions; one candidate never becomes a team or core rule automatically.",
   },
   {
     q: "Does $ss-learn upload my code, prompts, screenshots, or brand data?",
-    a: "No. The local learning contract rejects project code, prompt text, screenshots, URLs, identities, local paths, brand tokens, and arbitrary extra fields. It prepares a content-addressed local package without registry submission. An optional MCP bridge can reveal one exact approved package to the connected client and model only after consuming a separate one-time human grant.",
+    a: "No automatic upload exists. The repository-only learning contract rejects project code, prompt text, screenshots, URLs, local paths, brand tokens, and arbitrary extra fields. Its scanner is a guardrail, not an anonymization guarantee, so review the exact package before exposure. The development bridge stays disabled until a host-owned proof adapter is verified; enabling it would reveal one exact approved package to the connected client and model after a one-time grant.",
   },
   {
     q: "Why can $ss-update find an update when the version is still 4.0.0?",
-    a: "StyleSeed tracks both engineVersion and engineRevision. The version names the release line; the revision hashes the exact maintained method, 23 skills, plugin boundary, MCP bridge, and palette engine. $ss-update compares installed, project-recorded, and published revisions, then refreshes the engine and re-resolves the project lock without replacing project-owned code or design decisions.",
+    a: "StyleSeed tracks both engineVersion and engineRevision. The version names the release line; the revision hashes the exact maintained method, 23 skills, plugin boundary, and palette engine. $ss-update compares installed, project-recorded, and published revisions, then refreshes the engine and re-resolves the project lock without replacing project-owned code or design decisions.",
   },
   {
     q: "Is the StyleSeed Codex plugin available in a public plugin directory?",
-    a: "Not yet. The repository contains a validated Codex plugin package with the same 23 canonical skills and an approval-gated local MCP bridge, and that package has been tested locally. Public installation remains npx skills add bitjaru/styleseed until a plugin-directory build is independently verified and released there.",
+    a: "Not yet. The repository contains a development Codex package with 23 core skills, but public directory release is not verified. The default/core package contains neither ss-learn nor a learning MCP. Public installation remains npx skills add bitjaru/styleseed until a plugin-directory build is independently verified and released there.",
   },
   {
     q: "Installing the skills asks for permission or gets blocked — is that normal? Do I even need them?",

@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "id": "site-learn",
+  "target": {
+    "kind": "route",
+    "locator": "/learn"
+  },
+  "selection": {
+    "grammar": "editorial-reading",
+    "adapter": "product-ui",
+    "domain": "developer-tools",
+    "page": "detail",
+    "recipe": "editorial-authority",
+    "palette": "editorial-ink",
+    "profile": "none",
+    "fallback": null
+  },
+  "decisions": {
+    "primaryDecision": "Can the reader understand what StyleSeed learning is and is not?",
+    "primaryAction": "Decide whether to opt into explicit local learning capture.",
+    "signatureMove": "Keep privacy limits and explicit consent boundaries visible before workflow detail."
+  },
+  "implementation": {
+    "sourceRoots": [
+      "demo-pricing/app/learn",
+      "demo-pricing/app/globals.css"
+    ],
+    "tokenFiles": [
+      "demo-pricing/app/globals.css",
+      "demo-pricing/app/skins.css"
+    ]
+  },
+  "validation": {
+    "scoreFloor": 80,
+    "requiredRenders": [
+      {
+        "id": "mobile-loaded",
+        "state": "loaded",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        }
+      },
+      {
+        "id": "desktop-loaded",
+        "state": "loaded",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        }
+      }
+    ],
+    "temporal": {
+      "required": false,
+      "scenarios": []
+    },
+    "humanAcceptance": false
+  }
+}

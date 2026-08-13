@@ -2,12 +2,15 @@
 
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { loadProjectRegistry } from "../../ss-resolve/scripts/project-registry.mjs";
+import { containedRegularFile } from "../../ss-score/scripts/evidence-contract.mjs";
+import { verifyEvidenceRun } from "../../ss-score/scripts/evidence-gate.mjs";
 
 const STAGES = ["briefed", "directed", "selected", "planned", "built", "verified"];
 const ROLES = new Set(["structure", "navigation", "signature", "motion", "asset-language"]);
 const LANES = new Set(["native", "signature", "experimental"]);
 const GATES = ["code", "visual", "temporal", "human"];
-const GATE_STATUSES = new Set(["pending", "pass", "fail", "blocked"]);
+const GATE_STATUSES = new Set(["pending", "fail", "blocked"]);
 const MEDIA_STATUSES = new Set(["planned", "running", "complete", "blocked", "rejected"]);
 
 function fail(message, code = 1) {
@@ -89,8 +92,56 @@ function validateDirection(direction, index, failures) {
   }
 }
 
+function registryContext(root, artifactId = null) {
+  const registry = loadProjectRegistry(root);
+  if (!registry) return { registry: null, artifact: null, manifestInfo: null };
+  if (!artifactId) fail("registry projects require --artifact");
+  const artifactEntry = registry.artifactMap.get(artifactId);
+  if (!artifactEntry) fail(`artifact not found in registry: ${artifactId}`);
+  const manifestPath = resolve(root, ".styleseed", "manifests", `${artifactId}.json`);
+  if (!existsSync(manifestPath)) fail(`artifact manifest not found: ${artifactId}`);
+  const manifest = readJson(manifestPath);
+  if (manifest.schemaVersion !== 2) fail(`artifact manifest must be schema v2: ${artifactId}`);
+  return {
+    registry,
+    artifact: artifactEntry.artifact,
+    manifestInfo: {
+      path: `.styleseed/manifests/${artifactId}.json`,
+      manifest,
+    },
+  };
+}
+
+function requireLocalRecordingIfNeeded(root, run, artifact) {
+  if (artifact?.validation?.temporal?.required !== true) return null;
+  if (!run.outputs?.recording) fail("temporal verification requires a local recording output");
+  return containedRegularFile(root, run.outputs.recording, { label: "studio recording" });
+}
+
+function writeEvidenceSummary(dir, verification, evidenceRunId, result) {
+  verification.evidenceRunId = evidenceRunId;
+  verification.evidenceSummary = result.summary;
+  verification.updatedAt = now();
+  writeJson(resolve(dir, "verification.json"), verification);
+}
+
+function rerunEvidenceForVerified(root, dir, run, verification) {
+  if (!run.artifactId) fail("verified Studio runs require an artifact-bound run");
+  if (!verification.evidenceRunId) fail("verified Studio runs require an evidence run");
+  const { artifact } = registryContext(root, run.artifactId);
+  requireLocalRecordingIfNeeded(root, run, artifact);
+  const result = verifyEvidenceRun({
+    projectRoot: root,
+    artifactId: run.artifactId,
+    runId: verification.evidenceRunId,
+  });
+  writeEvidenceSummary(dir, verification, verification.evidenceRunId, result);
+  return { artifact, result };
+}
+
 function validateTarget(dir, run, target) {
   const failures = [];
+  const root = resolve(dir, "..", "..", "..");
   if (!STAGES.includes(target)) failures.push(`unknown target stage ${target}`);
   const briefPath = resolve(dir, "brief.md");
   if (!existsSync(briefPath) || readFileSync(briefPath, "utf8").trim().length < 40) {
@@ -103,8 +154,9 @@ function validateTarget(dir, run, target) {
     else references.items.forEach((item, index) => {
       requiredString(item.id, `references[${index}].id`, failures);
       if (!ROLES.has(item.role)) failures.push(`references[${index}].role is invalid`);
-      for (const key of ["source", "observedAt", "observation", "principle", "confidence", "rights"])
+      for (const key of ["source", "observedAt", "observation", "principle", "confidence", "rights"]) {
         requiredString(item[key], `references[${index}].${key}`, failures);
+      }
     });
 
     const directions = readJson(resolve(dir, "directions.json"));
@@ -135,17 +187,20 @@ function validateTarget(dir, run, target) {
     const scenes = readJson(resolve(dir, "scenes.json"));
     if (!Array.isArray(scenes.scenes) || scenes.scenes.length === 0) failures.push("at least one interaction scene is required");
     else scenes.scenes.forEach((scene, index) => {
-      for (const key of ["id", "trigger", "from", "to", "feedback", "interrupt", "reducedMotion"])
+      for (const key of ["id", "trigger", "from", "to", "feedback", "interrupt", "reducedMotion"]) {
         requiredString(scene[key], `scenes[${index}].${key}`, failures);
-      for (const key of ["continuity", "enter", "exit", "rendererTargets"])
+      }
+      for (const key of ["continuity", "enter", "exit", "rendererTargets"]) {
         if (!Array.isArray(scene[key])) failures.push(`scenes[${index}].${key} must be an array`);
+      }
     });
 
     const assets = readJson(resolve(dir, "assets.json"));
     if (!Array.isArray(assets.jobs)) failures.push("assets.json jobs must be an array");
     else assets.jobs.forEach((job, index) => {
-      for (const key of ["id", "role", "kind", "capability", "provider", "prompt", "status", "provenance", "rights", "fallback", "consumingScene"])
+      for (const key of ["id", "role", "kind", "capability", "provider", "prompt", "status", "provenance", "rights", "fallback", "consumingScene"]) {
         requiredString(job[key], `assets[${index}].${key}`, failures);
+      }
       if (!Array.isArray(job.inputs)) failures.push(`assets[${index}].inputs must be an array`);
       if (!MEDIA_STATUSES.has(job.status)) failures.push(`assets[${index}].status is invalid`);
       if (job.status === "complete") requiredString(job.output, `assets[${index}].output`, failures);
@@ -163,16 +218,22 @@ function validateTarget(dir, run, target) {
   }
 
   if (STAGES.indexOf(target) >= STAGES.indexOf("verified")) {
-    requiredString(run.outputs?.recording, "run.outputs.recording", failures);
     const verification = readJson(resolve(dir, "verification.json"));
+    const summary = verification.evidenceSummary;
+    if (!verification.evidenceRunId) failures.push("verification.evidenceRunId is required");
+    if (!summary || summary.schemaVersion !== 1) failures.push("verification.evidenceSummary must be a computed verifier summary");
     for (const gate of GATES) {
-      if (verification.gates?.[gate] !== "pass") failures.push(`verification gate ${gate} must pass`);
+      if (summary?.gates?.[gate] !== "pass") failures.push(`verification gate ${gate} must pass`);
     }
-    if (!Array.isArray(verification.evidence) || verification.evidence.length < 4) {
-      failures.push("verification needs evidence for all four gates");
+    if (summary?.status !== "pass") failures.push("verification summary status must be pass");
+    if (run.artifactId) {
+      try {
+        const { artifact } = registryContext(root, run.artifactId);
+        requireLocalRecordingIfNeeded(root, run, artifact);
+      } catch (error) {
+        failures.push(error.message);
+      }
     }
-    requiredString(verification.reviewer, "verification.reviewer", failures);
-    requiredString(verification.acceptedAt, "verification.acceptedAt", failures);
   }
 
   return failures;
@@ -181,6 +242,7 @@ function validateTarget(dir, run, target) {
 function init(options) {
   for (const key of ["name", "brief", "surface", "platform"]) if (!options[key]) fail(`--${key} is required`);
   const root = projectRoot(options);
+  const { artifact, manifestInfo } = registryContext(root, options.artifact ?? null);
   const baseId = slugify(options.name);
   let id = baseId;
   let suffix = 2;
@@ -191,7 +253,7 @@ function init(options) {
   mkdirSync(resolve(dir, "evidence", "recordings"), { recursive: true });
   const createdAt = now();
   writeJson(resolve(dir, "run.json"), {
-    schemaVersion: 1,
+    schemaVersion: 2,
     id,
     title: options.name,
     createdAt,
@@ -199,6 +261,9 @@ function init(options) {
     stage: "briefed",
     surface: options.surface,
     platform: options.platform,
+    artifactId: artifact?.id ?? null,
+    manifestPath: manifestInfo?.path ?? null,
+    methodHash: manifestInfo?.manifest?.methodHash ?? null,
     outputs: { prototype: null, recording: null },
   });
   writeFileSync(resolve(dir, "brief.md"), `# ${options.name}\n\n${options.brief.trim()}\n`);
@@ -209,8 +274,11 @@ function init(options) {
   writeJson(resolve(dir, "assets.json"), { jobs: [] });
   writeJson(resolve(dir, "video.json"), { mode: "prototype-first", shots: [] });
   writeJson(resolve(dir, "verification.json"), {
-    gates: Object.fromEntries(GATES.map((gate) => [gate, "pending"])),
-    evidence: [], reviewer: null, acceptedAt: null, risks: [],
+    schemaVersion: 2,
+    evidenceRunId: null,
+    evidenceSummary: null,
+    risks: [],
+    updatedAt: createdAt,
   });
   console.log(dir);
 }
@@ -277,29 +345,44 @@ function gate(options) {
   if (!GATE_STATUSES.has(options.status)) {
     fail(`--status must be one of ${[...GATE_STATUSES].join(", ")}`);
   }
-  if (options.gate === "human" && options.status === "pass" && !options.reviewer) {
-    fail("human pass requires --reviewer");
-  }
   const verificationPath = resolve(dir, "verification.json");
   const verification = readJson(verificationPath);
-  verification.gates[options.gate] = options.status;
-  if (options.evidence) {
-    verification.evidence.push({
-      gate: options.gate,
-      path: options.evidence,
-      note: options.note || `${options.gate} ${options.status}`,
-      recordedAt: now(),
-    });
-  }
-  if (options.reviewer) verification.reviewer = options.reviewer;
-  if (options.gate === "human" && options.status === "pass") verification.acceptedAt = now();
+  verification.manualState ??= {};
+  verification.manualState[options.gate] = {
+    status: options.status,
+    note: options.note || `${options.gate} ${options.status}`,
+    recordedAt: now(),
+  };
+  verification.updatedAt = now();
   writeJson(verificationPath, verification);
   run.updatedAt = now();
   writeJson(path, run);
   console.log(`${run.id}: gate ${options.gate} -> ${options.status}`);
 }
 
+function evidence(options) {
+  const root = projectRoot(options);
+  const { dir, path, run } = requireRun(options);
+  if (!options["evidence-run"]) fail("--evidence-run is required");
+  if (!run.artifactId) fail("evidence verification requires an artifact-bound Studio run");
+  const verificationPath = resolve(dir, "verification.json");
+  const verification = readJson(verificationPath);
+  const { artifact } = registryContext(root, run.artifactId);
+  requireLocalRecordingIfNeeded(root, run, artifact);
+  const result = verifyEvidenceRun({
+    projectRoot: root,
+    artifactId: run.artifactId,
+    runId: options["evidence-run"],
+  });
+  writeEvidenceSummary(dir, verification, options["evidence-run"], result);
+  run.updatedAt = now();
+  writeJson(path, run);
+  if (!result.ok) fail(`evidence verification failed:\n- ${result.errors.join("\n- ")}`, 2);
+  console.log(`${run.id}: evidence ${options["evidence-run"]} verified`);
+}
+
 function advance(options) {
+  const root = projectRoot(options);
   const { dir, path, run } = requireRun(options);
   const target = options.stage;
   if (!STAGES.includes(target)) fail(`--stage must be one of ${STAGES.join(", ")}`);
@@ -307,6 +390,10 @@ function advance(options) {
   const targetIndex = STAGES.indexOf(target);
   if (targetIndex !== currentIndex + 1) fail(`advance must be sequential: ${run.stage} -> ${STAGES[currentIndex + 1] || "complete"}`);
   if (target === "selected") fail("use the select command for the human selection gate");
+  if (target === "verified") {
+    const verification = readJson(resolve(dir, "verification.json"));
+    rerunEvidenceForVerified(root, dir, run, verification);
+  }
   const failures = validateTarget(dir, run, target);
   if (failures.length) fail(`cannot advance to ${target}:\n- ${failures.join("\n- ")}`);
   run.stage = target;
@@ -338,7 +425,7 @@ function status(options) {
     mediaJobs: assets.jobs.length,
     mediaComplete: assets.jobs.filter((job) => job.status === "complete").length,
     prototypeShots: video.shots.filter((shot) => shot.sourceType === "prototype-recording").length,
-    gates: verification.gates,
+    gates: verification.evidenceSummary?.gates ?? null,
     outputs: run.outputs,
     path: dir,
   }, null, 2));
@@ -350,7 +437,8 @@ else if (command === "select") select(options);
 else if (command === "output") output(options);
 else if (command === "media") media(options);
 else if (command === "gate") gate(options);
+else if (command === "evidence") evidence(options);
 else if (command === "advance") advance(options);
 else if (command === "validate") validate(options);
 else if (command === "status") status(options);
-else fail("command must be init, select, output, media, gate, advance, validate, or status");
+else fail("command must be init, select, output, media, gate, evidence, advance, validate, or status");

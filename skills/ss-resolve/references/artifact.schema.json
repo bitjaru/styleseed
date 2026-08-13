@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://styleseed.dev/schemas/artifact.schema.json",
+  "type": "object", "additionalProperties": false,
+  "required": ["schemaVersion", "id", "target", "selection", "decisions", "implementation", "validation"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "id": { "$ref": "#/$defs/id" },
+    "target": { "type": "object", "additionalProperties": false, "required": ["kind", "locator"], "properties": { "kind": { "enum": ["route", "component", "document", "deck", "carousel", "single-frame"] }, "locator": { "type": "string", "minLength": 1, "maxLength": 240, "pattern": "^[^\\u0000-\\u001f\\u007f?#]+$" } } },
+    "selection": {
+      "type": "object", "additionalProperties": false, "required": ["grammar", "adapter", "domain", "page", "recipe", "palette", "profile", "fallback"],
+      "properties": {
+        "grammar": { "enum": ["commerce-conversion", "consumer-service", "editorial-reading", "expressive-marketing", "institutional-service", "operations-console", "sequential-story", "technical-instrument"] },
+        "adapter": { "enum": [null, "document-report", "product-ui", "single-frame", "slide-deck", "social-carousel"] },
+        "domain": { "enum": [null, "ai-assistant", "booking", "content", "developer-tools", "ecommerce", "education", "fintech", "health", "marketplace", "none", "productivity", "saas", "social"] },
+        "page": { "enum": ["dashboard", "detail", "form", "landing", "list", "none", "onboarding", "settings"] },
+        "recipe": { "enum": [null, "calm-consumer", "commerce-operator", "creative-professional", "developer-platform", "editorial-authority", "enterprise-workbench", "expressive-brand", "native-mobile", "public-service"] },
+        "palette": { "enum": [null, "civic-blue", "cobalt-instrument", "deep-lime-studio", "editorial-ink", "nocturne-violet", "quiet-mineral", "signal-coral", "warm-clay-commerce"] },
+        "profile": { "enum": [null, "brutalist-lite", "editorial", "minimal-mono", "none", "swiss", "technical", "warm-dtc"] },
+        "fallback": { "enum": [null, "commerce-conversion", "consumer-service", "editorial-reading", "expressive-marketing", "institutional-service", "operations-console", "sequential-story", "technical-instrument"] }
+      }
+    },
+    "decisions": { "type": "object", "additionalProperties": false, "required": ["primaryDecision", "primaryAction", "signatureMove"], "properties": { "primaryDecision": { "$ref": "#/$defs/text" }, "primaryAction": { "$ref": "#/$defs/text" }, "signatureMove": { "$ref": "#/$defs/text" } } },
+    "implementation": { "type": "object", "additionalProperties": false, "required": ["sourceRoots", "tokenFiles"], "properties": { "sourceRoots": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/path" } }, "tokenFiles": { "type": "array", "items": { "$ref": "#/$defs/path" } } } },
+    "validation": {
+      "type": "object", "additionalProperties": false, "required": ["scoreFloor", "requiredRenders", "temporal", "humanAcceptance"],
+      "properties": {
+        "scoreFloor": { "type": "integer", "minimum": 80, "maximum": 100 },
+        "requiredRenders": {
+          "type": "array", "minItems": 1,
+          "items": {
+            "type": "object", "additionalProperties": false, "required": ["id", "state", "viewport"],
+            "properties": {
+              "id": { "$ref": "#/$defs/id" },
+              "state": { "enum": ["loaded", "loading", "empty", "error", "success", "disabled", "focused", "reduced-motion"] },
+              "viewport": {
+                "type": "object", "additionalProperties": false, "required": ["width", "height"],
+                "properties": { "width": { "type": "integer", "minimum": 1, "maximum": 10000 }, "height": { "type": "integer", "minimum": 1, "maximum": 10000 } }
+              }
+            }
+          }
+        },
+        "temporal": { "type": "object", "additionalProperties": false, "required": ["required", "scenarios"], "properties": { "required": { "type": "boolean" }, "scenarios": { "type": "array", "items": { "$ref": "#/$defs/id" } } } },
+        "humanAcceptance": { "type": "boolean" }
+      }
+    }
+  },
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,63}$" },
+    "text": { "type": "string", "minLength": 1, "maxLength": 600, "pattern": "^[^\\u0000-\\u001f\\u007f]+$" },
+    "path": { "type": "string", "minLength": 1, "maxLength": 240, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*[\\u0000-\\u001f\\u007f]).+$" }
+  }
+}

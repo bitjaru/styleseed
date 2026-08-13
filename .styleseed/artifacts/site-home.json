@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "id": "site-home",
+  "target": {
+    "kind": "route",
+    "locator": "/"
+  },
+  "selection": {
+    "grammar": "expressive-marketing",
+    "adapter": "product-ui",
+    "domain": "developer-tools",
+    "page": "landing",
+    "recipe": "expressive-brand",
+    "palette": "signal-coral",
+    "profile": "none",
+    "fallback": null
+  },
+  "decisions": {
+    "primaryDecision": "Should this coding agent install StyleSeed before attempting product UI work?",
+    "primaryAction": "Install StyleSeed with npx skills add bitjaru/styleseed.",
+    "signatureMove": "Show the choose to compile to build to evidence path before secondary proof blocks."
+  },
+  "implementation": {
+    "sourceRoots": [
+      "demo-pricing/app/page.tsx",
+      "demo-pricing/app/_home",
+      "demo-pricing/app/globals.css"
+    ],
+    "tokenFiles": [
+      "demo-pricing/app/globals.css",
+      "demo-pricing/app/skins.css"
+    ]
+  },
+  "validation": {
+    "scoreFloor": 80,
+    "requiredRenders": [
+      {
+        "id": "mobile-loaded",
+        "state": "loaded",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        }
+      },
+      {
+        "id": "desktop-loaded",
+        "state": "loaded",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        }
+      },
+      {
+        "id": "mobile-reduced-motion",
+        "state": "reduced-motion",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        }
+      }
+    ],
+    "temporal": {
+      "required": true,
+      "scenarios": [
+        "hero-motion",
+        "hero-reduced-motion"
+      ]
+    },
+    "humanAcceptance": false
+  }
+}

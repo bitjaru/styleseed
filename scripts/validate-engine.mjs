@@ -7,6 +7,8 @@ const root = resolve(new URL("../", import.meta.url).pathname);
 const read = (path) => readFileSync(resolve(root, path), "utf8");
 const failures = [];
 const assert = (ok, message) => { if (!ok) failures.push(message); };
+const skillContracts = spawnSync(process.execPath, [resolve(root, "scripts/validate-skill-contracts.mjs")], { encoding: "utf8" });
+assert(skillContracts.status === 0, `skill contract matrix failed: ${skillContracts.stderr || skillContracts.stdout}`);
 function walkRelativeFiles(directory, prefix = "") {
   return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
     const relative = prefix ? `${prefix}/${entry.name}` : entry.name;
@@ -19,25 +21,25 @@ function walkRelativeFiles(directory, prefix = "") {
 const version = read("engine/VERSION").trim();
 const plugin = JSON.parse(read(".claude-plugin/plugin.json"));
 const codexPlugin = JSON.parse(read(".codex-plugin/plugin.json"));
-const mcpManifest = JSON.parse(read(".mcp.json"));
 const publicVersion = JSON.parse(read("demo-pricing/public/version.json"));
 assert(plugin.version === version, `plugin version ${plugin.version} != ${version}`);
 assert(codexPlugin.version === version, `Codex plugin version ${codexPlugin.version} != ${version}`);
 assert(publicVersion.version === version, `public version ${publicVersion.version} != ${version}`);
 assert(JSON.stringify(plugin.skills) === JSON.stringify(["./engine/.claude/skills"]), "plugin must expose only the canonical skill directory");
-assert(codexPlugin.name === "styleseed" && codexPlugin.skills === "./skills/" && codexPlugin.mcpServers === "./.mcp.json", "Codex plugin manifest wiring drifted");
-assert(mcpManifest.mcpServers?.["styleseed-learning"]?.command === "node", "StyleSeed learning MCP command drifted");
+assert(codexPlugin.name === "styleseed" && codexPlugin.skills === "./engine/.claude/skills/" && !("mcpServers" in codexPlugin), "Codex plugin manifest wiring drifted");
+assert(!existsSync(resolve(root, ".mcp.json")), "default core plugin must not auto-discover an MCP server");
 assert(!existsSync(resolve(root, "skills/styleseed-design-review/SKILL.md")), "legacy standalone review skill must not compete with ss-score");
 
 const skillsDir = resolve(root, "engine/.claude/skills");
 const skills = readdirSync(skillsDir, { withFileTypes: true })
-  .filter((entry) => entry.isDirectory() && entry.name.startsWith("ss-") && existsSync(resolve(skillsDir, entry.name, "SKILL.md")));
+  .filter((entry) => entry.isDirectory() && (entry.name === "styleseed" || entry.name.startsWith("ss-")) && existsSync(resolve(skillsDir, entry.name, "SKILL.md")));
 assert(skills.length === 23, `expected 23 canonical skills, found ${skills.length}`);
 assert(publicVersion.skills === skills.length, `version.json skills ${publicVersion.skills} != ${skills.length}`);
 assert(skills.some((entry) => entry.name === "ss-reference"), "ss-reference is missing");
 assert(skills.some((entry) => entry.name === "ss-resolve"), "ss-resolve is missing");
 assert(skills.some((entry) => entry.name === "ss-studio"), "ss-studio is missing");
-assert(skills.some((entry) => entry.name === "ss-learn"), "ss-learn is missing");
+assert(skills.some((entry) => entry.name === "styleseed"), "primary styleseed router is missing");
+assert(!skills.some((entry) => entry.name === "ss-learn"), "core skills must not include the optional ss-learn extension");
 
 const bridge = resolve(root, ".agents/skills");
 assert(existsSync(bridge) && lstatSync(bridge).isSymbolicLink(), ".agents/skills must be the canonical symlink");
@@ -103,14 +105,22 @@ for (const path of coreFiles) {
 
 const catalog = JSON.parse(read("engine/.claude/skills/ss-resolve/references/catalog.json"));
 assert(catalog.engineVersion === version, `context catalog ${catalog.engineVersion} != ${version}`);
+assert(catalog.schemaVersion === 4, `context catalog schema ${catalog.schemaVersion} != 4`);
 assert(/^sha256:[0-9a-f]{64}$/.test(catalog.engineRevision), "context catalog engine revision is invalid");
-assert(Array.isArray(catalog.distributionFiles) && catalog.distributionFiles.length >= 40, "context catalog distribution manifest is incomplete");
-assert(catalog.distributionFiles.some((file) => file.path === ".claude/skills/ss-update/scripts/check-update.mjs"), "distribution manifest omits the update checker");
-assert(catalog.distributionFiles.some((file) => file.path === "root/.codex-plugin/plugin.json"), "distribution manifest omits the Codex plugin");
-assert(catalog.distributionFiles.some((file) => file.path === "root/mcp/styleseed-learning-server.mjs"), "distribution manifest omits the learning MCP bridge");
-assert(!catalog.distributionFiles.some((file) => file.path.endsWith("ss-resolve/references/catalog.json")), "distribution revision must not hash its generated catalog");
+assert(Array.isArray(catalog.distributions?.core?.files) && catalog.distributions.core.files.length >= 40, "context catalog core distribution is incomplete");
+assert(catalog.distributions.core.revision === catalog.engineRevision, "core distribution revision drifted from engineRevision");
+assert(catalog.distributions.core.files.some((file) => file.path === ".codex-plugin/plugin.json"), "core distribution omits the Codex plugin manifest");
+assert(catalog.distributions.core.files.some((file) => file.path === "LICENSE"), "core distribution omits LICENSE");
+assert(catalog.distributions.core.files.some((file) => file.path === "SECURITY.md"), "core distribution omits SECURITY.md");
+assert(catalog.distributions.core.files.some((file) => file.path === "engine/.claude/skills/ss-update/scripts/check-update.mjs"), "core distribution omits the update checker");
+assert(!catalog.distributions.core.files.some((file) => file.path.startsWith("engine/.claude/skills/ss-learn/")), "core distribution must exclude ss-learn");
+assert(!catalog.distributions.core.files.some((file) => file.path.includes("/mcp/") || file.path.endsWith("/.mcp.json")), "core distribution must not include the learning MCP bridge");
+assert(!catalog.distributions.core.files.some((file) => file.path.endsWith("ss-resolve/references/catalog.json")), "distribution revision must not hash its generated catalog");
+assert(Array.isArray(catalog.distributionFiles) && catalog.distributionFiles.length === catalog.distributions.core.files.length, "legacy distributionFiles alias drifted from the core distribution");
+assert(catalog.distributionFiles.some((file) => file.path === "root/.codex-plugin/plugin.json"), "legacy distribution alias omits the Codex plugin manifest");
+assert(catalog.distributionFiles.some((file) => file.path === ".claude/skills/ss-update/scripts/check-update.mjs"), "legacy distribution alias omits the update checker");
 assert(publicVersion.revision === catalog.engineRevision, "version.json revision differs from the canonical catalog");
-assert(publicVersion.revisionFiles === catalog.distributionFiles.length, "version.json revision file count drifted");
+assert(publicVersion.revisionFiles === catalog.distributions.core.files.length, "version.json revision file count drifted");
 assert(Object.keys(catalog.grammars).length === 8, "context catalog grammar count drifted");
 assert(Object.keys(catalog.adapters).length === 5, "context catalog adapter count drifted");
 assert(Object.keys(catalog.domains).length === 12, "context catalog domain count drifted");
@@ -166,7 +176,7 @@ try {
     assert(manifest.selection.palette === "cobalt-instrument", "resolver selected the wrong palette");
     assert(manifest.engineRevision === catalog.engineRevision, "resolver manifest omitted the engine revision");
     assert(manifest.bundle.bytes >= 5000 && manifest.bundle.bytes <= 30000, `resolver bundle is ${manifest.bundle.bytes} bytes`);
-    assert(/^[0-9a-f]{64}$/.test(manifest.bundle.sha256), "resolver bundle hash is invalid");
+    assert(/^(?:sha256:)?[0-9a-f]{64}$/.test(manifest.bundle.sha256), "resolver bundle hash is invalid");
     const updateChecker = resolve(root, "engine/.claude/skills/ss-update/scripts/check-update.mjs");
     const remoteVersionPath = resolve(smokeRoot, "remote-version.json");
     writeFileSync(remoteVersionPath, JSON.stringify({ version, revision: catalog.engineRevision }));
@@ -234,13 +244,14 @@ try {
 
 const learningRoot = mkdtempSync(join(tmpdir(), "styleseed-learn-"));
 try {
-  const learning = resolve(root, "engine/.claude/skills/ss-learn/scripts/learning.mjs");
-  const learningSource = read("engine/.claude/skills/ss-learn/scripts/learning.mjs");
-  const learningPackageSource = read("engine/.claude/skills/ss-learn/scripts/learning-package.mjs");
-  const learningMcpSource = read("mcp/styleseed-learning-server.mjs");
+  const learningRuntimeCatalog = JSON.parse(read("extensions/learning/runtime/catalog.json"));
+  const learning = resolve(root, "extensions/learning/skills/ss-learn/scripts/learning.mjs");
+  const learningSource = read("extensions/learning/skills/ss-learn/scripts/learning.mjs");
+  const learningPackageSource = read("extensions/learning/skills/ss-learn/scripts/learning-package.mjs");
+  const learningMcpSource = read("extensions/learning/mcp/styleseed-learning-server.mjs");
   assert(!/\bfetch\s*\(|node:https?|https?\.request|child_process/.test(`${learningSource}\n${learningPackageSource}\n${learningMcpSource}`), "ss-learn and its MCP bridge must not contain a network or subprocess transport");
-  assert(existsSync(resolve(root, "engine/.claude/skills/ss-learn/references/candidate.schema.json")), "ss-learn candidate schema is missing");
-  assert(existsSync(resolve(root, "engine/.claude/skills/ss-learn/agents/openai.yaml")), "ss-learn Codex UI metadata is missing");
+  assert(existsSync(resolve(root, "extensions/learning/skills/ss-learn/references/candidate.schema.json")), "optional ss-learn candidate schema is missing");
+  assert(existsSync(resolve(root, "extensions/learning/skills/ss-learn/agents/openai.yaml")), "optional ss-learn Codex UI metadata is missing");
 
   const init = spawnSync(process.execPath, [learning, "init", "--project-root", learningRoot], { encoding: "utf8" });
   assert(init.status === 0, `ss-learn init failed: ${init.stderr || init.stdout}`);
@@ -280,7 +291,7 @@ try {
     const candidate = JSON.parse(readFileSync(captureResult.path, "utf8"));
     assert(candidate.status === "draft", "ss-learn capture must remain draft before human review");
     assert(candidate.privacy.networkTransmission === false, "ss-learn candidate must record zero transmission");
-    assert(candidate.engine.revision === catalog.engineRevision, "ss-learn candidate omitted the engine revision");
+    assert(candidate.engine.revision === learningRuntimeCatalog.engineRevision, "ss-learn candidate omitted its extension runtime revision");
     assert(/^sha256:[0-9a-f]{64}$/.test(candidate.recordHash), "ss-learn candidate record hash is invalid");
 
     const prematureShare = spawnSync(process.execPath, [learning, "prepare-share", "--project-root", learningRoot, "--id", candidate.id, "--purpose", "team-registry", "--attestation", "APPROVE_LOCAL_EXPORT"], { encoding: "utf8" });
@@ -300,34 +311,16 @@ try {
       assert(/^sha256:[0-9a-f]{64}$/.test(share.packageHash), "ss-learn package hash is invalid");
       assert(/^sha256:[0-9a-f]{64}$/.test(share.approval.localReviewHash), "ss-learn package omitted the local review hash");
 
-      const prematureMcp = spawnSync(process.execPath, [resolve(root, "mcp/styleseed-learning-server.mjs")], {
+      const prematureMcp = spawnSync(process.execPath, [resolve(root, "extensions/learning/mcp/styleseed-learning-server.mjs")], {
         encoding: "utf8",
         input: `${JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tools/call", params: { name: "styleseed_consume_approved_learning_package", arguments: { packagePath: preparedResult.path, packageHash: share.packageHash } } })}\n`,
       });
       assert(prematureMcp.status === 0 && JSON.parse(prematureMcp.stdout).result.isError === true, "learning MCP must reject a package without a one-time grant");
 
-      const grant = spawnSync(process.execPath, [learning, "grant-mcp-read", "--project-root", learningRoot, "--package", preparedResult.path, "--attestation", "APPROVE_MCP_READ"], { encoding: "utf8" });
-      assert(grant.status === 0, `ss-learn MCP grant failed: ${grant.stderr || grant.stdout}`);
-      if (grant.status === 0) {
-        const grantResult = JSON.parse(grant.stdout);
-        assert(grantResult.usesRemaining === 1 && existsSync(grantResult.grantPath), "ss-learn MCP grant was not created once");
-        const mcpInput = [
-          { jsonrpc: "2.0", id: 1, method: "initialize", params: { protocolVersion: "2025-06-18", capabilities: {}, clientInfo: { name: "validator", version: "1" } } },
-          { jsonrpc: "2.0", id: 2, method: "tools/list", params: {} },
-          { jsonrpc: "2.0", id: 3, method: "tools/call", params: { name: "styleseed_consume_approved_learning_package", arguments: { packagePath: preparedResult.path, packageHash: share.packageHash } } },
-          { jsonrpc: "2.0", id: 4, method: "tools/call", params: { name: "styleseed_consume_approved_learning_package", arguments: { packagePath: preparedResult.path, packageHash: share.packageHash } } },
-        ].map((message) => JSON.stringify(message)).join("\n") + "\n";
-        const mcp = spawnSync(process.execPath, [resolve(root, "mcp/styleseed-learning-server.mjs")], { encoding: "utf8", input: mcpInput });
-        assert(mcp.status === 0, `learning MCP protocol smoke failed: ${mcp.stderr || mcp.stdout}`);
-        if (mcp.status === 0) {
-          const messages = mcp.stdout.trim().split("\n").map((line) => JSON.parse(line));
-          assert(messages[0].result.serverInfo.name === "styleseed-learning", "learning MCP initialize metadata drifted");
-          assert(messages[1].result.tools.length === 2, "learning MCP tool discovery drifted");
-          assert(messages[2].result.structuredContent.grantConsumed === true && messages[2].result.structuredContent.clientExposure === true, "learning MCP did not disclose or consume the approved read");
-          assert(messages[3].result.isError === true, "learning MCP one-time grant must fail on retry");
-          assert(!existsSync(grantResult.grantPath), "learning MCP did not remove the consumed grant");
-        }
-      }
+      // SEC-050/060/070 are intentionally not exercised here. Until a host-owned,
+      // action-bound proof adapter is selected, the core validator may prove only
+      // that an ungranted package is rejected; it must not manufacture a grant and
+      // turn the development bridge green by self-attestation.
     }
 
     const acceptedPath = resolve(learningRoot, ".styleseed/learning/candidates", `${candidate.id}.json`);
@@ -382,12 +375,12 @@ try {
     assert(recording.status === 0, `ss-studio recording output failed: ${recording.stderr || recording.stdout}`);
     for (const gate of ["code", "visual", "temporal"]) {
       const result = spawnSync(process.execPath, [studio, "gate", "--project-root", studioRoot, "--run", runId, "--gate", gate, "--status", "pass", "--evidence", `evidence/${gate}.json`, "--note", `${gate} validator fixture`], { encoding: "utf8" });
-      assert(result.status === 0, `ss-studio ${gate} gate update failed: ${result.stderr || result.stdout}`);
+      assert(result.status !== 0, `ss-studio ${gate} gate accepted a manual pass string`);
     }
     const human = spawnSync(process.execPath, [studio, "gate", "--project-root", studioRoot, "--run", runId, "--gate", "human", "--status", "pass", "--reviewer", "validator fixture", "--evidence", "evidence/human.json", "--note", "synthetic acceptance for schema validation only"], { encoding: "utf8" });
-    assert(human.status === 0, `ss-studio human gate update failed: ${human.stderr || human.stdout}`);
+    assert(human.status !== 0, "ss-studio human gate accepted a manual pass string");
     const verified = spawnSync(process.execPath, [studio, "advance", "--project-root", studioRoot, "--run", runId, "--stage", "verified"], { encoding: "utf8" });
-    assert(verified.status === 0, `ss-studio verified contract failed: ${verified.stderr || verified.stdout}`);
+    assert(verified.status !== 0, "ss-studio verified an unbound run without artifact evidence");
   }
 } finally {
   rmSync(studioRoot, { recursive: true, force: true });
@@ -403,4 +396,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log(`StyleSeed ${version}: 8 grammars · 9 recipes · 8 palettes · 5 adapters · 23 skills · Studio + context compiler + private local learning verified`);
+console.log(`StyleSeed ${version}: 8 grammars · 9 recipes · 8 palettes · 5 adapters · 23 core skills · Studio + context compiler verified; optional learning local contract verified through SEC-040 only`);

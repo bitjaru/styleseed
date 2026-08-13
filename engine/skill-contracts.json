@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "evidenceLevels": ["none", "compiled", "checked", "render-inspected", "temporal-inspected", "acceptance-recorded", "evidence-valid"],
+  "skills": {
+    "styleseed": { "consumesBundle": true, "maySelectGrammar": false, "mayMutateProjectConfig": false, "evidenceLevel": "none" },
+    "ss-a11y": { "consumesBundle": true, "maySelectGrammar": false, "mayMutateProjectConfig": false, "evidenceLevel": "checked" },
+    "ss-audit": { "consumesBundle": true, "maySelectGrammar": false, "mayMutateProjectConfig": false, "evidenceLevel": "checked" },
+    "ss-build": { "consumesBundle": true, "maySelectGrammar": false, "mayMutateProjectConfig": false, "evidenceLevel": "checked" },
+    "ss-component": { "consumesBundle": true, "maySelectGrammar": false, "mayMutateProjectConfig": false, "evidenceLevel": "checked" },
+    "ss-copy": { "consumesBundle": true, "maySelectGrammar": false, "mayMutateProjectConfig": false, "evidenceLevel": "none" },
+    "ss-dial": { "consumesBundle": true, "maySelectGrammar": false, "mayMutateProjectConfig": true, "evidenceLevel": "checked" },
+    "ss-feedback": { "consumesBundle": true, "maySelectGrammar": false, "mayMutateProjectConfig": false, "evidenceLevel": "checked" },
+    "ss-flow": { "consumesBundle": true, "maySelectGrammar": false, "mayMutateProjectConfig": false, "evidenceLevel": "none" },
+    "ss-lint": { "consumesBundle": true, "maySelectGrammar": false, "mayMutateProjectConfig": false, "evidenceLevel": "checked" },
+    "ss-motion": { "consumesBundle": true, "maySelectGrammar": false, "mayMutateProjectConfig": false, "evidenceLevel": "checked" },
+    "ss-page": { "consumesBundle": true, "maySelectGrammar": false, "mayMutateProjectConfig": false, "evidenceLevel": "checked" },
+    "ss-pattern": { "consumesBundle": true, "maySelectGrammar": false, "mayMutateProjectConfig": false, "evidenceLevel": "checked" },
+    "ss-reference": { "consumesBundle": true, "maySelectGrammar": true, "mayMutateProjectConfig": true, "evidenceLevel": "compiled" },
+    "ss-resolve": { "consumesBundle": false, "maySelectGrammar": true, "mayMutateProjectConfig": true, "evidenceLevel": "compiled" },
+    "ss-restyle": { "consumesBundle": true, "maySelectGrammar": false, "mayMutateProjectConfig": true, "evidenceLevel": "checked" },
+    "ss-review": { "consumesBundle": true, "maySelectGrammar": false, "mayMutateProjectConfig": false, "evidenceLevel": "checked" },
+    "ss-score": { "consumesBundle": true, "maySelectGrammar": false, "mayMutateProjectConfig": false, "evidenceLevel": "checked" },
+    "ss-setup": { "consumesBundle": false, "maySelectGrammar": true, "mayMutateProjectConfig": true, "evidenceLevel": "compiled" },
+    "ss-studio": { "consumesBundle": true, "maySelectGrammar": true, "mayMutateProjectConfig": true, "evidenceLevel": "acceptance-recorded" },
+    "ss-tokens": { "consumesBundle": true, "maySelectGrammar": false, "mayMutateProjectConfig": true, "evidenceLevel": "checked" },
+    "ss-update": { "consumesBundle": true, "maySelectGrammar": false, "mayMutateProjectConfig": false, "evidenceLevel": "compiled" },
+    "ss-verify": { "consumesBundle": true, "maySelectGrammar": false, "mayMutateProjectConfig": false, "evidenceLevel": "evidence-valid" }
+  }
+}

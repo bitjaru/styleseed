@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "projectId": "styleseed-demo-pricing",
+  "defaults": {
+    "agent": "codex",
+    "domain": "developer-tools",
+    "adapter": "product-ui",
+    "recipe": "developer-platform",
+    "palette": "cobalt-instrument",
+    "profile": "none",
+    "fallback": "technical-instrument"
+  },
+  "brand": {
+    "keyColor": "#0F766E",
+    "paletteCharacter": "balanced",
+    "paletteMode": "light",
+    "paletteHarmony": "auto",
+    "surfaceTemperature": "neutral",
+    "fontFamilies": [
+      "Inter"
+    ],
+    "radius": "soft",
+    "elevation": "restrained-shadow",
+    "density": "comfortable",
+    "motion": {
+      "seed": "spring",
+      "intensity": "restrained"
+    },
+    "imageryRole": "product-proof-first"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:styleseed:learning-share-package:v2",
+  "title": "StyleSeed local learning share package",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "kind", "purpose", "candidate", "approval", "transmission", "packageHash"],
+  "properties": {
+    "schemaVersion": { "const": 2 },
+    "kind": { "const": "styleseed-learning-share-package" },
+    "purpose": { "enum": ["team-registry", "community-candidate"] },
+    "candidate": { "type": "object", "additionalProperties": false },
+    "approval": { "type": "object", "additionalProperties": false },
+    "transmission": { "type": "object", "additionalProperties": false },
+    "packageHash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+  }
+}

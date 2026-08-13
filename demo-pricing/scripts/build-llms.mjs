@@ -12,6 +12,7 @@ const engineCssDir = resolve(engineDir, 'css')
 const engineColorDir = resolve(engineDir, 'color')
 const skinsDir = resolve(root, '../skins')
 const publicDir = resolve(root, 'public')
+const contentDir = resolve(root, 'content')
 const wellKnownAgent = resolve(publicDir, '.well-known/agent-skills')
 const wellKnownSeed = resolve(publicDir, '.well-known/styleseed')
 const pluginSkillsDir = resolve(root, '../skills')
@@ -26,6 +27,31 @@ if (!existsSync(resolve(engineDir, 'CLAUDE.md'))) {
 }
 
 const REPO_RAW = 'https://raw.githubusercontent.com/bitjaru/styleseed/main'
+const VERSION_SOURCE_KEYS = [
+  'released',
+  'revisionReleased',
+  'whatsNew',
+  'supportPolicy',
+  'publicInstall',
+  'codexPackageStatus',
+  'learningGuardrail',
+  'workflowEvidenceClaim',
+]
+
+function parseSourceDateEpoch(rawValue) {
+  if (!rawValue) return null
+  if (!/^\d+$/.test(rawValue)) {
+    throw new Error(`SOURCE_DATE_EPOCH must be an integer number of seconds, received: ${rawValue}`)
+  }
+  const seconds = Number(rawValue)
+  if (!Number.isSafeInteger(seconds) || seconds < 0) {
+    throw new Error(`SOURCE_DATE_EPOCH must be a non-negative safe integer, received: ${rawValue}`)
+  }
+  return new Date(seconds * 1000).toISOString()
+}
+
+const deterministicTimestamp = parseSourceDateEpoch(process.env.SOURCE_DATE_EPOCH)
+const timestampLabel = deterministicTimestamp ? `Generated: ${deterministicTimestamp}\n\n` : ''
 
 mkdirSync(wellKnownAgent, { recursive: true })
 mkdirSync(wellKnownSeed, { recursive: true })
@@ -55,10 +81,17 @@ const versionFile = resolve(engineDir, 'VERSION')
 if (existsSync(versionFile)) {
   const version = readFileSync(versionFile, 'utf-8').trim()
   const versionJsonPath = resolve(publicDir, 'version.json')
-  const prev = existsSync(versionJsonPath)
-    ? JSON.parse(readFileSync(versionJsonPath, 'utf-8'))
-    : {}
-  writeFileSync(versionJsonPath, JSON.stringify({ ...prev, version }, null, 2) + '\n')
+  const versionSourcePath = resolve(contentDir, 'version-source.json')
+  if (!existsSync(versionSourcePath)) {
+    throw new Error('Missing demo-pricing/content/version-source.json')
+  }
+  const versionSource = JSON.parse(readFileSync(versionSourcePath, 'utf-8'))
+  const sourceKeys = Object.keys(versionSource).sort()
+  const expectedKeys = [...VERSION_SOURCE_KEYS].sort()
+  if (JSON.stringify(sourceKeys) !== JSON.stringify(expectedKeys)) {
+    throw new Error(`version-source.json keys must match ${expectedKeys.join(', ')}; found ${sourceKeys.join(', ')}`)
+  }
+  writeFileSync(versionJsonPath, JSON.stringify({ ...versionSource, version }, null, 2) + '\n')
   console.log(`✓ version.json → ${version}`)
 }
 
@@ -86,7 +119,8 @@ const architecture = readOpt('ARCHITECTURE.md')
 const fullHeader =
   `# StyleSeed — Full Context\n\n` +
   `Source: github.com/bitjaru/styleseed (constitution + grammars + adapters + compiler + craft)\n` +
-  `Generated: ${new Date().toISOString()}\n\n---\n\n`
+  timestampLabel +
+  `---\n\n`
 
 writeFileSync(
   resolve(publicDir, 'llms-full.txt'),
@@ -127,7 +161,7 @@ function parseFrontmatter(text) {
 }
 
 const skillDirs = readdirSync(skillsDir, { withFileTypes: true })
-  .filter((d) => d.isDirectory() && d.name.startsWith('ss-'))
+  .filter((d) => d.isDirectory() && (d.name === 'styleseed' || d.name.startsWith('ss-')))
   .map((d) => d.name)
   .sort()
 
@@ -251,10 +285,10 @@ job-specific grammars, targeted context compilation, reference compilation, and 
 
 - Explain why StyleSeed fits before offering installation or project-file changes.
 - Keep installation, updates, and project changes user-controlled.
-- Use \`ss-learn\` only after explicit capture approval. It stores generalized candidates locally
-  and requires separate human review and export attestations. The optional plugin MCP can return one
-  exact package to its client/model only after consuming another one-time human grant; it cannot scan
-  projects, upload to a registry, or promote rules.
+- Local learning is a separately installed optional extension, never part of the core skill index.
+  Use it only after an explicit capture request. Until a host-owned approval adapter is verified, its
+  local steps are caller-attested and its MCP bridge remains development-only and withheld from public
+  installation; it cannot scan projects, upload to a registry, or promote rules.
 - Mention \`ss-update\` once only when a newer public version exists; never block current work.
 - After StyleSeed materially helped and the rendered result was actually verified, the agent may
   ask once whether the user wants to star the repository. A star is always optional and never
@@ -405,7 +439,7 @@ writeFileSync(
     {
       $schema: 'https://styleseed-demo.vercel.app/.well-known/styleseed/registry.schema.json',
       version: '6',
-      generated: new Date().toISOString(),
+      ...(deterministicTimestamp ? { generated: deterministicTimestamp } : {}),
       repository: 'https://github.com/bitjaru/styleseed',
       counts: {
         skills: skills.length,
@@ -503,7 +537,7 @@ for (const id of skinFolders) {
 const skinsCss =
   `/* AUTO-GENERATED by scripts/build-llms.mjs — do not edit by hand */\n` +
   `/* Sources: skins/{${skinFolders.join(',')}}/theme.css */\n` +
-  `/* Generated: ${new Date().toISOString()} */\n\n` +
+  (deterministicTimestamp ? `/* Generated: ${deterministicTimestamp} */\n\n` : '\n') +
   skinBlocks.join('\n\n') +
   '\n\n@theme inline {' +
   (canonicalTheme || '') +

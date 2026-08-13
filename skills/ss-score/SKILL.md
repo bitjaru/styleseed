@@ -6,6 +6,38 @@ allowed-tools: Read, Grep, Glob, Bash
 ---
 
 # Design Score
+## Registry-first artifact boundary
+
+When `.styleseed/project.json` and `.styleseed/artifacts/index.json` exist, resolve the requested artifact ID first, then read only `.styleseed/bundles/<artifact-id>.md` and `.styleseed/manifests/<artifact-id>.json`. Never fall back to the global legacy bundle for a registry project. Legacy projects may use `.styleseed/effective-rules.md` only when no registry exists.
+
+## Deterministic check boundary
+
+For the executable contract and stable diagnostics, run the canonical checker:
+
+```bash
+node engine/.claude/skills/ss-score/scripts/styleseed-check.mjs scan \
+  --project-root . --artifact <artifact-id> --format json
+node engine/.claude/skills/ss-score/scripts/styleseed-check.mjs scan \
+  --project-root . --artifact <artifact-id> --format sarif --out .styleseed/evidence/<artifact>/<run>/deterministic.sarif
+```
+
+The checker revalidates the artifact manifest, bundle/output hashes, declared source roots, and
+project containment before scanning. Contract/path/hash/coverage failures are hard errors. Source
+detectors are warning-only until their fixture precision is measured and a maintainer promotes them.
+Stable detector IDs are `SS001` hardcoded colors, `SS002` arbitrary pixel values, `SS003`
+`transition-all`, `SS004` motion without reduced-motion handling, `SS005` focus suppression, and
+`SS006` high-confidence unlabeled icon controls. A deterministic JSON report contains only
+`detectorRevision`, `inventoryHash`, and sorted `findings`, so it can be attached to the evidence
+gate without caller-supplied pass claims.
+
+Attach the generated JSON through the same typed gate path as other reports:
+
+```bash
+node engine/.claude/skills/ss-score/scripts/evidence-gate.mjs attach \
+  --project-root . --artifact <artifact-id> --run <run-id> \
+  --gate deterministic \
+  --report .styleseed/evidence/<artifact-id>/<run-id>/deterministic.json
+```
 
 `/ss-review` tells you *what's wrong*. `/ss-score` tells you *how good it is
 overall* and *what to fix first* — a single number plus a category breakdown, so

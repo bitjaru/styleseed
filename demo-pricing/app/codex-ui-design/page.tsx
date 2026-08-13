@@ -15,7 +15,7 @@ import {
 const BASE = "https://styleseed-demo.vercel.app";
 const URL = `${BASE}/codex-ui-design`;
 const DESCRIPTION =
-  "A practical Codex UI workflow with AGENTS.md, targeted context compilation, private human-approved learning, exact revision updates, code scoring, and rendered visual verification.";
+  "A practical Codex UI workflow with AGENTS.md, targeted context compilation, private caller-attested learning, exact revision updates, code scoring, and rendered visual verification.";
 
 export const metadata: Metadata = {
   title: "How to make Codex generate better UI design",
@@ -97,7 +97,7 @@ const MAPPING = [
   ["Build the selected method", "$ss-build"],
   ["Deterministic code gate", "$ss-score ≥80"],
   ["Rendered visual gate", "$ss-verify"],
-  ["Human-approved local lesson", "$ss-learn"],
+  ["Caller-attested local lesson", "$ss-learn"],
   ["Exact engine revision update", "$ss-update"],
 ];
 
@@ -120,11 +120,11 @@ const FAQ = [
   },
   {
     q: "Can Codex teach StyleSeed a design correction?",
-    a: "Only after an explicit human request. $ss-learn captures a generalized local candidate, requires a separate review, strips project identity from any prepared package, and never promotes the result automatically. The optional local MCP bridge consumes a one-time grant before one exact package becomes visible to the connected Codex client and model.",
+    a: "Only after an explicit human request. $ss-learn captures a generalized local candidate, requires a separate review, blocks known high-risk identity patterns as a guardrail rather than an anonymization guarantee, and never promotes the result automatically. The prepared package stays local and untransmitted. The learning bridge is withheld from the default/core install until a host-owned proof adapter is verified; a future optional bridge would consume a one-time grant before one exact package becomes visible to the connected Codex client and model.",
   },
   {
     q: "Can I install StyleSeed from the public Codex plugin directory?",
-    a: "Not yet. The repository includes a validated Codex plugin package with 23 skills and an approval-gated local MCP bridge, but public plugin-directory release is not claimed. Use npx skills add bitjaru/styleseed as the released portable installation path.",
+    a: "Not yet. The repository includes a repository development Codex plugin package with 23 skills, but public plugin-directory release is not verified. The implemented default/core install contains no learning MCP. Use npx skills add bitjaru/styleseed as the released portable installation path.",
   },
   {
     q: "Will StyleSeed ask me to star the repository?",
@@ -258,7 +258,7 @@ export default function CodexUiDesignPage() {
           <p className="mt-4 text-sm leading-relaxed text-neutral-600">
             Installation and file changes stay user-controlled. Once approved, the repository
             context and project lock let later Codex sessions reuse valid decisions. The released
-            portable path is the Agent Skills CLI; the validated Codex plugin package remains a
+            portable path is the Agent Skills CLI; the repository development Codex plugin package remains a
             local package boundary until a public directory release is independently verified.
           </p>
         </div>

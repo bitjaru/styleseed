@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object", "additionalProperties": false,
+  "required": ["score", "categories", "evidence", "reviewer"],
+  "properties": { "score": { "type": "number", "minimum": 0, "maximum": 100 }, "categories": { "type": "object" }, "evidence": { "type": "array" }, "reviewer": {} }
+}

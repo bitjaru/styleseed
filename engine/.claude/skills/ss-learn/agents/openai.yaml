@@ -1,4 +1,0 @@
-interface:
-  display_name: "StyleSeed Learn"
-  short_description: "Capture private, reusable UI design lessons"
-  default_prompt: "Use $ss-learn to turn this human-approved design correction into a privacy-minimized local candidate, then stop for review before preparing any share package."

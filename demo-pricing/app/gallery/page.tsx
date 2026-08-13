@@ -112,7 +112,7 @@ export default function GalleryPage() {
         </section>
 
         <footer className="mt-16 border-t border-gray-200 pt-6 text-sm text-gray-500">
-          Registry generated {new Date(reg.generated).toISOString().slice(0, 10)} from{" "}
+          Registry {reg.generated ? `generated ${reg.generated.slice(0, 10)}` : "compiled"} from{" "}
           <a href={reg.repository} className="underline">
             {reg.repository.replace("https://", "")}
           </a>

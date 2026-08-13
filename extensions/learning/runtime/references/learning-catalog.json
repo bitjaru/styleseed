@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "contractVersion": 2,
+  "scannerVersion": 2,
+  "revision": "sha256:7d09eb9527be5debf1e217f5fc69cf538e4e3911af1288ffcebbcd9886984e21",
+  "files": [
+    {
+      "path": "extensions/learning/runtime/catalog.json",
+      "sha256": "sha256:15018a4cb0ad507cd293ef2e937c53118ec3ebb559be0351e6b1ecef89115b7a"
+    },
+    {
+      "path": "extensions/learning/skills/ss-learn/scripts/learning-contract.mjs",
+      "sha256": "sha256:b91ba7c42611db0e5559608f9b5a3a0fe5fba97728a91472ee7fc27e87ce6a47"
+    },
+    {
+      "path": "extensions/learning/skills/ss-learn/scripts/privacy-scan.mjs",
+      "sha256": "sha256:5212358f495d36c2e08f0a9568fd0c23236e2d87c3eef7a7abbcf77907346715"
+    },
+    {
+      "path": "extensions/learning/skills/ss-learn/scripts/secure-fs.mjs",
+      "sha256": "sha256:50072631505dff68c0be7a45b9e936b88dc9b833889186c6f32a84c1b3b0a359"
+    },
+    {
+      "path": "extensions/learning/skills/ss-learn/references/candidate.schema.json",
+      "sha256": "sha256:854f4421aa48c5d64ba87bfb69a4f3c917b85ad875d3e25fa584dfadd01f474d"
+    },
+    {
+      "path": "extensions/learning/skills/ss-learn/references/candidate-record.schema.json",
+      "sha256": "sha256:0745d76f63eac620d8758b14af433cfec05b164b597a799666e7c9d8a2fa61de"
+    },
+    {
+      "path": "extensions/learning/skills/ss-learn/references/share-package.schema.json",
+      "sha256": "sha256:9271452fc856d97a8a8e7d0b549f8a2fee68b867303175d2f9bd038ca33f5814"
+    }
+  ]
+}

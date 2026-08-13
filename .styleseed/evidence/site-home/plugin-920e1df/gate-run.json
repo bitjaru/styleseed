@@ -1,0 +1,56 @@
+{
+  "artifactId": "site-home",
+  "bundleBytes": 18481,
+  "bundleHash": "sha256:aadaad700c5d8f1c3218241a3951bc8d1c977584a4888abff29b9acc0e2b0a6b",
+  "bundlePath": ".styleseed/bundles/site-home.md",
+  "gates": {
+    "code": {
+      "attached": true,
+      "reportBytes": 1421,
+      "reportPath": ".styleseed/evidence/site-home/plugin-920e1df/code.json",
+      "reportSha256": "sha256:fc47b43c8c9d1aee200fce3fd0f93600274703e72597746a30d93dfd9247c0b3"
+    },
+    "deterministic": {
+      "attached": true,
+      "reportBytes": 7080,
+      "reportPath": ".styleseed/evidence/site-home/plugin-920e1df/deterministic.json",
+      "reportSha256": "sha256:bc6553395b5d0d646a942d221b3d1df13239647ecb339c7c0338b4ed18e494d4"
+    },
+    "human": {
+      "attached": false,
+      "reportBytes": null,
+      "reportPath": null,
+      "reportSha256": null
+    },
+    "temporal": {
+      "attached": true,
+      "reportPath": ".styleseed/evidence/site-home/plugin-920e1df/temporal.json",
+      "reportSha256": "sha256:127313d8d6e0398c95166279ea550a88bc5dfd1a297f9eeecfdbe98f763813c1",
+      "reportBytes": 683
+    },
+    "visual": {
+      "attached": true,
+      "reportBytes": 1621,
+      "reportPath": ".styleseed/evidence/site-home/plugin-920e1df/visual.json",
+      "reportSha256": "sha256:6588040f52ac115a1f1f277c1a7131fa4c46d54f4544e5b427d4e7815bd649f1"
+    }
+  },
+  "implementation": {
+    "inventoryHash": "sha256:be8a2f6508d8286d200aeb24be36133e256f1754a1aea39edac16fb5861dee47",
+    "sourceRoots": [
+      "demo-pricing/app/page.tsx",
+      "demo-pricing/app/_home",
+      "demo-pricing/app/globals.css",
+      "demo-pricing/content/competitor-source.json"
+    ]
+  },
+  "manifestPath": ".styleseed/manifests/site-home.json",
+  "methodHash": "sha256:7118dddce1e2851c88c981a7b0214953a7c929e973889837eeafa8ed08373394",
+  "repositoryRevision": {
+    "commit": "920e1df6e1da709caa9288cf9cfc18abe80cbf6d",
+    "vcs": "git"
+  },
+  "runId": "plugin-920e1df",
+  "schemaVersion": 1,
+  "validationHash": "sha256:0ec7d75ee76c479b1107717acb8ae8411fdb1dfaeab57d3a8b8b3e098c7ee3de"
+}

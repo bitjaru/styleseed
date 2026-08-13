@@ -1,21 +1,16 @@
 {
   "schemaVersion": 1,
   "artifactId": "site-docs",
-  "runId": "baseline-f5ff2b5",
-  "status": "fail",
+  "runId": "plugin-920e1df",
+  "status": "pass",
   "gates": {
-    "deterministic": "fail",
-    "code": "fail",
-    "visual": "fail",
+    "deterministic": "pass",
+    "code": "pass",
+    "visual": "pass",
     "temporal": "pass",
     "human": "pass"
   },
-  "errors": [
-    "manifest bundle snapshot is stale",
-    "deterministic evidence contains hard findings",
-    "code evidence is required",
-    "visual evidence is required"
-  ],
+  "errors": [],
   "warnings": [],
   "computed": {
     "manifestMethodHash": "sha256:3b85de8475bbf990f49b17da4ef58a06cfb37d3126657035b8f4d60548ffecb7",
@@ -25,7 +20,10 @@
       "sha256": "sha256:c29dba6b6be0a320d5b89ddbfa4ad3e2979ffc59acd61b0e6bae2e6aca649966",
       "bytes": 16833
     },
-    "repositoryRevision": null,
+    "repositoryRevision": {
+      "commit": "920e1df6e1da709caa9288cf9cfc18abe80cbf6d",
+      "vcs": "git"
+    },
     "implementation": {
       "hash": "sha256:a1193b3f09852edd3712aa9b3bacef9d245ec0cbadb97eef9f4de28defa8ac7a",
       "files": 4,

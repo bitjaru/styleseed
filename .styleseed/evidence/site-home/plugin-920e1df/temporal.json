@@ -1,0 +1,19 @@
+{
+  "applicability": "required",
+  "scenarios": [
+    {
+      "id": "hero-motion",
+      "recordingPath": ".styleseed/evidence/site-home/plugin-920e1df/recordings/hero-motion.webm",
+      "recordingSha256": "sha256:1ab6dc8f9612138ac7d666b4003de839f97945e20dc8220777d7ebde99ffd304",
+      "recordingBytes": 104310,
+      "reducedMotion": "not-applicable"
+    },
+    {
+      "id": "hero-reduced-motion",
+      "recordingPath": ".styleseed/evidence/site-home/plugin-920e1df/recordings/hero-reduced-motion.webm",
+      "recordingSha256": "sha256:f4cb51ff58a2a4eb8658c62c06cf22886eaf13bb697cd5a32c1273b1e373a488",
+      "recordingBytes": 123006,
+      "reducedMotion": "pass"
+    }
+  ]
+}

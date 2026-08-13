@@ -1,0 +1,54 @@
+{
+  "artifactId": "site-gate",
+  "bundleBytes": 16799,
+  "bundleHash": "sha256:66a80ddf4de8838d4b63eb321f649a1bdc06b216cd495a6f3ff25e88b39101d0",
+  "bundlePath": ".styleseed/bundles/site-gate.md",
+  "gates": {
+    "code": {
+      "attached": true,
+      "reportBytes": 541,
+      "reportPath": ".styleseed/evidence/site-gate/plugin-920e1df/code.json",
+      "reportSha256": "sha256:45f2366bfecdf732ad0140e534e36771c2a3eab802a1fe56136e3efd20ff98ff"
+    },
+    "deterministic": {
+      "attached": true,
+      "reportBytes": 1378,
+      "reportPath": ".styleseed/evidence/site-gate/plugin-920e1df/deterministic.json",
+      "reportSha256": "sha256:38004c1bc7d1b34b872b9fb48d9d6ac3022875196d9a2fcf95c0ca3335ca7e38"
+    },
+    "human": {
+      "attached": false,
+      "reportBytes": null,
+      "reportPath": null,
+      "reportSha256": null
+    },
+    "temporal": {
+      "attached": true,
+      "reportPath": ".styleseed/evidence/site-gate/plugin-920e1df/temporal.json",
+      "reportSha256": "sha256:486d986b5d16bef3677fc8d5c9736b9a808acac1b8bd8858fc8e9ea80cf50dee",
+      "reportBytes": 59
+    },
+    "visual": {
+      "attached": true,
+      "reportBytes": 1044,
+      "reportPath": ".styleseed/evidence/site-gate/plugin-920e1df/visual.json",
+      "reportSha256": "sha256:e88630eafa5c27dc58b78e9667cad682b3fb492b60b08bb7bfe9d4785dda0d91"
+    }
+  },
+  "implementation": {
+    "inventoryHash": "sha256:b5808ce7b259cd1dfee0083296f6d0e6ed14b54ea0edbfd129945c233c373c05",
+    "sourceRoots": [
+      "demo-pricing/app/gate",
+      "demo-pricing/app/globals.css"
+    ]
+  },
+  "manifestPath": ".styleseed/manifests/site-gate.json",
+  "methodHash": "sha256:07ec651169265a5a55a52cd5db02e595b766f1f9ba81dd25bbb7d54bf6d22d38",
+  "repositoryRevision": {
+    "commit": "920e1df6e1da709caa9288cf9cfc18abe80cbf6d",
+    "vcs": "git"
+  },
+  "runId": "plugin-920e1df",
+  "schemaVersion": 1,
+  "validationHash": "sha256:3462a1922e141bcb82dfd875e886dc8aae43a995ce0bc7958705594a9cf20e0c"
+}

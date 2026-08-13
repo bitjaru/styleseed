@@ -1,0 +1,31 @@
+{
+  "score": 91,
+  "categories": {
+    "color": 14,
+    "hierarchy": 16,
+    "layout": 11,
+    "surfaces": 9,
+    "states": 16,
+    "motion": 6,
+    "coherence": 10,
+    "distinctiveness": 9
+  },
+  "evidence": [
+    {
+      "message": "The first viewport now has one filled action: the exact npx install command. Header, GitHub, architecture, benchmark, and the long orchestration prompt are visibly subordinate."
+    },
+    {
+      "message": "The hero expresses the product method as Choose, Compile, Build, Prove before secondary product sections; approved choices and exact evidence are described as repository-bound artifacts rather than ambient AI judgment."
+    },
+    {
+      "message": "Clipboard failure selects the command or prompt for manual copy and reports the fallback through an aria-live message; keyboard focus treatments remain visible."
+    },
+    {
+      "message": "The hero no longer animates content into readability. The lower motion demo uses useReducedMotion to disable entrance, hover, press, pointer, pulse, and confetti effects when reduction is requested."
+    },
+    {
+      "message": "The deterministic scanner reports no hard errors and no SS004 reduced-motion warning. Its remaining 24 advisory findings are isolated demo or section color literals plus two arbitrary-width utilities, not blockers for the selected action or reading order."
+    }
+  ],
+  "reviewer": "Codex ss-score"
+}

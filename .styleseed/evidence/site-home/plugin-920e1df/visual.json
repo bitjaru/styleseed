@@ -1,0 +1,39 @@
+{
+  "inspectionMethod": "Manual original-resolution pixel inspection of current mobile, desktop, and reduced-motion full-page renders after lazy-content priming",
+  "renders": [
+    {
+      "id": "desktop-loaded",
+      "state": "loaded",
+      "viewport": { "width": 1440, "height": 900 },
+      "path": ".styleseed/evidence/site-home/plugin-920e1df/renders/desktop-loaded.png",
+      "sha256": "sha256:da546b6052042609d2b88cba7eb0f9e6f5ae7b14252c47a190e4f909f2eb3a0c",
+      "bytes": 4414059
+    },
+    {
+      "id": "mobile-loaded",
+      "state": "loaded",
+      "viewport": { "width": 390, "height": 844 },
+      "path": ".styleseed/evidence/site-home/plugin-920e1df/renders/mobile-loaded.png",
+      "sha256": "sha256:6fa23837b45128843d99a42a4700719faee41095788136d0806c4877d7c31bdc",
+      "bytes": 2978542
+    },
+    {
+      "id": "mobile-reduced-motion",
+      "state": "reduced-motion",
+      "viewport": { "width": 390, "height": 844 },
+      "path": ".styleseed/evidence/site-home/plugin-920e1df/renders/mobile-reduced-motion.png",
+      "sha256": "sha256:828024f1f15d0ff6090baa2c0207be21ff5f7266d30bff5b6be7440e8a913887",
+      "bytes": 2967747
+    }
+  ],
+  "findings": [
+    {
+      "severity": "note",
+      "message": "The first viewport keeps one filled install action and a clear focal headline; the full page preserves the Choose-to-Prove rhythm, real showcase imagery, and readable dark/light section transforms."
+    },
+    {
+      "severity": "note",
+      "message": "The reduced-motion render retains every section and action with no content hidden, collapsed, or visually displaced."
+    }
+  ]
+}

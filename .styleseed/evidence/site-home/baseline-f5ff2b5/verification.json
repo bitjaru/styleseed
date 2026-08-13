@@ -11,8 +11,10 @@
     "human": "pass"
   },
   "errors": [
+    "manifest validation evidence is stale",
     "manifest bundle snapshot is stale",
-    "deterministic evidence contains hard findings",
+    "implementation source inventory is stale",
+    "deterministic inventory is stale",
     "code evidence is required",
     "visual evidence is required",
     "temporal evidence is required"
@@ -20,17 +22,17 @@
   "warnings": [],
   "computed": {
     "manifestMethodHash": "sha256:7118dddce1e2851c88c981a7b0214953a7c929e973889837eeafa8ed08373394",
-    "manifestValidationHash": "sha256:7cbfc1600d5c86ee87f2fb9225ee8fbe8d62a43364f1fa51453949ff382fdae1",
+    "manifestValidationHash": "sha256:0ec7d75ee76c479b1107717acb8ae8411fdb1dfaeab57d3a8b8b3e098c7ee3de",
     "bundle": {
       "path": ".styleseed/bundles/site-home.md",
-      "sha256": "sha256:507f02e379fd7ac438f95d67b8d8b5838caaf114e0a41cd2ed7eabc9f6beae1d",
+      "sha256": "sha256:aadaad700c5d8f1c3218241a3951bc8d1c977584a4888abff29b9acc0e2b0a6b",
       "bytes": 18481
     },
     "repositoryRevision": null,
     "implementation": {
-      "hash": "sha256:de429764824d2538e11c744e1a0432dfabc5b15f19442c734a49cead8515ccbb",
+      "hash": "sha256:fcfa778833889dec4de9b31d750761ba1aac710c7b73873f6486d0680ac0e767",
       "files": 8,
-      "bytes": 61100
+      "bytes": 64982
     }
   }
 }

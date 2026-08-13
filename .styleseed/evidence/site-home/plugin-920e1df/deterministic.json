@@ -1,0 +1,222 @@
+{
+  "detectorRevision": "styleseed-check-v1",
+  "inventoryHash": "sha256:be8a2f6508d8286d200aeb24be36133e256f1754a1aea39edac16fb5861dee47",
+  "findings": [
+    {
+      "id": "SS001",
+      "file": "demo-pricing/app/_home/seed-demo.tsx",
+      "line": 195,
+      "evidence": "#4ECDC4",
+      "severity": "warning",
+      "message": "Hardcoded color found outside a registered token/theme file.",
+      "fix": "Use a semantic color token."
+    },
+    {
+      "id": "SS001",
+      "file": "demo-pricing/app/_home/seed-demo.tsx",
+      "line": 195,
+      "evidence": "#8B5CF6",
+      "severity": "warning",
+      "message": "Hardcoded color found outside a registered token/theme file.",
+      "fix": "Use a semantic color token."
+    },
+    {
+      "id": "SS001",
+      "file": "demo-pricing/app/_home/seed-demo.tsx",
+      "line": 219,
+      "evidence": "#2563EB",
+      "severity": "warning",
+      "message": "Hardcoded color found outside a registered token/theme file.",
+      "fix": "Use a semantic color token."
+    },
+    {
+      "id": "SS001",
+      "file": "demo-pricing/app/_home/seed-demo.tsx",
+      "line": 230,
+      "evidence": "#8B5CF600",
+      "severity": "warning",
+      "message": "Hardcoded color found outside a registered token/theme file.",
+      "fix": "Use a semantic color token."
+    },
+    {
+      "id": "SS001",
+      "file": "demo-pricing/app/_home/seed-demo.tsx",
+      "line": 230,
+      "evidence": "#8B5CF600",
+      "severity": "warning",
+      "message": "Hardcoded color found outside a registered token/theme file.",
+      "fix": "Use a semantic color token."
+    },
+    {
+      "id": "SS001",
+      "file": "demo-pricing/app/_home/seed-demo.tsx",
+      "line": 230,
+      "evidence": "#8B5CF6cc",
+      "severity": "warning",
+      "message": "Hardcoded color found outside a registered token/theme file.",
+      "fix": "Use a semantic color token."
+    },
+    {
+      "id": "SS001",
+      "file": "demo-pricing/app/_home/seed-demo.tsx",
+      "line": 233,
+      "evidence": "#7C3AED",
+      "severity": "warning",
+      "message": "Hardcoded color found outside a registered token/theme file.",
+      "fix": "Use a semantic color token."
+    },
+    {
+      "id": "SS001",
+      "file": "demo-pricing/app/_home/seed-demo.tsx",
+      "line": 240,
+      "evidence": "#4ECDC4",
+      "severity": "warning",
+      "message": "Hardcoded color found outside a registered token/theme file.",
+      "fix": "Use a semantic color token."
+    },
+    {
+      "id": "SS001",
+      "file": "demo-pricing/app/_home/seed-demo.tsx",
+      "line": 240,
+      "evidence": "#6C5CE7",
+      "severity": "warning",
+      "message": "Hardcoded color found outside a registered token/theme file.",
+      "fix": "Use a semantic color token."
+    },
+    {
+      "id": "SS001",
+      "file": "demo-pricing/app/_home/seed-demo.tsx",
+      "line": 240,
+      "evidence": "#FF6B6B",
+      "severity": "warning",
+      "message": "Hardcoded color found outside a registered token/theme file.",
+      "fix": "Use a semantic color token."
+    },
+    {
+      "id": "SS001",
+      "file": "demo-pricing/app/_home/seed-demo.tsx",
+      "line": 240,
+      "evidence": "#FFD93D",
+      "severity": "warning",
+      "message": "Hardcoded color found outside a registered token/theme file.",
+      "fix": "Use a semantic color token."
+    },
+    {
+      "id": "SS001",
+      "file": "demo-pricing/app/_home/seed-demo.tsx",
+      "line": 258,
+      "evidence": "#DB2777",
+      "severity": "warning",
+      "message": "Hardcoded color found outside a registered token/theme file.",
+      "fix": "Use a semantic color token."
+    },
+    {
+      "id": "SS001",
+      "file": "demo-pricing/app/_home/seed-demo.tsx",
+      "line": 276,
+      "evidence": "#2563EB",
+      "severity": "warning",
+      "message": "Hardcoded color found outside a registered token/theme file.",
+      "fix": "Use a semantic color token."
+    },
+    {
+      "id": "SS001",
+      "file": "demo-pricing/app/_home/seed-demo.tsx",
+      "line": 277,
+      "evidence": "#635BFF",
+      "severity": "warning",
+      "message": "Hardcoded color found outside a registered token/theme file.",
+      "fix": "Use a semantic color token."
+    },
+    {
+      "id": "SS001",
+      "file": "demo-pricing/app/_home/seed-demo.tsx",
+      "line": 278,
+      "evidence": "#5E6AD2",
+      "severity": "warning",
+      "message": "Hardcoded color found outside a registered token/theme file.",
+      "fix": "Use a semantic color token."
+    },
+    {
+      "id": "SS001",
+      "file": "demo-pricing/app/_home/seed-demo.tsx",
+      "line": 279,
+      "evidence": "#B45309",
+      "severity": "warning",
+      "message": "Hardcoded color found outside a registered token/theme file.",
+      "fix": "Use a semantic color token."
+    },
+    {
+      "id": "SS001",
+      "file": "demo-pricing/app/_home/seed-demo.tsx",
+      "line": 280,
+      "evidence": "#DB2777",
+      "severity": "warning",
+      "message": "Hardcoded color found outside a registered token/theme file.",
+      "fix": "Use a semantic color token."
+    },
+    {
+      "id": "SS002",
+      "file": "demo-pricing/app/page.tsx",
+      "line": 53,
+      "evidence": "max-w-[1280px]",
+      "severity": "warning",
+      "message": "Arbitrary pixel value found in a supported utility or CSS property.",
+      "fix": "Use the selected spacing or sizing token."
+    },
+    {
+      "id": "SS001",
+      "file": "demo-pricing/app/page.tsx",
+      "line": 112,
+      "evidence": "#F5F8F7",
+      "severity": "warning",
+      "message": "Hardcoded color found outside a registered token/theme file.",
+      "fix": "Use a semantic color token."
+    },
+    {
+      "id": "SS001",
+      "file": "demo-pricing/app/page.tsx",
+      "line": 161,
+      "evidence": "#F4F6F3",
+      "severity": "warning",
+      "message": "Hardcoded color found outside a registered token/theme file.",
+      "fix": "Use a semantic color token."
+    },
+    {
+      "id": "SS001",
+      "file": "demo-pricing/app/page.tsx",
+      "line": 184,
+      "evidence": "#F5F8F7",
+      "severity": "warning",
+      "message": "Hardcoded color found outside a registered token/theme file.",
+      "fix": "Use a semantic color token."
+    },
+    {
+      "id": "SS001",
+      "file": "demo-pricing/app/page.tsx",
+      "line": 309,
+      "evidence": "#0F766E",
+      "severity": "warning",
+      "message": "Hardcoded color found outside a registered token/theme file.",
+      "fix": "Use a semantic color token."
+    },
+    {
+      "id": "SS001",
+      "file": "demo-pricing/app/page.tsx",
+      "line": 309,
+      "evidence": "#6B7280",
+      "severity": "warning",
+      "message": "Hardcoded color found outside a registered token/theme file.",
+      "fix": "Use a semantic color token."
+    },
+    {
+      "id": "SS002",
+      "file": "demo-pricing/app/page.tsx",
+      "line": 337,
+      "evidence": "min-w-[600px]",
+      "severity": "warning",
+      "message": "Arbitrary pixel value found in a supported utility or CSS property.",
+      "fix": "Use the selected spacing or sizing token."
+    }
+  ]
+}

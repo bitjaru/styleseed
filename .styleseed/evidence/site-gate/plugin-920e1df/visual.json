@@ -1,0 +1,27 @@
+{
+  "inspectionMethod": "Manual original-resolution pixel inspection of current mobile and desktop full-page renders after lazy-content priming",
+  "renders": [
+    {
+      "id": "desktop-loaded",
+      "state": "loaded",
+      "viewport": { "width": 1440, "height": 900 },
+      "path": ".styleseed/evidence/site-gate/plugin-920e1df/renders/desktop-loaded.png",
+      "sha256": "sha256:8e3dfba06e276619b18719503556846fdb34daf6e891527938393b7b097a957b",
+      "bytes": 736074
+    },
+    {
+      "id": "mobile-loaded",
+      "state": "loaded",
+      "viewport": { "width": 390, "height": 844 },
+      "path": ".styleseed/evidence/site-gate/plugin-920e1df/renders/mobile-loaded.png",
+      "sha256": "sha256:151254f6a5a3e004fb96efb11290210674556f56a73f9cf29cf560ccdd8900e1",
+      "bytes": 636523
+    }
+  ],
+  "findings": [
+    {
+      "severity": "info",
+      "message": "The technical comparison, receipts, caveats, and result hierarchy remain legible; the table transforms into readable mobile cards without horizontal clipping."
+    }
+  ]
+}

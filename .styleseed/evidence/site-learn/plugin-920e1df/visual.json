@@ -1,0 +1,27 @@
+{
+  "inspectionMethod": "Manual original-resolution pixel inspection of current mobile and desktop full-page renders after lazy-content priming",
+  "renders": [
+    {
+      "id": "desktop-loaded",
+      "state": "loaded",
+      "viewport": { "width": 1440, "height": 900 },
+      "path": ".styleseed/evidence/site-learn/plugin-920e1df/renders/desktop-loaded.png",
+      "sha256": "sha256:e8d680000ed31d2654ca9a6133e43243c879dbedc75dd879aa7ff4bc0505b58c",
+      "bytes": 667063
+    },
+    {
+      "id": "mobile-loaded",
+      "state": "loaded",
+      "viewport": { "width": 390, "height": 844 },
+      "path": ".styleseed/evidence/site-learn/plugin-920e1df/renders/mobile-loaded.png",
+      "sha256": "sha256:354302a67cf2e772012c2b3cf6681ce6583f4c1e54fa544f1b823010aa8f864d",
+      "bytes": 672827
+    }
+  ],
+  "findings": [
+    {
+      "severity": "info",
+      "message": "The optional-extension boundary, allowed-versus-rejected material split, FAQ hierarchy, and calls to action remain legible without overlap or clipped controls."
+    }
+  ]
+}

@@ -111,6 +111,16 @@ function routeFor(artifact) {
   return artifact.target.locator;
 }
 
+async function primeLazyContent(page, viewportHeight) {
+  const documentHeight = await page.evaluate(() => document.documentElement.scrollHeight);
+  for (let y = 0; y < documentHeight; y += Math.max(480, viewportHeight - 120)) {
+    await page.evaluate((top) => window.scrollTo({ top, behavior: "instant" }), y);
+    await page.waitForTimeout(40);
+  }
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
+  await page.waitForTimeout(120);
+}
+
 function captureRequiredRenders(artifact, runId, browser, baseUrl) {
   return Promise.all((artifact.validation.requiredRenders || []).map(async (render) => {
     const reducedMotion = render.state === "reduced-motion" ? "reduce" : "no-preference";
@@ -124,6 +134,7 @@ function captureRequiredRenders(artifact, runId, browser, baseUrl) {
     const page = await context.newPage();
     await page.goto(`${baseUrl}${routeFor(artifact)}`, { waitUntil: "domcontentloaded" });
     await page.evaluate(() => document.fonts.ready);
+    await primeLazyContent(page, render.viewport.height);
     await page.waitForTimeout(render.state === "reduced-motion" ? 150 : 400);
     await page.screenshot({ path: absolutePath, fullPage: true });
     await context.close();

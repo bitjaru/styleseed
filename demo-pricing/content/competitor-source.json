@@ -1,0 +1,11 @@
+{
+  "observedAt": "2026-08-13",
+  "impeccable": {
+    "name": "Impeccable",
+    "repositoryUrl": "https://github.com/pbakaus/impeccable",
+    "cliSourceUrl": "https://github.com/pbakaus/impeccable/blob/main/README.npm.md",
+    "hooksSourceUrl": "https://github.com/pbakaus/impeccable/blob/main/docs/hooks.md",
+    "capabilitySummary": "Its current public package documents 23 commands, 60 deterministic rules, CLI checks for local files and URLs, JSON output for CI, and hooks for major coding agents."
+  },
+  "styleseedFocus": "StyleSeed focuses on compiling a bounded contract for each artifact, persisting approved project decisions, and binding code, build, pixel, and temporal evidence to the exact source revision."
+}

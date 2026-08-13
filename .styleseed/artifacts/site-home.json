@@ -24,7 +24,8 @@
     "sourceRoots": [
       "demo-pricing/app/page.tsx",
       "demo-pricing/app/_home",
-      "demo-pricing/app/globals.css"
+      "demo-pricing/app/globals.css",
+      "demo-pricing/content/competitor-source.json"
     ],
     "tokenFiles": [
       "demo-pricing/app/globals.css",

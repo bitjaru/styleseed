@@ -6,6 +6,7 @@ import { ArrowRight } from "lucide-react";
 import {
   motion,
   useMotionValue,
+  useReducedMotion,
   useSpring,
   useTransform,
 } from "framer-motion";
@@ -23,6 +24,7 @@ export function SeedDemo() {
   const [active, setActive] = useState<SeedId>("spring");
   const [mounted, setMounted] = useState(true);
   const seed = seeds[active];
+  const shouldReduceMotion = useReducedMotion();
 
   return (
     <div className="rounded-2xl bg-white p-8 shadow-[0_1px_3px_rgba(0,0,0,0.04),0_30px_80px_rgba(0,0,0,0.08)]">
@@ -77,7 +79,7 @@ export function SeedDemo() {
             {mounted && (
               <motion.div
                 key={`${active}-mount`}
-                {...seed.entrance}
+                {...(shouldReduceMotion ? {} : seed.entrance)}
                 className="h-11 w-11 rounded-xl"
                 style={{ background: SEED_COLOR[active] }}
               />
@@ -87,7 +89,7 @@ export function SeedDemo() {
         <DemoCell label="Hover" desc="point at the square">
           <div className="flex h-20 items-center justify-center">
             <motion.div
-              {...seed.hover}
+              {...(shouldReduceMotion ? {} : seed.hover)}
               className="h-11 w-11 cursor-pointer rounded-xl"
               style={{ background: SEED_COLOR[active] }}
             />
@@ -97,8 +99,8 @@ export function SeedDemo() {
           <div className="flex h-20 items-center justify-center">
             <motion.button
               type="button"
-              {...seed.press}
-              {...seed.hover}
+              {...(shouldReduceMotion ? {} : seed.press)}
+              {...(shouldReduceMotion ? {} : seed.hover)}
               className="rounded-lg px-4 py-2 text-[13px] font-bold text-white"
               style={{ background: SEED_COLOR[active] }}
             >
@@ -123,16 +125,16 @@ export function SeedDemo() {
 
       <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
         <FlairCell keyword="tilt-3d">
-          <TiltMini />
+          <TiltMini reducedMotion={Boolean(shouldReduceMotion)} />
         </FlairCell>
         <FlairCell keyword="magnetic">
-          <MagneticMini />
+          <MagneticMini reducedMotion={Boolean(shouldReduceMotion)} />
         </FlairCell>
         <FlairCell keyword="glow-pulse">
-          <GlowMini />
+          <GlowMini reducedMotion={Boolean(shouldReduceMotion)} />
         </FlairCell>
         <FlairCell keyword="confetti-pop">
-          <ConfettiMini />
+          <ConfettiMini reducedMotion={Boolean(shouldReduceMotion)} />
         </FlairCell>
       </div>
 
@@ -173,7 +175,7 @@ function FlairCell({ keyword, children }: { keyword: string; children: React.Rea
 }
 
 // ── flashy mini demos ──
-function TiltMini() {
+function TiltMini({ reducedMotion }: { reducedMotion: boolean }) {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [16, -16]), { stiffness: 250, damping: 18 });
@@ -181,6 +183,7 @@ function TiltMini() {
   return (
     <motion.div
       onPointerMove={(e) => {
+        if (reducedMotion) return;
         const r = e.currentTarget.getBoundingClientRect();
         x.set((e.clientX - r.left) / r.width - 0.5);
         y.set((e.clientY - r.top) / r.height - 0.5);
@@ -197,13 +200,14 @@ function TiltMini() {
   );
 }
 
-function MagneticMini() {
+function MagneticMini({ reducedMotion }: { reducedMotion: boolean }) {
   const x = useSpring(0, { stiffness: 300, damping: 18 });
   const y = useSpring(0, { stiffness: 300, damping: 18 });
   return (
     <motion.button
       type="button"
       onPointerMove={(e) => {
+        if (reducedMotion) return;
         const r = e.currentTarget.getBoundingClientRect();
         x.set((e.clientX - r.left - r.width / 2) * 0.5);
         y.set((e.clientY - r.top - r.height / 2) * 0.5);
@@ -220,11 +224,11 @@ function MagneticMini() {
   );
 }
 
-function GlowMini() {
+function GlowMini({ reducedMotion }: { reducedMotion: boolean }) {
   return (
     <motion.div
-      animate={{ boxShadow: ["0 0 0px #8B5CF600", "0 0 22px #8B5CF6cc", "0 0 0px #8B5CF600"] }}
-      transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+      animate={reducedMotion ? undefined : { boxShadow: ["0 0 0px #8B5CF600", "0 0 22px #8B5CF6cc", "0 0 0px #8B5CF600"] }}
+      transition={reducedMotion ? undefined : { duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
       className="flex h-11 w-12 items-center justify-center rounded-lg text-[10px] font-bold text-white"
       style={{ background: "#7C3AED" }}
     >
@@ -234,12 +238,13 @@ function GlowMini() {
 }
 
 const CONFETTI = ["#FF6B6B", "#FFD93D", "#6C5CE7", "#4ECDC4"];
-function ConfettiMini() {
+function ConfettiMini({ reducedMotion }: { reducedMotion: boolean }) {
   const [bits, setBits] = useState<{ id: number; dx: number; dy: number; c: string }[]>([]);
   return (
     <button
       type="button"
-      onClick={() =>
+      onClick={() => {
+        if (reducedMotion) return;
         setBits(
           Array.from({ length: 12 }, (_, i) => ({
             id: i,
@@ -247,8 +252,8 @@ function ConfettiMini() {
             dy: -30 - (i % 4) * 14,
             c: CONFETTI[i % 4],
           })),
-        )
-      }
+        );
+      }}
       className="relative rounded-lg px-3 py-2 text-[11px] font-bold text-white"
       style={{ background: "#DB2777" }}
     >

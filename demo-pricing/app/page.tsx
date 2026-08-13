@@ -6,10 +6,11 @@ import { listShowcase } from "@/lib/showcase";
 import { seeds as motionSeeds } from "@engine/motion";
 import { SeedDemo } from "./_home/seed-demo";
 import { Hero } from "./_home/hero";
-import { PromptBox } from "./_home/prompt-box";
+import { InstallCommand } from "./_home/prompt-box";
 import { WhatsNew } from "./_home/whats-new";
 import { GithubIcon } from "./_home/github-icon";
 import { GithubStarCount } from "./_home/github-star-count";
+import competitorSource from "@/content/competitor-source.json";
 
 const HERO_SHOWCASE_IDS = ["finance", "food", "fitness", "music", "issues", "wallet"];
 
@@ -29,7 +30,7 @@ function CompareCell({ value, self = false }: { value: string; self?: boolean })
   if (value.startsWith("✓ ")) {
     return (
       <span className="text-[14px] text-neutral-100">
-        <span className="font-bold text-violet-300">✓</span> {value.slice(2)}
+        <span className="font-bold text-teal-300">✓</span> {value.slice(2)}
       </span>
     );
   }
@@ -95,9 +96,9 @@ export default function HomePage() {
             </a>
             <Link
               href="/showcase"
-              className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-md bg-neutral-900 px-3 py-1.5 text-[14px] font-bold text-white hover:bg-black"
+              className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-md border border-neutral-200 bg-white px-3 py-1.5 text-[14px] font-bold text-neutral-700 hover:border-neutral-900 hover:text-neutral-950"
             >
-              Browse showcase
+              Showcase
               <ArrowRight size={13} />
             </Link>
           </div>
@@ -108,10 +109,10 @@ export default function HomePage() {
         {/* Hero */}
         <Hero />
 
-        <section className="border-t border-neutral-200 bg-[#F7F7FB]">
+        <section className="border-t border-neutral-200 bg-[#F5F8F7]">
           <div className="mx-auto grid max-w-6xl items-center gap-10 px-6 py-20 lg:grid-cols-[0.85fr_1.4fr]">
             <div>
-              <div className="text-[11px] font-bold uppercase tracking-widest text-violet-600">New in v4.0</div>
+              <div className="text-[11px] font-bold uppercase tracking-widest text-teal-700">New in v4.0</div>
               <h2 className="mt-2 text-[clamp(28px,4vw,42px)] font-bold leading-tight tracking-tight">
                 Direction, color, motion.<br />One working scene.
               </h2>
@@ -145,7 +146,7 @@ export default function HomePage() {
         <section className="border-t border-neutral-200 bg-white">
           <div className="mx-auto max-w-6xl px-6 py-20">
             <div className="max-w-3xl">
-              <div className="text-[11px] font-bold uppercase tracking-widest text-emerald-700">Latest v4 revision</div>
+              <div className="text-[11px] font-bold uppercase tracking-widest text-teal-700">Latest v4 revision</div>
               <h2 className="mt-2 text-[clamp(28px,4vw,42px)] font-bold leading-tight tracking-tight">
                 The method can learn.<br />Updates stay exact.
               </h2>
@@ -158,30 +159,30 @@ export default function HomePage() {
 
             <div className="mt-9 grid gap-4 lg:grid-cols-3">
               <article className="border border-neutral-200 bg-[#F4F6F3] p-6">
-                <div className="font-mono text-[11px] font-bold text-emerald-700">Optional extension</div>
+                <div className="font-mono text-[11px] font-bold text-teal-700">Optional extension</div>
                 <h3 className="mt-5 text-xl font-bold tracking-tight">Caller-attested local learning</h3>
                 <p className="mt-2 text-[14px] leading-relaxed text-neutral-600">
                   Not included in the core install. Capture only on request, review separately, block known high-risk identity
                   patterns, and keep the result local. This is a guardrail, not an anonymization
                   guarantee; review the exact package before exposure.
                 </p>
-                <Link href="/learn" className="mt-5 inline-flex items-center gap-1.5 text-[14px] font-bold text-emerald-800 hover:underline">
+                <Link href="/learn" className="mt-5 inline-flex items-center gap-1.5 text-[14px] font-bold text-teal-800 hover:underline">
                   See the privacy boundary <ArrowRight size={14} />
                 </Link>
               </article>
               <article className="border border-neutral-200 bg-neutral-950 p-6 text-white">
-                <div className="font-mono text-[11px] font-bold text-violet-300">engineRevision</div>
+                <div className="font-mono text-[11px] font-bold text-teal-300">engineRevision</div>
                 <h3 className="mt-5 text-xl font-bold tracking-tight">Same version, exact payload</h3>
                 <p className="mt-2 text-[14px] leading-relaxed text-neutral-400">
                   <code className="text-neutral-200">$ss-update</code> compares the installed,
                   project-recorded, and published revision before refresh and re-resolution.
                 </p>
-                <Link href="/architecture" className="mt-5 inline-flex items-center gap-1.5 text-[14px] font-bold text-violet-300 hover:underline">
+                <Link href="/architecture" className="mt-5 inline-flex items-center gap-1.5 text-[14px] font-bold text-teal-300 hover:underline">
                   Read the update architecture <ArrowRight size={14} />
                 </Link>
               </article>
-              <article className="border border-neutral-200 bg-[#F7F7FB] p-6">
-                <div className="font-mono text-[11px] font-bold text-violet-700">Codex package</div>
+              <article className="border border-neutral-200 bg-[#F5F8F7] p-6">
+                <div className="font-mono text-[11px] font-bold text-teal-700">Codex package</div>
                 <h3 className="mt-5 text-xl font-bold tracking-tight">23 core skills, no learning payload</h3>
                 <p className="mt-2 text-[14px] leading-relaxed text-neutral-600">
                   The repository includes a repository development Codex package boundary. The
@@ -189,7 +190,7 @@ export default function HomePage() {
                   remains <code>npx skills add bitjaru/styleseed</code> until a plugin-directory
                   release is independently verified.
                 </p>
-                <Link href="/codex-ui-design" className="mt-5 inline-flex items-center gap-1.5 text-[14px] font-bold text-violet-700 hover:underline">
+                <Link href="/codex-ui-design" className="mt-5 inline-flex items-center gap-1.5 text-[14px] font-bold text-teal-700 hover:underline">
                   Open the Codex guide <ArrowRight size={14} />
                 </Link>
               </article>
@@ -197,18 +198,18 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Get started — the first thing a visitor needs: how to use it */}
+        {/* Install first; the long orchestration prompt is an advanced disclosure in the hero. */}
         <section id="get-started" className="scroll-mt-20 border-t border-neutral-200 bg-neutral-900 text-white">
           <div className="mx-auto max-w-6xl px-6 py-16">
             <div className="flex flex-wrap items-end justify-between gap-4">
               <div>
                 <div className="text-[11px] font-bold uppercase tracking-widest text-neutral-400">Get started</div>
                 <h2 className="mt-2 text-[clamp(26px,4vw,36px)] font-bold tracking-tight">
-                  The fastest way is one sentence.
+                  Install once. Keep the method in the repo.
                 </h2>
                 <p className="mt-2 max-w-xl text-[15px] text-neutral-400">
-                  Paste once. It installs the full workflow when allowed, or uses the portable
-                  agent router when installation is unavailable.
+                  The core install gives your agent the resolver, builder, score, and visual gate.
+                  Approved choices persist in project files instead of disappearing with the chat.
                 </p>
               </div>
               <a
@@ -221,30 +222,21 @@ export default function HomePage() {
               </a>
             </div>
 
-            {/* the one-paste path — the primary, lowest-friction way */}
-            <div className="mt-8 max-w-3xl">
-              <PromptBox tone="dark" />
+            <div className="mt-8 max-w-xl">
+              <InstallCommand tone="dark" />
             </div>
 
-            <div className="mt-10 text-[11px] font-bold uppercase tracking-widest text-neutral-400">
-              For real projects — install it
-            </div>
-            <div className="mt-4 max-w-xl rounded-2xl bg-white/[0.06] p-6 ring-1 ring-white/10">
-              <div className="text-[12px] font-bold uppercase tracking-widest text-violet-300">Why install beats paste</div>
-              <h3 className="mt-2 text-[17px] font-bold">The quality gate only runs when it&rsquo;s installed</h3>
+            <div className="mt-8 max-w-3xl border-t border-white/10 pt-7">
+              <div className="text-[12px] font-bold uppercase tracking-widest text-teal-300">What the install changes</div>
+              <h3 className="mt-2 text-[17px] font-bold">A repeatable loop, not a one-off style prompt</h3>
               <p className="mt-1.5 text-[15px] leading-relaxed text-neutral-400">
-                Paste alone teaches the rules, but the step that strips the &ldquo;AI look&rdquo; is
-                the gate &mdash; and <code className="font-mono text-[13px] text-violet-300">ss-score</code> /{" "}
-                <code className="font-mono text-[13px] text-violet-300">ss-build</code> can only
-                <em> run</em> once installed. Then your lock persists in{" "}
-                <code className="font-mono text-[13px] text-neutral-300">STYLESEED.md</code> (no drift),
-                and when the StyleSeed workflow is invoked, it compiles the selected artifact and
-                records the checks and rendered evidence that actually ran before you see it. All 23
-                skills, universally — Claude Code, Codex, Cursor, Gemini CLI &amp; 12+ more.
+                When invoked, StyleSeed resolves only the rules selected for the artifact, builds
+                against that bundle, records the code and rendered checks that actually ran, and
+                preserves the approved lock for later updates. The core package contains 23 skills;
+                optional local-learning tools are distributed separately.
               </p>
               <div className="mt-4 space-y-1.5">
-                <code className="block rounded-lg bg-black/40 px-3 py-2 font-mono text-[13px] text-neutral-100">npx skills add bitjaru/styleseed</code>
-                <code className="block rounded-lg bg-black/40 px-3 py-2 font-mono text-[13px]"><span className="text-neutral-400"># Claude Code: </span><span className="text-violet-300">/ss-resolve → /ss-build</span><span className="text-neutral-500"> · </span><span className="text-neutral-400">Codex: </span><span className="text-emerald-300">$ss-resolve → $ss-build</span></code>
+                <code className="block rounded-lg bg-black/40 px-3 py-2 font-mono text-[13px]"><span className="text-neutral-400"># Claude Code: </span><span className="text-teal-300">/ss-resolve → /ss-build</span><span className="text-neutral-500"> · </span><span className="text-neutral-400">Codex: </span><span className="text-teal-300">$ss-resolve → $ss-build</span></code>
               </div>
             </div>
           </div>
@@ -253,11 +245,11 @@ export default function HomePage() {
         {/* Restyle gallery — aesthetic profiles, separate from functional output grammars */}
         <section className="border-t border-neutral-900 bg-neutral-950 text-white">
           <div className="mx-auto max-w-6xl px-6 py-20">
-            <div className="text-[11px] font-bold uppercase tracking-widest text-violet-300">
+            <div className="text-[11px] font-bold uppercase tracking-widest text-teal-300">
               One engine, many looks
             </div>
             <h2 className="mt-2 max-w-3xl text-[clamp(28px,4vw,40px)] font-bold leading-tight tracking-tight">
-              Same product. Six aesthetic profiles. One <code className="rounded bg-white/10 px-1.5 py-0.5 font-mono text-[0.85em] text-violet-200">ss-restyle</code> away.
+              Same product. Six aesthetic profiles. One <code className="rounded bg-white/10 px-1.5 py-0.5 font-mono text-[0.85em] text-teal-200">ss-restyle</code> away.
             </h2>
             <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-neutral-400">
               Profiles coordinate radius, density, color, weight, motion, type, and one signature
@@ -314,7 +306,7 @@ export default function HomePage() {
                 { k: "Why it works", v: "The eye locks onto magnitude first; equal sizes flatten it into noise." },
               ].map((c, i) => (
                 <div key={c.k} className="rounded-2xl bg-neutral-50 p-5" style={{ boxShadow: "inset 0 0 0 1px rgba(0,0,0,0.04)" }}>
-                  <div className="text-[11px] font-bold uppercase tracking-widest" style={{ color: i === 2 ? "#7C3AED" : "#6B7280" }}>{c.k}</div>
+                  <div className="text-[11px] font-bold uppercase tracking-widest" style={{ color: i === 2 ? "#0F766E" : "#6B7280" }}>{c.k}</div>
                   <div className="mt-1.5 text-[14px] font-semibold leading-snug text-neutral-800">{c.v}</div>
                 </div>
               ))}
@@ -339,7 +331,7 @@ export default function HomePage() {
               Other design skills make your UI <span className="text-neutral-500">coherent.</span>
               <br />
               StyleSeed also fights the{" "}
-              <span className="text-violet-300">generic-AI look</span> — and enforces it.
+              <span className="text-teal-300">generic-AI look</span> — and enforces it.
             </h2>
             <div className="mt-9 overflow-x-auto">
               <table className="w-full min-w-[600px] border-collapse text-left">
@@ -375,7 +367,7 @@ export default function HomePage() {
             </div>
             {/* the question every Claude Code user now asks */}
             <div className="mt-8 rounded-2xl border border-white/10 bg-white/[0.03] p-6">
-              <div className="text-[11px] font-bold uppercase tracking-widest text-violet-300">
+              <div className="text-[11px] font-bold uppercase tracking-widest text-teal-300">
                 &ldquo;Why not just use the official frontend-design skill?&rdquo;
               </div>
               <p className="mt-2 max-w-3xl text-[15px] leading-relaxed text-neutral-300">
@@ -392,24 +384,50 @@ export default function HomePage() {
               <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2">
                 <Link
                   href="/claude-code-ui-design"
-                  className="inline-flex items-center gap-1.5 text-[13px] font-bold text-violet-300 hover:underline"
+                  className="inline-flex items-center gap-1.5 text-[13px] font-bold text-teal-300 hover:underline"
                 >
                   Read the Claude Code UI design workflow <ArrowRight size={13} />
                 </Link>
                 <Link
                   href="/codex-ui-design"
-                  className="inline-flex items-center gap-1.5 text-[13px] font-bold text-emerald-300 hover:underline"
+                  className="inline-flex items-center gap-1.5 text-[13px] font-bold text-teal-300 hover:underline"
                 >
                   Read the Codex UI design workflow <ArrowRight size={13} />
                 </Link>
               </div>
             </div>
+            <article className="mt-4 border border-white/10 bg-white/[0.03] p-6">
+              <div className="text-[11px] font-bold uppercase tracking-widest text-teal-300">
+                Named peer · observed {competitorSource.observedAt}
+              </div>
+              <h3 className="mt-2 text-[18px] font-bold tracking-tight text-white">
+                {competitorSource.impeccable.name} is a serious execution-layer reference.
+              </h3>
+              <p className="mt-2 max-w-3xl text-[14px] leading-relaxed text-neutral-300">
+                {competitorSource.impeccable.capabilitySummary}
+              </p>
+              <p className="mt-2 max-w-3xl text-[14px] leading-relaxed text-neutral-400">
+                {competitorSource.styleseedFocus} This is a capability-specific snapshot, not an
+                overall ranking.
+              </p>
+              <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-[13px] font-bold">
+                <a href={competitorSource.impeccable.repositoryUrl} target="_blank" rel="noreferrer" className="text-teal-300 hover:underline">
+                  Repository ↗
+                </a>
+                <a href={competitorSource.impeccable.cliSourceUrl} target="_blank" rel="noreferrer" className="text-teal-300 hover:underline">
+                  CLI evidence ↗
+                </a>
+                <a href={competitorSource.impeccable.hooksSourceUrl} target="_blank" rel="noreferrer" className="text-teal-300 hover:underline">
+                  Hook evidence ↗
+                </a>
+              </div>
+            </article>
             <p className="mt-5 max-w-3xl text-[14px] leading-relaxed text-neutral-400">
               Also in the box: 7 brand skins from one <code className="rounded bg-white/10 px-1 font-mono text-[13px]">data-skin</code>{" "}
               attribute, 5 motion seeds plus 20+ keyword moves, and a drop-in{" "}
               <code className="rounded bg-white/10 px-1 font-mono text-[13px]">engine/</code> — no build step, no lock-in.
               The rules are open: propose new ones via PR.{" "}
-              <Link href="/why" className="font-semibold text-violet-300 underline underline-offset-2">
+              <Link href="/why" className="font-semibold text-teal-300 underline underline-offset-2">
                 See the before/after →
               </Link>
             </p>
@@ -497,7 +515,7 @@ export default function HomePage() {
                 <code className="rounded bg-neutral-100 px-1 text-[13px]">magnetic</code>,{" "}
                 <code className="rounded bg-neutral-100 px-1 text-[13px]">glow-pulse</code>. Try them
                 live below, or{" "}
-                <Link href="/motion" className="font-semibold text-violet-600 underline underline-offset-2">
+                <Link href="/motion" className="font-semibold text-teal-700 underline underline-offset-2">
                   browse the full gallery
                 </Link>
                 .
@@ -547,7 +565,7 @@ export default function HomePage() {
                   rel="noreferrer"
                   className="group rounded-2xl bg-white p-5 shadow-sm transition-shadow hover:shadow-md"
                 >
-                  <div className="text-[11px] font-bold uppercase tracking-widest text-violet-600">
+                  <div className="text-[11px] font-bold uppercase tracking-widest text-teal-700">
                     {a.tag}
                   </div>
                   <h3 className="mt-2 text-[15px] font-bold leading-snug text-neutral-900 group-hover:underline">
@@ -569,7 +587,7 @@ export default function HomePage() {
               Stop redrawing. Start shipping.
             </h2>
             <div className="mx-auto mt-8 max-w-2xl">
-              <PromptBox />
+              <InstallCommand />
             </div>
             <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
               <a
@@ -584,11 +602,11 @@ export default function HomePage() {
               </a>
             </div>
             <p className="mx-auto mt-5 max-w-md text-[15px] text-neutral-600">
-              One paste away from UI that doesn&rsquo;t look generated.
+              One command to make the method available to every future project prompt.
             </p>
             <p className="mt-6 text-[14px] text-neutral-500">
               MIT licensed · no telemetry ·{" "}
-              <Link href="/showcase" className="font-semibold text-violet-600 underline underline-offset-2">
+              <Link href="/showcase" className="font-semibold text-teal-700 underline underline-offset-2">
                 browse the showcase
               </Link>
             </p>

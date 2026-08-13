@@ -1,0 +1,32 @@
+{
+  "inspectionMethod": "Manual pixel inspection at original resolution",
+  "renders": [
+    {
+      "id": "desktop-loaded",
+      "state": "loaded",
+      "viewport": { "width": 1440, "height": 900 },
+      "path": ".styleseed/evidence/site-home/baseline-bf07a56/renders/desktop-loaded.png",
+      "sha256": "sha256:27af0ed0d87dcbf2cddaef16da302aea626c908265d29a16d646fe74ec81675a",
+      "bytes": 4329491
+    },
+    {
+      "id": "mobile-loaded",
+      "state": "loaded",
+      "viewport": { "width": 390, "height": 844 },
+      "path": ".styleseed/evidence/site-home/baseline-bf07a56/renders/mobile-loaded.png",
+      "sha256": "sha256:630e8a990f62b19569fa0856932386a2676bbbfce5addb0009fadac0c722aef2",
+      "bytes": 2901375
+    },
+    {
+      "id": "mobile-reduced-motion",
+      "state": "reduced-motion",
+      "viewport": { "width": 390, "height": 844 },
+      "path": ".styleseed/evidence/site-home/baseline-bf07a56/renders/mobile-reduced-motion.png",
+      "sha256": "sha256:45378554674fdc01b024b695b91f5816888c8e6e8adc2a90f592dfd4b7ac3fb8",
+      "bytes": 2906390
+    }
+  ],
+  "findings": [
+    { "severity": "warning", "message": "The full-page hierarchy and responsive transforms are coherent, but the filled Browse showcase header action competes with installation intent and WEB-002 remains pending." }
+  ]
+}

@@ -8,7 +8,7 @@
   "publicInstall": "npx skills add bitjaru/styleseed",
   "codexPackageStatus": "repository development Codex package",
   "version": "4.0.0",
-  "revision": "sha256:9582cb350c4750c92d5fb9eba2ba01bf4e2a558230a0fa379b79a06d1afb271f",
+  "revision": "sha256:c52db8d7ee54c5a7096a94006173fcb96d068583cd2f3b66b1dc43be765e69be",
   "revisionFiles": 78,
   "skills": 23,
   "grammars": 8,

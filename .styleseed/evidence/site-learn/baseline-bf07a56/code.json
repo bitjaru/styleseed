@@ -1,0 +1,18 @@
+{
+  "score": 88,
+  "categories": {
+    "color": 13,
+    "hierarchy": 15,
+    "layout": 11,
+    "surfaces": 9,
+    "states": 17,
+    "motion": 4,
+    "coherence": 10,
+    "distinctiveness": 9
+  },
+  "evidence": [
+    { "message": "The optional-extension boundary, four-step contract, allowed/rejected material split, and FAQ build an honest editorial hierarchy." },
+    { "message": "Two hardcoded surfaces and shared transition detection remain advisory source findings." }
+  ],
+  "reviewer": "Codex ss-score"
+}

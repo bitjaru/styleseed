@@ -1,10 +1,10 @@
 {
   "schemaVersion": 4,
   "engineVersion": "4.0.0",
-  "engineRevision": "sha256:9582cb350c4750c92d5fb9eba2ba01bf4e2a558230a0fa379b79a06d1afb271f",
+  "engineRevision": "sha256:c52db8d7ee54c5a7096a94006173fcb96d068583cd2f3b66b1dc43be765e69be",
   "distributions": {
     "core": {
-      "revision": "sha256:9582cb350c4750c92d5fb9eba2ba01bf4e2a558230a0fa379b79a06d1afb271f",
+      "revision": "sha256:c52db8d7ee54c5a7096a94006173fcb96d068583cd2f3b66b1dc43be765e69be",
       "files": [
         {
           "path": ".codex-plugin/plugin.json",
@@ -193,8 +193,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-score/scripts/evidence-gate.mjs",
-          "sha256": "a5bcc08a4b7d2eb40d027d5f1f046f5313f641aa56f73b23856beba4e66c655c",
-          "bytes": 16206
+          "sha256": "5e69e31b6ee28cbf854bbcef445f162bc75b98b414c526e4541078877ddc83fb",
+          "bytes": 16556
         },
         {
           "path": "engine/.claude/skills/ss-score/scripts/styleseed-check.mjs",
@@ -587,8 +587,8 @@
     },
     {
       "path": ".claude/skills/ss-score/scripts/evidence-gate.mjs",
-      "sha256": "a5bcc08a4b7d2eb40d027d5f1f046f5313f641aa56f73b23856beba4e66c655c",
-      "bytes": 16206
+      "sha256": "5e69e31b6ee28cbf854bbcef445f162bc75b98b414c526e4541078877ddc83fb",
+      "bytes": 16556
     },
     {
       "path": ".claude/skills/ss-score/scripts/styleseed-check.mjs",

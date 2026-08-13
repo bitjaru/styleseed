@@ -1,0 +1,18 @@
+{
+  "score": 86,
+  "categories": {
+    "color": 12,
+    "hierarchy": 15,
+    "layout": 11,
+    "surfaces": 9,
+    "states": 17,
+    "motion": 4,
+    "coherence": 10,
+    "distinctiveness": 8
+  },
+  "evidence": [
+    { "message": "The benchmark narrative, receipts, limitations, and result tables fit the technical-instrument grammar." },
+    { "message": "Hardcoded surfaces, an arbitrary table width, and missing detected reduced-motion handling remain advisory source findings." }
+  ],
+  "reviewer": "Codex ss-score"
+}

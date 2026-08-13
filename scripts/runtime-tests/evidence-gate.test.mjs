@@ -451,6 +451,54 @@ test("verify fails when temporal evidence is required but marked not-applicable"
   }
 });
 
+test("verify fails when a required temporal scenario records reduced-motion failure", () => {
+  const projectRoot = makeProjectRoot("styleseed-gate-temporal-reduced-fail-");
+  try {
+    writeFixtureProject(projectRoot, {
+      temporalRequired: true,
+      temporalApplicability: "required",
+      includeTemporalEvidence: true,
+    });
+    const temporalPath = resolve(projectRoot, ".styleseed/evidence/app-dashboard/run-001/temporal.json");
+    const temporal = JSON.parse(readFileSync(temporalPath, "utf8"));
+    temporal.scenarios[0].reducedMotion = "fail";
+    writeJson(temporalPath, temporal);
+    const gateRunPath = resolve(projectRoot, ".styleseed/evidence/app-dashboard/run-001/gate-run.json");
+    const gateRun = JSON.parse(readFileSync(gateRunPath, "utf8"));
+    const bytes = readFileSync(temporalPath);
+    gateRun.gates.temporal.reportSha256 = digest(bytes);
+    gateRun.gates.temporal.reportBytes = bytes.byteLength;
+    writeJson(gateRunPath, gateRun);
+    const run = runGate(["verify", "--project-root", ".", "--artifact", "app-dashboard", "--run", "run-001", "--json"], projectRoot);
+    assert.notEqual(run.status, 0, run.stdout || run.stderr);
+    assert.match(run.stdout, /failed reduced-motion inspection/i);
+  } finally {
+    rmSync(projectRoot, { recursive: true, force: true });
+  }
+});
+
+test("verify fails when visual evidence contains a hard finding", () => {
+  const projectRoot = makeProjectRoot("styleseed-gate-visual-finding-");
+  try {
+    writeFixtureProject(projectRoot);
+    const visualPath = resolve(projectRoot, ".styleseed/evidence/app-dashboard/run-001/visual.json");
+    const visual = JSON.parse(readFileSync(visualPath, "utf8"));
+    visual.findings = [{ severity: "fail", message: "Rendered focal action is missing." }];
+    writeJson(visualPath, visual);
+    const gateRunPath = resolve(projectRoot, ".styleseed/evidence/app-dashboard/run-001/gate-run.json");
+    const gateRun = JSON.parse(readFileSync(gateRunPath, "utf8"));
+    const bytes = readFileSync(visualPath);
+    gateRun.gates.visual.reportSha256 = digest(bytes);
+    gateRun.gates.visual.reportBytes = bytes.byteLength;
+    writeJson(gateRunPath, gateRun);
+    const run = runGate(["verify", "--project-root", ".", "--artifact", "app-dashboard", "--run", "run-001", "--json"], projectRoot);
+    assert.notEqual(run.status, 0, run.stdout || run.stderr);
+    assert.match(run.stdout, /visual evidence contains hard findings/i);
+  } finally {
+    rmSync(projectRoot, { recursive: true, force: true });
+  }
+});
+
 test("verify fails when implementation sources change after evidence capture", () => {
   const projectRoot = makeProjectRoot("styleseed-gate-source-drift-");
   try {

@@ -1,0 +1,55 @@
+{
+  "artifactId": "site-docs",
+  "bundleBytes": 16833,
+  "bundleHash": "sha256:d4570d912e54c8958ffb9f9da1622dbb81fdc62a3371eecfd433b6a06c622201",
+  "bundlePath": ".styleseed/bundles/site-docs.md",
+  "gates": {
+    "code": {
+      "attached": true,
+      "reportBytes": 507,
+      "reportPath": ".styleseed/evidence/site-docs/baseline-bf07a56/code.json",
+      "reportSha256": "sha256:241d9b941362066411ee34b13f09eae995c3f2130091683a914224a2a9423e33"
+    },
+    "deterministic": {
+      "attached": true,
+      "reportBytes": 790,
+      "reportPath": ".styleseed/evidence/site-docs/baseline-bf07a56/deterministic.json",
+      "reportSha256": "sha256:bd8e24989388571d96d93ada594e9367f0ab27ee6b6380e3e6b07002e502c732"
+    },
+    "human": {
+      "attached": false,
+      "reportBytes": null,
+      "reportPath": null,
+      "reportSha256": null
+    },
+    "temporal": {
+      "attached": true,
+      "reportPath": ".styleseed/evidence/site-docs/baseline-bf07a56/temporal.json",
+      "reportSha256": "sha256:486d986b5d16bef3677fc8d5c9736b9a808acac1b8bd8858fc8e9ea80cf50dee",
+      "reportBytes": 59
+    },
+    "visual": {
+      "attached": true,
+      "reportBytes": 936,
+      "reportPath": ".styleseed/evidence/site-docs/baseline-bf07a56/visual.json",
+      "reportSha256": "sha256:9373124989cd39e230d20eb4bcfd8fb730157571af96be2de1834e16c324df25"
+    }
+  },
+  "implementation": {
+    "inventoryHash": "sha256:a1193b3f09852edd3712aa9b3bacef9d245ec0cbadb97eef9f4de28defa8ac7a",
+    "sourceRoots": [
+      "demo-pricing/app/architecture",
+      "demo-pricing/app/guides",
+      "demo-pricing/app/globals.css"
+    ]
+  },
+  "manifestPath": ".styleseed/manifests/site-docs.json",
+  "methodHash": "sha256:3b85de8475bbf990f49b17da4ef58a06cfb37d3126657035b8f4d60548ffecb7",
+  "repositoryRevision": {
+    "commit": "bf07a56c6abf44041e8fcb3a5f81f57ed90d53f4",
+    "vcs": "git"
+  },
+  "runId": "baseline-bf07a56",
+  "schemaVersion": 1,
+  "validationHash": "sha256:58f1e9b237d636028d6e79a54d842f0b73be8605f4aa387278a4cc8793ac45cd"
+}

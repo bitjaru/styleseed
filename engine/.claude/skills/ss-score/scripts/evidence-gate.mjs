@@ -195,10 +195,15 @@ export function verifyEvidenceRun({ projectRoot, artifactId, runId }) {
           const found = report.renders.find((candidate) => candidate.id === render.id && candidate.state === render.state && candidate.viewport?.width === render.viewport.width && candidate.viewport?.height === render.viewport.height);
           if (!found) throw new Error(`required viewport is missing: ${render.id}`);
         }
+        if (report.findings.some((finding) => finding.severity === "error" || finding.severity === "fail")) throw new Error("visual evidence contains hard findings");
       } else if (gate === "temporal") {
         const contract = artifact.validation.temporal ?? { required: false, scenarios: [] };
         if (contract.required && report.applicability === "not-applicable") throw new Error("temporal evidence is required but marked not-applicable");
-        for (const scenario of contract.scenarios ?? []) if (!report.scenarios.some((candidate) => candidate.id === scenario)) throw new Error(`required temporal scenario is missing: ${scenario}`);
+        for (const scenario of contract.scenarios ?? []) {
+          const found = report.scenarios.find((candidate) => candidate.id === scenario);
+          if (!found) throw new Error(`required temporal scenario is missing: ${scenario}`);
+          if (found.reducedMotion === "fail") throw new Error(`temporal scenario failed reduced-motion inspection: ${scenario}`);
+        }
       }
       gates[gate] = "pass";
     } catch (error) {

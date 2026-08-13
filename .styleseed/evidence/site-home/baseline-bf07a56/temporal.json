@@ -1,0 +1,19 @@
+{
+  "applicability": "required",
+  "scenarios": [
+    {
+      "id": "hero-motion",
+      "recordingPath": ".styleseed/evidence/site-home/baseline-bf07a56/recordings/hero-motion.webm",
+      "recordingSha256": "sha256:dee0dbdaf6165ab1a2d1d5282e758ab47da8aa255b318cae4584de79850a319f",
+      "recordingBytes": 943817,
+      "reducedMotion": "not-applicable"
+    },
+    {
+      "id": "hero-reduced-motion",
+      "recordingPath": ".styleseed/evidence/site-home/baseline-bf07a56/recordings/hero-reduced-motion.webm",
+      "recordingSha256": "sha256:288b40885ac3a73b4ca4a45c09314b8d3167401fa097fe09bcd14088dc2caa9a",
+      "recordingBytes": 943042,
+      "reducedMotion": "fail"
+    }
+  ]
+}

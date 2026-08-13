@@ -19,12 +19,16 @@ Date: 2026-08-13
 
 ## Latest local evidence
 
-- Runtime tests: 54 passing, 0 failing.
+- Runtime tests: 56 passing, 0 failing.
 - Learning security fixtures: T01, T02, T03, T04, T05, T06, T09a, T10, T11 passing.
 - Canonical-to-generated regeneration completed after integration; `validate-palettes`,
   `validate-engine`, skill/router/public-claim/core-isolation checks, package build/validation, and
   `git diff --check` pass.
-- Deterministic dogfood scan: 0 hard errors; 38 advisory warnings.
+- Dogfood baseline `baseline-bf07a56` is bound to Git commit
+  `bf07a56c6abf44041e8fcb3a5f81f57ed90d53f4`: 0 deterministic hard errors, 38 advisory warnings,
+  nine manually inspected PNG renders, and two inspected home recordings.
+- `site-docs`, `site-gate`, and `site-learn` pass all required gates. `site-home` correctly fails its
+  temporal gate because `prefers-reduced-motion` still receives the same blur/fade entrance.
 - Production website build: 133 static/SSG routes generated with Next.js 16.2.3.
 - Core package: 75 files, 734295 payload bytes; deterministic archive SHA-256
   `b52ae89cd0a879cf612320e8aa95be595c1159cd27b36351bdc42fa8fdc7db78`.
@@ -36,10 +40,13 @@ Date: 2026-08-13
 
 ## Intentionally not verified
 
-- No dogfood artifact has a fresh screenshot/recording evidence run. `evidence-gate verify --all`
-  correctly reports the preserved failed baseline runs. The first baseline exposed stale manifests;
-  those runs remain recorded rather than being deleted or relabeled. New gate runs bind a Git commit,
-  reject dirty implementation roots, and re-check source roots against the bound revision.
+- The first `baseline-f5ff2b5` exposed stale manifests; those failed runs remain recorded rather than
+  being deleted or relabeled. New gate runs bind a Git commit, reject dirty implementation roots, and
+  re-check source roots against the bound revision. `verify --all` keeps failed history visible while
+  requiring at least one current passing run per artifact.
+- The current dogfood aggregate is `PARTIAL`: three artifacts pass, and `site-home` has no passing run
+  because the temporal verifier rejects its recorded reduced-motion failure. The evidence contract now
+  also rejects hard visual findings instead of treating their existence as a pass.
 - WEB-002 layout work did not start and none of its owner files were edited. A live Lazyweb MCP health
   check reached the configured service but returned `FREE_MONTHLY_TOOL_QUOTA_EXHAUSTED`. The ticket
   explicitly requires the current-page screenshot report and stops `PARTIAL` before UI edits when the
@@ -55,11 +62,10 @@ Date: 2026-08-13
 
 ## Next authorized sequence
 
-1. On the clean integration SHA, initialize fresh evidence runs, start the built site, capture required
-   mobile/desktop/reduced-motion evidence, attach reports, and run `evidence-gate verify --all`.
-2. After Lazyweb quota is available, run the required current-screen report, implement WEB-002, and
-   bind newly captured `site-home` evidence. Do not reuse the baseline screenshots.
-3. Obtain explicit approval before PKG-010 install smoke, adding the missing validator dependency,
+1. After Lazyweb quota is available, run the required current-screen report, implement WEB-002,
+   remove the recorded reduced-motion entrance failure, and bind a newly captured `site-home` run. Do
+   not reuse the baseline screenshots.
+2. Obtain explicit approval before PKG-010 install smoke, adding the missing validator dependency,
    version/release work, or deployment.
-4. Treat SEC-050 as a maintainer decision; do not enable or publish the learning bridge until its
+3. Treat SEC-050 as a maintainer decision; do not enable or publish the learning bridge until its
    host-owned proof contract and negative tests exist.

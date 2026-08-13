@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "artifactId": "site-learn",
+  "runId": "baseline-f5ff2b5",
+  "status": "fail",
+  "gates": {
+    "deterministic": "fail",
+    "code": "fail",
+    "visual": "fail",
+    "temporal": "pass",
+    "human": "pass"
+  },
+  "errors": [
+    "manifest bundle snapshot is stale",
+    "deterministic evidence contains hard findings",
+    "code evidence is required",
+    "visual evidence is required"
+  ],
+  "warnings": [],
+  "computed": {
+    "manifestMethodHash": "sha256:c69caf6516e35a8071ec388b6aa513a130b271e0825a6d366515338afda71605",
+    "manifestValidationHash": "sha256:5e84b491f159579a662990376c5877e339d3030a7b96c4dc8638545ed6ed0f55",
+    "bundle": {
+      "path": ".styleseed/bundles/site-learn.md",
+      "sha256": "sha256:d4570d912e54c8958ffb9f9da1622dbb81fdc62a3371eecfd433b6a06c622201",
+      "bytes": 16833
+    },
+    "repositoryRevision": null,
+    "implementation": {
+      "hash": "sha256:96989ee9f2eec37fb4b136c99419c0ad298321047aeea7cc3163ca97c06f886d",
+      "files": 2,
+      "bytes": 10651
+    }
+  }
+}

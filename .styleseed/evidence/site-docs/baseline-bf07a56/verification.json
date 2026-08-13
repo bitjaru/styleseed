@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "artifactId": "site-docs",
+  "runId": "baseline-bf07a56",
+  "status": "pass",
+  "gates": {
+    "deterministic": "pass",
+    "code": "pass",
+    "visual": "pass",
+    "temporal": "pass",
+    "human": "pass"
+  },
+  "errors": [],
+  "warnings": [],
+  "computed": {
+    "manifestMethodHash": "sha256:3b85de8475bbf990f49b17da4ef58a06cfb37d3126657035b8f4d60548ffecb7",
+    "manifestValidationHash": "sha256:58f1e9b237d636028d6e79a54d842f0b73be8605f4aa387278a4cc8793ac45cd",
+    "bundle": {
+      "path": ".styleseed/bundles/site-docs.md",
+      "sha256": "sha256:d4570d912e54c8958ffb9f9da1622dbb81fdc62a3371eecfd433b6a06c622201",
+      "bytes": 16833
+    },
+    "repositoryRevision": {
+      "commit": "bf07a56c6abf44041e8fcb3a5f81f57ed90d53f4",
+      "vcs": "git"
+    },
+    "implementation": {
+      "hash": "sha256:a1193b3f09852edd3712aa9b3bacef9d245ec0cbadb97eef9f4de28defa8ac7a",
+      "files": 4,
+      "bytes": 24025
+    }
+  }
+}

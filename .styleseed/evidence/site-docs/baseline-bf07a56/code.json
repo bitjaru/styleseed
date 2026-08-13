@@ -1,0 +1,18 @@
+{
+  "score": 88,
+  "categories": {
+    "color": 13,
+    "hierarchy": 15,
+    "layout": 11,
+    "surfaces": 9,
+    "states": 17,
+    "motion": 4,
+    "coherence": 10,
+    "distinctiveness": 9
+  },
+  "evidence": [
+    { "message": "Editorial hierarchy, bounded reading measure, and the architecture diagram support the selected editorial-reading grammar." },
+    { "message": "One hardcoded surface color and shared transition warning remain advisory source findings." }
+  ],
+  "reviewer": "Codex ss-score"
+}

@@ -122,7 +122,7 @@ function captureRequiredRenders(artifact, runId, browser, baseUrl) {
       reducedMotion,
     });
     const page = await context.newPage();
-    await page.goto(`${baseUrl}${routeFor(artifact)}`, { waitUntil: "networkidle" });
+    await page.goto(`${baseUrl}${routeFor(artifact)}`, { waitUntil: "domcontentloaded" });
     await page.evaluate(() => document.fonts.ready);
     await page.waitForTimeout(render.state === "reduced-motion" ? 150 : 400);
     await page.screenshot({ path: absolutePath, fullPage: true });
@@ -145,7 +145,7 @@ async function captureTemporalIfRequired(artifact, runId, browser, baseUrl) {
     });
     const page = await videoContext.newPage();
     const video = page.video();
-    await page.goto(`${baseUrl}${routeFor(artifact)}`, { waitUntil: "networkidle" });
+    await page.goto(`${baseUrl}${routeFor(artifact)}`, { waitUntil: "domcontentloaded" });
     await page.evaluate(() => document.fonts.ready);
     await page.waitForTimeout(1200);
     await page.close();

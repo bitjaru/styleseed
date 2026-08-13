@@ -1,11 +1,13 @@
 import { createHash } from "node:crypto";
-import { mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
+import { cpSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const engine = resolve(root, "engine");
 const out = resolve(engine, ".claude/skills/ss-resolve/references/catalog.json");
+const canonicalSkills = resolve(engine, ".claude/skills");
+const discoverySkills = resolve(root, "skills");
 const read = (name) => readFileSync(resolve(engine, name), "utf8").trim();
 
 function section(markdown, heading, nextHeadingPattern) {
@@ -38,11 +40,10 @@ const topLevelDistributionFiles = readdirSync(engine, { withFileTypes: true })
   .map((entry) => entry.name)
   .filter((name) => name === ".cursorrules" || name === "VERSION" || name.endsWith(".md"));
 const coreDistributionPaths = [
-  ".codex-plugin/plugin.json",
   "LICENSE",
   "SECURITY.md",
   ...topLevelDistributionFiles.map((path) => `engine/${path}`),
-  ...walkFiles(resolve(engine, ".claude/skills"), "engine/.claude/skills")
+  ...walkFiles(canonicalSkills, "engine/.claude/skills")
     .filter((path) => path !== "engine/.claude/skills/ss-resolve/references/catalog.json")
     .filter((path) => !path.startsWith("engine/.claude/skills/ss-learn/")),
   ...walkFiles(resolve(engine, "color"), "engine/color"),
@@ -256,6 +257,10 @@ const catalog = {
 
 mkdirSync(dirname(out), { recursive: true });
 writeFileSync(out, `${JSON.stringify(catalog, null, 2)}\n`);
+// Codex requires a physical root skills/ discovery tree. The catalog keeps one logical
+// canonical inventory; the installed verifier maps it to the physical mirror it runs from.
+rmSync(discoverySkills, { recursive: true, force: true });
+cpSync(canonicalSkills, discoverySkills, { recursive: true });
 console.log(
   `StyleSeed context catalog: ${grammarIds.length} grammars · ${adapterIds.length} adapters · ${Object.keys(domainHeadings).length} domains · ${Object.keys(pageHeadings).length} pages · ${recipeIds.length} recipes · ${palettes.length} palettes · ${profileIds.length} profiles`,
 );

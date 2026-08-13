@@ -18,22 +18,43 @@ function isSafeDistributionPath(value) {
   return parts.every((part) => part.length > 0 && part !== "." && part !== "..");
 }
 
-function resolveDistributionRoot(scriptPath) {
-  return resolve(dirname(scriptPath), "..", "..", "..", "..", "..");
+function resolveDistributionLayout(scriptPath) {
+  const absoluteScript = normalizePath(resolve(scriptPath));
+  for (const [marker, skillRoot] of [
+    ["/engine/.claude/skills/", "engine/.claude/skills"],
+    ["/.claude/skills/", ".claude/skills"],
+    ["/.agents/skills/", ".agents/skills"],
+    ["/skills/", "skills"],
+  ]) {
+    const index = absoluteScript.lastIndexOf(marker);
+    if (index > 0) return { root: absoluteScript.slice(0, index), skillRoot };
+  }
+  throw new Error(`Cannot locate the StyleSeed distribution root from: ${scriptPath}`);
 }
 
-function resolveContainedPath(root, relativePath) {
+function physicalDistributionPath(relativePath, skillRoot) {
+  const canonicalPrefix = "engine/.claude/skills/";
+  return relativePath.startsWith(canonicalPrefix) && skillRoot !== "engine/.claude/skills"
+    ? `${skillRoot}/${relativePath.slice(canonicalPrefix.length)}`
+    : relativePath;
+}
+
+function resolveContainedPath(root, relativePath, skillRoot) {
   if (!isSafeDistributionPath(relativePath)) {
     throw new Error(`Invalid distribution path: ${relativePath}`);
   }
-  const absolutePath = resolve(root, relativePath);
+  const physicalPath = physicalDistributionPath(relativePath, skillRoot);
+  if (!isSafeDistributionPath(physicalPath)) {
+    throw new Error(`Invalid physical distribution path: ${physicalPath}`);
+  }
+  const absolutePath = resolve(root, physicalPath);
   const normalizedRoot = normalizePath(root);
   const normalizedAbsolute = normalizePath(absolutePath);
   if (normalizedAbsolute !== normalizedRoot && !normalizedAbsolute.startsWith(`${normalizedRoot}/`)) {
     throw new Error(`Distribution path escapes root: ${relativePath}`);
   }
   let current = root;
-  for (const part of relativePath.split("/")) {
+  for (const part of physicalPath.split("/")) {
     current = resolve(current, part);
     if (existsSync(current) && lstatSync(current).isSymbolicLink()) {
       throw new Error(`Distribution path traverses a symlink: ${relativePath}`);
@@ -67,7 +88,7 @@ export function verifyDistribution({ catalog, scriptPath }) {
     throw new Error("verifyDistribution requires scriptPath");
   }
 
-  const root = resolveDistributionRoot(scriptPath);
+  const { root, skillRoot } = resolveDistributionLayout(scriptPath);
   const files = distribution.files.map((entry, index) => {
     if (
       !entry
@@ -98,7 +119,7 @@ export function verifyDistribution({ catalog, scriptPath }) {
   const actualDigests = [];
   const mismatches = [];
   for (const file of files) {
-    const absolutePath = resolveContainedPath(root, file.path);
+    const absolutePath = resolveContainedPath(root, file.path, skillRoot);
     if (!existsSync(absolutePath)) {
       mismatches.push({ path: file.path, reason: "missing" });
       continue;

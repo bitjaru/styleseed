@@ -16,7 +16,7 @@
     "accessibility",
     "codex"
   ],
-  "skills": "./engine/.claude/skills/",
+  "skills": "./skills/",
   "interface": {
     "displayName": "StyleSeed",
     "shortDescription": "Durable design judgment and verified UI workflows",

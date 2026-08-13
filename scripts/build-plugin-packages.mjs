@@ -78,7 +78,6 @@ function expectedCatalogLiteralFiles(catalog) {
     .filter((entry) => !entry.path.startsWith("root/"))
     .map((entry) => entry.path)
     .filter((path) => !path.startsWith(".claude/skills/"))
-    .filter((path) => path === "VERSION" || path.endsWith(".md"))
     .map((path) => `engine/${path}`)
     .sort();
 }
@@ -89,8 +88,6 @@ function validateAllowlistIntegrity(allowlist, catalog, sourceRoot) {
     ".codex-plugin/plugin.json",
     "LICENSE",
     "SECURITY.md",
-    "engine/color/generator.mjs",
-    "engine/color/palettes.json",
     ...expectedCatalogLiteralFiles(catalog),
   ].sort();
   const actualLiteral = [...allowlist.literalFiles].sort();
@@ -107,7 +104,22 @@ function validateAllowlistIntegrity(allowlist, catalog, sourceRoot) {
     failures.push("allowlist skillTrees drifted from the canonical engine skill directories");
   }
 
-  if (allowlist.literalFiles.some((path) => path.includes("**")) || allowlist.skillTrees.some((path) => path.includes("**"))) {
+  const discoverySkillDirs = skillDirs.map((path) => path.replace(/^engine\/\.claude\//u, ""));
+  const actualDiscoverySkills = [...allowlist.discoverySkillTrees].sort();
+  if (JSON.stringify(discoverySkillDirs) !== JSON.stringify(actualDiscoverySkills)) {
+    failures.push("allowlist discoverySkillTrees drifted from the generated Codex skill mirror");
+  }
+  for (const [canonicalPath, discoveryPath] of skillDirs.map((path, index) => [path, discoverySkillDirs[index]])) {
+    const canonicalFiles = walkTree(sourceRoot, canonicalPath, allowlist)
+      .map((entry) => [entry.relativePath.slice(canonicalPath.length + 1), entry.sha256]);
+    const discoveryFiles = walkTree(sourceRoot, discoveryPath, allowlist)
+      .map((entry) => [entry.relativePath.slice(discoveryPath.length + 1), entry.sha256]);
+    if (JSON.stringify(canonicalFiles) !== JSON.stringify(discoveryFiles)) {
+      failures.push(`generated Codex skill mirror drifted from canonical source: ${discoveryPath}`);
+    }
+  }
+
+  if ([...allowlist.literalFiles, ...allowlist.skillTrees, ...allowlist.discoverySkillTrees].some((path) => path.includes("**"))) {
     failures.push("allowlist must not contain caller-style glob patterns");
   }
 
@@ -170,6 +182,9 @@ function collectAllowedFiles(sourceRoot, allowlist, catalog) {
   for (const treePath of allowlist.skillTrees) {
     files.push(...walkTree(sourceRoot, treePath, allowlist));
   }
+  for (const treePath of allowlist.discoverySkillTrees) {
+    files.push(...walkTree(sourceRoot, treePath, allowlist));
+  }
   files.sort((left, right) => left.relativePath.localeCompare(right.relativePath));
   const deduped = [];
   const seen = new Set();
@@ -194,7 +209,7 @@ function stageFile(sourceRoot, stageRoot, entry) {
 function rewriteStagedManifest(stageRoot) {
   const manifestPath = resolve(stageRoot, ".codex-plugin/plugin.json");
   const manifest = readJson(manifestPath);
-  manifest.skills = "./engine/.claude/skills/";
+  manifest.skills = "./skills/";
   delete manifest.mcpServers;
   const content = Buffer.from(`${JSON.stringify(manifest, null, 2)}\n`, "utf8");
   writeFileSync(manifestPath, content);
@@ -301,7 +316,7 @@ export async function buildPluginPackage({
   if (clean) rmSync(stageRoot, { recursive: true, force: true });
   mkdirSync(stageRoot, { recursive: true });
 
-  const { files, totalBytes } = collectAllowedFiles(sourceRoot, allowlist, catalog);
+  const { files } = collectAllowedFiles(sourceRoot, allowlist, catalog);
   for (const entry of files) stageFile(sourceRoot, stageRoot, entry);
   const manifestEntry = rewriteStagedManifest(stageRoot);
   const stagedFiles = files.map((entry) => (
@@ -309,8 +324,12 @@ export async function buildPluginPackage({
       ? { ...entry, content: manifestEntry.content, bytes: manifestEntry.bytes, sha256: manifestEntry.sha256 }
       : entry
   ));
+  const stagedTotalBytes = stagedFiles.reduce((sum, entry) => sum + entry.bytes, 0);
+  if (stagedTotalBytes > allowlist.maxPayloadBytes) {
+    throw new Error(`Staged payload too large: ${stagedTotalBytes} bytes exceeds ${allowlist.maxPayloadBytes}`);
+  }
   const archive = await createDeterministicArchive(stageRoot, allowlist, stagedFiles);
-  const inventory = buildInventory(allowlist, stagedFiles, totalBytes, archive);
+  const inventory = buildInventory(allowlist, stagedFiles, stagedTotalBytes, archive);
   writeFileSync(resolve(stageRoot, "inventory.json"), `${JSON.stringify(inventory, null, 2)}\n`);
   return {
     stageRoot,

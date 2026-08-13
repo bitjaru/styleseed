@@ -29,7 +29,11 @@
     "engine/UX-WRITING.md",
     "engine/VERSION",
     "engine/VISUAL-CRAFT.md",
+    "engine/.cursorrules",
+    "engine/color/generate-palette.mjs",
+    "engine/color/generator.d.mts",
     "engine/color/generator.mjs",
+    "engine/color/index.ts",
     "engine/color/palettes.json"
   ],
   "skillTrees": [
@@ -56,6 +60,31 @@
     "engine/.claude/skills/ss-update",
     "engine/.claude/skills/ss-verify",
     "engine/.claude/skills/styleseed"
+  ],
+  "discoverySkillTrees": [
+    "skills/ss-a11y",
+    "skills/ss-audit",
+    "skills/ss-build",
+    "skills/ss-component",
+    "skills/ss-copy",
+    "skills/ss-dial",
+    "skills/ss-feedback",
+    "skills/ss-flow",
+    "skills/ss-lint",
+    "skills/ss-motion",
+    "skills/ss-page",
+    "skills/ss-pattern",
+    "skills/ss-reference",
+    "skills/ss-resolve",
+    "skills/ss-restyle",
+    "skills/ss-review",
+    "skills/ss-score",
+    "skills/ss-setup",
+    "skills/ss-studio",
+    "skills/ss-tokens",
+    "skills/ss-update",
+    "skills/ss-verify",
+    "skills/styleseed"
   ],
   "deniedPathSegments": [
     ".git",

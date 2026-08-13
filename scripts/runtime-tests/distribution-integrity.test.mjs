@@ -31,6 +31,15 @@ function stageCoreDistribution(destinationRoot) {
   writeFileSync(destinationCatalog, `${JSON.stringify(catalog, null, 2)}\n`);
 }
 
+function mirrorCanonicalSkillsAsRoot(destinationRoot) {
+  cpSync(
+    resolve(destinationRoot, "engine/.claude/skills"),
+    resolve(destinationRoot, "skills"),
+    { recursive: true },
+  );
+  rmSync(resolve(destinationRoot, "engine/.claude/skills"), { recursive: true, force: true });
+}
+
 function stagedScript(destinationRoot) {
   return resolve(destinationRoot, stagedScriptPath);
 }
@@ -61,6 +70,21 @@ test("verifyDistribution accepts a clean staged core layout and recomputes the c
   try {
     stageCoreDistribution(sandbox);
     const result = verifyDistribution({ catalog, scriptPath: stagedScript(sandbox) });
+    assert.equal(result.status, "verified");
+    assert.equal(result.computedRevision, catalog.engineRevision);
+    assert.deepEqual(result.mismatches, []);
+  } finally {
+    rmSync(sandbox, { recursive: true, force: true });
+  }
+});
+
+test("verifyDistribution maps the canonical inventory onto a root Codex skills mirror", () => {
+  const sandbox = makeSandbox("styleseed-distribution-codex-mirror-");
+  try {
+    stageCoreDistribution(sandbox);
+    mirrorCanonicalSkillsAsRoot(sandbox);
+    const codexScript = resolve(sandbox, "skills/ss-update/scripts/check-update.mjs");
+    const result = verifyDistribution({ catalog, scriptPath: codexScript });
     assert.equal(result.status, "verified");
     assert.equal(result.computedRevision, catalog.engineRevision);
     assert.deepEqual(result.mismatches, []);

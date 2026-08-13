@@ -63,11 +63,7 @@ const catalogBuild = spawnSync(process.execPath, [resolve(root, '../scripts/buil
 if (catalogBuild.status !== 0) {
   throw new Error(`Context catalog build failed:\n${catalogBuild.stderr || catalogBuild.stdout}`)
 }
-// Codex plugin archives do not dereference repository skill symlinks. Keep a real generated mirror
-// while engine/.claude/skills remains the only maintained source. Copy after catalog generation so
-// the resolver metadata is byte-identical too.
-rmSync(pluginSkillsDir, { recursive: true, force: true })
-cpSync(skillsDir, pluginSkillsDir, { recursive: true })
+// build-context-catalog owns the physical Codex discovery mirror and refreshes its generated catalog.
 console.log('✓ mirrored canonical skills → plugin skills/')
 const contextCatalogPath = resolve(skillsDir, 'ss-resolve/references/catalog.json')
 const contextCatalog = JSON.parse(readFileSync(contextCatalogPath, 'utf8'))

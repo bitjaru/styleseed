@@ -544,8 +544,9 @@ this hotfix.
 **Owner files**
 
 - `.codex-plugin/plugin.json`: remove `mcpServers`, point `skills` to
-  `./engine/.claude/skills/`, remove the `mcp` keyword, learning capability/default prompt, and any
-  approval-gated bridge claim.
+  the host-required generated `./skills/` discovery root, remove the `mcp` keyword, learning
+  capability/default prompt, and any approval-gated bridge claim. Canonical runtime source remains
+  `engine/.claude/skills/` and packaging must prove the two trees are byte-identical.
 - remove the root auto-discovered `.mcp.json`; do not ship an executable example config before
   `SEC-060` and `SEC-070` are complete.
 - `scripts/build-context-catalog.mjs`: remove the root MCP file/server from the default distribution.
@@ -844,6 +845,13 @@ Catalog schema v4 replaces the ambiguous global payload with:
 Core files exclude `ss-learn`, MCP, and learning claims even before their source relocation. Resolver
 manifests bind the core revision. The optional extension later adds its own package-local
 `learningRevision`; it never changes what `engineRevision` means.
+
+The core revision keeps one canonical logical skill inventory. At verification time, that inventory is
+mapped to the physical skill tree that invoked the checker (`engine/.claude/skills/`, root `skills/`,
+`.claude/skills/`, or `.agents/skills/`) and those actual bytes are rehashed. It intentionally excludes
+`.codex-plugin/plugin.json`: the approved local-development cachebuster changes only that host manifest
+version after staging. Package `inventory.json` still hashes the exact manifest shipped, while installed
+engine integrity remains stable across that metadata-only mutation.
 
 **Stop condition:** if `npx skills`, Claude plugin, and Codex plugin cannot all carry the files needed
 for verification, keep the status unverified and fix packaging before claiming fail-closed integrity.
@@ -1217,7 +1225,8 @@ Staging layout is fixed:
 
 ```text
 dist/plugins/styleseed/
-├── .codex-plugin/plugin.json           # staged manifest points skills to ./engine/.claude/skills/
+├── .codex-plugin/plugin.json           # host contract points skills to ./skills/
+├── skills/<core-skill>/**              # generated physical discovery mirror
 ├── engine/.claude/skills/<core-skill>/**
 ├── engine/color/generator.mjs
 ├── engine/color/palettes.json
@@ -1229,9 +1238,10 @@ dist/plugins/styleseed/
 ```
 
 `packaging/codex/allowlist.json` enumerates literal files plus the only permitted trees:
-`engine/.claude/skills/<core-skill>/**` and exactly the catalog-declared engine runtime files. It may not
-use `**` at repository root or accept caller-supplied extra paths. Root generated `skills/` is discovery
-output, not the plugin runtime source. Inventory and deterministic `styleseed-core.tar.gz` contain no
+`engine/.claude/skills/<core-skill>/**`, the byte-identical generated `skills/<core-skill>/**` discovery
+mirror, and exactly the catalog-declared engine runtime files. It may not use `**` at repository root or
+accept caller-supplied extra paths. Root `skills/` remains generated discovery output, while the engine
+tree remains the canonical runtime source. Inventory and deterministic `styleseed-core.tar.gz` contain no
 timestamp, uid/gid, or nondeterministic file order.
 
 Explicit denylist: `.git`, `.DS_Store`, `.local-marketplace`, `.lazyweb`, `demo-pricing`, `showcase`,

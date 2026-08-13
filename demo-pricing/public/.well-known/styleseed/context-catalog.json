@@ -1,16 +1,11 @@
 {
   "schemaVersion": 4,
   "engineVersion": "4.0.0",
-  "engineRevision": "sha256:c52db8d7ee54c5a7096a94006173fcb96d068583cd2f3b66b1dc43be765e69be",
+  "engineRevision": "sha256:b4c9fe60d350f02774133d8b9958160f4fa8b277c9a4168cb6a5826a369d1f86",
   "distributions": {
     "core": {
-      "revision": "sha256:c52db8d7ee54c5a7096a94006173fcb96d068583cd2f3b66b1dc43be765e69be",
+      "revision": "sha256:b4c9fe60d350f02774133d8b9958160f4fa8b277c9a4168cb6a5826a369d1f86",
       "files": [
-        {
-          "path": ".codex-plugin/plugin.json",
-          "sha256": "87dd4a6e969ed6464352f0db9239b4c68e3b8c8bd7d136f9113839b5ad42f72e",
-          "bytes": 1237
-        },
         {
           "path": "LICENSE",
           "sha256": "2de9d43f4c5a690a3a8e01a58fd906c259f2b70e7903805b702982ec52f23b43",
@@ -113,13 +108,13 @@
         },
         {
           "path": "engine/.claude/skills/ss-resolve/scripts/compiler.mjs",
-          "sha256": "361dda77641d913b9ff7bb895baeeac6e102c923674623a88943811742389d4b",
-          "bytes": 18712
+          "sha256": "028af7a2ab8e25e039e3601bd537c95f13efa409ecc028035bd9494f7c9f7f80",
+          "bytes": 19076
         },
         {
           "path": "engine/.claude/skills/ss-resolve/scripts/distribution-integrity.mjs",
-          "sha256": "4eac37afbd371622ba12ff054622089673a4773ceccda31aed836c886f85805d",
-          "bytes": 5191
+          "sha256": "e2ba33db34f66812628d35f2516cfa316f0516b80549aa27f651896d96f967be",
+          "bytes": 6163
         },
         {
           "path": "engine/.claude/skills/ss-resolve/scripts/migrate-project.mjs",
@@ -401,11 +396,6 @@
   },
   "distributionFiles": [
     {
-      "path": "root/.codex-plugin/plugin.json",
-      "sha256": "87dd4a6e969ed6464352f0db9239b4c68e3b8c8bd7d136f9113839b5ad42f72e",
-      "bytes": 1237
-    },
-    {
       "path": "root/LICENSE",
       "sha256": "2de9d43f4c5a690a3a8e01a58fd906c259f2b70e7903805b702982ec52f23b43",
       "bytes": 1079
@@ -507,13 +497,13 @@
     },
     {
       "path": ".claude/skills/ss-resolve/scripts/compiler.mjs",
-      "sha256": "361dda77641d913b9ff7bb895baeeac6e102c923674623a88943811742389d4b",
-      "bytes": 18712
+      "sha256": "028af7a2ab8e25e039e3601bd537c95f13efa409ecc028035bd9494f7c9f7f80",
+      "bytes": 19076
     },
     {
       "path": ".claude/skills/ss-resolve/scripts/distribution-integrity.mjs",
-      "sha256": "4eac37afbd371622ba12ff054622089673a4773ceccda31aed836c886f85805d",
-      "bytes": 5191
+      "sha256": "e2ba33db34f66812628d35f2516cfa316f0516b80549aa27f651896d96f967be",
+      "bytes": 6163
     },
     {
       "path": ".claude/skills/ss-resolve/scripts/migrate-project.mjs",

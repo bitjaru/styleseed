@@ -26,7 +26,7 @@ assert(plugin.version === version, `plugin version ${plugin.version} != ${versio
 assert(codexPlugin.version === version, `Codex plugin version ${codexPlugin.version} != ${version}`);
 assert(publicVersion.version === version, `public version ${publicVersion.version} != ${version}`);
 assert(JSON.stringify(plugin.skills) === JSON.stringify(["./engine/.claude/skills"]), "plugin must expose only the canonical skill directory");
-assert(codexPlugin.name === "styleseed" && codexPlugin.skills === "./engine/.claude/skills/" && !("mcpServers" in codexPlugin), "Codex plugin manifest wiring drifted");
+assert(codexPlugin.name === "styleseed" && codexPlugin.skills === "./skills/" && !("mcpServers" in codexPlugin), "Codex plugin manifest wiring drifted");
 assert(!existsSync(resolve(root, ".mcp.json")), "default core plugin must not auto-discover an MCP server");
 assert(!existsSync(resolve(root, "skills/styleseed-design-review/SKILL.md")), "legacy standalone review skill must not compete with ss-score");
 
@@ -109,7 +109,7 @@ assert(catalog.schemaVersion === 4, `context catalog schema ${catalog.schemaVers
 assert(/^sha256:[0-9a-f]{64}$/.test(catalog.engineRevision), "context catalog engine revision is invalid");
 assert(Array.isArray(catalog.distributions?.core?.files) && catalog.distributions.core.files.length >= 40, "context catalog core distribution is incomplete");
 assert(catalog.distributions.core.revision === catalog.engineRevision, "core distribution revision drifted from engineRevision");
-assert(catalog.distributions.core.files.some((file) => file.path === ".codex-plugin/plugin.json"), "core distribution omits the Codex plugin manifest");
+assert(!catalog.distributions.core.files.some((file) => file.path === ".codex-plugin/plugin.json"), "mutable Codex cachebuster manifest must not define the core revision");
 assert(catalog.distributions.core.files.some((file) => file.path === "LICENSE"), "core distribution omits LICENSE");
 assert(catalog.distributions.core.files.some((file) => file.path === "SECURITY.md"), "core distribution omits SECURITY.md");
 assert(catalog.distributions.core.files.some((file) => file.path === "engine/.claude/skills/ss-update/scripts/check-update.mjs"), "core distribution omits the update checker");
@@ -117,7 +117,7 @@ assert(!catalog.distributions.core.files.some((file) => file.path.startsWith("en
 assert(!catalog.distributions.core.files.some((file) => file.path.includes("/mcp/") || file.path.endsWith("/.mcp.json")), "core distribution must not include the learning MCP bridge");
 assert(!catalog.distributions.core.files.some((file) => file.path.endsWith("ss-resolve/references/catalog.json")), "distribution revision must not hash its generated catalog");
 assert(Array.isArray(catalog.distributionFiles) && catalog.distributionFiles.length === catalog.distributions.core.files.length, "legacy distributionFiles alias drifted from the core distribution");
-assert(catalog.distributionFiles.some((file) => file.path === "root/.codex-plugin/plugin.json"), "legacy distribution alias omits the Codex plugin manifest");
+assert(!catalog.distributionFiles.some((file) => file.path === "root/.codex-plugin/plugin.json"), "mutable Codex cachebuster manifest must not define the engine revision");
 assert(catalog.distributionFiles.some((file) => file.path === ".claude/skills/ss-update/scripts/check-update.mjs"), "legacy distribution alias omits the update checker");
 assert(publicVersion.revision === catalog.engineRevision, "version.json revision differs from the canonical catalog");
 assert(publicVersion.revisionFiles === catalog.distributions.core.files.length, "version.json revision file count drifted");

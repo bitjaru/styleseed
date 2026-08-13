@@ -104,7 +104,7 @@ function resolveImportWithinStage(stageRoot, fromFile, specifier) {
 }
 
 function copyAllowedFixture(targetRoot) {
-  for (const relative of [...allowlist.literalFiles, ...allowlist.skillTrees]) {
+  for (const relative of [...allowlist.literalFiles, ...allowlist.skillTrees, ...allowlist.discoverySkillTrees]) {
     const source = resolve(repoRoot, relative);
     const destination = resolve(targetRoot, relative);
     mkdirSync(dirname(destination), { recursive: true });
@@ -195,7 +195,7 @@ async function validateStage(stageRoot) {
   const files = stageFiles(stageRoot);
   const payloadFiles = files.filter((entry) => entry.path !== "inventory.json" && entry.path !== allowlist.archiveName);
   const topLevel = new Set(files.map((entry) => entry.path.split("/")[0]));
-  for (const required of [".codex-plugin", "engine", "LICENSE", "SECURITY.md", "inventory.json", allowlist.archiveName]) {
+  for (const required of [".codex-plugin", "engine", "skills", "LICENSE", "SECURITY.md", "inventory.json", allowlist.archiveName]) {
     if (!topLevel.has(required)) throw new Error(`Missing staged top-level entry: ${required}`);
   }
 
@@ -224,7 +224,7 @@ async function validateStage(stageRoot) {
   }
 
   const manifest = readJson(resolve(stageRoot, ".codex-plugin/plugin.json"));
-  if (manifest.skills !== "./engine/.claude/skills/") throw new Error("Staged manifest skills path drifted");
+  if (manifest.skills !== "./skills/") throw new Error("Staged manifest skills path drifted");
   if ("mcpServers" in manifest) throw new Error("Staged manifest must expose zero MCP servers");
   if (!existsSync(resolve(stageRoot, manifest.skills))) throw new Error("Staged manifest skills path does not resolve");
 
@@ -245,11 +245,11 @@ async function validateStage(stageRoot) {
     cpSync(stageRoot, projectRoot, { recursive: true });
     writeLock(projectRoot);
 
-    const listRun = runNode(projectRoot, ["engine/.claude/skills/ss-resolve/scripts/resolve-context.mjs", "--list"]);
+    const listRun = runNode(projectRoot, ["skills/ss-resolve/scripts/resolve-context.mjs", "--list"]);
     if (listRun.status !== 0) throw new Error(`Staged resolver --list failed:\n${listRun.stderr || listRun.stdout}`);
 
     const resolveRun = runNode(projectRoot, [
-      "engine/.claude/skills/ss-resolve/scripts/resolve-context.mjs",
+      "skills/ss-resolve/scripts/resolve-context.mjs",
       "--project-root",
       ".",
       "--from-lock",
@@ -260,7 +260,7 @@ async function validateStage(stageRoot) {
     if (resolveRun.status !== 0) throw new Error(`Staged resolver build failed:\n${resolveRun.stderr || resolveRun.stdout}`);
 
     const checkRun = runNode(projectRoot, [
-      "engine/.claude/skills/ss-resolve/scripts/resolve-context.mjs",
+      "skills/ss-resolve/scripts/resolve-context.mjs",
       "--project-root",
       ".",
       "--from-lock",
@@ -275,7 +275,7 @@ async function validateStage(stageRoot) {
     const versionJsonPath = resolve(projectRoot, "version.json");
     writeFileSync(versionJsonPath, `${JSON.stringify({ version: catalog.engineVersion, revision: catalog.engineRevision }, null, 2)}\n`);
     const updateRun = runNode(projectRoot, [
-      "engine/.claude/skills/ss-update/scripts/check-update.mjs",
+      "skills/ss-update/scripts/check-update.mjs",
       "--project-root",
       ".",
       "--remote",
@@ -283,6 +283,10 @@ async function validateStage(stageRoot) {
       "--json",
     ]);
     if (updateRun.status !== 0) throw new Error(`Staged update check failed:\n${updateRun.stderr || updateRun.stdout}`);
+    const updateResult = JSON.parse(updateRun.stdout);
+    if (updateResult.status !== "current" || updateResult.installed?.verificationStatus !== "verified") {
+      throw new Error(`Staged update integrity is not current + verified:\n${updateRun.stdout}`);
+    }
   } finally {
     rmSync(smokeRoot, { recursive: true, force: true });
   }

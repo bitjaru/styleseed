@@ -19,6 +19,7 @@ function stageCoreDistribution(catalog, destinationRoot) {
     mkdirSync(dirname(destination), { recursive: true });
     cpSync(source, destination, { recursive: false });
   }
+  cpSync(resolve(root, "skills"), resolve(destinationRoot, "skills"), { recursive: true });
 }
 
 const codexPlugin = readJson(".codex-plugin/plugin.json");
@@ -31,7 +32,7 @@ const searchableFields = [
   ...(codexPlugin.keywords ?? []),
 ].filter(Boolean).join("\n").toLowerCase();
 
-assert(codexPlugin.skills === "./engine/.claude/skills/", "Codex plugin must point at the canonical engine skill directory");
+assert(codexPlugin.skills === "./skills/", "Codex plugin must point at the host-discoverable root skill directory");
 assert(!("mcpServers" in codexPlugin), "Codex plugin must expose zero default MCP servers");
 assert(!codexPlugin.keywords?.includes("mcp"), "Codex plugin keywords must not advertise MCP");
 assert(!searchableFields.includes("learn"), "Codex plugin manifest must not claim learning capabilities");
@@ -44,6 +45,7 @@ assert(readFileSync(resolve(root, "engine/.claude/skills/styleseed/SKILL.md"), "
 assert(!catalog.distributionFiles.some((file) => file.path === "root/.mcp.json"), "Core distribution manifest must not include .mcp.json");
 assert(!catalog.distributionFiles.some((file) => file.path.startsWith("root/mcp/")), "Core distribution manifest must not include any MCP server file");
 assert(!catalog.distributionFiles.some((file) => /ss-learn|learning|mcp/i.test(file.path)), "Core distribution manifest must not include learning payloads");
+assert(!catalog.distributionFiles.some((file) => file.path === "root/.codex-plugin/plugin.json"), "Mutable host cachebuster manifest must not define the engine revision");
 
 const stageRoot = mkdtempSync(join(tmpdir(), "styleseed-core-plugin-"));
 try {
@@ -61,4 +63,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log("Core plugin boundary verified: zero default MCP exposure, canonical skills path resolves, staged core excludes learning bridge");
+console.log("Core plugin boundary verified: zero default MCP exposure, host-discoverable skills path resolves, staged core excludes learning bridge");

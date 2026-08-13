@@ -1,11 +1,17 @@
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
-import { generatePalette } from "../../../../color/generator.mjs";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { sha256, safeProjectPath } from "./runtime-contract.mjs";
 
-const skillDir = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+const scriptDir = dirname(fileURLToPath(import.meta.url));
+const skillDir = resolve(scriptDir, "..");
+const paletteGeneratorPath = [
+  resolve(scriptDir, "../../../../color/generator.mjs"),
+  resolve(scriptDir, "../../../engine/color/generator.mjs"),
+].find((path) => existsSync(path));
+if (!paletteGeneratorPath) throw new Error("StyleSeed palette generator is missing from the installed distribution");
+const { generatePalette } = await import(pathToFileURL(paletteGeneratorPath).href);
 const defaultCatalog = JSON.parse(readFileSync(resolve(skillDir, "references/catalog.json"), "utf8"));
 
 const AUTO_RECIPE_BY_GRAMMAR = {

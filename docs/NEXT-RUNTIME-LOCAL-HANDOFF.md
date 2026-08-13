@@ -19,7 +19,7 @@ Date: 2026-08-13
 
 ## Latest local evidence
 
-- Runtime tests: 56 passing, 0 failing.
+- Runtime tests: 57 passing, 0 failing, including canonical and root-Codex skill-layout integrity.
 - Learning security fixtures: T01, T02, T03, T04, T05, T06, T09a, T10, T11 passing.
 - Canonical-to-generated regeneration completed after integration; `validate-palettes`,
   `validate-engine`, skill/router/public-claim/core-isolation checks, package build/validation, and
@@ -41,6 +41,22 @@ Date: 2026-08-13
   inspected recordings. Reduced-motion frames show complete content from the first recorded frame.
 - The capture runner now uses DOM/font readiness and primes lazy content before full-page screenshots,
   so external async requests do not deadlock the run and showcase images are part of the evidence.
+- PKG-010 clean-install smoke is complete. The allowlist-only core has 128 files, 1,137,203 payload
+  bytes, and a deterministic archive SHA-256 of
+  `59b1d9b41637f2925be4168a79fc655b7daebb192ccba9d5d89bc8571040a7ff`.
+  Host `plugin-creator` validation passes, and the installed cache is 1.7 MiB with 23 core skills,
+  zero symlinks, zero MCP files, and zero `ss-learn` payloads.
+- The final personal install is `styleseed@personal` version `4.0.0+codex.20260813133342`. Its staged
+  resolver and update checker report `current` with `verificationStatus: verified` at core revision
+  `sha256:b4c9fe60d350f02774133d8b9958160f4fa8b277c9a4168cb6a5826a369d1f86`.
+  A fresh Codex process discovers `styleseed`, `ss-resolve`, `ss-build`, `ss-score`, and `ss-verify`,
+  while `ss-learn` is absent.
+- The legacy `styleseed@styleseed-local` installation was removed through `codex plugin remove`; its
+  1.1-GiB cache was removed by the CLI. The repository-local marketplace source remains available for
+  explicit rollback/reinstall.
+- Dogfood run `plugin-920e1df` is bound to commit
+  `920e1df6e1da709caa9288cf9cfc18abe80cbf6d`, the current engine revision, nine newly captured and
+  manually inspected PNGs, and two current homepage recordings. All four artifact gates pass.
 - Production deployment `dpl_jiUfbn5u232U6AGSMWFi7LZezMY9` completed from repository HEAD
   `8e39e449768d57dd241def37aa83057c8989ff8b`. Vercel reported `READY` and aliased it to
   `https://styleseed-demo.vercel.app`.
@@ -49,9 +65,9 @@ Date: 2026-08-13
   snapshot. The public agent-skill registry returned 23 skills, and a fresh 390×844 production
   screenshot matched the locally inspected first viewport.
 - Production website build: 133 static/SSG routes generated with Next.js 16.2.3.
-- Core package: 75 files, 734645 payload bytes; deterministic archive SHA-256
-  `61887a575966b186962e598f244ba2fcaaa8bb3a92c0fa75291e2de7ccd88c77`.
-- Core engine revision: `sha256:b5312805a069ec2f0506136213591b402d78f54532660ba1702abc556ce33ab9`.
+- Core package: 128 files, 1137203 payload bytes; deterministic archive SHA-256
+  `59b1d9b41637f2925be4168a79fc655b7daebb192ccba9d5d89bc8571040a7ff`.
+- Core engine revision: `sha256:b4c9fe60d350f02774133d8b9958160f4fa8b277c9a4168cb6a5826a369d1f86`.
 - Optional learning contract revision:
   `sha256:7d09eb9527be5debf1e217f5fc69cf538e4e3911af1288ffcebbcd9886984e21`.
 - Repeated final generated-output inventory hashes matched:
@@ -70,16 +86,13 @@ Date: 2026-08-13
   browser evidence instead.
 - SEC-050 host-owned, action-bound approval proof is undecided. Therefore SEC-060/070 and learning
   bridge success smoke remain blocked.
-- No clean local plugin install was performed; PKG-010 requires explicit install approval.
-- The repository package validator passes. The host plugin-creator validator was found, but could not
-  start because its local `PyYAML` dependency is absent; no dependency was installed, so that layer is
-  `NOT VERIFIED`.
 - No version bump, package release, benchmark run/publication, or Slack post was performed. The web
   production deployment and public read-back described above are verified separately.
 
 ## Next authorized sequence
 
-1. Obtain explicit approval before PKG-010 install smoke, adding the missing validator dependency,
-   version/release work, or deployment.
-2. Treat SEC-050 as a maintainer decision; do not enable or publish the learning bridge until its
+1. Decide the next semantic version and authorize REL-001A release-candidate artifacts. Tag/publish,
+   public directory submission, and production deployment remain separately authorized operations.
+2. Complete BENCH-002B or record an explicit maintainer `BENCH_WAIVER` before REL-001B.
+3. Treat SEC-050 as a maintainer decision; do not enable or publish the learning bridge until its
    host-owned proof contract and negative tests exist.

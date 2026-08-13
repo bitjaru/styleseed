@@ -1,0 +1,55 @@
+{
+  "artifactId": "site-docs",
+  "bundleBytes": 16833,
+  "bundleHash": "sha256:c38f0369e848c638117ab6222d5abd768b87d6415c2c002fb077738db4b24055",
+  "bundlePath": ".styleseed/bundles/site-docs.md",
+  "gates": {
+    "code": {
+      "attached": true,
+      "reportBytes": 527,
+      "reportPath": ".styleseed/evidence/site-docs/final-21937b8/code.json",
+      "reportSha256": "sha256:d1e68ccfb4a515f52b787da961e642fd13265a0bc90b1f0abba5d21ece26fc08"
+    },
+    "deterministic": {
+      "attached": true,
+      "reportBytes": 790,
+      "reportPath": ".styleseed/evidence/site-docs/final-21937b8/deterministic.json",
+      "reportSha256": "sha256:bd8e24989388571d96d93ada594e9367f0ab27ee6b6380e3e6b07002e502c732"
+    },
+    "human": {
+      "attached": false,
+      "reportBytes": null,
+      "reportPath": null,
+      "reportSha256": null
+    },
+    "temporal": {
+      "attached": true,
+      "reportPath": ".styleseed/evidence/site-docs/final-21937b8/temporal.json",
+      "reportSha256": "sha256:486d986b5d16bef3677fc8d5c9736b9a808acac1b8bd8858fc8e9ea80cf50dee",
+      "reportBytes": 59
+    },
+    "visual": {
+      "attached": true,
+      "reportBytes": 990,
+      "reportPath": ".styleseed/evidence/site-docs/final-21937b8/visual.json",
+      "reportSha256": "sha256:3163e0afe10038959a17284d50bab804f14d3a62a859df0e7cf6e835b646c0ab"
+    }
+  },
+  "implementation": {
+    "inventoryHash": "sha256:a1193b3f09852edd3712aa9b3bacef9d245ec0cbadb97eef9f4de28defa8ac7a",
+    "sourceRoots": [
+      "demo-pricing/app/architecture",
+      "demo-pricing/app/guides",
+      "demo-pricing/app/globals.css"
+    ]
+  },
+  "manifestPath": ".styleseed/manifests/site-docs.json",
+  "methodHash": "sha256:3b85de8475bbf990f49b17da4ef58a06cfb37d3126657035b8f4d60548ffecb7",
+  "repositoryRevision": {
+    "commit": "21937b8696ed10f4e675e50af0cf7f0186600bf0",
+    "vcs": "git"
+  },
+  "runId": "final-21937b8",
+  "schemaVersion": 1,
+  "validationHash": "sha256:58f1e9b237d636028d6e79a54d842f0b73be8605f4aa387278a4cc8793ac45cd"
+}

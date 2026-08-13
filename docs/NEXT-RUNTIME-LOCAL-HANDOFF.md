@@ -24,9 +24,11 @@ Date: 2026-08-13
 - Canonical-to-generated regeneration completed after integration; `validate-palettes`,
   `validate-engine`, skill/router/public-claim/core-isolation checks, package build/validation, and
   `git diff --check` pass.
-- Dogfood baseline `baseline-bf07a56` is bound to Git commit
-  `bf07a56c6abf44041e8fcb3a5f81f57ed90d53f4`: 0 deterministic hard errors, 38 advisory warnings,
-  nine manually inspected PNG renders, and two inspected home recordings.
+- Final dogfood run `final-21937b8` is bound to Git commit
+  `21937b8696ed10f4e675e50af0cf7f0186600bf0` and engine revision
+  `sha256:c52db8d7ee54c5a7096a94006173fcb96d068583cd2f3b66b1dc43be765e69be`:
+  0 deterministic hard errors, 38 advisory warnings, nine manually inspected PNG renders, and two
+  inspected home recordings.
 - `site-docs`, `site-gate`, and `site-learn` pass all required gates. `site-home` correctly fails its
   temporal gate because `prefers-reduced-motion` still receives the same blur/fade entrance.
 - Production website build: 133 static/SSG routes generated with Next.js 16.2.3.

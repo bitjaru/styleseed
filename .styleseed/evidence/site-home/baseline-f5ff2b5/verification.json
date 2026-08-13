@@ -23,7 +23,7 @@
     "manifestValidationHash": "sha256:7cbfc1600d5c86ee87f2fb9225ee8fbe8d62a43364f1fa51453949ff382fdae1",
     "bundle": {
       "path": ".styleseed/bundles/site-home.md",
-      "sha256": "sha256:0a26eea1025738ca501aa2676cd1c2c5b948fa70782225c850ae3d535a22b30b",
+      "sha256": "sha256:507f02e379fd7ac438f95d67b8d8b5838caaf114e0a41cd2ed7eabc9f6beae1d",
       "bytes": 18481
     },
     "repositoryRevision": null,

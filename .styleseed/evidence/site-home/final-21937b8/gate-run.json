@@ -1,0 +1,55 @@
+{
+  "artifactId": "site-home",
+  "bundleBytes": 18481,
+  "bundleHash": "sha256:507f02e379fd7ac438f95d67b8d8b5838caaf114e0a41cd2ed7eabc9f6beae1d",
+  "bundlePath": ".styleseed/bundles/site-home.md",
+  "gates": {
+    "code": {
+      "attached": true,
+      "reportBytes": 565,
+      "reportPath": ".styleseed/evidence/site-home/final-21937b8/code.json",
+      "reportSha256": "sha256:3aacb8f78f711b169e12547645e470b15c9042d9f67eca082e29eb3027afe038"
+    },
+    "deterministic": {
+      "attached": true,
+      "reportBytes": 8559,
+      "reportPath": ".styleseed/evidence/site-home/final-21937b8/deterministic.json",
+      "reportSha256": "sha256:67b58c0b9015440725217f3819bba78d49cd7c23d80c4e07dd6d274af5b5430a"
+    },
+    "human": {
+      "attached": false,
+      "reportBytes": null,
+      "reportPath": null,
+      "reportSha256": null
+    },
+    "temporal": {
+      "attached": true,
+      "reportPath": ".styleseed/evidence/site-home/final-21937b8/temporal.json",
+      "reportSha256": "sha256:6bbc48608fe142d558821e80a821a9e9bd15b15e4018701f9a10ab44d1de7492",
+      "reportBytes": 681
+    },
+    "visual": {
+      "attached": true,
+      "reportBytes": 1397,
+      "reportPath": ".styleseed/evidence/site-home/final-21937b8/visual.json",
+      "reportSha256": "sha256:9d8ca0b1654409f3824b737ff20b1cb062498da3b7eefdfc769efd9df7dbf2d5"
+    }
+  },
+  "implementation": {
+    "inventoryHash": "sha256:de429764824d2538e11c744e1a0432dfabc5b15f19442c734a49cead8515ccbb",
+    "sourceRoots": [
+      "demo-pricing/app/page.tsx",
+      "demo-pricing/app/_home",
+      "demo-pricing/app/globals.css"
+    ]
+  },
+  "manifestPath": ".styleseed/manifests/site-home.json",
+  "methodHash": "sha256:7118dddce1e2851c88c981a7b0214953a7c929e973889837eeafa8ed08373394",
+  "repositoryRevision": {
+    "commit": "21937b8696ed10f4e675e50af0cf7f0186600bf0",
+    "vcs": "git"
+  },
+  "runId": "final-21937b8",
+  "schemaVersion": 1,
+  "validationHash": "sha256:7cbfc1600d5c86ee87f2fb9225ee8fbe8d62a43364f1fa51453949ff382fdae1"
+}

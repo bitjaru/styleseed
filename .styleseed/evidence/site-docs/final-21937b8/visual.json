@@ -1,0 +1,33 @@
+{
+  "inspectionMethod": "Manual pixel inspection at original resolution",
+  "renders": [
+    {
+      "id": "desktop-loaded",
+      "state": "loaded",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "sha256": "sha256:300101c1f7168bd9ccc3c8fce0042a601d108423b0968aa935c2aabc97d252bf",
+      "bytes": 1477514,
+      "path": ".styleseed/evidence/site-docs/final-21937b8/renders/desktop-loaded.png"
+    },
+    {
+      "id": "mobile-loaded",
+      "state": "loaded",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "sha256": "sha256:8b2a767cd62a0704c2f77fab7baddb5ab84e356a7f21f8677a8525f82fbdf527",
+      "bytes": 1076086,
+      "path": ".styleseed/evidence/site-docs/final-21937b8/renders/mobile-loaded.png"
+    }
+  ],
+  "findings": [
+    {
+      "severity": "info",
+      "message": "Desktop and mobile preserve the editorial hierarchy, readable type, diagram legibility, and bounded section rhythm without clipping."
+    }
+  ]
+}

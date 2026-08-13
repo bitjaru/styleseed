@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "artifactId": "site-docs",
   "runId": "baseline-bf07a56",
-  "status": "pass",
+  "status": "fail",
   "gates": {
     "deterministic": "pass",
     "code": "pass",
@@ -10,14 +10,16 @@
     "temporal": "pass",
     "human": "pass"
   },
-  "errors": [],
+  "errors": [
+    "manifest bundle snapshot is stale"
+  ],
   "warnings": [],
   "computed": {
     "manifestMethodHash": "sha256:3b85de8475bbf990f49b17da4ef58a06cfb37d3126657035b8f4d60548ffecb7",
     "manifestValidationHash": "sha256:58f1e9b237d636028d6e79a54d842f0b73be8605f4aa387278a4cc8793ac45cd",
     "bundle": {
       "path": ".styleseed/bundles/site-docs.md",
-      "sha256": "sha256:d4570d912e54c8958ffb9f9da1622dbb81fdc62a3371eecfd433b6a06c622201",
+      "sha256": "sha256:c38f0369e848c638117ab6222d5abd768b87d6415c2c002fb077738db4b24055",
       "bytes": 16833
     },
     "repositoryRevision": {

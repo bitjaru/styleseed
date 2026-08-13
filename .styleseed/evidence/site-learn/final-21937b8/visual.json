@@ -1,0 +1,33 @@
+{
+  "inspectionMethod": "Manual pixel inspection at original resolution",
+  "renders": [
+    {
+      "id": "desktop-loaded",
+      "state": "loaded",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "sha256": "sha256:e8d680000ed31d2654ca9a6133e43243c879dbedc75dd879aa7ff4bc0505b58c",
+      "bytes": 667063,
+      "path": ".styleseed/evidence/site-learn/final-21937b8/renders/desktop-loaded.png"
+    },
+    {
+      "id": "mobile-loaded",
+      "state": "loaded",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "sha256": "sha256:354302a67cf2e772012c2b3cf6681ce6583f4c1e54fa544f1b823010aa8f864d",
+      "bytes": 672827,
+      "path": ".styleseed/evidence/site-learn/final-21937b8/renders/mobile-loaded.png"
+    }
+  ],
+  "findings": [
+    {
+      "severity": "info",
+      "message": "Desktop and mobile keep the learning boundary, allowed/rejected contrast, and FAQ legible with no overlap or clipped controls."
+    }
+  ]
+}

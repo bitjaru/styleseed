@@ -1,0 +1,54 @@
+{
+  "artifactId": "site-learn",
+  "bundleBytes": 16833,
+  "bundleHash": "sha256:c38f0369e848c638117ab6222d5abd768b87d6415c2c002fb077738db4b24055",
+  "bundlePath": ".styleseed/bundles/site-learn.md",
+  "gates": {
+    "code": {
+      "attached": true,
+      "reportBytes": 532,
+      "reportPath": ".styleseed/evidence/site-learn/final-21937b8/code.json",
+      "reportSha256": "sha256:fe1d11f446a172d9f392e183642eecc57b5faacaf54612fcf0355740400f6a4d"
+    },
+    "deterministic": {
+      "attached": true,
+      "reportBytes": 1067,
+      "reportPath": ".styleseed/evidence/site-learn/final-21937b8/deterministic.json",
+      "reportSha256": "sha256:62973a3ef0dfa04f9746562a2e4076d8007caa872bd086c8bed0765428a8d92c"
+    },
+    "human": {
+      "attached": false,
+      "reportBytes": null,
+      "reportPath": null,
+      "reportSha256": null
+    },
+    "temporal": {
+      "attached": true,
+      "reportPath": ".styleseed/evidence/site-learn/final-21937b8/temporal.json",
+      "reportSha256": "sha256:486d986b5d16bef3677fc8d5c9736b9a808acac1b8bd8858fc8e9ea80cf50dee",
+      "reportBytes": 59
+    },
+    "visual": {
+      "attached": true,
+      "reportBytes": 984,
+      "reportPath": ".styleseed/evidence/site-learn/final-21937b8/visual.json",
+      "reportSha256": "sha256:1ae53bb459ebf01adebecb954af36c219af389879cbd8c7882aedca4d51d1654"
+    }
+  },
+  "implementation": {
+    "inventoryHash": "sha256:96989ee9f2eec37fb4b136c99419c0ad298321047aeea7cc3163ca97c06f886d",
+    "sourceRoots": [
+      "demo-pricing/app/learn",
+      "demo-pricing/app/globals.css"
+    ]
+  },
+  "manifestPath": ".styleseed/manifests/site-learn.json",
+  "methodHash": "sha256:c69caf6516e35a8071ec388b6aa513a130b271e0825a6d366515338afda71605",
+  "repositoryRevision": {
+    "commit": "21937b8696ed10f4e675e50af0cf7f0186600bf0",
+    "vcs": "git"
+  },
+  "runId": "final-21937b8",
+  "schemaVersion": 1,
+  "validationHash": "sha256:5e84b491f159579a662990376c5877e339d3030a7b96c4dc8638545ed6ed0f55"
+}

@@ -1,0 +1,22 @@
+{
+  "score": 81,
+  "categories": {
+    "color": 10,
+    "hierarchy": 15,
+    "layout": 11,
+    "surfaces": 9,
+    "states": 16,
+    "motion": 3,
+    "coherence": 9,
+    "distinctiveness": 8
+  },
+  "evidence": [
+    {
+      "message": "The homepage has a strong product-specific focal headline and shows real StyleSeed output rather than placeholder art."
+    },
+    {
+      "message": "Multiple hardcoded demo hues and custom entrance motion without a reduced-motion fallback reduce color, coherence, and motion scores."
+    }
+  ],
+  "reviewer": "Codex ss-score"
+}

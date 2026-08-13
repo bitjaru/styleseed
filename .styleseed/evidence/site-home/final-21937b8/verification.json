@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "artifactId": "site-home",
-  "runId": "baseline-bf07a56",
+  "runId": "final-21937b8",
   "status": "fail",
   "gates": {
     "deterministic": "pass",
@@ -11,7 +11,6 @@
     "human": "pass"
   },
   "errors": [
-    "manifest bundle snapshot is stale",
     "temporal scenario failed reduced-motion inspection: hero-reduced-motion"
   ],
   "warnings": [],
@@ -24,7 +23,7 @@
       "bytes": 18481
     },
     "repositoryRevision": {
-      "commit": "bf07a56c6abf44041e8fcb3a5f81f57ed90d53f4",
+      "commit": "21937b8696ed10f4e675e50af0cf7f0186600bf0",
       "vcs": "git"
     },
     "implementation": {

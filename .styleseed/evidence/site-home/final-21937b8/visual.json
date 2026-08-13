@@ -1,0 +1,44 @@
+{
+  "inspectionMethod": "Manual pixel inspection at original resolution",
+  "renders": [
+    {
+      "id": "desktop-loaded",
+      "state": "loaded",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "sha256": "sha256:c69247dc258d9f95d8250ce4ef84a19c1ba724413aedd12ead8fa4fb95af8804",
+      "bytes": 4427452,
+      "path": ".styleseed/evidence/site-home/final-21937b8/renders/desktop-loaded.png"
+    },
+    {
+      "id": "mobile-loaded",
+      "state": "loaded",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "sha256": "sha256:d1162c76adce27a7e2249e7b27e5af685eed0bbe30911a5ad2d087934924ff66",
+      "bytes": 2891000,
+      "path": ".styleseed/evidence/site-home/final-21937b8/renders/mobile-loaded.png"
+    },
+    {
+      "id": "mobile-reduced-motion",
+      "state": "reduced-motion",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "sha256": "sha256:0cd97adeea0f0f63d39db3254fa053e72224b860f64758f0a6a7b20dbfa09b70",
+      "bytes": 2890719,
+      "path": ".styleseed/evidence/site-home/final-21937b8/renders/mobile-reduced-motion.png"
+    }
+  ],
+  "findings": [
+    {
+      "severity": "warning",
+      "message": "The full-page hierarchy and responsive transforms are coherent, but the filled Browse showcase header action competes with installation intent and WEB-002 remains pending."
+    }
+  ]
+}

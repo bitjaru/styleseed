@@ -19,15 +19,15 @@ Date: 2026-08-13
 
 ## Latest local evidence
 
-- Runtime tests: 52 passing, 0 failing.
+- Runtime tests: 54 passing, 0 failing.
 - Learning security fixtures: T01, T02, T03, T04, T05, T06, T09a, T10, T11 passing.
 - Canonical-to-generated regeneration completed after integration; `validate-palettes`,
   `validate-engine`, skill/router/public-claim/core-isolation checks, package build/validation, and
   `git diff --check` pass.
 - Deterministic dogfood scan: 0 hard errors; 38 advisory warnings.
 - Production website build: 133 static/SSG routes generated with Next.js 16.2.3.
-- Core package: 75 files, 731612 payload bytes; deterministic archive SHA-256
-  `3b67f5a814243d3e26c6ac1d8bedffc7edc4f80e517da44332256a46912c6302`.
+- Core package: 75 files, 734295 payload bytes; deterministic archive SHA-256
+  `b52ae89cd0a879cf612320e8aa95be595c1159cd27b36351bdc42fa8fdc7db78`.
 - Core engine revision: `sha256:b5312805a069ec2f0506136213591b402d78f54532660ba1702abc556ce33ab9`.
 - Optional learning contract revision:
   `sha256:7d09eb9527be5debf1e217f5fc69cf538e4e3911af1288ffcebbcd9886984e21`.
@@ -37,8 +37,9 @@ Date: 2026-08-13
 ## Intentionally not verified
 
 - No dogfood artifact has a fresh screenshot/recording evidence run. `evidence-gate verify --all`
-  correctly fails each artifact with `required evidence run is missing`. The capture contract also
-  refuses the current dirty source tree, so a passing run requires a reviewed exact commit first.
+  correctly reports the preserved failed baseline runs. The first baseline exposed stale manifests;
+  those runs remain recorded rather than being deleted or relabeled. New gate runs bind a Git commit,
+  reject dirty implementation roots, and re-check source roots against the bound revision.
 - WEB-002 layout work did not start and none of its owner files were edited. A live Lazyweb MCP health
   check reached the configured service but returned `FREE_MONTHLY_TOOL_QUOTA_EXHAUSTED`. The ticket
   explicitly requires the current-page screenshot report and stops `PARTIAL` before UI edits when the

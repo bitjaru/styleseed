@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import { createHash } from "node:crypto";
+import { spawnSync } from "node:child_process";
 
 import {
   existsSync,
@@ -22,6 +23,7 @@ import {
 import { safeProjectPath } from "../../ss-resolve/scripts/runtime-contract.mjs";
 
 const GATE_KEYS = Object.freeze({ acceptance: "human" });
+const GIT_COMMIT = /^[0-9a-f]{40,64}$/u;
 
 function fail(message) {
   throw new Error(message);
@@ -50,6 +52,38 @@ function projectRoot(options) {
 function safeRunId(value) {
   if (typeof value !== "string" || !/^[a-z0-9][a-z0-9-]{0,63}$/u.test(value)) fail("--run must be a safe ID");
   return value;
+}
+
+function git(root, args) {
+  return spawnSync("git", ["-C", root, ...args], { encoding: "utf8" });
+}
+
+function repositoryRevision(root, sourceRoots, { required = false } = {}) {
+  const head = git(root, ["rev-parse", "HEAD"]);
+  if (head.status !== 0) {
+    if (required) fail("repository revision is missing or unavailable");
+    return null;
+  }
+  const commit = head.stdout.trim();
+  if (!GIT_COMMIT.test(commit)) fail("repository revision is invalid");
+  const status = git(root, ["status", "--porcelain", "--untracked-files=all", "--", ...sourceRoots]);
+  if (status.status !== 0) fail(status.stderr.trim() || "cannot inspect implementation source status");
+  if (status.stdout.trim()) fail("implementation source roots must be clean before evidence init");
+  return { vcs: "git", commit };
+}
+
+function verifyRepositoryRevision(root, revision, sourceRoots) {
+  if (revision === null || revision === undefined) return;
+  if (!revision || revision.vcs !== "git" || !GIT_COMMIT.test(revision.commit ?? "") || Object.keys(revision).some((key) => !["vcs", "commit"].includes(key))) {
+    fail("repository revision contract is invalid");
+  }
+  const commit = git(root, ["cat-file", "-e", `${revision.commit}^{commit}`]);
+  if (commit.status !== 0) fail("bound repository revision is unavailable");
+  const tracked = git(root, ["diff", "--quiet", revision.commit, "--", ...sourceRoots]);
+  if (tracked.status !== 0) fail("implementation source roots differ from the bound repository revision");
+  const untracked = git(root, ["ls-files", "--others", "--exclude-standard", "--", ...sourceRoots]);
+  if (untracked.status !== 0) fail(untracked.stderr.trim() || "cannot inspect untracked implementation sources");
+  if (untracked.stdout.trim()) fail("implementation source roots contain files outside the bound repository revision");
 }
 
 function paths(root, artifactId, runId) {
@@ -125,6 +159,7 @@ export function verifyEvidenceRun({ projectRoot, artifactId, runId }) {
   if (gateRun.methodHash !== manifest.methodHash) errors.push("manifest method evidence is stale");
   if (gateRun.validationHash !== manifest.validationHash) errors.push("manifest validation evidence is stale");
   if (gateRun.bundleHash !== manifest.bundle?.sha256 || gateRun.bundleBytes !== manifest.bundle?.bytes) errors.push("manifest bundle snapshot is stale");
+  try { verifyRepositoryRevision(root, gateRun.repositoryRevision, gateRun.implementation?.sourceRoots ?? artifact.implementation?.sourceRoots); } catch (error) { addError(errors, error); }
 
   let inventory = null;
   try {
@@ -203,6 +238,7 @@ export function verifyEvidenceRun({ projectRoot, artifactId, runId }) {
       manifestMethodHash: manifest.methodHash,
       manifestValidationHash: manifest.validationHash,
       bundle: manifest.bundle ? { path: manifest.bundle.path, sha256: manifest.bundle.sha256, bytes: manifest.bundle.bytes } : null,
+      repositoryRevision: gateRun.repositoryRevision ?? null,
       implementation: inventory ? { hash: inventory.hash, files: inventory.files, bytes: inventory.bytes } : null,
     },
   };
@@ -235,6 +271,7 @@ function init(options) {
     validationHash: manifest.validationHash,
     bundleHash: manifest.bundle.sha256,
     bundleBytes: manifest.bundle.bytes,
+    repositoryRevision: repositoryRevision(root, artifact.implementation.sourceRoots),
     implementation: { sourceRoots: artifact.implementation.sourceRoots, inventoryHash: inventory.hash },
     gates: Object.fromEntries(GATES.map((gate) => [gate, { attached: false, reportPath: null, reportSha256: null, reportBytes: null }])),
   };
@@ -272,9 +309,10 @@ function verifyCommand(options) {
       const evidenceDir = safeProjectPath(root, `.styleseed/evidence/${artifactId}`);
       const runs = existsSync(evidenceDir) ? readdirSync(evidenceDir).sort() : [];
       if (runs.length === 0) return { artifactId, ok: false, errors: ["required evidence run is missing"] };
-      return { artifactId, runs: runs.map((runId) => verifyEvidenceRun({ projectRoot: root, artifactId, runId })) };
+      const verifiedRuns = runs.map((runId) => verifyEvidenceRun({ projectRoot: root, artifactId, runId }));
+      return { artifactId, ok: verifiedRuns.some((run) => run.ok), runs: verifiedRuns };
     });
-    return { ok: results.every((result) => result.ok !== false && result.runs?.every((run) => run.ok)), results };
+    return { ok: results.every((result) => result.ok), results };
   }
   if (!options.artifact || !options.run) fail("--artifact and --run are required unless --all is used");
   return verifyEvidenceRun({ projectRoot: root, artifactId: options.artifact, runId: safeRunId(options.run) });

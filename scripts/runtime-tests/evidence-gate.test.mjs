@@ -148,6 +148,7 @@ function writeFixtureProject(projectRoot, {
     validationHash: "sha256:3333333333333333333333333333333333333333333333333333333333333333",
     bundleHash: digest(readFileSync(resolve(projectRoot, ".styleseed/bundles", `${artifactId}.md`))),
     bundleBytes: readFileSync(resolve(projectRoot, ".styleseed/bundles", `${artifactId}.md`)).byteLength,
+    repositoryRevision: null,
     implementation: {
       sourceRoots: ["src/app/dashboard"],
       inventoryHash: sourceInventoryHash(projectRoot),
@@ -263,6 +264,36 @@ test("attach accepts and binds a generated deterministic report", () => {
   }
 });
 
+test("init records a Git commit and refuses dirty implementation roots", () => {
+  const projectRoot = makeProjectRoot("styleseed-gate-git-revision-");
+  try {
+    writeFixtureProject(projectRoot);
+    rmSync(resolve(projectRoot, ".styleseed/evidence/app-dashboard/run-001"), { recursive: true, force: true });
+    for (const args of [
+      ["init", "-q"],
+      ["config", "user.email", "fixture@example.test"],
+      ["config", "user.name", "StyleSeed Fixture"],
+      ["add", "."],
+      ["commit", "-qm", "fixture"],
+    ]) {
+      const result = spawnSync("git", args, { cwd: projectRoot, encoding: "utf8" });
+      assert.equal(result.status, 0, result.stderr);
+    }
+    const head = spawnSync("git", ["rev-parse", "HEAD"], { cwd: projectRoot, encoding: "utf8" }).stdout.trim();
+    const clean = runGate(["init", "--project-root", ".", "--artifact", "app-dashboard", "--run", "run-clean", "--json"], projectRoot);
+    assert.equal(clean.status, 0, clean.stdout || clean.stderr);
+    const recorded = JSON.parse(readFileSync(resolve(projectRoot, ".styleseed/evidence/app-dashboard/run-clean/gate-run.json"), "utf8"));
+    assert.deepEqual(recorded.repositoryRevision, { vcs: "git", commit: head });
+
+    writeFileSync(resolve(projectRoot, "src/app/dashboard/page.tsx"), "export default function Page(){return 'dirty'}\n");
+    const dirty = runGate(["init", "--project-root", ".", "--artifact", "app-dashboard", "--run", "run-dirty", "--json"], projectRoot);
+    assert.notEqual(dirty.status, 0);
+    assert.match(`${dirty.stdout}\n${dirty.stderr}`, /source roots must be clean/i);
+  } finally {
+    rmSync(projectRoot, { recursive: true, force: true });
+  }
+});
+
 test("verify --all treats --all as a flag and reports missing runs", () => {
   const projectRoot = makeProjectRoot("styleseed-gate-all-");
   try {
@@ -275,6 +306,33 @@ test("verify --all treats --all as a flag and reports missing runs", () => {
     assert.notEqual(run.status, 0);
     assert.doesNotMatch(run.stderr, /missing value for --all/u);
     assert.match(run.stdout, /required evidence run is missing/u);
+  } finally {
+    rmSync(projectRoot, { recursive: true, force: true });
+  }
+});
+
+test("verify --all preserves failed history but accepts one current passing run per artifact", () => {
+  const projectRoot = makeProjectRoot("styleseed-gate-all-history-");
+  try {
+    writeFixtureProject(projectRoot);
+    writeJson(resolve(projectRoot, ".styleseed/artifacts/index.json"), {
+      schemaVersion: 1,
+      artifacts: [{ id: "app-dashboard", config: "app-dashboard.json" }],
+    });
+    const staleDir = resolve(projectRoot, ".styleseed/evidence/app-dashboard/stale-run");
+    mkdirSync(staleDir, { recursive: true });
+    const stale = JSON.parse(readFileSync(resolve(projectRoot, ".styleseed/evidence/app-dashboard/run-001/gate-run.json"), "utf8"));
+    stale.runId = "stale-run";
+    stale.bundleHash = "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
+    writeJson(resolve(staleDir, "gate-run.json"), stale);
+
+    const run = runGate(["verify", "--project-root", ".", "--all", "--json"], projectRoot);
+    assert.equal(run.status, 0, run.stdout || run.stderr);
+    const result = JSON.parse(run.stdout);
+    assert.equal(result.ok, true);
+    assert.equal(result.results[0].runs.length, 2);
+    assert.equal(result.results[0].runs.some((candidate) => !candidate.ok), true);
+    assert.equal(result.results[0].runs.some((candidate) => candidate.ok), true);
   } finally {
     rmSync(projectRoot, { recursive: true, force: true });
   }

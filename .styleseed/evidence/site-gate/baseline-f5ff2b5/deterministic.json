@@ -1,0 +1,51 @@
+{
+  "detectorRevision": "styleseed-check-v1",
+  "inventoryHash": "sha256:b5808ce7b259cd1dfee0083296f6d0e6ed14b54ea0edbfd129945c233c373c05",
+  "findings": [
+    {
+      "id": "SS000",
+      "file": ".styleseed/manifests/site-gate.json",
+      "line": 1,
+      "evidence": "",
+      "severity": "error",
+      "message": "artifact manifest bundle declaration is stale",
+      "fix": "Fix the contract, path, or hash before relying on this check."
+    },
+    {
+      "id": "SS001",
+      "file": "demo-pricing/app/gate/page.tsx",
+      "line": 133,
+      "evidence": "#f7f7f4",
+      "severity": "warning",
+      "message": "Hardcoded color found outside a registered token/theme file.",
+      "fix": "Use a semantic color token."
+    },
+    {
+      "id": "SS004",
+      "file": "demo-pricing/app/gate/page.tsx",
+      "line": 138,
+      "evidence": "transition",
+      "severity": "warning",
+      "message": "Motion was detected without a reduced-motion handling path in the declared source set.",
+      "fix": "Add prefers-reduced-motion or useReducedMotion handling."
+    },
+    {
+      "id": "SS002",
+      "file": "demo-pricing/app/gate/page.tsx",
+      "line": 200,
+      "evidence": "min-w-[700px]",
+      "severity": "warning",
+      "message": "Arbitrary pixel value found in a supported utility or CSS property.",
+      "fix": "Use the selected spacing or sizing token."
+    },
+    {
+      "id": "SS001",
+      "file": "demo-pricing/app/gate/page.tsx",
+      "line": 382,
+      "evidence": "#f7f7f4",
+      "severity": "warning",
+      "message": "Hardcoded color found outside a registered token/theme file.",
+      "fix": "Use a semantic color token."
+    }
+  ]
+}

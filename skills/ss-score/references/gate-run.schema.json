@@ -3,7 +3,7 @@
   "$id": "https://styleseed.dev/schemas/gate-run.schema.json",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion", "artifactId", "runId", "manifestPath", "bundlePath", "methodHash", "validationHash", "bundleHash", "bundleBytes", "implementation", "gates"],
+  "required": ["schemaVersion", "artifactId", "runId", "manifestPath", "bundlePath", "methodHash", "validationHash", "bundleHash", "bundleBytes", "repositoryRevision", "implementation", "gates"],
   "properties": {
     "schemaVersion": { "const": 1 },
     "artifactId": { "$ref": "../../ss-resolve/references/manifest.schema.json#/$defs/id" },
@@ -13,6 +13,20 @@
     "validationHash": { "$ref": "../../ss-resolve/references/manifest.schema.json#/$defs/hash" },
     "bundleHash": { "$ref": "../../ss-resolve/references/manifest.schema.json#/$defs/hash" },
     "bundleBytes": { "type": "integer", "minimum": 0 },
+    "repositoryRevision": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["vcs", "commit"],
+          "properties": {
+            "vcs": { "const": "git" },
+            "commit": { "type": "string", "pattern": "^[0-9a-f]{40,64}$" }
+          }
+        }
+      ]
+    },
     "implementation": { "type": "object", "additionalProperties": false, "required": ["sourceRoots", "inventoryHash"], "properties": { "sourceRoots": { "type": "array", "items": { "type": "string" } }, "inventoryHash": { "$ref": "../../ss-resolve/references/manifest.schema.json#/$defs/hash" } } },
     "gates": { "type": "object" }
   }

@@ -81,6 +81,17 @@ function requireCurrentBundle(manifest, gateRun, artifactId) {
   }
 }
 
+function requireBoundRepositoryRevision(artifact, gateRun) {
+  const revision = gateRun.repositoryRevision;
+  if (revision?.vcs !== "git" || !/^[0-9a-f]{40,64}$/u.test(revision.commit ?? "")) {
+    fail(`gate-run for ${artifact.id} is not bound to a Git commit`);
+  }
+  const tracked = spawnSync("git", ["-C", projectRoot, "diff", "--quiet", revision.commit, "--", ...artifact.implementation.sourceRoots]);
+  if (tracked.status !== 0) fail(`source roots differ from bound commit for ${artifact.id}`);
+  const untracked = spawnSync("git", ["-C", projectRoot, "ls-files", "--others", "--exclude-standard", "--", ...artifact.implementation.sourceRoots], { encoding: "utf8" });
+  if (untracked.status !== 0 || untracked.stdout.trim()) fail(`source roots contain unbound files for ${artifact.id}`);
+}
+
 function ensureNewFileTarget(path) {
   const absolute = safeProjectPath(projectRoot, path);
   if (existsSync(absolute)) fail(`refusing to overwrite existing evidence file: ${path}`);
@@ -153,6 +164,7 @@ async function captureArtifact(artifact, runId, browser, baseUrl) {
   const gateRun = gateRunFor(artifact.id, runId);
   requireCurrentInventory(artifact, gateRun);
   requireCurrentBundle(manifest, gateRun, artifact.id);
+  requireBoundRepositoryRevision(artifact, gateRun);
   const renders = await captureRequiredRenders(artifact, runId, browser, baseUrl);
   const recordings = await captureTemporalIfRequired(artifact, runId, browser, baseUrl);
   return { artifactId: artifact.id, runId, renders, recordings };

@@ -1,0 +1,50 @@
+{
+  "artifactId": "site-learn",
+  "bundleBytes": 16833,
+  "bundleHash": "sha256:fa1962f76f2e656b9a332548a53376be1159c88ded8e4fa949fb3542922a26a9",
+  "bundlePath": ".styleseed/bundles/site-learn.md",
+  "gates": {
+    "code": {
+      "attached": false,
+      "reportBytes": null,
+      "reportPath": null,
+      "reportSha256": null
+    },
+    "deterministic": {
+      "attached": true,
+      "reportPath": ".styleseed/evidence/site-learn/baseline-f5ff2b5/deterministic.json",
+      "reportSha256": "sha256:c96b78dd9527c444d5ab3eb2d18600eff9f22d6afc959d410fd4a6b6069f7575",
+      "reportBytes": 1364
+    },
+    "human": {
+      "attached": false,
+      "reportBytes": null,
+      "reportPath": null,
+      "reportSha256": null
+    },
+    "temporal": {
+      "attached": false,
+      "reportBytes": null,
+      "reportPath": null,
+      "reportSha256": null
+    },
+    "visual": {
+      "attached": false,
+      "reportBytes": null,
+      "reportPath": null,
+      "reportSha256": null
+    }
+  },
+  "implementation": {
+    "inventoryHash": "sha256:96989ee9f2eec37fb4b136c99419c0ad298321047aeea7cc3163ca97c06f886d",
+    "sourceRoots": [
+      "demo-pricing/app/learn",
+      "demo-pricing/app/globals.css"
+    ]
+  },
+  "manifestPath": ".styleseed/manifests/site-learn.json",
+  "methodHash": "sha256:c69caf6516e35a8071ec388b6aa513a130b271e0825a6d366515338afda71605",
+  "runId": "baseline-f5ff2b5",
+  "schemaVersion": 1,
+  "validationHash": "sha256:5e84b491f159579a662990376c5877e339d3030a7b96c4dc8638545ed6ed0f55"
+}

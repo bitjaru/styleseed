@@ -7,6 +7,7 @@ import { sha256, safeProjectPath } from "./runtime-contract.mjs";
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const skillDir = resolve(scriptDir, "..");
 const paletteGeneratorPath = [
+  resolve(scriptDir, "palette-generator.mjs"),
   resolve(scriptDir, "../../../../color/generator.mjs"),
   resolve(scriptDir, "../../../engine/color/generator.mjs"),
 ].find((path) => existsSync(path));

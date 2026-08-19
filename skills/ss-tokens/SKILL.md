@@ -36,7 +36,7 @@ Arguments: $ARGUMENTS
 Do not pick a second color by eye or copy a preset. Run the shared StyleSeed generator:
 
 ```bash
-node <styleseed-root>/engine/color/generate-palette.mjs \
+node <installed-ss-tokens>/scripts/generate-palette.mjs \
   --key-color "#276B5E" \
   --mode light \
   --character calm \
@@ -44,6 +44,9 @@ node <styleseed-root>/engine/color/generate-palette.mjs \
   --temperature neutral \
   --out .styleseed/palette.json
 ```
+
+The generator is bundled inside this skill for skills-only installations and is deterministically
+mirrored from the canonical `engine/color` source during repository generation.
 
 Supported controls are `light|dark` mode, `calm|balanced|vivid|deep` character,
 `auto|tonal|adjacent|contrast` harmony, and `neutral|warm|cool` surface temperature.

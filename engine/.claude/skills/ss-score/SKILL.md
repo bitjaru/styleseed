@@ -15,9 +15,9 @@ When `.styleseed/project.json` and `.styleseed/artifacts/index.json` exist, reso
 For the executable contract and stable diagnostics, run the canonical checker:
 
 ```bash
-node engine/.claude/skills/ss-score/scripts/styleseed-check.mjs scan \
+node <installed-ss-score>/scripts/styleseed-check.mjs scan \
   --project-root . --artifact <artifact-id> --format json
-node engine/.claude/skills/ss-score/scripts/styleseed-check.mjs scan \
+node <installed-ss-score>/scripts/styleseed-check.mjs scan \
   --project-root . --artifact <artifact-id> --format sarif --out .styleseed/evidence/<artifact>/<run>/deterministic.sarif
 ```
 
@@ -33,7 +33,7 @@ gate without caller-supplied pass claims.
 Attach the generated JSON through the same typed gate path as other reports:
 
 ```bash
-node engine/.claude/skills/ss-score/scripts/evidence-gate.mjs attach \
+node <installed-ss-score>/scripts/evidence-gate.mjs attach \
   --project-root . --artifact <artifact-id> --run <run-id> \
   --gate deterministic \
   --report .styleseed/evidence/<artifact-id>/<run-id>/deterministic.json

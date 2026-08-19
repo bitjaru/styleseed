@@ -10,6 +10,26 @@ const canonicalSkills = resolve(engine, ".claude/skills");
 const discoverySkills = resolve(root, "skills");
 const read = (name) => readFileSync(resolve(engine, name), "utf8").trim();
 
+function syncPortableSkillRuntime() {
+  const generator = readFileSync(resolve(engine, "color/generator.mjs"));
+  const generatorCli = readFileSync(resolve(engine, "color/generate-palette.mjs"));
+  const targets = [
+    ["ss-resolve/scripts/palette-generator.mjs", generator],
+    ["ss-tokens/scripts/generator.mjs", generator],
+    ["ss-tokens/scripts/generate-palette.mjs", generatorCli],
+  ];
+  for (const [relativePath, content] of targets) {
+    const target = resolve(canonicalSkills, relativePath);
+    mkdirSync(dirname(target), { recursive: true });
+    writeFileSync(target, content);
+  }
+}
+
+// `npx skills add` installs skill directories without the repository-level engine tree.
+// Mirror the minimum executable color runtime into the skills that invoke it so the public
+// skills-only install remains functional. `engine/color/*` stays the canonical source.
+syncPortableSkillRuntime();
+
 function section(markdown, heading, nextHeadingPattern) {
   const start = markdown.indexOf(heading);
   if (start < 0) throw new Error(`Missing context heading: ${heading}`);

@@ -62,7 +62,7 @@
       "type": "skill-md",
       "description": "Quick automated lint — detects common design system violations in seconds",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-lint/SKILL.md",
-      "digest": "sha256:2511ed7edc30c5138a9faf6bc4a83bb6cc382b64225e5e14d24c86347c374760"
+      "digest": "sha256:d7949e53db1dbd5a9324f5938d8da8366a47d5ffb91d0f417c430d87d56bae9b"
     },
     {
       "name": "ss-motion",
@@ -118,7 +118,7 @@
       "type": "skill-md",
       "description": "Score a visual artifact's implementation quality 0-100 against its composed StyleSeed rule set — category breakdown, evidence, and prioritized fixes.",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-score/SKILL.md",
-      "digest": "sha256:e40bae0dd6b05aa182a2875ee919a83aad51abfb4a64fb2019d5c87c589b0a79"
+      "digest": "sha256:cb2e2e5c8d4b3bd7e17ab66015a5236096b546de24881cf8773b51f90c454207"
     },
     {
       "name": "ss-setup",
@@ -139,7 +139,7 @@
       "type": "skill-md",
       "description": "Generate an accessible semantic palette from a key color, or view, add, and modify StyleSeed design tokens. Use when a user supplies a brand color, asks which colors combine well, needs light/dark theme roles, or needs token files for implementation.",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-tokens/SKILL.md",
-      "digest": "sha256:8e07e02dacc3f99d72487dc452bbe06de6345b49bf1cd78e2361141add0c8aa5"
+      "digest": "sha256:7b2d47255cb83f7674cefa79991ccb2b0b6a716c3c6536ee2aa7e3ff6c2d0583"
     },
     {
       "name": "ss-update",

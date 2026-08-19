@@ -1,3 +1,4 @@
+import { spawnSync } from "node:child_process";
 import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
@@ -57,10 +58,60 @@ try {
   rmSync(stageRoot, { recursive: true, force: true });
 }
 
+const skillsOnlyRoot = mkdtempSync(join(tmpdir(), "styleseed-skills-only-"));
+try {
+  const installedSkills = resolve(skillsOnlyRoot, ".agents/skills");
+  mkdirSync(dirname(installedSkills), { recursive: true });
+  cpSync(resolve(root, "skills"), installedSkills, { recursive: true });
+
+  const resolver = resolve(installedSkills, "ss-resolve/scripts/resolve-context.mjs");
+  const list = spawnSync(process.execPath, [resolver, "--list"], {
+    cwd: skillsOnlyRoot,
+    encoding: "utf8",
+  });
+  assert(list.status === 0, `skills-only resolver list failed: ${list.stderr || list.stdout}`);
+
+  const compile = spawnSync(process.execPath, [
+    resolver,
+    "--project-root", skillsOnlyRoot,
+    "--agent", "codex",
+    "--grammar", "operations-console",
+    "--adapter", "product-ui",
+    "--domain", "developer-tools",
+    "--page", "dashboard",
+    "--recipe", "enterprise-workbench",
+    "--palette", "cobalt-instrument",
+    "--key-color", "#0F766E",
+    "--palette-character", "balanced",
+    "--palette-mode", "light",
+    "--palette-harmony", "auto",
+    "--surface-temperature", "cool",
+    "--profile", "technical",
+  ], { cwd: skillsOnlyRoot, encoding: "utf8" });
+  assert(compile.status === 0, `skills-only resolver compile failed: ${compile.stderr || compile.stdout}`);
+  assert(existsSync(resolve(skillsOnlyRoot, ".styleseed/palette.json")), "skills-only resolver did not emit palette.json");
+
+  const tokenOutput = resolve(skillsOnlyRoot, "token-smoke.json");
+  const tokenGenerator = resolve(installedSkills, "ss-tokens/scripts/generate-palette.mjs");
+  const generate = spawnSync(process.execPath, [
+    tokenGenerator,
+    "--key-color", "#0F766E",
+    "--mode", "light",
+    "--character", "balanced",
+    "--harmony", "auto",
+    "--temperature", "cool",
+    "--out", tokenOutput,
+  ], { cwd: skillsOnlyRoot, encoding: "utf8" });
+  assert(generate.status === 0, `skills-only token generator failed: ${generate.stderr || generate.stdout}`);
+  assert(readJson(tokenOutput).valid === true, "skills-only token generator emitted an invalid palette");
+} finally {
+  rmSync(skillsOnlyRoot, { recursive: true, force: true });
+}
+
 if (failures.length > 0) {
   console.error(`Core plugin boundary failed (${failures.length}):`);
   for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);
 }
 
-console.log("Core plugin boundary verified: zero default MCP exposure, host-discoverable skills path resolves, staged core excludes learning bridge");
+console.log("Core plugin boundary verified: zero default MCP exposure, staged plugin boundary, and executable skills-only install");

@@ -15,9 +15,9 @@ When `.styleseed/project.json` and `.styleseed/artifacts/index.json` exist, reso
 For a reproducible, artifact-bound scan with machine-readable output, use:
 
 ```bash
-node engine/.claude/skills/ss-score/scripts/styleseed-check.mjs scan \
+node <installed-ss-score>/scripts/styleseed-check.mjs scan \
   --project-root . --artifact <artifact-id> --format json
-node engine/.claude/skills/ss-score/scripts/styleseed-check.mjs scan \
+node <installed-ss-score>/scripts/styleseed-check.mjs scan \
   --project-root . --all --format sarif
 ```
 

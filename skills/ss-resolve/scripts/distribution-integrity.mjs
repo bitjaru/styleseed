@@ -20,14 +20,14 @@ function isSafeDistributionPath(value) {
 
 function resolveDistributionLayout(scriptPath) {
   const absoluteScript = normalizePath(resolve(scriptPath));
-  for (const [marker, skillRoot] of [
-    ["/engine/.claude/skills/", "engine/.claude/skills"],
-    ["/.claude/skills/", ".claude/skills"],
-    ["/.agents/skills/", ".agents/skills"],
-    ["/skills/", "skills"],
+  for (const [marker, skillRoot, distribution] of [
+    ["/engine/.claude/skills/", "engine/.claude/skills", "core"],
+    ["/.claude/skills/", ".claude/skills", "skills"],
+    ["/.agents/skills/", ".agents/skills", "skills"],
+    ["/skills/", "skills", "skills"],
   ]) {
     const index = absoluteScript.lastIndexOf(marker);
-    if (index > 0) return { root: absoluteScript.slice(0, index), skillRoot };
+    if (index > 0) return { root: absoluteScript.slice(0, index), skillRoot, distribution };
   }
   throw new Error(`Cannot locate the StyleSeed distribution root from: ${scriptPath}`);
 }
@@ -69,26 +69,30 @@ function compareByPath(left, right) {
   return 0;
 }
 
-export function getCoreDistribution(catalog) {
-  const distribution = catalog?.distributions?.core;
+export function getDistribution(catalog, name = "core") {
+  const distribution = catalog?.distributions?.[name];
   if (
     !distribution
     || typeof distribution.revision !== "string"
     || !/^sha256:[0-9a-f]{64}$/u.test(distribution.revision)
     || !Array.isArray(distribution.files)
   ) {
-    throw new Error("Installed catalog does not expose a verifiable distributions.core inventory");
+    throw new Error(`Installed catalog does not expose a verifiable distributions.${name} inventory`);
   }
   return distribution;
 }
 
+export function getCoreDistribution(catalog) {
+  return getDistribution(catalog, "core");
+}
+
 export function verifyDistribution({ catalog, scriptPath }) {
-  const distribution = getCoreDistribution(catalog);
   if (typeof scriptPath !== "string" || scriptPath.length === 0) {
     throw new Error("verifyDistribution requires scriptPath");
   }
 
-  const { root, skillRoot } = resolveDistributionLayout(scriptPath);
+  const { root, skillRoot, distribution: distributionName } = resolveDistributionLayout(scriptPath);
+  const distribution = getDistribution(catalog, distributionName);
   const files = distribution.files.map((entry, index) => {
     if (
       !entry
@@ -157,7 +161,7 @@ export function verifyDistribution({ catalog, scriptPath }) {
   )}`;
 
   if (mismatches.some((entry) => entry.reason === "missing")) {
-    return { status: "incomplete", computedRevision, mismatches };
+    return { status: "incomplete", distribution: distributionName, computedRevision, mismatches };
   }
   if (computedRevision !== distribution.revision) {
     mismatches.push({
@@ -168,7 +172,7 @@ export function verifyDistribution({ catalog, scriptPath }) {
     });
   }
   if (mismatches.length > 0) {
-    return { status: "tampered", computedRevision, mismatches };
+    return { status: "tampered", distribution: distributionName, computedRevision, mismatches };
   }
-  return { status: "verified", computedRevision, mismatches: [] };
+  return { status: "verified", distribution: distributionName, computedRevision, mismatches: [] };
 }

@@ -204,6 +204,8 @@ writeFileSync(
       version: contextCatalog.engineVersion,
       revision: contextCatalog.engineRevision,
       revisionFiles: contextCatalog.distributionFiles.length,
+      skillsRevision: contextCatalog.distributions.skills.revision,
+      skillsRevisionFiles: contextCatalog.distributions.skills.files.length,
       skills: skills.length,
       grammars: grammarIds.length,
       adapters: adapterIds.length,

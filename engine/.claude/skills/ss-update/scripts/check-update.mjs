@@ -5,7 +5,6 @@ import { existsSync, readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { verifyDistribution } from "../../ss-resolve/scripts/distribution-integrity.mjs";
-import { inspectArtifactImpact } from "./artifact-impact.mjs";
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 
@@ -127,12 +126,22 @@ const installedVerification = installed
     }
   })()
   : null;
-const installedComputedRevision = installedVerification?.computedRevision ?? null;
-const installedRevision = installedComputedRevision ?? installedDeclaredRevision;
-const artifactImpact = inspectArtifactImpact({
-  projectRoot,
-  installedCatalog: installed?.value ?? null,
-});
+const installedDistribution = installedVerification?.distribution ?? null;
+const installedDistributionRevision = installedVerification?.computedRevision ?? null;
+const installedDeclaredDistributionRevision = installedDistribution
+  ? installed?.value.distributions?.[installedDistribution]?.revision ?? null
+  : null;
+const remoteDistributionRevision = installedDistribution === "skills"
+  ? remote.skillsRevision ?? null
+  : remoteRevision;
+const registryPresent = existsSync(resolve(projectRoot, ".styleseed/project.json"))
+  && existsSync(resolve(projectRoot, ".styleseed/artifacts/index.json"));
+const artifactImpact = registryPresent
+  ? (await import("./artifact-impact.mjs")).inspectArtifactImpact({
+      projectRoot,
+      installedCatalog: installed?.value ?? null,
+    })
+  : { artifacts: [] };
 
 let status;
 let reason;
@@ -141,26 +150,33 @@ if (installed && installedVerification?.status === "unverified") {
   reason = installedVerification.error ?? "The installed catalog cannot prove the staged core distribution bytes.";
 } else if (installedVerification?.status === "incomplete") {
   status = "installed-revision-unverified";
-  reason = "The installed core distribution is missing required files, so its declared revision cannot be trusted.";
+  reason = `The installed ${installedDistribution ?? "core"} distribution is missing required files, so its declared revision cannot be trusted.`;
 } else if (installedVerification?.status === "tampered") {
   status = "installed-revision-tampered";
-  reason = "Installed core distribution bytes differ from the catalog inventory, so the declared revision is not current.";
-} else if (!installedRevision && remoteRevision) {
+  reason = `Installed ${installedDistribution ?? "core"} distribution bytes differ from the catalog inventory, so the declared revision is not current.`;
+} else if (!installedDistributionRevision && remoteDistributionRevision) {
   status = "update-available";
   reason = "The installed payload predates revision tracking; refresh it once to establish an exact baseline.";
-} else if (installedRevision && remoteRevision && installedRevision !== remoteRevision) {
+} else if (
+  installedDistributionRevision
+  && remoteDistributionRevision
+  && installedDistributionRevision !== remoteDistributionRevision
+) {
   status = "update-available";
-  reason = "The published rule/skill payload differs from the installed payload, even if the release version is unchanged.";
+  reason = `The published ${installedDistribution ?? "core"} payload differs from the installed payload, even if the release version is unchanged.`;
+} else if (installedDeclaredRevision && remoteRevision && installedDeclaredRevision !== remoteRevision) {
+  status = "update-available";
+  reason = "The published engine metadata differs from the installed catalog, even if this channel's executable bytes are unchanged.";
 } else if (!remoteRevision && installedVersion && remoteVersion && installedVersion !== remoteVersion) {
   status = "update-available";
   reason = "The published release version differs; the remote endpoint does not expose an exact revision yet.";
-} else if (!remoteRevision) {
+} else if (!remoteRevision || !remoteDistributionRevision) {
   status = "remote-revision-unavailable";
-  reason = "The remote endpoint cannot prove exact payload equality; do not claim the install is current from version alone.";
+  reason = `The remote endpoint cannot prove exact ${installedDistribution ?? "core"} payload equality; do not claim the install is current from version alone.`;
 } else if (legacyConflicts.length > 0) {
   status = "legacy-skill-conflict";
   reason = "The canonical payload is current, but a retired standalone reviewer still competes with ss-score.";
-} else if (projectManifest && projectRevision !== installedRevision) {
+} else if (projectManifest && projectRevision !== installedDeclaredRevision) {
   status = "project-bundle-stale";
   reason = "The installed engine is current, but this project's effective bundle was resolved from another revision.";
 } else {
@@ -174,9 +190,12 @@ const result = {
   reason,
   installed: {
     version: installedVersion,
-    revision: installedRevision,
+    revision: installedDeclaredRevision,
     declaredRevision: installedDeclaredRevision,
-    computedRevision: installedComputedRevision,
+    distribution: installedDistribution,
+    distributionRevision: installedDistributionRevision,
+    declaredDistributionRevision: installedDeclaredDistributionRevision,
+    computedRevision: installedDistributionRevision,
     verificationStatus: installedVerification?.status ?? null,
     catalogPath: installed?.path ?? null,
     mismatches: installedVerification?.mismatches ?? [],
@@ -190,6 +209,8 @@ const result = {
   remote: {
     version: remoteVersion,
     revision: remoteRevision,
+    distribution: installedDistribution,
+    distributionRevision: remoteDistributionRevision,
     source: remoteSource,
   },
   legacyConflicts,
@@ -200,7 +221,8 @@ if (args.json) {
   console.log(JSON.stringify(result, null, 2));
 } else {
   console.log(`StyleSeed update status: ${status}`);
-  console.log(`installed ${installedVersion ?? "unknown"} @ ${shortRevision(installedRevision)}`);
+  console.log(`installed ${installedVersion ?? "unknown"} @ ${shortRevision(installedDeclaredRevision)}`);
+  console.log(`payload   ${installedDistribution ?? "unknown"} @ ${shortRevision(installedDistributionRevision)}`);
   console.log(`project   ${projectVersion ?? "not resolved"} @ ${shortRevision(projectRevision)}`);
   console.log(`published ${remoteVersion ?? "unknown"} @ ${shortRevision(remoteRevision)}`);
   console.log(reason);

@@ -1,5 +1,5 @@
 import { spawnSync } from "node:child_process";
-import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -104,6 +104,27 @@ try {
   ], { cwd: skillsOnlyRoot, encoding: "utf8" });
   assert(generate.status === 0, `skills-only token generator failed: ${generate.stderr || generate.stdout}`);
   assert(readJson(tokenOutput).valid === true, "skills-only token generator emitted an invalid palette");
+
+  const remoteVersion = resolve(skillsOnlyRoot, "remote-version.json");
+  writeFileSync(remoteVersion, JSON.stringify({
+    version: catalog.engineVersion,
+    revision: catalog.engineRevision,
+    skillsRevision: catalog.distributions.skills.revision,
+  }));
+  const updateChecker = resolve(installedSkills, "ss-update/scripts/check-update.mjs");
+  const update = spawnSync(process.execPath, [
+    updateChecker,
+    "--project-root", skillsOnlyRoot,
+    "--remote", remoteVersion,
+    "--json",
+  ], { cwd: skillsOnlyRoot, encoding: "utf8" });
+  assert(update.status === 0, `skills-only update checker failed: ${update.stderr || update.stdout}`);
+  if (update.status === 0) {
+    const result = JSON.parse(update.stdout);
+    assert(result.status === "current", `skills-only update checker returned ${result.status}`);
+    assert(result.installed.distribution === "skills", "skills-only update checker selected the wrong inventory");
+    assert(result.installed.verificationStatus === "verified", "skills-only update payload was not verified");
+  }
 } finally {
   rmSync(skillsOnlyRoot, { recursive: true, force: true });
 }

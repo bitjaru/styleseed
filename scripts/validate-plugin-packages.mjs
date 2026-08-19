@@ -273,7 +273,11 @@ async function validateStage(stageRoot) {
 
     const catalog = readJson(resolve(projectRoot, "engine/.claude/skills/ss-resolve/references/catalog.json"));
     const versionJsonPath = resolve(projectRoot, "version.json");
-    writeFileSync(versionJsonPath, `${JSON.stringify({ version: catalog.engineVersion, revision: catalog.engineRevision }, null, 2)}\n`);
+    writeFileSync(versionJsonPath, `${JSON.stringify({
+      version: catalog.engineVersion,
+      revision: catalog.engineRevision,
+      skillsRevision: catalog.distributions.skills.revision,
+    }, null, 2)}\n`);
     const updateRun = runNode(projectRoot, [
       "skills/ss-update/scripts/check-update.mjs",
       "--project-root",

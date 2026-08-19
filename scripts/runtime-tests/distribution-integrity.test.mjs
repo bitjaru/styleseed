@@ -71,6 +71,7 @@ test("verifyDistribution accepts a clean staged core layout and recomputes the c
     stageCoreDistribution(sandbox);
     const result = verifyDistribution({ catalog, scriptPath: stagedScript(sandbox) });
     assert.equal(result.status, "verified");
+    assert.equal(result.distribution, "core");
     assert.equal(result.computedRevision, catalog.engineRevision);
     assert.deepEqual(result.mismatches, []);
   } finally {
@@ -78,7 +79,7 @@ test("verifyDistribution accepts a clean staged core layout and recomputes the c
   }
 });
 
-test("verifyDistribution maps the canonical inventory onto a root Codex skills mirror", () => {
+test("verifyDistribution maps the skills inventory onto a root Codex skills mirror", () => {
   const sandbox = makeSandbox("styleseed-distribution-codex-mirror-");
   try {
     stageCoreDistribution(sandbox);
@@ -86,7 +87,8 @@ test("verifyDistribution maps the canonical inventory onto a root Codex skills m
     const codexScript = resolve(sandbox, "skills/ss-update/scripts/check-update.mjs");
     const result = verifyDistribution({ catalog, scriptPath: codexScript });
     assert.equal(result.status, "verified");
-    assert.equal(result.computedRevision, catalog.engineRevision);
+    assert.equal(result.distribution, "skills");
+    assert.equal(result.computedRevision, catalog.distributions.skills.revision);
     assert.deepEqual(result.mismatches, []);
   } finally {
     rmSync(sandbox, { recursive: true, force: true });

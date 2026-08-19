@@ -109,6 +109,9 @@ assert(catalog.schemaVersion === 4, `context catalog schema ${catalog.schemaVers
 assert(/^sha256:[0-9a-f]{64}$/.test(catalog.engineRevision), "context catalog engine revision is invalid");
 assert(Array.isArray(catalog.distributions?.core?.files) && catalog.distributions.core.files.length >= 40, "context catalog core distribution is incomplete");
 assert(catalog.distributions.core.revision === catalog.engineRevision, "core distribution revision drifted from engineRevision");
+assert(Array.isArray(catalog.distributions?.skills?.files) && catalog.distributions.skills.files.length >= 20, "context catalog skills distribution is incomplete");
+assert(/^sha256:[0-9a-f]{64}$/.test(catalog.distributions.skills.revision), "skills distribution revision is invalid");
+assert(catalog.distributions.skills.files.every((file) => file.path.startsWith("engine/.claude/skills/")), "skills distribution contains a non-skill file");
 assert(!catalog.distributions.core.files.some((file) => file.path === ".codex-plugin/plugin.json"), "mutable Codex cachebuster manifest must not define the core revision");
 assert(catalog.distributions.core.files.some((file) => file.path === "LICENSE"), "core distribution omits LICENSE");
 assert(catalog.distributions.core.files.some((file) => file.path === "SECURITY.md"), "core distribution omits SECURITY.md");
@@ -121,6 +124,8 @@ assert(!catalog.distributionFiles.some((file) => file.path === "root/.codex-plug
 assert(catalog.distributionFiles.some((file) => file.path === ".claude/skills/ss-update/scripts/check-update.mjs"), "legacy distribution alias omits the update checker");
 assert(publicVersion.revision === catalog.engineRevision, "version.json revision differs from the canonical catalog");
 assert(publicVersion.revisionFiles === catalog.distributions.core.files.length, "version.json revision file count drifted");
+assert(publicVersion.skillsRevision === catalog.distributions.skills.revision, "version.json skills revision differs from the canonical catalog");
+assert(publicVersion.skillsRevisionFiles === catalog.distributions.skills.files.length, "version.json skills revision file count drifted");
 assert(Object.keys(catalog.grammars).length === 8, "context catalog grammar count drifted");
 assert(Object.keys(catalog.adapters).length === 5, "context catalog adapter count drifted");
 assert(Object.keys(catalog.domains).length === 12, "context catalog domain count drifted");

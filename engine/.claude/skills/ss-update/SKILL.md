@@ -15,6 +15,12 @@ line; `engineRevision` identifies the exact maintained rules, skills, entry docs
 engine. Two installs with the same release version are not proven equal until their revisions
 match.
 
+The checker verifies the payload for the active install channel. A repository/plugin checkout
+uses the full `core` inventory; a project-local Agent Skills install uses the executable `skills`
+inventory. The published endpoint must expose both the engine `revision` and, for a skills-only
+install, `skillsRevision`. The project manifest continues to record the engine revision that
+compiled its method bundle.
+
 ## When not to use
 
 - First installation → `/ss-setup` or `$ss-setup`.
@@ -77,6 +83,7 @@ Before changing anything, report:
 ```text
 StyleSeed update report
 - Installed: <version> @ <revision>
+- Installed payload: <core|skills> @ <distribution revision>
 - Published: <version> @ <revision>
 - Project bundle: <version/revision or not resolved>
 - Project worktree: clean | has existing changes

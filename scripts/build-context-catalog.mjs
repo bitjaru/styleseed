@@ -59,27 +59,37 @@ const topLevelDistributionFiles = readdirSync(engine, { withFileTypes: true })
   .filter((entry) => entry.isFile())
   .map((entry) => entry.name)
   .filter((name) => name === ".cursorrules" || name === "VERSION" || name.endsWith(".md"));
+const skillsDistributionPaths = walkFiles(canonicalSkills, "engine/.claude/skills")
+  .filter((path) => path !== "engine/.claude/skills/ss-resolve/references/catalog.json")
+  .filter((path) => !path.startsWith("engine/.claude/skills/ss-learn/"))
+  .sort();
 const coreDistributionPaths = [
   "LICENSE",
   "SECURITY.md",
   ...topLevelDistributionFiles.map((path) => `engine/${path}`),
-  ...walkFiles(canonicalSkills, "engine/.claude/skills")
-    .filter((path) => path !== "engine/.claude/skills/ss-resolve/references/catalog.json")
-    .filter((path) => !path.startsWith("engine/.claude/skills/ss-learn/")),
+  ...skillsDistributionPaths,
   ...walkFiles(resolve(engine, "color"), "engine/color"),
 ].sort();
-const distributionFiles = coreDistributionPaths.map((path) => {
-  const absolute = resolve(root, path);
-  const content = readFileSync(absolute);
-  return {
-    path,
-    sha256: createHash("sha256").update(content).digest("hex"),
-    bytes: statSync(absolute).size,
-  };
-});
-const engineRevision = `sha256:${createHash("sha256")
-  .update(distributionFiles.map((file) => `${file.path}\0${file.sha256}\n`).join(""))
-  .digest("hex")}`;
+function distributionInventory(paths) {
+  return paths.map((path) => {
+    const absolute = resolve(root, path);
+    const content = readFileSync(absolute);
+    return {
+      path,
+      sha256: createHash("sha256").update(content).digest("hex"),
+      bytes: statSync(absolute).size,
+    };
+  });
+}
+function distributionRevision(files) {
+  return `sha256:${createHash("sha256")
+    .update(files.map((file) => `${file.path}\0${file.sha256}\n`).join(""))
+    .digest("hex")}`;
+}
+const distributionFiles = distributionInventory(coreDistributionPaths);
+const skillsDistributionFiles = distributionInventory(skillsDistributionPaths);
+const engineRevision = distributionRevision(distributionFiles);
+const skillsRevision = distributionRevision(skillsDistributionFiles);
 const legacyDistributionFiles = distributionFiles.map((file) => ({
   ...file,
   path: file.path.startsWith("engine/")
@@ -179,6 +189,10 @@ const catalog = {
     core: {
       revision: engineRevision,
       files: distributionFiles,
+    },
+    skills: {
+      revision: skillsRevision,
+      files: skillsDistributionFiles,
     },
   },
   distributionFiles: legacyDistributionFiles,

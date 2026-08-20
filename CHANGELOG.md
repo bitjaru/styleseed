@@ -5,11 +5,27 @@ All notable changes to StyleSeed. Agents can check the latest version at
 
 ## Unreleased
 
+## [4.1.0] — 2026-08-20
+
+**Theme: exact, artifact-bound delivery.** StyleSeed now binds each artifact, installed
+distribution, and verification run to the exact rules and source bytes that produced it. The core
+release remains local-first and contains no learning MCP.
+
 ### Added
 
+- A multi-artifact project registry with one config, compiled bundle, manifest, palette, and evidence
+  history per artifact.
+- Deterministic semantic palette generation from a key color, including light/dark roles, harmony and
+  temperature controls, WCAG validation, and eight maintained palette recipes.
+- Code, build, pixel, temporal, and acceptance evidence contracts that recompute hashes instead of
+  trusting stored pass labels.
+- An allowlist-only Codex core package with a deterministic archive, byte-level inventory, physical
+  23-skill discovery mirror, staged resolver smoke tests, and zero default MCP servers.
+- An optional repository-only learning extension that can prepare a caller-attested generalized
+  candidate locally. It is not included in the default/core archive or public installation path.
 - Public v4 revision pages and copy for private local learning, one-time MCP exposure, exact
   revision-aware updates, and the validated-but-not-yet-public Codex plugin package boundary.
-- `/ss-learn`, an opt-in local workflow that turns a human-approved design correction into a
+- `/ss-learn`, an opt-in repository extension that turns a human-approved design correction into a
   generalized, content-addressed candidate with applicability, counterexamples, measured evidence,
   and immutable review history.
 - A fail-closed privacy contract: raw project material is rejected, local learning files are ignored
@@ -18,6 +34,26 @@ All notable changes to StyleSeed. Agents can check the latest version at
 - A Codex plugin package plus a dependency-free local MCP bridge. The bridge exposes no project
   discovery tool and returns one exact approved package only after consuming a separate one-time
   human grant; client/model exposure is explicit and no registry submission is implemented.
+
+### Changed
+
+- `ss-update` now compares exact core and skills revisions, detects same-version drift, verifies
+  installed bytes, reports artifact impact, and preserves project-owned decisions before recompiling.
+- Skills-only installs now carry the executable resolver and palette runtime they invoke, so the
+  public `npx skills add` path can compile, generate tokens, and verify its own revision without a
+  repository-level engine tree.
+- StyleSeed's own website now dogfoods the artifact registry and evidence gate across home, learning,
+  benchmark, and documentation surfaces, with source-revision-bound desktop, mobile, and temporal
+  evidence.
+- The public install path is the primary homepage action, while the repository Codex package and
+  optional learning bridge remain explicitly labeled as development-only boundaries.
+
+### Security
+
+- Core packaging rejects secrets, denied paths, symlinks, hardlinks, special files, escaped relative
+  imports, and any `ss-learn` or learning MCP payload.
+- Local learning rejects raw project material and separates capture, review, export, one-time bridge
+  exposure, and core-rule promotion. The scanner is a guardrail, not an anonymization guarantee.
 
 ## [4.0.0] — 2026-08-06
 

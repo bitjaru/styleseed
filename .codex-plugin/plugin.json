@@ -1,6 +1,6 @@
 {
   "name": "styleseed",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "description": "A design-method engine with durable project rules, verification workflows, and reproducible UI workflows.",
   "author": {
     "name": "bitjaru",

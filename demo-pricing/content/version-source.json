@@ -1,7 +1,7 @@
 {
-  "released": "2026-08-06",
-  "revisionReleased": "2026-08-12",
-  "whatsNew": "Latest repository development updates add caller-attested local learning boundaries, exact revision-aware updates, Studio, semantic palettes, working interactions, and evidence gates. The implemented default/core install contains no learning MCP, and public plugin-directory release is not verified.",
+  "released": "2026-08-20",
+  "revisionReleased": "2026-08-20",
+  "whatsNew": "StyleSeed 4.1 binds artifact-level contracts and evidence to exact source revisions, makes engine and skills updates independently verifiable, and packages a deterministic 23-skill core. The optional learning extension remains outside the default/core archive, and public plugin-directory release is not verified.",
   "learningGuardrail": "known high-risk identity patterns are blocked; this is a guardrail, not an anonymization guarantee; review the exact package before exposure.",
   "workflowEvidenceClaim": "when the StyleSeed workflow is invoked, it compiles the selected artifact and records the checks and rendered evidence that actually ran",
   "supportPolicy": "Supported versions are published tags or published artifacts, plus separately identified security fixes. Main is not an immutable release by itself.",

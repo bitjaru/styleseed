@@ -1,0 +1,27 @@
+{
+  "inspectionMethod": "Manual rendered-pixel inspection of the current mobile and desktop full-page captures after lazy-content priming",
+  "renders": [
+    {
+      "id": "desktop-loaded",
+      "state": "loaded",
+      "viewport": { "width": 1440, "height": 900 },
+      "path": ".styleseed/evidence/site-docs/rel001a-3dc4544/renders/desktop-loaded.png",
+      "sha256": "sha256:ce13236a087d77b4a9e1212c36794c9a8e8a38f475f750580f5bf54bd8d6687c",
+      "bytes": 1477265
+    },
+    {
+      "id": "mobile-loaded",
+      "state": "loaded",
+      "viewport": { "width": 390, "height": 844 },
+      "path": ".styleseed/evidence/site-docs/rel001a-3dc4544/renders/mobile-loaded.png",
+      "sha256": "sha256:de0c65d0de846c8316232f900ec0fae82e48586d4f72cc0895aa20619cd75a23",
+      "bytes": 1076537
+    }
+  ],
+  "findings": [
+    {
+      "severity": "info",
+      "message": "Desktop and mobile preserve the reading hierarchy, diagram legibility, card rhythm, and update-learning boundary without overlap, clipped controls, or horizontal overflow."
+    }
+  ]
+}

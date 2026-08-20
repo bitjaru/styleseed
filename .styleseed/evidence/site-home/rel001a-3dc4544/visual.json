@@ -1,0 +1,39 @@
+{
+  "inspectionMethod": "Manual rendered-pixel inspection of the current mobile, desktop, and reduced-motion full-page captures after lazy-content priming",
+  "renders": [
+    {
+      "id": "desktop-loaded",
+      "state": "loaded",
+      "viewport": { "width": 1440, "height": 900 },
+      "path": ".styleseed/evidence/site-home/rel001a-3dc4544/renders/desktop-loaded.png",
+      "sha256": "sha256:a4d718085bd7594bfce30cdef33d713f7b6824f1d6e5181ea0d86a22dd0e260f",
+      "bytes": 4414103
+    },
+    {
+      "id": "mobile-loaded",
+      "state": "loaded",
+      "viewport": { "width": 390, "height": 844 },
+      "path": ".styleseed/evidence/site-home/rel001a-3dc4544/renders/mobile-loaded.png",
+      "sha256": "sha256:04dc9ad194d939eeb78235d850a3e473c9e33b37826d51731dc72987bae04142",
+      "bytes": 2974070
+    },
+    {
+      "id": "mobile-reduced-motion",
+      "state": "reduced-motion",
+      "viewport": { "width": 390, "height": 844 },
+      "path": ".styleseed/evidence/site-home/rel001a-3dc4544/renders/mobile-reduced-motion.png",
+      "sha256": "sha256:af3d9d7d740b12d1711201f36b94f57871c0cb3b55ceafb67589a8deec84bed1",
+      "bytes": 2967707
+    }
+  ],
+  "findings": [
+    {
+      "severity": "note",
+      "message": "The install action and product method remain the focal path across desktop and mobile; all long-form sections and real showcase imagery render without overlap, clipped controls, or horizontal overflow."
+    },
+    {
+      "severity": "note",
+      "message": "The reduced-motion full-page render retains the same content, actions, and layout as the ordinary mobile render."
+    }
+  ]
+}

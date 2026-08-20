@@ -1,0 +1,22 @@
+{
+  "score": 88,
+  "categories": {
+    "color": 13,
+    "hierarchy": 15,
+    "layout": 11,
+    "surfaces": 9,
+    "states": 17,
+    "motion": 4,
+    "coherence": 10,
+    "distinctiveness": 9
+  },
+  "evidence": [
+    {
+      "message": "The optional-extension boundary, four-step human-approved workflow, allowed-versus-rejected material split, and candidate-versus-authority boundary remain explicit."
+    },
+    {
+      "message": "The deterministic scanner reports no hard errors; two hardcoded surfaces and the shared transition detection remain advisory findings."
+    }
+  ],
+  "reviewer": "Codex ss-score (REL-001A rerun)"
+}

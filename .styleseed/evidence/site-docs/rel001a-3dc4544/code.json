@@ -1,0 +1,22 @@
+{
+  "score": 88,
+  "categories": {
+    "color": 13,
+    "hierarchy": 15,
+    "layout": 11,
+    "surfaces": 9,
+    "states": 17,
+    "motion": 4,
+    "coherence": 10,
+    "distinctiveness": 9
+  },
+  "evidence": [
+    {
+      "message": "The architecture page preserves a bounded editorial hierarchy, a legible engine diagram, and an explicit project-versus-engine revision boundary after the 4.1 metadata update."
+    },
+    {
+      "message": "The deterministic scanner reports no hard errors; one hardcoded surface color and the shared transition warning remain advisory findings."
+    }
+  ],
+  "reviewer": "Codex ss-score (REL-001A rerun)"
+}

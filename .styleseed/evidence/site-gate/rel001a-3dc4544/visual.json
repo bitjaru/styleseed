@@ -1,0 +1,27 @@
+{
+  "inspectionMethod": "Manual rendered-pixel inspection of the current mobile and desktop full-page captures after lazy-content priming",
+  "renders": [
+    {
+      "id": "desktop-loaded",
+      "state": "loaded",
+      "viewport": { "width": 1440, "height": 900 },
+      "path": ".styleseed/evidence/site-gate/rel001a-3dc4544/renders/desktop-loaded.png",
+      "sha256": "sha256:ca72401d76daba460dd6bc110c2534e5138c042b63c70d3338cbbd572df548fe",
+      "bytes": 736047
+    },
+    {
+      "id": "mobile-loaded",
+      "state": "loaded",
+      "viewport": { "width": 390, "height": 844 },
+      "path": ".styleseed/evidence/site-gate/rel001a-3dc4544/renders/mobile-loaded.png",
+      "sha256": "sha256:d73d65636393c1754622e5eb05ed4db5a8b430cdf17b4ad31827da7adfcb6474",
+      "bytes": 636523
+    }
+  ],
+  "findings": [
+    {
+      "severity": "info",
+      "message": "The result hierarchy, caveats, receipts, and category data remain legible; the desktop table becomes bounded mobile cards with no clipping or horizontal overflow."
+    }
+  ]
+}

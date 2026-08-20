@@ -1,0 +1,27 @@
+{
+  "inspectionMethod": "Manual rendered-pixel inspection of the current mobile and desktop full-page captures after lazy-content priming",
+  "renders": [
+    {
+      "id": "desktop-loaded",
+      "state": "loaded",
+      "viewport": { "width": 1440, "height": 900 },
+      "path": ".styleseed/evidence/site-learn/rel001a-3dc4544/renders/desktop-loaded.png",
+      "sha256": "sha256:35faec2cf370d74e329ceca42e441f99cd73c4cc33d3dee89decb05cea5b4ba5",
+      "bytes": 667201
+    },
+    {
+      "id": "mobile-loaded",
+      "state": "loaded",
+      "viewport": { "width": 390, "height": 844 },
+      "path": ".styleseed/evidence/site-learn/rel001a-3dc4544/renders/mobile-loaded.png",
+      "sha256": "sha256:9485b843f81d65105ab94b8be3e41af5687c44cb1c82fc9c14d64bde4a519d1e",
+      "bytes": 672960
+    }
+  ],
+  "findings": [
+    {
+      "severity": "info",
+      "message": "The four-step workflow, allowed-versus-rejected material split, promotion boundary, FAQ, and calls to action remain legible without overlap, clipped controls, or horizontal overflow."
+    }
+  ]
+}

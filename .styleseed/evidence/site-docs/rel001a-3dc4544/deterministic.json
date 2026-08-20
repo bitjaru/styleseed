@@ -1,0 +1,24 @@
+{
+  "detectorRevision": "styleseed-check-v1",
+  "inventoryHash": "sha256:c9c52a01ade01881f8de272679d1505716bf6836266f3af81a215d80fd99a52d",
+  "findings": [
+    {
+      "id": "SS001",
+      "file": "demo-pricing/app/architecture/page.tsx",
+      "line": 109,
+      "evidence": "#F7F7FB",
+      "severity": "warning",
+      "message": "Hardcoded color found outside a registered token/theme file.",
+      "fix": "Use a semantic color token."
+    },
+    {
+      "id": "SS004",
+      "file": "demo-pricing/app/globals.css",
+      "line": 11,
+      "evidence": "transition",
+      "severity": "warning",
+      "message": "Motion was detected without a reduced-motion handling path in the declared source set.",
+      "fix": "Add prefers-reduced-motion or useReducedMotion handling."
+    }
+  ]
+}

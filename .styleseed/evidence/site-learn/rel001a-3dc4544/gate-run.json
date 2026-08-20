@@ -1,0 +1,54 @@
+{
+  "artifactId": "site-learn",
+  "bundleBytes": 16833,
+  "bundleHash": "sha256:8915fb2fa8422ae0f37e03f139acc2ff3c519aba2e48720e8e6588c671c6989b",
+  "bundlePath": ".styleseed/bundles/site-learn.md",
+  "gates": {
+    "code": {
+      "attached": true,
+      "reportBytes": 630,
+      "reportPath": ".styleseed/evidence/site-learn/rel001a-3dc4544/code.json",
+      "reportSha256": "sha256:242fa6e30e49d10a133b672140287683aa5a262ac23c04575d8a80d255d717cf"
+    },
+    "deterministic": {
+      "attached": true,
+      "reportBytes": 1067,
+      "reportPath": ".styleseed/evidence/site-learn/rel001a-3dc4544/deterministic.json",
+      "reportSha256": "sha256:62973a3ef0dfa04f9746562a2e4076d8007caa872bd086c8bed0765428a8d92c"
+    },
+    "human": {
+      "attached": false,
+      "reportBytes": null,
+      "reportPath": null,
+      "reportSha256": null
+    },
+    "temporal": {
+      "attached": true,
+      "reportPath": ".styleseed/evidence/site-learn/rel001a-3dc4544/temporal.json",
+      "reportSha256": "sha256:486d986b5d16bef3677fc8d5c9736b9a808acac1b8bd8858fc8e9ea80cf50dee",
+      "reportBytes": 59
+    },
+    "visual": {
+      "attached": true,
+      "reportBytes": 1066,
+      "reportPath": ".styleseed/evidence/site-learn/rel001a-3dc4544/visual.json",
+      "reportSha256": "sha256:69160f293355af794c2e0466076d29e00f7bffdaa45df43be14e7e6cf7724f58"
+    }
+  },
+  "implementation": {
+    "inventoryHash": "sha256:96989ee9f2eec37fb4b136c99419c0ad298321047aeea7cc3163ca97c06f886d",
+    "sourceRoots": [
+      "demo-pricing/app/learn",
+      "demo-pricing/app/globals.css"
+    ]
+  },
+  "manifestPath": ".styleseed/manifests/site-learn.json",
+  "methodHash": "sha256:c69caf6516e35a8071ec388b6aa513a130b271e0825a6d366515338afda71605",
+  "repositoryRevision": {
+    "commit": "3dc454418c28856682a52a22874affe708382fb2",
+    "vcs": "git"
+  },
+  "runId": "rel001a-3dc4544",
+  "schemaVersion": 1,
+  "validationHash": "sha256:5e84b491f159579a662990376c5877e339d3030a7b96c4dc8638545ed6ed0f55"
+}

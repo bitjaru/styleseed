@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "artifactId": "site-learn",
+  "runId": "rel001a-3dc4544",
+  "status": "pass",
+  "gates": {
+    "deterministic": "pass",
+    "code": "pass",
+    "visual": "pass",
+    "temporal": "pass",
+    "human": "pass"
+  },
+  "errors": [],
+  "warnings": [],
+  "computed": {
+    "manifestMethodHash": "sha256:c69caf6516e35a8071ec388b6aa513a130b271e0825a6d366515338afda71605",
+    "manifestValidationHash": "sha256:5e84b491f159579a662990376c5877e339d3030a7b96c4dc8638545ed6ed0f55",
+    "bundle": {
+      "path": ".styleseed/bundles/site-learn.md",
+      "sha256": "sha256:8915fb2fa8422ae0f37e03f139acc2ff3c519aba2e48720e8e6588c671c6989b",
+      "bytes": 16833
+    },
+    "repositoryRevision": {
+      "commit": "3dc454418c28856682a52a22874affe708382fb2",
+      "vcs": "git"
+    },
+    "implementation": {
+      "hash": "sha256:96989ee9f2eec37fb4b136c99419c0ad298321047aeea7cc3163ca97c06f886d",
+      "files": 2,
+      "bytes": 10651
+    }
+  }
+}

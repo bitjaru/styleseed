@@ -1,0 +1,25 @@
+{
+  "score": 91,
+  "categories": {
+    "color": 14,
+    "hierarchy": 16,
+    "layout": 11,
+    "surfaces": 9,
+    "states": 16,
+    "motion": 6,
+    "coherence": 10,
+    "distinctiveness": 9
+  },
+  "evidence": [
+    {
+      "message": "The first viewport retains one dominant install action, while architecture, benchmark, revision-safe updates, learning, and showcase evidence remain progressively disclosed."
+    },
+    {
+      "message": "The reduced-motion implementation preserves all content and actions while disabling the optional hero entrance transition; ordinary motion stays bounded to presentation."
+    },
+    {
+      "message": "The deterministic scanner reports no hard errors and no SS004 finding; its remaining advisory findings are isolated demo color literals and two bounded width utilities."
+    }
+  ],
+  "reviewer": "Codex ss-score (REL-001A rerun)"
+}

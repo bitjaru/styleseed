@@ -1,0 +1,22 @@
+{
+  "score": 86,
+  "categories": {
+    "color": 12,
+    "hierarchy": 15,
+    "layout": 11,
+    "surfaces": 9,
+    "states": 17,
+    "motion": 4,
+    "coherence": 10,
+    "distinctiveness": 8
+  },
+  "evidence": [
+    {
+      "message": "The benchmark result, receipts, limitations, and comparison tables remain explicit and internally coherent under the technical-instrument grammar."
+    },
+    {
+      "message": "The deterministic scanner reports no hard errors; hardcoded surfaces, one arbitrary table width, and shared reduced-motion detection remain advisory findings."
+    }
+  ],
+  "reviewer": "Codex ss-score (REL-001A rerun)"
+}

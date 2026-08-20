@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "artifactId": "site-gate",
+  "runId": "rel001a-3dc4544",
+  "status": "pass",
+  "gates": {
+    "deterministic": "pass",
+    "code": "pass",
+    "visual": "pass",
+    "temporal": "pass",
+    "human": "pass"
+  },
+  "errors": [],
+  "warnings": [],
+  "computed": {
+    "manifestMethodHash": "sha256:07ec651169265a5a55a52cd5db02e595b766f1f9ba81dd25bbb7d54bf6d22d38",
+    "manifestValidationHash": "sha256:3462a1922e141bcb82dfd875e886dc8aae43a995ce0bc7958705594a9cf20e0c",
+    "bundle": {
+      "path": ".styleseed/bundles/site-gate.md",
+      "sha256": "sha256:d9e4883989596fecd17cb8c796e0ef4e59639e12b5627eebfe71c8617b8d01c3",
+      "bytes": 16799
+    },
+    "repositoryRevision": {
+      "commit": "3dc454418c28856682a52a22874affe708382fb2",
+      "vcs": "git"
+    },
+    "implementation": {
+      "hash": "sha256:b5808ce7b259cd1dfee0083296f6d0e6ed14b54ea0edbfd129945c233c373c05",
+      "files": 2,
+      "bytes": 18952
+    }
+  }
+}

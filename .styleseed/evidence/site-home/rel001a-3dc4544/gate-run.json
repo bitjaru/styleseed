@@ -1,0 +1,56 @@
+{
+  "artifactId": "site-home",
+  "bundleBytes": 18481,
+  "bundleHash": "sha256:30ba34dcde03f20500b0b5f1c5c2644b4d9de8e91417f327faab261619528c6f",
+  "bundlePath": ".styleseed/bundles/site-home.md",
+  "gates": {
+    "code": {
+      "attached": true,
+      "reportBytes": 875,
+      "reportPath": ".styleseed/evidence/site-home/rel001a-3dc4544/code.json",
+      "reportSha256": "sha256:4864ad36421bd8ed6f5622650785339491a39944fefb7ad735cb7911a6907611"
+    },
+    "deterministic": {
+      "attached": true,
+      "reportBytes": 7080,
+      "reportPath": ".styleseed/evidence/site-home/rel001a-3dc4544/deterministic.json",
+      "reportSha256": "sha256:bc6553395b5d0d646a942d221b3d1df13239647ecb339c7c0338b4ed18e494d4"
+    },
+    "human": {
+      "attached": false,
+      "reportBytes": null,
+      "reportPath": null,
+      "reportSha256": null
+    },
+    "temporal": {
+      "attached": true,
+      "reportPath": ".styleseed/evidence/site-home/rel001a-3dc4544/temporal.json",
+      "reportSha256": "sha256:7f9618da6b94b493105d0276ba3e4840d34c82e6af9ca13ba92e083a06455fa4",
+      "reportBytes": 685
+    },
+    "visual": {
+      "attached": true,
+      "reportBytes": 1618,
+      "reportPath": ".styleseed/evidence/site-home/rel001a-3dc4544/visual.json",
+      "reportSha256": "sha256:d9d25fa43d075a4579c9a5a60999d5c2065db82149f1c138e3c2144fbf11eb30"
+    }
+  },
+  "implementation": {
+    "inventoryHash": "sha256:be8a2f6508d8286d200aeb24be36133e256f1754a1aea39edac16fb5861dee47",
+    "sourceRoots": [
+      "demo-pricing/app/page.tsx",
+      "demo-pricing/app/_home",
+      "demo-pricing/app/globals.css",
+      "demo-pricing/content/competitor-source.json"
+    ]
+  },
+  "manifestPath": ".styleseed/manifests/site-home.json",
+  "methodHash": "sha256:7118dddce1e2851c88c981a7b0214953a7c929e973889837eeafa8ed08373394",
+  "repositoryRevision": {
+    "commit": "3dc454418c28856682a52a22874affe708382fb2",
+    "vcs": "git"
+  },
+  "runId": "rel001a-3dc4544",
+  "schemaVersion": 1,
+  "validationHash": "sha256:0ec7d75ee76c479b1107717acb8ae8411fdb1dfaeab57d3a8b8b3e098c7ee3de"
+}

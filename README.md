@@ -728,6 +728,7 @@ Yes. The engine is brand-agnostic. Pick any skin, swap the brand color, ship.
 ## Documentation
 
 Full docs in the **[Wiki](../../wiki)** — design rules reference, composition recipes, chart guides, skills reference.
+Where the project is headed: **[ROADMAP.md](ROADMAP.md)**.
 
 ## Field notes — the thinking behind the rules
 

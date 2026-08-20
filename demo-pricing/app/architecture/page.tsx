@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import versionInfo from "../../public/version.json";
 
 const BASE = "https://styleseed-demo.vercel.app";
+const ENGINE_SERIES = `v${versionInfo.version.split(".")[0]}`;
 const DESCRIPTION =
   "How StyleSeed compiles directed concepts, grammar, morphology, semantic color, and interaction plans; verifies the result; preserves caller-attested lessons locally; and updates the exact engine revision without overwriting project decisions.";
 
@@ -24,7 +26,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "article",
     url: `${BASE}/architecture`,
-    title: "StyleSeed v4.0 engine architecture",
+    title: `StyleSeed ${ENGINE_SERIES} engine architecture`,
     description: DESCRIPTION,
     siteName: "StyleSeed",
     images: [
@@ -32,13 +34,13 @@ export const metadata: Metadata = {
         url: `${BASE}/og/styleseed-og.png`,
         width: 1200,
         height: 630,
-        alt: "StyleSeed v4.0 creative direction, semantic palette, interaction, media, and context compiler architecture diagram",
+        alt: `StyleSeed ${ENGINE_SERIES} creative direction, semantic palette, interaction, media, and context compiler architecture diagram`,
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "StyleSeed v4.0 engine architecture",
+    title: `StyleSeed ${ENGINE_SERIES} engine architecture`,
     description: DESCRIPTION,
     images: [`${BASE}/og/styleseed-og.png`],
   },
@@ -67,11 +69,11 @@ export default function ArchitecturePage() {
         "@type": "TechArticle",
         "@id": `${BASE}/architecture#page`,
         url: `${BASE}/architecture`,
-        headline: "StyleSeed v4.0 engine architecture",
+        headline: `StyleSeed ${ENGINE_SERIES} engine architecture`,
         description: DESCRIPTION,
         image: `${BASE}/styleseed-architecture.svg`,
         datePublished: "2026-07-18",
-        dateModified: "2026-08-12",
+        dateModified: versionInfo.revisionReleased ?? versionInfo.released,
         author: { "@type": "Organization", name: "StyleSeed", url: BASE },
         isPartOf: { "@id": `${BASE}/#website` },
         about: [
@@ -114,7 +116,7 @@ export default function ArchitecturePage() {
           <ArrowLeft size={14} /> Home
         </Link>
         <div className="mt-12 max-w-3xl">
-          <div className="text-[11px] font-bold uppercase tracking-widest text-violet-600">Engine architecture · v4.0</div>
+          <div className="text-[11px] font-bold uppercase tracking-widest text-violet-600">Engine architecture · {ENGINE_SERIES}</div>
           <h1 className="mt-3 text-[clamp(38px,6vw,64px)] font-bold leading-[1.03] tracking-tight">
             Fixed judgment.<br />Multiple design languages.
           </h1>
@@ -128,7 +130,7 @@ export default function ArchitecturePage() {
             manifest before the right renderer takes over. After a person accepts a correction,
             <code> ss-learn</code> can preserve a generalized local candidate without turning it into
             authority. The exact <code>engineRevision</code> makes later fixes detectable even when
-            the release line still says 4.0.0.
+            the semantic version has not changed.
           </p>
         </div>
 

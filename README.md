@@ -783,7 +783,7 @@ Already using StyleSeed? Check the exact rule/skill revision first:
 ```
 
 `ss-update` compares the installed `engineRevision`, the revision recorded in
-`.styleseed/manifest.json`, and the published revision. A matching `4.0.0` version alone is not
+`.styleseed/manifest.json`, and the published revision. A matching semantic version alone is not
 enough. Refresh through the original install channel, then re-resolve and inspect the bundle diff.
 
 **Preserved by the update contract:** `STYLESEED.md`, app code, tokens, assets, customized

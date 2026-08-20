@@ -76,7 +76,7 @@ const FAQ: { q: string; a: string }[] = [
     a: "No automatic upload exists. The repository-only learning contract rejects project code, prompt text, screenshots, URLs, local paths, brand tokens, and arbitrary extra fields. Its scanner is a guardrail, not an anonymization guarantee, so review the exact package before exposure. The development bridge stays disabled until a host-owned proof adapter is verified; enabling it would reveal one exact approved package to the connected client and model after a one-time grant.",
   },
   {
-    q: "Why can $ss-update find an update when the version is still 4.0.0?",
+    q: "Why can $ss-update find an update when the semantic version has not changed?",
     a: "StyleSeed tracks both engineVersion and engineRevision. The version names the release line; the revision hashes the exact maintained method, 23 skills, plugin boundary, and palette engine. $ss-update compares installed, project-recorded, and published revisions, then refreshes the engine and re-resolves the project lock without replacing project-owned code or design decisions.",
   },
   {

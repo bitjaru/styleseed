@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import versionInfo from "../public/version.json";
 import "./globals.css";
 
 const inter = Inter({
@@ -115,12 +116,12 @@ export default function RootLayout({
         operatingSystem: "Web",
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
         license: "https://opensource.org/licenses/MIT",
-        softwareVersion: "4.0.0",
+        softwareVersion: versionInfo.version,
         programmingLanguage: ["Markdown", "TypeScript", "React", "Python"],
         codeRepository: "https://github.com/bitjaru/styleseed",
         publisher: { "@id": `${SITE_URL}/#organization` },
         isPartOf: { "@id": `${SITE_URL}/#website` },
-        dateModified: "2026-08-12",
+        dateModified: versionInfo.revisionReleased ?? versionInfo.released,
         keywords:
           "design method for AI, Claude Code, Cursor, Codex, output grammars, semantic palette, interaction design, private local learning, revision-safe updates, reference compiler, AI UI, vibe coding, design judgment",
         sameAs: SAME_AS,

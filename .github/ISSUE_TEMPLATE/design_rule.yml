@@ -1,7 +1,7 @@
 name: "💡 Propose a design rule"
 description: "Teach everyone's AI a pattern you found — a decision + why it works."
 title: "[Rule] "
-labels: ["design-rule"]
+labels: ["enhancement"]
 body:
   - type: markdown
     attributes:
@@ -43,6 +43,14 @@ body:
         ❌ <p class="text-[32px]">3.8<span class="text-[32px]">M</span></p>
     validations:
       required: false
+  - type: textarea
+    id: counterexample
+    attributes:
+      label: Counterexample or boundary
+      description: Where should this rule not apply? Name a surface, product job, or accessibility constraint.
+      placeholder: "Do not apply this ratio inside dense data tables where row height is the governing constraint."
+    validations:
+      required: true
   - type: input
     id: source
     attributes:

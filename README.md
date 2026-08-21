@@ -42,6 +42,10 @@ StyleSeed handles the design lock, build, code gate, and visual check. No design
 
 [Claude Code guide](https://styleseed-demo.vercel.app/claude-code-ui-design) · [Codex guide](https://styleseed-demo.vercel.app/codex-ui-design) · [See examples](https://styleseed-demo.vercel.app/showcase) · [Need help?](#troubleshooting--i-applied-styleseed-but-the-ui-still-looks-bad)
 
+> **Want a first PR?** Fix a doc, add a regression fixture, improve a skin, or claim a
+> [`good first issue`](https://github.com/bitjaru/styleseed/issues?q=is%3Aissue%20is%3Aopen%20label%3A%22good%20first%20issue%22).
+> Small docs and test fixes need no proposal. See the [15-minute contribution path](CONTRIBUTING.md#first-pr-in-about-15-minutes).
+
 ## What it bans on sight
 
 The "AI-generated look" isn't bad luck — it's a list of nameable tells. StyleSeed ships **74 rules** that ban them, and a **0–100 scored gate** that tells an installed agent to revise screens below 80 before presentation. The gate is enforced when the StyleSeed build workflow is actually invoked; a markdown file alone cannot block delivery.

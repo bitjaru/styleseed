@@ -42,6 +42,10 @@ StyleSeed가 디자인 락, 빌드, 코드 검사, 실제 화면 검증을 진�
 
 [Claude Code 가이드](https://styleseed-demo.vercel.app/claude-code-ui-design) · [Codex 가이드](https://styleseed-demo.vercel.app/codex-ui-design) · [결과물 예시](https://styleseed-demo.vercel.app/showcase) · [상세 사용법](#상세-사용법)
 
+> **첫 PR을 올리고 싶나요?** 문서 수정, 회귀 테스트 fixture, 스킨 개선부터 시작하거나
+> [`good first issue`](https://github.com/bitjaru/styleseed/issues?q=is%3Aissue%20is%3Aopen%20label%3A%22good%20first%20issue%22)를 맡아주세요.
+> 작은 문서·테스트 수정은 사전 제안이 필요 없습니다. [15분 기여 가이드](CONTRIBUTING.md#first-pr-in-about-15-minutes)를 참고하세요.
+
 ## 보자마자 금지하는 것들
 
 "AI가 만든 티"는 운이 나쁜 게 아니라 — **이름 붙일 수 있는 패턴의 목록**입니다. StyleSeed는 그걸 금지하는 **74개 룰**과, 설치된 빌드 워크플로가 80점 미만 화면을 표시 전에 수정하도록 지시하는 **0–100 채점 게이트**를 함께 제공합니다. 마크다운 파일만으로 배포를 물리적으로 차단하는 것은 아닙니다.

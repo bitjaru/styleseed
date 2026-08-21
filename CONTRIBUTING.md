@@ -1,169 +1,166 @@
 # Contributing to StyleSeed
 
-Thank you for your interest in contributing! StyleSeed is a **living judgment framework** — its
-core value is the design *rules and the reasoning behind them*, and that ecosystem grows when the
-people who use it propose what they've learned. If you found a pattern that reliably makes UI look
-better, teach it to everyone's AI by proposing it as a rule.
+StyleSeed grows when users turn a repeatable design decision, regression, example, or integration
+lesson into something the next person can reuse. You do not need to understand the whole engine to
+make a useful contribution.
 
-## Ways to Contribute
+## Start with a PR you can finish
 
-### 1. Propose a Design Rule (the heart of StyleSeed) ⭐
+- Browse [`good first issue`](https://github.com/bitjaru/styleseed/issues?q=is%3Aissue%20is%3Aopen%20label%3A%22good%20first%20issue%22)
+  for bounded tasks with an expected file and check.
+- Small documentation, typo, broken-link, and test-fixture fixes can go straight to a PR. No proposal
+  issue is required.
+- Comment on an issue before starting larger work so two people do not solve the same problem.
+- Open a proposal issue before changing the core design canon, adding a grammar or adapter, or
+  changing a public contract.
 
-This is the most valuable thing you can add. StyleSeed's rules (`engine/DESIGN-LANGUAGE.md`,
-`engine/VISUAL-CRAFT.md`) are what teach an AI *judgment*. A good rule isn't an opinion — it's a
-**decision + the reason it works**, written so a model can apply it.
+If you are unsure where to start, a documentation correction or regression fixture is a complete
+contribution—not a lesser one.
 
-**Every rule follows the same shape — Decision → Rule → Why → (Source):**
+## First PR in about 15 minutes
+
+Requirements: Git, Node.js 22, and npm.
+
+```bash
+git clone https://github.com/<your-name>/styleseed.git
+cd styleseed
+git checkout -b docs/clear-install-example
+```
+
+Make one bounded change, then run the smallest relevant check from the table below. Every PR should
+also pass:
+
+```bash
+git diff --check
+```
+
+Push your branch and open a PR. The template asks for the command you ran and, for visual changes, a
+current screenshot. CI runs the complete suite.
+
+AI-assisted contributions are welcome. The human submitter is still responsible for reading the
+diff, running the stated checks, and removing invented paths or claims.
+
+## Contribution lanes
+
+| Lane | Good first contribution | Source of truth | Minimum local check |
+|---|---|---|---|
+| Docs, examples, translation | Correct a stale path, add one real setup example, improve Korean or English copy | `README*.md`, `docs/`, maintained files in `demo-pricing/` | `git diff --check` |
+| Regression fixture | Reproduce one resolver, registry, evidence, or update bug | `scripts/runtime-tests/` | `node --test scripts/runtime-tests/*.test.mjs` |
+| Design rule | Add a specific decision with rationale, do/don't evidence, and counterexample | `engine/DESIGN-LANGUAGE.md` or `engine/VISUAL-CRAFT.md` | `node scripts/validate-engine.mjs` |
+| Palette recipe | Improve a maintained palette posture or add validation coverage | `engine/color/palettes.json`, `scripts/validate-palettes.mjs` | `node scripts/validate-palettes.mjs` |
+| Skin | Add an original `skin.json` + `theme.css`, without protected assets or a product clone | `skins/<id>/` | `npm run build --prefix demo-pricing` |
+| Component or pattern | Fix semantics, states, accessibility, or recipe consumption | `engine/components/` | engine checks + demo build |
+| Agent skill | Fix one workflow or cross-agent contract | `engine/.claude/skills/` | skill checks below |
+| Grammar or adapter | Propose a new product job or render target with evidence and conformance cases | proposal issue first | agreed in the issue |
+
+Do not edit `skills/` directly. `engine/.claude/skills/` is the canonical skill source; `skills/`
+and public registry files are generated mirrors.
+
+## Propose a design rule
+
+This is the core community contribution. A mergeable rule is a decision the agent can apply, not a
+taste claim.
 
 ```markdown
-## NN. Short Rule Name
+## Short rule name
 
-**Rule:** <the imperative, with numbers> — e.g. "Numbers are 2:1 with their unit
-(48px value over a 24px unit)."
-
-**Why it works:** <the principle/reasoning a model can reuse> — e.g. "The eye locks
-onto magnitude first; equal sizes flatten the value into noise."
-
-**Do / Don't:** a minimal good example and the common failure it replaces.
-
-**Source (optional but loved):** the research or product that backs it (Refactoring UI,
-Material 3, Apple HIG, WCAG, a named app…).
+**Rule:** State one imperative, with a measurable boundary where possible.
+**Why it works:** Explain the reusable design reasoning.
+**Do / Don't:** Show the successful case and the failure it replaces.
+**Evidence:** Link a primary source, rendered comparison, or reproducible example.
+**Counterexample:** Name a context where the rule should not apply.
 ```
 
-**What makes a rule mergeable:**
+Before writing the PR, open a
+[`Propose a design rule`](https://github.com/bitjaru/styleseed/issues/new?template=design_rule.yml)
+issue. Rules that change the core canon need applicability and counterexamples because a universal
+instruction can improve one surface while damaging another.
 
-- [ ] It's a **decision**, not a preference ("use one accent," not "blue is nice").
-- [ ] It states **why** — the reasoning is the payload an AI repeats.
-- [ ] It's **specific and testable** (numbers, ratios, a clear do/don't) — vague rules don't change output.
-- [ ] It's **brand-agnostic** — a rule about layout/hierarchy/rhythm, not one skin's colors.
-- [ ] It doesn't contradict the 11 Golden Rules (`engine/CLAUDE.md`); refinements within them are welcome.
-- [ ] Bonus: a real source. Sourced rules build trust with humans *and* models.
+## Add a skin
 
-**How to submit:** open a **"Propose a design rule"** issue (uses the template) to discuss, or send a
-PR adding it to `engine/DESIGN-LANGUAGE.md` (visual/layout rules) or `engine/VISUAL-CRAFT.md` (craft &
-coherence). Append it, bump the count in the README/llms.txt, and we'll review the reasoning together.
+A skin changes token material; it does not copy a company's protected assets or layout. Start from
+an existing two-file skin:
 
-### 2. Create a New Seed (Most Impactful for visual range)
-
-Each seed is a complete design language that AI coding tools can follow. The more seeds we have, the more design styles developers can choose from.
-
-#### Quick Start: Use Claude Code to Create a Seed
-
-The fastest way to create a new seed is to use Claude Code itself:
-
-1. **Copy the template:**
-   ```bash
-   cp -r seeds/_template seeds/your-style-name
-   ```
-
-2. **Open Claude Code** in the `seeds/your-style-name/` directory
-
-3. **Tell Claude:**
-   ```
-   Look at seeds/toss/ as a reference implementation. 
-   Create a [Your Style]-style design language following the same structure.
-   
-   Style characteristics:
-   - [Describe the visual style you want]
-   - [Key color palette]
-   - [Typography preferences]
-   - [Layout patterns]
-   ```
-
-4. **Claude Code will generate:**
-   - `DESIGN-LANGUAGE.md` — Visual design rules for your style
-   - `tokens/` — Color palettes, typography scale, spacing, shadows
-   - `css/theme.css` — Tailwind CSS v4 implementation
-   - Adjusted pattern components matching your style
-
-5. **Review and iterate** — Test by building a sample page with the seed
-
-6. **Submit a PR** with your new seed
-
-#### Seed Quality Checklist
-
-- [ ] `DESIGN-LANGUAGE.md` has 500+ lines of specific, actionable design rules
-- [ ] `CLAUDE.md` provides clear guidance for AI code generation
-- [ ] `tokens/` has all 6 token files (colors, typography, spacing, radii, shadows, motion)
-- [ ] `css/theme.css` implements all tokens as CSS custom properties
-- [ ] Light and dark mode are both supported
-- [ ] At least 5 pattern components are included or adapted
-- [ ] No brand-specific content (use generic examples like "Acme Corp")
-- [ ] Skills are present and reference the correct file paths
-
-#### Naming Convention
-
-- Use lowercase, single-word names: `toss`, `apple`, `linear`, `stripe`
-- If multi-word is necessary, use hyphens: `material-you`
-
-### 2. Improve an Existing Seed
-
-- Fix design inconsistencies
-- Add missing pattern components
-- Improve design language rules (more specific = better AI output)
-- Add accessibility rules
-- Fix dark mode issues
-- Improve UX skills
-
-### 3. Add Components
-
-- New pattern components that work across seeds
-- Additional UI primitives (following shadcn/ui conventions)
-- Utility functions
-
-### 4. Documentation
-
-- Fix typos or unclear explanations
-- Add examples and usage patterns
-- Translate documentation
-
-## Seed Structure
-
-Every seed must follow this structure:
-
-```
-seeds/your-style/
-├── README.md              # Seed overview and setup instructions
-├── CLAUDE.md              # AI integration guide (Claude Code reads this)
-├── DESIGN-LANGUAGE.md     # Visual design rules (the core value)
-├── .claude/skills/        # Canonical agent skills (Claude /ss-*, Codex $ss-*)
-├── tokens/                # JSON design tokens
-│   ├── colors.json
-│   ├── typography.json
-│   ├── spacing.json
-│   ├── radii.json
-│   ├── shadows.json
-│   └── motion.json
-├── css/
-│   ├── theme.css          # CSS custom properties + Tailwind theme
-│   ├── base.css           # Element defaults
-│   ├── fonts.css          # Font imports
-│   └── index.css          # Entry point
-├── components/
-│   ├── ui/                # Primitives (can reuse from toss seed)
-│   └── patterns/          # Style-specific pattern components
-├── utils/
-├── icons/
-└── scaffold/              # New project template
+```bash
+mkdir skins/your-skin
+cp skins/arc/skin.json skins/your-skin/skin.json
+cp skins/arc/theme.css skins/your-skin/theme.css
 ```
 
-## Code Style
+Update the metadata and tokens, run the demo build, and attach a screenshot of the current output to
+the PR. If the change also alters geometry, component choice, or containment, it may belong in a
+brand recipe rather than a skin—open an issue before expanding the scope.
 
-- **Components**: Use `function` declarations, `data-slot` attributes, `cn()` for classes
-- **TypeScript**: Strict mode, `React.ComponentProps<>` for props
-- **CSS**: Semantic tokens only (no hardcoded hex in components)
-- **Tailwind**: Use utility classes, avoid arbitrary values where tokens exist
+## Checks by change type
 
-## Pull Request Process
+### Engine, rule, palette, component, or registry
 
-1. Fork the repo and create a branch (`feat/new-seed-name` or `fix/description`)
-2. Make your changes
-3. Test with Claude Code — build a sample page to verify AI output quality
-4. Submit a PR with:
-   - Description of the seed's design philosophy
-   - Screenshot of a page built with the seed
-   - Any known limitations
+```bash
+node demo-pricing/scripts/build-llms.mjs
+node scripts/validate-palettes.mjs
+node scripts/validate-engine.mjs
+git diff --check
+```
 
-## Questions?
+Run the runtime tests when behavior changes:
 
-Open an issue or start a discussion. We're happy to help!
+```bash
+node --test scripts/runtime-tests/*.test.mjs
+```
+
+### Agent skills
+
+```bash
+node demo-pricing/scripts/build-llms.mjs
+node scripts/validate-skill-contracts.mjs
+node scripts/test-router-contract.mjs
+node scripts/build-plugin-packages.mjs --clean
+node scripts/validate-plugin-packages.mjs
+git diff --check
+```
+
+### Demo, skin, or renderable UI
+
+```bash
+npm ci --prefix demo-pricing
+npm run build --prefix demo-pricing
+git diff --check
+```
+
+The demo build fetches Google Fonts and may require network access. A green build is not a visual
+pass: inspect the affected route and attach a current screenshot when pixels changed.
+
+## Generated files
+
+Edit maintained sources in `engine/`, `skins/`, or the relevant demo content. Then run:
+
+```bash
+node demo-pricing/scripts/build-llms.mjs
+```
+
+That command refreshes the public registry, context catalog, skin bundle, engine mirrors, plugin
+skill mirror, and LLM indexes. Commit the resulting generated changes with their source change. CI
+fails when generated output drifts.
+
+## Pull request boundaries
+
+- Keep one concern per PR. A rule change, tooling refactor, and compatibility fix should not arrive
+  as one review unit.
+- Link the issue when the work was scoped in one.
+- Include the exact commands you ran and their result.
+- Include before/after screenshots for a visual change and describe what to inspect.
+- Do not change `engine/VERSION`, `CHANGELOG.md`, release manifests, or deployment files unless the
+  maintainer explicitly requested release work.
+- Do not include secrets, private project material, copyrighted assets, or trademarked product
+  clones.
+
+The maintainer may ask to split a useful PR when its parts have different evidence or review needs.
+That is a scope decision, not a rejection of the contribution.
+
+## Recognition
+
+Merged PR authors appear in GitHub's contributor history. User-facing contributions are credited in
+the relevant release notes, and reusable examples may be linked from the showcase or documentation.
+
+All participation follows the [Code of Conduct](CODE_OF_CONDUCT.md), and contributions are licensed
+under the repository's [MIT License](LICENSE).

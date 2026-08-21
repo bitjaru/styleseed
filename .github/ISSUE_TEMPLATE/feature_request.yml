@@ -1,12 +1,13 @@
-name: 💡 Feature / rule / skin request
-description: Suggest a new design rule, component, motion keyword, skin, or skill
+name: 💡 Feature or integration request
+description: Suggest a product capability, integration, component, skin, or agent workflow
+title: "[Request] "
 labels: ["enhancement"]
 body:
   - type: textarea
     id: idea
     attributes:
       label: What would you like to see?
-      description: A new design rule, component, motion move, brand skin, or /ss-* skill.
+      description: A capability, integration, component, motion move, skin, adapter, or /ss-* skill.
       placeholder: A `toggle-fold` motion keyword that ...
     validations:
       required: true
@@ -22,11 +23,15 @@ body:
     attributes:
       label: Type
       options:
-        - Design rule
+        - Product workflow
+        - Integration / install channel
         - Component / pattern
         - Motion (seed / keyword move)
-        - Brand skin
+        - Skin / palette / brand recipe
+        - Grammar / adapter
         - Skill (/ss-*)
+        - Evidence / verification
+        - Documentation / example
         - Other
     validations:
       required: true

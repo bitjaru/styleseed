@@ -1,5 +1,6 @@
 name: 🐛 Bug report
-description: Something in the engine, components, skins, or skills isn't working
+description: Something in the engine, package, components, skins, or skills isn't working
+title: "[Bug] "
 labels: ["bug"]
 body:
   - type: markdown
@@ -18,7 +19,7 @@ body:
     attributes:
       label: Steps to reproduce
       placeholder: |
-        1. Copy engine into a Vite + React 18 project
+        1. Install with `npx skills add bitjaru/styleseed`
         2. Run ...
         3. See error
     validations:
@@ -30,8 +31,11 @@ body:
       options:
         - Components / patterns
         - Skins / theme.css
-        - Motion (seeds / keyword moves)
+        - Motion (personality seeds / keyword moves)
         - Skills (/ss-*)
+        - Resolver / project registry / update
+        - Codex or Claude package
+        - Evidence gate
         - Design rules / docs
         - Setup / install
         - Other
@@ -41,7 +45,7 @@ body:
     id: env
     attributes:
       label: Environment
-      placeholder: React 18, Tailwind v4, Vite 6, Claude Code / Cursor, OS
+      placeholder: StyleSeed version or revision, agent + version, framework, OS
   - type: textarea
     id: extra
     attributes:

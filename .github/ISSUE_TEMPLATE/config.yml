@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Setup and troubleshooting
+    url: https://styleseed-demo.vercel.app/faq
+    about: Check install, agent, update, and verification answers before filing a bug.
+  - name: Security report
+    url: https://github.com/bitjaru/styleseed/security/policy
+    about: Report vulnerabilities privately instead of opening a public issue.

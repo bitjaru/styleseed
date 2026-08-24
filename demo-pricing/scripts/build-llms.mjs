@@ -2,8 +2,9 @@ import { readFileSync, writeFileSync, readdirSync, mkdirSync, statSync, existsSy
 import { resolve, dirname, basename } from 'node:path'
 import { createHash } from 'node:crypto'
 import { spawnSync } from 'node:child_process'
+import { fileURLToPath } from 'node:url'
 
-const here = dirname(new URL(import.meta.url).pathname)
+const here = dirname(fileURLToPath(import.meta.url))
 const root = resolve(here, '..')
 const engineDir = resolve(root, '../engine')
 const skillsDir = resolve(engineDir, '.claude/skills')

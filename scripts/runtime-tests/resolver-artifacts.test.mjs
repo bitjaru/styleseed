@@ -5,8 +5,9 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
+import { fileURLToPath } from "node:url";
 
-const repoRoot = resolve(new URL("../../", import.meta.url).pathname);
+const repoRoot = resolve(fileURLToPath(new URL("../../", import.meta.url)));
 const resolver = resolve(repoRoot, "engine/.claude/skills/ss-resolve/scripts/resolve-context.mjs");
 
 function makeRoot(prefix) {

@@ -2,8 +2,9 @@
 import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const root = resolve(new URL("..", import.meta.url).pathname);
+const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const catalog = JSON.parse(readFileSync(resolve(root, "engine/.claude/skills/ss-resolve/references/catalog.json"), "utf8"));
 const coreFiles = catalog.distributions.core.files.map((file) => file.path);
 assert.equal(coreFiles.some((path) => /ss-learn|learning|mcp/i.test(path)), false, "core distribution contains learning or MCP paths");

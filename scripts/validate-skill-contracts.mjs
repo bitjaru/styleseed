@@ -2,8 +2,9 @@
 
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const root = resolve(new URL("../", import.meta.url).pathname);
+const root = resolve(fileURLToPath(new URL("../", import.meta.url)));
 const matrixPath = resolve(root, "engine/skill-contracts.json");
 const matrix = JSON.parse(readFileSync(matrixPath, "utf8"));
 const levels = new Set(matrix.evidenceLevels);

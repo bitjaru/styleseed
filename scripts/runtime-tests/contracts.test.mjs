@@ -4,6 +4,7 @@ import { mkdtempSync, mkdirSync, readFileSync, realpathSync, rmSync, symlinkSync
 import { spawnSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import {
   CONTRACT_ENUMS,
   canonicalJson,
@@ -15,7 +16,7 @@ import {
   sha256,
 } from "../../engine/.claude/skills/ss-resolve/scripts/runtime-contract.mjs";
 
-const repoRoot = resolve(new URL("../../", import.meta.url).pathname);
+const repoRoot = resolve(fileURLToPath(new URL("../../", import.meta.url)));
 const references = resolve(repoRoot, "engine/.claude/skills/ss-resolve/references");
 const catalog = JSON.parse(readFileSync(resolve(references, "catalog.json"), "utf8"));
 const projectSchema = JSON.parse(readFileSync(resolve(references, "project.schema.json"), "utf8"));

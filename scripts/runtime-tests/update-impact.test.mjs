@@ -5,9 +5,10 @@ import { createHash } from "node:crypto";
 import { mkdtempSync, mkdirSync, cpSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
 const artifactImpactModule = import("../../engine/.claude/skills/ss-update/scripts/artifact-impact.mjs");
-const repoRoot = resolve(new URL("../../", import.meta.url).pathname);
+const repoRoot = resolve(fileURLToPath(new URL("../../", import.meta.url)));
 const resolver = resolve(repoRoot, "engine/.claude/skills/ss-resolve/scripts/resolve-context.mjs");
 const updateChecker = resolve(repoRoot, "engine/.claude/skills/ss-update/scripts/check-update.mjs");
 

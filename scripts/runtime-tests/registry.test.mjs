@@ -4,9 +4,10 @@ import { existsSync, mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync
 import { spawnSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { loadArtifactConfig, loadProjectRegistry } from "../../engine/.claude/skills/ss-resolve/scripts/project-registry.mjs";
 
-const repoRoot = resolve(new URL("../../", import.meta.url).pathname);
+const repoRoot = resolve(fileURLToPath(new URL("../../", import.meta.url)));
 const migrateScript = resolve(repoRoot, "engine/.claude/skills/ss-resolve/scripts/migrate-project.mjs");
 
 function fixtureRoot() {

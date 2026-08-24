@@ -12,6 +12,7 @@ import {
   renameSync,
 } from "node:fs";
 import { resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import {
   containedRegularFile,
   GATES,
@@ -336,4 +337,4 @@ async function main() {
   if (!result.ok) process.exitCode = 1;
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) main().catch((error) => { console.error(`evidence gate: ${error.message}`); process.exitCode = 1; });
+if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import.meta.url))) main().catch((error) => { console.error(`evidence gate: ${error.message}`); process.exitCode = 1; });

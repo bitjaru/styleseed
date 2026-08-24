@@ -1,8 +1,9 @@
 import { mkdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
 
-const here = dirname(new URL(import.meta.url).pathname);
+const here = dirname(fileURLToPath(import.meta.url));
 const root = resolve(here, "..");
 const output = resolve(root, "scripts/captures/palettes");
 const baseUrl = process.env.STYLESEED_CAPTURE_URL || "http://127.0.0.1:4177";

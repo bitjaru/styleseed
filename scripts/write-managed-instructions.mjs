@@ -8,6 +8,7 @@ import {
   renameSync,
 } from "node:fs";
 import { resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
 const BEGIN = "<!-- STYLESEED:MANAGED:BEGIN -->";
 const END = "<!-- STYLESEED:MANAGED:END -->";
@@ -84,6 +85,6 @@ function main() {
   console.log(JSON.stringify(result, null, 2));
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === resolve(new URL(import.meta.url).pathname)) {
+if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import.meta.url))) {
   try { main(); } catch (error) { console.error(`managed instructions: ${error.message}`); process.exitCode = 2; }
 }

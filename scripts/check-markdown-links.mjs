@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { existsSync, readdirSync, readFileSync } from "node:fs";
-import { dirname, relative, resolve } from "node:path";
+import { dirname, isAbsolute, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
@@ -21,8 +21,11 @@ function collectMarkdownFiles(directory) {
   }
 
   const files = [];
+  const entries = readdirSync(directory, { withFileTypes: true }).sort((a, b) =>
+    a.name.localeCompare(b.name),
+  );
 
-  for (const entry of readdirSync(directory, { withFileTypes: true })) {
+  for (const entry of entries) {
     const filePath = resolve(directory, entry.name);
 
     if (entry.isDirectory()) {
@@ -47,9 +50,7 @@ function getMarkdownFiles(repositoryRoot) {
   }
 
   for (const directory of scanDirectories) {
-    files.push(
-      ...collectMarkdownFiles(resolve(repositoryRoot, directory))
-    );
+    files.push(...collectMarkdownFiles(resolve(repositoryRoot, directory)));
   }
 
   return files;
@@ -58,8 +59,8 @@ function getMarkdownFiles(repositoryRoot) {
 function isIgnoredTarget(target) {
   return (
     target.startsWith("#") ||
-    /^https?:\/\//iu.test(target) ||
-    /^mailto:/iu.test(target)
+    target.startsWith("//") ||
+    /^[a-z][a-z0-9+.-]*:/iu.test(target)
   );
 }
 
@@ -96,8 +97,7 @@ function extractMarkdownLinks(content) {
       continue;
     }
 
-    const linkPattern =
-      /!?\[[^\]]*\]\(\s*(?:<([^>]+)>|([^\s)]+))/gu;
+    const linkPattern = /!?\[[^\]]*\]\(\s*(?:<([^>]+)>|([^\s)]+))/gu;
 
     let match;
 
@@ -121,7 +121,6 @@ function resolveTarget(sourceFile, target, repositoryRoot) {
 
   const decodedTarget = decodeURIComponent(localTarget);
 
-  // A leading slash is treated as repository-root-relative.
   if (decodedTarget.startsWith("/")) {
     return resolve(repositoryRoot, `.${decodedTarget}`);
   }
@@ -140,20 +139,22 @@ export function checkMarkdownLinks(repositoryRoot = root) {
         continue;
       }
 
-      const targetPath = resolveTarget(
-        sourceFile,
-        link.target,
-        repositoryRoot
-      );
+      const targetPath = resolveTarget(sourceFile, link.target, repositoryRoot);
 
       if (!targetPath) {
         continue;
       }
-const relativeTarget = relative(repositoryRoot, targetPath);
 
-if (relativeTarget.startsWith("..")) {
-  continue;
-}
+      const relativeTarget = relative(repositoryRoot, targetPath);
+      const isOutsideRepository =
+        relativeTarget === ".." ||
+        relativeTarget.startsWith(`..${sep}`) ||
+        isAbsolute(relativeTarget);
+
+      if (isOutsideRepository) {
+        continue;
+      }
+
       if (!existsSync(targetPath)) {
         errors.push({
           file: relative(repositoryRoot, sourceFile),
@@ -178,9 +179,7 @@ if (isMain) {
     console.error("Broken Markdown links found:");
 
     for (const error of errors) {
-      console.error(
-        `  ${error.file}:${error.line} -> ${error.target}`
-      );
+      console.error(`  ${error.file}:${error.line} -> ${error.target}`);
     }
 
     process.exit(1);

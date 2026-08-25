@@ -175,6 +175,38 @@ above; for Korean UI, run them as the checklist:
 
 ---
 
+## §W9 — Korean mixed-script examples
+
+Use these when Hangul, Latin product or plan names, numerals, money, percentages, and units share
+one UI string. They apply to product UI, pricing, status, and CTA copy where the user needs to scan
+the value quickly. Counterexample: legal, billing, medical, or government copy may need the official
+term, full product name, or policy wording even when a shorter UI phrase would scan better.
+
+**Hangul + Latin product name**
+- **Do:** `Pro 플랜으로 업그레이드하기`
+- **Don't:** `프로 요금제 업그레이드 신청 제출`
+- **Why:** Keep the actual product or plan name if the user saw it that way elsewhere; translate the
+  surrounding action into natural Korean and make the CTA name the outcome. Toss's public writing
+  guide favors active, product-native 해요체 copy and action-specific buttons; that is useful evidence,
+  not a universal demand to copy Toss wording.
+
+**Money or percentage + tabular numerals**
+- **Do:** `이번 달 12,400원 절약했어요` / `전월보다 8% 낮아요`
+- **Don't:** `이번 달에 절약한 금액은 십이만사천원입니다` / `전월 대비 8 퍼센트만큼 감소`
+- **Why:** Arabic numerals make changing values easier to compare and should render with tabular
+  numerals in UI. In Korean, currency symbols and common unit signs can sit tight with Arabic
+  numerals in compact UI (`12,400원`, `8%`), while the sentence explains the meaning in plain Korean.
+
+**Number + unit in CTA or status**
+- **Do:** `3분 안에 끝내기` / `남은 공간 2GB`
+- **Don't:** `삼 분 이내 절차 진행` / `잔여 저장 공간: 2 기가바이트`
+- **Why:** Put the decision-making number where scanning starts, keep the unit users expect in the
+  product context, and avoid nominalized admin language. Use Korean units when they are the user's
+  mental model (`3분`); keep established technical units in Latin when that is how the product,
+  OS, or device labels them (`2GB`).
+
+---
+
 ## Sources
 
 **General UX writing:** Nielsen Norman Group (error messages, empty states, microcopy) ·
@@ -186,3 +218,8 @@ Material Design & Apple HIG (writing) · Mailchimp Content Style Guide · Shopif
 [Toss Tech — "토스 피플 #2: UX 라이팅의 새로운 기준"](https://toss.tech/article/toss-people-2) ·
 [Toss Feed — UX Writing 인터뷰](https://toss.im/tossfeed/article/uxwriter-interview) (잡초 뽑기, TDS 버튼 규칙).
 StyleSeed restates Toss's published *principles*, not its proprietary copy.
+
+**§W9 mixed Korean UI strings:** [Toss App-in-Toss UX Writing](https://developers-apps-in-toss.toss.im/design/ux-writing.html)
+(해요체, active phrasing, positive/plain wording, and exceptions) ·
+[국립국어원 온라인가나다 — 한글맞춤법 제43항 질문](https://www.korean.go.kr/front/onlineQna/onlineQnaView.do?mn_id=27&pageIndex=1&qna_seq=326727)
+(unit nouns may attach to Arabic numerals under Hangul orthography rule 43).

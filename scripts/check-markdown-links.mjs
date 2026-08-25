@@ -74,6 +74,7 @@ function extractMarkdownLinks(content) {
 
   let fenced = false;
   let fenceCharacter = null;
+  let fenceLength = 0;
 
   for (let index = 0; index < lines.length; index += 1) {
     const line = lines[index];
@@ -81,13 +82,16 @@ function extractMarkdownLinks(content) {
 
     if (fence) {
       const character = fence[1][0];
+      const length = fence[1].length;
 
       if (!fenced) {
         fenced = true;
         fenceCharacter = character;
-      } else if (character === fenceCharacter) {
+        fenceLength = length;
+      } else if (character === fenceCharacter && length >= fenceLength) {
         fenced = false;
         fenceCharacter = null;
+        fenceLength = 0;
       }
 
       continue;
@@ -119,7 +123,13 @@ function resolveTarget(sourceFile, target, repositoryRoot) {
     return null;
   }
 
-  const decodedTarget = decodeURIComponent(localTarget);
+  let decodedTarget = localTarget;
+
+  try {
+    decodedTarget = decodeURIComponent(localTarget);
+  } catch {
+    decodedTarget = localTarget;
+  }
 
   if (decodedTarget.startsWith("/")) {
     return resolve(repositoryRoot, `.${decodedTarget}`);

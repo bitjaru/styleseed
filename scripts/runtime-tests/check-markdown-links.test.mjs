@@ -9,7 +9,7 @@ function root(prefix) {
   return mkdtempSync(join(tmpdir(), prefix));
 }
 
-test("markdown link checker accepts valid local targets", () => {
+test("markdown link checker accepts valid local targets, including query strings, fragments, and root-relative links", () => {
   const projectRoot = root("styleseed-links-valid-");
   try {
     mkdirSync(join(projectRoot, "docs"), { recursive: true });
@@ -20,6 +20,7 @@ test("markdown link checker accepts valid local targets", () => {
         "[valid](docs/target.md)",
         "[query](docs/target.md?foo=bar)",
         "[fragment](docs/target.md#section)",
+        "[root relative](/docs/target.md)",
       ].join("\n"),
     );
     assert.deepEqual(checkMarkdownLinks(projectRoot), []);
@@ -28,25 +29,34 @@ test("markdown link checker accepts valid local targets", () => {
   }
 });
 
-test("markdown link checker reports missing targets with source and line", () => {
+test("markdown link checker reports missing local targets with source and line, including ones that merely start with '..'", () => {
   const projectRoot = root("styleseed-links-missing-");
   try {
     writeFileSync(
       join(projectRoot, "README.md"),
-      ["# Example", "", "[missing](docs/does-not-exist.md)"].join("\n"),
+      [
+        "# Example",
+        "",
+        "[missing](docs/does-not-exist.md)",
+        "[dotdot prefix](..missing.md)",
+      ].join("\n"),
     );
+
     const errors = checkMarkdownLinks(projectRoot);
-    assert.equal(errors.length, 1);
+
+    assert.equal(errors.length, 2);
     assert.equal(errors[0].file, "README.md");
     assert.equal(errors[0].line, 3);
     assert.equal(errors[0].target, "docs/does-not-exist.md");
+    assert.equal(errors[1].line, 4);
+    assert.equal(errors[1].target, "..missing.md");
   } finally {
     rmSync(projectRoot, { recursive: true, force: true });
   }
 });
 
-test("markdown link checker ignores external URLs and anchors", () => {
-  const projectRoot = root("styleseed-links-external-");
+test("markdown link checker ignores non-local targets: http(s), mailto, other URI schemes, network-path references, and anchors", () => {
+  const projectRoot = root("styleseed-links-nonlocal-");
   try {
     writeFileSync(
       join(projectRoot, "README.md"),
@@ -54,6 +64,8 @@ test("markdown link checker ignores external URLs and anchors", () => {
         "[GitHub](https://github.com/example/project)",
         "[HTTP](http://example.com)",
         "[Email](mailto:test@example.com)",
+        "[FTP](ftp://example.com/file.md)",
+        "[Network path](//cdn.example.com/image.png)",
         "[Anchor](#section)",
       ].join("\n"),
     );
@@ -63,7 +75,7 @@ test("markdown link checker ignores external URLs and anchors", () => {
   }
 });
 
-test("markdown link checker ignores links inside fenced code blocks", () => {
+test("markdown link checker ignores links inside fenced code blocks, respecting fence length for nested examples", () => {
   const projectRoot = root("styleseed-links-fenced-");
   try {
     mkdirSync(join(projectRoot, "docs"), { recursive: true });
@@ -76,53 +88,17 @@ test("markdown link checker ignores links inside fenced code blocks", () => {
         "```",
         "",
         "[valid](docs/target.md)",
+        "",
+        "Here's how to write a broken link example in your docs:",
+        "",
+        "````md",
+        "```",
+        "[nested example](docs/also-does-not-exist.md)",
+        "```",
+        "````",
       ].join("\n"),
     );
     assert.deepEqual(checkMarkdownLinks(projectRoot), []);
-  } finally {
-    rmSync(projectRoot, { recursive: true, force: true });
-  }
-});
-
-test("markdown link checker ignores non-http(s) URI schemes and network-path references", () => {
-  const projectRoot = root("styleseed-links-schemes-");
-  try {
-    writeFileSync(
-      join(projectRoot, "README.md"),
-      [
-        "[FTP](ftp://example.com/file.md)",
-        "[Network path](//cdn.example.com/image.png)",
-      ].join("\n"),
-    );
-    assert.deepEqual(checkMarkdownLinks(projectRoot), []);
-  } finally {
-    rmSync(projectRoot, { recursive: true, force: true });
-  }
-});
-
-test("markdown link checker still resolves single-leading-slash repository-root links", () => {
-  const projectRoot = root("styleseed-links-root-relative-");
-  try {
-    mkdirSync(join(projectRoot, "docs"), { recursive: true });
-    writeFileSync(join(projectRoot, "docs", "target.md"), "# Target\n");
-    writeFileSync(
-      join(projectRoot, "README.md"),
-      "[root relative](/docs/target.md)\n",
-    );
-    assert.deepEqual(checkMarkdownLinks(projectRoot), []);
-  } finally {
-    rmSync(projectRoot, { recursive: true, force: true });
-  }
-});
-
-test("markdown link checker reports an in-repository target that merely starts with '..'", () => {
-  const projectRoot = root("styleseed-links-dotdot-prefix-");
-  try {
-    writeFileSync(join(projectRoot, "README.md"), "[missing](..missing.md)\n");
-    const errors = checkMarkdownLinks(projectRoot);
-    assert.equal(errors.length, 1);
-    assert.equal(errors[0].file, "README.md");
-    assert.equal(errors[0].target, "..missing.md");
   } finally {
     rmSync(projectRoot, { recursive: true, force: true });
   }
@@ -133,6 +109,24 @@ test("markdown link checker ignores targets outside the repository", () => {
   try {
     writeFileSync(join(projectRoot, "README.md"), "[Wiki](../../wiki)\n");
     assert.deepEqual(checkMarkdownLinks(projectRoot), []);
+  } finally {
+    rmSync(projectRoot, { recursive: true, force: true });
+  }
+});
+
+test("markdown link checker does not crash on malformed percent-encoding in a target", () => {
+  const projectRoot = root("styleseed-links-percent-");
+  try {
+    writeFileSync(
+      join(projectRoot, "README.md"),
+      "[Sale docs](50%-off-sale.md)\n",
+    );
+    const errors = checkMarkdownLinks(projectRoot);
+
+    assert.equal(errors.length, 1);
+    assert.equal(errors[0].file, "README.md");
+    assert.equal(errors[0].line, 1);
+    assert.equal(errors[0].target, "50%-off-sale.md");
   } finally {
     rmSync(projectRoot, { recursive: true, force: true });
   }

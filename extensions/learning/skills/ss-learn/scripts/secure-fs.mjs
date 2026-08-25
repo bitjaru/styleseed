@@ -56,7 +56,19 @@ export function __testOnlyRejectSpecialNode(stats) {
   rejectSpecialNode(stats);
 }
 
+function supportsDirectoryFsync(platform = process.platform) {
+  return platform !== "win32";
+}
+
+export function __testOnlySupportsDirectoryFsync(platform) {
+  return supportsDirectoryFsync(platform);
+}
+
 async function fsyncDirectory(path) {
+  // Files are synced before rename on every platform. Node cannot open and sync
+  // directory handles with POSIX semantics on Windows, so only the parent
+  // directory metadata flush is skipped there.
+  if (!supportsDirectoryFsync()) return;
   const handle = await fs.open(path, fsConstants.O_RDONLY);
   try {
     await handle.sync();

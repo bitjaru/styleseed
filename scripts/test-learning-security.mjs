@@ -9,6 +9,7 @@ import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 import {
   __testOnlyRejectSpecialNode,
+  __testOnlySupportsDirectoryFsync,
   openLearningRoot,
   readJsonNoFollow,
   writeJsonExclusive,
@@ -90,6 +91,9 @@ function makeSpecialNodeShape(kind) {
 }
 
 async function runT03() {
+  assert.equal(__testOnlySupportsDirectoryFsync("win32"), false, "Windows must skip unsupported directory fsync");
+  assert.equal(__testOnlySupportsDirectoryFsync("linux"), true, "POSIX hosts must retain directory fsync");
+
   const sandboxRoot = mkdtempSync("/tmp/ssls-");
   const projectRoot = resolve(sandboxRoot, "project");
   await fs.mkdir(projectRoot, { recursive: true, mode: 0o700 });

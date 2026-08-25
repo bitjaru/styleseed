@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "contractVersion": 2,
   "scannerVersion": 2,
-  "revision": "sha256:380f0ee191b8aeaeef39d9513b5a427255860ee5398172c14089e51520671128",
+  "revision": "sha256:3e72cdd42ab24ccc0902b90289fa155f2724a5996e53d6de3e3497dcb52887a2",
   "files": [
     {
       "path": "extensions/learning/runtime/catalog.json",
@@ -18,7 +18,7 @@
     },
     {
       "path": "extensions/learning/skills/ss-learn/scripts/secure-fs.mjs",
-      "sha256": "sha256:50072631505dff68c0be7a45b9e936b88dc9b833889186c6f32a84c1b3b0a359"
+      "sha256": "sha256:90fd37d24f407ff4f7c2962fd24effad4e3766c042a3a9d6ac750a2deabec9d4"
     },
     {
       "path": "extensions/learning/skills/ss-learn/references/candidate.schema.json",

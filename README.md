@@ -338,6 +338,7 @@ The fastest path is at the top — [paste one prompt](#easy-start-30-seconds), o
 > **New to this? Read top to bottom — every step matters.** The most common
 > mistake is expecting setup to work before the skill is installed. Claude
 > Code scans `.claude/skills/`; Codex scans `.agents/skills/`.
+> Windows users can follow the copy-pasteable [PowerShell verification path](docs/WINDOWS-INSTALL.md).
 
 ### Option 1: Interactive Setup (Recommended)
 

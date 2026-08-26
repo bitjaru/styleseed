@@ -106,7 +106,7 @@ export default function ArchitecturePage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#F7F7FB] text-neutral-900">
+    <main className="min-h-screen bg-neutral-50 text-neutral-900">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

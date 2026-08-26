@@ -42,6 +42,12 @@ StyleSeed가 디자인 락, 빌드, 코드 검사, 실제 화면 검증을 진�
 
 [Claude Code 가이드](https://styleseed-demo.vercel.app/claude-code-ui-design) · [Codex 가이드](https://styleseed-demo.vercel.app/codex-ui-design) · [결과물 예시](https://styleseed-demo.vercel.app/showcase) · [상세 사용법](#상세-사용법)
 
+### 저장소를 심사·검증하나요?
+
+README의 설명을 먼저 믿지 말고 **[3분 검증 경로](https://styleseed-demo.vercel.app/evaluate)**에서
+깨끗한 공개 설치부터 확인할 수 있습니다. 이어서 [평가자용 빠른 검증 문서](docs/EVALUATOR-QUICKSTART.md)가
+릴리즈 manifest, Windows PowerShell 근거, CI, SBOM, 벤치마크 경계, 프로덕션 빌드까지 연결합니다.
+
 > **첫 PR을 올리고 싶나요?** 문서 수정, 회귀 테스트 fixture, 스킨 개선부터 시작하거나
 > [`good first issue`](https://github.com/bitjaru/styleseed/issues?q=is%3Aissue%20is%3Aopen%20label%3A%22good%20first%20issue%22)를 맡아주세요.
 > 작은 문서·테스트 수정은 사전 제안이 필요 없습니다. [15분 기여 가이드](CONTRIBUTING.md#first-pr-in-about-15-minutes)를 참고하세요.

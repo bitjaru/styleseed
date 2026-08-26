@@ -42,6 +42,13 @@ StyleSeed handles the design lock, build, code gate, and visual check. No design
 
 [Claude Code guide](https://styleseed-demo.vercel.app/claude-code-ui-design) · [Codex guide](https://styleseed-demo.vercel.app/codex-ui-design) · [See examples](https://styleseed-demo.vercel.app/showcase) · [Need help?](#troubleshooting--i-applied-styleseed-but-the-ui-still-looks-bad)
 
+### Evaluating the repository?
+
+Use the **[three-minute verification path](https://styleseed-demo.vercel.app/evaluate)** to test a
+clean public install before trusting the README. The source-level
+[evaluator quickstart](docs/EVALUATOR-QUICKSTART.md) then connects that install to the published
+release manifest, Windows PowerShell evidence, CI, SBOM, benchmark boundary, and production build.
+
 > **Want a first PR?** Fix a doc, add a regression fixture, improve a skin, or claim a
 > [`good first issue`](https://github.com/bitjaru/styleseed/issues?q=is%3Aissue%20is%3Aopen%20label%3A%22good%20first%20issue%22).
 > Small docs and test fixes need no proposal. See the [15-minute contribution path](CONTRIBUTING.md#first-pr-in-about-15-minutes).
@@ -339,6 +346,7 @@ The fastest path is at the top — [paste one prompt](#easy-start-30-seconds), o
 > mistake is expecting setup to work before the skill is installed. Claude
 > Code scans `.claude/skills/`; Codex scans `.agents/skills/`.
 > Windows users can follow the copy-pasteable [PowerShell verification path](docs/WINDOWS-INSTALL.md).
+> Reviewers can run the end-to-end [evaluator quickstart](docs/EVALUATOR-QUICKSTART.md).
 
 ### Option 1: Interactive Setup (Recommended)
 

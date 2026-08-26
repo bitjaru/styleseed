@@ -38,3 +38,56 @@ jobs:
         working-directory: demo-pricing
       - run: git diff --check
       - run: git diff --exit-code
+
+  windows-powershell:
+    runs-on: windows-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@49933ea5288ca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+      - name: Regenerate public catalogs on Windows
+        run: |
+          node scripts/build-context-catalog.mjs
+          node extensions/learning/runtime/scripts/build-learning-catalog.mjs
+          node demo-pricing/scripts/build-llms.mjs
+      - name: Run path-sensitive contracts on Windows
+        shell: pwsh
+        run: |
+          node scripts/test-public-claims.mjs
+          $testFiles = Get-ChildItem "scripts/runtime-tests/*.test.mjs" | ForEach-Object { $_.FullName }
+          node --test $testFiles
+          node scripts/validate-engine.mjs
+          node scripts/check-markdown-links.mjs
+      - name: Install the current checkout through PowerShell
+        shell: pwsh
+        run: |
+          $probe = Join-Path $env:RUNNER_TEMP "styleseed-install-smoke"
+          New-Item -ItemType Directory -Path $probe -Force | Out-Null
+          git -C $probe init --quiet
+          Push-Location $probe
+          try {
+            npx.cmd skills add $env:GITHUB_WORKSPACE --agent codex --yes --copy
+            npx.cmd skills list --json --agent codex | Out-Null
+            $skills = @(Get-ChildItem ".agents/skills" -Directory)
+            if ($skills.Count -ne 23) {
+              throw "Expected 23 installed skills, found $($skills.Count)"
+            }
+            if (-not (Test-Path ".agents/skills/styleseed/SKILL.md" -PathType Leaf)) {
+              throw "Missing project-local StyleSeed router"
+            }
+            if (Test-Path ".agents/skills/ss-learn") {
+              throw "Optional learning extension leaked into the core install"
+            }
+            $links = @(Get-ChildItem ".agents/skills" -Recurse -Attributes ReparsePoint -ErrorAction SilentlyContinue)
+            if ($links.Count -ne 0) {
+              throw "Expected physical copies, found $($links.Count) reparse points"
+            }
+          }
+          finally {
+            Pop-Location
+          }
+      - run: git diff --check
+      - run: git diff --exit-code

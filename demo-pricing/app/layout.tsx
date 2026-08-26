@@ -145,6 +145,7 @@ export default function RootLayout({
         hasPart: [
           { "@id": `${SITE_URL}/claude-code-ui-design#article` },
           { "@id": `${SITE_URL}/codex-ui-design#article` },
+          { "@id": `${SITE_URL}/evaluate#article` },
           { "@id": `${SITE_URL}/showcase#page` },
           { "@id": `${SITE_URL}/architecture#page` },
           { "@id": `${SITE_URL}/recipes#page` },

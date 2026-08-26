@@ -4,15 +4,17 @@ import { listShowcase } from "@/lib/showcase";
 import { MOTION_LIBRARY } from "@engine/motion";
 import { DOMAINS } from "@/lib/domains";
 import { SCREENS } from "@/lib/screens";
+import versionInfo from "../public/version.json";
 
 const BASE = "https://styleseed-demo.vercel.app";
-const CONTENT_UPDATED = new Date("2026-08-12T00:00:00.000Z");
+const CONTENT_UPDATED = new Date(`${versionInfo.siteUpdated}T00:00:00.000Z`);
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: `${BASE}/`, lastModified: CONTENT_UPDATED, changeFrequency: "weekly", priority: 1 },
     { url: `${BASE}/claude-code-ui-design`, lastModified: CONTENT_UPDATED, changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE}/codex-ui-design`, lastModified: CONTENT_UPDATED, changeFrequency: "monthly", priority: 0.9 },
+    { url: `${BASE}/evaluate`, lastModified: CONTENT_UPDATED, changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE}/showcase`, lastModified: CONTENT_UPDATED, changeFrequency: "weekly", priority: 0.9 },
     { url: `${BASE}/motion`, lastModified: CONTENT_UPDATED, changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE}/motion/guide`, lastModified: CONTENT_UPDATED, changeFrequency: "monthly", priority: 0.7 },

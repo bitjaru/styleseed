@@ -31,6 +31,7 @@ const REPO_RAW = 'https://raw.githubusercontent.com/bitjaru/styleseed/main'
 const VERSION_SOURCE_KEYS = [
   'released',
   'revisionReleased',
+  'siteUpdated',
   'whatsNew',
   'supportPolicy',
   'publicInstall',
@@ -112,6 +113,16 @@ const studioPipeline = readOpt('STUDIO-PIPELINE.md')
 const presets = readOpt('PRESETS.md')
 const referenceCompiler = readOpt('REFERENCE-COMPILER.md')
 const architecture = readOpt('ARCHITECTURE.md')
+const ruleNumbers = [...designLang.matchAll(/^##\s+(\d+)\./gm)].map((match) => Number(match[1]))
+const ruleCount = Math.max(...ruleNumbers)
+const skinFolders = readdirSync(skinsDir, { withFileTypes: true })
+  .filter((d) => d.isDirectory() && !d.name.startsWith('_'))
+  .map((d) => d.name)
+  .sort()
+
+if (!Number.isSafeInteger(ruleCount) || ruleCount < 1) {
+  throw new Error('Could not derive a positive rule count from engine/DESIGN-LANGUAGE.md')
+}
 
 const fullHeader =
   `# StyleSeed — Full Context\n\n` +
@@ -207,7 +218,9 @@ writeFileSync(
       revisionFiles: contextCatalog.distributionFiles.length,
       skillsRevision: contextCatalog.distributions.skills.revision,
       skillsRevisionFiles: contextCatalog.distributions.skills.files.length,
+      rules: ruleCount,
       skills: skills.length,
+      skins: skinFolders.length,
       grammars: grammarIds.length,
       adapters: adapterIds.length,
       recipes: recipeIds.length,
@@ -383,11 +396,6 @@ function scanComponents(type, dirName) {
 }
 
 const components = [...scanComponents('ui', 'ui'), ...scanComponents('pattern', 'patterns')]
-
-const skinFolders = readdirSync(skinsDir, { withFileTypes: true })
-  .filter((d) => d.isDirectory() && !d.name.startsWith('_'))
-  .map((d) => d.name)
-  .sort()
 
 const skinsManifest = skinFolders.map((id) => {
   const meta = JSON.parse(readFileSync(resolve(skinsDir, id, 'skin.json'), 'utf-8'))

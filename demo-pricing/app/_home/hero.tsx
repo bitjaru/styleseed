@@ -80,8 +80,8 @@ export function Hero() {
             GitHub
             <GithubStarCount className="text-neutral-500" />
           </a>
-          <Link href="/architecture" className="inline-flex items-center gap-1 hover:text-neutral-950 hover:underline">
-            Engine architecture <ArrowRight size={13} />
+          <Link href="/evaluate" className="inline-flex items-center gap-1 hover:text-neutral-950 hover:underline">
+            Verify in 3 minutes <ArrowRight size={13} />
           </Link>
           <Link href="/gate" className="inline-flex items-center gap-1 hover:text-neutral-950 hover:underline">
             Benchmark evidence <ArrowRight size={13} />

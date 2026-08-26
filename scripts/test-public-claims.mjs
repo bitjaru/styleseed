@@ -1,7 +1,8 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const root = resolve(new URL("../", import.meta.url).pathname);
+const root = fileURLToPath(new URL("../", import.meta.url));
 const files = [
   "README.md",
   "README-KR.md",

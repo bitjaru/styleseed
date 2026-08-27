@@ -607,6 +607,34 @@ The adapter/companion owns them; StyleSeed owns the visual judgment applied with
 - **QA:** render every page and inspect widows/orphans, clipped tables, broken links, page numbers,
   accessibility structure, and cross-page consistency.
 
+Recommended lock additions:
+
+```markdown
+- Surface adapter: document-report
+- Artifact type: research-report
+- Paper size: Letter
+- Margins: 0.75in top/bottom, 0.85in inner/outer
+- Header/footer: report title in header, section label optional, page number in footer
+- Reading measure: 60-75 characters for body text
+- Renderer: document/PDF renderer
+- Editable source: DOCX or structured source document
+- PDF export: required
+- Render evidence: page-by-page PDF images or screenshots
+- QA checks: widows/orphans, clipped tables, links, page numbers, accessibility structure
+- Physical output contract: renderer owns pagination, paper metrics, export fidelity, and PDF tags
+```
+
+Failing example:
+
+```markdown
+- Surface adapter: document-report
+- Layout assumption: reuse responsive web cards and let content scroll vertically
+```
+
+Paginated reports do not inherit web viewport assumptions. StyleSeed owns the report hierarchy,
+reading rhythm, and visual judgment; the renderer owns page boundaries, margins, flow, and export
+constraints.
+
 ## `single-frame`
 
 - **Canvas:** declare exact dimensions, crop variants, safe zones, and intended viewing distance.

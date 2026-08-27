@@ -1,10 +1,10 @@
 {
   "schemaVersion": 4,
   "engineVersion": "4.1.0",
-  "engineRevision": "sha256:20d50dd072e087f055807ce66845e47c7895d5b5a38188cdcc2b980820a99a91",
+  "engineRevision": "sha256:3618e298e175c92f70d17998c9bdd284b41bc227a1bb46b76ed8c4baf4f5a113",
   "distributions": {
     "core": {
-      "revision": "sha256:20d50dd072e087f055807ce66845e47c7895d5b5a38188cdcc2b980820a99a91",
+      "revision": "sha256:3618e298e175c92f70d17998c9bdd284b41bc227a1bb46b76ed8c4baf4f5a113",
       "files": [
         {
           "path": "LICENSE",
@@ -368,8 +368,8 @@
         },
         {
           "path": "engine/UX-WRITING.md",
-          "sha256": "430954276b5f1515e742b22df6dc91daacb095753a0da6904e91f47f4b409b98",
-          "bytes": 12263
+          "sha256": "bfbf7ed036b191f639d27bf459695f8162cee04bdff5da11e28ec30c7f0e53d2",
+          "bytes": 12524
         },
         {
           "path": "engine/VERSION",
@@ -1032,8 +1032,8 @@
     },
     {
       "path": "UX-WRITING.md",
-      "sha256": "430954276b5f1515e742b22df6dc91daacb095753a0da6904e91f47f4b409b98",
-      "bytes": 12263
+      "sha256": "bfbf7ed036b191f639d27bf459695f8162cee04bdff5da11e28ec30c7f0e53d2",
+      "bytes": 12524
     },
     {
       "path": "VERSION",

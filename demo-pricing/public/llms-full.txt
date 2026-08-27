@@ -5676,10 +5676,11 @@ term, full product name, or policy wording even when a shorter UI phrase would s
 
 **Money or percentage + tabular numerals**
 - **Do:** `이번 달 12,400원 절약했어요` / `전월보다 8% 낮아요`
-- **Don't:** `이번 달에 절약한 금액은 십이만사천원입니다` / `전월 대비 8 퍼센트만큼 감소`
-- **Why:** Arabic numerals make changing values easier to compare and should render with tabular
-  numerals in UI. In Korean, currency symbols and common unit signs can sit tight with Arabic
-  numerals in compact UI (`12,400원`, `8%`), while the sentence explains the meaning in plain Korean.
+- **Don't:** `이번 달에 절약한 금액은 일만 이천사백 원입니다` / `전월 대비 8 퍼센트만큼 감소`
+- **Why:** Arabic numerals make changing values easier to compare. Use tabular numerals when
+  aligned or repeatedly updated UI values need stable digit widths. In Korean, currency symbols and
+  common unit signs can sit tight with Arabic numerals in compact UI (`12,400원`, `8%`), while the
+  sentence explains the meaning in plain Korean.
 
 **Number + unit in CTA or status**
 - **Do:** `3분 안에 끝내기` / `남은 공간 2GB`
@@ -5703,7 +5704,9 @@ Material Design & Apple HIG (writing) · Mailchimp Content Style Guide · Shopif
 [Toss Feed — UX Writing 인터뷰](https://toss.im/tossfeed/article/uxwriter-interview) (잡초 뽑기, TDS 버튼 규칙).
 StyleSeed restates Toss's published *principles*, not its proprietary copy.
 
-**§W9 mixed Korean UI strings:** [Toss App-in-Toss UX Writing](https://developers-apps-in-toss.toss.im/design/ux-writing.html)
-(해요체, active phrasing, positive/plain wording, and exceptions) ·
+**§W9 mixed Korean UI strings:** [Toss Tech — "토스의 8가지 라이팅 원칙들"](https://toss.tech/article/8-writing-principles-of-toss)
+(clear, concise, friendly, respectful, empathetic Korean UI wording) ·
 [국립국어원 온라인가나다 — 한글맞춤법 제43항 질문](https://www.korean.go.kr/front/onlineQna/onlineQnaView.do?mn_id=27&pageIndex=1&qna_seq=326727)
-(unit nouns may attach to Arabic numerals under Hangul orthography rule 43).
+(unit nouns may attach to Arabic numerals under Hangul orthography rule 43) ·
+[W3C CSS Fonts Module Level 4 — `font-variant-numeric`](https://www.w3.org/TR/css-fonts-4/#font-variant-numeric-prop)
+(`tabular-nums` uses tabular figures for stable numeric alignment).

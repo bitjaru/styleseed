@@ -1,0 +1,109 @@
+name: Prepare StyleSeed release assets
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing signed release tag to verify and package (for example, v4.1.1)
+        required: true
+        type: string
+
+concurrency:
+  group: prepare-release-${{ inputs.tag }}
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+    steps:
+      - name: Check out the requested tag
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          ref: ${{ inputs.tag }}
+          fetch-depth: 0
+
+      - name: Set up Node.js 22
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: demo-pricing/package-lock.json
+
+      - name: Verify tag, version, and clean checkout
+        id: release
+        shell: bash
+        env:
+          RELEASE_TAG: ${{ inputs.tag }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          version="$(tr -d '\r\n' < engine/VERSION)"
+          test "$RELEASE_TAG" = "v$version"
+          test "$(git rev-parse HEAD)" = "$(git rev-list -n 1 "$RELEASE_TAG")"
+          tag_object="$(gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$RELEASE_TAG" --jq '.object.sha + " " + .object.type')"
+          read -r tag_sha tag_type <<< "$tag_object"
+          test "$tag_type" = "tag"
+          test "$(gh api "repos/$GITHUB_REPOSITORY/git/tags/$tag_sha" --jq '.verification.verified')" = "true"
+          test -z "$(git status --porcelain)"
+          created_at="$(git show -s --format=%cI HEAD)"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "created_at=$created_at" >> "$GITHUB_OUTPUT"
+
+      - name: Install demo dependencies
+        run: npm ci
+        working-directory: demo-pricing
+
+      - name: Run canonical repository verification
+        run: node scripts/verify-repo.mjs
+
+      - name: Audit production dependencies
+        run: npm audit --omit=dev --audit-level=high
+        working-directory: demo-pricing
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+        working-directory: demo-pricing
+
+      - name: Run browser smoke tests
+        run: npm run test:browser
+        working-directory: demo-pricing
+
+      - name: Build release archive, manifests, SBOMs, and checksums
+        env:
+          RELEASE_TAG: ${{ inputs.tag }}
+          RELEASE_VERSION: ${{ steps.release.outputs.version }}
+          RELEASE_CREATED_AT: ${{ steps.release.outputs.created_at }}
+        run: |
+          node scripts/build-release-assets.mjs \
+            --version "$RELEASE_VERSION" \
+            --tag "$RELEASE_TAG" \
+            --git-sha "$GITHUB_SHA" \
+            --created-at "$RELEASE_CREATED_AT" \
+            --tag-verified true \
+            --workflow-run-url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          node scripts/validate-release-assets.mjs
+
+      - name: Attest release asset provenance
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4.2.2
+        with:
+          subject-checksums: dist/release/SHA256SUMS
+
+      - name: Bind the core SPDX SBOM to the release archive
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4.2.2
+        with:
+          subject-path: dist/release/styleseed-core-${{ steps.release.outputs.version }}.tar.gz
+          sbom-path: dist/release/sbom-core.spdx.json
+
+      - name: Upload verified release candidates
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: styleseed-${{ inputs.tag }}-release-candidates
+          path: dist/release/*
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 0

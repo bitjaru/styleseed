@@ -142,6 +142,23 @@ async function runSelfTests() {
     const cleanStage = resolve(sandbox, "clean-stage");
     const built = await buildPluginPackage({ sourceRoot: cleanSource, stageRoot: cleanStage, clean: true });
     assert.equal(readJson(resolve(cleanStage, "inventory.json")).files.length, built.inventory.files.length);
+    assert.equal(built.inventory.distributionSource.channel, "edge");
+
+    const releaseStage = resolve(sandbox, "release-stage");
+    const releaseVersion = readJson(resolve(cleanSource, "engine/.claude/skills/ss-resolve/references/catalog.json")).engineVersion;
+    const releaseArchiveName = `styleseed-core-${releaseVersion}.tar.gz`;
+    const released = await buildPluginPackage({
+      sourceRoot: cleanSource,
+      stageRoot: releaseStage,
+      clean: true,
+      release: { version: releaseVersion, tag: `v${releaseVersion}` },
+      archiveName: releaseArchiveName,
+    });
+    assert.equal(released.inventory.distributionSource.channel, "stable");
+    assert.equal(released.inventory.archive.path, releaseArchiveName);
+    const stableCatalog = readJson(resolve(releaseStage, "skills/ss-resolve/references/catalog.json"));
+    assert.equal(stableCatalog.distributionSource.channel, "stable");
+    assert.equal(stableCatalog.distributionSource.install.includes(`/${releaseArchiveName} --agent codex`), true);
 
     const secretSource = resolve(sandbox, "secret-source");
     copyAllowedFixture(secretSource);
@@ -193,9 +210,16 @@ async function runSelfTests() {
 async function validateStage(stageRoot) {
   const inventory = readJson(resolve(stageRoot, "inventory.json"));
   const files = stageFiles(stageRoot);
-  const payloadFiles = files.filter((entry) => entry.path !== "inventory.json" && entry.path !== allowlist.archiveName);
+  const archiveName = inventory.archive?.path ?? allowlist.archiveName;
+  const archiveFile = files.find((entry) => entry.path === archiveName);
+  if (!archiveFile) throw new Error(`Missing staged archive: ${archiveName}`);
+  if (archiveFile.bytes !== inventory.archive?.bytes) throw new Error("Staged archive byte count differs from inventory");
+  if (createHash("sha256").update(archiveFile.content).digest("hex") !== inventory.archive?.sha256) {
+    throw new Error("Staged archive checksum differs from inventory");
+  }
+  const payloadFiles = files.filter((entry) => entry.path !== "inventory.json" && entry.path !== archiveName);
   const topLevel = new Set(files.map((entry) => entry.path.split("/")[0]));
-  for (const required of [".codex-plugin", "engine", "skills", "LICENSE", "SECURITY.md", "inventory.json", allowlist.archiveName]) {
+  for (const required of [".codex-plugin", "engine", "skills", "LICENSE", "SECURITY.md", "inventory.json", archiveName]) {
     if (!topLevel.has(required)) throw new Error(`Missing staged top-level entry: ${required}`);
   }
 
@@ -227,6 +251,14 @@ async function validateStage(stageRoot) {
   if (manifest.skills !== "./skills/") throw new Error("Staged manifest skills path drifted");
   if ("mcpServers" in manifest) throw new Error("Staged manifest must expose zero MCP servers");
   if (!existsSync(resolve(stageRoot, manifest.skills))) throw new Error("Staged manifest skills path does not resolve");
+  const canonicalCatalog = readJson(resolve(stageRoot, "engine/.claude/skills/ss-resolve/references/catalog.json"));
+  const discoveryCatalog = readJson(resolve(stageRoot, "skills/ss-resolve/references/catalog.json"));
+  if (JSON.stringify(canonicalCatalog.distributionSource) !== JSON.stringify(discoveryCatalog.distributionSource)) {
+    throw new Error("Staged canonical and discovery catalogs disagree on distribution source");
+  }
+  if (JSON.stringify(inventory.distributionSource) !== JSON.stringify(discoveryCatalog.distributionSource)) {
+    throw new Error("Inventory distribution source differs from the staged catalog");
+  }
 
   for (const entry of payloadFiles.filter((file) => /\.(?:mjs|js|ts|mts)$/u.test(file.path))) {
     for (const specifier of candidateImports(entry.content.toString("utf8"))) {

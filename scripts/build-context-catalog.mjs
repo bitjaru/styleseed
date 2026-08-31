@@ -182,9 +182,15 @@ const recipeIds = [
 ];
 
 const catalog = {
-  schemaVersion: 4,
+  schemaVersion: 5,
   engineVersion: read("VERSION"),
   engineRevision,
+  distributionSource: {
+    schemaVersion: 1,
+    channel: "edge",
+    updateManifest: "https://styleseed-demo.vercel.app/version.json",
+    install: "npx skills add bitjaru/styleseed",
+  },
   distributions: {
     core: {
       revision: engineRevision,

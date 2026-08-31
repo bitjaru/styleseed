@@ -34,6 +34,17 @@ also pass:
 git diff --check
 ```
 
+For the same complete source and production-build gate used by Ubuntu CI:
+
+```bash
+npm ci --prefix demo-pricing
+node scripts/verify-repo.mjs
+```
+
+Use `node scripts/verify-repo.mjs --core` for the full non-web suite, or add `--browser` after
+installing Playwright Chromium. `--webpack` is the documented local fallback when a constrained
+environment cannot run Turbopack; CI still exercises the default Turbopack build.
+
 Push your branch and open a PR. The template asks for the command you ran and, for visual changes, a
 current screenshot. CI runs the complete suite.
 

@@ -49,6 +49,12 @@ const expectedSkins = readdirSync(resolve(root, "skins"), { withFileTypes: true 
 const resolvedDocsPalette = readFileSync(resolve(root, ".styleseed/palettes/site-docs.json"), "utf8");
 const bundledDocsPalette = readFileSync(resolve(root, "demo-pricing/content/site-docs-palette.json"), "utf8");
 
+if (versionInfo.channel !== "edge") failures.push(`version.json channel must be edge; found ${String(versionInfo.channel)}`);
+if (versionInfo.publicInstall !== "npx skills add bitjaru/styleseed") failures.push("version.json edge install command drifted");
+if (versionInfo.stableManifest !== "https://github.com/bitjaru/styleseed/releases/latest/download/release-manifest.json") {
+  failures.push("version.json stable release manifest URL drifted");
+}
+
 for (const phrase of requiredPhrases) {
   if (!texts.some(({ text }) => text.includes(phrase))) failures.push(`missing required phrase: ${phrase}`);
 }

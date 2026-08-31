@@ -10,6 +10,7 @@
     "export:signal-carousel": "node scripts/export-signal-carousel.mjs",
     "capture:studio": "node scripts/capture-studio.mjs",
     "capture:palettes": "node scripts/capture-palettes.mjs",
+    "test:browser": "node scripts/test-browser-smoke.mjs",
     "start": "next start"
   },
   "dependencies": {

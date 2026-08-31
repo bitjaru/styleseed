@@ -28,10 +28,12 @@ copies as the source of truth.
 
 ## Verification
 
-- Every engine change: run `node scripts/validate-palettes.mjs`,
-  `node scripts/validate-engine.mjs`, and `git diff --check`.
+- Every engine change: run `node scripts/verify-repo.mjs --core`.
 - Engine, skin, component, registry, or demo changes: run `npm run build` from
-  `demo-pricing/`, then run `git diff --check` from the repository root.
+  `demo-pricing/`, or use the canonical full gate: `node scripts/verify-repo.mjs` after
+  `npm ci --prefix demo-pricing`.
+- Run `node scripts/verify-repo.mjs --browser` when changing critical public routes or their
+  generated endpoints. It checks `/`, `/gate`, `/learn`, and `/evaluate` at desktop and 390×844.
 - The demo build fetches Google Fonts and may require network access.
 - Do not claim a visual pass without rendering and inspecting the affected UI.
 
@@ -41,3 +43,5 @@ copies as the source of truth.
   in separate commits or pull requests.
 - Do not change `engine/VERSION`, the changelog, or publish a release unless the
   maintainer explicitly includes release work in the task.
+- `docs/RELEASE.md` is the release boundary. The preparation workflow creates verified candidate
+  assets only; it never publishes a GitHub release or deploys production.

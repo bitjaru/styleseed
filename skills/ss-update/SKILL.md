@@ -21,6 +21,10 @@ inventory. The published endpoint must expose both the engine `revision` and, fo
 install, `skillsRevision`. The project manifest continues to record the engine revision that
 compiled its method bundle.
 
+The bundled catalog also records `distributionSource.channel`. `edge` follows the mutable public
+repository state; `stable` follows the latest published release manifest. Do not compare a stable
+archive directly to edge `main` unless the user explicitly requests a channel switch.
+
 ## When not to use
 
 - First installation → `/ss-setup` or `$ss-setup`.
@@ -83,6 +87,7 @@ Before changing anything, report:
 ```text
 StyleSeed update report
 - Installed: <version> @ <revision>
+- Installed channel: <stable|edge|legacy-edge>
 - Installed payload: <core|skills> @ <distribution revision>
 - Published: <version> @ <revision>
 - Project bundle: <version/revision or not resolved>
@@ -99,14 +104,17 @@ method update, but do not use destructive reset/checkout commands as an update s
 
 Use the same channel that installed StyleSeed:
 
-- Agent Skills CLI installation: run `npx skills add bitjaru/styleseed` and select the same
-  project/provider scope. The repository exposes exactly the canonical 23 `ss-*` skills.
+- Edge Agent Skills CLI installation: run the returned `installed.install` command (normally
+  `npx skills add bitjaru/styleseed`) and select the same project/provider scope.
+- Stable Agent Skills CLI installation: run `npx skills add <remote.archiveUrl> --agent codex
+  --yes --copy`, using the exact latest published archive URL returned by the checker.
 - Claude/plugin or another provider marketplace: use that provider's normal update action.
 - Vendored source checkout: fetch the intended tag or commit, review the diff, and update the
   canonical engine as a set. Do not mix files from two revisions.
 
 Do not implement an update with a blind recursive copy into an existing skills directory. The
 installer must reconcile the managed payload; project-owned files stay outside that operation.
+Do not silently change `stable` to `edge` or `edge` to `stable` during refresh.
 
 If this skill was invoked only to inspect availability, stop before the external refresh and
 present the report.

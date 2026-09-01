@@ -11,7 +11,7 @@ implementation. Progress is tracked in the linked issues — comments and counte
   test does.
 - **Korean typography & UX-writing rules** — extend the canon beyond Latin-first assumptions:
   line-length and line-height rules for Hangul, mixed-script hierarchy, and Korean microcopy
-  patterns in `UX-WRITING.md`.
+  patterns in `UX-WRITING.md` (parent roadmap issue [#8](https://github.com/bitjaru/styleseed/issues/8)).
 
 ## Next
 

@@ -146,7 +146,7 @@
       "type": "skill-md",
       "description": "Check and update an existing StyleSeed installation by exact rule/skill revision, preserve project-owned design decisions, then recompile and verify the effective bundle.",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-update/SKILL.md",
-      "digest": "sha256:bf7e6236caf1707d89729ed85fd9219918d8a73dbc91112de6ea754b5da84976"
+      "digest": "sha256:daeaa0c0a210e951ac55e2e03161efd3be3ad74c6928a1c620a25690bfe06e6e"
     },
     {
       "name": "ss-verify",

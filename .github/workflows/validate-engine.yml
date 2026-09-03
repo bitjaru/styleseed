@@ -5,9 +5,14 @@ on:
   push:
     branches: [main]
 
+concurrency:
+  group: styleseed-validate-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   validate:
     runs-on: ubuntu-latest
+    timeout-minutes: 35
     permissions:
       contents: read
     steps:
@@ -17,30 +22,21 @@ jobs:
           node-version: 22
           cache: npm
           cache-dependency-path: demo-pricing/package-lock.json
-      - run: node scripts/build-context-catalog.mjs
-      - run: node extensions/learning/runtime/scripts/build-learning-catalog.mjs
-      - run: node demo-pricing/scripts/build-llms.mjs
-      - run: node scripts/validate-skill-contracts.mjs
-      - run: node scripts/test-router-contract.mjs
-      - run: node scripts/test-core-learning-isolation.mjs
-      - run: node scripts/test-core-plugin-boundary.mjs
-      - run: node scripts/test-public-claims.mjs
-      - run: node scripts/test-learning-security.mjs
-      - run: node scripts/validate-palettes.mjs
-      - run: node --test scripts/runtime-tests/*.test.mjs
-      - run: node scripts/validate-engine.mjs
-      - run: node scripts/build-plugin-packages.mjs --clean
-      - run: node scripts/validate-plugin-packages.mjs
-      - run: node scripts/check-markdown-links.mjs
-      - run: npm ci
+      - name: Install demo dependencies
+        run: npm ci
         working-directory: demo-pricing
-      - run: npm run build
+      - name: Run canonical repository verification
+        run: node scripts/verify-repo.mjs
+      - name: Install Chromium for browser smoke tests
+        run: npx playwright install --with-deps chromium
         working-directory: demo-pricing
-      - run: git diff --check
-      - run: git diff --exit-code
+      - name: Run browser smoke tests
+        run: npm run test:browser
+        working-directory: demo-pricing
 
   windows-powershell:
     runs-on: windows-latest
+    timeout-minutes: 25
     permissions:
       contents: read
     steps:

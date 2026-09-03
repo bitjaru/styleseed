@@ -65,29 +65,13 @@ Clone the repository, then run the same generated-file and product checks used b
 ```bash
 git clone https://github.com/bitjaru/styleseed.git
 cd styleseed
-node scripts/build-context-catalog.mjs
-node extensions/learning/runtime/scripts/build-learning-catalog.mjs
-node demo-pricing/scripts/build-llms.mjs
-node scripts/validate-skill-contracts.mjs
-node scripts/test-router-contract.mjs
-node scripts/test-core-learning-isolation.mjs
-node scripts/test-core-plugin-boundary.mjs
-node scripts/test-public-claims.mjs
-node scripts/test-learning-security.mjs
-node scripts/validate-palettes.mjs
-node --test scripts/runtime-tests/*.test.mjs
-node scripts/validate-engine.mjs
-node scripts/build-plugin-packages.mjs --clean
-node scripts/validate-plugin-packages.mjs
-node scripts/check-markdown-links.mjs
 npm ci --prefix demo-pricing
-npm run build --prefix demo-pricing
-git diff --check
-git diff --exit-code
+node scripts/verify-repo.mjs
 ```
 
-`git diff --exit-code` matters: a successful generator that changes committed catalogs still means
-the repository was drifting. Review the current [GitHub Actions run](https://github.com/bitjaru/styleseed/actions/workflows/validate-engine.yml)
+The verifier snapshots the starting worktree and fails if generation changes it, so a successful
+generator that drifts committed catalogs still fails. Add `--browser` after installing Chromium to
+run the critical-route runtime suite. Review the current [GitHub Actions run](https://github.com/bitjaru/styleseed/actions/workflows/validate-engine.yml)
 separately; a green local run is not CI evidence.
 
 ## 4. Check the evidence boundary

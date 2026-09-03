@@ -7,6 +7,8 @@ import { fileURLToPath } from "node:url";
 import { verifyDistribution } from "../../ss-resolve/scripts/distribution-integrity.mjs";
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
+const defaultEdgeManifest = "https://styleseed-demo.vercel.app/version.json";
+const latestStableReleaseBase = "https://github.com/bitjaru/styleseed/releases/latest/download";
 
 function parseArgs(argv) {
   const out = {};
@@ -54,6 +56,30 @@ function firstJson(paths) {
   return path ? { path, value: readJson(path) } : null;
 }
 
+function normalizeRemote(value) {
+  if (value?.engine?.coreRevision) {
+    const archivePath = value.package?.archive?.path ?? null;
+    return {
+      version: value.version ?? value.engine.version ?? null,
+      revision: value.engine.coreRevision ?? null,
+      skillsRevision: value.engine.skillsRevision ?? null,
+      channel: "stable",
+      archivePath,
+      archiveSha256: value.package?.archive?.sha256 ?? null,
+      archiveUrl: archivePath ? `${latestStableReleaseBase}/${encodeURIComponent(archivePath)}` : null,
+    };
+  }
+  return {
+    version: value?.version ?? null,
+    revision: value?.revision ?? null,
+    skillsRevision: value?.skillsRevision ?? null,
+    channel: value?.channel ?? "edge",
+    archivePath: value?.archive?.path ?? null,
+    archiveSha256: value?.archive?.sha256 ?? null,
+    archiveUrl: value?.archive?.url ?? null,
+  };
+}
+
 function shortRevision(value) {
   return value?.startsWith("sha256:") ? value.slice(7, 19) : value ?? "unknown";
 }
@@ -71,13 +97,19 @@ published revision. It is read-only and never updates project or skill files.`);
 }
 
 const projectRoot = resolve(args["project-root"] ?? process.cwd());
-const remoteSource = args.remote ?? "https://styleseed-demo.vercel.app/version.json";
 const installed = firstJson([
   resolve(projectRoot, "engine/.claude/skills/ss-resolve/references/catalog.json"),
   resolve(projectRoot, ".claude/skills/ss-resolve/references/catalog.json"),
   resolve(projectRoot, ".agents/skills/ss-resolve/references/catalog.json"),
   resolve(scriptDir, "../../ss-resolve/references/catalog.json"),
 ]);
+const installedSource = installed?.value.distributionSource ?? {
+  schemaVersion: 0,
+  channel: "legacy-edge",
+  updateManifest: defaultEdgeManifest,
+  install: "npx skills add bitjaru/styleseed",
+};
+const remoteSource = args.remote ?? installedSource.updateManifest ?? defaultEdgeManifest;
 const projectManifest = firstJson([
   resolve(projectRoot, ".styleseed/manifest.json"),
 ]);
@@ -98,14 +130,14 @@ const legacyConflicts = [
     reason: "Retired standalone seven-category reviewer can conflict with canonical ss-score.",
   }];
 });
-const remote = await readRemote(remoteSource);
+const remote = normalizeRemote(await readRemote(remoteSource));
 
 const installedVersion = installed?.value.engineVersion ?? null;
 const installedDeclaredRevision = installed?.value.distributions?.core?.revision ?? installed?.value.engineRevision ?? null;
 const projectVersion = projectManifest?.value.engineVersion ?? null;
 const projectRevision = projectManifest?.value.engineRevision ?? null;
-const remoteVersion = remote.version ?? null;
-const remoteRevision = remote.revision ?? null;
+const remoteVersion = remote.version;
+const remoteRevision = remote.revision;
 const installedScriptPath = installed?.path
   ? resolve(dirname(installed.path), "..", "..", "ss-update", "scripts", "check-update.mjs")
   : null;
@@ -132,7 +164,7 @@ const installedDeclaredDistributionRevision = installedDistribution
   ? installed?.value.distributions?.[installedDistribution]?.revision ?? null
   : null;
 const remoteDistributionRevision = installedDistribution === "skills"
-  ? remote.skillsRevision ?? null
+  ? remote.skillsRevision
   : remoteRevision;
 const registryPresent = existsSync(resolve(projectRoot, ".styleseed/project.json"))
   && existsSync(resolve(projectRoot, ".styleseed/artifacts/index.json"));
@@ -200,6 +232,9 @@ const result = {
     catalogPath: installed?.path ?? null,
     mismatches: installedVerification?.mismatches ?? [],
     verificationError: installedVerification?.error ?? null,
+    channel: installedSource.channel ?? null,
+    updateManifest: installedSource.updateManifest ?? null,
+    install: installedSource.install ?? null,
   },
   project: {
     version: projectVersion,
@@ -212,6 +247,10 @@ const result = {
     distribution: installedDistribution,
     distributionRevision: remoteDistributionRevision,
     source: remoteSource,
+    channel: remote.channel,
+    archivePath: remote.archivePath,
+    archiveSha256: remote.archiveSha256,
+    archiveUrl: remote.archiveUrl,
   },
   legacyConflicts,
   artifacts: artifactImpact.artifacts,
@@ -222,6 +261,7 @@ if (args.json) {
 } else {
   console.log(`StyleSeed update status: ${status}`);
   console.log(`installed ${installedVersion ?? "unknown"} @ ${shortRevision(installedDeclaredRevision)}`);
+  console.log(`channel   ${installedSource.channel ?? "unknown"}`);
   console.log(`payload   ${installedDistribution ?? "unknown"} @ ${shortRevision(installedDistributionRevision)}`);
   console.log(`project   ${projectVersion ?? "not resolved"} @ ${shortRevision(projectRevision)}`);
   console.log(`published ${remoteVersion ?? "unknown"} @ ${shortRevision(remoteRevision)}`);

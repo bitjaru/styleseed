@@ -164,6 +164,12 @@ try {
   await assertJson(baseUrl, "/.well-known/agent-skills/index.json", (value) => {
     assert(Array.isArray(value.skills) && value.skills.length === 23, "agent skill index does not expose 23 skills");
   });
+  await assertJson(baseUrl, "/api/github-stars", (value) => {
+    assert(
+      value.stars === null || (Number.isSafeInteger(value.stars) && value.stars >= 0),
+      "github stars endpoint returned an invalid fallback payload",
+    );
+  });
 
   browser = await chromium.launch({ headless: true });
   const failures = [

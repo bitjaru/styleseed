@@ -50,8 +50,8 @@ When instructions disagree, use this order:
 10. **Score and visual verification** — evidence that the method was applied.
 
 `STYLESEED.md` is persistence, not permission. An arbitrary value in the lock never turns
-a violation into a sound design decision. Unknown values fall back to the nearest maintained
-grammar and the core defaults.
+a violation into a sound design decision. Unknown values are resolver errors, not permission
+to silently choose a different grammar. Use only an explicitly configured, supported fallback.
 
 ## Core invariants
 

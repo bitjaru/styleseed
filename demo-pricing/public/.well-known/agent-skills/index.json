@@ -95,9 +95,9 @@
     {
       "name": "ss-resolve",
       "type": "skill-md",
-      "description": "Compile a small, deterministic StyleSeed rule bundle for one agent, output grammar, surface adapter, domain, page type, brand recipe, palette recipe, and optional profile. Use before setup or build, when STYLESEED.md changes, when updating StyleSeed, or whenever an agent would otherwise load the full rule handbook.",
+      "description": "Compile a small, deterministic StyleSeed rule bundle for one agent, output grammar, surface adapter, domain, page type, brand recipe, palette recipe, and optional profile. Use before setup or build, when project configuration changes, when updating StyleSeed, or to diagnose local installation, rule drift, and evidence health without changing files.",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-resolve/SKILL.md",
-      "digest": "sha256:c151e944140fc5aa56fa8c0027427c41dbaa2b54fb05eda5854a92c8f7ab1af6"
+      "digest": "sha256:678a94a773ab39a002288aa3c586cee7ded9ad3f6ee06c61d56de89b725dc306"
     },
     {
       "name": "ss-restyle",
@@ -118,7 +118,7 @@
       "type": "skill-md",
       "description": "Score a visual artifact's implementation quality 0-100 against its composed StyleSeed rule set — category breakdown, evidence, and prioritized fixes.",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-score/SKILL.md",
-      "digest": "sha256:cb2e2e5c8d4b3bd7e17ab66015a5236096b546de24881cf8773b51f90c454207"
+      "digest": "sha256:c8a8bb0e903afdf66b583f148f9392fec56ee09bb96d2b63da2fd604f243f346"
     },
     {
       "name": "ss-setup",
@@ -160,7 +160,7 @@
       "type": "skill-md",
       "description": "Route a StyleSeed request to exactly one first workflow after resolving the current artifact boundary. Use when the user asks generally for StyleSeed help rather than invoking one specific ss-* skill.",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/styleseed/SKILL.md",
-      "digest": "sha256:5f4f0154b9a9c7be2fc5309f798a5c0013e2f237570183cf34bedcfdfd58fe9f"
+      "digest": "sha256:3837248e3a82505a140818c9043882b17255891e285c907132b2551c6ab18bfc"
     }
   ]
 }

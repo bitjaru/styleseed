@@ -426,6 +426,10 @@ cp engine/.cursorrules your-project/.cursorrules
 
 ## Troubleshooting — "I applied StyleSeed but the UI still looks bad"
 
+For installation, configuration, or stale-evidence problems, first run the [read-only project
+doctor](docs/PROJECT-DOCTOR.md). It separates a healthy installation and current compiled rules
+from missing or invalid evidence; it does not claim that a screen looks good.
+
 The honest reason: **consistency comes from constraints.** If you used a bare *"apply StyleSeed"*
 prompt (without the plan-mode + key-color + quality-gate steps [the prompt above](#easy-start-30-seconds)
 includes), the agent reads a summary once and improvises — so colors land at random and there's

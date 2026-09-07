@@ -46,6 +46,9 @@ Choose exactly one first workflow:
 - `ss-score` for code/design quality scoring or gate-floor measurement.
 - `ss-verify` for rendered pixel inspection, screenshot review, or visual verification.
 - `ss-update` for refreshing an installed StyleSeed payload or checking whether it is current.
+- `ss-resolve` and its read-only `scripts/styleseed-doctor.mjs` for local installation integrity,
+  configuration, compiled-rule drift, or missing/stale evidence diagnosis. Do not substitute
+  an update, recompilation, or visual inspection for a status-only request.
 - separately installed `ss-learn` only for explicit learning capture requests; otherwise report that
   the optional learning extension is unavailable.
 

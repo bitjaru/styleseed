@@ -8,6 +8,7 @@ import {
   lstatSync,
   mkdirSync,
   readdirSync,
+  realpathSync,
   writeFileSync,
   renameSync,
 } from "node:fs";
@@ -56,7 +57,7 @@ function safeRunId(value) {
 }
 
 function git(root, args) {
-  return spawnSync("git", ["-C", root, ...args], { encoding: "utf8" });
+  return spawnSync("git", ["-c", "core.fsmonitor=false", "-C", root, ...args], { encoding: "utf8", timeout: 30000, env: { ...process.env, GIT_OPTIONAL_LOCKS: "0" } });
 }
 
 function repositoryRevision(root, sourceRoots, { required = false } = {}) {
@@ -80,7 +81,7 @@ function verifyRepositoryRevision(root, revision, sourceRoots) {
   }
   const commit = git(root, ["cat-file", "-e", `${revision.commit}^{commit}`]);
   if (commit.status !== 0) fail("bound repository revision is unavailable");
-  const tracked = git(root, ["diff", "--quiet", revision.commit, "--", ...sourceRoots]);
+  const tracked = git(root, ["diff", "--no-ext-diff", "--no-textconv", "--quiet", revision.commit, "--", ...sourceRoots]);
   if (tracked.status !== 0) fail("implementation source roots differ from the bound repository revision");
   const untracked = git(root, ["ls-files", "--others", "--exclude-standard", "--", ...sourceRoots]);
   if (untracked.status !== 0) fail(untracked.stderr.trim() || "cannot inspect untracked implementation sources");
@@ -139,7 +140,7 @@ function writeJsonAtomic(path, value) {
   renameSync(temp, path);
 }
 
-export function verifyEvidenceRun({ projectRoot, artifactId, runId }) {
+export function verifyEvidenceRun({ projectRoot, artifactId, runId, writeSummary = true }) {
   const root = resolve(projectRoot);
   const errors = [];
   const warnings = [];
@@ -248,10 +249,12 @@ export function verifyEvidenceRun({ projectRoot, artifactId, runId }) {
       implementation: inventory ? { hash: inventory.hash, files: inventory.files, bytes: inventory.bytes } : null,
     },
   };
-  try {
-    const verificationPath = safeProjectPath(root, `.styleseed/evidence/${artifactId}/${runId}/verification.json`);
-    writeJsonAtomic(verificationPath, summary);
-  } catch (error) { addError(errors, `cannot write verification summary: ${error.message}`); }
+  if (writeSummary) {
+    try {
+      const verificationPath = safeProjectPath(root, `.styleseed/evidence/${artifactId}/${runId}/verification.json`);
+      writeJsonAtomic(verificationPath, summary);
+    } catch (error) { addError(errors, `cannot write verification summary: ${error.message}`); }
+  }
   summary.status = errors.length === 0 && Object.values(gates).every((status) => status === "pass") ? "pass" : "fail";
   return { ok: summary.status === "pass", errors, warnings, gates, summary };
 }
@@ -337,4 +340,4 @@ async function main() {
   if (!result.ok) process.exitCode = 1;
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import.meta.url))) main().catch((error) => { console.error(`evidence gate: ${error.message}`); process.exitCode = 1; });
+if (process.argv[1] && realpathSync(resolve(process.argv[1])) === realpathSync(fileURLToPath(import.meta.url))) main().catch((error) => { console.error(`evidence gate: ${error.message}`); process.exitCode = 1; });

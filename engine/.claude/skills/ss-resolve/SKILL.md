@@ -1,13 +1,15 @@
 ---
 name: ss-resolve
-description: Compile a small, deterministic StyleSeed rule bundle for one agent, output grammar, surface adapter, domain, page type, brand recipe, palette recipe, and optional profile. Use before setup or build, when STYLESEED.md changes, when updating StyleSeed, or whenever an agent would otherwise load the full rule handbook.
+description: Compile a small, deterministic StyleSeed rule bundle for one agent, output grammar, surface adapter, domain, page type, brand recipe, palette recipe, and optional profile. Use before setup or build, when project configuration changes, when updating StyleSeed, or to diagnose local installation, rule drift, and evidence health without changing files.
 ---
 
 # Resolve effective StyleSeed context
 
 Use the bundled `scripts/resolve-context.mjs`; do not hand-compose the rule stack.
 
-1. Read `STYLESEED.md` when it exists. Confirm missing required selections with the user.
+1. Resolve the project boundary first: if either `.styleseed/project.json` or
+   `.styleseed/artifacts/index.json` exists, require a complete, valid registry. Do not fall back
+   to `STYLESEED.md` on a registry error. Only use that lock when no registry exists.
 2. Keep the working directory at the user's project root. Invoke the script by its installed
    path; do not `cd` into the skill directory.
 3. Legacy single-artifact projects should prefer `--from-lock STYLESEED.md`. Registry projects use
@@ -17,7 +19,21 @@ Use the bundled `scripts/resolve-context.mjs`; do not hand-compose the rule stac
    writes `.styleseed/bundles/<artifact-id>.md`.
 5. Preserve the manifest output: legacy uses `.styleseed/manifest.json`; registry uses
    `.styleseed/manifests/<artifact-id>.json`.
-5. Use `--check` to detect context drift without rewriting files.
+6. Use `--check` to detect context drift without rewriting files.
+
+For installation or project-health questions, run the read-only diagnostic first:
+
+```bash
+node <installed-ss-resolve>/scripts/styleseed-doctor.mjs --project-root . --json
+```
+
+It checks the local distribution inventory, project configuration, compiled rules, and stored
+evidence against current inputs. Use `--artifact <id>` to narrow a registry check. It never
+sets up, migrates, recompiles, renders, or updates the project. Follow its `next` actions only
+within the user's authorization. Exit 0 means current evidence for all selected artifacts,
+not an independent visual judgment; exit 1 means attention needed; exit 2 means invalid invocation.
+Legacy projects can have current rules while evidence remains `unsupported`. Installation
+integrity does not prove host discovery, publisher authenticity, or the latest upstream revision.
 
 ```bash
 node <installed-ss-resolve>/scripts/resolve-context.mjs \

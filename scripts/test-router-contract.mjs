@@ -39,6 +39,8 @@ function routeIntent({
       return { kind: "workflow", workflow: "ss-verify" };
     case "update":
       return { kind: "workflow", workflow: "ss-update" };
+    case "diagnose":
+      return { kind: "workflow", workflow: "ss-resolve" };
     case "ambiguous-build-vs-studio":
       return { kind: "question", question: "build-vs-studio" };
     case "ambiguous-audit-vs-score-vs-verify":
@@ -89,6 +91,7 @@ const fixtures = [
   [{ intent: "score" }, { kind: "workflow", workflow: "ss-score" }],
   [{ intent: "verify" }, { kind: "workflow", workflow: "ss-verify" }],
   [{ intent: "update" }, { kind: "workflow", workflow: "ss-update" }],
+  [{ intent: "diagnose" }, { kind: "workflow", workflow: "ss-resolve" }],
   [{ intent: "build", explicitLearning: true }, { kind: "workflow", workflow: "ss-learn" }],
   [{ intent: "build", directSkill: "ss-build" }, { kind: "workflow", workflow: "ss-build" }],
   [{ intent: "ambiguous-build-vs-studio" }, { kind: "question", question: "build-vs-studio" }],

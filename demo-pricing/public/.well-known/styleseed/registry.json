@@ -20,7 +20,7 @@
   },
   "context": {
     "engineVersion": "4.1.0",
-    "engineRevision": "sha256:d0973a8e13aee65358636e54c748371c53eb892545623a747fc11faca2a18e7f",
+    "engineRevision": "sha256:9e707554af2244788bb7c7ebcafb1ba32c364265ceefb879a509a1a2271ba815",
     "resolverSkill": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-resolve/SKILL.md",
     "catalogUrl": "https://styleseed-demo.vercel.app/.well-known/styleseed/context-catalog.json",
     "grammarIds": [

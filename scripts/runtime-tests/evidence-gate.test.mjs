@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
@@ -239,6 +239,27 @@ function runGate(args, projectRoot) {
 
 test("planned evidence gate module exists and can be imported", async () => {
   await import(gateScript);
+});
+
+test("read-only verification rechecks evidence without creating or replacing its summary", async () => {
+  const root = makeProjectRoot("styleseed-gate-readonly-");
+  try {
+    writeFixtureProject(root);
+    const { verifyEvidenceRun } = await import(gateScript);
+    const args = { projectRoot: root, artifactId: "app-dashboard", runId: "run-001", writeSummary: false };
+    const summary = resolve(root, ".styleseed/evidence/app-dashboard/run-001/verification.json");
+    const first = verifyEvidenceRun(args);
+    assert.equal(first.ok, true, JSON.stringify(first.errors));
+    assert.equal(existsSync(summary), false);
+    writeFileSync(summary, '{"status":"pass","cached":true}\n');
+    const before = readFileSync(summary, "utf8");
+    writeFileSync(resolve(root, ".styleseed/evidence/app-dashboard/run-001/code.json"), '{"score":100}\n');
+    const second = verifyEvidenceRun(args);
+    assert.equal(second.ok, false);
+    assert.equal(readFileSync(summary, "utf8"), before);
+    verifyEvidenceRun({ ...args, writeSummary: true });
+    assert.equal(JSON.parse(readFileSync(summary, "utf8")).status, "fail");
+  } finally { rmSync(root, { recursive: true, force: true }); }
 });
 
 test("attach accepts and binds a generated deterministic report", () => {

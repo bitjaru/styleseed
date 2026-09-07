@@ -36,7 +36,8 @@ function compileCheck(root, id, agent, registry) {
   const result = spawnSync(process.execPath, args, { encoding: "utf8", timeout: 30000, maxBuffer: 1024 * 1024 });
   return {
     status: result.status === 0 ? "current" : result.status === 2 ? "stale" : "invalid",
-    detail: (result.error?.message || result.stderr || result.stdout || "Resolver did not complete").trim(),
+    detail: (result.error?.message || result.stderr?.trim() || result.stdout?.trim()
+      || (result.status === 0 ? "Compiled rules and manifest match the current project contract." : "Resolver did not complete")).trim(),
     ...(result.status === 0 ? {} : { next: "Run ss-resolve for this artifact after reviewing the reported drift; doctor does not recompile." }),
   };
 }

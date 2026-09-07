@@ -113,6 +113,7 @@ test("fresh processes preserve React project choices and isolate artifact drift"
   const first = diagnose(root);
   assert.equal(first.exit, 1);
   assert.ok(first.report.artifacts.every((entry) => entry.compilation.status === "current" && entry.evidence.status === "missing"));
+  assert.ok(first.report.artifacts.every((entry) => entry.compilation.detail === "Compiled rules and manifest match the current project contract."));
   assert.deepEqual(diagnose(root), first);
   assert.deepEqual(snapshot(root), before);
   const path = resolve(root, ".styleseed/artifacts/settings.json");

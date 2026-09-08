@@ -15,14 +15,23 @@ of design judgment.
 
 ## Step 1 — Establish the rule set before code
 
-If `STYLESEED.md` does not exist, run `/ss-setup` and write it before UI code. If the user
-supplied a visual reference that the selected built-in grammar does not capture, run
-`/ss-reference` first. Never reduce an unfamiliar reference to a palette swap.
+If either `.styleseed/project.json` or `.styleseed/artifacts/index.json` exists, require a
+complete, valid registry and resolve the requested artifact with the installed resolver's
+`scripts/resolve-context.mjs --project-root . --artifact <artifact-id> --agent <agent>`.
+Read `.styleseed/bundles/<artifact-id>.md` and preserve `.styleseed/manifests/<artifact-id>.json`
+as provenance. Do not create `STYLESEED.md`, restart setup, or use a legacy bundle because a
+registry is incomplete, invalid, or lacks a compiled output. Resolve missing scope with the user.
+For changes spanning multiple artifacts, resolve and check each affected artifact separately.
 
-Then invoke `/ss-resolve` (Claude Code) or `$ss-resolve` (Codex), or run its bundled
-`scripts/resolve-context.mjs --project-root . --from-lock STYLESEED.md --agent <agent>`.
-Read `.styleseed/effective-rules.md` and preserve `.styleseed/manifest.json` as the provenance
-record. Do not load `llms-full.txt` after resolution succeeds.
+Only when neither registry file exists, use the legacy path: if `STYLESEED.md` is missing,
+run `/ss-setup` before UI code; otherwise preserve it. Invoke `/ss-resolve` (Claude Code) or
+`$ss-resolve` (Codex) with `--from-lock STYLESEED.md --agent <agent>`, read
+`.styleseed/effective-rules.md`, and preserve `.styleseed/manifest.json`.
+
+If a supplied visual reference is not represented by the selected grammar, use `/ss-reference`
+within the selected project boundary. Never reduce an unfamiliar reference to a palette swap or
+replace approved project choices without human approval. Do not load `llms-full.txt` after
+resolution succeeds.
 
 ## Step 2 — Compose, do not improvise
 
@@ -71,7 +80,7 @@ Report:
 - final code score;
 - visual verification status and viewport;
 - material fixes made by the gates;
-- `STYLESEED.md` and any compiled grammar path.
+- project/artifact configuration paths (or legacy `STYLESEED.md`) and any compiled grammar path.
 
 ## Rules
 

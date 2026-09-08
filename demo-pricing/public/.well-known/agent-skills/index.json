@@ -20,7 +20,7 @@
       "type": "skill-md",
       "description": "Build a screen with StyleSeed's composed design method — choose or compile an output grammar, apply a brand recipe plus domain/page/profile/lock constraints, then run the code and pixel gates before presenting.",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-build/SKILL.md",
-      "digest": "sha256:6da3ee935fc1c86d52017f90343f67923c3a596dcee44ff7b055c584e9b58b03"
+      "digest": "sha256:79a9d4130284675cead5ed24ed9ac91b923dccb60f8710b0613088294a711169"
     },
     {
       "name": "ss-component",
@@ -153,7 +153,7 @@
       "type": "skill-md",
       "description": "The VISUAL gate — render a UI or visual artifact through its surface adapter, inspect the actual pixels, then fix and re-render until it passes the composed StyleSeed rule set.",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-verify/SKILL.md",
-      "digest": "sha256:55446eb821129be6bac83a5a1ebd6bcfccb67649156d7ea92d8418770aa60a3f"
+      "digest": "sha256:dc4fe9918b6b4543e294ecd5983a1e19faf5a4c93ce505c45880774f5b5c7ade"
     },
     {
       "name": "styleseed",

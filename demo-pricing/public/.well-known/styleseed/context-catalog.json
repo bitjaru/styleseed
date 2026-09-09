@@ -1,7 +1,7 @@
 {
   "schemaVersion": 5,
   "engineVersion": "4.1.0",
-  "engineRevision": "sha256:9e707554af2244788bb7c7ebcafb1ba32c364265ceefb879a509a1a2271ba815",
+  "engineRevision": "sha256:b7452d014022391d6c99e50bbe38e79c14587399d0a6b676b2f32a2c6784588e",
   "distributionSource": {
     "schemaVersion": 1,
     "channel": "edge",
@@ -10,7 +10,7 @@
   },
   "distributions": {
     "core": {
-      "revision": "sha256:9e707554af2244788bb7c7ebcafb1ba32c364265ceefb879a509a1a2271ba815",
+      "revision": "sha256:b7452d014022391d6c99e50bbe38e79c14587399d0a6b676b2f32a2c6784588e",
       "files": [
         {
           "path": "LICENSE",
@@ -34,8 +34,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-build/SKILL.md",
-          "sha256": "6da3ee935fc1c86d52017f90343f67923c3a596dcee44ff7b055c584e9b58b03",
-          "bytes": 4233
+          "sha256": "79a9d4130284675cead5ed24ed9ac91b923dccb60f8710b0613088294a711169",
+          "bytes": 4986
         },
         {
           "path": "engine/.claude/skills/ss-component/SKILL.md",
@@ -274,8 +274,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-verify/SKILL.md",
-          "sha256": "55446eb821129be6bac83a5a1ebd6bcfccb67649156d7ea92d8418770aa60a3f",
-          "bytes": 8632
+          "sha256": "dc4fe9918b6b4543e294ecd5983a1e19faf5a4c93ce505c45880774f5b5c7ade",
+          "bytes": 9241
         },
         {
           "path": "engine/.claude/skills/styleseed/SKILL.md",
@@ -294,8 +294,8 @@
         },
         {
           "path": "engine/AGENTS.md",
-          "sha256": "87066141feec85f1986ca8b9ebdafcba045f6097adcefc919ab6d72f70a59bfd",
-          "bytes": 8043
+          "sha256": "4bf893bd99ec92292b92fd9397c156726e0449c7fb9e24c7739f155d476b7e6a",
+          "bytes": 8482
         },
         {
           "path": "engine/APP-PLAYBOOKS.md",
@@ -420,7 +420,7 @@
       ]
     },
     "skills": {
-      "revision": "sha256:780df1cbc5abb4673fa75c0d1e39c876305dd7aec978a0c97f30f396e485a9a2",
+      "revision": "sha256:f537892a19e6be28c6f7add81c012e9328c0a4088375532c64094f4bc99f25b8",
       "files": [
         {
           "path": "engine/.claude/skills/ss-a11y/SKILL.md",
@@ -434,8 +434,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-build/SKILL.md",
-          "sha256": "6da3ee935fc1c86d52017f90343f67923c3a596dcee44ff7b055c584e9b58b03",
-          "bytes": 4233
+          "sha256": "79a9d4130284675cead5ed24ed9ac91b923dccb60f8710b0613088294a711169",
+          "bytes": 4986
         },
         {
           "path": "engine/.claude/skills/ss-component/SKILL.md",
@@ -674,8 +674,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-verify/SKILL.md",
-          "sha256": "55446eb821129be6bac83a5a1ebd6bcfccb67649156d7ea92d8418770aa60a3f",
-          "bytes": 8632
+          "sha256": "dc4fe9918b6b4543e294ecd5983a1e19faf5a4c93ce505c45880774f5b5c7ade",
+          "bytes": 9241
         },
         {
           "path": "engine/.claude/skills/styleseed/SKILL.md",
@@ -708,8 +708,8 @@
     },
     {
       "path": ".claude/skills/ss-build/SKILL.md",
-      "sha256": "6da3ee935fc1c86d52017f90343f67923c3a596dcee44ff7b055c584e9b58b03",
-      "bytes": 4233
+      "sha256": "79a9d4130284675cead5ed24ed9ac91b923dccb60f8710b0613088294a711169",
+      "bytes": 4986
     },
     {
       "path": ".claude/skills/ss-component/SKILL.md",
@@ -948,8 +948,8 @@
     },
     {
       "path": ".claude/skills/ss-verify/SKILL.md",
-      "sha256": "55446eb821129be6bac83a5a1ebd6bcfccb67649156d7ea92d8418770aa60a3f",
-      "bytes": 8632
+      "sha256": "dc4fe9918b6b4543e294ecd5983a1e19faf5a4c93ce505c45880774f5b5c7ade",
+      "bytes": 9241
     },
     {
       "path": ".claude/skills/styleseed/SKILL.md",
@@ -968,8 +968,8 @@
     },
     {
       "path": "AGENTS.md",
-      "sha256": "87066141feec85f1986ca8b9ebdafcba045f6097adcefc919ab6d72f70a59bfd",
-      "bytes": 8043
+      "sha256": "4bf893bd99ec92292b92fd9397c156726e0449c7fb9e24c7739f155d476b7e6a",
+      "bytes": 8482
     },
     {
       "path": "APP-PLAYBOOKS.md",

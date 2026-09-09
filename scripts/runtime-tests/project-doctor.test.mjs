@@ -178,6 +178,45 @@ test("current evidence is rechecked read-only and success is artifact-scoped", (
   assert.equal(diagnose(root, ["--artifact", "dashboard"]).report.artifacts[0].evidence.status, "invalid");
 });
 
+test("shared UI edits invalidate both artifacts while preserving approved DNA and bundles", (t) => {
+  const root = temporary(t);
+  app(root);
+  const shared = resolve(root, "src/shared/tokens.css");
+  write(shared, ":root { --control-height: 48px; }\n");
+  for (const id of ["dashboard", "settings"]) {
+    const path = resolve(root, `.styleseed/artifacts/${id}.json`);
+    const config = readJson(path);
+    config.implementation.sourceRoots.push("src/shared");
+    config.implementation.tokenFiles.push("src/shared/tokens.css");
+    write(path, config);
+  }
+  compile(root);
+  const approved = snapshot(resolve(root, ".styleseed"));
+  for (const id of ["dashboard", "settings"]) syntheticEvidence(root, id, "baseline");
+  assert.equal(diagnose(root).exit, 0);
+  write(shared, ":root { --control-height: 48px; --search-width: 24rem; }\n");
+  const stale = diagnose(root);
+  assert.equal(stale.exit, 1);
+  assert.ok(stale.report.artifacts.every((entry) => entry.compilation.status === "current"));
+  assert.ok(stale.report.artifacts.every((entry) => entry.evidence.status === "invalid"));
+  // A stored pass and a no-op recompilation cannot bless changed source bytes.
+  for (const id of ["dashboard", "settings"]) {
+    write(resolve(root, `.styleseed/evidence/${id}/baseline/verification.json`), { status: "pass" });
+  }
+  compile(root);
+  assert.equal(diagnose(root).exit, 1);
+  syntheticEvidence(root, "dashboard", "fresh");
+  assert.equal(diagnose(root, ["--artifact", "dashboard"]).exit, 0);
+  assert.equal(diagnose(root).exit, 1); // shared detail still needs its own fresh evidence
+  syntheticEvidence(root, "settings", "fresh");
+  assert.equal(diagnose(root).exit, 0);
+  assert.ok(diagnose(root).report.artifacts.every((entry) => entry.evidence.currentRunIds.join() === "fresh"));
+  const after = snapshot(resolve(root, ".styleseed"));
+  for (const path of Object.keys(approved)) assert.equal(after[path].hash, approved[path].hash, path);
+  assert.equal(existsSync(resolve(root, "STYLESEED.md")), false);
+  assert.equal(existsSync(resolve(root, ".styleseed/effective-rules.md")), false);
+});
+
 test("Git-bound diagnosis preserves the index and refuses changed implementation", (t) => {
   const root = temporary(t);
   app(root);

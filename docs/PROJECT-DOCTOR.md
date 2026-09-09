@@ -49,6 +49,13 @@ Legacy checks reuse the stored manifest's agent, falling back to Codex when no m
 Use `--json` for the schema-versioned report. With `--artifact`, success is scoped to that one
 artifact, not the whole repository. Running without it checks every registered artifact.
 
+Shared UI files must be included in every consuming artifact's declared implementation roots.
+Changing a shared stylesheet or component can leave both compiled contracts `current` while
+making both evidence runs `invalid`. Recompiling the same contract does not refresh source or
+render evidence; collect and verify a new run for each affected artifact. A passing run for
+only one artifact does not make the whole project current. See the
+[external-app acceptance procedure](EXTERNAL-APP-ACCEPTANCE.md).
+
 ## Verification boundary
 
 Inventory consistency does not establish publisher authenticity, the latest upstream release,

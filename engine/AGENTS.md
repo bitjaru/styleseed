@@ -63,8 +63,14 @@ palette mode.
 
 ## Design lock — read before every visual task
 
-Look for `STYLESEED.md` in the project root. If missing, use setup before writing visual code or
-render scripts. A valid lock resembles:
+First apply the artifact registry boundary above. If either registry file exists, require both
+files and valid artifact configuration; do not create `STYLESEED.md` or restart setup on a
+registry error. Project DNA lives in `.styleseed/project.json`, and each affected artifact owns
+its configuration, bundle, manifest, and validation contract. Preserve approved choices.
+
+Only when neither registry file exists, look for `STYLESEED.md` in the project root. If that
+legacy lock is missing, use setup before writing visual code or render scripts. A valid legacy
+lock resembles:
 
 ```markdown
 # StyleSeed — Design Lock

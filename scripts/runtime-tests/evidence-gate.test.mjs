@@ -5,7 +5,7 @@ import { existsSync, mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync
 import { spawnSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(here, "..", "..");
@@ -238,14 +238,14 @@ function runGate(args, projectRoot) {
 }
 
 test("planned evidence gate module exists and can be imported", async () => {
-  await import(gateScript);
+  await import(pathToFileURL(gateScript).href);
 });
 
 test("read-only verification rechecks evidence without creating or replacing its summary", async () => {
   const root = makeProjectRoot("styleseed-gate-readonly-");
   try {
     writeFixtureProject(root);
-    const { verifyEvidenceRun } = await import(gateScript);
+    const { verifyEvidenceRun } = await import(pathToFileURL(gateScript).href);
     const args = { projectRoot: root, artifactId: "app-dashboard", runId: "run-001", writeSummary: false };
     const summary = resolve(root, ".styleseed/evidence/app-dashboard/run-001/verification.json");
     const first = verifyEvidenceRun(args);

@@ -78,9 +78,13 @@ const coreChecks = [
 for (const [label, command, args] of coreChecks) run(label, command, args);
 
 if (!flags.has("--core")) {
+  run("Typecheck design-pilot API examples", node, ["scripts/check-design-pilot-examples.mjs"]);
   const buildArgs = flags.has("--webpack") ? ["run", "build", "--", "--webpack"] : ["run", "build"];
   run(flags.has("--webpack") ? "Build demo with Webpack" : "Build demo with Turbopack", npmCommand, buildArgs, demoRoot);
-  if (flags.has("--browser")) run("Run browser smoke tests", npmCommand, ["run", "test:browser"], demoRoot);
+  if (flags.has("--browser")) {
+    run("Run browser smoke tests", npmCommand, ["run", "test:browser"], demoRoot);
+    run("Calibrate design-pilot browser acceptance", node, ["scripts/test-design-pilot-browser.mjs", "--calibrate"]);
+  }
 }
 
 run("Check patch whitespace", "git", ["diff", "--check"]);

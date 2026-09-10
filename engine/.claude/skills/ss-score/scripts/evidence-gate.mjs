@@ -12,7 +12,7 @@ import {
   writeFileSync,
   renameSync,
 } from "node:fs";
-import { resolve } from "node:path";
+import { basename, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   containedRegularFile,
@@ -135,7 +135,7 @@ function writeJsonAtomic(path, value) {
     const stats = lstatSync(path);
     if (!stats.isFile() || stats.isSymbolicLink() || stats.nlink !== 1) fail(`refusing unsafe generated output: ${path}`);
   }
-  const temp = resolve(parent, `.${path.split("/").at(-1)}.${process.pid}.tmp`);
+  const temp = resolve(parent, `.${basename(path)}.${process.pid}.tmp`);
   writeFileSync(temp, `${JSON.stringify(value, null, 2)}\n`, { mode: 0o600, flag: "wx" });
   renameSync(temp, path);
 }

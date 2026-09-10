@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="styleseed-pilot-protocol" content="1">
+  <title>Browser evaluator calibration — not a product UI</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { font: 16px/1.5 system-ui, sans-serif; margin: 16px auto; padding: 0 16px; max-width: 960px; }
+    a, button, input:not([type=checkbox]), select, label:has(input[type=checkbox]) { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; padding: 8px; font: inherit; }
+    label:has(input[type=checkbox]) { gap: 8px; }
+    input:not([type=checkbox]), select { max-width: 100%; }
+    :focus-visible { outline: 3px solid #174ea6; outline-offset: 2px; }
+    nav, .controls { display: flex; flex-wrap: wrap; gap: 8px; }
+    [data-resource-id], fieldset { margin: 12px 0; padding: 12px; border: 1px solid #777; min-width: 0; }
+    form label { display: block; }
+    dialog { max-width: calc(100% - 32px); }
+    [role=alert] { border-left: 4px solid #9c1717; padding-left: 12px; }
+    [hidden] { display: none !important; }
+    @keyframes calibration-motion { to { transform: translateX(6px); } }
+  </style>
+</head>
+<body>
+  <p>Operator-only browser test double. No expert approval or design-quality result.</p>
+  <nav aria-label="Primary"><a href="/resources">Resources</a><a href="/settings">Settings</a></nav>
+  <aside aria-label="Fixture controls"><label for="save-outcome">Save outcome</label><select id="save-outcome"><option value="success">Success</option><option value="failure">Failure</option></select></aside>
+  <main></main>
+  <script id="calibration-config" type="application/json">CALIBRATION_CONFIG</script>
+  <script type="module" src="/app.mjs"></script>
+</body>
+</html>

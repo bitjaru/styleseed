@@ -1,7 +1,7 @@
 {
   "name": "styleseed",
   "version": "4.1.0",
-  "description": "A design-method engine with durable project rules, verification workflows, and reproducible UI workflows.",
+  "description": "A design-method engine for making expert design decisions repeatable by coding agents, with project-owned rules and reviewable evidence.",
   "author": {
     "name": "bitjaru",
     "url": "https://github.com/bitjaru"
@@ -19,8 +19,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "StyleSeed",
-    "shortDescription": "Durable design judgment and verified UI workflows",
-    "longDescription": "Select or compile a design grammar, preserve bounded project decisions, build with a coherent visual method, and verify the rendered result.",
+    "shortDescription": "Expert design decisions, repeatable by coding agents",
+    "longDescription": "Make recorded expert decisions usable in coding-agent workflows: compile selected rules, preserve project choices, build, and inspect the result. Support expert judgment, not replace it; a passing score is not human acceptance.",
     "developerName": "bitjaru",
     "category": "Developer Tools",
     "capabilities": [

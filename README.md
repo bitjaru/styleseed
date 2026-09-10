@@ -4,9 +4,9 @@
 
 # StyleSeed
 
-### Teach your AI fixed design judgment.<br />Not one fixed aesthetic.
+### Make expert design judgment<br />repeatable by coding agents.
 
-<sub>Your AI coding agent sets up the design system, a scored gate keeps the quality, and the decisions live in your repo, maintained across screens and sessions — <b>designed-looking products without a design team</b>. Open source, for Claude Code · Codex · Cursor.</sub>
+<sub>StyleSeed turns recorded design decisions into project-local rules and implementation workflows. <b>Support experts, not replace them with a collection of tastes.</b> Open source, for Claude Code · Codex · Cursor.</sub>
 
 <br />
 <br />
@@ -23,16 +23,22 @@
 
 ## Easy Start (30 seconds)
 
+Our goal is repeatable application of expert judgment, not a claim of expert-level output today.
+The engine compiles selected rules, preserves project choices, and supports code and rendered
+checks. A score does not replace human design acceptance.
+[Product principles](engine/PRODUCT-PRINCIPLES.md) · [Quality-first roadmap](ROADMAP.md)
+
 **1. Open your project in Claude Code, Codex, Cursor, or another coding agent.**
 
 **2. Paste this message:**
 
 ```text
-Install StyleSeed with `npx skills add bitjaru/styleseed`, then set it up for this project. Ask what I am building and only the design choices you need. Choose the right output grammar, brand recipe, and semantic palette—or derive a local grammar from my references. For a full concept with three directions, image/video jobs, and a working interaction reel, use `/ss-studio` in Claude Code or `$ss-studio` in Codex. Otherwise resolve the approved direction with `/ss-resolve` or `$ss-resolve`, build with one clear focal point, score to at least 80, then render and visually verify it before showing me.
+Install StyleSeed with `npx skills add bitjaru/styleseed`, then set it up for this project. Help the agent repeat our design decisions, not replace our design system. First inspect approved tokens, components, and project choices; report unsupported choices instead of silently remapping them. Ask what I am building and only the unresolved decisions you need. Choose a supported output grammar, brand recipe, and semantic palette—or derive a local grammar from my references. For creative exploration use `/ss-studio` in Claude Code or `$ss-studio` in Codex and pause for my selection. Otherwise resolve the approved direction with `/ss-resolve` or `$ss-resolve`, implement, score to at least 80, and inspect the rendered result. Report evidence and remaining human decisions; do not treat a score as my approval.
 ```
 
 **3. Approve the install, answer the short setup questions, and describe what you want to build.**
-StyleSeed handles the design lock, build, code gate, and visual check. No design-system knowledge required.
+The invoked workflow handles the design lock, build, code gate, and visual check. Bring existing
+design decisions when you have them; review proposed choices when you do not.
 
 | Agent | If you want to run it manually |
 |---|---|
@@ -53,18 +59,21 @@ release manifest, Windows PowerShell evidence, CI, SBOM, benchmark boundary, and
 > [`good first issue`](https://github.com/bitjaru/styleseed/issues?q=is%3Aissue%20is%3Aopen%20label%3A%22good%20first%20issue%22).
 > Small docs and test fixes need no proposal. See the [15-minute contribution path](CONTRIBUTING.md#first-pr-in-about-15-minutes).
 
-## What it bans on sight
+## What the current rules check
 
-The "AI-generated look" isn't bad luck — it's a list of nameable tells. StyleSeed ships **74 rules** that ban them, and a **0–100 scored gate** that tells an installed agent to revise screens below 80 before presentation. The gate is enforced when the StyleSeed build workflow is actually invoked; a markdown file alone cannot block delivery.
+StyleSeed ships **74 craft rules** and a **0–100 scored gate** that tells an installed agent to
+revise screens below 80 before presentation. Checks must be interpreted through the selected
+grammar and project contract, not as universal taste. The workflow must actually be invoked;
+a markdown file alone cannot block delivery, and 80 points is not expert approval.
 
-| Banned | Why |
+| Check | Why |
 |---|---|
-| Default indigo `#4F46E5` / `#5E6AD2` accent | the universal "an AI made this" color |
+| Unselected default accent | require an intentional, recorded color role |
 | Emoji as UI icons 🚗 🧺 ⭐ | inject random colors, render differently per OS |
 | The icon-in-a-chip above every feature card | gen-1 AI tell — decoration pretending to be information |
 | All-even grid of same-weight centered cards | the #1 machine-composed tell: no focal point |
-| Pure `#000` backgrounds | a flat void — real dark UIs use layered ramps |
-| Font sizes outside one fixed table | size drift is why screens feel "off" but you can't say why |
+| Accidental flat-black backgrounds | use the selected grammar's surface model; explicit supported exceptions differ |
+| Type sizes outside the selected scale | prevent unintentional hierarchy drift |
 | Hardcoded hex in components | tokens only — otherwise the lock can't hold across screens |
 
 <sub>Banning the defaults isn't enough — agents converge on new uniforms once the old ones are blocked. That's why the rules come with an enforced score-then-fix loop, not a checklist. [What happens after install ↓](#what-happens-after-easy-start)</sub>
@@ -102,9 +111,9 @@ geometry, containment, controls, collections, density, and motion.
 
 <br />
 
-**StyleSeed fixes the design method — not one Toss-like aesthetic.**
+**Expert decisions become repeatable instructions — not one universal aesthetic.**
 
-**Judgment, not data** — how designers *think*, not a palette collection &nbsp;·&nbsp;
+**Judgment with implementation context** — decisions, applicability, and evidence, not just palettes &nbsp;·&nbsp;
 **Right grammar for the result** — consumer service, operations, technical, editorial,
 commerce, institutional, marketing, or sequential story &nbsp;·&nbsp;
 **Real morphology choices** — nine brand recipes change structure and component selection,
@@ -267,11 +276,13 @@ applies them every time:
 
 ## Data vs Judgment
 
-Every "help LLMs design better" project solves the wrong half of the problem. They feed the model more **design data** — brand palettes, font specs, shadow tokens, component libraries. I tried that first. Dumped Toss's entire design token JSON into my prompts. The output was still generic.
+Tokens and components are necessary, but they do not explain every design decision. Agents also
+need to know when a pattern applies, why it fits the task, which choices are approved, and how
+to handle exceptions. Expert judgment and implementation material need to travel together.
 
-Then it hit me: **a junior designer with Toss's palette still ships ugly dashboards. A senior designer with only grayscale ships something refined.** The difference isn't what they have. It's what they know to do with it.
-
-Design data is the paint. Design judgment is knowing where to put it.
+StyleSeed's goal is to make that judgment repeatable while leaving intent, tradeoffs, and
+acceptance with people. The current engine is a starting point; component-context experiments
+and independent human evaluation are the next steps, not completed capabilities.
 
 <div align="center">
   <a href="https://styleseed-demo.vercel.app/how-it-thinks">
@@ -287,22 +298,21 @@ StyleSeed is a **design-method engine** — 74 craft rules, 8 output grammars, 5
 adapters, 48 components, a reference compiler, a named motion system, and 23 agent skills:
 
 ```
-"The most refined black isn't #000 — it's #2A2A2A"
-"One accent color in the entire app. Everything else grayscale. Restraint is elegance."
-"Shadows at 4% opacity. If you can see it, it's already too much."
-"Numbers and units at 2:1 ratio. 48px number, 24px unit. Always."
-"Never repeat the same section type twice. Alternate tall and compact for rhythm."
-"Card/background separation matters more than any border."
+"Use the approved semantic roles rather than inventing component-local colors."
+"Select grouping and density for the task, not for a favorite template."
+"Preserve the project's type and surface system across screens."
+"Loading, empty, error, and recovery states are part of the implementation."
+"Record unsupported choices instead of silently changing the design system."
 ```
 
-Nobody writes these down. They're baked into years of experience — invisible to outsiders, invisible to LLMs. StyleSeed writes them down, organizes them into six categories (color discipline, spatial rhythm, information hierarchy, shadow/elevation, component variance, motion/feedback), and hands them to Claude as a single markdown file it reads automatically.
-
-The rules are **brand-agnostic** — they don't reference specific colors, only semantic tokens. Which means the same rulebook works whether your app looks like Toss, Vercel, or your client's weird purple brand. Swap the skin, the judgment carries over.
+StyleSeed organizes maintained guidance by grammar, adapter, domain, and project choices,
+then compiles the selected context for the agent. Defaults are not universal expert decisions:
+unsupported project choices need an explicit review, not a silent palette or component swap.
 
 <div align="center">
   <img src="showcase/light-hero.png" width="260" alt="Light mode" />&nbsp;&nbsp;&nbsp;&nbsp;<img src="showcase/dark-hero.png" width="260" alt="Dark mode" />
   <br />
-  <em>Same engine, different skins. Built with Claude Code. Zero designer.</em>
+  <em>Same engine, different token skins. Examples, not proof that expert review is unnecessary.</em>
 </div>
 
 <details>
@@ -723,7 +733,9 @@ React 18 · TypeScript · Tailwind CSS v4 · Radix UI · Vite 6 · Lucide Icons 
 | Price | Free (MIT) | Free | $299+ | Free | — |
 | Works *with* AI coding tools | ✅ | Indirect | Indirect | Indirect | — |
 
-**TL;DR:** shadcn/ui gives you components. Tailwind UI gives you templates. StyleSeed gives you the *design judgment* that makes AI output stop looking like AI output.
+**TL;DR:** component libraries supply implementation material. StyleSeed adds recorded design
+decisions and workflows for applying and checking them. Its goal is repeatable expert judgment,
+not replacing the designer or the project's component library.
 
 ## FAQ
 

@@ -160,7 +160,7 @@
       "type": "skill-md",
       "description": "Route a StyleSeed request to exactly one first workflow after resolving the current artifact boundary. Use when the user asks generally for StyleSeed help rather than invoking one specific ss-* skill.",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/styleseed/SKILL.md",
-      "digest": "sha256:3837248e3a82505a140818c9043882b17255891e285c907132b2551c6ab18bfc"
+      "digest": "sha256:10ffdaefbd174a1e3f4f32e2ce7623ae7c0e81241f788050edc79d13204180cc"
     }
   ]
 }

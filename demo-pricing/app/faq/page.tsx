@@ -5,10 +5,10 @@ import { ArrowLeft, ArrowRight, Star } from "lucide-react";
 const BASE = "https://styleseed-demo.vercel.app";
 
 const description =
-  "Answers to the real questions developers ask about AI-built UI: design quality, persistent judgment, private local learning, revision-safe updates, and StyleSeed workflows for Claude Code, Codex, and Cursor.";
+  "How StyleSeed helps coding agents apply recorded design decisions: expert authority, existing design systems, quality checks, private learning, and honest implementation limits.";
 
 export const metadata: Metadata = {
-  title: "FAQ — making AI-built UI look designed, not generated",
+  title: "FAQ — expert judgment and coding agents",
   description,
   keywords: [
     "make my app look professional",
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: `${BASE}/faq`,
-    title: "FAQ — making AI-built UI look designed, not generated",
+    title: "FAQ — expert judgment and coding agents",
     description,
     siteName: "StyleSeed",
     images: [{ url: `${BASE}/og/coherence.png`, width: 1280, height: 640 }],
@@ -36,6 +36,14 @@ export const metadata: Metadata = {
 /** Answer leads with a self-contained 40–60 word capsule (the citation unit), then optional context. */
 const FAQ: { q: string; a: string }[] = [
   {
+    q: "What is StyleSeed's goal — does it replace designers?",
+    a: "StyleSeed aims to make expert design judgment repeatable by coding agents, not replace experts with aesthetic preferences. People own intent, tradeoffs, and acceptance. The current engine compiles selected rules, preserves project choices, and supports implementation checks; passing those checks does not establish expert-level quality.",
+  },
+  {
+    q: "Can it work with our existing design system?",
+    a: "Preserving an approved system is a product priority, not a promise of universal import today. Start from the project's real components, semantic tokens, and decisions. Where the engine cannot express them, report the mismatch instead of silently choosing a StyleSeed preset. Component-contract integration and independent quality evaluation are planned research.",
+  },
+  {
     q: "My app looks generic / AI-generated — how do I fix it?",
     a: "StyleSeed fixes generic, “AI-slop” UI with 74 design rules covering color discipline, spacing rhythm, hierarchy, elevation, and motion. Install the project entry or invoke the installed StyleSeed workflow so Claude Code, Codex, or Cursor actually loads those rules for visual work. Instead of defaulting to slate neutrals and 8px radius on everything, the workflow pushes the output toward one intentional system. It's MIT-licensed and free.",
   },
@@ -45,7 +53,7 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "Why does the same prompt give a great result one time and a generic one the next?",
-    a: "Because output quality tracks how many constraints the agent has, not luck. A polished result happens when the rules, the key color, the skin, and a review pass are all pinned; a generic one happens when the agent improvised from a summary. Reduce the variance by deciding app type, accent, and motion up front (ideally in plan mode), installing the rule files so they persist across prompts, and running /ss-review to catch drift. More constraints = less variance.",
+    a: "A prompt alone may leave important decisions implicit, and models can still vary even with the same context. Record the approved system, load the relevant rules and implementation material, and inspect the result. More constraints are not automatically better: task fit, correct components, meaningful states, and human review matter alongside consistency.",
   },
   {
     q: "Why does every shadcn app look the same, and how do I make mine different?",
@@ -93,7 +101,7 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "How do I make my app look more professional / polished / expensive?",
-    a: "Generic-to-premium is mostly discipline: one saturated accent, a real font pairing, an 8pt spacing scale, intentional hierarchy, a signature shadow, and subtle motion. StyleSeed encodes all of these as 74 rules Claude Code, Codex, and Cursor follow automatically, so “make it look more professional” produces an actually professional result instead of more average defaults.",
+    a: "Start with the task and your approved design system, then review hierarchy, typography, density, states, and responsive behavior using real content. StyleSeed supplies maintained guidance and an implementation/check loop when invoked. It does not guarantee professional quality, and a preset, extra shadow, or passing score cannot replace an expert review.",
   },
   {
     q: "My spacing feels off and my layout looks cramped — how do I fix it?",
@@ -105,7 +113,7 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "Why does my app look amateur or unfinished?",
-    a: "Apps look amateur when there's no system-level owner: inconsistent spacing, too many colors, default type, no hover or loading states. StyleSeed gives your AI agent that ownership — 74 rules plus a motion system for hover, loading, success, and error states — so the last 20% of polish that separates real products from prototypes gets handled.",
+    a: "Missing hierarchy, inconsistent components, incomplete states, and unclear ownership can all leave a product unfinished. StyleSeed helps the agent apply recorded decisions and inspect the result. Design ownership stays with people: identify which choices need expert input rather than handing that authority to the agent or treating visual polish as automatic.",
   },
   {
     q: "How do I stop my UI from looking like a template?",
@@ -113,7 +121,7 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "I'm vibe coding without a designer — how do I get good-looking UI?",
-    a: "StyleSeed is built for vibe coding without a designer. It hands Claude Code, Codex, and Cursor the design judgment a designer would provide — rules, components, brand skins, and motion — so non-designers ship UI that looks designed. It's free and MIT-licensed, and layers on top of shadcn/ui and Tailwind.",
+    a: "You can use StyleSeed's maintained guidance as a starting point, make explicit choices, and run its implementation and visual-check workflows. Treat the result as something to review, not expert-approved output. StyleSeed is free and MIT-licensed; it helps apply recorded judgment but does not replace user research, design expertise, or final acceptance.",
   },
   {
     q: "How do I fix too many colors / a messy palette?",
@@ -147,7 +155,7 @@ export default function FaqPage() {
           </Link>
           <div className="text-[12px] font-bold uppercase tracking-[0.18em] text-neutral-400">FAQ</div>
           <h1 className="mt-3 text-[clamp(30px,5vw,44px)] font-bold leading-tight tracking-tight">
-            Making AI-built UI look designed, not generated.
+            Expert judgment, repeatable implementation.
           </h1>
           <p className="mt-4 text-[16px] leading-relaxed text-neutral-600">
             Design quality, durable decisions, private learning, updates, and the honest boundaries around each one.

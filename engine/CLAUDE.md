@@ -1,9 +1,11 @@
 # StyleSeed — Design Engine
 
-A design-method engine that makes AI reason like a strong UI/UX designer. StyleSeed fixes the
-judgment process, not one aesthetic: a consumer-finance home, operations console, editorial
-story, and commerce detail page use different output grammars. Skins provide materials; they
-never define the method.
+A design-method engine whose goal is to make expert design judgment repeatable by coding
+agents, not to replace designers with aesthetic preferences. Preserve approved project choices;
+surface unsupported choices rather than silently replacing the project's design system.
+`PRODUCT-PRINCIPLES.md` defines the goal and authority boundaries. Different product jobs use
+different output grammars. Skins provide materials; they never define the method. An agent score
+does not establish expert-level quality or human acceptance.
 
 **Run `/ss-resolve` first.** It compiles the project lock into
 `.styleseed/effective-rules.md` plus a hash-verifiable manifest. Build from that small bundle

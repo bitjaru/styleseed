@@ -1,13 +1,14 @@
 # StyleSeed Studio Pipeline
 
 StyleSeed Studio turns a product brief into a directed, interactive, and reviewable UI concept.
-It extends StyleSeed's fixed design judgment into creative direction, generated media, interaction
+It helps make expert design decisions repeatable across creative direction, generated media, interaction
 scenes, and a prototype-first showcase reel. The pipeline is for client work and product
 exploration where a static screen is not enough.
 
 ## Product boundary
 
-StyleSeed owns the decisions, manifests, provenance, and verification. Image and video models are
+People own design decisions; StyleSeed records them with manifests, provenance, and verification.
+It does not replace expert review. Image and video models are
 replaceable renderers. A provider result never becomes the design method merely because it looks
 fashionable.
 

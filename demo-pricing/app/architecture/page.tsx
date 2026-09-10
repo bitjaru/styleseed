@@ -6,7 +6,7 @@ import versionInfo from "../../public/version.json";
 const BASE = "https://styleseed-demo.vercel.app";
 const ENGINE_SERIES = `v${versionInfo.version.split(".")[0]}`;
 const DESCRIPTION =
-  "How StyleSeed compiles directed concepts, grammar, morphology, semantic color, and interaction plans; verifies the result; preserves caller-attested lessons locally; and updates the exact engine revision without overwriting project decisions.";
+  "How StyleSeed works toward repeatable expert design judgment: selected rules, project-owned decisions, task-specific compilation, implementation workflows, and evidence with explicit limits.";
 
 export const metadata: Metadata = {
   title: "StyleSeed engine architecture — AI design grammar compiler",
@@ -55,7 +55,7 @@ const layers = [
   ["Reference compiler", "Turns screenshots, URLs, Figma exports, or an existing UI into a local grammar with evidence and confidence."],
   ["Studio director", "Produces native, signature, and experimental directions, records human selection, then compiles interaction scenes and image/video jobs."],
   ["Context compiler", "ss-resolve emits only the selected 10–20KB method plus a manifest of selections, source hashes, and bundle hash."],
-  ["Build method", "The agent implements real product content from effective-rules.md instead of reassembling the full handbook."],
+  ["Build method", "The agent implements real content from the selected artifact bundle; legacy projects use effective-rules.md. It does not reassemble the full handbook."],
   ["Evidence gates", "Code and pixel checks find structural and rendered drift; temporal evidence proves the interaction, and acceptance is recorded only when that step actually ran."],
   ["Local learning", "ss-learn preserves an explicitly requested, caller-attested correction as a privacy-minimized candidate; it cannot scan a project or promote itself."],
   ["Revision ledger", "engineRevision hashes the maintained method, skills, plugin boundary, and palette engine so same-version fixes remain detectable."],
@@ -118,11 +118,11 @@ export default function ArchitecturePage() {
         <div className="mt-12 max-w-3xl">
           <div className="text-[11px] font-bold uppercase tracking-widest text-violet-600">Engine architecture · {ENGINE_SERIES}</div>
           <h1 className="mt-3 text-[clamp(38px,6vw,64px)] font-bold leading-[1.03] tracking-tight">
-            Fixed judgment.<br />Multiple design languages.
+            Expert decisions.<br />Repeatable implementation.
           </h1>
           <p className="mt-5 max-w-2xl text-[17px] leading-relaxed text-neutral-600">
-            StyleSeed no longer treats a Toss-like product aesthetic as the answer to every
-            result. It selects the functional grammar the artifact needs, or compiles one from
+            StyleSeed aims to make expert design judgment repeatable by coding agents, not
+            replace experts with a fixed look. Today it selects the grammar the artifact needs, or compiles one from
             the user&rsquo;s references. A separate brand recipe selects morphology rather than
             color. A palette recipe binds semantic color roles and generated-media anchors. Studio
             adds three directed concepts, a human decision, and executable interaction/media plans.
@@ -130,7 +130,8 @@ export default function ArchitecturePage() {
             manifest before the right renderer takes over. After a person accepts a correction,
             <code> ss-learn</code> can preserve a generalized local candidate without turning it into
             authority. The exact <code>engineRevision</code> makes later fixes detectable even when
-            the semantic version has not changed.
+            the semantic version has not changed. These mechanisms do not by themselves prove
+            expert-level quality or universal compatibility with existing design systems.
           </p>
         </div>
 

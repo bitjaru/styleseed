@@ -7,5 +7,5 @@
     "hooksSourceUrl": "https://github.com/pbakaus/impeccable/blob/main/docs/hooks.md",
     "capabilitySummary": "Its current public package documents 23 commands, 60 deterministic rules, CLI checks for local files and URLs, JSON output for CI, and hooks for major coding agents."
   },
-  "styleseedFocus": "StyleSeed focuses on compiling a bounded contract for each artifact, persisting approved project decisions, and binding code, build, pixel, and temporal evidence to the exact source revision."
+  "styleseedFocus": "StyleSeed aims to make expert design judgment repeatable by coding agents, not replace experts. Its current engine compiles bounded artifact contracts, preserves project decisions, and binds recorded evidence to source revisions. Expert-level quality and universal design-system import remain unproven."
 }

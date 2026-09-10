@@ -6,9 +6,10 @@ body:
   - type: markdown
     attributes:
       value: |
-        StyleSeed is a living judgment framework. A great rule is a **decision + the reason it works**,
-        written so an AI can apply it — not an opinion. See `CONTRIBUTING.md` → "Propose a Design Rule"
-        for the format. Specific + sourced rules get merged fastest.
+        StyleSeed aims to make expert design judgment repeatable by coding agents.
+        A useful rule records a **decision + rationale + applicability + counterexample**.
+        Name whose decision it is and how the agent can apply and check it without replacing an
+        approved design system. See `CONTRIBUTING.md` → "Propose a design rule" for the format.
   - type: input
     id: name
     attributes:

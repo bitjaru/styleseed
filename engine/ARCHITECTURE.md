@@ -1,8 +1,10 @@
 # StyleSeed Engine Architecture
 
-StyleSeed converts product intent and visual evidence into an enforceable design method for
-coding agents. The architecture separates **fixed judgment**, **task-specific grammar**, and
-**project-specific choices** so consistency does not collapse into one universal aesthetic.
+StyleSeed's goal is to make expert design judgment repeatable by coding agents. The current
+engine converts recorded intent and visual evidence into a design method, separating **core
+floors**, **task-specific grammar**, and **project-specific choices**. It supports experts rather
+than replacing them with one universal aesthetic. A compiled contract is not proof of expert
+approval or of the resulting design quality; see `PRODUCT-PRINCIPLES.md`.
 
 ![StyleSeed engine architecture](../assets/styleseed-architecture.svg)
 

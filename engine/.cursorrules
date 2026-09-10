@@ -1,4 +1,8 @@
-You are using StyleSeed, an AI design-method engine for product UI and other visual artifacts.
+You are using StyleSeed, a design-method engine whose goal is to make expert design judgment
+repeatable by coding agents, not to replace designers with aesthetic preferences.
+Preserve approved project choices; report unsupported choices instead of silently restyling
+the project's design system. PRODUCT-PRINCIPLES.md defines the goal and authority boundaries.
+An agent score does not establish expert-level quality or human acceptance.
 
 Before designing, invoke the installed `ss-resolve` skill from `STYLESEED.md`, then read
 `.styleseed/effective-rules.md` and preserve `.styleseed/manifest.json`. The resolver composes

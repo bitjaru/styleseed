@@ -73,6 +73,7 @@ export function buildPilotPlan(root = repo) {
   }
   read('scripts/prepare-design-pilot.mjs');
   const common = { 'TASK.md': read(`${study}/common/TASK.md`), 'LICENSE': read('LICENSE') };
+  common['BROWSER-CONTRACT.md'] = read(`${study}/common/BROWSER-CONTRACT.md`);
   for (const name of ['fixtures.json', 'model.mjs', 'model.test.mjs']) common[`fixture/${name}`] = read(`${study}/common/${name}`);
   for (const name of ['button.tsx', 'input.tsx', 'label.tsx', 'table.tsx', 'badge.tsx', 'utils.ts']) {
     common[`src/ui/${name}`] = read(`engine/components/ui/${name}`);
@@ -127,7 +128,7 @@ export function buildPilotPlan(root = repo) {
   const arms = {};
   for (const id of ['A', 'B', 'C', 'D']) {
     const files = { ...common };
-    let prompt = 'Complete TASK.md using this workspace only. Do not inspect sibling conditions, operator materials, or previous results. Report unsupported requirements and verification limits.\n';
+    let prompt = 'Complete TASK.md and the draft BROWSER-CONTRACT.md using this workspace only. Do not inspect sibling conditions, operator materials, or previous results. Report unsupported requirements and verification limits.\n';
     if (id !== 'A') {
       Object.assign(files, skillFiles, registry);
       prompt += 'Use the installed StyleSeed skills and the artifact registry. Preserve the existing library/theme; provisional resolver settings do not approve replacing them.\n';

@@ -55,7 +55,7 @@ Source reads use an explicit file list; skill copying follows the catalog invent
 scanning arbitrary extra files in an installation.
 
 The output has `arms/A` through `arms/D` plus `operator/`. Each arm has its own `PROMPT.md`,
-`TASK.md`, fixture tests, actual library, Next/React/Tailwind dependency declarations/lock, and CSS
+`TASK.md`, identical draft `BROWSER-CONTRACT.md`, fixture tests, actual library, Next/React/Tailwind dependency declarations/lock, and CSS
 entry point. Screen/layout/route implementations are deliberately absent, so this is not yet a
 buildable three-screen app. Demo lifecycle scripts are removed; no marketing-site code is copied.
 The full existing dependency graph is retained for reproducibility, not advertised as a minimal app.
@@ -84,6 +84,65 @@ API type correctness. They do not establish interactive UI behavior, rendering q
 accessibility, controlled agent exposure, or statistical validity. Example snippets are not running
 asynchronous state demonstrations. Do not present these checks as completed quality comparisons.
 
+## Browser acceptance and evaluator calibration
+
+The [draft browser protocol](common/BROWSER-CONTRACT.md) makes observable behavior testable without
+prescribing screen composition. All conditions receive it. The implementation under
+`scripts/design-pilot/` and the operator-only `operator/calibration/` DOM simulator are **never
+copied into A/B/C/D**. The simulator is deliberately not a React implementation or a design-system
+adoption example. It validates the evaluator, not a candidate app or expert design quality.
+
+After installing the locked demo dependencies and their Chromium binary:
+
+```sh
+npm ci --prefix demo-pricing
+cd demo-pricing
+npx playwright install chromium
+cd ..
+node scripts/test-design-pilot-browser.mjs --calibrate
+```
+
+Calibration runs 24 functional scenarios across desktop, mobile and mobile/reduced-motion
+contexts (70 applicable cases), plus 15 deliberate defects. It must pass **every** baseline case
+and reject every defect at its designated assertion. An environment/browser failure is not a
+successful defect detection. Missing cases, duplicate cases, missing screenshots, off-origin
+requests, console errors and input changes during the run cannot produce a passing result.
+Five additional boundary probes require protocol opt-in and block cross-origin fetch, redirect,
+WebSocket and popup attempts using two owned loopback servers. The receiving server must see
+zero requests. These are targeted browser controls, not an operating-system security sandbox.
+
+The scenarios exercise search/filter/selection, cancellation and atomic refusal, viewer
+restrictions, list/detail mutation consistency and history, error/loading/empty states,
+settings validation and failed-save recovery, saved-versus-draft navigation, visible keyboard
+focus, target-size/overflow checks and reduced-motion animation suppression. These checks do
+not establish full accessibility, pixel quality, React/component reuse or server authorization.
+The source of truth for the exact assertions is `scripts/design-pilot/scenarios.mjs`.
+
+For a separately launched **disposable local candidate** implementing the protocol:
+
+```sh
+node scripts/test-design-pilot-browser.mjs --url http://127.0.0.1:3210
+```
+
+The runner accepts only an explicit numeric loopback origin and requires protocol opt-in. It
+blocks off-origin browser requests, WebSockets, service workers and popups; it does not install,
+build or launch candidate code, load credentials, or operate a remote service. Use canonical routes
+that respond directly: HTTP redirects (including same-origin redirects) are refused. Supply only a
+credential-free synthetic test app, never a production session. A URL run is explicitly **not
+bound to candidate source** and cannot be attached as a StyleSeed acceptance report.
+
+Both modes create a fresh output directory outside the checkout; `--output <new-directory>` is
+optional and cannot overwrite an existing path. `report.json` records evaluator commit/dirty
+state, input hashes, Node/Playwright/Chromium versions, per-case controls, assertions and hashed
+screenshots. The full browser gate and Ubuntu CI run calibration. Windows runs the dependency-free
+runner contracts; Chromium calibration on Windows is not implied by that job.
+Ubuntu CI retains the synthetic report/screenshots as `styleseed-pilot-browser-<attempt>`
+artifacts for 14 days, including failed calibration runs when a report was produced.
+
+No run here changes the preparer's `readyForAgentRuns=false`, populates expert approval, executes
+a model comparison or promotes benchmark claims. Actual UI output review/blinding, source-bound
+candidate verification, expert rubric approval and the frozen generation runtime remain separate.
+
 ## Before any real model run
 
 1. Have named human experts approve the task/rubric, reference library, incompatibility handling,
@@ -93,9 +152,9 @@ asynchronous state demonstrations. Do not present these checks as completed qual
 3. Put each condition in a separate restricted environment. Sibling folders are **not a security
    boundary**: globally installed skills, parent instructions, network/repo access and session history
    can contaminate a comparison. Copy only one arm into the actual runtime and verify isolation.
-4. Implement/freeze browser acceptance checks for every task state, including selection reset,
-   cancel/confirm, routing recovery, saving/failed retry and dirty navigation. Pure model tests are
-   not substitutes. Run the shared-library compatibility rehearsal before paid generation.
+4. Review/freeze the draft browser acceptance checks against actual candidate implementations,
+   including the documented coverage limits and explicit protocol adapter. Calibration of the
+   evaluator is not a shared-library compatibility trial. Run that rehearsal before paid generation.
 5. Randomize and blind result labels for human review, record disagreements and actual rework/cost,
    then run the operator-only follow-up in a fresh session after initial outputs are frozen.
 

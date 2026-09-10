@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "id": "incident-list",
+  "target": {
+    "kind": "route",
+    "locator": "/index.html"
+  },
+  "selection": {
+    "grammar": "operations-console",
+    "adapter": null,
+    "domain": null,
+    "page": "dashboard",
+    "recipe": null,
+    "palette": null,
+    "profile": null,
+    "fallback": null
+  },
+  "decisions": {
+    "primaryDecision": "Which incident needs attention first?",
+    "primaryAction": "Inspect priority incident",
+    "signatureMove": "Keep the priority incident connected to its operational context."
+  },
+  "implementation": {
+    "sourceRoots": [
+      "src/shared",
+      "src/incident-list",
+      "build.mjs",
+      "package.json"
+    ],
+    "tokenFiles": [
+      "src/shared/tokens.css"
+    ]
+  },
+  "validation": {
+    "scoreFloor": 80,
+    "requiredRenders": [
+      {
+        "id": "desktop-loaded",
+        "state": "loaded",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        }
+      },
+      {
+        "id": "mobile-loaded",
+        "state": "loaded",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        }
+      },
+      {
+        "id": "mobile-empty",
+        "state": "empty",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        }
+      },
+      {
+        "id": "mobile-error",
+        "state": "error",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        }
+      },
+      {
+        "id": "mobile-loading",
+        "state": "loading",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        }
+      }
+    ],
+    "temporal": {
+      "required": false,
+      "scenarios": []
+    },
+    "humanAcceptance": false
+  }
+}

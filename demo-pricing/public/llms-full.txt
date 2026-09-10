@@ -5,9 +5,45 @@ Source: github.com/bitjaru/styleseed (constitution + grammars + adapters + compi
 
 # StyleSeed Product Constitution
 
-StyleSeed is an **AI design-method engine**. Its primary job is to make a coding agent
-reason like a strong UI/UX designer and apply that reasoning consistently. Components,
-skins, scores, and screenshots support that job; they do not define it.
+StyleSeed makes expert design judgment repeatable by coding agents. It is not a collection
+of aesthetic preferences that replaces designers.
+
+**StyleSeed는 전문가를 대체하는 디자인 취향 모음이 아니라, 전문가의 디자인 판단을
+코딩 에이전트가 반복해서 실행할 수 있게 만드는 시스템입니다.**
+
+This is the project's goal, not a claim that today's engine reproduces expert-level quality.
+The current design-method engine compiles selected rules, preserves project decisions, and
+supports implementation and evidence workflows. Components, skins, scores, and screenshots
+support that purpose; neither their count nor a passing score proves that the goal is achieved.
+
+## Decisions stay with people
+
+- Experts define intent, applicability, tradeoffs, and acceptable exceptions. The agent applies
+  recorded decisions; it does not acquire the expert's authority by reading them.
+- Preserve the project's approved design system. Do not replace its identity, tokens, or
+  components with a StyleSeed preset merely to make the output look different.
+- Distinguish accessibility and functional floors, approved project choices, adjustable
+  heuristics, and unresolved human decisions. A recommendation is not approval.
+- If an approved choice cannot be expressed by the current engine, report that limitation and
+  propose a bounded change. Do not silently remap it or pretend arbitrary design-system import
+  already works. This goal does not change the resolver's supported values or authority order.
+- People may deliberately revise durable choices and re-run checks. Generated scores and
+  byte-bound evidence do not authenticate expertise or substitute for design acceptance.
+
+## Development decision test
+
+Before changing the engine, name the design decision being made repeatable, its owner and
+applicability, the implementation context the agent needs, and the evidence that would show
+an improvement. Maintenance fixes may instead name the existing contract they preserve.
+
+Prioritize task-specific component APIs, token mappings, working state examples, and tests
+over adding more aesthetic rules. Evaluate new-system creation and existing-system adoption
+separately. Measure functional correctness, expert-reviewed visual quality, correct reuse,
+cross-screen/session consistency, and human rework alongside model cost.
+
+A compliant but poorly designed screen is not success; neither is an attractive screen that
+breaks the approved system. Use independent human evaluation before claiming expert-level
+quality. The research sequence and unimplemented work live in the repository `ROADMAP.md`.
 
 ## The fixed method, not one fixed look
 
@@ -96,8 +132,9 @@ understand the job → choose or compile a grammar → lock bounded decisions
 → present the result and evidence
 ```
 
-The build method is the product. Scoring and verification are auxiliary gates: they find
-drift, but they never choose or rewrite the design philosophy after the fact.
+Repeatable application of expert decisions is the product goal. The build method implements
+that goal; scoring and verification are supporting gates. They find drift, but never choose
+or rewrite the design philosophy after the fact or replace the responsible human's judgment.
 
 ## Learning without surveillance
 
@@ -175,9 +212,11 @@ defaults. `PRODUCT-PRINCIPLES.md` remains the higher authority.
 
 # StyleSeed Engine Architecture
 
-StyleSeed converts product intent and visual evidence into an enforceable design method for
-coding agents. The architecture separates **fixed judgment**, **task-specific grammar**, and
-**project-specific choices** so consistency does not collapse into one universal aesthetic.
+StyleSeed's goal is to make expert design judgment repeatable by coding agents. The current
+engine converts recorded intent and visual evidence into a design method, separating **core
+floors**, **task-specific grammar**, and **project-specific choices**. It supports experts rather
+than replacing them with one universal aesthetic. A compiled contract is not proof of expert
+approval or of the resulting design quality; see `PRODUCT-PRINCIPLES.md`.
 
 ![StyleSeed engine architecture](../assets/styleseed-architecture.svg)
 
@@ -1031,13 +1070,14 @@ and selected brand recipe. If a key color exists, generate and inspect the actua
 # StyleSeed Studio Pipeline
 
 StyleSeed Studio turns a product brief into a directed, interactive, and reviewable UI concept.
-It extends StyleSeed's fixed design judgment into creative direction, generated media, interaction
+It helps make expert design decisions repeatable across creative direction, generated media, interaction
 scenes, and a prototype-first showcase reel. The pipeline is for client work and product
 exploration where a static screen is not enough.
 
 ## Product boundary
 
-StyleSeed owns the decisions, manifests, provenance, and verification. Image and video models are
+People own design decisions; StyleSeed records them with manifests, provenance, and verification.
+It does not replace expert review. Image and video models are
 replaceable renderers. A provider result never becomes the design method merely because it looks
 fashionable.
 
@@ -1295,10 +1335,12 @@ Then update `STYLESEED.md`:
 
 # StyleSeed — Design Engine
 
-A design-method engine that makes AI reason like a strong UI/UX designer. StyleSeed fixes the
-judgment process, not one aesthetic: a consumer-finance home, operations console, editorial
-story, and commerce detail page use different output grammars. Skins provide materials; they
-never define the method.
+A design-method engine whose goal is to make expert design judgment repeatable by coding
+agents, not to replace designers with aesthetic preferences. Preserve approved project choices;
+surface unsupported choices rather than silently replacing the project's design system.
+`PRODUCT-PRINCIPLES.md` defines the goal and authority boundaries. Different product jobs use
+different output grammars. Skins provide materials; they never define the method. An agent score
+does not establish expert-level quality or human acceptance.
 
 **Run `/ss-resolve` first.** It compiles the project lock into
 `.styleseed/effective-rules.md` plus a hash-verifiable manifest. Build from that small bundle

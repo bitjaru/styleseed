@@ -15,6 +15,9 @@ StyleSeed help in general terms.
 
 ## First principles
 
+- Help coding agents repeat expert design decisions, not replace expert authority with presets.
+  Preserve approved project choices; identify unsupported or unresolved choices before routing
+  to work that would change them. A score is not human acceptance.
 - Resolve the current artifact first when `.styleseed/project.json` and `.styleseed/artifacts/index.json`
   exist.
 - Never fan out to “run every StyleSeed skill.”

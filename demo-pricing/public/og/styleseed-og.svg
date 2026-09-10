@@ -17,13 +17,13 @@
   <text x="72" y="172" fill="#9CA3AF" font-size="14" font-weight="700" letter-spacing="2.5">DESIGN ENGINE · CLAUDE CODE · CURSOR · CODEX</text>
 
   <!-- headline -->
-  <text x="70" y="240" fill="#111827" font-size="56" font-weight="800" letter-spacing="-1.5">Teach your AI</text>
-  <text x="70" y="304" fill="#111827" font-size="56" font-weight="800" letter-spacing="-1.5">design <tspan fill="#3182F6">judgment</tspan>.</text>
-  <text x="70" y="368" fill="#9CA3AF" font-size="56" font-weight="800" letter-spacing="-1.5">Not just components.</text>
+  <text x="70" y="240" fill="#111827" font-size="56" font-weight="800" letter-spacing="-1.5">Expert design</text>
+  <text x="70" y="304" fill="#111827" font-size="56" font-weight="800" letter-spacing="-1.5"><tspan fill="#3182F6">judgment.</tspan></text>
+  <text x="70" y="368" fill="#6B7280" font-size="42" font-weight="800" letter-spacing="-1.5">Repeatable by agents.</text>
 
   <!-- subline -->
-  <text x="72" y="430" fill="#6B7280" font-size="19" font-weight="500">74 design rules your AI reads automatically —</text>
-  <text x="72" y="458" fill="#6B7280" font-size="19" font-weight="500">so the output stops looking generated.</text>
+  <text x="72" y="430" fill="#6B7280" font-size="19" font-weight="500">Project-owned decisions. Reviewable evidence.</text>
+  <text x="72" y="458" fill="#6B7280" font-size="19" font-weight="500">Support experts. Do not replace them.</text>
 
   <!-- footer -->
   <text x="72" y="556" fill="#374151" font-size="15" font-weight="700">74 rules · 23 skills · 7 brand skins · MIT</text>

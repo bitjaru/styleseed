@@ -1,8 +1,21 @@
 # StyleSeed repository guide
 
-StyleSeed is an AI design-method engine for coding agents. It combines fixed judgment,
-job-specific output grammars, surface adapters, and project-local reference grammars. Keep the
-rules, skills, components, skins, and generated demo artifacts in sync.
+StyleSeed makes expert design judgment repeatable by coding agents; it does not replace
+designers with a collection of aesthetic preferences. `engine/PRODUCT-PRINCIPLES.md` is the
+canonical goal and decision framework. Keep the rules, skills, components, skins, and generated
+demo artifacts in sync.
+
+## Keep development aligned with the goal
+
+- Read the product constitution and `ROADMAP.md` before proposing new engine behavior or product
+  positioning. Name the expert decision being supported, or the existing contract being repaired.
+- Preserve approved project design systems; do not equate a StyleSeed preset with expert intent.
+- Separate implemented capability, research hypothesis, and human approval in docs and reports.
+  Passing CI or an agent score is not proof of expert-level design quality.
+- Prioritize quality and reuse experiments before new aesthetic packs or hosted services. For
+  behavior changes, record applicability, tradeoffs, verification, and remaining human decisions.
+- Update maintained public descriptions and generated mirrors together when the goal changes.
+  Preserve historical benchmark reports, release notes, and third-party article titles as history.
 
 ## Before changing the engine
 

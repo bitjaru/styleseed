@@ -8,6 +8,12 @@ const files = [
   "README-KR.md",
   "SECURITY.md",
   ".claude-plugin/plugin.json",
+  ".codex-plugin/plugin.json",
+  "engine/PRODUCT-PRINCIPLES.md",
+  "engine/AGENTS.md",
+  "engine/CLAUDE.md",
+  "engine/.cursorrules",
+  "demo-pricing/scripts/build-llms.mjs",
   "demo-pricing/app/page.tsx",
   "demo-pricing/app/_home/hero.tsx",
   "demo-pricing/app/_home/prompt-box.tsx",
@@ -35,7 +41,12 @@ const denylist = [
   "every artifact is compiled, scored, and visually checked before you see it",
   "The latest release on `main` is the supported version.",
   "identities are rejected",
-  "strips project identity"
+  "strips project identity",
+  "designed-looking products without a design team",
+  "makes AI reason like a strong UI/UX designer",
+  "디자인 팀 없이도 디자인된 티가 나는 제품",
+  "Zero designer.",
+  "StyleSeed is built for vibe coding without a designer."
 ];
 const failures = [];
 const texts = files.map((path) => ({ path, text: readFileSync(resolve(root, path), "utf8") }));

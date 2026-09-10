@@ -1,8 +1,44 @@
 # StyleSeed Product Constitution
 
-StyleSeed is an **AI design-method engine**. Its primary job is to make a coding agent
-reason like a strong UI/UX designer and apply that reasoning consistently. Components,
-skins, scores, and screenshots support that job; they do not define it.
+StyleSeed makes expert design judgment repeatable by coding agents. It is not a collection
+of aesthetic preferences that replaces designers.
+
+**StyleSeed는 전문가를 대체하는 디자인 취향 모음이 아니라, 전문가의 디자인 판단을
+코딩 에이전트가 반복해서 실행할 수 있게 만드는 시스템입니다.**
+
+This is the project's goal, not a claim that today's engine reproduces expert-level quality.
+The current design-method engine compiles selected rules, preserves project decisions, and
+supports implementation and evidence workflows. Components, skins, scores, and screenshots
+support that purpose; neither their count nor a passing score proves that the goal is achieved.
+
+## Decisions stay with people
+
+- Experts define intent, applicability, tradeoffs, and acceptable exceptions. The agent applies
+  recorded decisions; it does not acquire the expert's authority by reading them.
+- Preserve the project's approved design system. Do not replace its identity, tokens, or
+  components with a StyleSeed preset merely to make the output look different.
+- Distinguish accessibility and functional floors, approved project choices, adjustable
+  heuristics, and unresolved human decisions. A recommendation is not approval.
+- If an approved choice cannot be expressed by the current engine, report that limitation and
+  propose a bounded change. Do not silently remap it or pretend arbitrary design-system import
+  already works. This goal does not change the resolver's supported values or authority order.
+- People may deliberately revise durable choices and re-run checks. Generated scores and
+  byte-bound evidence do not authenticate expertise or substitute for design acceptance.
+
+## Development decision test
+
+Before changing the engine, name the design decision being made repeatable, its owner and
+applicability, the implementation context the agent needs, and the evidence that would show
+an improvement. Maintenance fixes may instead name the existing contract they preserve.
+
+Prioritize task-specific component APIs, token mappings, working state examples, and tests
+over adding more aesthetic rules. Evaluate new-system creation and existing-system adoption
+separately. Measure functional correctness, expert-reviewed visual quality, correct reuse,
+cross-screen/session consistency, and human rework alongside model cost.
+
+A compliant but poorly designed screen is not success; neither is an attractive screen that
+breaks the approved system. Use independent human evaluation before claiming expert-level
+quality. The research sequence and unimplemented work live in the repository `ROADMAP.md`.
 
 ## The fixed method, not one fixed look
 
@@ -91,8 +127,9 @@ understand the job → choose or compile a grammar → lock bounded decisions
 → present the result and evidence
 ```
 
-The build method is the product. Scoring and verification are auxiliary gates: they find
-drift, but they never choose or rewrite the design philosophy after the fact.
+Repeatable application of expert decisions is the product goal. The build method implements
+that goal; scoring and verification are supporting gates. They find drift, but never choose
+or rewrite the design philosophy after the fact or replace the responsible human's judgment.
 
 ## Learning without surveillance
 

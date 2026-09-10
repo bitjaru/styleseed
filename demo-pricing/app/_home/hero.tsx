@@ -11,7 +11,7 @@ const PRODUCT_LOOP = [
   {
     step: "01",
     title: "Choose",
-    copy: "Pick the output grammar, surface, brand recipe, and bounded project decisions.",
+    copy: "Record the project's design intent and approved choices; identify what still needs a decision.",
   },
   {
     step: "02",
@@ -42,17 +42,18 @@ export function Hero() {
     <section className="bg-white">
       <div className="mx-auto max-w-6xl px-6 pb-16 pt-14 text-center sm:pt-16">
         <div className="inline-flex items-center gap-2 rounded-full border border-teal-200 bg-teal-50 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-teal-800">
-          Design-method engine · open source
+          Expert decisions → agent workflows · open source
         </div>
 
         <h1 className="mx-auto mt-5 max-w-4xl text-[clamp(40px,7vw,68px)] font-bold leading-[1.03] tracking-tight text-neutral-950">
-          Give your coding agent
-          <br className="hidden sm:block" /> a design method it can repeat.
+          Expert design judgment.
+          <br className="hidden sm:block" /> Repeatable by coding agents.
         </h1>
 
         <p className="mx-auto mt-5 max-w-2xl text-[16px] leading-relaxed text-neutral-600 sm:text-[17px]">
-          StyleSeed compiles your chosen design rules into an artifact-level contract, builds against
-          it, and keeps the decisions in your repo so the next screen and the next update stay coherent.
+          Our goal is to help agents apply expert decisions, not replace experts with a collection
+          of tastes. StyleSeed compiles selected rules, keeps project choices in your repo, and
+          supports code and rendered checks. Quality still needs human review.
         </p>
 
         <div className="mx-auto mt-7 max-w-xl">

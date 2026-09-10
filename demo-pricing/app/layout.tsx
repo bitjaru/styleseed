@@ -12,12 +12,12 @@ const inter = Inter({
 const SITE_URL = "https://styleseed-demo.vercel.app";
 const SITE_NAME = "StyleSeed";
 const SITE_DESC =
-  "Open-source AI design-method engine for Claude Code, Codex, and Cursor — directed concepts, semantic palettes, verified working interactions, privacy-minimized local learning with explicit limits, and revision-safe updates.";
+  "Make expert design judgment repeatable by coding agents. StyleSeed compiles selected rules, preserves project decisions, and supports verification — not designer replacement.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "StyleSeed — Design engine for vibe coding",
+    default: "StyleSeed — Expert decisions, repeatable by agents",
     template: "%s · StyleSeed",
   },
   description: SITE_DESC,
@@ -52,7 +52,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: SITE_NAME,
-    title: "StyleSeed — Design engine for vibe coding",
+    title: "StyleSeed — Expert decisions, repeatable by agents",
     description: SITE_DESC,
     url: SITE_URL,
     locale: "en_US",
@@ -61,13 +61,13 @@ export const metadata: Metadata = {
         url: "/og/styleseed-og.png",
         width: 1200,
         height: 630,
-        alt: "StyleSeed — fixed AI design judgment, multiple output grammars, and reference-compiled rule sets.",
+        alt: "StyleSeed — design rules, output grammars, and project-local decisions for coding agents.",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "StyleSeed — Design engine for vibe coding",
+    title: "StyleSeed — Expert decisions, repeatable by agents",
     description: SITE_DESC,
     images: ["/og/styleseed-og.png"],
     creator: "@bitjaru",

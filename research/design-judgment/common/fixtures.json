@@ -1,0 +1,15 @@
+{
+  "resources": [
+    { "id": "res-101", "name": "Payments API", "owner": "Platform", "status": "active", "protected": true },
+    { "id": "res-102", "name": "Search index", "owner": "Discovery", "status": "active", "protected": false },
+    { "id": "res-103", "name": "Digest worker", "owner": "Platform", "status": "paused", "protected": false },
+    { "id": "res-104", "name": "Audit exporter", "owner": "Security", "status": "active", "protected": false }
+  ],
+  "history": {
+    "res-101": [{ "at": "2026-09-01T09:00:00Z", "action": "Protection enabled", "actor": "Platform" }],
+    "res-102": [{ "at": "2026-09-02T09:00:00Z", "action": "Resource activated", "actor": "Discovery" }],
+    "res-103": [{ "at": "2026-09-03T09:00:00Z", "action": "Resource paused", "actor": "Platform" }],
+    "res-104": []
+  },
+  "settings": { "workspaceName": "Resource lab", "digest": "daily", "retentionDays": 30 }
+}

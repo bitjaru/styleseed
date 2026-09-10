@@ -2,7 +2,7 @@
 // Offline preparation only. No model execution, install, human approval, or quality scoring.
 import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { lstatSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, realpathSync, writeFileSync } from 'node:fs';
+import { lstatSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { basename, dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -71,11 +71,6 @@ export function buildPilotPlan(root = repo) {
     inputs[path] = bytes;
     return bytes;
   }
-  function walk(path) {
-    if (lstatSync(resolve(root, path)).isSymbolicLink()) throw new Error(`Input is a symlink: ${path}`);
-    return readdirSync(resolve(root, path), { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))
-      .flatMap(entry => entry.isDirectory() ? walk(`${path}/${entry.name}`) : [`${path}/${entry.name}`]);
-  }
   read('scripts/prepare-design-pilot.mjs');
   const common = { 'TASK.md': read(`${study}/common/TASK.md`), 'LICENSE': read('LICENSE') };
   for (const name of ['fixtures.json', 'model.mjs', 'model.test.mjs']) common[`fixture/${name}`] = read(`${study}/common/${name}`);
@@ -105,13 +100,16 @@ export function buildPilotPlan(root = repo) {
 
   const skillFiles = {};
   const skillPrefix = 'engine/.claude/skills/';
-  for (const path of walk(skillPrefix.slice(0, -1))) skillFiles[`.agents/skills/${path.slice(skillPrefix.length)}`] = read(path);
+  skillFiles['.agents/skills/ss-resolve/references/catalog.json'] = read(`${skillPrefix}ss-resolve/references/catalog.json`);
   const catalog = JSON.parse(skillFiles['.agents/skills/ss-resolve/references/catalog.json']);
   for (const entry of catalog.distributions.skills.files) {
-    const bytes = inputs[entry.path];
+    validateOutputPath(entry.path);
+    if (!entry.path.startsWith(skillPrefix)) throw new Error(`Non-skill inventory path: ${entry.path}`);
+    const bytes = read(entry.path);
     if (!bytes || hash(bytes).slice(7) !== entry.sha256.replace(/^sha256:/u, '') || bytes.length !== entry.bytes) {
       throw new Error(`Stale skill inventory: ${entry.path}; regenerate catalogs first`);
     }
+    skillFiles[`.agents/skills/${entry.path.slice(skillPrefix.length)}`] = bytes;
   }
   const contract = read(`${study}/contexts/component-contract.md`);
   const examples = read(`${study}/contexts/examples.tsx`);

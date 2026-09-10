@@ -51,6 +51,8 @@ An optional `--output <new-directory>` after `--prepare` selects a new folder wh
 exists. Existing folders/files/symlinks and destinations inside the checkout are refused. No
 credentials, network calls, package installs, agent sessions, or Git writes occur. Temporary
 packages remain for inspection; only remove an explicitly inspected run directory.
+Source reads use an explicit file list; skill copying follows the catalog inventory rather than
+scanning arbitrary extra files in an installation.
 
 The output has `arms/A` through `arms/D` plus `operator/`. Each arm has its own `PROMPT.md`,
 `TASK.md`, fixture tests, actual library, Next/React/Tailwind dependency declarations/lock, and CSS

@@ -42,6 +42,10 @@ test('condition context is additive without exposing operator or held-out materi
   const { A, B, C, D } = plan.arms;
   assert.equal(Object.keys(A).some(path => path.startsWith('.agents/') || path.startsWith('.styleseed/') || path.startsWith('context/')), false);
   assert.equal(Object.keys(B).filter(path => path.endsWith('/SKILL.md')).length, 23);
+  const catalog = JSON.parse(B['.agents/skills/ss-resolve/references/catalog.json']);
+  const expectedPayload = catalog.distributions.skills.files.map(entry => entry.path.replace('engine/.claude/skills/', '.agents/skills/'));
+  expectedPayload.push('.agents/skills/ss-resolve/references/catalog.json');
+  assert.deepEqual(Object.keys(B).filter(path => path.startsWith('.agents/')).sort(), expectedPayload.sort());
   assert.equal(B['context/component-contract.md'], undefined);
   assert.equal(C['context/plan.md'], undefined);
   assert.ok(C['context/component-contract.md'] && C['context/examples.tsx'] && D['context/plan.md']);

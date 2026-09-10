@@ -4,6 +4,26 @@ This is a bounded maintainer acceptance procedure, not a model-quality benchmark
 certification, or release gate waiver. Runtime fixture tests use synthetic attachments and must
 not be described as visual evidence.
 
+## Repeatable application regression
+
+With the demo's locked dependencies and Playwright Chromium installed, run from the repository root:
+
+```sh
+node scripts/test-external-app.mjs
+```
+
+The [Incident Workbench fixture](../examples/incident-workbench/README.md) is staged as a physical
+external application in a fresh temporary Git repository. The runner exercises actual browser
+interactions and source-change invalidation, preserves contract bytes, and retains JSON, PNG,
+and trace diagnostics. Ubuntu CI runs the same command and uploads available reports even on
+failure. Browser setup prerequisites and output retention are documented with the fixture.
+
+This automates a deterministic regression subset of the procedure below, **not** the fresh
+Codex session or visual-review steps. Evidence runs are initialized with no reviewer attachments;
+the test asserts they cannot become accepted simply because browser checks pass. Doctor remains
+nonzero until genuine required reviews are supplied. The portable fixture uses system fonts and
+does not reuse September 8 screenshots, reports, or font-cache artifacts.
+
 ## Procedure
 
 1. Create a disposable Git application outside the StyleSeed checkout. Install or stage an exact

@@ -27,7 +27,7 @@
       "type": "skill-md",
       "description": "Generate a new UI component following the StyleSeed design conventions",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-component/SKILL.md",
-      "digest": "sha256:ef3259b045b0e35b1d843614bd81290d2cdca454b9a14ed4c137b7d630cdf0b4"
+      "digest": "sha256:440e228e5175804a471bfc953206c9f81dbfa0f464f7d27fc8dc117d7c0cafd0"
     },
     {
       "name": "ss-copy",

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 5,
   "engineVersion": "4.1.0",
-  "engineRevision": "sha256:5292e0e8ae290ffc4c63987508a7608b6cbde9dfbee9a6d77ef72e9c1e44eddb",
+  "engineRevision": "sha256:d7cc33b74cf432ce00a0883cc8339bb1ff234f1bda781e90c8fcc04e1daacb1a",
   "distributionSource": {
     "schemaVersion": 1,
     "channel": "edge",
@@ -10,7 +10,7 @@
   },
   "distributions": {
     "core": {
-      "revision": "sha256:5292e0e8ae290ffc4c63987508a7608b6cbde9dfbee9a6d77ef72e9c1e44eddb",
+      "revision": "sha256:d7cc33b74cf432ce00a0883cc8339bb1ff234f1bda781e90c8fcc04e1daacb1a",
       "files": [
         {
           "path": "LICENSE",
@@ -39,8 +39,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-component/SKILL.md",
-          "sha256": "ef3259b045b0e35b1d843614bd81290d2cdca454b9a14ed4c137b7d630cdf0b4",
-          "bytes": 3060
+          "sha256": "440e228e5175804a471bfc953206c9f81dbfa0f464f7d27fc8dc117d7c0cafd0",
+          "bytes": 5065
         },
         {
           "path": "engine/.claude/skills/ss-copy/SKILL.md",
@@ -204,8 +204,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-score/scripts/evidence-gate.mjs",
-          "sha256": "2d01a036c8d2007e37c94fd91de26d5445951e13f233a92d0ecd8fa13c6b55a7",
-          "bytes": 16858
+          "sha256": "d58692cb1ed42dd8204a0952737eaa104b37eff1350663269c331f7179c65718",
+          "bytes": 16860
         },
         {
           "path": "engine/.claude/skills/ss-score/scripts/styleseed-check.mjs",
@@ -420,7 +420,7 @@
       ]
     },
     "skills": {
-      "revision": "sha256:a4ef19c796d2e5836a3a5ff0c1a7b306769996f1aa83b02c5607e17ea6520bcc",
+      "revision": "sha256:773778e1151be25c9a51cd66c1749dd70732b0aeaa2bd5dadee65735a4c0eca8",
       "files": [
         {
           "path": "engine/.claude/skills/ss-a11y/SKILL.md",
@@ -439,8 +439,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-component/SKILL.md",
-          "sha256": "ef3259b045b0e35b1d843614bd81290d2cdca454b9a14ed4c137b7d630cdf0b4",
-          "bytes": 3060
+          "sha256": "440e228e5175804a471bfc953206c9f81dbfa0f464f7d27fc8dc117d7c0cafd0",
+          "bytes": 5065
         },
         {
           "path": "engine/.claude/skills/ss-copy/SKILL.md",
@@ -604,8 +604,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-score/scripts/evidence-gate.mjs",
-          "sha256": "2d01a036c8d2007e37c94fd91de26d5445951e13f233a92d0ecd8fa13c6b55a7",
-          "bytes": 16858
+          "sha256": "d58692cb1ed42dd8204a0952737eaa104b37eff1350663269c331f7179c65718",
+          "bytes": 16860
         },
         {
           "path": "engine/.claude/skills/ss-score/scripts/styleseed-check.mjs",
@@ -713,8 +713,8 @@
     },
     {
       "path": ".claude/skills/ss-component/SKILL.md",
-      "sha256": "ef3259b045b0e35b1d843614bd81290d2cdca454b9a14ed4c137b7d630cdf0b4",
-      "bytes": 3060
+      "sha256": "440e228e5175804a471bfc953206c9f81dbfa0f464f7d27fc8dc117d7c0cafd0",
+      "bytes": 5065
     },
     {
       "path": ".claude/skills/ss-copy/SKILL.md",
@@ -878,8 +878,8 @@
     },
     {
       "path": ".claude/skills/ss-score/scripts/evidence-gate.mjs",
-      "sha256": "2d01a036c8d2007e37c94fd91de26d5445951e13f233a92d0ecd8fa13c6b55a7",
-      "bytes": 16858
+      "sha256": "d58692cb1ed42dd8204a0952737eaa104b37eff1350663269c331f7179c65718",
+      "bytes": 16860
     },
     {
       "path": ".claude/skills/ss-score/scripts/styleseed-check.mjs",

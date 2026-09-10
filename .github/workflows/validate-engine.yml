@@ -33,6 +33,16 @@ jobs:
       - name: Run browser smoke tests
         run: npm run test:browser
         working-directory: demo-pricing
+      - name: Calibrate three-screen browser acceptance
+        run: node scripts/test-design-pilot-browser.mjs --calibrate --output "${{ runner.temp }}/styleseed-pilot-browser"
+      - name: Preserve browser calibration evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: styleseed-pilot-browser-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/styleseed-pilot-browser
+          if-no-files-found: ignore
+          retention-days: 14
 
   windows-powershell:
     runs-on: windows-latest

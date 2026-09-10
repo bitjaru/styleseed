@@ -1,7 +1,7 @@
 {
   "schemaVersion": 5,
   "engineVersion": "4.1.0",
-  "engineRevision": "sha256:b7452d014022391d6c99e50bbe38e79c14587399d0a6b676b2f32a2c6784588e",
+  "engineRevision": "sha256:f077869b80623ee2f5117b0844365ef1969a847848b89fbf31831ba2dbe418d7",
   "distributionSource": {
     "schemaVersion": 1,
     "channel": "edge",
@@ -10,7 +10,7 @@
   },
   "distributions": {
     "core": {
-      "revision": "sha256:b7452d014022391d6c99e50bbe38e79c14587399d0a6b676b2f32a2c6784588e",
+      "revision": "sha256:f077869b80623ee2f5117b0844365ef1969a847848b89fbf31831ba2dbe418d7",
       "files": [
         {
           "path": "LICENSE",
@@ -39,8 +39,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-component/SKILL.md",
-          "sha256": "ef3259b045b0e35b1d843614bd81290d2cdca454b9a14ed4c137b7d630cdf0b4",
-          "bytes": 3060
+          "sha256": "440e228e5175804a471bfc953206c9f81dbfa0f464f7d27fc8dc117d7c0cafd0",
+          "bytes": 5065
         },
         {
           "path": "engine/.claude/skills/ss-copy/SKILL.md",
@@ -420,7 +420,7 @@
       ]
     },
     "skills": {
-      "revision": "sha256:f537892a19e6be28c6f7add81c012e9328c0a4088375532c64094f4bc99f25b8",
+      "revision": "sha256:5fedca9a4fa17a25a3dc7eeafca92766adf00e826716d648a2df93f352ddbd65",
       "files": [
         {
           "path": "engine/.claude/skills/ss-a11y/SKILL.md",
@@ -439,8 +439,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-component/SKILL.md",
-          "sha256": "ef3259b045b0e35b1d843614bd81290d2cdca454b9a14ed4c137b7d630cdf0b4",
-          "bytes": 3060
+          "sha256": "440e228e5175804a471bfc953206c9f81dbfa0f464f7d27fc8dc117d7c0cafd0",
+          "bytes": 5065
         },
         {
           "path": "engine/.claude/skills/ss-copy/SKILL.md",
@@ -713,8 +713,8 @@
     },
     {
       "path": ".claude/skills/ss-component/SKILL.md",
-      "sha256": "ef3259b045b0e35b1d843614bd81290d2cdca454b9a14ed4c137b7d630cdf0b4",
-      "bytes": 3060
+      "sha256": "440e228e5175804a471bfc953206c9f81dbfa0f464f7d27fc8dc117d7c0cafd0",
+      "bytes": 5065
     },
     {
       "path": ".claude/skills/ss-copy/SKILL.md",

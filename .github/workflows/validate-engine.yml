@@ -44,29 +44,38 @@ jobs:
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
         with:
           node-version: 22
-      - name: Regenerate public catalogs on Windows
-        run: |
-          node scripts/build-context-catalog.mjs
-          node extensions/learning/runtime/scripts/build-learning-catalog.mjs
-          node demo-pricing/scripts/build-llms.mjs
-      - name: Run path-sensitive contracts on Windows
+      # Keep each native check in its own step so a later success cannot mask its exit code.
+      - name: Regenerate context catalog on Windows
+        run: node scripts/build-context-catalog.mjs
+      - name: Regenerate learning catalog on Windows
+        run: node extensions/learning/runtime/scripts/build-learning-catalog.mjs
+      - name: Regenerate public mirrors on Windows
+        run: node demo-pricing/scripts/build-llms.mjs
+      - name: Check public claims on Windows
+        run: node scripts/test-public-claims.mjs
+      - name: Run runtime contracts on Windows
         shell: pwsh
         run: |
-          node scripts/test-public-claims.mjs
           $testFiles = Get-ChildItem "scripts/runtime-tests/*.test.mjs" | ForEach-Object { $_.FullName }
+          if (-not $testFiles) { throw "No runtime contract tests found" }
           node --test $testFiles
-          node scripts/validate-engine.mjs
-          node scripts/check-markdown-links.mjs
+      - name: Validate engine on Windows
+        run: node scripts/validate-engine.mjs
+      - name: Check Markdown links on Windows
+        run: node scripts/check-markdown-links.mjs
       - name: Install the current checkout through PowerShell
         shell: pwsh
         run: |
           $probe = Join-Path $env:RUNNER_TEMP "styleseed-install-smoke"
           New-Item -ItemType Directory -Path $probe -Force | Out-Null
           git -C $probe init --quiet
+          if ($LASTEXITCODE -ne 0) { throw "Install probe git init failed ($LASTEXITCODE)" }
           Push-Location $probe
           try {
             npx.cmd skills add $env:GITHUB_WORKSPACE --agent codex --yes --copy
+            if ($LASTEXITCODE -ne 0) { throw "Skill installation failed ($LASTEXITCODE)" }
             npx.cmd skills list --json --agent codex | Out-Null
+            if ($LASTEXITCODE -ne 0) { throw "Installed skill listing failed ($LASTEXITCODE)" }
             $skills = @(Get-ChildItem ".agents/skills" -Directory)
             if ($skills.Count -ne 23) {
               throw "Expected 23 installed skills, found $($skills.Count)"

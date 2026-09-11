@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: Existing signed release tag to verify and package (for example, v4.1.1)
+        description: Existing signed release tag; run this workflow from that same tag (for example, v4.2.0)
         required: true
         type: string
 
@@ -44,7 +44,10 @@ jobs:
           set -euo pipefail
           version="$(tr -d '\r\n' < engine/VERSION)"
           test "$RELEASE_TAG" = "v$version"
-          test "$(git rev-parse HEAD)" = "$(git rev-list -n 1 "$RELEASE_TAG")"
+          git_sha="$(git rev-parse HEAD)"
+          test "$git_sha" = "$(git rev-list -n 1 "$RELEASE_TAG")"
+          test "$GITHUB_REF" = "refs/tags/$RELEASE_TAG"
+          test "$GITHUB_SHA" = "$git_sha"
           tag_object="$(gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$RELEASE_TAG" --jq '.object.sha + " " + .object.type')"
           read -r tag_sha tag_type <<< "$tag_object"
           test "$tag_type" = "tag"
@@ -52,6 +55,7 @@ jobs:
           test -z "$(git status --porcelain)"
           created_at="$(git show -s --format=%cI HEAD)"
           echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "git_sha=$git_sha" >> "$GITHUB_OUTPUT"
           echo "created_at=$created_at" >> "$GITHUB_OUTPUT"
 
       - name: Install demo dependencies
@@ -73,16 +77,34 @@ jobs:
         run: npm run test:browser
         working-directory: demo-pricing
 
+      - name: Run disposable external application regression
+        run: node scripts/test-external-app.mjs --output "${{ runner.temp }}/styleseed-release-external-app"
+
+      - name: Calibrate three-screen browser acceptance
+        run: node scripts/test-design-pilot-browser.mjs --calibrate --output "${{ runner.temp }}/styleseed-release-pilot-browser"
+
+      - name: Preserve release browser diagnostics
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: styleseed-release-browser-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/styleseed-release-external-app/
+            ${{ runner.temp }}/styleseed-release-pilot-browser/
+          if-no-files-found: ignore
+          retention-days: 14
+
       - name: Build release archive, manifests, SBOMs, and checksums
         env:
           RELEASE_TAG: ${{ inputs.tag }}
           RELEASE_VERSION: ${{ steps.release.outputs.version }}
           RELEASE_CREATED_AT: ${{ steps.release.outputs.created_at }}
+          RELEASE_GIT_SHA: ${{ steps.release.outputs.git_sha }}
         run: |
           node scripts/build-release-assets.mjs \
             --version "$RELEASE_VERSION" \
             --tag "$RELEASE_TAG" \
-            --git-sha "$GITHUB_SHA" \
+            --git-sha "$RELEASE_GIT_SHA" \
             --created-at "$RELEASE_CREATED_AT" \
             --tag-verified true \
             --workflow-run-url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"

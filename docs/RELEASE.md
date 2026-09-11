@@ -17,9 +17,18 @@ archive inventory repeats that metadata so an evaluator can inspect it without e
 1. Merge the version/changelog change through a green pull request. The version must match every
    maintained plugin manifest.
 2. Create a signed `v<version>` tag at the intended commit and push that exact tag.
-3. Manually run **Prepare StyleSeed release assets** with the existing tag.
+3. Manually run **Prepare StyleSeed release assets** from that same tag, not from `main`:
+
+   ```bash
+   gh workflow run prepare-release.yml --ref v4.2.0 -f tag=v4.2.0
+   ```
+
+   Replace both tag arguments together for another version. The workflow requires its execution
+   ref, checked-out source, tag target, and manifest Git SHA to agree so provenance describes the
+   files actually packaged. Local generation also rejects a Git SHA different from checkout HEAD.
 4. The workflow checks out the tag, reruns the canonical source and production build gates, audits
-   production dependencies, installs Chromium, and runs the browser smoke suite.
+   production dependencies, installs Chromium, and runs the browser smoke, external-application,
+   and browser-calibration suites. Their diagnostic artifacts are separate from release assets.
 5. It creates and validates:
 
    - `styleseed-core-<version>.tar.gz` with stable-channel metadata;

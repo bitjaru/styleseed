@@ -13,6 +13,7 @@ import {
 import { dirname, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { buildPluginPackage } from "./build-plugin-packages.mjs";
+import { assertReleaseCommit } from "./release-source.mjs";
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const distRoot = resolve(repoRoot, "dist");
@@ -151,6 +152,7 @@ async function main() {
   const tag = requireMatch(args.tag ?? `v${version}`, /^v\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/u, "--tag");
   if (tag !== `v${version}`) throw new Error(`Tag ${tag} does not match version ${version}`);
   const gitSha = requireMatch(args["git-sha"], /^[0-9a-f]{40}$/u, "--git-sha");
+  assertReleaseCommit(repoRoot, gitSha);
   const createdAt = normalizeCreatedAt(args["created-at"]);
   const engineVersion = readFileSync(resolve(repoRoot, "engine/VERSION"), "utf8").trim();
   if (engineVersion !== version) throw new Error(`engine/VERSION ${engineVersion} does not match ${version}`);

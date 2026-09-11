@@ -80,6 +80,9 @@ jobs:
       - name: Run disposable external application regression
         run: node scripts/test-external-app.mjs --output "${{ runner.temp }}/styleseed-release-external-app"
 
+      - name: Check pilot React and CSS integration
+        run: node scripts/test-design-pilot-library.mjs --output "${{ runner.temp }}/styleseed-release-pilot-library"
+
       - name: Calibrate three-screen browser acceptance
         run: node scripts/test-design-pilot-browser.mjs --calibrate --output "${{ runner.temp }}/styleseed-release-pilot-browser"
 
@@ -91,6 +94,8 @@ jobs:
           path: |
             ${{ runner.temp }}/styleseed-release-external-app/
             ${{ runner.temp }}/styleseed-release-pilot-browser/
+            ${{ runner.temp }}/styleseed-release-pilot-library/report.json
+            ${{ runner.temp }}/styleseed-release-pilot-library/*.png
           if-no-files-found: ignore
           retention-days: 14
 

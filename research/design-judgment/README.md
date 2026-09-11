@@ -145,6 +145,39 @@ candidate verification, expert rubric approval and the frozen generation runtime
 
 ## Before any real model run
 
+### Shared-library integration check
+
+With the locked demo dependencies and Chromium installed, run:
+
+```sh
+node scripts/test-design-pilot-library.mjs
+```
+
+This operator-only probe compiles the actual copied React primitives, condition C API examples,
+and shared Tailwind/theme/recipe CSS. It checks nine assertions at desktop and 390×844: target
+size, recipe radius, brand-token wiring, containment, label/error relationships, controlled input,
+keyboard focus, busy-state click suppression/input retention, and table semantics. Three injected
+CSS defects must fail their designated assertions; missing cases/screenshots and browser errors
+cannot count as successful detection. The probe is not copied into any experimental arm.
+
+The first run found the example Input still used its vendor `rounded-md` (4px), while the selected
+recipe requires 3px. Its usage now explicitly adds `ss-pattern-control`; copied vendor/theme bytes
+remain unchanged. The report also records the unmodified vendor defaults, which still need
+usage-level adaptations and human compatibility review.
+
+Each run retains a fresh report, source/build hashes, dependency/browser versions and screenshots
+outside the checkout. `--output <new-directory>` cannot overwrite existing paths. It reuses locked
+checkout dependencies for compilation, with no install or network asset fetching. The temporary
+fixture's dependency link is not an isolated agent environment. CI uploads only the report/PNGs,
+not that link or the build workspace. Ubuntu CI and the full `--browser` gate run this probe;
+Windows runs its dependency-free runner contracts, not the Chromium probe.
+
+This verifies a bounded React/CSS integration slice, not the three-screen application, asynchronous
+backend behavior, complete accessibility, approved library compatibility, or design-quality gains.
+It does not change `readyForAgentRuns=false`, human approvals, budgets, or model-run counts.
+
+### Remaining human and execution prerequisites
+
 1. Have named human experts approve the task/rubric, reference library, incompatibility handling,
    noncompensable failures and promotion thresholds before outputs exist.
 2. Freeze exact model/runtime/tool versions, both code/input revisions, run count, time/token/spend
@@ -154,7 +187,8 @@ candidate verification, expert rubric approval and the frozen generation runtime
    can contaminate a comparison. Copy only one arm into the actual runtime and verify isolation.
 4. Review/freeze the draft browser acceptance checks against actual candidate implementations,
    including the documented coverage limits and explicit protocol adapter. Calibration of the
-   evaluator is not a shared-library compatibility trial. Run that rehearsal before paid generation.
+   evaluator is not a shared-library compatibility trial. The React/CSS probe above checks the
+   examples only; complete the three-screen candidate rehearsal before paid generation.
 5. Randomize and blind result labels for human review, record disagreements and actual rework/cost,
    then run the operator-only follow-up in a fresh session after initial outputs are frozen.
 

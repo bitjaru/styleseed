@@ -83,6 +83,7 @@ if (!flags.has("--core")) {
   run(flags.has("--webpack") ? "Build demo with Webpack" : "Build demo with Turbopack", npmCommand, buildArgs, demoRoot);
   if (flags.has("--browser")) {
     run("Run browser smoke tests", npmCommand, ["run", "test:browser"], demoRoot);
+    run("Check pilot React and CSS integration", node, ["scripts/test-design-pilot-library.mjs"]);
     run("Calibrate design-pilot browser acceptance", node, ["scripts/test-design-pilot-browser.mjs", "--calibrate"]);
   }
 }

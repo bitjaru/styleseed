@@ -25,6 +25,10 @@ this condition only makes relevant usage context explicit.
 - Follow the local `./utils` imports. No `@/components/ui/utils` alias is preconfigured here.
 - `Button` has sub-44px sizes and `Input` defaults to 36px height. Meet the common task's 44px
   floor through supported `className` overrides/wrappers; do not silently rewrite vendor files.
+- Apply `ss-pattern-control` to the Input usage when it must inherit the selected recipe's
+  control radius. `min-h-11` fixes the target height only: with this theme, the unmodified Input's
+  `rounded-md` computes to 4px while enterprise-workbench controls use 3px. The example makes that
+  usage-level override explicit without changing the copied component or theme.
 - Some Button variants contain fixed color values; Input has a fixed radius utility. Record
   conflicts with the requested system and use an applicable existing variant/override. These
   implementation limitations have not been endorsed by an expert or certified accessible.

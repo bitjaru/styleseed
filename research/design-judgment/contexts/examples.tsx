@@ -11,7 +11,7 @@ export function WorkspaceName({ value, error, onChange }: {
 }) {
   return <div>
     <Label htmlFor="workspace-name">Workspace name</Label>
-    <Input id="workspace-name" value={value} className="min-h-11"
+    <Input id="workspace-name" value={value} className="ss-pattern-control min-h-11"
       onChange={event => onChange(event.currentTarget.value)}
       aria-invalid={Boolean(error)} aria-describedby={error ? 'workspace-name-error' : undefined} />
     {error && <p id="workspace-name-error" role="alert">{error}</p>}

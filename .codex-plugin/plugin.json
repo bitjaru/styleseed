@@ -1,6 +1,6 @@
 {
   "name": "styleseed",
-  "version": "4.1.0",
+  "version": "4.2.0",
   "description": "A design-method engine for making expert design decisions repeatable by coding agents, with project-owned rules and reviewable evidence.",
   "author": {
     "name": "bitjaru",

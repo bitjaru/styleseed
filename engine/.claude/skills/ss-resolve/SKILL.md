@@ -1,6 +1,6 @@
 ---
 name: ss-resolve
-description: Compile a small, deterministic StyleSeed rule bundle for one agent, output grammar, surface adapter, domain, page type, brand recipe, palette recipe, and optional profile. Use before setup or build, when project configuration changes, when updating StyleSeed, or to diagnose local installation, rule drift, and evidence health without changing files.
+description: Compile the effective StyleSeed rule bundle for one artifact, or inspect install and evidence health read-only. Use before setup or build, or to diagnose rule drift.
 ---
 
 # Resolve effective StyleSeed context

@@ -1,6 +1,6 @@
 ---
 name: ss-build
-description: Build a screen with StyleSeed's composed design method — choose or compile an output grammar, apply a brand recipe plus domain/page/profile/lock constraints, then run the code and pixel gates before presenting.
+description: Build a screen with StyleSeed's composed method, then run the code and pixel gates before presenting. Use when building or rebuilding a screen; sets up the project first if needed.
 argument-hint: "[what to build]"
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash, WebFetch
 ---

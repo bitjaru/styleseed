@@ -1,7 +1,7 @@
 {
   "schemaVersion": 5,
   "engineVersion": "4.2.0",
-  "engineRevision": "sha256:eeb89d12b518c178162f72ffe39a7126dd611953d2f66be0f5507de1bfbe7073",
+  "engineRevision": "sha256:9ff59f30d4bd3f115cd4bef36e64a85c55ac700c940cca988f2a798649aa4b74",
   "distributionSource": {
     "schemaVersion": 1,
     "channel": "edge",
@@ -10,7 +10,7 @@
   },
   "distributions": {
     "core": {
-      "revision": "sha256:eeb89d12b518c178162f72ffe39a7126dd611953d2f66be0f5507de1bfbe7073",
+      "revision": "sha256:9ff59f30d4bd3f115cd4bef36e64a85c55ac700c940cca988f2a798649aa4b74",
       "files": [
         {
           "path": "LICENSE",
@@ -34,8 +34,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-build/SKILL.md",
-          "sha256": "79a9d4130284675cead5ed24ed9ac91b923dccb60f8710b0613088294a711169",
-          "bytes": 4986
+          "sha256": "4521682bd9efdc5eb47da16c91239024a6c60bcb4f0a5e7d43bf9c008e2ac2ff",
+          "bytes": 4954
         },
         {
           "path": "engine/.claude/skills/ss-component/SKILL.md",
@@ -49,8 +49,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-dial/SKILL.md",
-          "sha256": "cb2961f041fc3ece017fec2835c197d5d4d8eb806c70ca1ecedaea1aa422dfbe",
-          "bytes": 9914
+          "sha256": "90fb39f82be555e5fed954bfe176fb14447896a5e6866cd5a774b6003ffddd96",
+          "bytes": 9675
         },
         {
           "path": "engine/.claude/skills/ss-feedback/SKILL.md",
@@ -69,8 +69,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-motion/SKILL.md",
-          "sha256": "50aa240d681a68cec4c493dd0230e3046d8ed2b62a66334a68f540353f88f0c9",
-          "bytes": 10417
+          "sha256": "ae559bf99eda4a9e05f8040a77a2d494b021bae5b5c007bd7daf33c75300ebc3",
+          "bytes": 10254
         },
         {
           "path": "engine/.claude/skills/ss-page/SKILL.md",
@@ -84,13 +84,13 @@
         },
         {
           "path": "engine/.claude/skills/ss-reference/SKILL.md",
-          "sha256": "1575bbb98c05958c01a0b80e59be650a40f877eba3ef0ed37023e7a7df567846",
-          "bytes": 2638
+          "sha256": "8cb72ef2e04016bcbc02fcd97f15575744679274fa5c01b1f8dae691cf3a9d87",
+          "bytes": 2549
         },
         {
           "path": "engine/.claude/skills/ss-resolve/SKILL.md",
-          "sha256": "678a94a773ab39a002288aa3c586cee7ded9ad3f6ee06c61d56de89b725dc306",
-          "bytes": 4258
+          "sha256": "392044139ea3e62087cc6a3bdcbff7cd5428b33d5b75e0925dbfbb1d7ca23219",
+          "bytes": 4073
         },
         {
           "path": "engine/.claude/skills/ss-resolve/references/artifact-index.schema.json",
@@ -219,8 +219,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-studio/SKILL.md",
-          "sha256": "4e97714d2f757c06ee3b3ba8692ef5edace25cedc4e97b21d8033c265825b513",
-          "bytes": 7034
+          "sha256": "4128bba56ac1a389d703a51306833f5a19589ed67ff430f5ab88f1f98bb2ed99",
+          "bytes": 6832
         },
         {
           "path": "engine/.claude/skills/ss-studio/agents/openai.yaml",
@@ -244,8 +244,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-tokens/SKILL.md",
-          "sha256": "7b2d47255cb83f7674cefa79991ccb2b0b6a716c3c6536ee2aa7e3ff6c2d0583",
-          "bytes": 4073
+          "sha256": "1d251a83f6701eee63c200f4e38c0223740826da285dddf1c0a3d3dee92d9428",
+          "bytes": 3992
         },
         {
           "path": "engine/.claude/skills/ss-tokens/scripts/generate-palette.mjs",
@@ -420,7 +420,7 @@
       ]
     },
     "skills": {
-      "revision": "sha256:773778e1151be25c9a51cd66c1749dd70732b0aeaa2bd5dadee65735a4c0eca8",
+      "revision": "sha256:5f1b38adf9b85eadf9ea5eb15d31fdc5788cf9adcda1498603bea7b8638749d8",
       "files": [
         {
           "path": "engine/.claude/skills/ss-a11y/SKILL.md",
@@ -434,8 +434,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-build/SKILL.md",
-          "sha256": "79a9d4130284675cead5ed24ed9ac91b923dccb60f8710b0613088294a711169",
-          "bytes": 4986
+          "sha256": "4521682bd9efdc5eb47da16c91239024a6c60bcb4f0a5e7d43bf9c008e2ac2ff",
+          "bytes": 4954
         },
         {
           "path": "engine/.claude/skills/ss-component/SKILL.md",
@@ -449,8 +449,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-dial/SKILL.md",
-          "sha256": "cb2961f041fc3ece017fec2835c197d5d4d8eb806c70ca1ecedaea1aa422dfbe",
-          "bytes": 9914
+          "sha256": "90fb39f82be555e5fed954bfe176fb14447896a5e6866cd5a774b6003ffddd96",
+          "bytes": 9675
         },
         {
           "path": "engine/.claude/skills/ss-feedback/SKILL.md",
@@ -469,8 +469,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-motion/SKILL.md",
-          "sha256": "50aa240d681a68cec4c493dd0230e3046d8ed2b62a66334a68f540353f88f0c9",
-          "bytes": 10417
+          "sha256": "ae559bf99eda4a9e05f8040a77a2d494b021bae5b5c007bd7daf33c75300ebc3",
+          "bytes": 10254
         },
         {
           "path": "engine/.claude/skills/ss-page/SKILL.md",
@@ -484,13 +484,13 @@
         },
         {
           "path": "engine/.claude/skills/ss-reference/SKILL.md",
-          "sha256": "1575bbb98c05958c01a0b80e59be650a40f877eba3ef0ed37023e7a7df567846",
-          "bytes": 2638
+          "sha256": "8cb72ef2e04016bcbc02fcd97f15575744679274fa5c01b1f8dae691cf3a9d87",
+          "bytes": 2549
         },
         {
           "path": "engine/.claude/skills/ss-resolve/SKILL.md",
-          "sha256": "678a94a773ab39a002288aa3c586cee7ded9ad3f6ee06c61d56de89b725dc306",
-          "bytes": 4258
+          "sha256": "392044139ea3e62087cc6a3bdcbff7cd5428b33d5b75e0925dbfbb1d7ca23219",
+          "bytes": 4073
         },
         {
           "path": "engine/.claude/skills/ss-resolve/references/artifact-index.schema.json",
@@ -619,8 +619,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-studio/SKILL.md",
-          "sha256": "4e97714d2f757c06ee3b3ba8692ef5edace25cedc4e97b21d8033c265825b513",
-          "bytes": 7034
+          "sha256": "4128bba56ac1a389d703a51306833f5a19589ed67ff430f5ab88f1f98bb2ed99",
+          "bytes": 6832
         },
         {
           "path": "engine/.claude/skills/ss-studio/agents/openai.yaml",
@@ -644,8 +644,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-tokens/SKILL.md",
-          "sha256": "7b2d47255cb83f7674cefa79991ccb2b0b6a716c3c6536ee2aa7e3ff6c2d0583",
-          "bytes": 4073
+          "sha256": "1d251a83f6701eee63c200f4e38c0223740826da285dddf1c0a3d3dee92d9428",
+          "bytes": 3992
         },
         {
           "path": "engine/.claude/skills/ss-tokens/scripts/generate-palette.mjs",
@@ -708,8 +708,8 @@
     },
     {
       "path": ".claude/skills/ss-build/SKILL.md",
-      "sha256": "79a9d4130284675cead5ed24ed9ac91b923dccb60f8710b0613088294a711169",
-      "bytes": 4986
+      "sha256": "4521682bd9efdc5eb47da16c91239024a6c60bcb4f0a5e7d43bf9c008e2ac2ff",
+      "bytes": 4954
     },
     {
       "path": ".claude/skills/ss-component/SKILL.md",
@@ -723,8 +723,8 @@
     },
     {
       "path": ".claude/skills/ss-dial/SKILL.md",
-      "sha256": "cb2961f041fc3ece017fec2835c197d5d4d8eb806c70ca1ecedaea1aa422dfbe",
-      "bytes": 9914
+      "sha256": "90fb39f82be555e5fed954bfe176fb14447896a5e6866cd5a774b6003ffddd96",
+      "bytes": 9675
     },
     {
       "path": ".claude/skills/ss-feedback/SKILL.md",
@@ -743,8 +743,8 @@
     },
     {
       "path": ".claude/skills/ss-motion/SKILL.md",
-      "sha256": "50aa240d681a68cec4c493dd0230e3046d8ed2b62a66334a68f540353f88f0c9",
-      "bytes": 10417
+      "sha256": "ae559bf99eda4a9e05f8040a77a2d494b021bae5b5c007bd7daf33c75300ebc3",
+      "bytes": 10254
     },
     {
       "path": ".claude/skills/ss-page/SKILL.md",
@@ -758,13 +758,13 @@
     },
     {
       "path": ".claude/skills/ss-reference/SKILL.md",
-      "sha256": "1575bbb98c05958c01a0b80e59be650a40f877eba3ef0ed37023e7a7df567846",
-      "bytes": 2638
+      "sha256": "8cb72ef2e04016bcbc02fcd97f15575744679274fa5c01b1f8dae691cf3a9d87",
+      "bytes": 2549
     },
     {
       "path": ".claude/skills/ss-resolve/SKILL.md",
-      "sha256": "678a94a773ab39a002288aa3c586cee7ded9ad3f6ee06c61d56de89b725dc306",
-      "bytes": 4258
+      "sha256": "392044139ea3e62087cc6a3bdcbff7cd5428b33d5b75e0925dbfbb1d7ca23219",
+      "bytes": 4073
     },
     {
       "path": ".claude/skills/ss-resolve/references/artifact-index.schema.json",
@@ -893,8 +893,8 @@
     },
     {
       "path": ".claude/skills/ss-studio/SKILL.md",
-      "sha256": "4e97714d2f757c06ee3b3ba8692ef5edace25cedc4e97b21d8033c265825b513",
-      "bytes": 7034
+      "sha256": "4128bba56ac1a389d703a51306833f5a19589ed67ff430f5ab88f1f98bb2ed99",
+      "bytes": 6832
     },
     {
       "path": ".claude/skills/ss-studio/agents/openai.yaml",
@@ -918,8 +918,8 @@
     },
     {
       "path": ".claude/skills/ss-tokens/SKILL.md",
-      "sha256": "7b2d47255cb83f7674cefa79991ccb2b0b6a716c3c6536ee2aa7e3ff6c2d0583",
-      "bytes": 4073
+      "sha256": "1d251a83f6701eee63c200f4e38c0223740826da285dddf1c0a3d3dee92d9428",
+      "bytes": 3992
     },
     {
       "path": ".claude/skills/ss-tokens/scripts/generate-palette.mjs",

@@ -1,6 +1,6 @@
 ---
 name: ss-dial
-description: Turn ONE design axis up or down as a coordinated, deterministic transform — "denser", "sharper corners", "more muted", "bolder", "flatter", "livelier". Not a vibe the model reinterprets each time; a defined ramp that moves many tokens together, respects the guardrails (8px grid, a11y floors, single accent, nested-radius), updates the lock, and re-runs the gate. Use this when a human saying "more X" would otherwise get an inconsistent one-off.
+description: Turn one design axis up or down — "denser", "bolder", "flatter", "livelier", "sharper corners". Use for a single-axis change, not a mood word (those go to /ss-restyle); updates the lock and re-runs the gate.
 argument-hint: "<axis> <direction>  — e.g. \"density denser\", \"radius sharper\", \"color more-muted\", \"weight bolder\""
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash
 ---

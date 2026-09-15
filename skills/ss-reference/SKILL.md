@@ -1,6 +1,6 @@
 ---
 name: ss-reference
-description: Compile screenshots, URLs, Figma exports, or an existing UI into a project-local StyleSeed output grammar with evidence, tokens, confidence, anti-patterns, and a validation screen. Use when the user supplies a design reference that StyleSeed does not already model.
+description: Compile screenshots, URLs, Figma exports, or an existing UI into a project-local output grammar. Use when the user supplies a design reference StyleSeed does not already model.
 argument-hint: "[reference paths or URLs] [--name slug]"
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash, WebFetch
 ---

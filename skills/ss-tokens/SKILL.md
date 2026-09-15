@@ -1,6 +1,6 @@
 ---
 name: ss-tokens
-description: Generate an accessible semantic palette from a key color, or view, add, and modify StyleSeed design tokens. Use when a user supplies a brand color, asks which colors combine well, needs light/dark theme roles, or needs token files for implementation.
+description: Generate an accessible semantic palette from a key color, or view, add, and modify design tokens. Use when a user supplies a brand color or needs light/dark theme roles.
 argument-hint: "[action: generate|list|add|update] [token-type: color|spacing|shadow|radius|typography]"
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash
 ---

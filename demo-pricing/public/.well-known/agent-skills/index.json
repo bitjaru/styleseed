@@ -18,9 +18,9 @@
     {
       "name": "ss-build",
       "type": "skill-md",
-      "description": "Build a screen with StyleSeed's composed design method — choose or compile an output grammar, apply a brand recipe plus domain/page/profile/lock constraints, then run the code and pixel gates before presenting.",
+      "description": "Build a screen with StyleSeed's composed method, then run the code and pixel gates before presenting. Use when building or rebuilding a screen; sets up the project first if needed.",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-build/SKILL.md",
-      "digest": "sha256:79a9d4130284675cead5ed24ed9ac91b923dccb60f8710b0613088294a711169"
+      "digest": "sha256:4521682bd9efdc5eb47da16c91239024a6c60bcb4f0a5e7d43bf9c008e2ac2ff"
     },
     {
       "name": "ss-component",
@@ -39,9 +39,9 @@
     {
       "name": "ss-dial",
       "type": "skill-md",
-      "description": "Turn ONE design axis up or down as a coordinated, deterministic transform — \"denser\", \"sharper corners\", \"more muted\", \"bolder\", \"flatter\", \"livelier\". Not a vibe the model reinterprets each time; a defined ramp that moves many tokens together, respects the guardrails (8px grid, a11y floors, single accent, nested-radius), updates the lock, and re-runs the gate. Use this when a human saying \"more X\" would otherwise get an inconsistent one-off.",
+      "description": "Turn one design axis up or down — \"denser\", \"bolder\", \"flatter\", \"livelier\", \"sharper corners\". Use for a single-axis change, not a mood word (those go to /ss-restyle); updates the lock and re-runs the gate.",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-dial/SKILL.md",
-      "digest": "sha256:cb2961f041fc3ece017fec2835c197d5d4d8eb806c70ca1ecedaea1aa422dfbe"
+      "digest": "sha256:90fb39f82be555e5fed954bfe176fb14447896a5e6866cd5a774b6003ffddd96"
     },
     {
       "name": "ss-feedback",
@@ -67,9 +67,9 @@
     {
       "name": "ss-motion",
       "type": "skill-md",
-      "description": "Apply a named StyleSeed motion to a component — either one of the 5 personality seeds (Spring/Silk/Snap/Float/Pulse × entrance/exit/hover/press/layout) or a distinctive keyword move from the motion library (toggle-flip, toggle-curtain, reveal-blur, pop-in, shimmer, …). Translates vibe words into framer-motion code from one source of truth.",
+      "description": "Apply a named StyleSeed motion from the five personality seeds or the keyword move library. Use when asked for a specific motion or a vibe word like \"springy\", \"snappy\", or \"shimmer\".",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-motion/SKILL.md",
-      "digest": "sha256:50aa240d681a68cec4c493dd0230e3046d8ed2b62a66334a68f540353f88f0c9"
+      "digest": "sha256:ae559bf99eda4a9e05f8040a77a2d494b021bae5b5c007bd7daf33c75300ebc3"
     },
     {
       "name": "ss-page",
@@ -88,16 +88,16 @@
     {
       "name": "ss-reference",
       "type": "skill-md",
-      "description": "Compile screenshots, URLs, Figma exports, or an existing UI into a project-local StyleSeed output grammar with evidence, tokens, confidence, anti-patterns, and a validation screen. Use when the user supplies a design reference that StyleSeed does not already model.",
+      "description": "Compile screenshots, URLs, Figma exports, or an existing UI into a project-local output grammar. Use when the user supplies a design reference StyleSeed does not already model.",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-reference/SKILL.md",
-      "digest": "sha256:1575bbb98c05958c01a0b80e59be650a40f877eba3ef0ed37023e7a7df567846"
+      "digest": "sha256:8cb72ef2e04016bcbc02fcd97f15575744679274fa5c01b1f8dae691cf3a9d87"
     },
     {
       "name": "ss-resolve",
       "type": "skill-md",
-      "description": "Compile a small, deterministic StyleSeed rule bundle for one agent, output grammar, surface adapter, domain, page type, brand recipe, palette recipe, and optional profile. Use before setup or build, when project configuration changes, when updating StyleSeed, or to diagnose local installation, rule drift, and evidence health without changing files.",
+      "description": "Compile the effective StyleSeed rule bundle for one artifact, or inspect install and evidence health read-only. Use before setup or build, or to diagnose rule drift.",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-resolve/SKILL.md",
-      "digest": "sha256:678a94a773ab39a002288aa3c586cee7ded9ad3f6ee06c61d56de89b725dc306"
+      "digest": "sha256:392044139ea3e62087cc6a3bdcbff7cd5428b33d5b75e0925dbfbb1d7ca23219"
     },
     {
       "name": "ss-restyle",
@@ -130,16 +130,16 @@
     {
       "name": "ss-studio",
       "type": "skill-md",
-      "description": "Turn a product brief and optional references into three distinct creative directions, a human-selected StyleSeed interaction plan, generated image/video asset jobs, a working UI prototype, and a verified prototype-first showcase reel. Use for client concepts, app interaction exploration, trendy but coherent UI direction, reference discovery and synthesis, or any request that needs more than one static screen.",
+      "description": "Turn a brief into three creative directions, a human-selected interaction plan, prototype, and showcase reel. Use when a request needs more than one static screen — client concepts or interaction exploration.",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-studio/SKILL.md",
-      "digest": "sha256:4e97714d2f757c06ee3b3ba8692ef5edace25cedc4e97b21d8033c265825b513"
+      "digest": "sha256:4128bba56ac1a389d703a51306833f5a19589ed67ff430f5ab88f1f98bb2ed99"
     },
     {
       "name": "ss-tokens",
       "type": "skill-md",
-      "description": "Generate an accessible semantic palette from a key color, or view, add, and modify StyleSeed design tokens. Use when a user supplies a brand color, asks which colors combine well, needs light/dark theme roles, or needs token files for implementation.",
+      "description": "Generate an accessible semantic palette from a key color, or view, add, and modify design tokens. Use when a user supplies a brand color or needs light/dark theme roles.",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-tokens/SKILL.md",
-      "digest": "sha256:7b2d47255cb83f7674cefa79991ccb2b0b6a716c3c6536ee2aa7e3ff6c2d0583"
+      "digest": "sha256:1d251a83f6701eee63c200f4e38c0223740826da285dddf1c0a3d3dee92d9428"
     },
     {
       "name": "ss-update",

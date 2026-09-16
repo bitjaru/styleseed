@@ -1,6 +1,6 @@
 ---
 name: ss-verify
-description: The VISUAL gate — render a UI or visual artifact through its surface adapter, inspect the actual pixels, then fix and re-render until it passes the composed StyleSeed rule set.
+description: Inspect rendered UI or visual artifacts against their StyleSeed contract. Report findings; fix and re-render only within an authorized build or repair task.
 argument-hint: "[route, file, artifact manifest, or export directory]"
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash
 ---
@@ -17,8 +17,10 @@ setup. Verify each affected artifact against its own required renders and valida
 
 Only projects without either registry file use `.styleseed/effective-rules.md` and
 `.styleseed/manifest.json`, checked with `ss-resolve --from-lock STYLESEED.md --check`.
-Invoke `/ss-resolve` or `$ss-resolve` from the corresponding project-owned configuration when
-that selected bundle is missing or stale. With no registry or lock, establish scope before a
+During an authorized build or repair, invoke `/ss-resolve` or `$ss-resolve` from the corresponding
+project-owned configuration when that selected bundle is missing or stale. In inspection-only
+mode, report that condition without rewriting bundles or claiming current compliance.
+With no registry or lock, establish scope before a
 compliance claim. Judge pixels against that compiled method.
 A lock value cannot excuse a core failure, and a recipe/profile cannot replace the output grammar.
 
@@ -32,12 +34,24 @@ background. A human sees these in half a second; a code-reading gate misses all 
 then score the same StyleSeed gate against what you see, fix, and re-render. This is the gate
 that most predicts whether a real user will say "this looks designed."
 
-Run it as the **final** gate after `/ss-score` passes — code-clean is necessary but not
-sufficient; pixel-clean is the real bar.
+During a build, run it as the final gate after `/ss-score`. A direct screenshot/pixel inspection
+does not require a new code-score loop; report code evidence as not checked if unavailable.
+
+## Inspection and repair scope
+
+A request to inspect, verify, or report is inspection-only unless it also authorizes fixes.
+Render and capture in a temporary workspace without modifying product source, configuration,
+or real user data. Report findings even when they fail. Use existing test fixtures for states;
+never empty a live database to produce an empty-state screenshot.
+
+Within an authorized build or repair, fix only in-scope implementation defects and re-render.
+Do not change approved identity or waive core floors to raise a score. A missing tool or failed
+gate calls for an honest report, not an invented pass or an unrelated installation.
 
 ## When NOT to use
 
-- Nothing renderable yet (pure logic/config, or a component with no host page) → use `/ss-score`.
+- Pure logic/config with no visual artifact → use relevant functional/configuration checks,
+  not a design score. A renderable component without a host can use the temporary harness below.
 - No way to render at all (no browser, no Playwright, headless blocked) → say so, fall back to
   `/ss-score`, and tell the user the visual gate was skipped. **Never claim you verified visually
   if you didn't actually see a screenshot.**
@@ -114,8 +128,8 @@ eyes, not source:
 ## Step 3 — Render states or sequence variants too
 
 The happy-path screenshot hides the most common real-world failure: **no empty / loading / error
-state.** Where the surface has a data view, render those variants (a query param, a mock, a
-forced prop, or temporarily emptying the data) and screenshot each. A blank white void for "no
+state.** Where the surface has a data view, render those variants with test fixtures, an existing
+preview query param, or props in a temporary harness, and screenshot each. A blank white void for "no
 data" is a fail you can only catch by *looking* at the empty state. (Static marketing pages with
 no data surface → N/A, note it.)
 
@@ -126,10 +140,11 @@ thumbnail or overview view.
 
 ## Step 4 — Fix, re-render, repeat
 
-For each visual failure, fix the code, then **re-render and look again** — don't assume the fix
-worked from the diff (the whole point is that code ≠ pixels). Loop up to ~3×. Present only when
-the screenshot passes, with the final image, the effective rule set, a one-line "fixed: …", and
-the gate result.
+In inspection-only mode, return findings and evidence without edits. In an authorized repair,
+fix the code, then **re-render and look again**. Stop on pass, after at most three repair-and-render
+passes, or at a permission/tool blocker. Do not reset the limit by switching skills.
+Always report the latest image if available, effective rule set, changes, gate status, and
+unresolved failures. A failed result may be shown for review, but never labeled accepted.
 
 ## Rules
 
@@ -137,9 +152,9 @@ the gate result.
   and say the visual gate was skipped. Never fabricate "looks good."
 - **Re-render after every fix.** The reason this skill exists is that source and pixels diverge;
   verifying a visual fix by reading the diff defeats it.
-- **Both gates, in order:** `/ss-score` (code) first to catch structural issues cheaply, then
+- **Build gates, in order:** `/ss-score` (code) first to catch structural issues cheaply, then
   `/ss-verify` (pixels) as the final bar. `/ss-build` runs code-gate in its loop; finish a
   renderable screen with `/ss-verify`.
-- **Clean up:** stop the dev server you started; delete any throwaway harness/mock files.
+- **Clean up:** stop only the dev server you started; remove only your own temporary harness files.
 - **Shoot at 2×** and at the locked surface's viewport — judging a desktop app on a 390px shot
   (or vice-versa) invalidates the type-scale and balance checks.

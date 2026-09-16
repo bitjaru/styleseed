@@ -33,9 +33,10 @@ Target: **$ARGUMENTS**
 - **Color independence**: Don't convey info by color alone (add icons/text)
 
 #### 2. Operable
-- **Touch targets**: Minimum 44x44px (`min-h-11 min-w-11`)
-  - Common violation: `h-9` (36px) buttons — should be `h-11`
-  - Icon buttons need explicit size: `w-11 h-11`
+- **Touch targets**: Minimum 44x44px (`min-h-11 min-w-11`) on touch surfaces
+  - Flag undersized touch hit areas, not approved pointer-first desktop controls merely for being 36–40px tall
+  - Pointer-first controls follow the resolved contract; preserve keyboard access and applicable accessibility floors
+  - Icon buttons need an explicit hit area appropriate to the input mode
 - **Keyboard navigation**: All interactive elements must be keyboard-accessible
   - Tab order should be logical
   - `focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2`

@@ -4,10 +4,19 @@ Preserve approved project choices; report unsupported choices instead of silentl
 the project's design system. PRODUCT-PRINCIPLES.md defines the goal and authority boundaries.
 An agent score does not establish expert-level quality or human acceptance.
 
-Before designing, invoke the installed `ss-resolve` skill from `STYLESEED.md`, then read
-`.styleseed/effective-rules.md` and preserve `.styleseed/manifest.json`. The resolver composes
+Before designing, if either `.styleseed/project.json` or `.styleseed/artifacts/index.json` exists,
+require a complete valid registry, resolve the selected artifact, and read its bundle/manifest
+under `.styleseed/bundles/` and `.styleseed/manifests/`. Never use a legacy fallback on registry errors.
+Only when neither registry file exists, resolve `STYLESEED.md` and read
+`.styleseed/effective-rules.md` with `.styleseed/manifest.json`. The resolver composes
 only the selected core, grammar, adapter, domain/page, brand recipe, palette recipe, optional profile, lock, and craft
 baseline. Do not load `llms-full.txt` after resolution succeeds.
+
+Honor explicit user scope over skill workflow defaults, within host safety and permissions.
+Review/inspection requests return findings without product edits or bundle regeneration.
+Continue authorized work without redundant approval; preserve human direction selection and
+learning/export grants. In repair loops stop on pass or after three correction passes, and
+report failed/skipped gates honestly. Never hide a failed result or claim it passed.
 
 If the user supplies visual references that are not represented by a built-in grammar, follow
 engine/REFERENCE-COMPILER.md and compile a project-local grammar. Do not reduce a reference to
@@ -29,7 +38,8 @@ Core rules:
 Workflow:
 understand job → select/compile grammar → select adapter → select brand recipe → select palette recipe → lock bounded choices → resolve →
 read effective bundle → build →
-run ss-score to >=80 → render and inspect with ss-verify → fix and re-render → present evidence.
+run ss-score → authorized repairs → render and inspect with ss-verify → authorized repairs → report actual pass/fail evidence.
+Stop on pass or three correction passes per gate, including delegated passes. Review-only requests do not authorize repairs.
 
 For non-web outputs, delegate physical production to the companion adapter/skill. Example:
 StyleSeed supplies `sequential-story` and brand rules; `carousel-build` owns Instagram canvas,

@@ -7,11 +7,22 @@ surface unsupported choices rather than silently replacing the project's design 
 different output grammars. Skins provide materials; they never define the method. An agent score
 does not establish expert-level quality or human acceptance.
 
-**Run `/ss-resolve` first.** It compiles the project lock into
-`.styleseed/effective-rules.md` plus a hash-verifiable manifest. Build from that small bundle
+**Resolve the artifact boundary first.** If either `.styleseed/project.json` or
+`.styleseed/artifacts/index.json` exists, require a valid registry and use `/ss-resolve` with
+`--artifact <id>`. Read `.styleseed/bundles/<id>.md` and `.styleseed/manifests/<id>.json`;
+never fall back to a legacy lock on a registry error. Only when neither registry file exists,
+resolve `STYLESEED.md` into `.styleseed/effective-rules.md` plus its manifest. Build from that small bundle
 instead of loading the full handbook. Resolve every screen as core judgment × one output
 grammar (built-in or `/ss-reference`) × adapter × domain/page × brand recipe × palette recipe × optional
 profile × lock.
+
+The user's explicit task takes precedence over skill workflow defaults, subject to host safety
+and permission rules. The design authority order determines compliance, not permission to edit.
+Review/inspection-only requests return findings without product edits or bundle regeneration.
+Continue authorized work without redundant approval; retain genuine human direction decisions
+and learning/export grants. Explain the exact skill requirement when it blocks progress.
+The compiled contract governs contextual type, geometry, and component choices; handbook
+examples below are not permission to replace approved systems. Never waive core floors.
 
 ## Golden Rules (NEVER break these)
 
@@ -35,7 +46,7 @@ profile × lock.
 10. Font sizes from the "Font Size by Context" table ONLY — don't guess
 11. NO emoji as UI icons (🚗🧺⭐) — one line-icon set in currentColor; emoji inject many colors
 12. Status color = severity only — a normal/"보통" state is grey, not colored; don't color every row
-13. After generating ANY UI → run the Quality Gate (below); never show UI that hasn't passed
+13. After generating UI → run the Quality Gate; report failures without claiming acceptance
 14. NEVER ship the default/unlocked accent (generic indigo #5E6AD2/#4F46E5) or a copied demo layout — lock a domain-fit key color + font FIRST (Quick Setup). A coherent-but-generic screen STILL reads "an AI made this"; coherent ≠ distinctive
 15. One focal point per screen — the hero/primary element must visually dominate. An all-even grid of same-weight cards, centered and evenly spaced, is the #1 "machine-composed" tell
 16. Match the type scale to the surface — mobile app uses the tight scale; desktop/web B2B uses the LARGER scale (body ≥16px). Don't ship 14px body on a 1440px screen
@@ -44,8 +55,8 @@ profile × lock.
 Reference this guide when Claude Code sets up a new project or implements UI.
 
 > **When to read which file:**
-> - **`.styleseed/effective-rules.md`**: The default implementation context. Generate it with
->   `/ss-resolve`; do not load `llms-full.txt` after it resolves.
+> - **Compiled bundle**: Use the artifact-bound bundle for registry projects, or
+>   `.styleseed/effective-rules.md` only for legacy projects. Do not load `llms-full.txt` after resolution.
 > - **PRODUCT-PRINCIPLES.md**: Product constitution, authority order, fixed method vs variable
 >   look. Read first.
 > - **RULESETS.md**: Functional output grammars selected by the result's job. Read before domain
@@ -77,7 +88,11 @@ The #1 cause of "the design looks random / colors went in anywhere / it's differ
 time" is that design decisions live only in chat memory, so they drift. **Fix: a project
 design-lock file.** Before building any UI:
 
-1. **Look for `STYLESEED.md` in the project root.** If it exists, it is the source of truth for
+First apply the registry boundary above. Registry projects preserve their project/artifact
+configuration; the legacy lock and Quick Setup instructions below apply only when neither
+registry file exists. Do not restart setup to recover from an invalid registry.
+
+1. **For a legacy project, look for `STYLESEED.md` in the project root.** If it exists, it is the source of truth for
    valid bounded selections — obey it on every prompt, but never let it override the constitution,
    grammar, or adapter. If a request conflicts with the composed rules, explain the conflict.
 2. **If it doesn't exist, run Quick Setup (below) and WRITE it** before scaffolding. Use this
@@ -118,15 +133,15 @@ prompts** — without it, even perfect rules drift.
 
 ## Quick Setup — MANDATORY before building (consistency comes from constraints)
 
-**This is not optional.** If there is no `STYLESEED.md` lock in the project and you are about
+**For legacy projects only.** If neither registry file nor a `STYLESEED.md` lock exists and you are about
 to build UI, running this setup is the **FIRST thing you do — before any code.** Skipping it
 is exactly how the output lands generic (default indigo, tight type, template layout) and the
 user says "still looks AI-made." Output that looks *distinctive and consistent* comes from
 pinning these down first.
 
-**Start in plan mode** (in Claude Code, `Shift+Tab`). Decide each choice **one at a time, with
-the user, holding full context** — showing a tiny preview/recommendation for each, not a wall
-of questions. Tell the user: *"Let's lock the look first — key color, font, motion — then I build."*
+Use the host's planning facilities when helpful; do not require a UI mode switch. Reuse choices
+the user already approved and propose a bounded recommendation for genuinely missing decisions.
+Ask only for those unresolved choices, not repeated confirmation of an approved brief.
 
 **Smart defaults — recommend, don't just ask (never fall back to the generic default):**
 Infer from the product job, surface, density, content, and language, then propose ONE recipe
@@ -139,7 +154,7 @@ recipe, density, environment, and image/data role; do not choose from a mood wor
 **The unlocked default accent (`#5E6AD2`/`#4F46E5` generic indigo) is FORBIDDEN as a final
 choice** — if nothing else is chosen, pick a domain-fit skin, never the bare default.
 
-Run this setup with the user (in plan mode), then build:
+Resolve the missing setup choices with the user, then build:
 
 1. **App type + surface** — domain (fintech / SaaS / e-commerce / social / content /
    productivity / health / dev-tools) **and surface** (mobile app vs desktop/web B2B). Bias
@@ -194,11 +209,11 @@ Confirm each choice before building. **More constraints = less variance.** For t
 consistent results, copy the rule files into the project (CLAUDE.md / AGENTS.md /
 .cursorrules) so they're re-read every prompt — a one-shot URL read drifts mid-session.
 
-## Quality Gate — run this BEFORE showing the user ANY UI (non-negotiable)
+## Quality Gate — required before claiming UI acceptance
 
-Generating the UI is not "done." Before you present it, it must **pass the gate.** This is
-the single biggest difference between "looks generated" and "looks designed" — the reference
-demo was reviewed and fixed, not a first draft. **Never show the user UI that hasn't passed.**
+Generating the UI is not evidence of acceptance. Run the applicable gates within the authorized
+build/fix scope, but always report the actual outcome. Failed or blocked work may be shown for
+review; it must not be labeled passed, accepted, or ready to ship.
 
 **The gate** (check every item — each is a common "AI-generated" tell):
 ```
@@ -239,7 +254,8 @@ demo was reviewed and fixed, not a first draft. **Never show the user UI that ha
 **How to gate:**
 1. If the `/ss-*` skills are installed → run **`/ss-score`** (0–100 + prioritized fix list).
    Otherwise self-score against the checklist above.
-2. **Target ≥ 80/100.** If anything fails, **fix the violations and re-check** — loop up to ~3×.
+2. **Target ≥ 80/100.** Within an authorized build/fix task, fix violations and re-check for
+   at most three correction passes; stop earlier on pass or a permission/tool blocker.
 3. **If you can render it, finish with `/ss-verify` (the VISUAL gate).** `/ss-score` reads the
    *code*; some of the worst "AI-made" tells only exist in *pixels* — a hero that doesn't
    dominate, a lower third of dead whitespace, a web font that silently failed to load, two
@@ -248,7 +264,7 @@ demo was reviewed and fixed, not a first draft. **Never show the user UI that ha
    empty/loading/error states). Code-clean is necessary; pixel-clean is the real bar. If nothing
    can render, say the visual gate was skipped — never claim you verified visually without seeing
    a screenshot.
-4. Only then present the UI, and briefly tell the user the score + what you fixed.
+4. Report the UI, actual score, fixes, and unresolved failures even when a gate fails or is skipped.
 
 A 30-second self-review is the product. Skipping the gate "to save time" is how the UI ends
 up looking like every other AI-generated app.
@@ -806,7 +822,7 @@ different from scroll-linked), autoplaying audio, and animating numbers/money as
 ## Accessibility (a11y) Rules
 
 ### Required
-- **Touch targets**: Interactive elements minimum 44x44px (`min-h-11 min-w-11` or `.touch-target`)
+- **Touch targets**: Touch hit areas minimum 44x44px (`min-h-11 min-w-11` or `.touch-target`); pointer-first desktop controls may use contract-approved 36–40px sizing while preserving keyboard access and applicable accessibility floors
 - **Focus rings**: All interactive elements need `focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2`
 - **Don't convey info by color alone**: Pair with icons or text
 - **Image alt text**: All `<img>` must have `alt` attribute
@@ -847,7 +863,7 @@ Custom skills available in the project:
 
 | Skill | Description | Usage |
 |-------|-------------|-------|
-| `/ss-build` | **Build a screen the demo way — enforces the whole loop (lock → build → score → fix to ≥80 → then show). Use this instead of building UI free-hand.** | `/ss-build inventory dashboard` |
+| `/ss-build` | **Build from the approved contract: resolve → build → score → bounded repair → visual verification → report the actual outcome.** | `/ss-build inventory dashboard` |
 | `/ss-dial` | Turn ONE design axis up/down as a deterministic transform (density/hierarchy/radius/elevation/color/weight/motion) — moves many tokens together, respects guardrails, re-gates | `/ss-dial density denser` |
 | `/ss-restyle` | Re-style to a named aesthetic (swiss/editorial/technical/warm-dtc/minimal-mono/brutalist-lite) — a coherent coordinate across the dial axes + font + signature, written to the lock | `/ss-restyle editorial` |
 | `/ss-setup` | Interactive setup wizard for new projects | `/ss-setup` |
@@ -874,14 +890,14 @@ the reference demo look designed instead of generic. Building free-hand is preci
 output lands "AI-made" (skipped lock → default indigo; skipped gate → first draft shipped). If
 the skills aren't installed, follow the same loop by hand:
 
-1. **Lock the look FIRST** — no `STYLESEED.md`? Run Quick Setup (plan mode: domain·surface·
-   mood·accent·font·motion) and write the lock **before any code.** If it exists, obey it.
+1. **Resolve the artifact FIRST** — preserve registry configuration; only a legacy project
+   without `STYLESEED.md` needs Quick Setup. Preserve approved choices before writing UI code.
 2. **Read the real rules** — DESIGN-LANGUAGE.md (ToC → 14, 18, 19, 61-63) + VISUAL-CRAFT.md
    (§C0, §CC-9x) + the domain/page bias — not a one-shot summary.
 3. **Build** with one focal point, the surface's type scale, no icon-chip cliché, the lock's
    accent/font/mood everywhere.
 4. **Gate loop (don't skip)** — `/ss-score` (code) → if < 80, fix the top items → re-score →
-   repeat to ≥ 80. Never present a first draft you haven't scored. **Then, if it renders,
+   stop on pass or after three correction passes and report remaining failures. **Then, if it renders,
    `/ss-verify` (pixels)** — screenshot it, look, fix what only shows up rendered (dead
    whitespace, unloaded font, blank empty state), re-render. Code-clean then pixel-clean.
 5. **Present** with the final score + what the gate caught and you fixed.

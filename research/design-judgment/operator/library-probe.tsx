@@ -1,3 +1,7 @@
+// Compiled only at the fixture path `operator/probe.tsx` that scripts/test-design-pilot-library.mjs
+// builds, where `../context/examples` and `../src/ui/*` are the staged pilot library. At this
+// committed path those specifiers do not resolve, so editors flag them; the compile-time gate is
+// scripts/check-design-pilot-examples.mjs, which stages this file and typechecks it.
 import * as React from 'react';
 import { createRoot } from 'react-dom/client';
 import { WorkspaceName, SaveAction, ResourceRows } from '../context/examples';

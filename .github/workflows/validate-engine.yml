@@ -47,15 +47,26 @@ jobs:
         run: node scripts/test-design-pilot-library.mjs --output "${{ runner.temp }}/styleseed-pilot-library"
       - name: Calibrate three-screen browser acceptance
         run: node scripts/test-design-pilot-browser.mjs --calibrate --output "${{ runner.temp }}/styleseed-pilot-browser"
+      # Separate artifacts per probe: mixing them moved the least-common-ancestor up to RUNNER_TEMP,
+      # which nested the calibration files one directory deeper and put library evidence under a
+      # name that said browser. The library paths stay narrow because its output directory also
+      # holds the build fixture, whose node_modules is a symlink into the checkout.
+      - name: Preserve pilot library evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: styleseed-pilot-library-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/styleseed-pilot-library/report.json
+            ${{ runner.temp }}/styleseed-pilot-library/*.png
+          if-no-files-found: ignore
+          retention-days: 14
       - name: Preserve browser calibration evidence
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: styleseed-pilot-browser-${{ github.run_attempt }}
-          path: |
-            ${{ runner.temp }}/styleseed-pilot-browser
-            ${{ runner.temp }}/styleseed-pilot-library/report.json
-            ${{ runner.temp }}/styleseed-pilot-library/*.png
+          path: ${{ runner.temp }}/styleseed-pilot-browser
           if-no-files-found: ignore
           retention-days: 14
 

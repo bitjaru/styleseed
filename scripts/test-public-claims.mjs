@@ -88,6 +88,54 @@ if (resolvedDocsPalette !== bundledDocsPalette) {
   failures.push("demo site-docs palette mirror drifted from the resolved StyleSeed palette");
 }
 
+// validate-engine.mjs ties every count in version.json back to its engine source. What nothing
+// checked is the same numbers retyped by hand in the public READMEs, as prose, as ASCII summaries
+// and as badge URLs. Those are the numbers an evaluator counts first, so hold them to version.json.
+// Korean alternatives matter as much as the English ones: README-KR is what the Korean
+// institution-run functional test reads, and it states counts as "74개 룰", "23개 스킬".
+const countedClaims = {
+  rules: "(?:craft\\s+)?rules|룰|규칙",
+  grammars: "(?:output\\s+)?grammars|(?:출력\\s*)?(?:그래머|문법)",
+  adapters: "(?:surface\\s+)?adapters|어댑터",
+  skills: "skills|스킬",
+  // A bare "N recipes" means brand recipes; palette counts always carry the word palette.
+  recipes: "(?:brand\\s+)?recipes|(?:브랜드\\s*)?레시피",
+  palettes: "palette\\s+recipes|palettes|팔레트\\s*레시피|팔레트",
+  skins: "(?:brand\\s+)?skins|스킨"
+};
+const claimSurfaces = ["README.md", "README-KR.md"];
+const lineOf = (text, index) => text.slice(0, index).split("\n").length;
+const claimsSeen = Object.fromEntries(Object.keys(countedClaims).map((field) => [field, 0]));
+for (const path of claimSurfaces) {
+  const entry = texts.find((item) => item.path === path);
+  if (!entry) {
+    failures.push(`counted-claim surface missing from the checked files: ${path}`);
+    continue;
+  }
+  for (const [field, keyword] of Object.entries(countedClaims)) {
+    const expected = versionInfo[field];
+    if (!Number.isSafeInteger(expected)) {
+      failures.push(`version.json ${field} must be an integer before READMEs can be checked against it`);
+      continue;
+    }
+    // `개` is the Korean counter. The trailing lookahead blocks a Latin letter or digit but
+    // not any letter: Korean agglutinates, so "9개 레시피이며" must count while "ruleset" must not.
+    const prose = new RegExp(`(\\d+)\\s*개?\\s*(?:\\*\\*)?\\s*(?:\\*\\*)?(?:${keyword})(?![A-Za-z\\p{Nd}])`, "giu");
+    const badge = new RegExp(`badgen\\.net/badge/${field}/(\\d+)/`, "gu");
+    for (const pattern of [prose, badge]) {
+      for (const match of entry.text.matchAll(pattern)) {
+        claimsSeen[field] += 1;
+        if (Number(match[1]) === expected) continue;
+        failures.push(`${path}:${lineOf(entry.text, match.index)} claims ${match[1]} for ${field}; version.json says ${expected} (${JSON.stringify(match[0])})`);
+      }
+    }
+  }
+}
+// A README rewrite that drops the wording would otherwise disable this check in silence.
+for (const [field, seen] of Object.entries(claimsSeen)) {
+  if (seen === 0) failures.push(`no ${field} count found in ${claimSurfaces.join(" or ")}; the counted-claim check would pass vacuously`);
+}
+
 if (failures.length > 0) {
   console.error(`Public claims test failed (${failures.length})`);
   for (const failure of failures) console.error(`- ${failure}`);

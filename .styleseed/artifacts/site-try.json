@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "id": "site-try",
+  "target": {
+    "kind": "route",
+    "locator": "/try"
+  },
+  "selection": {
+    "grammar": "technical-instrument",
+    "adapter": "product-ui",
+    "domain": "developer-tools",
+    "page": "form",
+    "recipe": "developer-platform",
+    "palette": "cobalt-instrument",
+    "profile": "none",
+    "fallback": null
+  },
+  "decisions": {
+    "primaryDecision": "See how one recorded design choice reaches real components and agent instructions.",
+    "primaryAction": "Try the existing engine and download the selected rule bundle.",
+    "signatureMove": "Pair a working settings example with its actual compiled rules and provenance."
+  },
+  "implementation": {
+    "sourceRoots": [
+      "demo-pricing/app/try",
+      "demo-pricing/scripts/build-try.mjs"
+    ],
+    "tokenFiles": [
+      "demo-pricing/app/try/try.module.css",
+      "demo-pricing/app/globals.css"
+    ]
+  },
+  "validation": {
+    "scoreFloor": 80,
+    "requiredRenders": [
+      {
+        "id": "mobile-loaded",
+        "state": "loaded",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        }
+      },
+      {
+        "id": "desktop-loaded",
+        "state": "loaded",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        }
+      }
+    ],
+    "temporal": {
+      "required": false,
+      "scenarios": []
+    },
+    "humanAcceptance": false
+  }
+}

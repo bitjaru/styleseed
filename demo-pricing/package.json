@@ -3,15 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "predev": "node scripts/build-llms.mjs",
+    "predev": "node scripts/build-llms.mjs && node scripts/build-try.mjs",
     "dev": "next dev",
-    "prebuild": "node scripts/build-llms.mjs",
+    "prebuild": "node scripts/build-llms.mjs && node scripts/build-try.mjs",
     "build": "next build",
     "export:signal-carousel": "node scripts/export-signal-carousel.mjs",
     "capture:studio": "node scripts/capture-studio.mjs",
     "capture:palettes": "node scripts/capture-palettes.mjs",
     "test:browser": "node scripts/test-browser-smoke.mjs",
-    "start": "next start"
+    "start": "next start",
+    "test:try": "node scripts/test-try.mjs"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.12",

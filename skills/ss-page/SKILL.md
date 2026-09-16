@@ -22,8 +22,13 @@ Description: $ARGUMENTS
 ## Instructions
 
 1. Resolve and read the active design method:
-   - `.styleseed/effective-rules.md` and `.styleseed/manifest.json`
-   - If missing or stale, invoke `/ss-resolve` or `$ss-resolve` from `STYLESEED.md`
+   - If either registry file exists, require a complete valid registry and resolve the selected
+     artifact with `--artifact <id>`. Read `.styleseed/bundles/<id>.md` and
+     `.styleseed/manifests/<id>.json`; never restart setup or use a legacy fallback on errors.
+   - Only when neither registry file exists, resolve `STYLESEED.md` and read
+     `.styleseed/effective-rules.md` and `.styleseed/manifest.json`.
+   - For missing/stale outputs in this authorized build, resolve from the corresponding
+     project-owned configuration and re-check without changing approved decisions.
    - `components/patterns/page-shell.tsx` for page layout
    - `components/patterns/top-bar.tsx` for header pattern
    - `components/patterns/bottom-nav.tsx` for navigation
@@ -73,9 +78,11 @@ export default function PageName() {
    Run `/ss-score` then `/ss-verify`. Confirm:
    - [ ] The first viewport exposes the grammar's user job and one focal point
    - [ ] Containment, geometry, controls, collections, density, and navigation fit the recipe
-   - [ ] Only `--brand` color used for accents (no other accent colors)
+   - [ ] One identifiable primary action; additional colors have contract-defined roles
    - [ ] No hardcoded hex values (all semantic tokens)
    - [ ] Section types alternate (no two identical types in a row)
    - [ ] Spacing uses one repeatable recipe-fit rhythm
-   - [ ] Touch targets ≥ 44px on all interactive elements
-   If any violation is found, fix it before presenting the page to the user.
+   - [ ] Touch targets ≥ 44px on touch surfaces; pointer-first desktop controls follow the
+         approved adapter/component contract, which may allow 36–40px
+   Follow the bounded build gate loops. Report actual results and remaining failures even when
+   a gate does not pass; never replace approved decisions or claim acceptance to end the loop.

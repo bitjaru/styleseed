@@ -10,6 +10,18 @@ surface that limitation instead of silently restyling it. See `PRODUCT-PRINCIPLE
 It applies to web and mobile products, social carousels, slide decks, documents/reports,
 and single-frame graphics.
 
+## Task scope and instruction priority
+
+The user's explicit task takes precedence over skill workflow defaults, subject to host safety
+and permission rules. StyleSeed's design authority order decides compliance, not authorization:
+an incompatible request may be reported as noncompliant, never silently rewritten or called a pass.
+Inspection requests do not authorize product edits. Continue already-authorized implementation
+without asking again; ask only for a genuinely unresolved decision or permission boundary.
+Keep Studio's human direction selection and explicit learning/export grants intact.
+If a skill blocks progress, name the file and requirement and report the work completed so far.
+Run required checks for the affected scope; repeat after relevant changes or new failures, not
+merely because another skill was invoked. Report failed or skipped gates rather than hiding work.
+
 ## Resolve only the context this artifact needs
 
 If `.styleseed/project.json` and `.styleseed/artifacts/index.json` exist, this is a registry project:
@@ -123,11 +135,12 @@ and a transfer validation artifact under `.styleseed/rulesets/<slug>/`.
 
 ## Build loop
 
-Use `$ss-build` when installed:
+For an authorized build task, use `$ss-build` when installed:
 
 ```text
 select or compile grammar → select adapter → lock → build with the composed method
-→ $ss-score → fix to >=80 → render → $ss-verify → fix and re-render → present evidence
+→ $ss-score → bounded authorized repairs → render → $ss-verify → bounded authorized repairs
+→ report actual evidence and pass/fail (stop on pass or three correction passes per gate)
 ```
 
 The build method serves repeatable application of expert decisions. Score and verification
@@ -137,7 +150,9 @@ are supporting evidence, not proof of expert-level quality or a replacement for 
 
 `$ss-score` reads implementation evidence and names the effective rule set. It checks eight
 weighted categories: color, hierarchy/type, layout/rhythm, surfaces/elevation, states/a11y,
-motion/interaction, coherence, and distinctiveness. Fix highest-gain failures and re-score.
+motion/interaction, coherence, and distinctiveness. Within an authorized build/fix task, address
+core failures first and re-score after fixes. Stop on pass or after three correction passes and
+report remaining failures; a plain scoring/review request does not authorize edits.
 
 ### Pixel gate
 

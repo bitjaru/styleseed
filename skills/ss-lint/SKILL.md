@@ -26,8 +26,10 @@ coverage failures as hard errors. Detector findings (`SS001`–`SS006`) remain w
 stable file, line, evidence snippet, severity, and fix. Use `styleseed-check ... verify` to recompute
 the bound evidence run; do not turn a string or stale report into a pass.
 
-Read `.styleseed/effective-rules.md` and `.styleseed/manifest.json`; invoke `/ss-resolve` or
-`$ss-resolve` first when they are missing or stale. Lint detects deterministic drift; it must
+If either registry file exists, require a complete, valid registry and check only the selected
+artifact's bundle and manifest. Only when neither registry file exists, read
+`.styleseed/effective-rules.md` and `.styleseed/manifest.json`. Report missing or stale evidence
+without regenerating bundles during a lint-only request. Lint detects deterministic drift; it must
 not flag an exact grammar/recipe/profile/adapter contract as a violation or let an arbitrary lock
 value create an exception.
 
@@ -36,13 +38,17 @@ value create an exception.
 - For deeper review of design judgment (composition, hierarchy, rhythm) → use `/ss-review`
 - For accessibility specifically → use `/ss-a11y`
 - For Nielsen UX heuristics → use `/ss-audit`
-- For applying refactors — this only flags violations; use `/ss-review` to fix
+- For applying refactors — this only flags findings; an authorized implementation step owns fixes
 
 Target: **$ARGUMENTS**
 
 ## What This Does
 
-Fast, grep-based scan for common design violations. Runs in seconds (unlike /ss-review which is a deep manual audit). Run this after every file change.
+Use the canonical checker above for executable diagnostics. The searches below are manual
+review hints for applicable project conventions, not additional hard-error detectors. Run on
+affected UI files when requested or required by the build workflow; do not lint unrelated edits.
+Do not edit code in lint-only mode. Once required checks pass, repeat only after relevant changes
+or new evidence of a problem. Use `--all` only when all artifacts are explicitly in scope.
 
 ## Checks
 

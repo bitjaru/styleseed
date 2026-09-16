@@ -102,10 +102,10 @@ Recommended lock additions:
 ```markdown
 - Surface adapter: document-report
 - Artifact type: research-report
-- Paper size: Letter
+- Paper size: Letter          # the project's call — A4 for Korean and most non-US reports
 - Margins: 0.75in top/bottom, 0.85in inner/outer
 - Header/footer: report title in header, section label optional, page number in footer
-- Reading measure: 60-75 characters for body text
+- Reading measure: 60-75 characters for body text   # Latin; Hangul reads comfortably shorter (see UX-WRITING.md §W9)
 - Renderer: document/PDF renderer
 - Editable source: DOCX or structured source document
 - PDF export: required

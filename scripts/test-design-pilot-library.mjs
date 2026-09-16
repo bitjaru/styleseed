@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // Compile the actual shared library/C examples and exercise React in Chromium. No model runs.
 import assert from 'node:assert/strict';
+import { spawnSync } from 'node:child_process';
 import { once } from 'node:events';
 import { mkdirSync, readFileSync, symlinkSync, writeFileSync } from 'node:fs';
 import { createServer } from 'node:http';
@@ -46,14 +47,17 @@ async function build(root, plan, fromDemo) {
   save('operator/probe.tsx', readFileSync(join(repo, 'research/design-judgment/operator/library-probe.tsx')));
   // Build-time dependency reuse only, never a claimed isolated agent environment.
   symlinkSync(join(repo, 'demo-pricing/node_modules'), join(root, 'node_modules'), process.platform === 'win32' ? 'junction' : 'dir');
-  const ts = fromDemo('typescript');
+  // TypeScript 7 is a native port whose package entry no longer exports `transpileModule`, so the
+  // emit runs through the CLI, which produces the same JavaScript on 5.9.3 and 7.0.2. --noCheck
+  // keeps this step a transpile as it was; the compile-time gate is check-design-pilot-examples.mjs.
   const sources = [...Object.keys(plan.common).filter(path => /^src\/ui\/.*\.tsx?$/u.test(path)), 'context/examples.tsx', 'operator/probe.tsx'];
-  for (const path of sources) {
-    const result = ts.transpileModule(readFileSync(join(root, path), 'utf8'), { fileName: path, compilerOptions: {
-      jsx: ts.JsxEmit.ReactJSX, module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022,
-    } });
-    save(path.replace(/\.tsx?$/u, '.js'), result.outputText);
-  }
+  save('tsconfig.json', `${JSON.stringify({ compilerOptions: {
+    jsx: 'react-jsx', module: 'esnext', moduleResolution: 'bundler', target: 'es2022', outDir: '.', rootDir: '.',
+  }, files: sources }, null, 2)}\n`);
+  const tsc = join(dirname(fromDemo.resolve('typescript/package.json')), 'bin/tsc');
+  const emit = spawnSync(process.execPath, [tsc, '--project', 'tsconfig.json', '--noCheck', '--pretty', 'false'], { cwd: root, encoding: 'utf8' });
+  if (emit.error) throw emit.error;
+  if (emit.status !== 0) throw new Error(`Pilot fixture transpile failed:\n${emit.stdout ?? ''}${emit.stderr ?? ''}`);
   const { webpack } = fromDemo('next/dist/compiled/webpack/webpack');
   await new Promise((done, reject) => {
     const compiler = webpack({ mode: 'production', context: root, entry: './operator/probe.js',

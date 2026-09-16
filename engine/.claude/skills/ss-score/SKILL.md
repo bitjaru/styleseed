@@ -51,9 +51,16 @@ you can track UI quality like you track test coverage.
 
 ## Step 0 — Resolve the effective rule set
 
-Before scoring, read `.styleseed/effective-rules.md` and `.styleseed/manifest.json`. If they are
-missing or `ss-resolve --check` reports drift, invoke `/ss-resolve` or `$ss-resolve` from the
-project lock first. Only fall back to the source handbook when no project lock exists.
+Before scoring, apply the registry-first artifact boundary above. Registry projects read
+`.styleseed/bundles/<artifact-id>.md` and `.styleseed/manifests/<artifact-id>.json`; check with
+`ss-resolve --artifact <artifact-id> --check`. A partial or invalid registry is an error, never
+a reason to use the legacy bundle or source handbook.
+
+Legacy projects without a registry read `.styleseed/effective-rules.md` and
+`.styleseed/manifest.json`, using `ss-resolve --from-lock STYLESEED.md --check`. If the selected
+bundle is missing or stale, invoke `/ss-resolve` or `$ss-resolve` from the corresponding
+project-owned configuration first. With no registry or lock, resolve the intended scope with
+the user before making a project-specific compliance claim.
 
 Score in authority order: core invariants first, then the exact output grammar, domain/page,
 brand recipe, optional aesthetic profile, and bounded lock values. The lock cannot waive an invariant.

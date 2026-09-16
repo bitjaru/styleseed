@@ -201,11 +201,12 @@ export default function CodexUiDesignPage() {
               <Sparkles size={12} /> Codex UI design guide
             </div>
             <h1 className="mt-6 max-w-[13ch] text-[clamp(44px,7vw,82px)] font-black leading-[0.92] tracking-[-0.055em]">
-              Make Codex carry design judgment across tasks.
+              Make Codex carry expert decisions across tasks.
             </h1>
             <p className="mt-7 max-w-2xl text-[18px] leading-relaxed text-neutral-600">
-              Better UI comes from durable repository context, a reusable design workflow, and
-              visible verification—not from asking for “modern and clean” one more time.
+              StyleSeed aims to make expert design judgment repeatable: preserve approved
+              project choices, provide relevant implementation context, and inspect the result.
+              A workflow score does not replace human review.
             </p>
           </div>
           <div className="border-l-4 border-emerald-600 pl-5">

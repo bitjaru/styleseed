@@ -104,9 +104,9 @@ export default function HowItThinks() {
             Every pixel here has a reason.
           </h1>
           <p className="mt-5 text-[17px] leading-relaxed text-neutral-600">
-            Most design repos hand your AI a pile of components and hope for the best. StyleSeed
-            hands it the <strong className="font-semibold text-neutral-900">judgment</strong> — the
-            rules <em>and the reasoning behind them</em> — so the output looks designed, not generated.
+            StyleSeed aims to make <strong className="font-semibold text-neutral-900">expert
+            design judgment</strong> repeatable by coding agents: recorded decisions, their reasons,
+            and checks on the implementation. Experts keep ownership of intent and acceptance.
           </p>
           <p className="mt-4 text-[17px] leading-relaxed text-neutral-600">
             Below is one screen. We&rsquo;ll walk every decision in it: what we chose, which rule it
@@ -292,13 +292,12 @@ export default function HowItThinks() {
       <section className="border-y border-neutral-200 bg-neutral-900 text-white">
         <div className="mx-auto max-w-3xl px-6 py-16 text-center">
           <h2 className="text-[clamp(24px,4vw,34px)] font-bold leading-tight tracking-tight">
-            None of those decisions are about taste.
+            Decisions need reasons and boundaries.
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-[16px] leading-relaxed text-neutral-300">
-            Each one is a rule with a reason — and reasons are something an AI can read, apply, and
-            repeat. That&rsquo;s the whole idea: not a library of parts, but a framework for the
-            judgment that arranges them. Beautiful parts don&rsquo;t make a beautiful UI.
-            <strong className="font-semibold text-white"> Agreeing parts do.</strong>
+            An agent needs to know when a decision applies and how to implement it, not just which
+            style to imitate. Coherence matters, but is not sufficient evidence of design quality.
+            <strong className="font-semibold text-white"> Human review still matters.</strong>
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <a

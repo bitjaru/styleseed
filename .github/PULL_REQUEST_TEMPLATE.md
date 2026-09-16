@@ -4,6 +4,10 @@
 
 <!-- What changed, and who benefits? -->
 
+<!-- Goal: make expert design judgment repeatable by coding agents, not replace experts.
+For engine/design changes: which decision, whose authority, where applicable, and how evaluated?
+For maintenance: which existing contract is preserved? Separate shipped capability from hypotheses. -->
+
 ## Related issue
 
 <!-- Use "Closes #123" when applicable. Small docs/test fixes do not require an issue. -->

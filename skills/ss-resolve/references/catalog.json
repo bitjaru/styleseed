@@ -1,10 +1,25 @@
 {
+<<<<<<< HEAD
   "schemaVersion": 4,
   "engineVersion": "4.1.0",
   "engineRevision": "sha256:3618e298e175c92f70d17998c9bdd284b41bc227a1bb46b76ed8c4baf4f5a113",
   "distributions": {
     "core": {
       "revision": "sha256:3618e298e175c92f70d17998c9bdd284b41bc227a1bb46b76ed8c4baf4f5a113",
+=======
+  "schemaVersion": 5,
+  "engineVersion": "4.2.0",
+  "engineRevision": "sha256:9ff59f30d4bd3f115cd4bef36e64a85c55ac700c940cca988f2a798649aa4b74",
+  "distributionSource": {
+    "schemaVersion": 1,
+    "channel": "edge",
+    "updateManifest": "https://styleseed-demo.vercel.app/version.json",
+    "install": "npx skills add bitjaru/styleseed"
+  },
+  "distributions": {
+    "core": {
+      "revision": "sha256:9ff59f30d4bd3f115cd4bef36e64a85c55ac700c940cca988f2a798649aa4b74",
+>>>>>>> origin/main
       "files": [
         {
           "path": "LICENSE",
@@ -28,13 +43,13 @@
         },
         {
           "path": "engine/.claude/skills/ss-build/SKILL.md",
-          "sha256": "6da3ee935fc1c86d52017f90343f67923c3a596dcee44ff7b055c584e9b58b03",
-          "bytes": 4233
+          "sha256": "4521682bd9efdc5eb47da16c91239024a6c60bcb4f0a5e7d43bf9c008e2ac2ff",
+          "bytes": 4954
         },
         {
           "path": "engine/.claude/skills/ss-component/SKILL.md",
-          "sha256": "ef3259b045b0e35b1d843614bd81290d2cdca454b9a14ed4c137b7d630cdf0b4",
-          "bytes": 3060
+          "sha256": "440e228e5175804a471bfc953206c9f81dbfa0f464f7d27fc8dc117d7c0cafd0",
+          "bytes": 5065
         },
         {
           "path": "engine/.claude/skills/ss-copy/SKILL.md",
@@ -43,8 +58,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-dial/SKILL.md",
-          "sha256": "cb2961f041fc3ece017fec2835c197d5d4d8eb806c70ca1ecedaea1aa422dfbe",
-          "bytes": 9914
+          "sha256": "90fb39f82be555e5fed954bfe176fb14447896a5e6866cd5a774b6003ffddd96",
+          "bytes": 9675
         },
         {
           "path": "engine/.claude/skills/ss-feedback/SKILL.md",
@@ -63,8 +78,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-motion/SKILL.md",
-          "sha256": "50aa240d681a68cec4c493dd0230e3046d8ed2b62a66334a68f540353f88f0c9",
-          "bytes": 10417
+          "sha256": "ae559bf99eda4a9e05f8040a77a2d494b021bae5b5c007bd7daf33c75300ebc3",
+          "bytes": 10254
         },
         {
           "path": "engine/.claude/skills/ss-page/SKILL.md",
@@ -78,13 +93,13 @@
         },
         {
           "path": "engine/.claude/skills/ss-reference/SKILL.md",
-          "sha256": "1575bbb98c05958c01a0b80e59be650a40f877eba3ef0ed37023e7a7df567846",
-          "bytes": 2638
+          "sha256": "8cb72ef2e04016bcbc02fcd97f15575744679274fa5c01b1f8dae691cf3a9d87",
+          "bytes": 2549
         },
         {
           "path": "engine/.claude/skills/ss-resolve/SKILL.md",
-          "sha256": "c151e944140fc5aa56fa8c0027427c41dbaa2b54fb05eda5854a92c8f7ab1af6",
-          "bytes": 3214
+          "sha256": "392044139ea3e62087cc6a3bdcbff7cd5428b33d5b75e0925dbfbb1d7ca23219",
+          "bytes": 4073
         },
         {
           "path": "engine/.claude/skills/ss-resolve/references/artifact-index.schema.json",
@@ -142,6 +157,11 @@
           "bytes": 17130
         },
         {
+          "path": "engine/.claude/skills/ss-resolve/scripts/styleseed-doctor.mjs",
+          "sha256": "4765d74f759ef10e8c9adb9807d65467e3f08a3f238bbb6d3ec4bf95ccb5bc1f",
+          "bytes": 10161
+        },
+        {
           "path": "engine/.claude/skills/ss-restyle/SKILL.md",
           "sha256": "fa451824b42a802728897111a02820fb4b4573d9f48be4c0dbfd40a2bb85a07e",
           "bytes": 2202
@@ -153,8 +173,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-score/SKILL.md",
-          "sha256": "cb2e2e5c8d4b3bd7e17ab66015a5236096b546de24881cf8773b51f90c454207",
-          "bytes": 12027
+          "sha256": "c8a8bb0e903afdf66b583f148f9392fec56ee09bb96d2b63da2fd604f243f346",
+          "bytes": 12500
         },
         {
           "path": "engine/.claude/skills/ss-score/references/acceptance-report.schema.json",
@@ -193,8 +213,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-score/scripts/evidence-gate.mjs",
-          "sha256": "a26fce38a97d460833c98dc90d154a32edcaae1c663f88ad353fb413afde34b6",
-          "bytes": 16638
+          "sha256": "d58692cb1ed42dd8204a0952737eaa104b37eff1350663269c331f7179c65718",
+          "bytes": 16860
         },
         {
           "path": "engine/.claude/skills/ss-score/scripts/styleseed-check.mjs",
@@ -208,8 +228,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-studio/SKILL.md",
-          "sha256": "4e97714d2f757c06ee3b3ba8692ef5edace25cedc4e97b21d8033c265825b513",
-          "bytes": 7034
+          "sha256": "4128bba56ac1a389d703a51306833f5a19589ed67ff430f5ab88f1f98bb2ed99",
+          "bytes": 6832
         },
         {
           "path": "engine/.claude/skills/ss-studio/agents/openai.yaml",
@@ -233,8 +253,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-tokens/SKILL.md",
-          "sha256": "7b2d47255cb83f7674cefa79991ccb2b0b6a716c3c6536ee2aa7e3ff6c2d0583",
-          "bytes": 4073
+          "sha256": "1d251a83f6701eee63c200f4e38c0223740826da285dddf1c0a3d3dee92d9428",
+          "bytes": 3992
         },
         {
           "path": "engine/.claude/skills/ss-tokens/scripts/generate-palette.mjs",
@@ -248,8 +268,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-update/SKILL.md",
-          "sha256": "bf7e6236caf1707d89729ed85fd9219918d8a73dbc91112de6ea754b5da84976",
-          "bytes": 8575
+          "sha256": "daeaa0c0a210e951ac55e2e03161efd3be3ad74c6928a1c620a25690bfe06e6e",
+          "bytes": 9159
         },
         {
           "path": "engine/.claude/skills/ss-update/scripts/artifact-impact.mjs",
@@ -258,23 +278,23 @@
         },
         {
           "path": "engine/.claude/skills/ss-update/scripts/check-update.mjs",
-          "sha256": "05fa2839453613a469c9b470303a09389aa2ae0ae139e637205b052f056850ee",
-          "bytes": 9637
+          "sha256": "642331d8d91d06109e537eea76a8ad97ec9913b8ecdf64e285a3b7547dea3595",
+          "bytes": 11238
         },
         {
           "path": "engine/.claude/skills/ss-verify/SKILL.md",
-          "sha256": "55446eb821129be6bac83a5a1ebd6bcfccb67649156d7ea92d8418770aa60a3f",
-          "bytes": 8632
+          "sha256": "dc4fe9918b6b4543e294ecd5983a1e19faf5a4c93ce505c45880774f5b5c7ade",
+          "bytes": 9241
         },
         {
           "path": "engine/.claude/skills/styleseed/SKILL.md",
-          "sha256": "5f4f0154b9a9c7be2fc5309f798a5c0013e2f237570183cf34bedcfdfd58fe9f",
-          "bytes": 3979
+          "sha256": "10ffdaefbd174a1e3f4f32e2ce7623ae7c0e81241f788050edc79d13204180cc",
+          "bytes": 4504
         },
         {
           "path": "engine/.cursorrules",
-          "sha256": "f78397089017acad4a4c012d324778c770d933c09c34b15ff8b6db8e60b9e82a",
-          "bytes": 2769
+          "sha256": "63656a3da7b08c8ca4679baaf6f5ecdcd61981bae697ed1662f0f9ad2c6bfed0",
+          "bytes": 3111
         },
         {
           "path": "engine/ADAPTERS.md",
@@ -283,8 +303,8 @@
         },
         {
           "path": "engine/AGENTS.md",
-          "sha256": "87066141feec85f1986ca8b9ebdafcba045f6097adcefc919ab6d72f70a59bfd",
-          "bytes": 8043
+          "sha256": "d18543ab7e39f656e4b09e1e68586e7b77118ce02440cad8973df11045600d93",
+          "bytes": 8871
         },
         {
           "path": "engine/APP-PLAYBOOKS.md",
@@ -293,8 +313,8 @@
         },
         {
           "path": "engine/ARCHITECTURE.md",
-          "sha256": "58301e3ad7aebba1ef9ed9d058042e632d836db47e1bff90f03e4c31d361945d",
-          "bytes": 8858
+          "sha256": "48b138a712e582cf3b3b0ed1c921946997ec2de9ee41ecb5f85d984facaa2d5b",
+          "bytes": 9030
         },
         {
           "path": "engine/BRAND-RECIPES.md",
@@ -303,8 +323,8 @@
         },
         {
           "path": "engine/CLAUDE.md",
-          "sha256": "4c3ac7b80cf9c22c8f0d4b6679603eb52e0910183c05f09a28febd739f6e9580",
-          "bytes": 50740
+          "sha256": "32e43f9d51a35134a616a8cb8ef8153eadcfda9f46c18fb8e79759f8465dcf7e",
+          "bytes": 50961
         },
         {
           "path": "engine/CRAFT-BASELINE.md",
@@ -338,13 +358,13 @@
         },
         {
           "path": "engine/PRODUCT-PRINCIPLES.md",
-          "sha256": "eaaa2c702d3e9e807f6407bb4a0ae572474d318f2155a1b7e6c0ca77819c33cb",
-          "bytes": 5395
+          "sha256": "16ba3f07c940dc0a5e96524e712b668df4f731ffffe4b5c42b2222d195a341f2",
+          "bytes": 7969
         },
         {
           "path": "engine/README.md",
-          "sha256": "2cf8d5a6a721f270c427d676a3b45ba1a24243afd31d1533ba612e2b6c22d8e4",
-          "bytes": 1902
+          "sha256": "475805d9d2e26fd31f0182cb2a566a2c9be9333fa168ffa9a973a9ff0e94675c",
+          "bytes": 2086
         },
         {
           "path": "engine/REFERENCE-COMPILER.md",
@@ -358,13 +378,13 @@
         },
         {
           "path": "engine/STUDIO-PIPELINE.md",
-          "sha256": "4df215044c319ea0c909763a48d30ff18cc3236f7b8694ee126e743a0bfb8be8",
-          "bytes": 6445
+          "sha256": "b92aaf8d6f6fca0ce1de6f41d8065bb406dba0a0aa7cf635aaf3d27fdabaed8d",
+          "bytes": 6513
         },
         {
           "path": "engine/UPDATE.md",
-          "sha256": "ab1905420e18e0cce282aca29306bce62344c68e838c48ba95b74c16ef33f732",
-          "bytes": 3916
+          "sha256": "2eafeb45c0f207b9c3df6fc84d095be74c758f9e8a1d41abb62fd3bd0d5c3b30",
+          "bytes": 4725
         },
         {
           "path": "engine/UX-WRITING.md",
@@ -373,7 +393,7 @@
         },
         {
           "path": "engine/VERSION",
-          "sha256": "3b10b6ad566eadbcacadb33c591f1ec629593d6adf47442e56e0f61996829ef7",
+          "sha256": "8fb33dadbe981cf5847df269c10c2a3fe107f2b269d5ccb6db37d1f61ffc3bba",
           "bytes": 6
         },
         {
@@ -409,7 +429,7 @@
       ]
     },
     "skills": {
-      "revision": "sha256:4eab915c29fa928487d3f93bfcf7802fb887ab9f68202139cde7444db72578a1",
+      "revision": "sha256:5f1b38adf9b85eadf9ea5eb15d31fdc5788cf9adcda1498603bea7b8638749d8",
       "files": [
         {
           "path": "engine/.claude/skills/ss-a11y/SKILL.md",
@@ -423,13 +443,13 @@
         },
         {
           "path": "engine/.claude/skills/ss-build/SKILL.md",
-          "sha256": "6da3ee935fc1c86d52017f90343f67923c3a596dcee44ff7b055c584e9b58b03",
-          "bytes": 4233
+          "sha256": "4521682bd9efdc5eb47da16c91239024a6c60bcb4f0a5e7d43bf9c008e2ac2ff",
+          "bytes": 4954
         },
         {
           "path": "engine/.claude/skills/ss-component/SKILL.md",
-          "sha256": "ef3259b045b0e35b1d843614bd81290d2cdca454b9a14ed4c137b7d630cdf0b4",
-          "bytes": 3060
+          "sha256": "440e228e5175804a471bfc953206c9f81dbfa0f464f7d27fc8dc117d7c0cafd0",
+          "bytes": 5065
         },
         {
           "path": "engine/.claude/skills/ss-copy/SKILL.md",
@@ -438,8 +458,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-dial/SKILL.md",
-          "sha256": "cb2961f041fc3ece017fec2835c197d5d4d8eb806c70ca1ecedaea1aa422dfbe",
-          "bytes": 9914
+          "sha256": "90fb39f82be555e5fed954bfe176fb14447896a5e6866cd5a774b6003ffddd96",
+          "bytes": 9675
         },
         {
           "path": "engine/.claude/skills/ss-feedback/SKILL.md",
@@ -458,8 +478,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-motion/SKILL.md",
-          "sha256": "50aa240d681a68cec4c493dd0230e3046d8ed2b62a66334a68f540353f88f0c9",
-          "bytes": 10417
+          "sha256": "ae559bf99eda4a9e05f8040a77a2d494b021bae5b5c007bd7daf33c75300ebc3",
+          "bytes": 10254
         },
         {
           "path": "engine/.claude/skills/ss-page/SKILL.md",
@@ -473,13 +493,13 @@
         },
         {
           "path": "engine/.claude/skills/ss-reference/SKILL.md",
-          "sha256": "1575bbb98c05958c01a0b80e59be650a40f877eba3ef0ed37023e7a7df567846",
-          "bytes": 2638
+          "sha256": "8cb72ef2e04016bcbc02fcd97f15575744679274fa5c01b1f8dae691cf3a9d87",
+          "bytes": 2549
         },
         {
           "path": "engine/.claude/skills/ss-resolve/SKILL.md",
-          "sha256": "c151e944140fc5aa56fa8c0027427c41dbaa2b54fb05eda5854a92c8f7ab1af6",
-          "bytes": 3214
+          "sha256": "392044139ea3e62087cc6a3bdcbff7cd5428b33d5b75e0925dbfbb1d7ca23219",
+          "bytes": 4073
         },
         {
           "path": "engine/.claude/skills/ss-resolve/references/artifact-index.schema.json",
@@ -537,6 +557,11 @@
           "bytes": 17130
         },
         {
+          "path": "engine/.claude/skills/ss-resolve/scripts/styleseed-doctor.mjs",
+          "sha256": "4765d74f759ef10e8c9adb9807d65467e3f08a3f238bbb6d3ec4bf95ccb5bc1f",
+          "bytes": 10161
+        },
+        {
           "path": "engine/.claude/skills/ss-restyle/SKILL.md",
           "sha256": "fa451824b42a802728897111a02820fb4b4573d9f48be4c0dbfd40a2bb85a07e",
           "bytes": 2202
@@ -548,8 +573,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-score/SKILL.md",
-          "sha256": "cb2e2e5c8d4b3bd7e17ab66015a5236096b546de24881cf8773b51f90c454207",
-          "bytes": 12027
+          "sha256": "c8a8bb0e903afdf66b583f148f9392fec56ee09bb96d2b63da2fd604f243f346",
+          "bytes": 12500
         },
         {
           "path": "engine/.claude/skills/ss-score/references/acceptance-report.schema.json",
@@ -588,8 +613,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-score/scripts/evidence-gate.mjs",
-          "sha256": "a26fce38a97d460833c98dc90d154a32edcaae1c663f88ad353fb413afde34b6",
-          "bytes": 16638
+          "sha256": "d58692cb1ed42dd8204a0952737eaa104b37eff1350663269c331f7179c65718",
+          "bytes": 16860
         },
         {
           "path": "engine/.claude/skills/ss-score/scripts/styleseed-check.mjs",
@@ -603,8 +628,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-studio/SKILL.md",
-          "sha256": "4e97714d2f757c06ee3b3ba8692ef5edace25cedc4e97b21d8033c265825b513",
-          "bytes": 7034
+          "sha256": "4128bba56ac1a389d703a51306833f5a19589ed67ff430f5ab88f1f98bb2ed99",
+          "bytes": 6832
         },
         {
           "path": "engine/.claude/skills/ss-studio/agents/openai.yaml",
@@ -628,8 +653,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-tokens/SKILL.md",
-          "sha256": "7b2d47255cb83f7674cefa79991ccb2b0b6a716c3c6536ee2aa7e3ff6c2d0583",
-          "bytes": 4073
+          "sha256": "1d251a83f6701eee63c200f4e38c0223740826da285dddf1c0a3d3dee92d9428",
+          "bytes": 3992
         },
         {
           "path": "engine/.claude/skills/ss-tokens/scripts/generate-palette.mjs",
@@ -643,8 +668,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-update/SKILL.md",
-          "sha256": "bf7e6236caf1707d89729ed85fd9219918d8a73dbc91112de6ea754b5da84976",
-          "bytes": 8575
+          "sha256": "daeaa0c0a210e951ac55e2e03161efd3be3ad74c6928a1c620a25690bfe06e6e",
+          "bytes": 9159
         },
         {
           "path": "engine/.claude/skills/ss-update/scripts/artifact-impact.mjs",
@@ -653,18 +678,18 @@
         },
         {
           "path": "engine/.claude/skills/ss-update/scripts/check-update.mjs",
-          "sha256": "05fa2839453613a469c9b470303a09389aa2ae0ae139e637205b052f056850ee",
-          "bytes": 9637
+          "sha256": "642331d8d91d06109e537eea76a8ad97ec9913b8ecdf64e285a3b7547dea3595",
+          "bytes": 11238
         },
         {
           "path": "engine/.claude/skills/ss-verify/SKILL.md",
-          "sha256": "55446eb821129be6bac83a5a1ebd6bcfccb67649156d7ea92d8418770aa60a3f",
-          "bytes": 8632
+          "sha256": "dc4fe9918b6b4543e294ecd5983a1e19faf5a4c93ce505c45880774f5b5c7ade",
+          "bytes": 9241
         },
         {
           "path": "engine/.claude/skills/styleseed/SKILL.md",
-          "sha256": "5f4f0154b9a9c7be2fc5309f798a5c0013e2f237570183cf34bedcfdfd58fe9f",
-          "bytes": 3979
+          "sha256": "10ffdaefbd174a1e3f4f32e2ce7623ae7c0e81241f788050edc79d13204180cc",
+          "bytes": 4504
         }
       ]
     }
@@ -692,13 +717,13 @@
     },
     {
       "path": ".claude/skills/ss-build/SKILL.md",
-      "sha256": "6da3ee935fc1c86d52017f90343f67923c3a596dcee44ff7b055c584e9b58b03",
-      "bytes": 4233
+      "sha256": "4521682bd9efdc5eb47da16c91239024a6c60bcb4f0a5e7d43bf9c008e2ac2ff",
+      "bytes": 4954
     },
     {
       "path": ".claude/skills/ss-component/SKILL.md",
-      "sha256": "ef3259b045b0e35b1d843614bd81290d2cdca454b9a14ed4c137b7d630cdf0b4",
-      "bytes": 3060
+      "sha256": "440e228e5175804a471bfc953206c9f81dbfa0f464f7d27fc8dc117d7c0cafd0",
+      "bytes": 5065
     },
     {
       "path": ".claude/skills/ss-copy/SKILL.md",
@@ -707,8 +732,8 @@
     },
     {
       "path": ".claude/skills/ss-dial/SKILL.md",
-      "sha256": "cb2961f041fc3ece017fec2835c197d5d4d8eb806c70ca1ecedaea1aa422dfbe",
-      "bytes": 9914
+      "sha256": "90fb39f82be555e5fed954bfe176fb14447896a5e6866cd5a774b6003ffddd96",
+      "bytes": 9675
     },
     {
       "path": ".claude/skills/ss-feedback/SKILL.md",
@@ -727,8 +752,8 @@
     },
     {
       "path": ".claude/skills/ss-motion/SKILL.md",
-      "sha256": "50aa240d681a68cec4c493dd0230e3046d8ed2b62a66334a68f540353f88f0c9",
-      "bytes": 10417
+      "sha256": "ae559bf99eda4a9e05f8040a77a2d494b021bae5b5c007bd7daf33c75300ebc3",
+      "bytes": 10254
     },
     {
       "path": ".claude/skills/ss-page/SKILL.md",
@@ -742,13 +767,13 @@
     },
     {
       "path": ".claude/skills/ss-reference/SKILL.md",
-      "sha256": "1575bbb98c05958c01a0b80e59be650a40f877eba3ef0ed37023e7a7df567846",
-      "bytes": 2638
+      "sha256": "8cb72ef2e04016bcbc02fcd97f15575744679274fa5c01b1f8dae691cf3a9d87",
+      "bytes": 2549
     },
     {
       "path": ".claude/skills/ss-resolve/SKILL.md",
-      "sha256": "c151e944140fc5aa56fa8c0027427c41dbaa2b54fb05eda5854a92c8f7ab1af6",
-      "bytes": 3214
+      "sha256": "392044139ea3e62087cc6a3bdcbff7cd5428b33d5b75e0925dbfbb1d7ca23219",
+      "bytes": 4073
     },
     {
       "path": ".claude/skills/ss-resolve/references/artifact-index.schema.json",
@@ -806,6 +831,11 @@
       "bytes": 17130
     },
     {
+      "path": ".claude/skills/ss-resolve/scripts/styleseed-doctor.mjs",
+      "sha256": "4765d74f759ef10e8c9adb9807d65467e3f08a3f238bbb6d3ec4bf95ccb5bc1f",
+      "bytes": 10161
+    },
+    {
       "path": ".claude/skills/ss-restyle/SKILL.md",
       "sha256": "fa451824b42a802728897111a02820fb4b4573d9f48be4c0dbfd40a2bb85a07e",
       "bytes": 2202
@@ -817,8 +847,8 @@
     },
     {
       "path": ".claude/skills/ss-score/SKILL.md",
-      "sha256": "cb2e2e5c8d4b3bd7e17ab66015a5236096b546de24881cf8773b51f90c454207",
-      "bytes": 12027
+      "sha256": "c8a8bb0e903afdf66b583f148f9392fec56ee09bb96d2b63da2fd604f243f346",
+      "bytes": 12500
     },
     {
       "path": ".claude/skills/ss-score/references/acceptance-report.schema.json",
@@ -857,8 +887,8 @@
     },
     {
       "path": ".claude/skills/ss-score/scripts/evidence-gate.mjs",
-      "sha256": "a26fce38a97d460833c98dc90d154a32edcaae1c663f88ad353fb413afde34b6",
-      "bytes": 16638
+      "sha256": "d58692cb1ed42dd8204a0952737eaa104b37eff1350663269c331f7179c65718",
+      "bytes": 16860
     },
     {
       "path": ".claude/skills/ss-score/scripts/styleseed-check.mjs",
@@ -872,8 +902,8 @@
     },
     {
       "path": ".claude/skills/ss-studio/SKILL.md",
-      "sha256": "4e97714d2f757c06ee3b3ba8692ef5edace25cedc4e97b21d8033c265825b513",
-      "bytes": 7034
+      "sha256": "4128bba56ac1a389d703a51306833f5a19589ed67ff430f5ab88f1f98bb2ed99",
+      "bytes": 6832
     },
     {
       "path": ".claude/skills/ss-studio/agents/openai.yaml",
@@ -897,8 +927,8 @@
     },
     {
       "path": ".claude/skills/ss-tokens/SKILL.md",
-      "sha256": "7b2d47255cb83f7674cefa79991ccb2b0b6a716c3c6536ee2aa7e3ff6c2d0583",
-      "bytes": 4073
+      "sha256": "1d251a83f6701eee63c200f4e38c0223740826da285dddf1c0a3d3dee92d9428",
+      "bytes": 3992
     },
     {
       "path": ".claude/skills/ss-tokens/scripts/generate-palette.mjs",
@@ -912,8 +942,8 @@
     },
     {
       "path": ".claude/skills/ss-update/SKILL.md",
-      "sha256": "bf7e6236caf1707d89729ed85fd9219918d8a73dbc91112de6ea754b5da84976",
-      "bytes": 8575
+      "sha256": "daeaa0c0a210e951ac55e2e03161efd3be3ad74c6928a1c620a25690bfe06e6e",
+      "bytes": 9159
     },
     {
       "path": ".claude/skills/ss-update/scripts/artifact-impact.mjs",
@@ -922,23 +952,23 @@
     },
     {
       "path": ".claude/skills/ss-update/scripts/check-update.mjs",
-      "sha256": "05fa2839453613a469c9b470303a09389aa2ae0ae139e637205b052f056850ee",
-      "bytes": 9637
+      "sha256": "642331d8d91d06109e537eea76a8ad97ec9913b8ecdf64e285a3b7547dea3595",
+      "bytes": 11238
     },
     {
       "path": ".claude/skills/ss-verify/SKILL.md",
-      "sha256": "55446eb821129be6bac83a5a1ebd6bcfccb67649156d7ea92d8418770aa60a3f",
-      "bytes": 8632
+      "sha256": "dc4fe9918b6b4543e294ecd5983a1e19faf5a4c93ce505c45880774f5b5c7ade",
+      "bytes": 9241
     },
     {
       "path": ".claude/skills/styleseed/SKILL.md",
-      "sha256": "5f4f0154b9a9c7be2fc5309f798a5c0013e2f237570183cf34bedcfdfd58fe9f",
-      "bytes": 3979
+      "sha256": "10ffdaefbd174a1e3f4f32e2ce7623ae7c0e81241f788050edc79d13204180cc",
+      "bytes": 4504
     },
     {
       "path": ".cursorrules",
-      "sha256": "f78397089017acad4a4c012d324778c770d933c09c34b15ff8b6db8e60b9e82a",
-      "bytes": 2769
+      "sha256": "63656a3da7b08c8ca4679baaf6f5ecdcd61981bae697ed1662f0f9ad2c6bfed0",
+      "bytes": 3111
     },
     {
       "path": "ADAPTERS.md",
@@ -947,8 +977,8 @@
     },
     {
       "path": "AGENTS.md",
-      "sha256": "87066141feec85f1986ca8b9ebdafcba045f6097adcefc919ab6d72f70a59bfd",
-      "bytes": 8043
+      "sha256": "d18543ab7e39f656e4b09e1e68586e7b77118ce02440cad8973df11045600d93",
+      "bytes": 8871
     },
     {
       "path": "APP-PLAYBOOKS.md",
@@ -957,8 +987,8 @@
     },
     {
       "path": "ARCHITECTURE.md",
-      "sha256": "58301e3ad7aebba1ef9ed9d058042e632d836db47e1bff90f03e4c31d361945d",
-      "bytes": 8858
+      "sha256": "48b138a712e582cf3b3b0ed1c921946997ec2de9ee41ecb5f85d984facaa2d5b",
+      "bytes": 9030
     },
     {
       "path": "BRAND-RECIPES.md",
@@ -967,8 +997,8 @@
     },
     {
       "path": "CLAUDE.md",
-      "sha256": "4c3ac7b80cf9c22c8f0d4b6679603eb52e0910183c05f09a28febd739f6e9580",
-      "bytes": 50740
+      "sha256": "32e43f9d51a35134a616a8cb8ef8153eadcfda9f46c18fb8e79759f8465dcf7e",
+      "bytes": 50961
     },
     {
       "path": "CRAFT-BASELINE.md",
@@ -1002,13 +1032,13 @@
     },
     {
       "path": "PRODUCT-PRINCIPLES.md",
-      "sha256": "eaaa2c702d3e9e807f6407bb4a0ae572474d318f2155a1b7e6c0ca77819c33cb",
-      "bytes": 5395
+      "sha256": "16ba3f07c940dc0a5e96524e712b668df4f731ffffe4b5c42b2222d195a341f2",
+      "bytes": 7969
     },
     {
       "path": "README.md",
-      "sha256": "2cf8d5a6a721f270c427d676a3b45ba1a24243afd31d1533ba612e2b6c22d8e4",
-      "bytes": 1902
+      "sha256": "475805d9d2e26fd31f0182cb2a566a2c9be9333fa168ffa9a973a9ff0e94675c",
+      "bytes": 2086
     },
     {
       "path": "REFERENCE-COMPILER.md",
@@ -1022,13 +1052,13 @@
     },
     {
       "path": "STUDIO-PIPELINE.md",
-      "sha256": "4df215044c319ea0c909763a48d30ff18cc3236f7b8694ee126e743a0bfb8be8",
-      "bytes": 6445
+      "sha256": "b92aaf8d6f6fca0ce1de6f41d8065bb406dba0a0aa7cf635aaf3d27fdabaed8d",
+      "bytes": 6513
     },
     {
       "path": "UPDATE.md",
-      "sha256": "ab1905420e18e0cce282aca29306bce62344c68e838c48ba95b74c16ef33f732",
-      "bytes": 3916
+      "sha256": "2eafeb45c0f207b9c3df6fc84d095be74c758f9e8a1d41abb62fd3bd0d5c3b30",
+      "bytes": 4725
     },
     {
       "path": "UX-WRITING.md",
@@ -1037,7 +1067,7 @@
     },
     {
       "path": "VERSION",
-      "sha256": "3b10b6ad566eadbcacadb33c591f1ec629593d6adf47442e56e0f61996829ef7",
+      "sha256": "8fb33dadbe981cf5847df269c10c2a3fe107f2b269d5ccb6db37d1f61ffc3bba",
       "bytes": 6
     },
     {
@@ -1083,7 +1113,7 @@
     "color/palettes.json",
     "PRESETS.md"
   ],
-  "core": "# StyleSeed Product Constitution\n\nStyleSeed is an **AI design-method engine**. Its primary job is to make a coding agent\nreason like a strong UI/UX designer and apply that reasoning consistently. Components,\nskins, scores, and screenshots support that job; they do not define it.\n\n## The fixed method, not one fixed look\n\nStyleSeed enforces a stable way of judging design. It does **not** force every product to\nlook like Toss, a SaaS dashboard, or the StyleSeed demo. A trustworthy consumer-finance\nhome, an observability console, an editorial story, and a product-detail page solve\ndifferent jobs and therefore need different design grammars.\n\nThe effective rule set is composed:\n\n```text\nCore judgment\n  × one output grammar from RULESETS.md (built-in or reference-compiled)\n  × one surface adapter from ADAPTERS.md\n  × one domain playbook from APP-PLAYBOOKS.md\n  × one page type from PAGE-TYPES.md\n  × one brand recipe from BRAND-RECIPES.md\n  × one semantic palette posture plus an optional key-color generation from PALETTE-RECIPES.md\n  × optional aesthetic profile from PRESETS.md\n  × bounded project tokens from STYLESEED.md\n= the rules for this screen\n```\n\n## Authority order\n\nWhen instructions disagree, use this order:\n\n1. **Core invariants** below.\n2. **Output grammar** — the functional visual language selected in `RULESETS.md`, or a\n   project-local grammar compiled by `REFERENCE-COMPILER.md`.\n3. **Surface adapter** — the renderer contract and physical constraints in `ADAPTERS.md`.\n4. **Domain playbook** and **page/artifact type**.\n5. **Brand recipe** — a reusable morphology and component-selection contract from\n   `BRAND-RECIPES.md`.\n6. **Palette system** — a maintained semantic posture plus deterministic key-color generation,\n   role mapping, gamut handling, and contrast correction from `PALETTE-RECIPES.md`.\n7. **Aesthetic profile** — an optional coordinated restyle from `PRESETS.md`.\n8. **Design lock** — records selections and bounded project parameters.\n9. **Skins and components** — implementation material, not sources of judgment.\n10. **Score and visual verification** — evidence that the method was applied.\n\n`STYLESEED.md` is persistence, not permission. An arbitrary value in the lock never turns\na violation into a sound design decision. Unknown values fall back to the nearest maintained\ngrammar and the core defaults.\n\n## Core invariants\n\nThese apply to every grammar, profile, domain, page, skin, and agent:\n\n- One deliberate visual system per product: radius, spacing, elevation, icon language,\n  typography, color roles, imagery, and motion agree.\n- One focal point per screen and a clear information hierarchy.\n- Color communicates role or meaning. One primary action remains identifiable even when\n  semantic, categorical, or product colors are present.\n- Semantic tokens replace component-level hardcoded colors.\n- Spacing follows a repeatable scale; proximity communicates grouping.\n- Typography fits the surface and task, with readable measure, contrast, and hierarchy.\n- Data surfaces include useful loading, empty, and error states.\n- Controls remain operable: visible focus, sufficient targets, labels, reduced-motion\n  support, and no dark patterns.\n- Motion fits the surface and never delays comprehension or action.\n- Distinctiveness comes from the product, its content, and its selected grammar — not a\n  copied demo, generic indigo, repeated icon chips, emoji chrome, or template uniformity.\n\n## What the lock may select\n\nThe lock may select only inputs the engine understands:\n\n- domain, surface adapter, page/artifact type, and one output grammar;\n- one maintained brand recipe, one semantic palette posture, optional bounded key-color generation,\n  one optional aesthetic profile, and one skin or project token implementation;\n- primary action/accent, type pairing, density, radius, elevation, imagery, and motion values\n  inside the selected grammar's allowed ranges;\n- one product-specific signature move that still obeys the invariants;\n- a project-local reference grammar with provenance and confidence recorded by the compiler.\n\nThe lock may not invent a palette mode, waive accessibility, legalize mixed systems, or\noverride a core invariant. A reusable built-in grammar requires research, examples, and\nregression evaluation. A reference-derived grammar stays project-local until it meets that bar.\n\n## The product loop\n\n```text\nunderstand the job → choose or compile a grammar → lock bounded decisions\n→ build with judgment → score the implementation → visually verify rendered output\n→ present the result and evidence\n```\n\nThe build method is the product. Scoring and verification are auxiliary gates: they find\ndrift, but they never choose or rewrite the design philosophy after the fact.\n\n## Learning without surveillance\n\nStyleSeed may preserve a design lesson only when a person explicitly asks it to capture an\naccepted correction. The stored candidate contains generalized conditions, counterexamples, and\nmeasured evidence—not source code, prompts, screenshots, brand tokens, product identity, or user\ncontent. Local review and export approval are separate decisions. Preparing a package does not\ntransmit it. Returning it through MCP requires another one-time human grant and must be reported as\nclient/model exposure. No candidate may automatically modify project or core rules.",
+  "core": "# StyleSeed Product Constitution\n\nStyleSeed makes expert design judgment repeatable by coding agents. It is not a collection\nof aesthetic preferences that replaces designers.\n\n**StyleSeed는 전문가를 대체하는 디자인 취향 모음이 아니라, 전문가의 디자인 판단을\n코딩 에이전트가 반복해서 실행할 수 있게 만드는 시스템입니다.**\n\nThis is the project's goal, not a claim that today's engine reproduces expert-level quality.\nThe current design-method engine compiles selected rules, preserves project decisions, and\nsupports implementation and evidence workflows. Components, skins, scores, and screenshots\nsupport that purpose; neither their count nor a passing score proves that the goal is achieved.\n\n## Decisions stay with people\n\n- Experts define intent, applicability, tradeoffs, and acceptable exceptions. The agent applies\n  recorded decisions; it does not acquire the expert's authority by reading them.\n- Preserve the project's approved design system. Do not replace its identity, tokens, or\n  components with a StyleSeed preset merely to make the output look different.\n- Distinguish accessibility and functional floors, approved project choices, adjustable\n  heuristics, and unresolved human decisions. A recommendation is not approval.\n- If an approved choice cannot be expressed by the current engine, report that limitation and\n  propose a bounded change. Do not silently remap it or pretend arbitrary design-system import\n  already works. This goal does not change the resolver's supported values or authority order.\n- People may deliberately revise durable choices and re-run checks. Generated scores and\n  byte-bound evidence do not authenticate expertise or substitute for design acceptance.\n\n## Development decision test\n\nBefore changing the engine, name the design decision being made repeatable, its owner and\napplicability, the implementation context the agent needs, and the evidence that would show\nan improvement. Maintenance fixes may instead name the existing contract they preserve.\n\nPrioritize task-specific component APIs, token mappings, working state examples, and tests\nover adding more aesthetic rules. Evaluate new-system creation and existing-system adoption\nseparately. Measure functional correctness, expert-reviewed visual quality, correct reuse,\ncross-screen/session consistency, and human rework alongside model cost.\n\nA compliant but poorly designed screen is not success; neither is an attractive screen that\nbreaks the approved system. Use independent human evaluation before claiming expert-level\nquality. The research sequence and unimplemented work live in the repository `ROADMAP.md`.\n\n## The fixed method, not one fixed look\n\nStyleSeed enforces a stable way of judging design. It does **not** force every product to\nlook like Toss, a SaaS dashboard, or the StyleSeed demo. A trustworthy consumer-finance\nhome, an observability console, an editorial story, and a product-detail page solve\ndifferent jobs and therefore need different design grammars.\n\nThe effective rule set is composed:\n\n```text\nCore judgment\n  × one output grammar from RULESETS.md (built-in or reference-compiled)\n  × one surface adapter from ADAPTERS.md\n  × one domain playbook from APP-PLAYBOOKS.md\n  × one page type from PAGE-TYPES.md\n  × one brand recipe from BRAND-RECIPES.md\n  × one semantic palette posture plus an optional key-color generation from PALETTE-RECIPES.md\n  × optional aesthetic profile from PRESETS.md\n  × bounded project tokens from STYLESEED.md\n= the rules for this screen\n```\n\n## Authority order\n\nWhen instructions disagree, use this order:\n\n1. **Core invariants** below.\n2. **Output grammar** — the functional visual language selected in `RULESETS.md`, or a\n   project-local grammar compiled by `REFERENCE-COMPILER.md`.\n3. **Surface adapter** — the renderer contract and physical constraints in `ADAPTERS.md`.\n4. **Domain playbook** and **page/artifact type**.\n5. **Brand recipe** — a reusable morphology and component-selection contract from\n   `BRAND-RECIPES.md`.\n6. **Palette system** — a maintained semantic posture plus deterministic key-color generation,\n   role mapping, gamut handling, and contrast correction from `PALETTE-RECIPES.md`.\n7. **Aesthetic profile** — an optional coordinated restyle from `PRESETS.md`.\n8. **Design lock** — records selections and bounded project parameters.\n9. **Skins and components** — implementation material, not sources of judgment.\n10. **Score and visual verification** — evidence that the method was applied.\n\n`STYLESEED.md` is persistence, not permission. An arbitrary value in the lock never turns\na violation into a sound design decision. Unknown values are resolver errors, not permission\nto silently choose a different grammar. Use only an explicitly configured, supported fallback.\n\n## Core invariants\n\nThese apply to every grammar, profile, domain, page, skin, and agent:\n\n- One deliberate visual system per product: radius, spacing, elevation, icon language,\n  typography, color roles, imagery, and motion agree.\n- One focal point per screen and a clear information hierarchy.\n- Color communicates role or meaning. One primary action remains identifiable even when\n  semantic, categorical, or product colors are present.\n- Semantic tokens replace component-level hardcoded colors.\n- Spacing follows a repeatable scale; proximity communicates grouping.\n- Typography fits the surface and task, with readable measure, contrast, and hierarchy.\n- Data surfaces include useful loading, empty, and error states.\n- Controls remain operable: visible focus, sufficient targets, labels, reduced-motion\n  support, and no dark patterns.\n- Motion fits the surface and never delays comprehension or action.\n- Distinctiveness comes from the product, its content, and its selected grammar — not a\n  copied demo, generic indigo, repeated icon chips, emoji chrome, or template uniformity.\n\n## What the lock may select\n\nThe lock may select only inputs the engine understands:\n\n- domain, surface adapter, page/artifact type, and one output grammar;\n- one maintained brand recipe, one semantic palette posture, optional bounded key-color generation,\n  one optional aesthetic profile, and one skin or project token implementation;\n- primary action/accent, type pairing, density, radius, elevation, imagery, and motion values\n  inside the selected grammar's allowed ranges;\n- one product-specific signature move that still obeys the invariants;\n- a project-local reference grammar with provenance and confidence recorded by the compiler.\n\nThe lock may not invent a palette mode, waive accessibility, legalize mixed systems, or\noverride a core invariant. A reusable built-in grammar requires research, examples, and\nregression evaluation. A reference-derived grammar stays project-local until it meets that bar.\n\n## The product loop\n\n```text\nunderstand the job → choose or compile a grammar → lock bounded decisions\n→ build with judgment → score the implementation → visually verify rendered output\n→ present the result and evidence\n```\n\nRepeatable application of expert decisions is the product goal. The build method implements\nthat goal; scoring and verification are supporting gates. They find drift, but never choose\nor rewrite the design philosophy after the fact or replace the responsible human's judgment.\n\n## Learning without surveillance\n\nStyleSeed may preserve a design lesson only when a person explicitly asks it to capture an\naccepted correction. The stored candidate contains generalized conditions, counterexamples, and\nmeasured evidence—not source code, prompts, screenshots, brand tokens, product identity, or user\ncontent. Local review and export approval are separate decisions. Preparing a package does not\ntransmit it. Returning it through MCP requires another one-time human grant and must be reported as\nclient/model exposure. No candidate may automatically modify project or core rules.",
   "craft": "# StyleSeed Compact Craft Baseline\n\nThis is the small, task-independent craft layer used by the Context Compiler. It preserves\nthe highest-leverage rules without injecting the full design handbook into every agent turn.\nThe selected output grammar, adapter, domain, page type, brand recipe, profile, and project lock narrow these\ndefaults. `PRODUCT-PRINCIPLES.md` remains the higher authority.\n\n## Coherence\n\n- Choose one coordinated family for radius, elevation, borders, icon style, typography, motion,\n  control heights, and interaction states. Encode each family as semantic tokens and reuse it.\n- A coherent system may contain multiple component shapes and colors, but every variation must\n  have a repeated role. Local decoration is not a role.\n- Preserve strengths and already-set project decisions. Do not restyle unrelated surfaces while\n  fixing one screen.\n\n## Hierarchy and composition\n\n- Give every screen one dominant user decision or reading promise. Supporting content must recede\n  through scale, position, contrast, density, or disclosure—not random color.\n- Proximity communicates grouping: space around a group should normally be at least twice the\n  space within it. Repeated sections need deliberate variation in height, density, or composition.\n- Use real product content and evidence. Placeholder dashboards, fake metrics, stock chat panels,\n  and equal card walls make otherwise clean work look generic.\n- Keep prose near 50–75 characters per line. Let data surfaces use width, but bound any reading\n  column inside them.\n\n## Spacing and type\n\n- Start from `{4, 8, 12, 16, 24, 32, 40, 48, 64, 80, 96}` and use off-scale values only for a\n  documented optical correction.\n- Default body text to 16px on general surfaces. Dense desktop UI may use 13–14px for metadata,\n  table chrome, timestamps, or identifiers; decisions and explanatory copy stay readable.\n- Use no more than two type families and one intentional weight ramp. Use tabular numerals for\n  money, tables, timers, and comparable metrics.\n- Tighten leading as type grows: body about 1.5, headings 1.2–1.35, display 1.0–1.2.\n\n## Components and interaction\n\n- Use the lightest separation that works: whitespace, then tone, then hairline, then shadow.\n  Do not combine a visible border and floating shadow without a functional reason.\n- Buttons, inputs, and selects in one context share a height. Touch surfaces provide at least\n  44px targets; pointer-first dense desktop controls may be smaller when still operable.\n- Labels remain visible. Errors name the problem and recovery and never rely on color alone.\n- Use one icon family, fill mode, and stroke family. Do not use emoji as application chrome.\n- Loading, empty, error, success, disabled, and permission states preserve layout and provide a\n  useful next action where the surface owns data or mutation.\n\n## Color, accessibility, and motion\n\n- Use semantic tokens. Keep one identifiable primary action while allowing stable semantic,\n  categorical, or brand roles required by the selected grammar.\n- Body text targets WCAG AA contrast; large text and meaningful graphics meet their applicable\n  threshold. Focus is visible, controls have names, and keyboard order follows visual order.\n- Motion uses one duration/easing family, communicates state or sequence, and never delays the\n  first read or an action. Provide a complete reduced-motion result.\n- Inspect the real render at the target viewport. Source review cannot certify optical balance,\n  font loading, crop, responsive transformation, or visual states.",
   "grammars": {
     "consumer-service": "### `consumer-service`\n\n- **Job:** understand personal state without anxiety and take one useful next action.\n- **Attention:** one dominant balance, status, benefit, or briefing; secondary services recede.\n- **Composition:** short contextual heading → dominant summary → small set of next actions →\n  progressive detail. Mobile-first, thumb-reachable, explicit bottom navigation where needed.\n- **Density/type:** comfortable to airy; friendly sans; large plain-language numbers; short copy.\n- **Color/surface:** calm neutral base, one brand action color, semantic colors only for real\n  status. Soft grouped surfaces are common but a card is used only when it groups a decision.\n- **Feedback:** immediate, reassuring, reversible; money and health values do not animate\n  theatrically.\n- **Reject:** every service as equal card, promotional clutter above state, rainbow categories,\n  cute language in serious moments, or copying Toss component-for-component.",

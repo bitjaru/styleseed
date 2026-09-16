@@ -1,0 +1,1 @@
+{"name":"styleseed-disposable-incident-workbench","private":true,"type":"module","scripts":{"build":"node build.mjs","test":"node --test app.test.mjs"},"dependencies":{"react":"19.2.4","react-dom":"19.2.4"}}

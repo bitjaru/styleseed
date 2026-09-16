@@ -6,7 +6,7 @@ import { Check, Copy } from "lucide-react";
 export const INSTALL_COMMAND = "npx skills add bitjaru/styleseed";
 
 export const STYLESEED_PROMPT =
-  "Install StyleSeed: `npx skills add bitjaru/styleseed` (or read https://styleseed-demo.vercel.app/llms.txt). Use `/ss-*` in Claude Code or `$ss-*` in Codex. Before building, choose the output grammar, surface adapter, brand recipe, and semantic palette. If the direction is still open, run `/ss-studio` or `$ss-studio` to produce three directions, require my selection, plan image/video assets and interaction scenes, then build a working prototype before recording a reel. If my references are not modeled, compile a project-local rule set with `/ss-reference` or `$ss-reference` instead of copying them. Save approved decisions to STYLESEED.md, resolve them, build, score to ≥80, then inspect the rendered screen and temporal interaction before showing me.";
+  "Install StyleSeed: `npx skills add bitjaru/styleseed` (or read https://styleseed-demo.vercel.app/llms.txt). Use `/ss-*` in Claude Code or `$ss-*` in Codex. Help apply our design decisions, not replace our design system. Inspect approved tokens, components, and choices first; report unsupported choices instead of silently remapping them. Resolve the selected artifact's contract when a registry exists; use STYLESEED.md only for a legacy project. Choose only unresolved grammar, adapter, recipe, and palette inputs. If the direction is open, use ss-studio and require my selection; compile unmodeled references with ss-reference. Build from the resolved contract, score to ≥80, and inspect the rendered result and relevant interactions. Report evidence and unresolved decisions; a score is not my approval.";
 
 type CopyState = "idle" | "copied" | "failed";
 

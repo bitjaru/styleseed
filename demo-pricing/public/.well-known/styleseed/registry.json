@@ -19,8 +19,13 @@
     "skins": 7
   },
   "context": {
+<<<<<<< HEAD
     "engineVersion": "4.1.0",
     "engineRevision": "sha256:3618e298e175c92f70d17998c9bdd284b41bc227a1bb46b76ed8c4baf4f5a113",
+=======
+    "engineVersion": "4.2.0",
+    "engineRevision": "sha256:9ff59f30d4bd3f115cd4bef36e64a85c55ac700c940cca988f2a798649aa4b74",
+>>>>>>> origin/main
     "resolverSkill": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-resolve/SKILL.md",
     "catalogUrl": "https://styleseed-demo.vercel.app/.well-known/styleseed/context-catalog.json",
     "grammarIds": [

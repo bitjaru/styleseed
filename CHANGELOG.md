@@ -5,6 +5,45 @@ All notable changes to StyleSeed. Agents can check the latest version at
 
 ## Unreleased
 
+## [4.2.0] — 2026-09-11
+
+**Theme: repeatable decisions, inspectable delivery.** StyleSeed's goal is to make expert
+design judgment repeatable by coding agents, not replace experts with aesthetic preferences.
+This release improves implementation context, diagnostics, distribution, and regression coverage;
+it does not establish expert-level design quality or universal design-system compatibility.
+
+### Added
+
+- A read-only project doctor that reports registry, compiled-context, and evidence state without
+  modifying project decisions or manufacturing acceptance.
+- Explicit edge and stable distribution channels, with stable update checks following the
+  published release manifest instead of mutable `main`.
+- An evaluator quickstart, Markdown-link checks, and a disposable two-screen React application
+  regression for skill copies, contract preservation, artifact isolation, and browser behavior.
+- Isolated three-screen research inputs and browser evaluator calibration: 70 applicable normal
+  cases, 15 intentional defects, and five execution-boundary probes. These are evaluator tests,
+  not an autonomous-agent comparison or expert visual approval.
+- Release preparation with a signed-tag check, checksums, core SPDX and demo CycloneDX SBOMs,
+  and GitHub provenance attestations. Preparation and publication remain separate steps.
+
+### Fixed
+
+- Build, component, and visual-verification workflows now preserve the named artifact boundary;
+  component guidance uses actual project paths and APIs instead of assumed legacy locations.
+- Windows file-URL and temporary-path handling, and PowerShell CI exit-code propagation so a later
+  successful command cannot hide a failed runtime check.
+- GitHub star-count failures degrade gracefully on the website.
+- Release metadata is bound to the checked-out commit, and release workflows must execute from
+  the same tag they package rather than attest an unrelated workflow ref.
+
+### Security and boundaries
+
+- Update the demo's Next.js security patch and vulnerable image/browser-mapping dependencies.
+- Keep 23 physical core skills; optional learning and MCP remain excluded from the core archive.
+- No new benchmark, gate-effect, superiority, or expert-quality claim is made. BENCH-V1 remains
+  historical evidence; the new design-judgment study has not been run.
+- Public Codex plugin-directory publication is not part of this release.
+
 ## [4.1.0] — 2026-08-20
 
 **Theme: exact, artifact-bound delivery.** StyleSeed now binds each artifact, installed

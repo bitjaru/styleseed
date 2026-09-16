@@ -64,6 +64,9 @@ export default function HomePage() {
             <a href="#get-started" className="hover:text-neutral-900">
               Get started
             </a>
+            <Link href="/evaluate" className="hover:text-neutral-900">
+              Verify
+            </Link>
             <Link href="/how-it-thinks" className="hover:text-neutral-900">
               How it thinks
             </Link>
@@ -112,7 +115,7 @@ export default function HomePage() {
         <section className="border-t border-neutral-200 bg-[#F5F8F7]">
           <div className="mx-auto grid max-w-6xl items-center gap-10 px-6 py-20 lg:grid-cols-[0.85fr_1.4fr]">
             <div>
-              <div className="text-[11px] font-bold uppercase tracking-widest text-teal-700">New in v4.0</div>
+              <div className="text-[11px] font-bold uppercase tracking-widest text-teal-700">Studio pipeline</div>
               <h2 className="mt-2 text-[clamp(28px,4vw,42px)] font-bold leading-tight tracking-tight">
                 Direction, color, motion.<br />One working scene.
               </h2>

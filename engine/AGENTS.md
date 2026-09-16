@@ -3,8 +3,12 @@
 This is the cross-agent entry point for Codex, Amp, Gemini CLI, Windsurf, Cline, and other
 tools that read `AGENTS.md`. Claude Code uses `CLAUDE.md`; Cursor uses `.cursorrules`.
 
-StyleSeed fixes **how an agent judges design**, not one Toss-like aesthetic. It applies to web
-and mobile products, social carousels, slide decks, documents/reports, and single-frame graphics.
+StyleSeed makes **expert design judgment repeatable by coding agents**, not a collection of
+tastes that replaces experts. Preserve approved project choices and distinguish them from
+defaults or unresolved decisions. If the current engine cannot express an approved system,
+surface that limitation instead of silently restyling it. See `PRODUCT-PRINCIPLES.md`.
+It applies to web and mobile products, social carousels, slide decks, documents/reports,
+and single-frame graphics.
 
 ## Resolve only the context this artifact needs
 
@@ -63,8 +67,14 @@ palette mode.
 
 ## Design lock — read before every visual task
 
-Look for `STYLESEED.md` in the project root. If missing, use setup before writing visual code or
-render scripts. A valid lock resembles:
+First apply the artifact registry boundary above. If either registry file exists, require both
+files and valid artifact configuration; do not create `STYLESEED.md` or restart setup on a
+registry error. Project DNA lives in `.styleseed/project.json`, and each affected artifact owns
+its configuration, bundle, manifest, and validation contract. Preserve approved choices.
+
+Only when neither registry file exists, look for `STYLESEED.md` in the project root. If that
+legacy lock is missing, use setup before writing visual code or render scripts. A valid legacy
+lock resembles:
 
 ```markdown
 # StyleSeed — Design Lock
@@ -120,7 +130,8 @@ select or compile grammar → select adapter → lock → build with the compose
 → $ss-score → fix to >=80 → render → $ss-verify → fix and re-render → present evidence
 ```
 
-The build method is the product. Score and verification are auxiliary proof gates.
+The build method serves repeatable application of expert decisions. Score and verification
+are supporting evidence, not proof of expert-level quality or a replacement for human acceptance.
 
 ### Code gate
 

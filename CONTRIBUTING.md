@@ -4,6 +4,15 @@ StyleSeed grows when users turn a repeatable design decision, regression, exampl
 lesson into something the next person can reuse. You do not need to understand the whole engine to
 make a useful contribution.
 
+Our goal is to make expert design judgment repeatable by coding agents, not replace designers
+with a collection of tastes. The [product constitution](engine/PRODUCT-PRINCIPLES.md) owns this
+goal; the [roadmap](ROADMAP.md) turns it into development priorities.
+
+For a design or workflow proposal, name the decision and its owner, where it applies, which
+existing components or tokens it should reuse, and how a reviewer can evaluate the result.
+Include counterexamples and unresolved choices. More rules or a higher self-score alone do
+not establish better design. Small maintenance fixes can simply name the contract they preserve.
+
 ## Start with a PR you can finish
 
 - Browse [`good first issue`](https://github.com/bitjaru/styleseed/issues?q=is%3Aissue%20is%3Aopen%20label%3A%22good%20first%20issue%22)
@@ -33,6 +42,17 @@ also pass:
 ```bash
 git diff --check
 ```
+
+For the same complete source and production-build gate used by Ubuntu CI:
+
+```bash
+npm ci --prefix demo-pricing
+node scripts/verify-repo.mjs
+```
+
+Use `node scripts/verify-repo.mjs --core` for the full non-web suite, or add `--browser` after
+installing Playwright Chromium. `--webpack` is the documented local fallback when a constrained
+environment cannot run Turbopack; CI still exercises the default Turbopack build.
 
 Push your branch and open a PR. The template asks for the command you ran and, for visual changes, a
 current screenshot. CI runs the complete suite.

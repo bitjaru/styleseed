@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "artifacts": [
+    {
+      "id": "incident-list",
+      "config": "incident-list.json"
+    },
+    {
+      "id": "incident-detail",
+      "config": "incident-detail.json"
+    }
+  ]
+}

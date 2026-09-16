@@ -10,8 +10,16 @@ allowed-tools: Read, Write, Edit, Grep, Glob, Bash
 
 When `.styleseed/project.json` and `.styleseed/artifacts/index.json` exist, resolve the requested artifact ID first, then read only `.styleseed/bundles/<artifact-id>.md` and `.styleseed/manifests/<artifact-id>.json`. Never fall back to the global legacy bundle for a registry project. Legacy projects may use `.styleseed/effective-rules.md` only when no registry exists.
 
-Read `.styleseed/effective-rules.md` and `.styleseed/manifest.json`; invoke `/ss-resolve` or
-`$ss-resolve` first when they are missing or stale. Judge pixels against that compiled method.
+If either registry file exists, require a complete, valid registry. Read the selected artifact's
+bundle and manifest above and check with `ss-resolve --artifact <artifact-id> --check`.
+An incomplete or invalid registry is an error, not permission to read a legacy bundle or restart
+setup. Verify each affected artifact against its own required renders and validation contract.
+
+Only projects without either registry file use `.styleseed/effective-rules.md` and
+`.styleseed/manifest.json`, checked with `ss-resolve --from-lock STYLESEED.md --check`.
+Invoke `/ss-resolve` or `$ss-resolve` from the corresponding project-owned configuration when
+that selected bundle is missing or stale. With no registry or lock, establish scope before a
+compliance claim. Judge pixels against that compiled method.
 A lock value cannot excuse a core failure, and a recipe/profile cannot replace the output grammar.
 
 `/ss-score` reads the **code** and scores it. But some of the worst "AI-made" tells never appear

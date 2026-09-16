@@ -140,7 +140,7 @@ async function main(args) {
     assert.equal(actual, lock.packages[`node_modules/${name}`]?.version, `Dependency drift: ${name}`); versions[name] = actual;
   }
   const plan = buildPilotPlan(); const sources = sourceInventory(repo, probeSources);
-  const output = freshOutput(repo, options.output); const root = join(output, 'fixture'); mkdirSync(root);
+  const output = freshOutput(repo, options.output, 'styleseed-pilot-library-'); const root = join(output, 'fixture'); mkdirSync(root);
   const report = { schemaVersion: 1, status: 'incomplete', sourceRevision: plan.manifest.sourceRevision,
     checkoutDirty: plan.manifest.checkoutDirty, inputHash: plan.manifest.inputHash, sourceInventory: plan.manifest.sourceInventory,
     probeInventory: sources, versions: { node: process.version, ...versions }, runs: [], calibration: null, errors: [],
@@ -157,7 +157,8 @@ async function main(args) {
       if (url.pathname === '/probe.js') { response.writeHead(200, { 'content-type': 'text/javascript' }).end(built.javascript); return; }
       if (url.pathname !== '/') { response.writeHead(404).end(); return; }
       const mutation = url.searchParams.get('case');
-      const defect = { 'missing-height-override': '.min-h-11{min-height:0!important}', 'missing-recipe': '[data-styleseed-recipe]{--ss-control-radius:0px}', 'missing-theme': ':root{--brand:initial}' }[mutation] ?? '';
+      const defects = { __proto__: null, 'missing-height-override': '.min-h-11{min-height:0!important}', 'missing-recipe': '[data-styleseed-recipe]{--ss-control-radius:0px}', 'missing-theme': ':root{--brand:initial}' };
+      const defect = defects[mutation] ?? '';
       response.writeHead(200, { 'content-type': 'text/html' }).end(`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,"><title>Component integration probe</title><style>${built.css}\n${defect}</style></head><body><div id="root"></div><script src="/probe.js"></script></body></html>`);
     });
     server.listen(0, '127.0.0.1'); await once(server, 'listening');
@@ -166,8 +167,14 @@ async function main(args) {
     report.calibration = summarize(report.runs); report.status = report.calibration.status;
   } catch (error) { report.errors.push(error.stack || error.message); report.status = 'fail'; }
   finally {
-    if (browser) await browser.close();
-    if (server?.listening) await new Promise(done => server.close(done));
+    // Each teardown step is isolated: a rejected close must not skip the ones after it.
+    // A crashed Chromium is exactly when the report is worth having, and a server left
+    // listening keeps the event loop alive until the CI job times out.
+    try { if (browser) await browser.close(); }
+    catch (error) { report.errors.push(`Browser close failed: ${error.stack || error.message}`); report.status = 'fail'; }
+    try { if (server?.listening) await new Promise(done => server.close(done)); }
+    catch (error) { report.errors.push(`Server close failed: ${error.stack || error.message}`); report.status = 'fail'; }
+    finally { server?.unref?.(); }
     try { assert.equal(buildPilotPlan().manifest.inputHash, report.inputHash); assert.deepEqual(sourceInventory(repo, probeSources), sources); }
     catch (error) { report.errors.push(`Inputs changed during probe: ${error.message}`); report.status = 'fail'; }
     writeReport(output, report);

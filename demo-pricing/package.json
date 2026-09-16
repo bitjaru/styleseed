@@ -36,7 +36,7 @@
     "@vercel/analytics": "^2.0.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "framer-motion": "^12.38.0",
+    "framer-motion": "^13.2.0",
     "lucide-react": "^1.8.0",
     "next": "16.3.3",
     "react": "19.2.4",
@@ -46,7 +46,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
+    "@types/node": "^26",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "playwright": "^1.62.1",

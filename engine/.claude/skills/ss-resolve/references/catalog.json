@@ -1,7 +1,11 @@
 {
   "schemaVersion": 5,
   "engineVersion": "4.2.0",
+<<<<<<< HEAD
   "engineRevision": "sha256:1311e9259f49af52310bc2556f5444a88c3e4c9b048843579fcd28b4c1204033",
+=======
+  "engineRevision": "sha256:b657d189878f18b181b030ba74f55e3c0708106d00932e6f42aed664003c4c01",
+>>>>>>> origin/main
   "distributionSource": {
     "schemaVersion": 1,
     "channel": "edge",
@@ -10,7 +14,11 @@
   },
   "distributions": {
     "core": {
+<<<<<<< HEAD
       "revision": "sha256:1311e9259f49af52310bc2556f5444a88c3e4c9b048843579fcd28b4c1204033",
+=======
+      "revision": "sha256:b657d189878f18b181b030ba74f55e3c0708106d00932e6f42aed664003c4c01",
+>>>>>>> origin/main
       "files": [
         {
           "path": "LICENSE",
@@ -379,8 +387,8 @@
         },
         {
           "path": "engine/UX-WRITING.md",
-          "sha256": "8762afc773f31bfef606e2ddf7dcf5c68a648cfb087822f80b54bddfd063090c",
-          "bytes": 9830
+          "sha256": "bfbf7ed036b191f639d27bf459695f8162cee04bdff5da11e28ec30c7f0e53d2",
+          "bytes": 12524
         },
         {
           "path": "engine/VERSION",
@@ -1053,8 +1061,8 @@
     },
     {
       "path": "UX-WRITING.md",
-      "sha256": "8762afc773f31bfef606e2ddf7dcf5c68a648cfb087822f80b54bddfd063090c",
-      "bytes": 9830
+      "sha256": "bfbf7ed036b191f639d27bf459695f8162cee04bdff5da11e28ec30c7f0e53d2",
+      "bytes": 12524
     },
     {
       "path": "VERSION",

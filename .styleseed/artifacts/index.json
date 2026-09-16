@@ -16,6 +16,10 @@
     {
       "id": "site-learn",
       "config": "site-learn.json"
+    },
+    {
+      "id": "site-try",
+      "config": "site-try.json"
     }
   ]
 }

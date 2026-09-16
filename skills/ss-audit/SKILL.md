@@ -65,7 +65,7 @@ Target: **$ARGUMENTS**
 #### 7. Flexibility and Efficiency
 - [ ] Key actions are reachable through an appropriate product-specific path
 - [ ] Refresh behavior follows the platform adapter and the product's data semantics
-- [ ] Touch targets >= 44x44px (no tiny tap areas)
+- [ ] Touch hit areas >= 44x44px; pointer-first controls follow the resolved contract (approved 36–40px controls are not touch failures)
 - [ ] Frequently used actions are placed according to the resolved navigation adapter
 
 #### 8. Aesthetic and Minimalist Design
@@ -90,7 +90,7 @@ Target: **$ARGUMENTS**
 ### Mobile-Specific UX Checks
 
 #### Touch & Gesture
-- [ ] Touch targets minimum 44x44px
+- [ ] On touch surfaces, hit areas minimum 44x44px; preserve applicable accessibility floors for every input mode
 - [ ] Minimum 8px between adjacent touch targets
 - [ ] No hover-dependent interactions (mobile has no hover)
 - [ ] Swipe gestures have visible affordances (carousel indicators)

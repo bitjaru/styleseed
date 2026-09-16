@@ -10,10 +10,21 @@ allowed-tools: Read, Grep, Glob
 
 When `.styleseed/project.json` and `.styleseed/artifacts/index.json` exist, resolve the requested artifact ID first, then read only `.styleseed/bundles/<artifact-id>.md` and `.styleseed/manifests/<artifact-id>.json`. Never fall back to the global legacy bundle for a registry project. Legacy projects may use `.styleseed/effective-rules.md` only when no registry exists.
 
-Read `.styleseed/effective-rules.md` and `.styleseed/manifest.json`. If missing or stale, invoke
-`/ss-resolve` or `$ss-resolve` from `STYLESEED.md` first. Review task fitness and grammar
-coherence before framework conventions. For non-web artifacts, replace React/Tailwind-only
-checks with the active adapter's render/export checks.
+If either registry file exists, require both files and valid artifact configuration. Use only
+the selected artifact's bundle and manifest; an incomplete registry is not a legacy project.
+Only when neither registry file exists, read `.styleseed/effective-rules.md` and
+`.styleseed/manifest.json`. If the selected bundle is missing or stale, report the missing
+evidence; do not regenerate it during a review-only request or claim verified compliance.
+Review task fitness and grammar coherence before framework conventions. For non-web artifacts,
+replace React/Tailwind-only checks with the active adapter's render/export checks.
+
+## Review scope
+
+Review and recommend; do not edit implementation or project configuration. A request to fix
+findings authorizes a separate implementation step with the appropriate editing tools, not an
+expansion of this read-only skill. Honor a narrower user request. Cite the selected contract for
+each violation; distinguish core failures, contract drift, optional suggestions, and missing
+evidence. Library conventions below apply only when the project uses those conventions.
 
 ## When NOT to use
 
@@ -41,7 +52,8 @@ Review the file: **$ARGUMENTS**
 - [ ] No wrapper components that only add a className
 
 ### 3. Accessibility (a11y)
-- [ ] Touch targets >= 44x44px for interactive elements
+- [ ] Touch targets >= 44x44px on touch surfaces; pointer-first desktop controls may be
+      36–40px when the adapter and approved component contract support them
 - [ ] `focus-visible` styles on all interactive elements
 - [ ] Proper `aria-*` attributes where needed
 - [ ] Color contrast meets WCAG AA (4.5:1 for text, 3:1 for large text)
@@ -54,7 +66,7 @@ Review the file: **$ARGUMENTS**
 - [ ] Touch-friendly spacing between interactive elements
 - [ ] Mobile safe area insets handled when the adapter requires them
 - [ ] Desktop density/type and non-web canvas/export rules follow the selected adapter
-- [ ] Text sizes >= 12px for readability
+- [ ] Text remains readable at the adapter's viewing distance and supported zoom
 - [ ] Scrollable containers have `-webkit-overflow-scrolling: touch`
 
 ### 5. Performance
@@ -64,13 +76,10 @@ Review the file: **$ARGUMENTS**
 
 ### 6. Typography
 - [ ] Uses the locked type family and recipe-fit type roles
-- [ ] Font sizes from the 14-step scale (10-48px, see CLAUDE.md)
-- [ ] Proper font weights (400, 500, 600, 700)
-- [ ] Display text (36-48px): `leading-none` + `tracking-[-0.02em]`
-- [ ] Heading text (18-24px): `leading-snug` + `tracking-[-0.01em]`
-- [ ] Body text (14-17px): `leading-normal` (no custom tracking)
-- [ ] Caption uppercase (10-13px): `tracking-[0.05em]` or `tracking-wide`
-- [ ] No `line-height: 1.5` on display/heading text (too loose)
+- [ ] Size, weight, leading, and tracking follow the compiled type roles and approved tokens
+- [ ] Display, heading, body, and caption roles remain distinct at the target surface size
+- [ ] Language, script, wrapping, and zoom do not cause clipping or impair reading
+- [ ] Handbook type examples are defaults, not grounds to replace an approved type scale
 
 ### 7. Spacing Consistency
 - [ ] Spacing uses one maintained token scale and the selected recipe's major rhythm
@@ -81,17 +90,21 @@ Review the file: **$ARGUMENTS**
 
 ### 8. Coherence (VISUAL-CRAFT.md §C0 — the "one choice per axis" laws)
 > The biggest reason a UI reads as "AI-generated" isn't ugly parts — it's *mixed*
-> parts. Check that each axis below uses ONE value system-wide; flag a mix as a real
-> issue, not a nitpick.
-- [ ] **One radius personality** — sharp (0-4px) OR soft (8-12px) OR pill, applied to every card/button/input/modal. No mixing (e.g. a `rounded-none` panel with `rounded-full` buttons).
+> parts. Check for one deliberate system of roles, not identical values on every component.
+- [ ] **Recipe-bound radius scale** — surfaces, controls, compact choices, and nested elements
+      follow their approved roles. For example, `calm-consumer` permits 12–20px outer surfaces
+      and pill controls for true compact choices. Flag unexplained drift, not that valid pairing.
 - [ ] **One identifiable primary action** plus only the selected grammar's stable semantic,
       categorical, or brand roles — no competing decorative emphasis hues.
 - [ ] **No emoji as UI icons** (🚗🧺⭐ as list/nav/status/category markers) — they inject many uncontrolled hues; use one line-icon set in `currentColor`.
-- [ ] **Status color = severity, not decoration** — a normal/OK/"보통" state is neutral grey (not colored); color marks only the minority of rows that need attention; same value → same color.
-- [ ] **No decorative hues** — favorite stars, category dots, avatars use the accent or grey, not a new color each.
+- [ ] **Status and category colors have stable roles** under the selected grammar and palette;
+      severity remains distinguishable, and a normal state does not compete with urgent states
+- [ ] **No uncontracted decorative hues** — additional colors need a documented semantic,
+      categorical, editorial, or brand role
 - [ ] **One shadow language** — same light direction, same scale/tint; not some black + some tinted, some up-lit + some down-lit.
 - [ ] **One icon family / fill mode / stroke weight** across the file.
-- [ ] **Nested-radius law** — an element inside a rounded container uses `inner = outer − padding`, not the same radius (which bulges).
+- [ ] **Nested contours** — use the recipe's nested-radius relationship; for concentric rounded
+      rectangles, `max(0, outer − padding)` is a useful default, not a rule for every shape
 - [ ] **Consistent control heights** — buttons, inputs, selects share a height set (e.g. 40px).
 - [ ] Errors/states never rely on color alone (icon + text too).
 

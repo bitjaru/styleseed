@@ -64,7 +64,9 @@ accessibility.
 
 Run `/ss-score` on the actual implementation. The score must name the effective rule set and
 check both core invariants and grammar-specific tells. Fix the highest-gain failures and
-re-score, up to roughly three passes, until ≥80. If it cannot pass, report the real blocker.
+re-score for at most three correction passes, stopping earlier on ≥80. Prioritize broken flows
+and core failures before optional score gains. If it cannot pass, report the actual score and
+remaining failures; do not restart the pass budget by invoking a different skill.
 
 ## Step 5 — Pixel gate loop
 

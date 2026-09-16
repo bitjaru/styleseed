@@ -23,9 +23,13 @@ Do not merely imitate the supplied screen. Read `PRODUCT-PRINCIPLES.md`, `RULESE
 4. Resolve contradictions instead of averaging them. Explain any material choice briefly.
 5. Choose the nearest built-in fallback grammar and adapter, then compile the project artifacts required by
    `REFERENCE-COMPILER.md` under `.styleseed/rulesets/<slug>/`.
-6. Update `STYLESEED.md` to select `reference:<slug>` while preserving bounded brand choices.
+6. Select `reference:<slug>` in the chosen artifact's project-owned configuration for registry
+   projects; only when neither registry file exists, update the legacy `STYLESEED.md`.
+   Preserve bounded brand choices. A partial or invalid registry is an error, not a fallback.
 7. Validate transfer: apply the grammar to one representative screen not present in the source
-   set, run `/ss-score`, then `/ss-verify` if renderable. Fix and repeat to the gate floor.
+   set, run `/ss-score`, then `/ss-verify` if renderable. Within the authorized validation scope,
+   fix and repeat until passing or three correction passes per gate, counting delegated passes.
+   Do not reset the budget by switching skills; report actual scores and unresolved failures.
 8. Report what was learned, what remains low-confidence, where the artifacts live, and the
    validation result.
 

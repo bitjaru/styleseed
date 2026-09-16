@@ -339,3 +339,4 @@ defaults. `PRODUCT-PRINCIPLES.md` remains the higher authority.
   first read or an action. Provide a complete reduced-motion result.
 - Inspect the real render at the target viewport. Source review cannot certify optical balance,
   font loading, crop, responsive transformation, or visual states.
+

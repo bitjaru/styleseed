@@ -173,9 +173,15 @@ above; for Korean UI, run them as the checklist:
 내비게이션만 "확인"/"다음". 두 버튼일 땐 취소 쪽을 **"취소" 대신 "닫기"·"다음에"** 로 (부정어 줄이기).
 **관점·존댓말:** "고객님의 계좌" → **"내 계좌"**; 해요체/합쇼체 섞지 말고 하나로.
 
+Once tone and button wording are settled here, **§W9** covers the mixed-script mechanics — Hangul
+with Latin product names, Arabic numerals, currency, percentages, and units in one string.
+
 ---
 
 ## §W9 — Korean mixed-script examples
+
+Run §W8's checklist first; it decides tone and button wording. This section only settles what a
+mixed-script string looks like once those are decided.
 
 Use these when Hangul, Latin product or plan names, numerals, money, percentages, and units share
 one UI string. They apply to product UI, pricing, status, and CTA copy where the user needs to scan

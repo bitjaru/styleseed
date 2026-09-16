@@ -269,3 +269,51 @@ test("check-update never reports tampered or incomplete installs as current", ()
     rmSync(incompleteSandbox, { recursive: true, force: true });
   }
 });
+
+test("check-update follows the installed stable channel instead of mutable main", () => {
+  const sandbox = makeSandbox("styleseed-update-stable-channel-");
+  try {
+    stageCoreDistribution(sandbox);
+    const remotePath = resolve(sandbox, "stable-release-manifest.json");
+    writeFileSync(remotePath, `${JSON.stringify({
+      schemaVersion: 1,
+      status: "publication-approved",
+      version: catalog.engineVersion,
+      engine: {
+        version: catalog.engineVersion,
+        coreRevision: catalog.engineRevision,
+        skillsRevision: catalog.distributions.skills.revision,
+      },
+      package: {
+        archive: {
+          path: `styleseed-core-${catalog.engineVersion}.tar.gz`,
+          sha256: `sha256:${"a".repeat(64)}`,
+        },
+      },
+    }, null, 2)}\n`);
+    const installedCatalogPath = resolve(sandbox, "engine/.claude/skills/ss-resolve/references/catalog.json");
+    const installedCatalog = JSON.parse(readFileSync(installedCatalogPath, "utf8"));
+    installedCatalog.distributionSource = {
+      schemaVersion: 1,
+      channel: "stable",
+      updateManifest: remotePath,
+      install: "release archive fixture",
+    };
+    writeFileSync(installedCatalogPath, `${JSON.stringify(installedCatalog, null, 2)}\n`);
+
+    const run = spawnSync(
+      process.execPath,
+      [resolve(sandbox, stagedScriptPath), "--project-root", sandbox, "--json"],
+      { cwd: sandbox, encoding: "utf8" },
+    );
+    expectStatus(run, 0, "stable channel update check");
+    const parsed = JSON.parse(run.stdout);
+    assert.equal(parsed.status, "current");
+    assert.equal(parsed.installed.channel, "stable");
+    assert.equal(parsed.remote.channel, "stable");
+    assert.equal(parsed.remote.source, remotePath);
+    assert.equal(parsed.remote.archivePath, `styleseed-core-${catalog.engineVersion}.tar.gz`);
+  } finally {
+    rmSync(sandbox, { recursive: true, force: true });
+  }
+});

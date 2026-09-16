@@ -1,7 +1,9 @@
 # StyleSeed Engine
 
-The AI design-method engine. It combines fixed judgment, job-specific output grammars,
-surface adapters, brand recipes, reference compilation, detailed craft, components, and agent skills.
+The design-method engine whose goal is to make expert design judgment repeatable by coding
+agents, not replace designers with aesthetic preferences. It combines job-specific output
+grammars, surface adapters, brand recipes, reference compilation, craft guidance, components,
+and agent skills. See [the product constitution](PRODUCT-PRINCIPLES.md) for authority and limits.
 
 ## What's Here
 
@@ -17,7 +19,7 @@ surface adapters, brand recipes, reference compilation, detailed craft, componen
 | `PRESETS.md` | Optional aesthetic profiles, separate from grammars |
 | `ARCHITECTURE.md` | Technical architecture and diagrams |
 | `DESIGN-LANGUAGE.md` | 74 visual design rules with Table of Contents |
-| `.claude/skills/` | 21 canonical agent skills (Claude `/ss-*`, Codex `$ss-*`) |
+| `.claude/skills/` | 23 canonical agent skills (Claude `/ss-*`, Codex `$ss-*`) |
 | `components/ui/` | 32 shadcn/ui-based primitives (including motion.tsx) |
 | `components/patterns/` | 16 recipe-aware pattern components |
 | `css/` | base.css, fonts.css, recipes.css, index.css (theme.css comes from skins/) |

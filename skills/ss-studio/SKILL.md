@@ -1,6 +1,6 @@
 ---
 name: ss-studio
-description: Turn a product brief and optional references into three distinct creative directions, a human-selected StyleSeed interaction plan, generated image/video asset jobs, a working UI prototype, and a verified prototype-first showcase reel. Use for client concepts, app interaction exploration, trendy but coherent UI direction, reference discovery and synthesis, or any request that needs more than one static screen.
+description: Turn a brief into three creative directions, a human-selected interaction plan, prototype, and showcase reel. Use when a request needs more than one static screen — client concepts or interaction exploration.
 ---
 
 # Build a directed interactive concept

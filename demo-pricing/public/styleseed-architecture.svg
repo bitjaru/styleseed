@@ -11,7 +11,7 @@
   </defs>
   <rect width="1440" height="900" rx="32" fill="url(#bg)"/>
   <text class="t h" x="80" y="75">StyleSeed engine architecture</text>
-  <text class="t sub" x="80" y="108">Fixed judgment, directed concepts, private learning, exact revisions, and four evidence gates.</text>
+  <text class="t sub" x="80" y="108">Expert decisions, repeatable implementation, project ownership, and reviewable evidence.</text>
 
   <text class="t k violet" x="80" y="170">01 · UNDERSTAND</text>
   <rect class="box" x="80" y="190" width="250" height="135" rx="18"/>

@@ -1,8 +1,21 @@
 # StyleSeed repository guide
 
-StyleSeed is an AI design-method engine for coding agents. It combines fixed judgment,
-job-specific output grammars, surface adapters, and project-local reference grammars. Keep the
-rules, skills, components, skins, and generated demo artifacts in sync.
+StyleSeed makes expert design judgment repeatable by coding agents; it does not replace
+designers with a collection of aesthetic preferences. `engine/PRODUCT-PRINCIPLES.md` is the
+canonical goal and decision framework. Keep the rules, skills, components, skins, and generated
+demo artifacts in sync.
+
+## Keep development aligned with the goal
+
+- Read the product constitution and `ROADMAP.md` before proposing new engine behavior or product
+  positioning. Name the expert decision being supported, or the existing contract being repaired.
+- Preserve approved project design systems; do not equate a StyleSeed preset with expert intent.
+- Separate implemented capability, research hypothesis, and human approval in docs and reports.
+  Passing CI or an agent score is not proof of expert-level design quality.
+- Prioritize quality and reuse experiments before new aesthetic packs or hosted services. For
+  behavior changes, record applicability, tradeoffs, verification, and remaining human decisions.
+- Update maintained public descriptions and generated mirrors together when the goal changes.
+  Preserve historical benchmark reports, release notes, and third-party article titles as history.
 
 ## Before changing the engine
 
@@ -28,10 +41,12 @@ copies as the source of truth.
 
 ## Verification
 
-- Every engine change: run `node scripts/validate-palettes.mjs`,
-  `node scripts/validate-engine.mjs`, and `git diff --check`.
+- Every engine change: run `node scripts/verify-repo.mjs --core`.
 - Engine, skin, component, registry, or demo changes: run `npm run build` from
-  `demo-pricing/`, then run `git diff --check` from the repository root.
+  `demo-pricing/`, or use the canonical full gate: `node scripts/verify-repo.mjs` after
+  `npm ci --prefix demo-pricing`.
+- Run `node scripts/verify-repo.mjs --browser` when changing critical public routes or their
+  generated endpoints. It checks `/`, `/gate`, `/learn`, and `/evaluate` at desktop and 390×844.
 - The demo build fetches Google Fonts and may require network access.
 - Do not claim a visual pass without rendering and inspecting the affected UI.
 
@@ -41,3 +56,5 @@ copies as the source of truth.
   in separate commits or pull requests.
 - Do not change `engine/VERSION`, the changelog, or publish a release unless the
   maintainer explicitly includes release work in the task.
+- `docs/RELEASE.md` is the release boundary. The preparation workflow creates verified candidate
+  assets only; it never publishes a GitHub release or deploys production.

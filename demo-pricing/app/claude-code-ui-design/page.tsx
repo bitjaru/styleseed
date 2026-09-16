@@ -186,11 +186,12 @@ export default function ClaudeCodeUiDesignPage() {
               <Sparkles size={12} /> Claude Code UI design guide
             </div>
             <h1 className="mt-6 max-w-[13ch] text-[clamp(44px,7vw,82px)] font-black leading-[0.92] tracking-[-0.055em]">
-              Make Claude Code design before it decorates.
+              Help Claude Code apply expert design decisions.
             </h1>
             <p className="mt-7 max-w-2xl text-[18px] leading-relaxed text-neutral-600">
-              The reliable way to get better UI is not a longer aesthetic prompt. Give the agent
-              a design method, persist its decisions, and require a rendered verification loop.
+              StyleSeed aims to make expert design judgment repeatable. Give the agent recorded
+              decisions and their context, preserve the approved system, and inspect the result.
+              The workflow supports experts; it does not replace them.
             </p>
           </div>
           <div className="border-l-4 border-violet-600 pl-5">

@@ -15,6 +15,9 @@ StyleSeed help in general terms.
 
 ## First principles
 
+- Help coding agents repeat expert design decisions, not replace expert authority with presets.
+  Preserve approved project choices; identify unsupported or unresolved choices before routing
+  to work that would change them. A score is not human acceptance.
 - Resolve the current artifact first when `.styleseed/project.json` and `.styleseed/artifacts/index.json`
   exist.
 - Never fan out to “run every StyleSeed skill.”
@@ -46,6 +49,9 @@ Choose exactly one first workflow:
 - `ss-score` for code/design quality scoring or gate-floor measurement.
 - `ss-verify` for rendered pixel inspection, screenshot review, or visual verification.
 - `ss-update` for refreshing an installed StyleSeed payload or checking whether it is current.
+- `ss-resolve` and its read-only `scripts/styleseed-doctor.mjs` for local installation integrity,
+  configuration, compiled-rule drift, or missing/stale evidence diagnosis. Do not substitute
+  an update, recompilation, or visual inspection for a status-only request.
 - separately installed `ss-learn` only for explicit learning capture requests; otherwise report that
   the optional learning extension is unavailable.
 

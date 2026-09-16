@@ -1,0 +1,13 @@
+:root {
+  --background: var(--ss-background); --surface: var(--ss-surface); --chrome: var(--ss-chrome);
+  --foreground: var(--ss-foreground); --muted-foreground: var(--ss-muted-foreground);
+  --chrome-foreground: var(--ss-chrome-foreground); --border: var(--ss-border);
+  --primary: var(--ss-primary); --primary-foreground: var(--ss-primary-foreground);
+  --focus: var(--ss-focus); --danger: var(--ss-danger);
+  --font-body: system-ui, sans-serif;
+  --radius-panel: 8px; --radius-control: 4px;
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+  --space-6: 24px; --space-8: 32px; --space-10: 40px; --space-12: 48px;
+  --type-small: 13px; --type-body: 16px; --type-title: 24px; --type-section: 20px;
+  --control-height: 48px;
+}

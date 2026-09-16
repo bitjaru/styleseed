@@ -433,9 +433,9 @@ export default function Gate() {
 
         <div className="mt-12 flex flex-col items-start justify-between gap-5 border-t border-neutral-200 pt-8 sm:flex-row sm:items-center">
           <p className="max-w-xl text-[14px] leading-relaxed text-neutral-600">
-            StyleSeed fixes the design method, not one aesthetic: lock bounded
-            decisions, choose the right output grammar, render, score, revise, and
-            visually verify.
+            StyleSeed aims to make expert decisions repeatable by coding agents.
+            This benchmark tests a render-score-revise loop; it does not prove expert-level
+            quality or replace human design acceptance.
           </p>
           <Link
             href="/architecture"

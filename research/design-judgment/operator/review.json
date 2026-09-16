@@ -1,0 +1,16 @@
+{
+  "status": "draft-not-approved",
+  "reviewers": [],
+  "rubricApproval": null,
+  "libraryApproval": null,
+  "runtimeEnvironmentApproval": null,
+  "modelVersion": null,
+  "toolAccess": null,
+  "limits": { "usdTotal": null, "tokensPerRun": null, "secondsPerRun": null, "retriesPerRun": null },
+  "runCountPerArm": null,
+  "promotionThresholds": null,
+  "dimensions": ["hierarchy", "typography", "density", "composition", "cross-screen coherence", "library reuse", "human rework minutes", "generation cost"],
+  "noncompensableFailures": ["required flow broken", "unauthorized mutation", "lost input after failure", "approved library replaced", "keyboard trap", "unreported inaccessible or missing state"],
+  "humanVisualReview": "NOT PERFORMED",
+  "agentRuns": "NOT RUN"
+}

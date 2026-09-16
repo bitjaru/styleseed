@@ -14,7 +14,7 @@ import {
   unlinkSync,
   writeFileSync,
 } from "node:fs";
-import { dirname, join, resolve, sep } from "node:path";
+import { basename, dirname, join, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { Readable } from "node:stream";
 
@@ -27,6 +27,7 @@ const catalogPath = resolve(
 );
 
 const textDecoder = new TextDecoder("utf8", { fatal: false });
+const latestStableManifest = "https://github.com/bitjaru/styleseed/releases/latest/download/release-manifest.json";
 
 function parseArgs(argv) {
   const args = { clean: false };
@@ -221,6 +222,48 @@ function rewriteStagedManifest(stageRoot) {
   };
 }
 
+function validateArchiveName(value) {
+  if (basename(value) !== value || !/^[A-Za-z0-9._-]+\.tar\.gz$/u.test(value)) {
+    throw new Error(`Invalid archive name: ${value}`);
+  }
+  return value;
+}
+
+function stableDistributionSource({ version, tag, archiveName }) {
+  if (!/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/u.test(version)) {
+    throw new Error(`Invalid release version: ${version}`);
+  }
+  if (tag !== `v${version}`) throw new Error(`Release tag ${tag} must match v${version}`);
+  const archiveUrl = `https://github.com/bitjaru/styleseed/releases/download/${tag}/${archiveName}`;
+  return {
+    schemaVersion: 1,
+    channel: "stable",
+    updateManifest: latestStableManifest,
+    install: `npx skills add ${archiveUrl} --agent codex --yes --copy`,
+    release: { version, tag, archiveUrl },
+  };
+}
+
+function rewriteStagedCatalogs(stageRoot, distributionSource) {
+  if (!distributionSource) return [];
+  return [
+    "engine/.claude/skills/ss-resolve/references/catalog.json",
+    "skills/ss-resolve/references/catalog.json",
+  ].map((relativePath) => {
+    const path = resolve(stageRoot, relativePath);
+    const catalog = readJson(path);
+    catalog.distributionSource = distributionSource;
+    const content = Buffer.from(`${JSON.stringify(catalog, null, 2)}\n`, "utf8");
+    writeFileSync(path, content);
+    return {
+      relativePath,
+      content,
+      bytes: content.length,
+      sha256: sha256(content),
+    };
+  });
+}
+
 function tarHeader(name, size, mode = 0o644, type = "0") {
   const header = Buffer.alloc(512, 0);
   const write = (value, start, length) => {
@@ -291,10 +334,11 @@ async function createDeterministicArchive(stageRoot, allowlist, files) {
   };
 }
 
-function buildInventory(allowlist, files, totalBytes, archive = null) {
+function buildInventory(allowlist, files, totalBytes, archive = null, distributionSource = null) {
   return {
     schemaVersion: 1,
     packageName: allowlist.packageName,
+    distributionSource,
     payloadBytes: totalBytes,
     maxPayloadBytes: allowlist.maxPayloadBytes,
     files: files.map((entry) => ({
@@ -310,26 +354,45 @@ export async function buildPluginPackage({
   sourceRoot = repoRoot,
   stageRoot = resolve(repoRoot, readJson(allowlistPath).stageRoot),
   clean = false,
+  release = null,
+  archiveName = null,
 } = {}) {
-  const allowlist = readJson(allowlistPath);
+  const sourceAllowlist = readJson(allowlistPath);
+  const allowlist = {
+    ...sourceAllowlist,
+    archiveName: validateArchiveName(archiveName ?? sourceAllowlist.archiveName),
+  };
   const catalog = readJson(catalogPath);
+  if (release?.version && release.version !== catalog.engineVersion) {
+    throw new Error(`Release version ${release.version} does not match engine ${catalog.engineVersion}`);
+  }
+  const distributionSource = release
+    ? stableDistributionSource({
+      version: release.version,
+      tag: release.tag ?? `v${release.version}`,
+      archiveName: allowlist.archiveName,
+    })
+    : catalog.distributionSource ?? null;
   if (clean) rmSync(stageRoot, { recursive: true, force: true });
   mkdirSync(stageRoot, { recursive: true });
 
   const { files } = collectAllowedFiles(sourceRoot, allowlist, catalog);
   for (const entry of files) stageFile(sourceRoot, stageRoot, entry);
   const manifestEntry = rewriteStagedManifest(stageRoot);
-  const stagedFiles = files.map((entry) => (
-    entry.relativePath === manifestEntry.relativePath
-      ? { ...entry, content: manifestEntry.content, bytes: manifestEntry.bytes, sha256: manifestEntry.sha256 }
-      : entry
-  ));
+  const catalogEntries = rewriteStagedCatalogs(stageRoot, distributionSource);
+  const rewritten = new Map([manifestEntry, ...catalogEntries].map((entry) => [entry.relativePath, entry]));
+  const stagedFiles = files.map((entry) => {
+    const replacement = rewritten.get(entry.relativePath);
+    return replacement
+      ? { ...entry, content: replacement.content, bytes: replacement.bytes, sha256: replacement.sha256 }
+      : entry;
+  });
   const stagedTotalBytes = stagedFiles.reduce((sum, entry) => sum + entry.bytes, 0);
   if (stagedTotalBytes > allowlist.maxPayloadBytes) {
     throw new Error(`Staged payload too large: ${stagedTotalBytes} bytes exceeds ${allowlist.maxPayloadBytes}`);
   }
   const archive = await createDeterministicArchive(stageRoot, allowlist, stagedFiles);
-  const inventory = buildInventory(allowlist, stagedFiles, stagedTotalBytes, archive);
+  const inventory = buildInventory(allowlist, stagedFiles, stagedTotalBytes, archive, distributionSource);
   writeFileSync(resolve(stageRoot, "inventory.json"), `${JSON.stringify(inventory, null, 2)}\n`);
   return {
     stageRoot,
@@ -343,7 +406,17 @@ async function main() {
     const args = parseArgs(process.argv.slice(2));
     const allowlist = readJson(allowlistPath);
     const stageRoot = resolve(repoRoot, args["stage-root"] ?? allowlist.stageRoot);
-    const result = await buildPluginPackage({ sourceRoot: repoRoot, stageRoot, clean: args.clean });
+    const release = args["release-version"]
+      ? { version: args["release-version"], tag: args["release-tag"] ?? `v${args["release-version"]}` }
+      : null;
+    if (args["release-tag"] && !release) throw new Error("--release-tag requires --release-version");
+    const result = await buildPluginPackage({
+      sourceRoot: repoRoot,
+      stageRoot,
+      clean: args.clean,
+      release,
+      archiveName: args["archive-name"] ?? null,
+    });
     console.log(JSON.stringify({
       stageRoot: normalizePath(result.stageRoot),
       payloadBytes: result.inventory.payloadBytes,

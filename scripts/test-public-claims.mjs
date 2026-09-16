@@ -1,12 +1,19 @@
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const root = resolve(new URL("../", import.meta.url).pathname);
+const root = fileURLToPath(new URL("../", import.meta.url));
 const files = [
   "README.md",
   "README-KR.md",
   "SECURITY.md",
   ".claude-plugin/plugin.json",
+  ".codex-plugin/plugin.json",
+  "engine/PRODUCT-PRINCIPLES.md",
+  "engine/AGENTS.md",
+  "engine/CLAUDE.md",
+  "engine/.cursorrules",
+  "demo-pricing/scripts/build-llms.mjs",
   "demo-pricing/app/page.tsx",
   "demo-pricing/app/_home/hero.tsx",
   "demo-pricing/app/_home/prompt-box.tsx",
@@ -15,6 +22,8 @@ const files = [
   "demo-pricing/app/architecture/page.tsx",
   "demo-pricing/app/codex-ui-design/page.tsx",
   "demo-pricing/app/layout.tsx",
+  "demo-pricing/app/evaluate/page.tsx",
+  "docs/EVALUATOR-QUICKSTART.md",
   "demo-pricing/content/version-source.json"
 ];
 const requiredPhrases = [
@@ -32,10 +41,30 @@ const denylist = [
   "every artifact is compiled, scored, and visually checked before you see it",
   "The latest release on `main` is the supported version.",
   "identities are rejected",
-  "strips project identity"
+  "strips project identity",
+  "designed-looking products without a design team",
+  "makes AI reason like a strong UI/UX designer",
+  "디자인 팀 없이도 디자인된 티가 나는 제품",
+  "Zero designer.",
+  "StyleSeed is built for vibe coding without a designer."
 ];
 const failures = [];
 const texts = files.map((path) => ({ path, text: readFileSync(resolve(root, path), "utf8") }));
+const versionInfo = JSON.parse(readFileSync(resolve(root, "demo-pricing/public/version.json"), "utf8"));
+const designLanguage = readFileSync(resolve(root, "engine/DESIGN-LANGUAGE.md"), "utf8");
+const ruleNumbers = [...designLanguage.matchAll(/^##\s+(\d+)\./gmu)].map((match) => Number(match[1]));
+const expectedRules = Math.max(...ruleNumbers);
+const expectedSkins = readdirSync(resolve(root, "skins"), { withFileTypes: true })
+  .filter((entry) => entry.isDirectory() && !entry.name.startsWith("_"))
+  .length;
+const resolvedDocsPalette = readFileSync(resolve(root, ".styleseed/palettes/site-docs.json"), "utf8");
+const bundledDocsPalette = readFileSync(resolve(root, "demo-pricing/content/site-docs-palette.json"), "utf8");
+
+if (versionInfo.channel !== "edge") failures.push(`version.json channel must be edge; found ${String(versionInfo.channel)}`);
+if (versionInfo.publicInstall !== "npx skills add bitjaru/styleseed") failures.push("version.json edge install command drifted");
+if (versionInfo.stableManifest !== "https://github.com/bitjaru/styleseed/releases/latest/download/release-manifest.json") {
+  failures.push("version.json stable release manifest URL drifted");
+}
 
 for (const phrase of requiredPhrases) {
   if (!texts.some(({ text }) => text.includes(phrase))) failures.push(`missing required phrase: ${phrase}`);
@@ -44,6 +73,19 @@ for (const denied of denylist) {
   for (const { path, text } of texts) {
     if (text.includes(denied)) failures.push(`denylisted phrase "${denied}" found in ${path}`);
   }
+}
+for (const [field, expected] of Object.entries({ rules: expectedRules, skins: expectedSkins })) {
+  if (!Number.isSafeInteger(versionInfo[field])) {
+    failures.push(`version.json ${field} must be an integer; found ${String(versionInfo[field])}`);
+  } else if (versionInfo[field] !== expected) {
+    failures.push(`version.json ${field} drifted: expected ${expected}, found ${versionInfo[field]}`);
+  }
+}
+if (texts.some(({ text }) => text.includes("New in v4.0"))) {
+  failures.push('stale homepage label "New in v4.0" found');
+}
+if (resolvedDocsPalette !== bundledDocsPalette) {
+  failures.push("demo site-docs palette mirror drifted from the resolved StyleSeed palette");
 }
 
 if (failures.length > 0) {

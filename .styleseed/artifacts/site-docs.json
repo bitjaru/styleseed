@@ -23,6 +23,7 @@
   "implementation": {
     "sourceRoots": [
       "demo-pricing/app/architecture",
+      "demo-pricing/app/evaluate",
       "demo-pricing/app/guides",
       "demo-pricing/app/globals.css"
     ],

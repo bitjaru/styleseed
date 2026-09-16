@@ -106,7 +106,13 @@ for (const path of coreFiles) {
 
 const catalog = JSON.parse(read("engine/.claude/skills/ss-resolve/references/catalog.json"));
 assert(catalog.engineVersion === version, `context catalog ${catalog.engineVersion} != ${version}`);
-assert(catalog.schemaVersion === 4, `context catalog schema ${catalog.schemaVersion} != 4`);
+assert(catalog.schemaVersion === 5, `context catalog schema ${catalog.schemaVersion} != 5`);
+assert(catalog.distributionSource?.channel === "edge", "source catalog must identify the mutable edge channel");
+assert(
+  catalog.distributionSource?.updateManifest === "https://styleseed-demo.vercel.app/version.json",
+  "source catalog edge update manifest drifted",
+);
+assert(catalog.distributionSource?.install === "npx skills add bitjaru/styleseed", "source catalog edge install command drifted");
 assert(/^sha256:[0-9a-f]{64}$/.test(catalog.engineRevision), "context catalog engine revision is invalid");
 assert(Array.isArray(catalog.distributions?.core?.files) && catalog.distributions.core.files.length >= 40, "context catalog core distribution is incomplete");
 assert(catalog.distributions.core.revision === catalog.engineRevision, "core distribution revision drifted from engineRevision");

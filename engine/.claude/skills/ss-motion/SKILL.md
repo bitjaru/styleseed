@@ -1,6 +1,6 @@
 ---
 name: ss-motion
-description: Apply a named StyleSeed motion to a component — either one of the 5 personality seeds (Spring/Silk/Snap/Float/Pulse × entrance/exit/hover/press/layout) or a distinctive keyword move from the motion library (toggle-flip, toggle-curtain, reveal-blur, pop-in, shimmer, …). Translates vibe words into framer-motion code from one source of truth.
+description: Apply a named StyleSeed motion from the five personality seeds or the keyword move library. Use when asked for a specific motion or a vibe word like "springy", "snappy", or "shimmer".
 argument-hint: "[vibe-seed-or-keyword] [context] [file-path]"
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash
 ---

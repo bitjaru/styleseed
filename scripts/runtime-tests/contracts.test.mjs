@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { mkdtempSync, mkdirSync, readFileSync, realpathSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
+import { lstatSync, mkdtempSync, mkdirSync, readFileSync, realpathSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
@@ -83,13 +83,21 @@ test("project paths reject absolute, traversal, NUL, and symlink escapes", () =>
     for (const unsafe of ["/tmp/file", "../file", "src/../file", "src/\0file"]) assert.throws(() => safeProjectPath(root, unsafe));
     symlinkSync(outside, resolve(root, "linked"));
     assert.throws(() => safeProjectPath(root, "linked/file.txt"), /symlink/u);
-    const fifoPath = resolve(root, "fixture.fifo");
-    const fifo = spawnSync("mkfifo", [fifoPath], { encoding: "utf8" });
-    if (fifo.status === 0) assert.throws(() => safeProjectPath(root, "fixture.fifo"), /regular file or directory/u);
   } finally {
     rmSync(root, { recursive: true, force: true });
     rmSync(outside, { recursive: true, force: true });
   }
+});
+
+test("project paths reject POSIX FIFO special files", { skip: process.platform === "win32" && "Windows does not provide POSIX FIFOs" }, () => {
+  const root = mkdtempSync(join(tmpdir(), "styleseed-fifo-"));
+  try {
+    const fifoPath = resolve(root, "fixture.fifo");
+    const fifo = spawnSync("mkfifo", [fifoPath], { encoding: "utf8" });
+    assert.equal(fifo.status, 0, fifo.error?.message || fifo.stderr);
+    assert.equal(lstatSync(fifoPath).isFIFO(), true, "fixture must be a real POSIX FIFO");
+    assert.throws(() => safeProjectPath(root, "fixture.fifo"), /regular file or directory/u);
+  } finally { rmSync(root, { recursive: true, force: true }); }
 });
 
 test("runtime enums stay in parity with JSON Schema enums", () => {

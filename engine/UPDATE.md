@@ -5,15 +5,25 @@ engine as one coherent payload.
 
 ## Version and revision are different
 
-- `engineVersion` is the published release line, such as `4.0.0`.
+- `engineVersion` is the published release line, such as `4.1.0`.
 - `engineRevision` is a SHA-256 digest of the exact maintained method docs, 23 canonical skills,
-  provider/plugin entry material, the local MCP bridge, and palette engine files.
+  portable runtime files, and palette engine files in the core distribution.
 
 A version match alone does not prove that an installation is current. A rule or skill fix on the
 same release line changes `engineRevision` and must still be detected.
 
-The resolver records both values in `.styleseed/manifest.json`. The public values are exposed at
-`https://styleseed-demo.vercel.app/version.json`.
+The resolver records both values in `.styleseed/manifest.json`. The edge channel values are exposed
+at `https://styleseed-demo.vercel.app/version.json`; a stable release archive records the latest
+published release manifest as its update source.
+
+## Stable and edge channels
+
+- `edge` is the mutable `bitjaru/styleseed` repository shortcut. It follows current public `main`.
+- `stable` is a versioned archive attached to a published GitHub release. Its bundled catalog
+  follows `releases/latest/download/release-manifest.json`, not the edge endpoint.
+
+The installed catalog stores the channel, update manifest, and reinstall command. `$ss-update`
+uses that metadata by default. `--remote` is an explicit diagnostic override, not a channel change.
 
 ## Ownership contract
 
@@ -45,7 +55,7 @@ The checker compares:
 It performs no writes.
 
 When an update is available, refresh through the channel originally used to install StyleSeed.
-For Agent Skills CLI installations:
+For an edge Agent Skills CLI installation:
 
 ```bash
 npx skills add bitjaru/styleseed
@@ -53,6 +63,10 @@ npx skills add bitjaru/styleseed
 
 Select the same project/provider scope. Do not blind-copy a directory on top of an older payload;
 the install channel should reconcile the managed 23-skill set.
+
+For a stable install, use the exact `remote.archiveUrl` returned by the checker. Do not replace a
+stable install with the mutable repository shortcut unless the user explicitly chooses to switch
+channels.
 
 ## Recompile after refresh
 

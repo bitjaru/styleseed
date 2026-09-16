@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "projectId": "incident-workbench",
+  "defaults": {
+    "agent": "codex",
+    "domain": "saas",
+    "adapter": "product-ui",
+    "recipe": "enterprise-workbench",
+    "palette": "cobalt-instrument",
+    "profile": "none",
+    "fallback": "operations-console"
+  },
+  "brand": {
+    "keyColor": "#0F766E",
+    "paletteCharacter": "balanced",
+    "paletteMode": "light",
+    "paletteHarmony": "auto",
+    "surfaceTemperature": "cool",
+    "fontFamilies": [
+      "system-ui"
+    ],
+    "radius": "soft",
+    "elevation": "restrained-shadow",
+    "density": "comfortable",
+    "motion": {
+      "seed": "spring",
+      "intensity": "restrained"
+    },
+    "imageryRole": "product-proof-first"
+  }
+}

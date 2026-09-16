@@ -6,32 +6,65 @@ allowed-tools: Read, Write, Edit, Grep, Glob, Bash
 ---
 
 # UI Component Generator
+
 ## Registry-first artifact boundary
 
-When `.styleseed/project.json` and `.styleseed/artifacts/index.json` exist, resolve the requested artifact ID first, then read only `.styleseed/bundles/<artifact-id>.md` and `.styleseed/manifests/<artifact-id>.json`. Never fall back to the global legacy bundle for a registry project. Legacy projects may use `.styleseed/effective-rules.md` only when no registry exists.
+If either `.styleseed/project.json` or `.styleseed/artifacts/index.json` exists, require a
+complete, valid registry. Resolve the requested artifact ID before writing a component; ask
+for scope if it is ambiguous. Never fall back to the global legacy bundle, create `STYLESEED.md`,
+or restart setup because a registry is incomplete, invalid, or has no compiled output.
+
+Locate the installed `ss-resolve` skill directory (shown as `<ss-resolve>` below), then run
+this read-only check from the target project root with the active agent (`codex`, `claude`, etc.):
+
+```sh
+node "<ss-resolve>/scripts/resolve-context.mjs" --project-root . --artifact <artifact-id> --agent <agent> --check
+```
+
+For a valid registry with missing or stale compiled output, run the same command without
+`--check`, then check again. Stop on invalid configuration or installation errors; do not
+change approved selections to make the check pass. After success, read only the selected
+`.styleseed/bundles/<artifact-id>.md` and `.styleseed/manifests/<artifact-id>.json` as the
+compiled method and provenance. A shared component affecting multiple artifacts requires
+resolving and checking each affected artifact separately, not merging their bundles.
+
+Legacy projects use the following path only when neither registry file exists. Preserve
+`STYLESEED.md`; if it is missing, use setup before component code.
+
+```sh
+node "<ss-resolve>/scripts/resolve-context.mjs" --project-root . --from-lock STYLESEED.md --agent <agent> --check
+```
+
+For missing or stale legacy output, run the same command without `--check`, then check again.
+Read `.styleseed/effective-rules.md` and `.styleseed/manifest.json` only after success.
 
 ## When NOT to use
 
 - For full-page scaffolding → use `/ss-page`
 - For composed multi-component patterns → use `/ss-pattern`
 - For tweaking an existing component — just edit the file directly
-- For non-StyleSeed projects (no `components/ui/` directory or no Tailwind v4)
+- For projects without a configured StyleSeed React/Tailwind v4 component system
 
 Generate a new component: **$0**
 Description: $ARGUMENTS
 
 ## Instructions
 
-1. First, read the compiled design method:
-   - Read `.styleseed/effective-rules.md` and `.styleseed/manifest.json`; resolve if stale
-   - Read `css/theme.css` for available design tokens
-   - Read `css/recipes.css` for morphology variables and helper classes
-   - Read `components/ui/button.tsx` as a reference pattern
+1. Apply the registry/legacy boundary above, then read the actual implementation context:
+   - For a registry artifact, start from its `implementation.sourceRoots` and
+     `implementation.tokenFiles`. For legacy projects, discover the existing component and
+     stylesheet entry points from the project source.
+   - Follow the active stylesheet imports to the token definitions and recipe helpers used by
+     this artifact. `css/theme.css` and `css/recipes.css` are examples, not required locations.
+   - Read an existing nearby primitive (such as the project's button) and its real imports,
+     props, variants, and states. Reuse an existing component when it already fits the request.
+   - Preserve the project's approved tokens and component API. If required context is missing
+     or unsupported, report the gap before inventing files, aliases, tokens, or replacements.
 
 2. Follow these conventions strictly:
    - Use `function` declaration (not `const`)
    - Add `data-slot="component-name"` attribute
-   - Use `cn()` from `@/components/ui/utils` for all className merging
+   - Use the project's existing `cn()` utility and verified import path for className merging
    - Use `React.ComponentProps<>` for prop typing
    - Always support `className` prop for overrides
    - Use CVA (`class-variance-authority`) if the component has variants
@@ -60,6 +93,6 @@ Description: $ARGUMENTS
 
 6. Export the component as a named export (not default)
 
-7. Place the file in the appropriate directory:
-   - Primitive/reusable → `src/components/ui/`
-   - Composed pattern → `src/components/patterns/`
+7. Place the file in the existing component directory established in step 1, inside the
+   affected artifact's implementation scope. `src/components/ui/` is a common layout, not
+   a path to create in every project. Route composed patterns to `/ss-pattern`.

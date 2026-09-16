@@ -86,7 +86,7 @@ Description: $ARGUMENTS
    - Use `ms-*/me-*` instead of `ml-*/mr-*` (logical properties)
 
 5. Accessibility requirements:
-   - Minimum touch target: 44x44px (`min-h-11 min-w-11`)
+   - Touch hit areas: minimum 44x44px (`min-h-11 min-w-11`); pointer-first desktop controls may use contract-approved 36–40px sizing while preserving keyboard access and applicable accessibility floors
    - Support `aria-*` attributes passthrough
    - Use `focus-visible:ring-2 focus-visible:ring-ring` for keyboard focus
    - Respect `prefers-reduced-motion` for animations

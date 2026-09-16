@@ -3,6 +3,7 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { inspectInstructionContracts } from "./lib/instruction-contracts.mjs";
 
 const root = resolve(fileURLToPath(new URL("../", import.meta.url)));
 const matrixPath = resolve(root, "engine/skill-contracts.json");
@@ -10,12 +11,13 @@ const matrix = JSON.parse(readFileSync(matrixPath, "utf8"));
 const levels = new Set(matrix.evidenceLevels);
 const skillRoot = resolve(root, "engine/.claude/skills");
 const failures = [];
-// Skill-list descriptions load under a host context budget (GPT-6 Astra caps it at 2% of
-// context and silently shortens anything over). Ceilings are characters so this check stays
-// dependency-free; at ~5 chars/token the total below is roughly 680 tokens.
+// Repository-owned discovery budgets, not a claim about any model's context limit.
+// Character ceilings keep this check deterministic and dependency-free; token counts
+// and host truncation behavior depend on the runtime and tokenizer.
 const DESCRIPTION_TOTAL_CEILING = 3400;
 const DESCRIPTION_SKILL_CEILING = 260;
 const descriptionLengths = new Map();
+const skillTexts = {};
 
 function validateFrontmatter(skillName, text) {
   if (!text.startsWith("---\n")) {
@@ -43,15 +45,19 @@ function validateFrontmatter(skillName, text) {
 if (matrix.schemaVersion !== 1 || !Array.isArray(matrix.evidenceLevels) || !matrix.skills) failures.push("skill contract matrix schema is invalid");
 const directories = readdirSync(skillRoot, { withFileTypes: true }).filter((entry) => entry.isDirectory() && existsSync(resolve(skillRoot, entry.name, "SKILL.md"))).map((entry) => entry.name).sort();
 for (const directory of directories) {
+  const text = readFileSync(resolve(skillRoot, directory, "SKILL.md"), "utf8");
+  skillTexts[directory] = text;
+  validateFrontmatter(directory, text);
   const contract = matrix.skills[directory];
   if (!contract) { failures.push(`missing skill contract: ${directory}`); continue; }
   if (typeof contract.consumesBundle !== "boolean" || typeof contract.maySelectGrammar !== "boolean" || typeof contract.mayMutateProjectConfig !== "boolean" || !levels.has(contract.evidenceLevel)) failures.push(`invalid contract fields: ${directory}`);
-  const text = readFileSync(resolve(skillRoot, directory, "SKILL.md"), "utf8");
-  validateFrontmatter(directory, text);
   if (contract.consumesBundle && !text.includes("Registry-first artifact boundary")) failures.push(`${directory} must declare the registry-first artifact boundary`);
   if (contract.consumesBundle && text.includes("fall back to the global") && !text.includes("Legacy projects")) failures.push(`${directory} contains an unbounded global fallback`);
 }
 for (const name of Object.keys(matrix.skills)) if (!directories.includes(name)) failures.push(`matrix references missing skill: ${name}`);
+for (const finding of inspectInstructionContracts(skillTexts)) {
+  failures.push(`${finding.skill}:${finding.line} ${finding.code}: ${finding.message}`);
+}
 const descriptionTotal = [...descriptionLengths.values()].reduce((sum, length) => sum + length, 0);
 for (const [name, length] of [...descriptionLengths].sort((a, b) => b[1] - a[1])) {
   if (length > DESCRIPTION_SKILL_CEILING) failures.push(`${name} description is ${length} characters, over the ${DESCRIPTION_SKILL_CEILING} ceiling; lead with the trigger and move mechanism detail into the skill body`);

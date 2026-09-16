@@ -30,7 +30,8 @@ Stable detector IDs are `SS001` hardcoded colors, `SS002` arbitrary pixel values
 `detectorRevision`, `inventoryHash`, and sorted `findings`, so it can be attached to the evidence
 gate without caller-supplied pass claims.
 
-Attach the generated JSON through the same typed gate path as other reports:
+Within an authorized evidence-writing/build task, attach the generated JSON through the same
+typed gate path as other reports. Plain scoring reports findings without attaching evidence:
 
 ```bash
 node <installed-ss-score>/scripts/evidence-gate.mjs attach \
@@ -46,7 +47,7 @@ you can track UI quality like you track test coverage.
 ## When NOT to use
 
 - For a quick pass/fail before committing → use `/ss-lint`
-- For a full prose audit with fixes → use `/ss-review`
+- For a full prose audit and recommendations → use `/ss-review`; applying fixes is a separate, authorized implementation step
 - For logic/config with no visual artifact — scoring is meaningless
 
 ## Step 0 — Resolve the effective rule set
@@ -58,7 +59,8 @@ a reason to use the legacy bundle or source handbook.
 
 Legacy projects without a registry read `.styleseed/effective-rules.md` and
 `.styleseed/manifest.json`, using `ss-resolve --from-lock STYLESEED.md --check`. If the selected
-bundle is missing or stale, invoke `/ss-resolve` or `$ss-resolve` from the corresponding
+bundle is missing or stale, plain scoring reports missing evidence without regeneration.
+Within an authorized build/fix task, invoke `/ss-resolve` or `$ss-resolve` from the corresponding
 project-owned configuration first. With no registry or lock, resolve the intended scope with
 the user before making a project-specific compliance claim.
 
@@ -113,8 +115,9 @@ big-number cards repeated with no variation (−2); **distinctive-but-dated** (�
 beige/paper page base, serif body text on a product surface, dark-heavy blocks that read
 "brochure" not "2026 product" (−3). Cap −10.
 
-**Hierarchy & typography (16)** — deduct for: number/unit not ~2:1 (−4); font
-sizes off the Font Size table / `text-[var(--…)]` for size (−5); everything the
+**Hierarchy & typography (16)** — deduct for: value/unit hierarchy contradicting the selected
+grammar (−4; compact/tabular and prose-like relationships are valid when specified); type roles
+that drift from the compiled contract or CSS that renders the wrong size (−5); everything the
 same weight, no clear primary (−5); cramped or wrong line-height on body (−3);
 **body < 16px on a desktop/web B2B surface** (tight mobile scale on a wide screen) (−4 —
 but dense-data chrome is exempt: chart ticks, mono SHAs/timestamps, table metadata at
@@ -150,11 +153,11 @@ or delays the headline/CTA (−4), or a missing `prefers-reduced-motion` fallbac
 page type first, then score.
 
 **Coherence (12)** — the "one choice per axis" laws (VISUAL-CRAFT §C0). Deduct for
-each axis that is *mixed* rather than unified across the file: mixed radius
-personalities, e.g. sharp panel + pill buttons (−5); two+ competing accent hues used
+each axis that drifts from the selected system: radius roles that contradict the recipe (−5;
+do not penalize recipe-approved surface/control differences); two+ competing accent hues used
 for emphasis (−4); mixed shadow languages / light directions (−3); mixed icon
-families, fill modes, or stroke weights (−3); same radius on a nested element instead
-of `inner = outer − padding` (−2); inconsistent control heights for buttons/inputs
+families, fill modes, or stroke weights (−3); nested contours that violate the recipe's geometry
+(−2; concentric rounded rectangles normally use `max(0, outer − padding)`); unexplained control-height drift
 (−2). This is the category that most predicts "looks AI-generated" — weight evidence
 of system-wide consistency, not per-component prettiness.
 
@@ -174,13 +177,13 @@ Layout & rhythm         9/12  ▓▓▓░  two identical KPI rows (l.22-31)
 Cards & elevation       8/10  ▓▓░░  mixed border + floating-shadow language (l.22)
 States & a11y          11/18  ▓▓░░  no empty/loading state; focus ring missing (l.55)
 Motion & interaction    4/6   ▓▓▓░  default fade, not a named seed
-Coherence               6/12  ▓▓░░  sharp cards (l.22) + pill buttons (l.48); 3 accent hues (§C0)
+Coherence               6/12  ▓▓░░  control shape drifts from enterprise-workbench (l.48); competing accents
 Distinctiveness          8/10  ▓▓▓░  all-even KPI grid weakens the operational focal panel
 
 ### Fix first (highest score gain)
 1. Add empty + loading states to the orders list       → +7 states (§71)
-2. Unify radius (pick soft 8-12px) + collapse to one accent → +9 coherence+color (§C0, §2)
-3. Drop the 1px borders, use tone + ≤8% shadow         → +4 cards  (§7)
+2. Restore locked control geometry and primary-action hierarchy → +9 coherence+color
+3. Restore recipe-bound hairlines; remove unrelated floating shadows → +4 cards
 
 Re-score after: ~92 / 100.
 ```
@@ -189,26 +192,29 @@ Use letter bands: 90+ A · 80-89 B · 70-79 C · 60-69 D · <60 F.
 
 ## Gate mode (use this as the Quality Gate before showing the user UI)
 
-The Quality Gate (CLAUDE.md / AGENTS.md) is `/ss-score` run as a loop, not a one-off:
+Gate mode applies within an authorized build or fix task. Plain scoring stays read-only with
+respect to implementation and configuration. A low score is not permission to begin editing.
 
 1. Score the just-generated UI.
-2. If **< 80**, apply the "fix first" list (use `/ss-review` to make the edits), then **re-score**.
-3. Repeat up to ~3×, or until ≥ 80.
-4. Present the UI with the final score and a one-line "fixed: …".
+2. If **< 80**, return findings to the authorized implementation step, then re-score after fixes.
+   `/ss-review` can explain findings but is read-only; it is not the editing step.
+3. Stop when ≥ 80 or after at most three fix-and-re-score passes. Do not restart the budget
+   by switching skills. Stop earlier on a permission boundary or an unavailable dependency.
+4. Report the actual score, fixes, and unresolved failures even when the gate did not pass.
+   Label incomplete work as failed or blocked, not accepted or ready to ship.
 
-The pass bar is a **floor, not a ceiling** — get to ≥ 80 and stop; don't chase 100. The point
-is that no first-draft, obviously-incoherent UI reaches the user. Especially never ship below
-80 with a rainbow status list, emoji icons, two accents, or missing states — those are the
-exact tells the gate exists to catch.
+The pass bar is a **floor, not a ceiling** — get to ≥ 80 and stop; don't chase 100. Reporting
+a failed gate is required and is not a release approval. A passing aggregate score does not
+waive core failures or establish human acceptance.
 
 ## Rules
 
 - **Read the file** — score from real evidence (line numbers), never guess.
-- Order the "fix first" list by **score gain**, not by severity alone — the goal
-  is the fastest path to a better number.
+- Address broken required flows and accessibility/core failures first, then prioritize remaining
+  improvements by impact and effort. Do not optimize the number at the expense of the contract.
 - For a directory, print a one-line score per file, then the lowest-scoring file's
   full breakdown.
-- Don't auto-edit in plain scoring. `/ss-score` measures; `/ss-review` and `/ss-motion` fix.
-  In **Gate mode** (above) you do fix-and-re-score until the floor is met.
-- As a *gate*, ≥ 80 is a floor before showing the user — but don't over-polish: chasing 95→100
-  to delay shipping is worse than shipping a clean 85.
+- Don't auto-edit in plain scoring. `/ss-score` measures and `/ss-review` recommends;
+  the authorized implementation step owns edits in Gate mode.
+- As a *gate*, ≥ 80 is required for a passing claim, not for reporting a failed result.
+  Do not delay completion by chasing 95→100 after the required checks pass.

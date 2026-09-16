@@ -159,11 +159,14 @@ or removing stale duplicate method files after review.
 
 Updating the engine does not redesign existing screens. If the user wants a retrofit:
 
-1. confirm or create `STYLESEED.md`;
+1. resolve the selected artifact and its project-owned configuration for registry projects; only when neither registry file exists, confirm or create the legacy `STYLESEED.md`. A partial or invalid registry is an error, not a fallback;
 2. re-score the highest-traffic screen against the new effective bundle;
-3. apply approved fixes with `/ss-review` or `$ss-review`;
+3. use `/ss-review` or `$ss-review` for read-only findings, then apply approved fixes in the authorized implementation step;
 4. render and inspect with `/ss-verify` or `$ss-verify`;
 5. report before/after evidence without claiming the old score was measured when it was not.
+
+Stop on pass or after three correction passes per gate, including delegated passes. Report
+remaining failures and actual evidence; invoking another skill does not reset this budget.
 
 ## Completion report
 

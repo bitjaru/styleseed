@@ -1,15 +1,7 @@
 {
-<<<<<<< HEAD
-  "schemaVersion": 4,
-  "engineVersion": "4.1.0",
-  "engineRevision": "sha256:b2b727c871aefbde83aa8decffa56695760a22a265b524eabf1d2982b83cb078",
-  "distributions": {
-    "core": {
-      "revision": "sha256:b2b727c871aefbde83aa8decffa56695760a22a265b524eabf1d2982b83cb078",
-=======
   "schemaVersion": 5,
   "engineVersion": "4.2.0",
-  "engineRevision": "sha256:9ff59f30d4bd3f115cd4bef36e64a85c55ac700c940cca988f2a798649aa4b74",
+  "engineRevision": "sha256:ef8c72d270f4bf46e39db6da9f071e0de4342e11a54c3e8a6c85e9784181ce82",
   "distributionSource": {
     "schemaVersion": 1,
     "channel": "edge",
@@ -18,8 +10,7 @@
   },
   "distributions": {
     "core": {
-      "revision": "sha256:9ff59f30d4bd3f115cd4bef36e64a85c55ac700c940cca988f2a798649aa4b74",
->>>>>>> origin/main
+      "revision": "sha256:ef8c72d270f4bf46e39db6da9f071e0de4342e11a54c3e8a6c85e9784181ce82",
       "files": [
         {
           "path": "LICENSE",

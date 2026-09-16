@@ -11,20 +11,12 @@
   "stableRelease": "https://github.com/bitjaru/styleseed/releases/latest",
   "stableManifest": "https://github.com/bitjaru/styleseed/releases/latest/download/release-manifest.json",
   "codexPackageStatus": "repository development Codex package",
-<<<<<<< HEAD
-  "version": "4.1.0",
-  "revision": "sha256:b2b727c871aefbde83aa8decffa56695760a22a265b524eabf1d2982b83cb078",
-  "revisionFiles": 80,
-  "skillsRevision": "sha256:4eab915c29fa928487d3f93bfcf7802fb887ab9f68202139cde7444db72578a1",
-  "skillsRevisionFiles": 51,
-=======
   "version": "4.2.0",
-  "revision": "sha256:9ff59f30d4bd3f115cd4bef36e64a85c55ac700c940cca988f2a798649aa4b74",
+  "revision": "sha256:ef8c72d270f4bf46e39db6da9f071e0de4342e11a54c3e8a6c85e9784181ce82",
   "revisionFiles": 81,
   "skillsRevision": "sha256:5f1b38adf9b85eadf9ea5eb15d31fdc5788cf9adcda1498603bea7b8638749d8",
   "skillsRevisionFiles": 52,
   "rules": 74,
->>>>>>> origin/main
   "skills": 23,
   "skins": 7,
   "grammars": 8,

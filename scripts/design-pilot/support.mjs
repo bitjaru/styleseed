@@ -19,13 +19,13 @@ export function localOrigin(value) {
   return url.origin;
 }
 
-export function freshOutput(repo, output) {
+export function freshOutput(repo, output, prefix = 'styleseed-pilot-browser-') {
   const proposed = output ? resolve(output) : null;
   const parent = realpathSync(proposed ? dirname(proposed) : tmpdir());
   const target = proposed ? join(parent, basename(proposed)) : parent;
   if (within(realpathSync(repo), target)) throw new Error('Browser evidence must be outside the source checkout');
   if (proposed) { mkdirSync(target, { mode: 0o700 }); return target; }
-  return mkdtempSync(join(parent, 'styleseed-pilot-browser-'));
+  return mkdtempSync(join(parent, prefix));
 }
 
 export function writeReport(output, report) {

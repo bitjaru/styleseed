@@ -28,6 +28,16 @@ assert(codexPlugin.version === version, `Codex plugin version ${codexPlugin.vers
 assert(publicVersion.version === version, `public version ${publicVersion.version} != ${version}`);
 assert(JSON.stringify(plugin.skills) === JSON.stringify(["./engine/.claude/skills"]), "plugin must expose only the canonical skill directory");
 assert(codexPlugin.name === "styleseed" && codexPlugin.skills === "./skills/" && !("mcpServers" in codexPlugin), "Codex plugin manifest wiring drifted");
+// The marketplace manifest is what makes `claude plugin marketplace add bitjaru/styleseed` resolve.
+// It restates the plugin's identity, so hold it to the plugin manifest rather than to a copy.
+const marketplace = JSON.parse(read(".claude-plugin/marketplace.json"));
+assert(marketplace.name === "styleseed", `marketplace name drifted: ${marketplace.name}`);
+assert(Array.isArray(marketplace.plugins) && marketplace.plugins.length === 1, "marketplace must publish exactly the one core plugin");
+const listed = marketplace.plugins[0];
+assert(listed.name === plugin.name, `marketplace lists ${listed.name} but the plugin manifest is ${plugin.name}`);
+assert(listed.source === "./", `marketplace plugin source must be the repository root, found ${JSON.stringify(listed.source)}`);
+assert(listed.description === plugin.description, "marketplace plugin description drifted from .claude-plugin/plugin.json");
+assert(!("version" in listed), "marketplace entry must not restate the version; plugin.json owns it");
 assert(!existsSync(resolve(root, ".mcp.json")), "default core plugin must not auto-discover an MCP server");
 assert(!existsSync(resolve(root, "skills/styleseed-design-review/SKILL.md")), "legacy standalone review skill must not compete with ss-score");
 

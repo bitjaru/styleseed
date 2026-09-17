@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "styleseed",
+  "owner": {
+    "name": "bitjaru",
+    "url": "https://github.com/bitjaru"
+  },
+  "description": "StyleSeed: an open-source design-method engine that aims to make expert design judgment repeatable by coding agents.",
+  "plugins": [
+    {
+      "name": "styleseed",
+      "source": "./",
+      "displayName": "StyleSeed",
+      "description": "Open-source design-method engine aiming to make expert design judgment repeatable by coding agents, not replace experts. Compiles selected rules, preserves project choices, and records only the checks and rendered evidence that actually ran when the StyleSeed workflow is invoked.",
+      "homepage": "https://styleseed-demo.vercel.app",
+      "repository": "https://github.com/bitjaru/styleseed",
+      "license": "MIT",
+      "category": "Productivity",
+      "keywords": [
+        "design-system",
+        "ui",
+        "design-review",
+        "tailwind",
+        "react",
+        "frontend",
+        "code-quality",
+        "accessibility",
+        "claude-code",
+        "cursor",
+        "codex"
+      ]
+    }
+  ]
+}

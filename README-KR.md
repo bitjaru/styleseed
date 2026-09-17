@@ -218,6 +218,22 @@ Install StyleSeed so its checks actually run: `npx skills add bitjaru/styleseed`
 npx skills add bitjaru/styleseed
 ```
 
+<details>
+<summary>Claude Code 플러그인 마켓플레이스</summary>
+
+`npx skills add`는 스킬을 프로젝트에 복사하고 지원되는 모든 에이전트에서 동작하므로 이 경로를 권장합니다.
+Claude Code가 StyleSeed를 버전 단위로 관리하고 제자리에서 갱신하게 하려면, 이 저장소를 마켓플레이스로
+추가할 수도 있습니다:
+
+```bash
+claude plugin marketplace add bitjaru/styleseed
+claude plugin install styleseed@styleseed
+```
+
+두 경로 모두 동일한 23개 정본 스킬을 설치합니다. 선택 확장인 `ss-learn`은 어느 쪽에도 포함되지 않습니다.
+
+</details>
+
 프로젝트에 직접 복사하려면 에이전트가 읽는 경로를 선택하세요:
 
 ```bash

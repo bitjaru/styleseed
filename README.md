@@ -210,6 +210,22 @@ the 220KB full handbook for every task. Your agent may ask you to approve tools 
 No install possible? Read [`llms.txt`](https://styleseed-demo.vercel.app/llms.txt) for the
 portable routing contract.
 
+<details>
+<summary>Claude Code plugin marketplace</summary>
+
+`npx skills add` copies the skills into your project and works across every supported agent, so it
+stays the recommended path. If you would rather have Claude Code manage StyleSeed as a versioned
+plugin it can update in place, this repository is also a marketplace:
+
+```bash
+claude plugin marketplace add bitjaru/styleseed
+claude plugin install styleseed@styleseed
+```
+
+Both paths install the same 23 canonical skills. The optional `ss-learn` extension is in neither.
+
+</details>
+
 **Your agent, its exact path:**
 
 | Your agent | Reads | Fastest install |

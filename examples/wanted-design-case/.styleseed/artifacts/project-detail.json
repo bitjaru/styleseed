@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "id": "project-detail",
+  "target": {
+    "kind": "route",
+    "locator": "/project-detail"
+  },
+  "selection": {
+    "grammar": "operations-console",
+    "adapter": "product-ui",
+    "domain": "productivity",
+    "page": "detail",
+    "recipe": "enterprise-workbench",
+    "palette": "quiet-mineral",
+    "profile": "none",
+    "fallback": null
+  },
+  "decisions": {
+    "primaryDecision": "Review the selected deliverable and record a clear next action.",
+    "primaryAction": "Complete the review.",
+    "signatureMove": "One actionable review queue before the full project collection; preserve status, control, and type roles across both views."
+  },
+  "implementation": {
+    "sourceRoots": [
+      "src"
+    ],
+    "tokenFiles": [
+      "src/tokens.css"
+    ]
+  },
+  "validation": {
+    "scoreFloor": 80,
+    "requiredRenders": [
+      {
+        "id": "desktop-loaded",
+        "state": "loaded",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        }
+      },
+      {
+        "id": "mobile-loaded",
+        "state": "loaded",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        }
+      }
+    ],
+    "temporal": {
+      "required": false,
+      "scenarios": []
+    },
+    "humanAcceptance": false
+  }
+}

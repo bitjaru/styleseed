@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "artifacts": [
+    {
+      "id": "project-list",
+      "config": "project-list.json"
+    },
+    {
+      "id": "project-detail",
+      "config": "project-detail.json"
+    }
+  ]
+}

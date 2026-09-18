@@ -1,0 +1,135 @@
+{
+  "schemaVersion": 2,
+  "artifactId": "project-detail",
+  "engineVersion": "4.2.0",
+  "engineRevision": "sha256:2ac39abb22417fa30964c3bd89667231ee18a5ae699aef9b588273f094606444",
+  "distributionIntegrity": "verified",
+  "selection": {
+    "agent": "codex",
+    "grammar": "operations-console",
+    "grammarSource": "built-in:operations-console",
+    "referenceContract": null,
+    "fallback": "operations-console",
+    "adapter": "product-ui",
+    "domain": "productivity",
+    "page": "detail",
+    "recipe": "enterprise-workbench",
+    "recipeSelection": "enterprise-workbench",
+    "palette": "quiet-mineral",
+    "paletteSelection": "quiet-mineral",
+    "paletteGeneration": {
+      "keyColor": "#17695B",
+      "mode": "light",
+      "character": "calm",
+      "harmony": "tonal",
+      "temperature": "neutral"
+    },
+    "profile": "none"
+  },
+  "inputs": [
+    {
+      "id": "project",
+      "path": ".styleseed/project.json",
+      "sha256": "sha256:9e95a73ef1a1afac613f6b8e5f118b6c5ed1e7f4f8931b4335d991939bf77f2f",
+      "bytes": 749
+    },
+    {
+      "id": "artifact",
+      "path": ".styleseed/artifacts/project-detail.json",
+      "sha256": "sha256:da4c03581ceeed035889ca7c94ac5e581ddc946f2e1db9aa9c53a10402a1a2b7",
+      "bytes": 1287
+    }
+  ],
+  "sources": [
+    {
+      "id": "agent-execution",
+      "path": "catalog:agents",
+      "sha256": "sha256:dfe4b0a2de36209ca50a04b39e35c248ac13fb8b059428fdb68a484cffc190cb",
+      "bytes": 329
+    },
+    {
+      "id": "core",
+      "path": "catalog:core",
+      "sha256": "sha256:b8386021967bb5cea954dbe3b3f8c36574457457d5e4bbe7277b5218a539af54",
+      "bytes": 7968
+    },
+    {
+      "id": "grammar",
+      "path": "built-in:operations-console",
+      "sha256": "sha256:e0439317e2e1c0722e391e9645b21978818f0d14dd07633385792f8e5a44b962",
+      "bytes": 1011
+    },
+    {
+      "id": "adapter",
+      "path": "catalog:adapters/product-ui",
+      "sha256": "sha256:7b5b5c34b0b235dca329e6384ccb94c66ee65a348bbe7142277ae7bbda3c13b0",
+      "bytes": 714
+    },
+    {
+      "id": "domain",
+      "path": "catalog:domains/productivity",
+      "sha256": "sha256:1bfc83fec1a7775961f2a26101110570379ddab0dcc50fca0af731336b7d4b09",
+      "bytes": 936
+    },
+    {
+      "id": "page",
+      "path": "catalog:pages/detail",
+      "sha256": "sha256:0b4321abc5e338d444ee8ac569f6d03059e33eae2a70bfc5502876cf48b15fc7",
+      "bytes": 679
+    },
+    {
+      "id": "recipe",
+      "path": "catalog:recipes/enterprise-workbench",
+      "sha256": "sha256:0b472aa9cccada93e1c5c0260070bbfcda76a75d7de61e2cb22938c39981aaf8",
+      "bytes": 1304
+    },
+    {
+      "id": "palette",
+      "path": "catalog:palettes/quiet-mineral",
+      "sha256": "sha256:92b4cdd1274c8e28c4f34388a62159441c4dc5866a6017fc43e3c4ed712cbe3c",
+      "bytes": 2194
+    },
+    {
+      "id": "craft",
+      "path": "catalog:craft",
+      "sha256": "sha256:9f8b9c38d3ec1dc6d476a149b7c3502b27c51cbb55bce397a696b44335a22d21",
+      "bytes": 3564
+    }
+  ],
+  "methodHash": "sha256:ce8f526daee592e7638abcf3bbf9dac6410318350b6dcdff9c81582357160e65",
+  "validationHash": "sha256:266364af7335696bd6a09583eeb58f9078ccb73663468f3a8da6ad3fa9b2cd44",
+  "validationSlices": {
+    "target": "sha256:83cd0e45efa6962eef085e44ee6b1958a90a08a2a120e879aca5c5d8b395c7c0",
+    "implementation": "sha256:58e1fe998c4ec61dd20ed0869d4401c795e47daa3f509cfe7d2fb1aa33b5355a",
+    "scoreFloor": "sha256:48449a14a4ff7d79bb7a1b6f3d488eba397c36ef25634c111b49baf362511afc",
+    "requiredRenders": "sha256:e2cbc22ce7be59d23cd2e88d6fdbc576aa98f69928e4ff1e61fda02e15ccca2f",
+    "temporal": "sha256:c5ec5a78d8447626a8d2c39addbf2843320eb8e491b9e7c1e92927a135b06bba",
+    "humanAcceptance": "sha256:fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa"
+  },
+  "bundle": {
+    "kind": "bundle",
+    "path": ".styleseed/bundles/project-detail.md",
+    "sha256": "sha256:26b69b01b2e28aaa5b0c3ed213340287d5391cadea9fde1bce81b2094983845c",
+    "bytes": 19612
+  },
+  "outputs": [
+    {
+      "kind": "bundle",
+      "path": ".styleseed/bundles/project-detail.md",
+      "sha256": "sha256:26b69b01b2e28aaa5b0c3ed213340287d5391cadea9fde1bce81b2094983845c",
+      "bytes": 19612
+    },
+    {
+      "kind": "palette-json",
+      "path": ".styleseed/palettes/project-detail.json",
+      "sha256": "sha256:ccfaba81432aa98a14fcc59a25e30ed369ec8b3d2f18e1907756b5def36a2323",
+      "bytes": 5907
+    },
+    {
+      "kind": "palette-css",
+      "path": ".styleseed/palettes/project-detail.css",
+      "sha256": "sha256:5aea2670f705b5c1e6e1f5c13f98e039970a923c473e1be9d3b17e41540882a3",
+      "bytes": 1157
+    }
+  ]
+}

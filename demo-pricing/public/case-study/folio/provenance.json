@@ -1,0 +1,13 @@
+{
+  "case": "StyleSeed wanted submission example",
+  "data": "fictional local sample data",
+  "humanAcceptance": false,
+  "freshSessionReuse": false,
+  "sourceHashes": {
+    "app.css": "a7fb4d3c904ed66ffaaabaadefd24ddce8abdc9e0eabbda83a46e69dcc2cbc9c",
+    "app.js": "261b5b615029593bbd3bd4603de32f8319a2bb1ea3f18d90a1998af83fa5d719",
+    "components.js": "d056f7cc2b74f406ab9ac237eeb99857ac1d8bb0588c157959248b78bad1a064",
+    "index.html": "fb5e369a05f414f640a5430106740bb4c35eea8738f90e3c65b7db3e24427769",
+    "tokens.css": "a0b048a6f349a2194bb0d2c4324ef44012bd5f1bdeda4107aca57787c84eb91b"
+  }
+}

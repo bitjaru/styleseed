@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "projectId": "wanted-studio-case",
+  "defaults": {
+    "agent": "codex",
+    "domain": "productivity",
+    "adapter": "product-ui",
+    "recipe": "enterprise-workbench",
+    "palette": "quiet-mineral",
+    "profile": "none",
+    "fallback": "operations-console"
+  },
+  "brand": {
+    "keyColor": "#17695B",
+    "paletteCharacter": "calm",
+    "paletteMode": "light",
+    "paletteHarmony": "tonal",
+    "surfaceTemperature": "neutral",
+    "fontFamilies": [
+      "Arial",
+      "Apple SD Gothic Neo"
+    ],
+    "radius": "soft",
+    "elevation": "restrained-shadow",
+    "density": "comfortable",
+    "motion": {
+      "seed": "spring",
+      "intensity": "restrained"
+    },
+    "imageryRole": "product-proof-first"
+  }
+}

@@ -1,0 +1,25 @@
+:root {
+  --canvas: var(--ss-background);
+  --surface: var(--ss-surface);
+  --ink: var(--ss-foreground);
+  --muted: var(--ss-muted-foreground);
+  --primary: var(--ss-primary);
+  --on-primary: var(--ss-primary-foreground);
+  --focus: var(--ss-focus);
+  --danger: var(--ss-danger);
+  --line: var(--ss-border);
+  --line-soft: color-mix(in srgb, var(--line) 44%, var(--surface));
+  --soft: color-mix(in srgb, var(--ss-chrome) 32%, var(--surface));
+  --selected: color-mix(in srgb, var(--primary) 9%, var(--surface));
+  --warning: var(--ss-warning);
+  --warning-soft: #FBF1DD;
+  --art-paper: #E9E5DD;
+  --art-dark: #283F37;
+  --art-clay: #BC7F63;
+  --art-sand: #D5C4A9;
+  --radius: 6px;
+  --control: 40px;
+  --space-unit: 8px;
+  --font: Arial, 'Apple SD Gothic Neo', sans-serif;
+  --mono: 'SFMono-Regular', Consolas, monospace;
+}

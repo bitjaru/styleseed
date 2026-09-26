@@ -2,11 +2,12 @@
 
 import { useRef, useState } from "react";
 import { Check, Copy } from "lucide-react";
+import install from "@/content/install.json";
 
-export const INSTALL_COMMAND = "npx skills add bitjaru/styleseed";
+export const INSTALL_COMMAND = install.default;
 
 export const STYLESEED_PROMPT =
-  "Install StyleSeed: `npx skills add bitjaru/styleseed` (or read https://styleseed-demo.vercel.app/llms.txt). Use `/ss-*` in Claude Code or `$ss-*` in Codex. Help apply our design decisions, not replace our design system. Inspect approved tokens, components, and choices first; report unsupported choices instead of silently remapping them. Resolve the selected artifact's contract when a registry exists; use STYLESEED.md only for a legacy project. Choose only unresolved grammar, adapter, recipe, and palette inputs. If the direction is open, use ss-studio and require my selection; compile unmodeled references with ss-reference. Build from the resolved contract, score to ≥80, and inspect the rendered result and relevant interactions. Report evidence and unresolved decisions; a score is not my approval.";
+  `Install StyleSeed: \`${INSTALL_COMMAND}\`. Use /styleseed in Claude Code or $styleseed in Codex. Help apply our design decisions, not replace our design system. Inspect approved tokens, components, and choices first; report unsupported choices instead of silently remapping them. Resolve the selected artifact's contract when a registry exists; use STYLESEED.md only for a legacy project. Choose only unresolved grammar, adapter, recipe, and palette inputs. If the direction is open, use ss-studio and require my selection; compile unmodeled references with ss-reference. Build from the resolved contract, score to ≥80, and inspect the rendered result and relevant interactions. Report evidence and unresolved decisions; a score is not my approval.`;
 
 type CopyState = "idle" | "copied" | "failed";
 
@@ -35,25 +36,30 @@ async function copyText(
   }
 }
 
-export function InstallCommand({ tone = "light" }: { tone?: "light" | "dark" }) {
+export function InstallCommand({ tone = "light", agent = "default" }: {
+  tone?: "light" | "dark";
+  agent?: "default" | "codex" | "claude";
+}) {
   const [state, setState] = useState<CopyState>("idle");
   const commandRef = useRef<HTMLElement>(null);
   const dark = tone === "dark";
+  const command = install[agent];
+  const target = agent === "default" ? "Codex + Claude Code" : agent === "codex" ? "Codex" : "Claude Code";
 
   return (
     <div>
       <button
         type="button"
-        onClick={() => copyText(INSTALL_COMMAND, commandRef.current, setState)}
+        onClick={() => copyText(command, commandRef.current, setState)}
         className="group flex w-full items-center justify-between gap-3 rounded-xl bg-teal-700 px-4 py-4 text-left text-white shadow-[0_14px_30px_-18px_rgba(15,118,110,0.9)] transition-colors hover:bg-teal-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-teal-700 sm:gap-4 sm:px-5"
-        aria-label={`Copy install command: ${INSTALL_COMMAND}`}
+        aria-label={`Copy install command: ${command}`}
       >
         <span className="min-w-0">
           <span className="block text-[11px] font-bold uppercase tracking-[0.14em] text-teal-100">
-            Install StyleSeed
+            Install for {target}
           </span>
-          <code ref={commandRef} className="mt-1 block whitespace-nowrap font-mono text-[12px] font-semibold sm:text-[15px]">
-            {INSTALL_COMMAND}
+          <code ref={commandRef} className="mt-1 block whitespace-normal break-words font-mono text-[12px] font-semibold sm:text-[15px]">
+            {command}
           </code>
         </span>
         <span className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-white/15 px-2.5 py-2 text-[13px] font-bold group-hover:bg-white/20">
@@ -67,8 +73,23 @@ export function InstallCommand({ tone = "light" }: { tone?: "light" | "dark" }) 
       >
         {state === "failed"
           ? "Clipboard access was blocked. The command is selected — copy it manually."
-          : "Works with Codex, Claude Code, Cursor, and other skills-compatible agents."}
+          : state === "copied"
+            ? "Copied. Run this in your project’s terminal."
+            : "Run in your project’s terminal. Copies all core skills into this project; skips the selection menus."}
       </p>
+      <details className={`mt-2 text-[12px] ${dark ? "text-neutral-300" : "text-neutral-600"}`}>
+        <summary className="w-fit cursor-pointer py-3 underline underline-offset-4">Another agent or install options?</summary>
+        <p className="mt-2 leading-relaxed">
+          For Cursor or another agent, run <code className="break-words">{install.interactive}</code>.
+          Choose your agent, Project, then Copy. Codex is already included under Universal.
+          Use this interactive command to review each installer choice.
+        </p>
+        <p className="mt-2 leading-relaxed">
+          Only use one? <a href="/codex-ui-design" className="underline">Codex setup</a> ·{" "}
+          <a href="/claude-code-ui-design" className="underline">Claude Code setup</a>.
+          If skills do not appear after installation, start a fresh agent session.
+        </p>
+      </details>
     </div>
   );
 }
@@ -102,7 +123,7 @@ export function PromptBox({
           type="button"
           onClick={() => copyText(prompt, promptRef.current, setState)}
           className="absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-lg bg-white/10 px-2.5 py-2 text-[13px] font-bold text-white hover:bg-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-          aria-label="Copy the advanced StyleSeed prompt"
+          aria-label={prompt === STYLESEED_PROMPT ? "Copy the advanced StyleSeed prompt" : "Copy this task prompt"}
         >
           {state === "copied" ? <Check size={13} /> : <Copy size={13} />}
           {state === "copied" ? "Copied" : "Copy"}
@@ -111,7 +132,7 @@ export function PromptBox({
       <p aria-live="polite" className={`mt-2 min-h-5 text-[12px] ${dark ? "text-neutral-400" : "text-neutral-500"}`}>
         {state === "failed"
           ? "Clipboard access was blocked. The prompt is selected — copy it manually."
-          : "Use this when you need the full workflow in one portable prompt."}
+          : prompt === STYLESEED_PROMPT ? "Use this when you need the full workflow in one portable prompt." : "Paste into your coding agent and add your screen or reference."}
       </p>
     </div>
   );

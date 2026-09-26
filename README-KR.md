@@ -28,23 +28,32 @@
 점수는 전문가의 판단이나 사람의 최종 승인을 대신하지 않습니다.
 [제품 원칙](engine/PRODUCT-PRINCIPLES.md) · [품질 우선 로드맵](ROADMAP.md)
 
-**1. 프로젝트를 Claude Code, Codex, Cursor 같은 코딩 에이전트에서 엽니다.**
+**1. 프로젝트 폴더에서 터미널을 열고 실행하세요.** Node.js/npm이 필요합니다.
 
-**2. 아래 문장을 그대로 붙여넣습니다:**
-
-```text
-StyleSeed를 `npx skills add bitjaru/styleseed`로 설치하고 이 프로젝트에 설정해줘. 우리 디자인 시스템을 대체하지 말고 디자인 결정을 반복해서 적용하도록 도와줘. 승인된 토큰·컴포넌트·프로젝트 선택부터 확인하고, 지원하지 않는 선택은 임의로 바꾸지 말고 알려줘. 내가 무엇을 만드는지와 아직 미정인 선택만 물어봐. 지원되는 출력 문법·브랜드 레시피·시맨틱 팔레트를 선택하거나 내 레퍼런스에서 로컬 문법을 만들어. 방향 탐색은 Claude Code의 `/ss-studio` 또는 Codex의 `$ss-studio`로 진행하고 내 선택을 기다려. 확정된 방향은 resolve한 뒤 구현하고 코드 점수를 80점 이상으로 고쳐 실제 화면과 동작을 검사해. 증거와 사람의 결정이 필요한 부분을 알려주고, 점수를 내 승인으로 취급하지 마.
+```bash
+npx -y skills add bitjaru/styleseed -a codex claude-code -y --copy
 ```
 
-**3. 설치를 승인하고, 짧은 설정 질문에 답한 뒤 만들고 싶은 것을 말합니다.**
-호출한 워크플로가 디자인 락, 빌드, 코드 검사, 실제 화면 검증을 진행합니다.
-기존 디자인 결정이 있으면 가져오고, 없다면 제안된 선택을 검토해 확정합니다.
+Codex와 Claude Code에 필요한 코어 스킬을 한 번에 설치합니다. **에이전트·스킬·설치 방식 선택 화면이 없습니다.**
+현재 프로젝트에 복사하므로 다른 프로젝트나 전역 설정은 바꾸지 않습니다.
 
-| 에이전트 | 직접 실행하고 싶을 때 |
-|---|---|
-| **Claude Code** | 방향 탐색은 `/ss-studio`, 확정 화면은 `/ss-setup` → `/ss-build` |
-| **Codex** | 방향 탐색은 `$ss-studio`, 확정 화면은 `$ss-setup` → `$ss-build` |
-| **Cursor 및 기타** | 위 문장을 붙여넣거나 설치된 스킬 선택기 사용 |
+**2. 에이전트에게 아래처럼 말하세요.** 스킬이 보이지 않으면 새 세션을 시작하세요.
+
+- **Codex:** `$styleseed 이 화면을 개선해줘. 기존 디자인은 존중하고, 내가 결정해야 할 것부터 알려줘.`
+- **Claude Code:** `/styleseed 이 화면을 개선해줘. 기존 디자인은 존중하고, 내가 결정해야 할 것부터 알려줘.`
+
+23개 스킬 이름을 외울 필요는 없습니다. `styleseed`가 첫 작업을 선택합니다. 필요한 디자인 선택은 함께 확정하고 실제 렌더 결과를 확인하세요.
+
+<details>
+<summary>한 에이전트만 쓰거나 직접 선택하고 싶나요?</summary>
+
+- Codex만: `npx -y skills add bitjaru/styleseed -a codex -y --copy`
+- Claude Code만: `npx -y skills add bitjaru/styleseed -a claude-code -y --copy`
+- Cursor 등 다른 도구: `npx skills add bitjaru/styleseed` → 사용 도구 → Project → Copy.
+- 대화형 목록에서 **Codex는 위쪽 Universal에 이미 포함**됩니다. Additional agents에서 다시 찾지 않아도 됩니다.
+- 기본 명령의 `-y`는 설치 질문을 생략합니다. 에이전트의 실행 권한을 우회하지는 않습니다.
+
+</details>
 
 [Claude Code 가이드](https://styleseed-demo.vercel.app/claude-code-ui-design) · [Codex 가이드](https://styleseed-demo.vercel.app/codex-ui-design) · [결과물 예시](https://styleseed-demo.vercel.app/showcase) · [상세 사용법](#상세-사용법)
 
@@ -192,30 +201,22 @@ Claude Code한테 "대시보드 만들어줘" 하면 보통 이런 결과가 나
 
 ## 상세 사용법
 
-### ⚡ 가장 빠른 방법: 한 문장 붙여넣기
+### 무엇이 불편한지부터 시작하세요
 
-Claude Code·Codex·Cursor 등 아무 AI 에이전트에 이 한 문장을 붙여넣으면 됩니다 — **설치 + 전체 루프를 한 번에**:
+- [앱은 돌아가는데 디자인이 촌스러워요](https://styleseed-demo.vercel.app/faq#app-looks-amateur)
+- [AI로 만든 사이트는 왜 다 비슷해 보이죠?](https://styleseed-demo.vercel.app/faq#ai-websites-look-the-same)
+- [페이지마다 디자인이 달라져요](https://styleseed-demo.vercel.app/faq#pages-look-inconsistent)
+- [레퍼런스 이미지를 줬는데 그 느낌이 안 나요](https://styleseed-demo.vercel.app/faq#reference-does-not-match)
 
-```
-Install StyleSeed so its checks actually run: `npx skills add bitjaru/styleseed` (if you can't, read https://styleseed-demo.vercel.app/llms.txt instead). Then use it for every visual artifact in this project. First, choose the output grammar, surface adapter, and one brand recipe for morphology without cloning a company. Lock color roles, type, geometry, and motion with me in STYLESEED.md, then run `/ss-resolve` in Claude Code or `$ss-resolve` in Codex and build from `.styleseed/effective-rules.md`. Build with ONE focal point and only stable, named color roles. Before showing me anything, run the quality gate (`/ss-score` or `$ss-score`) to ≥ 80 and fix what fails, then render and inspect with `/ss-verify` or `$ss-verify`.
-```
-
-> 💡 **왜 설치부터 시키나:** `ss-resolve` 컨텍스트 컴파일러와 `ss-score`·`ss-build`
-> 게이트는 **스킬이 설치돼 있어야 실제로 돌아갑니다.** 설치하면 `STYLESEED.md`가 작은
-> 출처 해시 규칙 번들로 컴파일되고, 게이트가 진짜로 채점·수정합니다. 설치가 안 되면
-> `llms.txt`의 포터블 라우팅과 공개 카탈로그를 쓸 수 있지만 컴파일·게이트는 수동 경로라
-> 재현성이 더 약합니다.
-
-설치 후 Claude Code에서는 `/ss-resolve` → `/ss-build`, Codex에서는 `$ss-resolve` →
-`$ss-build`를 실행하세요. 선택된 규칙만 작은 번들로 컴파일되고 출처 해시가
-`.styleseed/manifest.json`에 남습니다. Codex의 `/skills` 목록에서도 선택할 수 있습니다.
+각 답변은 직접 점검할 순서, 에이전트에게 보낼 문장, StyleSeed가 도울 수 있는 범위와 예시를 연결합니다.
+설치할 수 없다면 `llms.txt`로 안내를 읽을 수 있습니다. 읽는 것만으로 로컬 컴파일이나 검증이 실행되지는 않습니다.
 
 ### 방법 1: 인터랙티브 설정 (추천)
 
-**1단계 — 스킬 설치.** 모든 지원 에이전트에서 가장 간단한 방법은 다음 명령입니다:
+**1단계 — 스킬 설치.** Codex와 Claude Code를 함께 쓴다면 다음 명령으로 선택 메뉴를 건너뜁니다:
 
 ```bash
-npx skills add bitjaru/styleseed
+npx -y skills add bitjaru/styleseed -a codex claude-code -y --copy
 ```
 
 <details>

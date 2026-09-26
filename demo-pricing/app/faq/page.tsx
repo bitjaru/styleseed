@@ -1,14 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, Star } from "lucide-react";
+import questions from "@/content/design-questions.json";
+import install from "@/content/install.json";
+import { InstallCommand, PromptBox } from "../_home/prompt-box";
 
 const BASE = "https://styleseed-demo.vercel.app";
 
 const description =
-  "How StyleSeed helps coding agents apply recorded design decisions: expert authority, existing design systems, quality checks, private learning, and honest implementation limits.";
+  "App works but looks amateur? Fix repetitive AI layouts, inconsistent pages, and screenshots that do not translate. Practical steps and prompts for Claude Code and Codex.";
 
 export const metadata: Metadata = {
-  title: "FAQ — expert judgment and coding agents",
+  title: "AI app looks amateur? Fix common UI problems",
   description,
   keywords: [
     "make my app look professional",
@@ -25,7 +28,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: `${BASE}/faq`,
-    title: "FAQ — expert judgment and coding agents",
+    title: "AI app looks amateur? Fix common UI problems",
     description,
     siteName: "StyleSeed",
     images: [{ url: `${BASE}/og/coherence.png`, width: 1280, height: 640 }],
@@ -36,16 +39,20 @@ export const metadata: Metadata = {
 /** Answer leads with a self-contained 40–60 word capsule (the citation unit), then optional context. */
 const FAQ: { q: string; a: string }[] = [
   {
+    q: "How do I install StyleSeed without choosing from a long list of agents?",
+    a: `Run ${install.default} in your project’s terminal. This installs all core skills for Codex and Claude Code in that project, using copies and skipping the installer menus. Then use $styleseed in Codex or /styleseed in Claude Code and describe the screen you want to improve. If the skills do not appear, start a fresh agent session.`,
+  },
+  {
+    q: "Why is Codex missing from the installer’s Additional agents list?",
+    a: "Codex is already in the Universal group, which reads .agents/skills. It does not need to be selected again under Additional agents. When using the interactive installer, select Claude Code there if you also use it, choose Project, and choose Copy for a fresh project. The explicit install command above skips these choices.",
+  },
+  {
     q: "What is StyleSeed's goal — does it replace designers?",
     a: "StyleSeed aims to make expert design judgment repeatable by coding agents, not replace experts with aesthetic preferences. People own intent, tradeoffs, and acceptance. The current engine compiles selected rules, preserves project choices, and supports implementation checks; passing those checks does not establish expert-level quality.",
   },
   {
     q: "Can it work with our existing design system?",
     a: "Preserving an approved system is a product priority, not a promise of universal import today. Start from the project's real components, semantic tokens, and decisions. Where the engine cannot express them, report the mismatch instead of silently choosing a StyleSeed preset. Component-contract integration and independent quality evaluation are planned research.",
-  },
-  {
-    q: "My app looks generic / AI-generated — how do I fix it?",
-    a: "StyleSeed fixes generic, “AI-slop” UI with 74 design rules covering color discipline, spacing rhythm, hierarchy, elevation, and motion. Install the project entry or invoke the installed StyleSeed workflow so Claude Code, Codex, or Cursor actually loads those rules for visual work. Instead of defaulting to slate neutrals and 8px radius on everything, the workflow pushes the output toward one intentional system. It's MIT-licensed and free.",
   },
   {
     q: "I applied StyleSeed but the design still looks bad / colors are random / there's no key color — what do I do?",
@@ -58,10 +65,6 @@ const FAQ: { q: string; a: string }[] = [
   {
     q: "Why does every shadcn app look the same, and how do I make mine different?",
     a: "Unmodified shadcn converges on a “fingerprint”: slate/zinc neutrals, Inter at default sizes, 8px radius everywhere, a default primary. StyleSeed breaks that fingerprint with rules and 7 brand skins (Toss, Stripe, Linear, Notion, Raycast, Arc, Vercel) so your AI-built app gets a committed accent, a real type pairing, and a signature look — not the default.",
-  },
-  {
-    q: "How do I make my app look like Linear (or Stripe / Notion / Vercel)?",
-    a: "StyleSeed ships 7 brand skins — including Linear, Stripe, Notion, Vercel, Raycast, Arc, and Toss — that encode each product's neutrals, radius, type, density, and motion as rules your agent applies. Ask Claude Code, Codex, or Cursor to build “in the Linear skin” and you get the dense, monochrome, intentional look instead of a generic approximation.",
   },
   {
     q: "How do I give Claude Code, Codex, or Cursor a design system so it stops making ugly UI?",
@@ -89,19 +92,15 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "Is the StyleSeed Codex plugin available in a public plugin directory?",
-    a: "Not yet. The repository contains a development Codex package with 23 core skills, but public directory release is not verified. The default/core package contains neither ss-learn nor a learning MCP. Public installation remains npx skills add bitjaru/styleseed until a plugin-directory build is independently verified and released there.",
+    a: "Not yet. The repository contains a development Codex package with 23 core skills, but public directory release is not verified. The default/core package contains neither ss-learn nor a learning MCP. Use the project-local CLI install above; a public plugin-directory release is a separate distribution path.",
   },
   {
     q: "Installing the skills asks for permission or gets blocked — is that normal? Do I even need them?",
-    a: "Yes, that's normal and expected: the /ss-* skills are executable, so your agent asks you to trust them once on first use — the same approval any third-party skill needs (good security), not a StyleSeed-specific block. But you don't need the skills at all. StyleSeed's core is the rules — plain markdown (CLAUDE.md / AGENTS.md / DESIGN-LANGUAGE.md) — which install with zero permissions. Paste the one-sentence prompt, or copy those files in, and you already get the design judgment. The skills are just optional automation on top.",
+    a: "Tool permissions depend on your agent and workspace settings. The install command skips the installer’s questions; it does not bypass host permissions. The skills include executable compilation and verification tools. Reading llms.txt can provide portable guidance when installation is unavailable, but reading markdown alone does not run those tools or establish a verified result.",
   },
   {
     q: "Does it handle UX writing / microcopy too, or just visuals?",
     a: "Both. StyleSeed covers verbal judgment as well as visual — buttons that name the action (“Send $2,400”, not “Submit”), error messages that help instead of blame (“Check the card number” not “Invalid input”), empty states that invite, calm money copy, one term per concept. The rules install with everything else, so your agent applies them to button labels, errors, and toasts automatically. Korean/CJK projects get writing principles grounded in Toss's published “8 Writing Principles.”",
-  },
-  {
-    q: "How do I make my app look more professional / polished / expensive?",
-    a: "Start with the task and your approved design system, then review hierarchy, typography, density, states, and responsive behavior using real content. StyleSeed supplies maintained guidance and an implementation/check loop when invoked. It does not guarantee professional quality, and a preset, extra shadow, or passing score cannot replace an expert review.",
   },
   {
     q: "My spacing feels off and my layout looks cramped — how do I fix it?",
@@ -112,20 +111,12 @@ const FAQ: { q: string; a: string }[] = [
     a: "StyleSeed's hierarchy rules drive contrast through size, weight, color, and position so there's a clear focal point and scan path — plus dashboard patterns ready to use. Your Claude Code, Codex, or Cursor dashboard stops looking like a flat default admin template where every element competes for the same attention.",
   },
   {
-    q: "Why does my app look amateur or unfinished?",
-    a: "Missing hierarchy, inconsistent components, incomplete states, and unclear ownership can all leave a product unfinished. StyleSeed helps the agent apply recorded decisions and inspect the result. Design ownership stays with people: identify which choices need expert input rather than handing that authority to the agent or treating visual polish as automatic.",
-  },
-  {
-    q: "How do I stop my UI from looking like a template?",
-    a: "StyleSeed replaces template defaults with intentional, branded choices: a committed radius, a stable action color, a deliberate type pairing, and a coherence rule. STYLESEED.md keeps those decisions in the repo; the installed project entry or StyleSeed workflow must load the lock for later visual tasks so new screens do not silently revert to template defaults.",
-  },
-  {
     q: "I'm vibe coding without a designer — how do I get good-looking UI?",
     a: "You can use StyleSeed's maintained guidance as a starting point, make explicit choices, and run its implementation and visual-check workflows. Treat the result as something to review, not expert-approved output. StyleSeed is free and MIT-licensed; it helps apply recorded judgment but does not replace user research, design expertise, or final acceptance.",
   },
   {
     q: "How do I fix too many colors / a messy palette?",
-    a: "StyleSeed's color-discipline rules cut your palette to one saturated accent plus semantic tokens, used sparingly and consistently. The agent stops decorating with color and starts using it to signal meaning, which is the single fastest fix for a UI that feels noisy, cheap, or off.",
+    a: "Assign colors to roles: actions, surfaces, text, and meaningful states or data. Remove decorative color that competes with those roles, and check contrast. The right number of accents depends on the screen and approved design; StyleSeed should preserve those decisions rather than force every product into one palette.",
   },
   {
     q: "Is there a free / open-source design tool for AI coding agents?",
@@ -137,7 +128,7 @@ export default function FaqPage() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: FAQ.map((f) => ({
+    mainEntity: [...questions.map((q) => ({ q: q.question, a: q.answer })), ...FAQ].map((f) => ({
       "@type": "Question",
       name: f.q,
       acceptedAnswer: { "@type": "Answer", text: f.a },
@@ -155,15 +146,43 @@ export default function FaqPage() {
           </Link>
           <div className="text-[12px] font-bold uppercase tracking-[0.18em] text-neutral-400">FAQ</div>
           <h1 className="mt-3 text-[clamp(30px,5vw,44px)] font-bold leading-tight tracking-tight">
-            Expert judgment, repeatable implementation.
+            Your app works. Why doesn&rsquo;t it look right?
           </h1>
           <p className="mt-4 text-[16px] leading-relaxed text-neutral-600">
-            Design quality, durable decisions, private learning, updates, and the honest boundaries around each one.
+            Start with the problem you can see. Try a focused change, inspect the result,
+            then decide whether you need a reusable workflow.
           </p>
+          <nav aria-label="Common UI problems" className="mt-6 space-y-3">
+            {questions.map((q) => <a key={q.id} href={`#${q.id}`} className="block text-sm font-semibold text-teal-700 underline underline-offset-4">{q.question}</a>)}
+          </nav>
         </div>
       </section>
 
       <section className="mx-auto max-w-3xl px-6 py-14">
+        <div className="divide-y divide-neutral-200">
+          {questions.map((q) => (
+            <article key={q.id} id={q.id} className="scroll-mt-8 pb-12 pt-10 first:pt-0">
+              <h2 className="text-2xl font-bold leading-snug tracking-tight">{q.question}</h2>
+              <p className="mt-4 text-[16px] leading-relaxed text-neutral-700">{q.answer}</p>
+              <ol className="mt-5 list-decimal space-y-2 pl-5 text-[15px] leading-relaxed text-neutral-700">
+                {q.steps.map((step) => <li key={step}>{step}</li>)}
+              </ol>
+              <h3 className="mb-3 mt-6 text-sm font-bold">Try this with your coding agent</h3>
+              <PromptBox prompt={q.prompt} />
+              <p className="mt-4 text-sm leading-relaxed text-neutral-600">{q.fit}</p>
+              <Link href={q.evidence.href} className="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-teal-700 underline underline-offset-4">{q.evidence.label}<ArrowRight size={14} className="shrink-0" /></Link>
+              <div lang="ko" className="mt-6 border-l-2 border-neutral-200 pl-4">
+                <h3 className="text-base font-bold">{q.questionKo}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-neutral-600">{q.answerKo}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+        <div id="install" className="mb-14 scroll-mt-8 border-y border-neutral-200 py-8">
+          <h2 className="mb-4 text-2xl font-bold">Want to use StyleSeed for this?</h2>
+          <InstallCommand />
+          <p className="mt-4 text-sm leading-relaxed text-neutral-600">Then send <code>$styleseed</code> in Codex or <code>/styleseed</code> in Claude Code, followed by your task. The router selects the first workflow.</p>
+        </div>
         <div className="space-y-8">
           {FAQ.map((f) => (
             <div key={f.q}>

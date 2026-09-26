@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { InstallCommand } from "../_home/prompt-box";
 import {
   ArrowLeft,
   ArrowRight,
@@ -264,24 +265,20 @@ export default function ClaudeCodeUiDesignPage() {
             One install. Project-local judgment.
           </h2>
           <p className="mt-4 text-sm leading-relaxed text-neutral-600">
-            Installation is optional and must remain user-controlled. The persistent path is
-            stronger because Claude can re-read the method and STYLESEED.md on later tasks.
+            Run this command in your project’s terminal to install the core workflows.
+            It copies the skills into the project and skips the installer menus. Your host may still require tool approval when a workflow runs.
           </p>
         </div>
         <div>
-          <div className="overflow-x-auto bg-[#171717] p-5 font-mono text-[13px] leading-relaxed text-neutral-100">
-            <span className="text-neutral-500">$</span> npx skills add bitjaru/styleseed
-            <br />
-            <span className="text-neutral-500">$</span> /ss-setup
-            <br />
-            <span className="text-neutral-500">$</span> /ss-resolve
-            <br />
-            <span className="text-neutral-500">$</span> /ss-build
-            <br />
-            <span className="text-neutral-500">$</span> /ss-score
-            <br />
-            <span className="text-neutral-500">$</span> /ss-verify
-          </div>
+          <InstallCommand agent="claude" />
+          <p className="mt-5 text-sm leading-relaxed text-neutral-600">
+            After installation, start a fresh agent session if needed. Send this message in Claude Code:
+          </p>
+          <pre className="mt-3 whitespace-pre-wrap break-words bg-neutral-950 p-5 text-[13px] leading-relaxed text-neutral-100"><code>/styleseed Help improve this screen. Preserve our existing design choices and show me what needs a decision.</code></pre>
+          <p className="mt-3 text-sm leading-relaxed text-neutral-600">
+            You do not need to memorize the individual workflows. Describe the problem; the router selects the first step.
+             <Link href="/faq" className="underline underline-offset-4">Start with common UI problems</Link>.
+          </p>
           <div className="mt-4 grid gap-3 sm:grid-cols-3">
             <Signal icon={GitBranch} title="Reusable" body="STYLESEED.md carries decisions forward." />
             <Signal icon={RefreshCw} title="Update-aware" body="Checks version once, only when relevant." />

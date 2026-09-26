@@ -1,0 +1,74 @@
+[
+  {
+    "id": "app-looks-amateur",
+    "question": "My app works, but looks amateur. What should I fix first?",
+    "questionKo": "앱은 돌아가는데 디자인이 촌스러워요. 어디부터 고치죠?",
+    "answer": "Start with one screen and the task a person needs to finish there. Check whether the heading, key information, and next action are easy to find, then fix spacing, text contrast, and missing loading or error states. Changing the whole palette first can leave the underlying usability problem untouched.",
+    "steps": [
+      "Capture the current screen at desktop and phone widths. Write down its main user task.",
+      "Name the three most consequential problems and change those first, preserving working behavior.",
+      "Render again at the same sizes and check the actual task, including keyboard use and error states."
+    ],
+    "prompt": "This screen works, but looks amateur. Identify its main user task and the three biggest visual or usability problems. Explain each proposed change, preserve existing components and behavior, then render before and after at desktop and mobile sizes.",
+    "fit": "StyleSeed’s ss-audit and ss-build workflows can structure this review and repair. You still decide whether the result serves your users; a passing score is not that decision.",
+    "evidence": {
+      "href": "/why",
+      "label": "Inspect an annotated before-and-after example"
+    },
+    "answerKo": "한 화면에서 사용자가 해야 할 일부터 정하세요. 제목·핵심 정보·다음 행동이 잘 보이는지 확인하고, 간격·글자 대비·로딩과 오류 상태 순서로 고칩니다. 색상부터 전부 바꾸면 사용하기 어려운 원인은 그대로 남을 수 있습니다."
+  },
+  {
+    "id": "ai-websites-look-the-same",
+    "question": "Why do all my AI-generated websites look the same?",
+    "questionKo": "AI로 만든 사이트는 왜 다 비슷해 보이죠?",
+    "answer": "If each brief leaves layout, density, typography, and imagery undecided, repeated templates can fill the gaps. Replacing purple with another accent does not define a direction. Choose references that fit the product’s task, explain what to borrow from each, and select a direction before implementing the whole site.",
+    "steps": [
+      "Collect two or three references and name the useful feature of each: reading rhythm, navigation, density, or imagery.",
+      "Compare a few directions on the same content and choose one for reasons tied to the audience and task.",
+      "Record the choice and check later screens against it. Keep useful conventions instead of chasing novelty everywhere."
+    ],
+    "prompt": "Before rebuilding this page, propose three directions for this audience and task. Keep the content the same so I can compare them. Explain layout, typography, density, and imagery choices, then wait for my selection.",
+    "fit": "StyleSeed’s ss-studio supports direction exploration and a human selection before the build. Its presets are starting points, not proof that a design fits your product.",
+    "evidence": {
+      "href": "/studio",
+      "label": "See the direction-selection workflow"
+    },
+    "answerKo": "배치·정보 밀도·글자·이미지 방향을 비워두면 비슷한 기본 패턴이 반복될 수 있습니다. 색 하나를 바꾸기보다 제품 목적에 맞는 레퍼런스를 고르고, 각각 무엇을 참고할지 설명하세요. 같은 콘텐츠로 몇 가지 방향을 비교한 뒤 하나를 선택합니다."
+  },
+  {
+    "id": "pages-look-inconsistent",
+    "question": "How do I stop Claude or Codex changing the design on every page?",
+    "questionKo": "페이지를 추가할 때마다 디자인이 달라져요. 어떻게 유지하죠?",
+    "answer": "Give the agent an approved screen, the actual components it must reuse, and a small record of decisions such as text sizes, color roles, and spacing. Ask it to inspect these before each new screen. Then compare the rendered result with the approved screen; having a rules file alone does not prove it was followed.",
+    "steps": [
+      "Identify the existing screen and components that are approved, including their loading, empty, and error states.",
+      "Record reusable choices and explicit exceptions. Ask the agent to report conflicts before substituting a preset.",
+      "Try the next screen in a fresh agent session and compare it with the approved one. Fix and record any drift."
+    ],
+    "prompt": "Add this screen using the existing approved screen and components. Inspect the project’s recorded design decisions first. List anything you cannot reuse faithfully before changing it. After implementation, render both screens and check typography, spacing, color roles, and states.",
+    "fit": "StyleSeed resolves project-local rules for an artifact and supports checks against them. Complete import of an arbitrary existing design system and guaranteed cross-session consistency are not established capabilities.",
+    "evidence": {
+      "href": "/architecture",
+      "label": "Inspect how project decisions and checks are connected"
+    },
+    "answerKo": "승인한 화면과 실제로 재사용할 컴포넌트, 글자 크기·색상 역할·간격 같은 결정을 함께 남기세요. 새 화면을 만들기 전에 읽게 하고 결과 화면을 비교해야 합니다. 규칙 파일이 있다는 것만으로 일관성이 검증되지는 않습니다."
+  },
+  {
+    "id": "reference-does-not-match",
+    "question": "I gave the AI a screenshot. Why doesn’t the result feel like it?",
+    "questionKo": "레퍼런스 이미지를 줬는데 왜 그 느낌이 안 나죠?",
+    "answer": "A screenshot shows one state at one size. It does not specify how the layout adapts, what the components do, or which details matter to you. Describe the useful relationships—content width, type hierarchy, spacing, image treatment—and verify those in the rendered page, including another viewport and an interactive state.",
+    "steps": [
+      "Mark the properties you want to carry over and separate them from the reference’s brand assets and content.",
+      "Ask the agent to describe the rules it inferred and flag anything the image cannot establish.",
+      "Build one representative screen first. Compare it at matching dimensions, then test mobile and interaction states."
+    ],
+    "prompt": "Use this reference to describe its layout, typography, spacing, and image treatment. Tell me what is uncertain from the screenshot. Preserve our product content and brand; build one representative screen and compare the rendered result before expanding to more pages.",
+    "fit": "StyleSeed’s ss-reference can turn supplied references into project-local rules. It does not guarantee pixel identity or infer every hidden interaction from a screenshot.",
+    "evidence": {
+      "href": "/showcase",
+      "label": "Inspect rendered examples before choosing a direction"
+    },
+    "answerKo": "스크린샷은 한 크기의 한 상태만 보여줍니다. 콘텐츠 폭·글자 위계·간격·이미지 처리 중 무엇을 참고할지 구체적으로 말하고, 이미지에서 알 수 없는 반응형 동작은 따로 정하세요. 대표 화면 하나를 만든 뒤 같은 크기와 모바일에서 비교합니다."
+  }
+]

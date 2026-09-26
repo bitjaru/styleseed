@@ -10,7 +10,7 @@ import { chromium } from "playwright";
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const appRoot = resolve(scriptDir, "..");
 const host = "127.0.0.1";
-const routes = ["/", "/gate", "/learn", "/evaluate"];
+const routes = ["/", "/gate", "/learn", "/evaluate", "/faq", "/guides", "/codex-ui-design", "/claude-code-ui-design"];
 const serverOutput = [];
 
 const sleep = (milliseconds) => new Promise((resolvePromise) => {
@@ -80,6 +80,7 @@ function isLocalVercelAnalyticsShim(url) {
 
 async function checkRoutes(browser, baseUrl, label, options) {
   const context = await browser.newContext(options);
+  await context.grantPermissions(["clipboard-read", "clipboard-write"], { origin: baseUrl });
   const failures = [];
   try {
     for (const route of routes) {
@@ -112,6 +113,28 @@ async function checkRoutes(browser, baseUrl, label, options) {
           pageFailures.push(`main document returned ${response?.status() ?? "no response"}`);
         }
         await page.waitForTimeout(300);
+        const installButton = page.getByRole("button", { name: /^Copy install command:/ }).first();
+        if (await installButton.count()) {
+          const command = await installButton.locator("code").innerText();
+          await installButton.click();
+          assert(await page.evaluate(() => navigator.clipboard.readText()) === command, `${route}: clipboard command differs from visible command`);
+          // Clipboard denial must leave an exact, selectable command and readable recovery text.
+          await page.evaluate(() => {
+            navigator.clipboard.writeText = async () => { throw new Error("Test clipboard denial"); };
+          });
+          await installButton.click();
+          assert(await page.evaluate(() => window.getSelection()?.toString()) === command, `${route}: manual-copy selection differs`);
+          assert(await page.getByText("Clipboard access was blocked. The command is selected — copy it manually.").count() > 0, `${route}: missing manual-copy guidance`);
+        }
+        if (route === "/faq") {
+          assert(await page.title() === "AI app looks amateur? Fix common UI problems · StyleSeed", "FAQ title does not match the page's search intent");
+          const structuredAnswersMatch = await page.evaluate(() => {
+            const schema = Array.from(document.querySelectorAll('script[type="application/ld+json"]')).map((node) => JSON.parse(node.textContent)).find((value) => value["@type"] === "FAQPage");
+            const visible = document.body.innerText;
+            return Array.isArray(schema?.mainEntity) && schema.mainEntity.every((entry) => visible.includes(entry.name) && visible.includes(entry.acceptedAnswer.text));
+          });
+          assert(structuredAnswersMatch, "FAQ structured answers differ from visible content");
+        }
         const dimensions = await page.evaluate(() => ({
           clientWidth: document.documentElement.clientWidth,
           scrollWidth: document.documentElement.scrollWidth,

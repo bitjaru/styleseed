@@ -7,16 +7,67 @@ and universal design-system import are not established capabilities; human revie
 
 ## Recommended path
 
-1. Install the skills: `npx skills add bitjaru/styleseed`
-2. Create or confirm `STYLESEED.md` with `/ss-setup` in Claude Code or `$ss-setup` in Codex.
-3. For a full creative-direction run, invoke `/ss-studio` or `$ss-studio`; for an
-   already-decided direction, invoke `/ss-resolve` or `$ss-resolve` directly.
-4. Read `.styleseed/effective-rules.md`; preserve `.styleseed/manifest.json`.
+1. In the project terminal, run `npx -y skills add bitjaru/styleseed -a codex claude-code -y --copy` for Codex and Claude Code.
+   This copies all core skills into the project and skips installer menus. Requires Node.js/npm.
+   Codex only: `npx -y skills add bitjaru/styleseed -a codex -y --copy`. Claude Code only: `npx -y skills add bitjaru/styleseed -a claude-code -y --copy`.
+   For other agents or interactive choices: `npx skills add bitjaru/styleseed` → agent → Project → Copy.
+   Codex is already included in the interactive Universal group (.agents/skills).
+2. Invoke `$styleseed` in Codex or `/styleseed` in Claude Code and describe the task.
+   The router selects the first workflow. Start a fresh session if skills are not discovered.
+3. Inspect approved project decisions before proposing changes. For an open direction,
+   invoke `/ss-studio` or `$ss-studio` and wait for the person's selection.
+   For a decided direction, invoke `/ss-resolve` or `$ss-resolve` directly.
+   Use `ss-reference` for unmodeled references.
+4. With an artifact registry, resolve the selected artifact and read its bundle and manifest.
+   Only legacy projects without a registry use `STYLESEED.md` and `.styleseed/effective-rules.md`.
 5. Build with `ss-build`, score to at least 80, then render and inspect with `ss-verify`.
+   Installation is not proof these checks ran. A score does not replace human acceptance.
 
 Do not load `llms-full.txt` after resolution succeeds. It is an archive/debug mirror, not the
 default context. The resolver normally emits a targeted 10–20 KB bundle instead of the full
 handbook.
+
+## Start from the user's problem
+
+These are practical starting points, not diagnoses of an unseen screen. Inspect the user's
+actual artifact before proposing a change. StyleSeed is one optional workflow for applying them.
+
+### My app works, but looks amateur. What should I fix first?
+
+Start with one screen and the task a person needs to finish there. Check whether the heading, key information, and next action are easy to find, then fix spacing, text contrast, and missing loading or error states. Changing the whole palette first can leave the underlying usability problem untouched.
+
+StyleSeed’s ss-audit and ss-build workflows can structure this review and repair. You still decide whether the result serves your users; a passing score is not that decision.
+
+Guide and prompt: https://styleseed-demo.vercel.app/faq#app-looks-amateur
+Example: https://styleseed-demo.vercel.app/why
+
+### Why do all my AI-generated websites look the same?
+
+If each brief leaves layout, density, typography, and imagery undecided, repeated templates can fill the gaps. Replacing purple with another accent does not define a direction. Choose references that fit the product’s task, explain what to borrow from each, and select a direction before implementing the whole site.
+
+StyleSeed’s ss-studio supports direction exploration and a human selection before the build. Its presets are starting points, not proof that a design fits your product.
+
+Guide and prompt: https://styleseed-demo.vercel.app/faq#ai-websites-look-the-same
+Example: https://styleseed-demo.vercel.app/studio
+
+### How do I stop Claude or Codex changing the design on every page?
+
+Give the agent an approved screen, the actual components it must reuse, and a small record of decisions such as text sizes, color roles, and spacing. Ask it to inspect these before each new screen. Then compare the rendered result with the approved screen; having a rules file alone does not prove it was followed.
+
+StyleSeed resolves project-local rules for an artifact and supports checks against them. Complete import of an arbitrary existing design system and guaranteed cross-session consistency are not established capabilities.
+
+Guide and prompt: https://styleseed-demo.vercel.app/faq#pages-look-inconsistent
+Example: https://styleseed-demo.vercel.app/architecture
+
+### I gave the AI a screenshot. Why doesn’t the result feel like it?
+
+A screenshot shows one state at one size. It does not specify how the layout adapts, what the components do, or which details matter to you. Describe the useful relationships—content width, type hierarchy, spacing, image treatment—and verify those in the rendered page, including another viewport and an interactive state.
+
+StyleSeed’s ss-reference can turn supplied references into project-local rules. It does not guarantee pixel identity or infer every hidden interaction from a screenshot.
+
+Guide and prompt: https://styleseed-demo.vercel.app/faq#reference-does-not-match
+Example: https://styleseed-demo.vercel.app/showcase
+
 
 ## Context choices
 
@@ -54,7 +105,7 @@ job-specific grammars, targeted context compilation, reference compilation, and 
 ## Core judgment
 
 - One coherent system for geometry, spacing, type, elevation, icons, color roles, imagery, and motion.
-- One focal point and one identifiable primary action.
+- Hierarchy and actions appropriate to the screen’s task and selected grammar.
 - Additional color requires a stable semantic, categorical, editorial, data, or brand role.
 - A supplied key color is compiled through the OKLCH Palette Engine into ramps, semantic roles,
   accessible foregrounds, and media anchors; the eight recipes are maintained postures, not limits.
@@ -83,6 +134,9 @@ job-specific grammars, targeted context compilation, reference compilation, and 
 - Version: https://styleseed-demo.vercel.app/version.json
 - Claude Code UI guide: https://styleseed-demo.vercel.app/claude-code-ui-design
 - Codex UI guide: https://styleseed-demo.vercel.app/codex-ui-design
+- Common UI problems, practical fixes, and install FAQ: https://styleseed-demo.vercel.app/faq
+- Public installation verification: https://styleseed-demo.vercel.app/evaluate
+- Historical benchmark and limits: https://styleseed-demo.vercel.app/gate
 - Architecture: https://styleseed-demo.vercel.app/architecture
 - Semantic palettes: https://styleseed-demo.vercel.app/palettes
 - Studio: https://styleseed-demo.vercel.app/studio

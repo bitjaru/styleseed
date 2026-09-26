@@ -14,6 +14,8 @@ const engineColorDir = resolve(engineDir, 'color')
 const skinsDir = resolve(root, '../skins')
 const publicDir = resolve(root, 'public')
 const contentDir = resolve(root, 'content')
+const install = JSON.parse(readFileSync(resolve(contentDir, 'install.json'), 'utf8'))
+const designQuestions = JSON.parse(readFileSync(resolve(contentDir, 'design-questions.json'), 'utf8'))
 const wellKnownAgent = resolve(publicDir, '.well-known/agent-skills')
 const wellKnownSeed = resolve(publicDir, '.well-known/styleseed')
 const pluginSkillsDir = resolve(root, '../skills')
@@ -243,16 +245,40 @@ and universal design-system import are not established capabilities; human revie
 
 ## Recommended path
 
-1. Install the skills: \`npx skills add bitjaru/styleseed\`
-2. Create or confirm \`STYLESEED.md\` with \`/ss-setup\` in Claude Code or \`$ss-setup\` in Codex.
-3. For a full creative-direction run, invoke \`/ss-studio\` or \`$ss-studio\`; for an
-   already-decided direction, invoke \`/ss-resolve\` or \`$ss-resolve\` directly.
-4. Read \`.styleseed/effective-rules.md\`; preserve \`.styleseed/manifest.json\`.
+1. In the project terminal, run \`${install.default}\` for Codex and Claude Code.
+   This copies all core skills into the project and skips installer menus. Requires Node.js/npm.
+   Codex only: \`${install.codex}\`. Claude Code only: \`${install.claude}\`.
+   For other agents or interactive choices: \`${install.interactive}\` → agent → Project → Copy.
+   Codex is already included in the interactive Universal group (.agents/skills).
+2. Invoke \`$styleseed\` in Codex or \`/styleseed\` in Claude Code and describe the task.
+   The router selects the first workflow. Start a fresh session if skills are not discovered.
+3. Inspect approved project decisions before proposing changes. For an open direction,
+   invoke \`/ss-studio\` or \`$ss-studio\` and wait for the person's selection.
+   For a decided direction, invoke \`/ss-resolve\` or \`$ss-resolve\` directly.
+   Use \`ss-reference\` for unmodeled references.
+4. With an artifact registry, resolve the selected artifact and read its bundle and manifest.
+   Only legacy projects without a registry use \`STYLESEED.md\` and \`.styleseed/effective-rules.md\`.
 5. Build with \`ss-build\`, score to at least 80, then render and inspect with \`ss-verify\`.
+   Installation is not proof these checks ran. A score does not replace human acceptance.
 
 Do not load \`llms-full.txt\` after resolution succeeds. It is an archive/debug mirror, not the
 default context. The resolver normally emits a targeted 10–20 KB bundle instead of the full
 handbook.
+
+## Start from the user's problem
+
+These are practical starting points, not diagnoses of an unseen screen. Inspect the user's
+actual artifact before proposing a change. StyleSeed is one optional workflow for applying them.
+
+${designQuestions.map((q) => `### ${q.question}
+
+${q.answer}
+
+${q.fit}
+
+Guide and prompt: https://styleseed-demo.vercel.app/faq#${q.id}
+Example: https://styleseed-demo.vercel.app${q.evidence.href}
+`).join('\n')}
 
 ## Context choices
 
@@ -290,7 +316,7 @@ job-specific grammars, targeted context compilation, reference compilation, and 
 ## Core judgment
 
 - One coherent system for geometry, spacing, type, elevation, icons, color roles, imagery, and motion.
-- One focal point and one identifiable primary action.
+- Hierarchy and actions appropriate to the screen’s task and selected grammar.
 - Additional color requires a stable semantic, categorical, editorial, data, or brand role.
 - A supplied key color is compiled through the OKLCH Palette Engine into ramps, semantic roles,
   accessible foregrounds, and media anchors; the eight recipes are maintained postures, not limits.
@@ -319,6 +345,9 @@ job-specific grammars, targeted context compilation, reference compilation, and 
 - Version: https://styleseed-demo.vercel.app/version.json
 - Claude Code UI guide: https://styleseed-demo.vercel.app/claude-code-ui-design
 - Codex UI guide: https://styleseed-demo.vercel.app/codex-ui-design
+- Common UI problems, practical fixes, and install FAQ: https://styleseed-demo.vercel.app/faq
+- Public installation verification: https://styleseed-demo.vercel.app/evaluate
+- Historical benchmark and limits: https://styleseed-demo.vercel.app/gate
 - Architecture: https://styleseed-demo.vercel.app/architecture
 - Semantic palettes: https://styleseed-demo.vercel.app/palettes
 - Studio: https://styleseed-demo.vercel.app/studio

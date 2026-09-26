@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { InstallCommand } from "../_home/prompt-box";
+import install from "@/content/install.json";
 import {
   ArrowLeft,
   ArrowRight,
@@ -124,7 +126,7 @@ const FAQ = [
   },
   {
     q: "Can I install StyleSeed from the public Codex plugin directory?",
-    a: "Not yet. The repository includes a repository development Codex plugin package with 23 skills, but public plugin-directory release is not verified. The implemented default/core install contains no learning MCP. Use npx skills add bitjaru/styleseed as the released portable installation path.",
+    a: `Not yet. The repository includes a repository development Codex plugin package with 23 skills, but public plugin-directory release is not verified. The implemented default/core install contains no learning MCP. Use ${install.codex} as the released portable installation path.`,
   },
   {
     q: "Will StyleSeed ask me to star the repository?",
@@ -264,15 +266,15 @@ export default function CodexUiDesignPage() {
           </p>
         </div>
         <div>
-          <div className="overflow-x-auto bg-[#171717] p-5 font-mono text-[13px] leading-relaxed text-neutral-100">
-            <span className="text-neutral-500">$</span> npx skills add bitjaru/styleseed<br />
-            <span className="text-neutral-500">$</span> $ss-setup<br />
-            <span className="text-neutral-500">$</span> $ss-resolve<br />
-            <span className="text-neutral-500">$</span> $ss-build<br />
-            <span className="text-neutral-500">$</span> $ss-score<br />
-            <span className="text-neutral-500">$</span> $ss-verify<br />
-            <span className="text-neutral-500">$</span> $ss-learn <span className="text-neutral-500"># only after an accepted correction</span>
-          </div>
+          <InstallCommand agent="codex" />
+          <p className="mt-5 text-sm leading-relaxed text-neutral-600">
+            After installation, start a fresh agent session if needed. Send this message in Codex:
+          </p>
+          <pre className="mt-3 whitespace-pre-wrap break-words bg-neutral-950 p-5 text-[13px] leading-relaxed text-neutral-100"><code>$styleseed Help improve this screen. Preserve our existing design choices and show me what needs a decision.</code></pre>
+          <p className="mt-3 text-sm leading-relaxed text-neutral-600">
+            You do not need to memorize the individual workflows. Describe the problem; the router selects the first step.
+             <Link href="/faq" className="underline underline-offset-4">Start with common UI problems</Link>.
+          </p>
           <div className="mt-4 grid gap-3 sm:grid-cols-4">
             <Signal icon={FileText} title="Repository-aware" body="AGENTS.md owns durable guidance." />
             <Signal icon={GitBranch} title="Reusable" body="STYLESEED.md carries decisions." />

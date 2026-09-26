@@ -1,3 +1,4 @@
+import questions from "@/content/design-questions.json";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
@@ -216,7 +217,7 @@ export default function HomePage() {
                 </p>
               </div>
               <a
-                href="https://github.com/bitjaru/styleseed#get-started"
+                href="https://github.com/bitjaru/styleseed#easy-start-30-seconds"
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center gap-1.5 rounded-xl border border-white/20 px-4 py-2.5 text-[14px] font-bold text-white hover:bg-white/10"
@@ -239,7 +240,7 @@ export default function HomePage() {
                 optional local-learning tools are distributed separately.
               </p>
               <div className="mt-4 space-y-1.5">
-                <code className="block rounded-lg bg-black/40 px-3 py-2 font-mono text-[13px]"><span className="text-neutral-400"># Claude Code: </span><span className="text-teal-300">/ss-resolve → /ss-build</span><span className="text-neutral-500"> · </span><span className="text-neutral-400">Codex: </span><span className="text-teal-300">$ss-resolve → $ss-build</span></code>
+                <code className="block rounded-lg bg-black/40 px-3 py-2 font-mono text-[13px]"><span className="text-neutral-400"># Claude Code: </span><span className="text-teal-300">/styleseed + your task</span><span className="text-neutral-500"> · </span><span className="text-neutral-400">Codex: </span><span className="text-teal-300">$styleseed + your task</span></code>
               </div>
             </div>
           </div>
@@ -527,6 +528,16 @@ export default function HomePage() {
 
             <div className="mt-12">
               <SeedDemo />
+            </div>
+          </div>
+        </section>
+
+        <section className="border-t border-neutral-200 bg-white">
+          <div className="mx-auto max-w-5xl px-6 py-14">
+            <h2 className="text-3xl font-bold tracking-tight text-neutral-900">What feels wrong with your UI?</h2>
+            <p className="mt-3 max-w-2xl text-neutral-600">Start with a problem you can see. Each answer includes a focused fix, a prompt to try, and an example to inspect.</p>
+            <div className="mt-6 divide-y divide-neutral-200 border-y border-neutral-200">
+              {questions.map((q) => <Link key={q.id} href={`/faq#${q.id}`} className="flex items-center justify-between gap-5 py-5 text-base font-semibold text-teal-700 hover:underline">{q.question}<ArrowRight size={18} className="shrink-0" /></Link>)}
             </div>
           </div>
         </section>

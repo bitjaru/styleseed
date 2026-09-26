@@ -51,6 +51,11 @@ export default function GuidesIndex() {
           </p>
         </header>
 
+        <p className="mb-8 text-[15px] leading-relaxed text-neutral-600">
+          App works but looks amateur, or every new page feels different?{" "}
+          <Link href="/faq" className="font-semibold text-teal-700 underline underline-offset-4">Start with common AI UI problems and concrete fixes</Link>.
+        </p>
+
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {DOMAINS.map((d) => (
             <Link

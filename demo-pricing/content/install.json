@@ -1,0 +1,6 @@
+{
+  "default": "npx -y skills add bitjaru/styleseed -a codex claude-code -y --copy",
+  "codex": "npx -y skills add bitjaru/styleseed -a codex -y --copy",
+  "claude": "npx -y skills add bitjaru/styleseed -a claude-code -y --copy",
+  "interactive": "npx skills add bitjaru/styleseed"
+}

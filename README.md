@@ -28,23 +28,33 @@ The engine compiles selected rules, preserves project choices, and supports code
 checks. A score does not replace human design acceptance.
 [Product principles](engine/PRODUCT-PRINCIPLES.md) · [Quality-first roadmap](ROADMAP.md)
 
-**1. Open your project in Claude Code, Codex, Cursor, or another coding agent.**
+**1. Open a terminal in your project folder and run this command.** Requires Node.js/npm.
 
-**2. Paste this message:**
-
-```text
-Install StyleSeed with `npx skills add bitjaru/styleseed`, then set it up for this project. Help the agent repeat our design decisions, not replace our design system. First inspect approved tokens, components, and project choices; report unsupported choices instead of silently remapping them. Ask what I am building and only the unresolved decisions you need. Choose a supported output grammar, brand recipe, and semantic palette—or derive a local grammar from my references. For creative exploration use `/ss-studio` in Claude Code or `$ss-studio` in Codex and pause for my selection. Otherwise resolve the approved direction with `/ss-resolve` or `$ss-resolve`, implement, score to at least 80, and inspect the rendered result. Report evidence and remaining human decisions; do not treat a score as my approval.
+```bash
+npx -y skills add bitjaru/styleseed -a codex claude-code -y --copy
 ```
 
-**3. Approve the install, answer the short setup questions, and describe what you want to build.**
-The invoked workflow handles the design lock, build, code gate, and visual check. Bring existing
-design decisions when you have them; review proposed choices when you do not.
+Installs the core skills for **Codex and Claude Code together, with no agent, skill, or install-mode menus**.
+It copies the skills into this project. It does not install globally or change other projects.
 
-| Agent | If you want to run it manually |
-|---|---|
-| **Claude Code** | `/ss-studio` for exploration, or `/ss-setup` → `/ss-build` for a decided screen |
-| **Codex** | `$ss-studio` for exploration, or `$ss-setup` → `$ss-build` from `/skills` |
-| **Cursor and others** | Paste the message above or use the installed skill picker |
+**2. Send one message to your agent.** Start a fresh session if the skills do not appear.
+
+- **Codex:** `$styleseed Help improve this screen. Preserve our existing design choices and show me what needs a decision.`
+- **Claude Code:** `/styleseed Help improve this screen. Preserve our existing design choices and show me what needs a decision.`
+
+You do not need to memorize 23 skill names. The `styleseed` router selects the first workflow.
+Choose unresolved design decisions together, then inspect the actual rendered result.
+
+<details>
+<summary>Only use one agent, or want to choose the options yourself?</summary>
+
+- Codex only: `npx -y skills add bitjaru/styleseed -a codex -y --copy`
+- Claude Code only: `npx -y skills add bitjaru/styleseed -a claude-code -y --copy`
+- Cursor or another agent: `npx skills add bitjaru/styleseed` → your agent → Project → Copy.
+- In the interactive list, **Codex is already included under Universal**. Do not look for it again under Additional agents.
+- `-y` skips installer questions; it does not bypass your coding agent's tool permissions.
+
+</details>
 
 [Claude Code guide](https://styleseed-demo.vercel.app/claude-code-ui-design) · [Codex guide](https://styleseed-demo.vercel.app/codex-ui-design) · [See examples](https://styleseed-demo.vercel.app/showcase) · [Need help?](#troubleshooting--i-applied-styleseed-but-the-ui-still-looks-bad)
 
@@ -199,10 +209,10 @@ agent  ▸  ✓ 88/100 — one accent, grey normal states, real empty/error stat
 **Want the 23 core agent skills too** (the `styleseed` router plus 22 `ss-*` workflows for Studio, context resolution, setup, build, review, score, and verification)?
 
 ```bash
-npx skills add bitjaru/styleseed
+npx -y skills add bitjaru/styleseed -a codex claude-code -y --copy
 ```
-Installs all 23 canonical core workflow skills into Claude Code, Codex, Cursor, Gemini CLI,
-Amp and more. Then run
+Installs all 23 canonical core workflow skills into Codex and Claude Code in this project.
+For other agents, use the interactive command in Easy Start. Then run
 `/ss-setup` → `/ss-resolve` in Claude Code or `$ss-setup` → `$ss-resolve` in Codex (you can
 also choose them from Codex's `/skills` picker). The resolver writes a targeted
 `.styleseed/effective-rules.md` bundle plus a source-hash manifest, so the agent does not need
@@ -230,11 +240,11 @@ Both paths install the same 23 canonical skills. The optional `ss-learn` extensi
 
 | Your agent | Reads | Fastest install |
 |---|---|---|
-| **Claude Code** | `CLAUDE.md` + `/ss-*` skills | `npx skills add bitjaru/styleseed` |
+| **Claude Code** | `CLAUDE.md` + `/ss-*` skills | `npx -y skills add bitjaru/styleseed -a claude-code -y --copy` |
 | **Cursor** | `.cursorrules` | `cp engine/.cursorrules .cursorrules` — or paste the prompt above |
-| **Codex** | `AGENTS.md` + `$ss-*` skills (`.agents/skills`) | `npx skills add bitjaru/styleseed` |
+| **Codex** | `AGENTS.md` + `$ss-*` skills (`.agents/skills`) | `npx -y skills add bitjaru/styleseed -a codex -y --copy` |
 | **Amp · Gemini CLI** | `AGENTS.md` + skills | `npx skills add bitjaru/styleseed` |
-| **Windsurf · Copilot · any other** | the paste-prompt above | no install — paste & go |
+| **Windsurf · Copilot · any other** | supported agent skills, or portable guidance | use the interactive installer; reading `llms.txt` alone does not execute local checks |
 
 <sub>More paths (manual copy, Cursor, awesome-design-md brands) in [Install by hand](#install-by-hand) below.</sub>
 
@@ -366,7 +376,7 @@ Official gets you *coherent*. StyleSeed keeps you from looking *templated*. Run 
 
 ## Install by hand
 
-The fastest path is at the top — [paste one prompt](#easy-start-30-seconds), or run `npx skills add bitjaru/styleseed`. To wire StyleSeed into an existing project manually, use one of the options below.
+The fastest path is the [single-command install](#easy-start-30-seconds) above. To wire StyleSeed into an existing project manually, use one of the options below.
 
 > **New to this? Read top to bottom — every step matters.** The most common
 > mistake is expecting setup to work before the skill is installed. Claude
@@ -376,10 +386,10 @@ The fastest path is at the top — [paste one prompt](#easy-start-30-seconds), o
 
 ### Option 1: Interactive Setup (Recommended)
 
-**Step 1 — Install the skills.** The portable path for every supported agent is:
+**Step 1 — Install the skills.** For Codex and Claude Code together:
 
 ```bash
-npx skills add bitjaru/styleseed
+npx -y skills add bitjaru/styleseed -a codex claude-code -y --copy
 ```
 
 For a manual project-local install, clone StyleSeed and copy the canonical
@@ -448,7 +458,7 @@ Use skins/stripe/theme.css for the color palette.
 cp engine/.cursorrules your-project/.cursorrules
 ```
 
-<sub>Want just some skills? `npx skills add bitjaru/styleseed --skill ss-motion,ss-page` cherry-picks.</sub>
+<sub>The core workflows share resolver and verification tools. Keep the core package together; use the router to choose which workflow to invoke.</sub>
 
 ## Troubleshooting — "I applied StyleSeed but the UI still looks bad"
 

@@ -148,6 +148,11 @@ are supporting evidence, not proof of expert-level quality or a replacement for 
 
 ### Code gate
 
+For interactive builds, declare and execute required user outcomes through the artifact's
+`validation.functional.scenarios`; follow the installed `ss-score` functional-checks reference.
+Failed, skipped, missing, or stale outcomes block completion regardless of the appearance score.
+Omitted functional contracts preserve compatibility but cannot claim functional verification.
+
 `$ss-score` reads implementation evidence and names the effective rule set. It checks eight
 weighted categories: color, hierarchy/type, layout/rhythm, surfaces/elevation, states/a11y,
 motion/interaction, coherence, and distinctiveness. Within an authorized build/fix task, address

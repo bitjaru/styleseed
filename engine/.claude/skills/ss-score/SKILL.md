@@ -12,6 +12,13 @@ When `.styleseed/project.json` and `.styleseed/artifacts/index.json` exist, reso
 
 ## Deterministic check boundary
 
+Functional completion is separate from this score. For declared user outcomes, the optional
+artifact contract `validation.functional.scenarios` requires executed, passing tests; see
+[functional checks](references/functional-checks.md). Missing or skipped outcomes cannot be
+offset by appearance points. Plain scoring does not run or attach functional evidence without
+an authorized build/test task. An artifact with no functional contract is unverified for
+functionality, even when its other gates pass.
+
 For the executable contract and stable diagnostics, run the canonical checker:
 
 ```bash

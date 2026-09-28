@@ -371,6 +371,7 @@ export function compileContext({
     requiredRenders: sha256(normalizedArtifact.validation.requiredRenders),
     temporal: sha256(normalizedArtifact.validation.temporal),
     humanAcceptance: sha256(normalizedArtifact.validation.humanAcceptance),
+    ...(normalizedArtifact.validation.functional ? { functional: sha256(normalizedArtifact.validation.functional) } : {}),
   };
   const manifest = {
     schemaVersion: 2,

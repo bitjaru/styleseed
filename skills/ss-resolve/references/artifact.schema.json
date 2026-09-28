@@ -41,7 +41,8 @@
           }
         },
         "temporal": { "type": "object", "additionalProperties": false, "required": ["required", "scenarios"], "properties": { "required": { "type": "boolean" }, "scenarios": { "type": "array", "items": { "$ref": "#/$defs/id" } } } },
-        "humanAcceptance": { "type": "boolean" }
+        "humanAcceptance": { "type": "boolean" },
+        "functional": { "type": "object", "additionalProperties": false, "required": ["scenarios"], "properties": { "scenarios": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/id" } } } }
       }
     }
   },

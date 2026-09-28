@@ -1,3 +1,4 @@
+import * as functionalParser from "./functional-results.mjs";
 import { createHash } from "node:crypto";
 import {
   closeSync,
@@ -16,7 +17,7 @@ import {
   safeProjectPath,
 } from "../../ss-resolve/scripts/runtime-contract.mjs";
 
-export const GATES = Object.freeze(["deterministic", "code", "visual", "temporal", "human"]);
+export const GATES = Object.freeze(["deterministic", "functional", "code", "visual", "temporal", "human"]);
 export const MAX_REPORT_BYTES = 1024 * 1024;
 export const MAX_SOURCE_FILES = 20_000;
 export const MAX_SOURCE_BYTES = 512 * 1024 * 1024;
@@ -202,6 +203,27 @@ export function validateGateReport(projectRoot, gate, report) {
     exactKeys(report, ["detectorRevision", "inventoryHash", "findings"], "deterministic report");
     boundedText(report.detectorRevision, "detectorRevision"); hash(report.inventoryHash, "inventoryHash");
     validateFindings(projectRoot, report.findings, "deterministic.findings");
+  } else if (gate === "functional") {
+    exactKeys(report, ["runner", "inventoryHash", "exitCode", "checks", "output"], "functional report");
+    if (report.runner !== "node-test-v1") fail("unsupported functional runner");
+    hash(report.inventoryHash, "functional.inventoryHash");
+    if (!Number.isInteger(report.exitCode)) fail("functional.exitCode must be an integer");
+    if (!Array.isArray(report.checks)) fail("functional.checks must be an array");
+    const ids = new Set();
+    for (const check of report.checks) {
+      exactKeys(check, ["id", "status"], "functional check");
+      id(check.id, "functional check.id");
+      if (ids.has(check.id)) fail("duplicate functional check ID");
+      ids.add(check.id);
+      if (!["pass", "fail", "skipped"].includes(check.status)) fail("invalid functional check status");
+    }
+    exactKeys(report.output, ["path", "sha256", "bytes"], "functional output");
+    if (!Number.isSafeInteger(report.output.bytes) || report.output.bytes < 1) fail("functional output.bytes must be a positive integer");
+    const output = validateEvidenceReference(projectRoot, report.output, "functional output", { maxBytes: 8 * MAX_REPORT_BYTES });
+    // The normalized result must agree with the retained runner output, not a hand-entered pass.
+    const { nodeTestChecks } = functionalParser;
+    const actualChecks = nodeTestChecks(output.content.toString("utf8"));
+    if (JSON.stringify(actualChecks) !== JSON.stringify(report.checks)) fail("functional checks differ from runner output");
   } else if (gate === "code") {
     exactKeys(report, ["score", "categories", "evidence", "reviewer"], "code report");
     if (typeof report.score !== "number" || !Number.isFinite(report.score) || report.score < 0 || report.score > 100) fail("code.score must be 0-100");

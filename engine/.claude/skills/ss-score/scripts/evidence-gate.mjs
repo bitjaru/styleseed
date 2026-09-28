@@ -173,6 +173,11 @@ export function verifyEvidenceRun({ projectRoot, artifactId, runId, writeSummary
     try {
       const entry = gateRun.gates?.[gate];
       if (!entry?.attached) {
+        if (gate === "functional" && artifact.validation?.functional === undefined) {
+          gates[gate] = "not-required";
+          warnings.push("Functional tests are not required by this artifact; no functional verification is claimed.");
+          continue;
+        }
         if (gate === "temporal" && artifact.validation?.temporal?.required === false) {
           gates[gate] = "pass";
           continue;
@@ -189,6 +194,13 @@ export function verifyEvidenceRun({ projectRoot, artifactId, runId, writeSummary
       if (gate === "deterministic") {
         if (report.inventoryHash !== inventory?.hash) throw new Error("deterministic inventory is stale");
         if (report.findings.some((finding) => finding.severity === "error" || finding.severity === "fail")) throw new Error("deterministic evidence contains hard findings");
+      } else if (gate === "functional") {
+        if (report.inventoryHash !== inventory?.hash) throw new Error("functional inventory is stale");
+        if (report.exitCode !== 0) throw new Error(`functional runner failed with exit ${report.exitCode}`);
+        if (!report.checks.length || report.checks.some((check) => check.status !== "pass")) throw new Error("functional checks failed, were skipped, or are empty");
+        for (const id of artifact.validation?.functional?.scenarios ?? []) {
+          if (!report.checks.some((check) => check.id === id && check.status === "pass")) throw new Error(`required functional scenario is missing: ${id}`);
+        }
       } else if (gate === "code") {
         if (report.score < artifact.validation.scoreFloor) throw new Error(`code score ${report.score} is below floor ${artifact.validation.scoreFloor}`);
       } else if (gate === "visual") {
@@ -222,7 +234,7 @@ export function verifyEvidenceRun({ projectRoot, artifactId, runId, writeSummary
         validationHash: gateRun.validationHash,
         bundleHash: gateRun.bundleHash,
         implementationHash: inventory?.hash ?? null,
-        reports: Object.fromEntries(["deterministic", "code", "visual", "temporal"].map((gate) => [gate, gateRun.gates?.[gate]?.reportSha256 ?? null])),
+        reports: Object.fromEntries(["deterministic", "code", "visual", "temporal", ...(artifact.validation?.functional || gateRun.gates?.functional?.attached ? ["functional"] : [])].map((gate) => [gate, gateRun.gates?.[gate]?.reportSha256 ?? null])),
       };
       const expected = `sha256:${createHash("sha256").update(`${JSON.stringify(bound)}\n`).digest("hex")}`;
       if (human.evidenceHash !== expected) throw new Error("acceptance evidenceHash does not bind the verified run evidence");
@@ -232,7 +244,7 @@ export function verifyEvidenceRun({ projectRoot, artifactId, runId, writeSummary
     }
   }
 
-  const ok = errors.length === 0 && Object.values(gates).every((status) => status === "pass");
+  const ok = errors.length === 0 && Object.values(gates).every((status) => (status === "pass" || status === "not-required"));
   const summary = {
     schemaVersion: 1,
     artifactId,
@@ -255,7 +267,7 @@ export function verifyEvidenceRun({ projectRoot, artifactId, runId, writeSummary
       writeJsonAtomic(verificationPath, summary);
     } catch (error) { addError(errors, `cannot write verification summary: ${error.message}`); }
   }
-  summary.status = errors.length === 0 && Object.values(gates).every((status) => status === "pass") ? "pass" : "fail";
+  summary.status = errors.length === 0 && Object.values(gates).every((status) => (status === "pass" || status === "not-required")) ? "pass" : "fail";
   return { ok: summary.status === "pass", errors, warnings, gates, summary };
 }
 
@@ -293,7 +305,7 @@ function attach(options) {
   const artifactId = options.artifact;
   const runId = safeRunId(options.run);
   const gate = options.gate === "acceptance" ? "human" : options.gate;
-  if (!GATES.includes(gate)) fail("--gate must be deterministic, code, visual, temporal, or human");
+  if (!GATES.includes(gate)) fail("--gate must be deterministic, functional, code, visual, temporal, or human");
   if (!options.report) fail("--report is required");
   const runPaths = paths(root, artifactId, runId);
   const gateRun = readStrictJson(runPaths.gateRun);

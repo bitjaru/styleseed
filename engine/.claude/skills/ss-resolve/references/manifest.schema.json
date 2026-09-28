@@ -15,7 +15,7 @@
       "properties": {
         "target": { "$ref": "#/$defs/hash" }, "implementation": { "$ref": "#/$defs/hash" },
         "scoreFloor": { "$ref": "#/$defs/hash" }, "requiredRenders": { "$ref": "#/$defs/hash" },
-        "temporal": { "$ref": "#/$defs/hash" }, "humanAcceptance": { "$ref": "#/$defs/hash" }
+        "temporal": { "$ref": "#/$defs/hash" }, "humanAcceptance": { "$ref": "#/$defs/hash" }, "functional": { "$ref": "#/$defs/hash" }
       }
     },
     "bundle": { "$ref": "#/$defs/file" }, "outputs": { "type": "array", "items": { "$ref": "#/$defs/file" } }

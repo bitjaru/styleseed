@@ -1,7 +1,7 @@
 {
   "schemaVersion": 5,
   "engineVersion": "4.2.0",
-  "engineRevision": "sha256:2ac39abb22417fa30964c3bd89667231ee18a5ae699aef9b588273f094606444",
+  "engineRevision": "sha256:93cc13a5d2bab9a1bb9748b650247baa48221551682442934557b45a41f3df69",
   "distributionSource": {
     "schemaVersion": 1,
     "channel": "edge",
@@ -10,7 +10,7 @@
   },
   "distributions": {
     "core": {
-      "revision": "sha256:2ac39abb22417fa30964c3bd89667231ee18a5ae699aef9b588273f094606444",
+      "revision": "sha256:93cc13a5d2bab9a1bb9748b650247baa48221551682442934557b45a41f3df69",
       "files": [
         {
           "path": "LICENSE",
@@ -34,8 +34,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-build/SKILL.md",
-          "sha256": "024556af216586a9677bdfe20704df7f073ef541093136d8ff35a52b8f01c8b0",
-          "bytes": 5132
+          "sha256": "59e75f3ee825e3b72ab0433f60adf248af87f5668d20a3693cd4e22807d890e0",
+          "bytes": 6099
         },
         {
           "path": "engine/.claude/skills/ss-component/SKILL.md",
@@ -99,13 +99,13 @@
         },
         {
           "path": "engine/.claude/skills/ss-resolve/references/artifact.schema.json",
-          "sha256": "53e7755ea2956ea0a29477aa35ad28796ec09fca05dacc8ce855ff31a5bcb1d2",
-          "bytes": 4535
+          "sha256": "d3d6650a81c060e7148f4bbf138ef5d1fb2ac9e2d4e004a17b30b326481aabf2",
+          "bytes": 4760
         },
         {
           "path": "engine/.claude/skills/ss-resolve/references/manifest.schema.json",
-          "sha256": "894f9bff3146df9ad1d7391e1de87c69339cae69b58086d3819d7568abf486de",
-          "bytes": 2221
+          "sha256": "9d1f4fdebb173c2e8a1ddcf6df0dc2424df8576dc645ce5c0f4086a9ecb58489",
+          "bytes": 2263
         },
         {
           "path": "engine/.claude/skills/ss-resolve/references/project.schema.json",
@@ -114,8 +114,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-resolve/scripts/compiler.mjs",
-          "sha256": "0a0469345d9c553b2912b09ff0663297dfd8e0db60b294e6c48406cfd737749b",
-          "bytes": 19123
+          "sha256": "1936b6572ef2a37f5cce6550cda642b27969d8c788d145d0b06e067a9c5fc5cf",
+          "bytes": 19246
         },
         {
           "path": "engine/.claude/skills/ss-resolve/scripts/distribution-integrity.mjs",
@@ -144,8 +144,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-resolve/scripts/runtime-contract.mjs",
-          "sha256": "d1e26fe07911b6dd640bf7514b955b41c159264dfa6dc6b0cd60103cef40c611",
-          "bytes": 17130
+          "sha256": "80d7f307a00de895f1897ddfeaea951ae7b7c93584a82dd9fa75c2c1ad2732ad",
+          "bytes": 17720
         },
         {
           "path": "engine/.claude/skills/ss-resolve/scripts/styleseed-doctor.mjs",
@@ -164,8 +164,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-score/SKILL.md",
-          "sha256": "8b0986ace6d11ffdc09856c189680a2382b13a6ef3d4ab7762587e9b7811afdc",
-          "bytes": 13380
+          "sha256": "9579c62049dd274ebb1c7f6437fe3e30368eab141df5a2a0bb47f618beeee079",
+          "bytes": 13885
         },
         {
           "path": "engine/.claude/skills/ss-score/references/acceptance-report.schema.json",
@@ -181,6 +181,11 @@
           "path": "engine/.claude/skills/ss-score/references/deterministic-report.schema.json",
           "sha256": "0c37c923772377ed2d770cedb4de8dd6d26ff773ff6b596d6a840114b665a985",
           "bytes": 350
+        },
+        {
+          "path": "engine/.claude/skills/ss-score/references/functional-checks.md",
+          "sha256": "24dd0cd931c2e52cea83643cb99eb672d3c1cc292de31efb147ebeb0af5e2a35",
+          "bytes": 4392
         },
         {
           "path": "engine/.claude/skills/ss-score/references/gate-run.schema.json",
@@ -199,13 +204,28 @@
         },
         {
           "path": "engine/.claude/skills/ss-score/scripts/evidence-contract.mjs",
-          "sha256": "6a74b4a692963cbb8a58b19ead4cfa16b9ed8b990c99c4cb4ba5cdcf2e0b38be",
-          "bytes": 14337
+          "sha256": "14f8ae1e8b8e27c51d7b324d6304fce5f4e733fc06d6f129d2c0e7a51310f6d1",
+          "bytes": 15944
         },
         {
           "path": "engine/.claude/skills/ss-score/scripts/evidence-gate.mjs",
-          "sha256": "d58692cb1ed42dd8204a0952737eaa104b37eff1350663269c331f7179c65718",
-          "bytes": 16860
+          "sha256": "88f28d7b0079e69e9fe3914abb432db9b0bd17da362ca37f985dfdb8e1645f47",
+          "bytes": 17973
+        },
+        {
+          "path": "engine/.claude/skills/ss-score/scripts/functional-reporter.mjs",
+          "sha256": "dad3ecc68e21b4f94cfcb07238a4acf46f0d9681d6e2f82ab943af100684f732",
+          "bytes": 203
+        },
+        {
+          "path": "engine/.claude/skills/ss-score/scripts/functional-results.mjs",
+          "sha256": "392feefd458c2c1d80d77c485bb8ded988d71a6f92e156e650a35fa1973745ae",
+          "bytes": 1683
+        },
+        {
+          "path": "engine/.claude/skills/ss-score/scripts/run-functional-tests.mjs",
+          "sha256": "ef833706ec391d3c199ae7b34fcbf8a875aa3e9ba7ba57e22108d327bdea7e16",
+          "bytes": 5859
         },
         {
           "path": "engine/.claude/skills/ss-score/scripts/styleseed-check.mjs",
@@ -264,8 +284,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-update/scripts/artifact-impact.mjs",
-          "sha256": "e10b5da5a58ebd73552c162cd5b7b1cbb0a97a7c1bac33f22026e9836c21969d",
-          "bytes": 6241
+          "sha256": "d2f9224c02b11fa71771902cde9c453a0500b532a77ad9bc5d6538f4e91156fa",
+          "bytes": 6626
         },
         {
           "path": "engine/.claude/skills/ss-update/scripts/check-update.mjs",
@@ -294,8 +314,8 @@
         },
         {
           "path": "engine/AGENTS.md",
-          "sha256": "4973627e31d88d04236317553c09cae64a8017632afe504497e204169f911b2b",
-          "bytes": 10072
+          "sha256": "6ea2449275dc067f068f8329ef4f90e9d4ddf95e8b34a1a041eac62b81387fad",
+          "bytes": 10450
         },
         {
           "path": "engine/APP-PLAYBOOKS.md",
@@ -304,8 +324,8 @@
         },
         {
           "path": "engine/ARCHITECTURE.md",
-          "sha256": "48b138a712e582cf3b3b0ed1c921946997ec2de9ee41ecb5f85d984facaa2d5b",
-          "bytes": 9030
+          "sha256": "a6fb3ab10f187c4ecb9aafe10141a6b825e1a082764442607be194262f6f3c9e",
+          "bytes": 9670
         },
         {
           "path": "engine/BRAND-RECIPES.md",
@@ -420,7 +440,7 @@
       ]
     },
     "skills": {
-      "revision": "sha256:af50155d265463cb3b11423ffa53245e80fefe099ee4c1e84390f2bfd3336676",
+      "revision": "sha256:85c5ec35d644d91a6104fb8c430e54f6e239848181df2d3e1caa55dc7f7d1e05",
       "files": [
         {
           "path": "engine/.claude/skills/ss-a11y/SKILL.md",
@@ -434,8 +454,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-build/SKILL.md",
-          "sha256": "024556af216586a9677bdfe20704df7f073ef541093136d8ff35a52b8f01c8b0",
-          "bytes": 5132
+          "sha256": "59e75f3ee825e3b72ab0433f60adf248af87f5668d20a3693cd4e22807d890e0",
+          "bytes": 6099
         },
         {
           "path": "engine/.claude/skills/ss-component/SKILL.md",
@@ -499,13 +519,13 @@
         },
         {
           "path": "engine/.claude/skills/ss-resolve/references/artifact.schema.json",
-          "sha256": "53e7755ea2956ea0a29477aa35ad28796ec09fca05dacc8ce855ff31a5bcb1d2",
-          "bytes": 4535
+          "sha256": "d3d6650a81c060e7148f4bbf138ef5d1fb2ac9e2d4e004a17b30b326481aabf2",
+          "bytes": 4760
         },
         {
           "path": "engine/.claude/skills/ss-resolve/references/manifest.schema.json",
-          "sha256": "894f9bff3146df9ad1d7391e1de87c69339cae69b58086d3819d7568abf486de",
-          "bytes": 2221
+          "sha256": "9d1f4fdebb173c2e8a1ddcf6df0dc2424df8576dc645ce5c0f4086a9ecb58489",
+          "bytes": 2263
         },
         {
           "path": "engine/.claude/skills/ss-resolve/references/project.schema.json",
@@ -514,8 +534,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-resolve/scripts/compiler.mjs",
-          "sha256": "0a0469345d9c553b2912b09ff0663297dfd8e0db60b294e6c48406cfd737749b",
-          "bytes": 19123
+          "sha256": "1936b6572ef2a37f5cce6550cda642b27969d8c788d145d0b06e067a9c5fc5cf",
+          "bytes": 19246
         },
         {
           "path": "engine/.claude/skills/ss-resolve/scripts/distribution-integrity.mjs",
@@ -544,8 +564,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-resolve/scripts/runtime-contract.mjs",
-          "sha256": "d1e26fe07911b6dd640bf7514b955b41c159264dfa6dc6b0cd60103cef40c611",
-          "bytes": 17130
+          "sha256": "80d7f307a00de895f1897ddfeaea951ae7b7c93584a82dd9fa75c2c1ad2732ad",
+          "bytes": 17720
         },
         {
           "path": "engine/.claude/skills/ss-resolve/scripts/styleseed-doctor.mjs",
@@ -564,8 +584,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-score/SKILL.md",
-          "sha256": "8b0986ace6d11ffdc09856c189680a2382b13a6ef3d4ab7762587e9b7811afdc",
-          "bytes": 13380
+          "sha256": "9579c62049dd274ebb1c7f6437fe3e30368eab141df5a2a0bb47f618beeee079",
+          "bytes": 13885
         },
         {
           "path": "engine/.claude/skills/ss-score/references/acceptance-report.schema.json",
@@ -581,6 +601,11 @@
           "path": "engine/.claude/skills/ss-score/references/deterministic-report.schema.json",
           "sha256": "0c37c923772377ed2d770cedb4de8dd6d26ff773ff6b596d6a840114b665a985",
           "bytes": 350
+        },
+        {
+          "path": "engine/.claude/skills/ss-score/references/functional-checks.md",
+          "sha256": "24dd0cd931c2e52cea83643cb99eb672d3c1cc292de31efb147ebeb0af5e2a35",
+          "bytes": 4392
         },
         {
           "path": "engine/.claude/skills/ss-score/references/gate-run.schema.json",
@@ -599,13 +624,28 @@
         },
         {
           "path": "engine/.claude/skills/ss-score/scripts/evidence-contract.mjs",
-          "sha256": "6a74b4a692963cbb8a58b19ead4cfa16b9ed8b990c99c4cb4ba5cdcf2e0b38be",
-          "bytes": 14337
+          "sha256": "14f8ae1e8b8e27c51d7b324d6304fce5f4e733fc06d6f129d2c0e7a51310f6d1",
+          "bytes": 15944
         },
         {
           "path": "engine/.claude/skills/ss-score/scripts/evidence-gate.mjs",
-          "sha256": "d58692cb1ed42dd8204a0952737eaa104b37eff1350663269c331f7179c65718",
-          "bytes": 16860
+          "sha256": "88f28d7b0079e69e9fe3914abb432db9b0bd17da362ca37f985dfdb8e1645f47",
+          "bytes": 17973
+        },
+        {
+          "path": "engine/.claude/skills/ss-score/scripts/functional-reporter.mjs",
+          "sha256": "dad3ecc68e21b4f94cfcb07238a4acf46f0d9681d6e2f82ab943af100684f732",
+          "bytes": 203
+        },
+        {
+          "path": "engine/.claude/skills/ss-score/scripts/functional-results.mjs",
+          "sha256": "392feefd458c2c1d80d77c485bb8ded988d71a6f92e156e650a35fa1973745ae",
+          "bytes": 1683
+        },
+        {
+          "path": "engine/.claude/skills/ss-score/scripts/run-functional-tests.mjs",
+          "sha256": "ef833706ec391d3c199ae7b34fcbf8a875aa3e9ba7ba57e22108d327bdea7e16",
+          "bytes": 5859
         },
         {
           "path": "engine/.claude/skills/ss-score/scripts/styleseed-check.mjs",
@@ -664,8 +704,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-update/scripts/artifact-impact.mjs",
-          "sha256": "e10b5da5a58ebd73552c162cd5b7b1cbb0a97a7c1bac33f22026e9836c21969d",
-          "bytes": 6241
+          "sha256": "d2f9224c02b11fa71771902cde9c453a0500b532a77ad9bc5d6538f4e91156fa",
+          "bytes": 6626
         },
         {
           "path": "engine/.claude/skills/ss-update/scripts/check-update.mjs",
@@ -708,8 +748,8 @@
     },
     {
       "path": ".claude/skills/ss-build/SKILL.md",
-      "sha256": "024556af216586a9677bdfe20704df7f073ef541093136d8ff35a52b8f01c8b0",
-      "bytes": 5132
+      "sha256": "59e75f3ee825e3b72ab0433f60adf248af87f5668d20a3693cd4e22807d890e0",
+      "bytes": 6099
     },
     {
       "path": ".claude/skills/ss-component/SKILL.md",
@@ -773,13 +813,13 @@
     },
     {
       "path": ".claude/skills/ss-resolve/references/artifact.schema.json",
-      "sha256": "53e7755ea2956ea0a29477aa35ad28796ec09fca05dacc8ce855ff31a5bcb1d2",
-      "bytes": 4535
+      "sha256": "d3d6650a81c060e7148f4bbf138ef5d1fb2ac9e2d4e004a17b30b326481aabf2",
+      "bytes": 4760
     },
     {
       "path": ".claude/skills/ss-resolve/references/manifest.schema.json",
-      "sha256": "894f9bff3146df9ad1d7391e1de87c69339cae69b58086d3819d7568abf486de",
-      "bytes": 2221
+      "sha256": "9d1f4fdebb173c2e8a1ddcf6df0dc2424df8576dc645ce5c0f4086a9ecb58489",
+      "bytes": 2263
     },
     {
       "path": ".claude/skills/ss-resolve/references/project.schema.json",
@@ -788,8 +828,8 @@
     },
     {
       "path": ".claude/skills/ss-resolve/scripts/compiler.mjs",
-      "sha256": "0a0469345d9c553b2912b09ff0663297dfd8e0db60b294e6c48406cfd737749b",
-      "bytes": 19123
+      "sha256": "1936b6572ef2a37f5cce6550cda642b27969d8c788d145d0b06e067a9c5fc5cf",
+      "bytes": 19246
     },
     {
       "path": ".claude/skills/ss-resolve/scripts/distribution-integrity.mjs",
@@ -818,8 +858,8 @@
     },
     {
       "path": ".claude/skills/ss-resolve/scripts/runtime-contract.mjs",
-      "sha256": "d1e26fe07911b6dd640bf7514b955b41c159264dfa6dc6b0cd60103cef40c611",
-      "bytes": 17130
+      "sha256": "80d7f307a00de895f1897ddfeaea951ae7b7c93584a82dd9fa75c2c1ad2732ad",
+      "bytes": 17720
     },
     {
       "path": ".claude/skills/ss-resolve/scripts/styleseed-doctor.mjs",
@@ -838,8 +878,8 @@
     },
     {
       "path": ".claude/skills/ss-score/SKILL.md",
-      "sha256": "8b0986ace6d11ffdc09856c189680a2382b13a6ef3d4ab7762587e9b7811afdc",
-      "bytes": 13380
+      "sha256": "9579c62049dd274ebb1c7f6437fe3e30368eab141df5a2a0bb47f618beeee079",
+      "bytes": 13885
     },
     {
       "path": ".claude/skills/ss-score/references/acceptance-report.schema.json",
@@ -855,6 +895,11 @@
       "path": ".claude/skills/ss-score/references/deterministic-report.schema.json",
       "sha256": "0c37c923772377ed2d770cedb4de8dd6d26ff773ff6b596d6a840114b665a985",
       "bytes": 350
+    },
+    {
+      "path": ".claude/skills/ss-score/references/functional-checks.md",
+      "sha256": "24dd0cd931c2e52cea83643cb99eb672d3c1cc292de31efb147ebeb0af5e2a35",
+      "bytes": 4392
     },
     {
       "path": ".claude/skills/ss-score/references/gate-run.schema.json",
@@ -873,13 +918,28 @@
     },
     {
       "path": ".claude/skills/ss-score/scripts/evidence-contract.mjs",
-      "sha256": "6a74b4a692963cbb8a58b19ead4cfa16b9ed8b990c99c4cb4ba5cdcf2e0b38be",
-      "bytes": 14337
+      "sha256": "14f8ae1e8b8e27c51d7b324d6304fce5f4e733fc06d6f129d2c0e7a51310f6d1",
+      "bytes": 15944
     },
     {
       "path": ".claude/skills/ss-score/scripts/evidence-gate.mjs",
-      "sha256": "d58692cb1ed42dd8204a0952737eaa104b37eff1350663269c331f7179c65718",
-      "bytes": 16860
+      "sha256": "88f28d7b0079e69e9fe3914abb432db9b0bd17da362ca37f985dfdb8e1645f47",
+      "bytes": 17973
+    },
+    {
+      "path": ".claude/skills/ss-score/scripts/functional-reporter.mjs",
+      "sha256": "dad3ecc68e21b4f94cfcb07238a4acf46f0d9681d6e2f82ab943af100684f732",
+      "bytes": 203
+    },
+    {
+      "path": ".claude/skills/ss-score/scripts/functional-results.mjs",
+      "sha256": "392feefd458c2c1d80d77c485bb8ded988d71a6f92e156e650a35fa1973745ae",
+      "bytes": 1683
+    },
+    {
+      "path": ".claude/skills/ss-score/scripts/run-functional-tests.mjs",
+      "sha256": "ef833706ec391d3c199ae7b34fcbf8a875aa3e9ba7ba57e22108d327bdea7e16",
+      "bytes": 5859
     },
     {
       "path": ".claude/skills/ss-score/scripts/styleseed-check.mjs",
@@ -938,8 +998,8 @@
     },
     {
       "path": ".claude/skills/ss-update/scripts/artifact-impact.mjs",
-      "sha256": "e10b5da5a58ebd73552c162cd5b7b1cbb0a97a7c1bac33f22026e9836c21969d",
-      "bytes": 6241
+      "sha256": "d2f9224c02b11fa71771902cde9c453a0500b532a77ad9bc5d6538f4e91156fa",
+      "bytes": 6626
     },
     {
       "path": ".claude/skills/ss-update/scripts/check-update.mjs",
@@ -968,8 +1028,8 @@
     },
     {
       "path": "AGENTS.md",
-      "sha256": "4973627e31d88d04236317553c09cae64a8017632afe504497e204169f911b2b",
-      "bytes": 10072
+      "sha256": "6ea2449275dc067f068f8329ef4f90e9d4ddf95e8b34a1a041eac62b81387fad",
+      "bytes": 10450
     },
     {
       "path": "APP-PLAYBOOKS.md",
@@ -978,8 +1038,8 @@
     },
     {
       "path": "ARCHITECTURE.md",
-      "sha256": "48b138a712e582cf3b3b0ed1c921946997ec2de9ee41ecb5f85d984facaa2d5b",
-      "bytes": 9030
+      "sha256": "a6fb3ab10f187c4ecb9aafe10141a6b825e1a082764442607be194262f6f3c9e",
+      "bytes": 9670
     },
     {
       "path": "BRAND-RECIPES.md",

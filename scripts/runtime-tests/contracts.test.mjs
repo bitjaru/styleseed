@@ -127,3 +127,14 @@ test("runtime enums stay in parity with JSON Schema enums", () => {
     assert.ok(Array.isArray(schema.required) && schema.required.length > 0);
   }
 });
+
+
+test("functional outcomes are optional, sorted, nonempty and unique safe IDs", () => {
+  const project = normalizeProject(projectInput, catalog);
+  const normalize = (functional) => normalizeArtifact({ ...artifactInput, validation: { ...artifactInput.validation, functional } }, project, catalog);
+  assert.deepEqual(normalize({ scenarios: ["save", "reload"] }).validation.functional.scenarios, ["reload", "save"]);
+  for (const functional of [{ scenarios: [] }, { scenarios: ["save", "save"] }, { scenarios: ["../save"] }, { scenarios: ["save"], required: false }, null]) {
+    assert.throws(() => normalize(functional));
+  }
+  assert.equal(Object.hasOwn(normalizeArtifact(artifactInput, project, catalog).validation, "functional"), false);
+});

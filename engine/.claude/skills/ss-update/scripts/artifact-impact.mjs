@@ -10,6 +10,7 @@ import { compileContext, defaultCatalog } from "../../ss-resolve/scripts/compile
 
 const CURRENT = Object.freeze({
   deterministic: "current",
+  functional: "current",
   code: "current",
   visual: "current",
   temporal: "current",
@@ -18,6 +19,7 @@ const CURRENT = Object.freeze({
 
 const STALE = Object.freeze({
   deterministic: "stale",
+  functional: "stale",
   code: "stale",
   visual: "stale",
   temporal: "stale",
@@ -71,6 +73,7 @@ function currentValidationSlices(liveArtifact) {
     requiredRenders: sha256(liveArtifact.validation.requiredRenders),
     temporal: sha256(liveArtifact.validation.temporal),
     humanAcceptance: sha256(liveArtifact.validation.humanAcceptance),
+    ...(liveArtifact.validation.functional ? { functional: sha256(liveArtifact.validation.functional) } : {}),
   };
 }
 
@@ -79,12 +82,14 @@ function deriveValidationEvidence(liveArtifact, previousSlices) {
   const evidence = cloneEvidence();
   const current = currentValidationSlices(liveArtifact);
   if (current.target !== previousSlices.target) {
+    evidence.functional = "stale";
     evidence.code = "stale";
     evidence.visual = "stale";
     evidence.temporal = "stale";
   }
   if (current.implementation !== previousSlices.implementation) {
     evidence.deterministic = "stale";
+    evidence.functional = "stale";
     evidence.code = "stale";
     evidence.visual = "stale";
     evidence.temporal = "stale";
@@ -98,6 +103,10 @@ function deriveValidationEvidence(liveArtifact, previousSlices) {
   }
   if (current.temporal !== previousSlices.temporal) {
     evidence.temporal = "stale";
+  }
+  if (current.functional !== previousSlices.functional) {
+    evidence.functional = "stale";
+    evidence.human = "stale";
   }
   if (current.humanAcceptance !== previousSlices.humanAcceptance) {
     evidence.human = "stale";
@@ -169,6 +178,7 @@ function inspectArtifact(projectRoot, registry, artifactEntry, installedCatalog)
       true,
       {
         deterministic: "stale",
+        functional: "stale",
         code: "stale",
         visual: "current",
         temporal: "current",

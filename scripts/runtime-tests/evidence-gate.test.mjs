@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { existsSync, mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
@@ -27,9 +27,12 @@ function digest(value) {
 }
 
 function sourceInventoryHash(projectRoot) {
-  const sourcePath = resolve(projectRoot, "src/app/dashboard/page.tsx");
-  const content = readFileSync(sourcePath);
-  return digest(`src/app/dashboard/page.tsx\0${digest(content)}\0${content.byteLength}\n`);
+  const names = ["page.tsx", "flows.test.mjs", "model.mjs"].filter((name) => existsSync(resolve(projectRoot, "src/app/dashboard", name))).sort();
+  return digest(names.map((name) => {
+    const path = `src/app/dashboard/${name}`;
+    const content = readFileSync(resolve(projectRoot, path));
+    return `${path}\0${digest(content)}\0${content.byteLength}\n`;
+  }).join(""));
 }
 
 function writeFixtureProject(projectRoot, {
@@ -42,6 +45,9 @@ function writeFixtureProject(projectRoot, {
   includeTemporalEvidence = false,
   humanAcceptance = false,
   bindReports = true,
+  functionalTest,
+  functionalScenarios = ["save-retains-draft"],
+  mutateModel = false,
 } = {}) {
   mkdirSync(resolve(projectRoot, ".styleseed/artifacts"), { recursive: true });
   mkdirSync(resolve(projectRoot, ".styleseed/manifests"), { recursive: true });
@@ -51,6 +57,11 @@ function writeFixtureProject(projectRoot, {
 
   writeFileSync(resolve(projectRoot, ".styleseed/bundles/app-dashboard.md"), "# bundle\n");
   writeFileSync(resolve(projectRoot, "src/app/dashboard/page.tsx"), "export default function Page(){return null}\n");
+  if (functionalTest !== undefined) {
+    writeFileSync(resolve(projectRoot, "src/app/dashboard/flows.test.mjs"), functionalTest);
+    const model = readFileSync(resolve(repoRoot, "research/design-judgment/common/model.mjs"), "utf8");
+    writeFileSync(resolve(projectRoot, "src/app/dashboard/model.mjs"), mutateModel ? model.replace("reason: 'save-failed', saved: current, draft", "reason: 'save-failed', saved: current, draft: current") : model);
+  }
   writeJson(resolve(projectRoot, ".styleseed/project.json"), { fixture: true });
   writeFileSync(resolve(projectRoot, ".styleseed/evidence", artifactId, runId, "renders", "desktop-loaded.png"), "png-bytes");
   if (includeTemporalEvidence) {
@@ -90,6 +101,7 @@ function writeFixtureProject(projectRoot, {
         ? { required: true, scenarios: ["motion-review"] }
         : { required: false, scenarios: [] },
       humanAcceptance,
+      ...(functionalTest !== undefined ? { functional: { scenarios: functionalScenarios } } : {}),
     },
   });
 
@@ -158,7 +170,7 @@ function writeFixtureProject(projectRoot, {
       code: { attached: true, reportPath: ".styleseed/evidence/app-dashboard/run-001/code.json" },
       visual: { attached: true, reportPath: ".styleseed/evidence/app-dashboard/run-001/visual.json" },
       temporal: { attached: true, reportPath: ".styleseed/evidence/app-dashboard/run-001/temporal.json" },
-      acceptance: { attached: humanAcceptance, reportPath: humanAcceptance ? ".styleseed/evidence/app-dashboard/run-001/human.json" : null },
+      human: { attached: humanAcceptance, reportPath: humanAcceptance ? ".styleseed/evidence/app-dashboard/run-001/human.json" : null },
     },
   });
 
@@ -236,6 +248,122 @@ function runGate(args, projectRoot) {
     cwd: projectRoot,
   });
 }
+
+const functionalRunner = resolve(repoRoot, "engine/.claude/skills/ss-score/scripts/run-functional-tests.mjs");
+const draftTest = `import test from 'node:test';
+import assert from 'node:assert/strict';
+import { saveSettings, hasUnsavedChanges } from './model.mjs';
+test('save-retains-draft', () => {
+  const saved = { workspaceName: 'Original', digest: 'daily', retentionDays: 30 };
+  const draft = { ...saved, workspaceName: 'New workspace' };
+  const result = saveSettings(saved, draft, { role: 'editor', fail: true });
+  assert.equal(result.ok, false);
+  assert.deepEqual(result.draft, draft);
+  assert.equal(hasUnsavedChanges(result.saved, result.draft), true);
+});`;
+
+function runFunctional(root, extra = []) {
+  return spawnSync(process.execPath, [functionalRunner, "--project-root", root, "--artifact", "app-dashboard", "--run", "run-001", "--test", "src/app/dashboard/flows.test.mjs", ...extra], { encoding: "utf8" });
+}
+function attachFunctional(root) {
+  return runGate(["attach", "--project-root", root, "--artifact", "app-dashboard", "--run", "run-001", "--gate", "functional", "--report", ".styleseed/evidence/app-dashboard/run-001/functional/report.json", "--json"], root);
+}
+function verifyFunctional(root) {
+  const result = runGate(["verify", "--project-root", root, "--artifact", "app-dashboard", "--run", "run-001", "--json"], root);
+  return { ...JSON.parse(result.stdout), exit: result.status };
+}
+
+test("a perfect code/visual fixture cannot pass until required functional scenarios run", () => {
+  const root = makeProjectRoot("styleseed-functional-");
+  try {
+    writeFixtureProject(root, { score: 100, functionalTest: draftTest });
+    assert.equal(verifyFunctional(root).gates.functional, "fail");
+    const run = runFunctional(root); assert.equal(run.status, 0, run.stderr);
+    assert.equal(attachFunctional(root).status, 0);
+    assert.equal(verifyFunctional(root).ok, true);
+    assert.notEqual(runFunctional(root).status, 0, "must not overwrite an existing run");
+  } finally { rmSync(root, { recursive: true, force: true }); }
+});
+
+test("physically installed functional reporters support spaces and URL-special characters", () => {
+  const root = makeProjectRoot("styleseed-functional-portable-");
+  const installed = makeProjectRoot("styleseed skills # reporter-");
+  try {
+    for (const skill of ["ss-score", "ss-resolve"]) cpSync(resolve(repoRoot, "engine/.claude/skills", skill), resolve(installed, skill), { recursive: true });
+    writeFixtureProject(root, { functionalTest: draftTest });
+    const result = spawnSync(process.execPath, [resolve(installed, "ss-score/scripts/run-functional-tests.mjs"), "--project-root", root, "--artifact", "app-dashboard", "--run", "run-001", "--test", "src/app/dashboard/flows.test.mjs"], { encoding: "utf8" });
+    assert.equal(result.status, 0, result.stderr + result.stdout);
+    const attached = attachFunctional(root);
+    assert.equal(attached.status, 0, attached.stderr + attached.stdout);
+    assert.equal(verifyFunctional(root).ok, true);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+    rmSync(installed, { recursive: true, force: true });
+  }
+});
+
+test("losing a draft on failed save blocks completion despite a perfect aesthetic score", () => {
+  const root = makeProjectRoot("styleseed-functional-defect-");
+  try {
+    writeFixtureProject(root, { score: 100, functionalTest: draftTest, mutateModel: true });
+    const run = runFunctional(root); assert.notEqual(run.status, 0);
+    assert.equal(attachFunctional(root).status, 0, run.stderr);
+    const result = verifyFunctional(root);
+    assert.equal(result.ok, false); assert.equal(result.gates.functional, "fail");
+  } finally { rmSync(root, { recursive: true, force: true }); }
+});
+
+test("skipped tests, missing scenarios, and empty successful programs cannot establish functional completion", () => {
+  for (const options of [
+    { functionalTest: draftTest.replace("test('save-retains-draft',", "test.skip('save-retains-draft',") },
+    { functionalTest: draftTest, functionalScenarios: ["save-retains-draft", "permission-denied"] },
+    { functionalTest: "// Exit zero without any tests.\n" },
+  ]) {
+    const root = makeProjectRoot("styleseed-functional-incomplete-");
+    try {
+      writeFixtureProject(root, options);
+      assert.notEqual(runFunctional(root).status, 0);
+      attachFunctional(root);
+      assert.equal(verifyFunctional(root).ok, false);
+    } finally { rmSync(root, { recursive: true, force: true }); }
+  }
+});
+
+test("functional evidence binds source, runner output, and attachment bytes", () => {
+  for (const mutation of ["source", "output", "report"]) {
+    const root = makeProjectRoot("styleseed-functional-binding-");
+    try {
+      writeFixtureProject(root, { functionalTest: draftTest });
+      const run = runFunctional(root); assert.equal(run.status, 0, run.stderr);
+      assert.equal(attachFunctional(root).status, 0);
+      const path = mutation === "source" ? "src/app/dashboard/model.mjs" : `.styleseed/evidence/app-dashboard/run-001/functional/${mutation === "output" ? "events.jsonl" : "report.json"}`;
+      writeFileSync(resolve(root, path), readFileSync(resolve(root, path), "utf8") + "\n");
+      assert.equal(verifyFunctional(root).ok, false, mutation);
+    } finally { rmSync(root, { recursive: true, force: true }); }
+  }
+});
+
+test("rewriting normalized check results cannot hide a skipped raw test", () => {
+  const root = makeProjectRoot("styleseed-functional-forged-");
+  try {
+    writeFixtureProject(root, { functionalTest: draftTest.replace("test('save-retains-draft',", "test.skip('save-retains-draft',") });
+    runFunctional(root);
+    const path = resolve(root, ".styleseed/evidence/app-dashboard/run-001/functional/report.json");
+    const report = JSON.parse(readFileSync(path, "utf8")); report.checks[0].status = "pass";
+    writeJson(path, report);
+    assert.notEqual(attachFunctional(root).status, 0);
+  } finally { rmSync(root, { recursive: true, force: true }); }
+});
+
+test("legacy artifacts remain compatible without claiming functional verification", () => {
+  const root = makeProjectRoot("styleseed-functional-legacy-");
+  try {
+    writeFixtureProject(root);
+    const result = verifyFunctional(root);
+    assert.equal(result.ok, true); assert.equal(result.gates.functional, "not-required");
+    assert.match(result.warnings.join(" "), /no functional verification/u);
+  } finally { rmSync(root, { recursive: true, force: true }); }
+});
 
 test("planned evidence gate module exists and can be imported", async () => {
   await import(pathToFileURL(gateScript).href);
@@ -530,4 +658,58 @@ test("verify fails when implementation sources change after evidence capture", (
   } finally {
     rmSync(projectRoot, { recursive: true, force: true });
   }
+});
+
+
+test("functional runner refuses untracked test scope before execution", () => {
+  const root = makeProjectRoot("styleseed-functional-scope-");
+  try {
+    writeFixtureProject(root, { functionalTest: draftTest });
+    writeFileSync(resolve(root, "outside.test.mjs"), "throw new Error('should-never-execute');");
+    const result = runFunctional(root, ["--test", "outside.test.mjs"]);
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /covered by implementation.sourceRoots/u);
+    assert.equal(existsSync(resolve(root, ".styleseed/evidence/app-dashboard/run-001/functional")), false);
+  } finally { rmSync(root, { recursive: true, force: true }); }
+});
+
+test("source mutation, timeout, duplicate IDs and nested tests cannot issue a functional report", () => {
+  for (const [source, extra, message] of [
+    [draftTest + "\nimport { appendFileSync } from 'node:fs'; appendFileSync(new URL('./model.mjs', import.meta.url), '\\n');", [], /changed during execution/u],
+    ["import test from 'node:test'; test('save-retains-draft', async () => { await new Promise(resolve => setTimeout(resolve, 10000)); });", ["--timeout-ms", "1000"], /interrupted/u],
+    [draftTest + "\ntest('save-retains-draft', () => {});", [], /unique scenario IDs/u],
+    ["import test from 'node:test'; test('save-retains-draft', async (t) => { await t.test('nested', () => {}); });", [], /flat Node tests/u],
+  ]) {
+    const root = makeProjectRoot("styleseed-functional-runner-");
+    try {
+      writeFixtureProject(root, { functionalTest: source });
+      const result = runFunctional(root, extra);
+      assert.notEqual(result.status, 0);
+      assert.match(result.stderr, message);
+      assert.equal(existsSync(resolve(root, ".styleseed/evidence/app-dashboard/run-001/functional/report.json")), false);
+    } finally { rmSync(root, { recursive: true, force: true }); }
+  }
+});
+
+test("human acceptance binds the executed functional report", () => {
+  const root = makeProjectRoot("styleseed-functional-human-");
+  try {
+    writeFixtureProject(root, { functionalTest: draftTest, humanAcceptance: true });
+    assert.equal(runFunctional(root).status, 0);
+    assert.equal(attachFunctional(root).status, 0);
+    const prefix = ".styleseed/evidence/app-dashboard/run-001/";
+    const gateRun = JSON.parse(readFileSync(resolve(root, prefix, "gate-run.json"), "utf8"));
+    const acceptancePath = resolve(root, prefix, "human.json");
+    const human = JSON.parse(readFileSync(acceptancePath, "utf8"));
+    const acceptanceHash = (includeFunctional) => digest(JSON.stringify({
+      methodHash: gateRun.methodHash, validationHash: gateRun.validationHash, bundleHash: gateRun.bundleHash,
+      implementationHash: gateRun.implementation.inventoryHash,
+      reports: Object.fromEntries(["deterministic", "code", "visual", "temporal", ...(includeFunctional ? ["functional"] : [])].map((gate) => [gate, gateRun.gates[gate].reportSha256])),
+    }) + "\n");
+    for (const [includeFunctional, expected] of [[false, false], [true, true]]) {
+      human.evidenceHash = acceptanceHash(includeFunctional); writeJson(acceptancePath, human);
+      assert.equal(runGate(["attach", "--project-root", root, "--artifact", "app-dashboard", "--run", "run-001", "--gate", "human", "--report", prefix + "human.json", "--json"], root).status, 0);
+      assert.equal(verifyFunctional(root).ok, expected);
+    }
+  } finally { rmSync(root, { recursive: true, force: true }); }
 });

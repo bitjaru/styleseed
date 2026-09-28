@@ -62,6 +62,19 @@ accessibility.
 
 ## Step 4 — Code gate loop
 
+For interactive work, name the required user outcomes before testing: for example, a saved
+setting survives reload, a failed save preserves the draft, or a viewer cannot perform an
+editor action. Reuse the project's real implementation and test tools; a disconnected demo
+or a source-text assertion does not establish that the action works.
+
+Registry builds record applicable outcomes as `validation.functional.scenarios` in the artifact
+and cover the tests and their implementation dependencies with `implementation.sourceRoots`.
+Use the installed `ss-score` reference `references/functional-checks.md` to run and retain
+evidence. A failed, skipped, missing, or unexecuted required scenario blocks completion even
+with a high code score. If the available runner cannot execute the project, report the exact
+unverified outcome; do not omit its requirement to obtain a pass. Static artifacts may omit
+functional scenarios with an explicit not-applicable explanation.
+
 Run `/ss-score` on the actual implementation. The score must name the effective rule set and
 check both core invariants and grammar-specific tells. Fix the highest-gain failures and
 re-score for at most three correction passes, stopping earlier on ≥80. Prioritize broken flows

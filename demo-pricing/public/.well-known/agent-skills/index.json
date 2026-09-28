@@ -20,7 +20,7 @@
       "type": "skill-md",
       "description": "Build a screen with StyleSeed's composed method, then run the code and pixel gates before presenting. Use when building or rebuilding a screen; sets up the project first if needed.",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-build/SKILL.md",
-      "digest": "sha256:024556af216586a9677bdfe20704df7f073ef541093136d8ff35a52b8f01c8b0"
+      "digest": "sha256:59e75f3ee825e3b72ab0433f60adf248af87f5668d20a3693cd4e22807d890e0"
     },
     {
       "name": "ss-component",
@@ -118,7 +118,7 @@
       "type": "skill-md",
       "description": "Score a visual artifact's implementation quality 0-100 against its composed StyleSeed rule set — category breakdown, evidence, and prioritized fixes.",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-score/SKILL.md",
-      "digest": "sha256:8b0986ace6d11ffdc09856c189680a2382b13a6ef3d4ab7762587e9b7811afdc"
+      "digest": "sha256:9579c62049dd274ebb1c7f6437fe3e30368eab141df5a2a0bb47f618beeee079"
     },
     {
       "name": "ss-setup",

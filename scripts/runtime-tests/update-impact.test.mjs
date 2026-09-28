@@ -241,7 +241,7 @@ test("inspectArtifactImpact reports current artifacts with per-gate evidence", a
       changedInputs: [],
       bundleRecompileRequired: false,
       evidence: {
-        deterministic: "current",
+        deterministic: "current", functional: "current",
         code: "current",
         visual: "current",
         temporal: "current",
@@ -281,7 +281,7 @@ test("inspectArtifactImpact distinguishes corruption, method drift, validation d
       changedInputs: ["artifact"],
       bundleRecompileRequired: true,
       evidence: {
-        deterministic: "stale",
+        deterministic: "stale", functional: "stale",
         code: "stale",
         visual: "stale",
         temporal: "stale",
@@ -306,7 +306,7 @@ test("inspectArtifactImpact distinguishes corruption, method drift, validation d
       changedInputs: ["artifact"],
       bundleRecompileRequired: false,
       evidence: {
-        deterministic: "current",
+        deterministic: "current", functional: "current",
         code: "current",
         visual: "stale",
         temporal: "current",
@@ -329,7 +329,7 @@ test("inspectArtifactImpact distinguishes corruption, method drift, validation d
       changedInputs: ["core"],
       bundleRecompileRequired: true,
       evidence: {
-        deterministic: "stale",
+        deterministic: "stale", functional: "stale",
         code: "stale",
         visual: "current",
         temporal: "current",
@@ -343,7 +343,7 @@ test("inspectArtifactImpact distinguishes corruption, method drift, validation d
       changedInputs: ["legacy-manifest"],
       bundleRecompileRequired: true,
       evidence: {
-        deterministic: "stale",
+        deterministic: "stale", functional: "stale",
         code: "stale",
         visual: "stale",
         temporal: "stale",
@@ -393,7 +393,7 @@ test("validation slice hashes allow selective staleness without private snapshot
     const { inspectArtifactImpact } = await artifactImpactModule;
     const result = inspectArtifactImpact({ projectRoot: root, installedCatalog: currentInstalledCatalog(root) });
     assert.deepEqual(result.artifacts.find((entry) => entry.id === "app-dashboard")?.evidence, {
-      deterministic: "current",
+      deterministic: "current", functional: "current",
       code: "current",
       visual: "current",
       temporal: "current",
@@ -421,9 +421,31 @@ test("older v2 manifests without validation slices fail closed on validation dri
       .artifacts.find((item) => item.id === "app-dashboard");
     assert.equal(entry.status, "validation-changed");
     assert.deepEqual(entry.evidence, {
-      deterministic: "stale", code: "stale", visual: "stale", temporal: "stale", human: "stale",
+      deterministic: "stale", functional: "stale", code: "stale", visual: "stale", temporal: "stale", human: "stale",
     });
   } finally {
     rmSync(root, { recursive: true, force: true });
+  }
+});
+
+
+test("adding, changing, or removing functional outcomes invalidates functional and human evidence", async () => {
+  const { inspectArtifactImpact } = await artifactImpactModule;
+  for (const [before, after] of [[undefined, ["save"]], [["save"], ["save", "reload"]], [["save"], undefined]]) {
+    const root = makeRoot("styleseed-functional-impact-");
+    try {
+      writeRegistryFixture(root);
+      const path = resolve(root, ".styleseed/artifacts/app-dashboard.json");
+      const artifact = readJson(path);
+      if (before) artifact.validation.functional = { scenarios: before };
+      writeJson(path, artifact);
+      runResolver(root, ["--artifact", "app-dashboard"]);
+      if (after) artifact.validation.functional = { scenarios: after };
+      else delete artifact.validation.functional;
+      writeJson(path, artifact);
+      const entry = inspectArtifactImpact({ projectRoot: root, installedCatalog: currentInstalledCatalog(root) }).artifacts.find((item) => item.id === "app-dashboard");
+      assert.equal(entry.status, "validation-changed");
+      assert.deepEqual(entry.evidence, { deterministic: "current", functional: "stale", code: "current", visual: "current", temporal: "current", human: "stale" });
+    } finally { rmSync(root, { recursive: true, force: true }); }
   }
 });

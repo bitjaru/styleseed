@@ -142,6 +142,14 @@ recording, interruption, and reduced motion, followed by named human acceptance.
 may mark temporal as not applicable, but it may not fabricate motion evidence. None of the gates
 is the design engine; the composed method is.
 
+Interactive builds also declare required user outcomes in the optional artifact field
+`validation.functional.scenarios`. The `ss-score` functional runner executes explicit local
+Node tests against declared implementation roots and retains the raw events. Missing, failed,
+skipped, or stale functional evidence blocks completion independently of appearance scores.
+The field is optional for compatibility; omission reports `not-required`, not functional
+verification. See the installed `ss-score/references/functional-checks.md` for coverage and
+runner limitations. These tests do not establish production success or expert design quality.
+
 ## Extension boundary
 
 - Add a new built-in grammar only after the promotion rule in `RULESETS.md` passes.

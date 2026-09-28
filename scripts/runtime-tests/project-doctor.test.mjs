@@ -262,6 +262,20 @@ test("legacy diagnosis does not migrate and honors the stored agent", (t) => {
   assert.deepEqual(snapshot(root), before);
 });
 
+test("legacy doctor reports conflicting sections and line numbers without writing", (t) => {
+  const root = temporary(t);
+  const fixture = readFileSync(resolve(repo, "scripts/fixtures/migration/multi-surface.md"), "utf8");
+  write(resolve(root, "STYLESEED.md"), fixture);
+  const before = snapshot(root);
+  const result = diagnose(root);
+  assert.equal(result.exit, 1);
+  assert.equal(result.report.configuration.mode, "legacy");
+  assert.deepEqual(result.report.configuration.legacyAnalysis.surfaceCandidates, ["s-3", "s-8"]);
+  assert.deepEqual(result.report.configuration.legacyAnalysis.duplicateGroups.find((item) => item.field === "Output grammar").lines, [4, 9]);
+  assert.match(result.report.configuration.next, /migrate-project\.mjs --dry-run/u);
+  assert.deepEqual(snapshot(root), before);
+});
+
 test("installed physical skill payload works outside the checkout and fails closed on damage", (t) => {
   const root = temporary(t);
   const installed = resolve(root, ".agents/skills");

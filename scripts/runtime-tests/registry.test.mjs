@@ -48,7 +48,7 @@ const validLock = `# StyleSeed — Design Lock
 - Motion: Spring restrained
 `;
 
-test("valid migration dry-run is deterministic and registry loads after write", () => {
+test("legacy migration preserves known values but refuses unreviewed write", () => {
   const root = fixtureRoot();
   try {
     writeLock(root, validLock);
@@ -63,15 +63,19 @@ test("valid migration dry-run is deterministic and registry loads after write", 
     assert.equal(preview.targets[0].content.defaults.palette, "cobalt-instrument");
     assert.equal(preview.targets[0].content.brand.keyColor, "#0F766E");
     assert.equal(preview.targets[2].content.selection.grammar, "operations-console");
+    assert.equal(preview.schemaVersion, 2);
+    assert.equal(preview.status, "review-required");
+    assert.equal(preview.requiresReview, true);
+    assert.equal(preview.canApply, false);
+    assert.ok(preview.unresolvedCriticalFields.some((item) => item.field === "artifacts.default.validation.requiredRenders"));
+    assert.ok(preview.unresolvedCriticalFields.some((item) => item.field === "artifacts.default.implementation.sourceRoots"));
     assert.equal(existsSync(resolve(root, ".styleseed")), false);
 
     const write = runMigration(root, ["--write"]);
-    assert.equal(write.status, 0, write.stderr);
-    const registry = loadProjectRegistry(root);
-    assert.ok(registry);
-    assert.equal(registry.project.defaults.recipe, "enterprise-workbench");
-    assert.equal(registry.artifactMap.get("default").artifact.selection.grammar, "operations-console");
-    assert.equal(loadArtifactConfig(root, "default").artifact.id, "default");
+    assert.equal(write.status, 2, write.stderr);
+    assert.deepEqual(JSON.parse(write.stdout).unresolvedCriticalFields, preview.unresolvedCriticalFields);
+    assert.equal(loadProjectRegistry(root), null);
+    assert.equal(existsSync(resolve(root, ".styleseed")), false);
   } finally {
     rmSync(root, { recursive: true, force: true });
   }
@@ -100,6 +104,8 @@ test("unknown and duplicate fields are reported without being interpreted", () =
       ],
     );
     assert.equal(payload.targets[0].content.defaults.domain, "developer-tools");
+    assert.equal(payload.canApply, false);
+    assert.ok(payload.unresolvedCriticalFields.some((item) => item.field === "project.defaults.domain" && item.reason === "duplicate"));
   } finally {
     rmSync(root, { recursive: true, force: true });
   }

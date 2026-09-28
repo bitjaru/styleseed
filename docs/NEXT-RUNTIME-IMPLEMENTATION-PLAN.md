@@ -911,6 +911,11 @@ git diff --check
 
 ### ART-002 — Safe migration and registry loader
 
+> Migration safety update: the original CLI sketch below is historical. Bare `--write` now
+> refuses unreviewed defaults. Use the [reviewed migration workflow](../engine/.claude/skills/ss-resolve/references/migration.md)
+> with a complete plan and exact confirmation hash. The implementation uses exclusive writes
+> and bounded rollback, rather than the overwrite-capable rename described in this early plan.
+
 **Depends on:** `ART-001`.
 
 **Owner files**

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 5,
   "engineVersion": "4.2.0",
-  "engineRevision": "sha256:93cc13a5d2bab9a1bb9748b650247baa48221551682442934557b45a41f3df69",
+  "engineRevision": "sha256:543ea25e32866f19afc4305e414fbb1ddbd9720065820e3c5bc5e2f51cc42339",
   "distributionSource": {
     "schemaVersion": 1,
     "channel": "edge",
@@ -10,7 +10,7 @@
   },
   "distributions": {
     "core": {
-      "revision": "sha256:93cc13a5d2bab9a1bb9748b650247baa48221551682442934557b45a41f3df69",
+      "revision": "sha256:543ea25e32866f19afc4305e414fbb1ddbd9720065820e3c5bc5e2f51cc42339",
       "files": [
         {
           "path": "LICENSE",
@@ -89,8 +89,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-resolve/SKILL.md",
-          "sha256": "392044139ea3e62087cc6a3bdcbff7cd5428b33d5b75e0925dbfbb1d7ca23219",
-          "bytes": 4073
+          "sha256": "2d58d741885de762f7ba6718d29666ec5f759c6f233b94b1c3d12a26aceaf8e1",
+          "bytes": 4660
         },
         {
           "path": "engine/.claude/skills/ss-resolve/references/artifact-index.schema.json",
@@ -108,6 +108,11 @@
           "bytes": 2263
         },
         {
+          "path": "engine/.claude/skills/ss-resolve/references/migration.md",
+          "sha256": "d2b6d9603e71450183014912876f972f25126c107812f0ea98917c15882aa83c",
+          "bytes": 3129
+        },
+        {
           "path": "engine/.claude/skills/ss-resolve/references/project.schema.json",
           "sha256": "ec1fc187d0ebe2c627d68e322a8dd07c74a1696504a82054d1725bd9ad341b23",
           "bytes": 3279
@@ -123,9 +128,14 @@
           "bytes": 6480
         },
         {
+          "path": "engine/.claude/skills/ss-resolve/scripts/legacy-lock-analysis.mjs",
+          "sha256": "99d0489e6b760a56a64ae9314944004861fbd9bd0ab43f799e2ac87147f9abaf",
+          "bytes": 3927
+        },
+        {
           "path": "engine/.claude/skills/ss-resolve/scripts/migrate-project.mjs",
-          "sha256": "3dd61030a9925f4128c95d3f8948986b082af77ed5f313400846e80b072dc6d3",
-          "bytes": 17044
+          "sha256": "f6966868a16f78352dc2abcd031d90553e63ab51ae60ab8d49845309ad6e2368",
+          "bytes": 34820
         },
         {
           "path": "engine/.claude/skills/ss-resolve/scripts/palette-generator.mjs",
@@ -149,8 +159,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-resolve/scripts/styleseed-doctor.mjs",
-          "sha256": "4765d74f759ef10e8c9adb9807d65467e3f08a3f238bbb6d3ec4bf95ccb5bc1f",
-          "bytes": 10161
+          "sha256": "e56d16e396d2eea67a3639cb3902930ab995bfffda72a284a9f6d81344186ed9",
+          "bytes": 11555
         },
         {
           "path": "engine/.claude/skills/ss-restyle/SKILL.md",
@@ -440,7 +450,7 @@
       ]
     },
     "skills": {
-      "revision": "sha256:85c5ec35d644d91a6104fb8c430e54f6e239848181df2d3e1caa55dc7f7d1e05",
+      "revision": "sha256:0760747c16b99f38ca4e3ea8273b6c2c9518550286fe7778f980c95a1b9b9b88",
       "files": [
         {
           "path": "engine/.claude/skills/ss-a11y/SKILL.md",
@@ -509,8 +519,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-resolve/SKILL.md",
-          "sha256": "392044139ea3e62087cc6a3bdcbff7cd5428b33d5b75e0925dbfbb1d7ca23219",
-          "bytes": 4073
+          "sha256": "2d58d741885de762f7ba6718d29666ec5f759c6f233b94b1c3d12a26aceaf8e1",
+          "bytes": 4660
         },
         {
           "path": "engine/.claude/skills/ss-resolve/references/artifact-index.schema.json",
@@ -528,6 +538,11 @@
           "bytes": 2263
         },
         {
+          "path": "engine/.claude/skills/ss-resolve/references/migration.md",
+          "sha256": "d2b6d9603e71450183014912876f972f25126c107812f0ea98917c15882aa83c",
+          "bytes": 3129
+        },
+        {
           "path": "engine/.claude/skills/ss-resolve/references/project.schema.json",
           "sha256": "ec1fc187d0ebe2c627d68e322a8dd07c74a1696504a82054d1725bd9ad341b23",
           "bytes": 3279
@@ -543,9 +558,14 @@
           "bytes": 6480
         },
         {
+          "path": "engine/.claude/skills/ss-resolve/scripts/legacy-lock-analysis.mjs",
+          "sha256": "99d0489e6b760a56a64ae9314944004861fbd9bd0ab43f799e2ac87147f9abaf",
+          "bytes": 3927
+        },
+        {
           "path": "engine/.claude/skills/ss-resolve/scripts/migrate-project.mjs",
-          "sha256": "3dd61030a9925f4128c95d3f8948986b082af77ed5f313400846e80b072dc6d3",
-          "bytes": 17044
+          "sha256": "f6966868a16f78352dc2abcd031d90553e63ab51ae60ab8d49845309ad6e2368",
+          "bytes": 34820
         },
         {
           "path": "engine/.claude/skills/ss-resolve/scripts/palette-generator.mjs",
@@ -569,8 +589,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-resolve/scripts/styleseed-doctor.mjs",
-          "sha256": "4765d74f759ef10e8c9adb9807d65467e3f08a3f238bbb6d3ec4bf95ccb5bc1f",
-          "bytes": 10161
+          "sha256": "e56d16e396d2eea67a3639cb3902930ab995bfffda72a284a9f6d81344186ed9",
+          "bytes": 11555
         },
         {
           "path": "engine/.claude/skills/ss-restyle/SKILL.md",
@@ -803,8 +823,8 @@
     },
     {
       "path": ".claude/skills/ss-resolve/SKILL.md",
-      "sha256": "392044139ea3e62087cc6a3bdcbff7cd5428b33d5b75e0925dbfbb1d7ca23219",
-      "bytes": 4073
+      "sha256": "2d58d741885de762f7ba6718d29666ec5f759c6f233b94b1c3d12a26aceaf8e1",
+      "bytes": 4660
     },
     {
       "path": ".claude/skills/ss-resolve/references/artifact-index.schema.json",
@@ -822,6 +842,11 @@
       "bytes": 2263
     },
     {
+      "path": ".claude/skills/ss-resolve/references/migration.md",
+      "sha256": "d2b6d9603e71450183014912876f972f25126c107812f0ea98917c15882aa83c",
+      "bytes": 3129
+    },
+    {
       "path": ".claude/skills/ss-resolve/references/project.schema.json",
       "sha256": "ec1fc187d0ebe2c627d68e322a8dd07c74a1696504a82054d1725bd9ad341b23",
       "bytes": 3279
@@ -837,9 +862,14 @@
       "bytes": 6480
     },
     {
+      "path": ".claude/skills/ss-resolve/scripts/legacy-lock-analysis.mjs",
+      "sha256": "99d0489e6b760a56a64ae9314944004861fbd9bd0ab43f799e2ac87147f9abaf",
+      "bytes": 3927
+    },
+    {
       "path": ".claude/skills/ss-resolve/scripts/migrate-project.mjs",
-      "sha256": "3dd61030a9925f4128c95d3f8948986b082af77ed5f313400846e80b072dc6d3",
-      "bytes": 17044
+      "sha256": "f6966868a16f78352dc2abcd031d90553e63ab51ae60ab8d49845309ad6e2368",
+      "bytes": 34820
     },
     {
       "path": ".claude/skills/ss-resolve/scripts/palette-generator.mjs",
@@ -863,8 +893,8 @@
     },
     {
       "path": ".claude/skills/ss-resolve/scripts/styleseed-doctor.mjs",
-      "sha256": "4765d74f759ef10e8c9adb9807d65467e3f08a3f238bbb6d3ec4bf95ccb5bc1f",
-      "bytes": 10161
+      "sha256": "e56d16e396d2eea67a3639cb3902930ab995bfffda72a284a9f6d81344186ed9",
+      "bytes": 11555
     },
     {
       "path": ".claude/skills/ss-restyle/SKILL.md",

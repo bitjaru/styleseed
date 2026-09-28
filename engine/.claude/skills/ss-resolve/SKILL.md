@@ -23,6 +23,13 @@ Use the bundled `scripts/resolve-context.mjs`; do not hand-compose the rule stac
 
 For installation or project-health questions, run the read-only diagnostic first:
 
+For a requested legacy-to-registry migration, inspect `migrate-project.mjs --dry-run` first.
+Follow the [reviewed migration guide](references/migration.md) for the plan format and apply sequence.
+The bare `--write` path deliberately refuses unreviewed defaults. Applying a migration requires
+a complete human-reviewed plan, the current lock hash, a one-to-one section-to-artifact mapping,
+and `--confirm-plan` matching that plan's exact hash. A valid schema or dry-run is not proof that
+the design decisions were preserved; never infer approval or run a write from a diagnosis request.
+
 ```bash
 node <installed-ss-resolve>/scripts/styleseed-doctor.mjs --project-root . --json
 ```

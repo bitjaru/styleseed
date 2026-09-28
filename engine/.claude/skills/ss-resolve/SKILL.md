@@ -24,7 +24,9 @@ Use the bundled `scripts/resolve-context.mjs`; do not hand-compose the rule stac
 For spacing recommendations and scoped control, see the [spatial roles guide](references/spacing.md).
 Optional project/artifact `spacing` compiles into a role table and artifact-scoped CSS in the bundle.
 `recommend-spacing.mjs --project-root . --artifact <id>` emits a read-only starting proposal; it does
-not inspect or rewrite implementation tokens and does not establish design acceptance.
+not inspect or rewrite implementation tokens and does not establish design acceptance. Optional
+`--measurement <project-relative-report.json>` adds source-bound rendered diagnostics; stale or
+inconsistent reports are rejected, and starting values remain explicitly heuristic.
 
 For installation or project-health questions, run the read-only diagnostic first:
 

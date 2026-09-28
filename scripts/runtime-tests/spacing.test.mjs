@@ -134,3 +134,86 @@ test('fully overridden project role changes do not alter effective artifact meth
   p.spacing.roles.sectionGap = { base: 80, wide: 100 };
   assert.equal(compile(p, a).manifest.methodHash, before.manifest.methodHash);
 });
+
+test('engine-owned spacing aliases cannot be used as project references, including cross-role cycles', () => {
+  for (const name of ['section-gap', 'component-inset', 'anything']) {
+    assert.throws(() => normalizeSpacing({ roles: { sectionGap: { base: `var(--ss-space-${name})` } } }), /reserved/);
+  }
+  const schema = JSON.parse(readFileSync(resolve(repo, 'engine/.claude/skills/ss-resolve/references/project.schema.json'), 'utf8'));
+  assert.equal(new RegExp(schema.$defs.spacingLength.oneOf[1].pattern).test('var(--ss-space-section-gap)'), false);
+});
+
+async function measuredFixture(t) {
+  const root = fixture(t);
+  const p = JSON.parse(readFileSync(join(root, '.styleseed/project.json'), 'utf8'));
+  const [pn, an] = normalized(p, artifact());
+  const { spacingSnapshot, measurementAdvice } = await import('../../engine/.claude/skills/ss-resolve/scripts/spacing-measurement.mjs');
+  const snapshot = spacingSnapshot(root, pn, an, catalog.engineRevision);
+  const effective = effectiveSpacing(pn, an);
+  const report = { schemaVersion: 1, artifactId: an.id, provenance: snapshot, viewport: { width: 390, height: 844 }, contract: { wideMinWidth: effective.wideMinWidth, roles: effective.roles }, status: 'pass', measurements: [{ role: 'sectionGap', property: 'rowGap', expected: 24, actual: 24, delta: 0 }, { role: 'componentInset', property: 'paddingLeft', expected: 20, actual: 20, delta: 0 }], failures: [], unsupported: [], observations: [], scope: 'supplied-bindings-at-one-viewport', designAcceptance: 'not-assessed' };
+  return { root, pn, an, snapshot, report, spacingSnapshot, measurementAdvice };
+}
+
+test('measured advice targets a wrapped control without rewriting unrelated spacing', async t => {
+  const f = await measuredFixture(t);
+  f.report.observations.push({ code: 'control-wrap', lines: 2 });
+  const advice = f.measurementAdvice(f.report, f.snapshot, f.pn, f.an);
+  assert.equal(advice.measurementStatus, 'pass');
+  assert.equal(advice.nextActions[0].action, 'review-control-width');
+  assert.equal(advice.spacing, undefined);
+  assert.equal(recommendSpacing(f.pn, f.an).measurementStatus, 'not-supplied');
+});
+
+test('token failures, unsupported measurements and missing coverage cannot become a measured pass', async t => {
+  const f = await measuredFixture(t);
+  f.report.failures.push({ code: 'unresolved-token', role: 'componentInset' });
+  assert.throws(() => f.measurementAdvice(f.report, f.snapshot, f.pn, f.an), /disagrees/);
+  f.report.status = 'fail';
+  assert.equal(f.measurementAdvice(f.report, f.snapshot, f.pn, f.an).nextActions[0].action, 'repair-token-reference');
+  f.report.failures = []; f.report.measurements = [];
+  f.report.status = 'pass';
+  assert.throws(() => f.measurementAdvice(f.report, f.snapshot, f.pn, f.an), /omits role/);
+  f.report.unsupported = [{ code: 'hidden-or-transformed-root' }]; f.report.status = 'unsupported';
+  assert.equal(f.measurementAdvice(f.report, f.snapshot, f.pn, f.an).measurementStatus, 'unsupported');
+});
+
+test('measurement recommendations reject changed implementation, config, engine and foreign artifacts', async t => {
+  const f = await measuredFixture(t);
+  writeFileSync(join(f.root, 'src/app.js'), 'export const app = false;');
+  const after = f.spacingSnapshot(f.root, f.pn, f.an, catalog.engineRevision);
+  assert.throws(() => f.measurementAdvice(f.report, after, f.pn, f.an), /stale/);
+  assert.throws(() => f.measurementAdvice(f.report, { ...f.snapshot, engineRevision: 'other' }, f.pn, f.an), /stale/);
+  assert.throws(() => f.measurementAdvice({ ...f.report, artifactId: 'other' }, f.snapshot, f.pn, f.an), /different artifact/);
+  const changed = { ...f.an, decisions: { ...f.an.decisions, primaryDecision: 'A different task' } };
+  assert.throws(() => f.measurementAdvice(f.report, f.spacingSnapshot(f.root, f.pn, changed, catalog.engineRevision), f.pn, changed), /stale/);
+});
+
+test('measurement CLI preserves proposal values, consumes source-bound diagnostics, and rejects stale reports', async t => {
+  const f = await measuredFixture(t);
+  f.report.observations = [{ code: 'horizontal-overflow', excessPx: 80 }];
+  writeFileSync(join(f.root, '.styleseed/spacing-measurement.json'), JSON.stringify(f.report));
+  const result = run(f.root, 'recommend-spacing.mjs', ['--artifact', 'settings', '--measurement', '.styleseed/spacing-measurement.json']);
+  assert.equal(result.status, 0, result.stderr);
+  const output = JSON.parse(result.stdout);
+  assert.equal(output.status, 'proposal-not-applied'); assert.equal(output.designAcceptance, 'not-assessed');
+  assert.equal(output.nextActions[0].action, 'review-container-width');
+  assert.deepEqual(output.spacing.roles.componentInset, f.pn.spacing.roles.componentInset);
+  writeFileSync(join(f.root, 'src/app.js'), 'export const app = 2;');
+  const stale = run(f.root, 'recommend-spacing.mjs', ['--artifact', 'settings', '--measurement', '.styleseed/spacing-measurement.json']);
+  assert.equal(stale.status, 1); assert.match(stale.stderr, /stale/);
+});
+
+
+test('measurement input cannot relabel a viewport, property, or empty observation as measured evidence', async t => {
+  const f = await measuredFixture(t);
+  for (const mutate of [
+    report => { report.viewport.width = 1440; },
+    report => { report.measurements[0].property = 'color'; },
+    report => { report.observations = [{ code: 'control-wrap', lines: 1 }]; },
+    report => { report.observations = [{ code: 'horizontal-overflow', excessPx: 0 }]; },
+    report => { report.scope = 'all-states-verified'; },
+  ]) {
+    const report = structuredClone(f.report); mutate(report);
+    assert.throws(() => f.measurementAdvice(report, f.snapshot, f.pn, f.an), /Invalid|disagrees/);
+  }
+});

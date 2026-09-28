@@ -7,7 +7,7 @@ export const SPACING_ROLES = Object.freeze({
   inlineGap: "Between related inline controls or items",
   componentInset: "Inside a containing component",
 });
-const tokenPattern = /^var\(--[a-zA-Z][a-zA-Z0-9-]{0,63}\)$/;
+const tokenPattern = /^var\(--(?!ss-space-)[a-zA-Z][a-zA-Z0-9-]{0,63}\)$/;
 function object(value, allowed, label) {
   if (!value || typeof value !== "object" || Array.isArray(value)) throw new Error(`${label} must be an object`);
   if (Object.keys(value).some((key) => !allowed.includes(key))) throw new Error(`${label} contains unknown keys`);
@@ -15,7 +15,7 @@ function object(value, allowed, label) {
 function length(value, label) {
   if (typeof value === "number" && Number.isFinite(value) && value >= 0 && value <= 256) return value;
   if (typeof value === "string" && tokenPattern.test(value)) return value;
-  throw new Error(`${label} must be 0-256 CSS px or var(--project-token)`);
+  throw new Error(`${label} must be 0-256 CSS px or var(--project-token); --ss-space-* is reserved`);
 }
 export function normalizeSpacing(input, label = "spacing") {
   object(input, ["wideMinWidth", "roles"], label);
@@ -52,9 +52,10 @@ export function spacingCss(spacing, artifactId) {
   const selector = `[data-styleseed-artifact="${artifactId}"]`;
   const cssValue = (value) => typeof value === "number" ? `${value}px` : value;
   const entries = Object.keys(SPACING_ROLES).filter((role) => spacing.roles[role]);
-  const base = entries.map((role) => `  ${spacingVariable(role)}: ${cssValue(spacing.roles[role].base)};`);
+  const resets = Object.keys(SPACING_ROLES).map((role) => `  ${spacingVariable(role)}: initial;`);
+  const base = Object.keys(SPACING_ROLES).map((role) => `  ${spacingVariable(role)}: ${spacing.roles[role] ? cssValue(spacing.roles[role].base) : "initial"};`);
   const wide = entries.filter((role) => spacing.roles[role].wide !== undefined).map((role) => `    ${spacingVariable(role)}: ${cssValue(spacing.roles[role].wide)};`);
-  return `${selector} {\n${base.join("\n")}\n}\n${wide.length ? `@media (min-width: ${spacing.wideMinWidth}px) {\n  ${selector} {\n${wide.join("\n")}\n  }\n}\n` : ""}`;
+  return `:where(${selector} [data-styleseed-artifact]) {\n${resets.join("\n")}\n}\n${selector} {\n${base.join("\n")}\n}\n${wide.length ? `@media (min-width: ${spacing.wideMinWidth}px) {\n  ${selector} {\n${wide.join("\n")}\n  }\n}\n` : ""}`;
 }
 export function spacingSection(project, artifact) {
   const spacing = effectiveSpacing(project, artifact);
@@ -62,14 +63,14 @@ export function spacingSection(project, artifact) {
   return [
     "## Spatial roles for this artifact",
     "Explicit project/artifact spacing replaces illustrative spacing defaults, not task or accessibility requirements.",
-    "Apply only declared roles. Unspecified roles preserve existing values. Density does not rescale these values.",
+    "Apply only declared roles. Project-native tokens are preserved; undeclared --ss-space-* aliases are unset at artifact boundaries, so use native fallback tokens for undeclared roles. Density does not rescale these values.",
     `Wide starts at ${spacing.wideMinWidth} CSS px; omitted wide values use base. Font size, line-height, target size, and reading width remain separate.`,
     "| Role | Base | Wide | Source | Meaning |",
     "|---|---|---|---|---|",
     ...Object.keys(SPACING_ROLES).filter((role) => spacing.roles[role]).map((role) => `| ${role} | ${spacing.roles[role].base} | ${spacing.roles[role].wide ?? spacing.roles[role].base} | ${spacing.sources[role]} | ${SPACING_ROLES[role]} |`),
     "Map these variables to project components inside this artifact. Do not apply every role to every container or double the page inset through nesting.",
     "```css", spacingCss(spacing, artifact.id).trimEnd(), "```",
-    "CSS variables are references to existing project tokens: confirm they resolve to usable nonnegative lengths at both viewports. Do not replace approved tokens just to match a suggested scale.",
+    "Run the installed ss-verify/scripts/inspect-spacing.mjs browser inspector with explicit role-to-element bindings at every required viewport. Missing, negative, cyclic or unapplied values fail; unsupported units cannot pass. Project token references must resolve on this artifact root. Do not replace approved tokens just to match a suggested scale.",
     "Render and inspect grouping, repeated alignment, text wrapping, overflow, and loading/error states. Geometry compliance is not human design acceptance.",
   ].join("\n");
 }
@@ -94,6 +95,7 @@ export function recommendSpacing(project, artifact) {
   const roles = { ...proposed, ...existing?.roles };
   return {
     status: "proposal-not-applied", designAcceptance: "not-assessed",
+    recommendationKind: "heuristic-starting-values", measurementStatus: "not-supplied",
     basis: { grammar: artifact.selection.grammar, page: artifact.selection.page, density },
     spacing: { wideMinWidth: existing?.wideMinWidth ?? 768, roles },
     preservedRoles: Object.keys(existing?.roles ?? {}),

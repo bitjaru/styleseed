@@ -60,6 +60,12 @@ accessibility.
 - Use product-specific content and evidence. Never copy the StyleSeed demo or a reference screen.
 - Implement loading, empty, error, focus, reduced-motion, and responsive behavior where relevant.
 
+For spacing work, use the resolver's [spatial roles guide](../ss-resolve/references/spacing.md).
+Read any compiled `spacing` section before choosing gaps. Map its scoped variables to existing
+components and preserve undeclared roles. Group related content deliberately; do not multiply
+nested insets or shrink type to achieve density. An implementation must consume the variables;
+config alone does not change rendered layout.
+
 ## Step 4 — Code gate loop
 
 For interactive work, name the required user outcomes before testing: for example, a saved

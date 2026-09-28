@@ -1,3 +1,4 @@
+import { spacingSection } from "./spacing-contract.mjs";
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
@@ -272,6 +273,7 @@ export function compileContext({
     profile: selection.profile,
   };
 
+  const spatialContent = registryMode ? spacingSection(normalizedProject, normalizedArtifact) : null;
   const sections = [
     { id: "agent-execution", path: "catalog:agents", content: catalog.agents[agent] },
     { id: "core", path: "catalog:core", content: catalog.core },
@@ -283,6 +285,7 @@ export function compileContext({
     { id: "palette", path: `catalog:palettes/${palette}`, content: paletteContent },
     ...(profileContent ? [{ id: "profile", path: `catalog:profiles/${selection.profile}`, content: profileContent }] : []),
     ...(legacyLock ? [{ id: "lock", path: legacyLock.path ?? "legacy:STYLESEED.md", content: buildLegacyLockSection(legacyLock) }] : []),
+    ...(spatialContent ? [{ id: "spacing", path: "config:spacing", content: spatialContent }] : []),
     { id: "craft", path: "catalog:craft", content: catalog.craft },
   ].filter((section) => section.content && section.content.trim().length > 0);
 

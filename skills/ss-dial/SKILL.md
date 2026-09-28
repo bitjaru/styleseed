@@ -26,44 +26,53 @@ one axis — it's a *combination* of positions across several axes. Use **`/ss-r
   skill; say it.
 - A named aesthetic (Swiss / editorial / brutalist) → `/ss-restyle` (a preset of dial positions).
 - Changing the accent *hue itself* (rebrand) → edit the lock's Key color directly, then re-derive.
-- No `STYLESEED.md` lock yet → run `/ss-build` or `/ss-setup` first; there's nothing to dial from.
+- Neither a valid registry nor a legacy lock exists → establish setup before dialing; do not restart setup on registry errors.
 
 ## The mechanic (every axis)
 
-1. **Read `STYLESEED.md`** — find the axis's current position (Mood/Density/Radius/Elevation/
-   Type scale/Font weight/Motion fields). If the lock doesn't record it, infer it from the code.
-2. **Move ONE position** in the requested direction on that axis's ramp (below). "more X" = one
-   step; an explicit target ("density: dense") jumps straight there. **Clamp at the ends** — you
-   cannot dial past `dense` or below `airy`. If already at the end, say so and stop (this is why
-   "each use makes it *more*" is bounded, not runaway).
-3. **Apply the whole coordinated token set** for the new position across every file that uses
-   those tokens — not just the one component in view. This is the point: system-wide, consistent.
-4. **Respect the guardrails** (each axis lists its own). Never break a Golden Rule to satisfy a
-   dial — if "denser" would push a touch control below 44px, stop at the floor and note it.
-5. **Update `STYLESEED.md`** with the new position (so it persists and the next prompt obeys it).
-6. **Re-run the Quality Gate** (`/ss-score`, loop to ≥ 80). A dial that drops the score below 80
-   is reverted or fixed, not shipped. Report: axis, old → new position, score.
+1. Resolve the artifact boundary above. If either registry file exists, require a valid complete
+   registry. Read project DNA from `.styleseed/project.json` and the target artifact config;
+   never create or update `STYLESEED.md` as a registry fallback. With no registry, read that legacy lock.
+2. Identify the axis and its supported current value. Move one supported step for “more/less”;
+   explicit targets must validate. If already at the end, report that without inventing a value.
+3. Apply the change only to the requested artifact or component scope. Project-wide token changes
+   are appropriate only when the requested scope is project-wide; resolve every affected artifact.
+4. Preserve unrelated axes and approved project tokens. The tables below are contextual examples,
+   not permission to overwrite an approved design system or force unsupported registry values.
+5. Persist supported values in the authoritative project/artifact configuration, then recompile.
+   For legacy projects, update the corresponding lock and implementation tokens. If an axis cannot
+   be represented, state that limitation instead of writing an invented enum or silently remapping it.
+6. During an authorized change, run the affected code and rendered gates. Report exact scope,
+   before/after values, tradeoffs, and remaining failures; a score is not visual or human acceptance.
 
 ---
 
 ## The axes
 
-### 1. Density — spacing rhythm + internal padding + type/line-height, together
+### 1. Density and spatial rhythm
 
-Ramp: `airy → comfortable → compact → dense`. The page gutter stays `px-6`/`mx-6` always
-(fixed rule); density moves the *vertical rhythm, card interior, and reading scale*.
+The supported density ramp is `compact → comfortable → spacious` in both the registry and this
+workflow. Terms like “airy” or “dense” are descriptions, not additional registry values. Density
+is a starting posture; do not automatically change type size, line-height, or every spacing token.
 
-| Position | Section `space-y` | Card padding | Grid `gap` | Body line-height | Type scale |
-|---|---|---|---|---|---|
-| **airy** | `space-y-10` | `p-8` | `gap-8` | `leading-relaxed` | one step up (desktop-larger) |
-| **comfortable** | `space-y-6` | `p-6` | `gap-6` | `leading-normal` | surface default |
-| **compact** | `space-y-4` | `p-4` | `gap-4` | `leading-normal` | surface default, tighter headings |
-| **dense** | `space-y-4` | `p-4` | `gap-3` (12px half-step) | `leading-snug` on data | data-table scale |
+For “sections farther apart”, “less padding inside cards”, or “more room on mobile”, use the
+installed resolver's [spatial roles guide](../ss-resolve/references/spacing.md). It defines six
+independent roles, project defaults, artifact overrides, and base/wide values. A role adjustment
+is a single-axis operation even when it does not change the qualitative density enum.
 
-**Guardrails:** stay on the 8px grid (only `p-2/4/6/8`, `gap-*` on grid or the 4px half-step —
-never invent `p-5`/`gap-2.5`); **touch controls stay ≥ 44px even at `dense`** (shrink padding,
-not tap targets); body never drops below the surface floor (desktop 16px). Dense is for
-data-heavy surfaces; don't dense-ify a marketing landing.
+- Recommend by task and grouping, inspecting existing tokens first. The read-only
+  `ss-resolve/scripts/recommend-spacing.mjs --project-root . --artifact <id>` offers an unapplied
+  starting proposal for registry product UI; its values are not a measured diagnosis.
+- Persist only requested roles in `artifact.spacing.roles`; use project `spacing` only for an
+  authorized project-wide change. An overridden role replaces both its responsive values.
+- Recompile and map the bundle's scoped CSS variables to the implementation. Preserve undeclared
+  roles and remove obsolete copied mappings when a role is removed.
+- Keep labels/help/controls related, comparison rows regular, and independent sections distinct.
+  A marketing narrative and an operational table need different rhythms.
+- Gutters adapt to the project and viewport; no universal `px-6` or mandatory 8px grid. Preserve
+  readable text and applicable accessibility floors. Whitespace reduction must not shrink hit targets.
+- Legacy/non-web projects preserve their native tokens; do not invent registry spacing support
+  or trigger a migration to complete a local adjustment.
 
 ### 2. Hierarchy contrast — the size/weight gap between levels
 
@@ -163,12 +172,11 @@ or blocks an action.
 ## Rules
 
 - **One axis per call.** A mood word ("premium") is a *combination* → `/ss-restyle`, not this.
-- **System-wide, or don't.** Applying a position to one component and not the rest re-creates the
-  incoherence this skill exists to prevent. Grep the token across the project and move all of it.
-- **Clamp at the ends.** Bounded ramp, not an infinite "more" — if already at `dense`/`sharp`/
+- **Scope is explicit.** Apply all uses of a changed token within the authorized boundary; do not propagate an artifact adjustment into unrelated screens.
+- **Clamp at the ends.** Bounded ramp, not an infinite "more" — if already at `spacious`/`sharp`/
   `bold`, say so and stop.
-- **Guardrails beat the dial.** Never break a Golden Rule (grid, ≥44px touch, single accent,
-  nested-radius, ≤8% shadow, no dark drop-shadow, font-size table) to satisfy a direction — stop
-  at the floor and tell the user.
-- **Persist + re-gate.** Write the new position to `STYLESEED.md`, then `/ss-score` to ≥ 80.
-  Report `axis: old → new` and the score. A dial that lowered the score is fixed, not shipped.
+- **Guardrails beat the dial.** Preserve task fitness and applicable accessibility requirements;
+  the current artifact bundle and approved project tokens govern contextual visual choices.
+- **Persist + re-gate.** Update the authoritative registry config, or the legacy lock only when
+  no registry exists, then recompile and run affected code and rendered gates. Report
+  `axis: old → new`, scope, and actual evidence; do not treat a score as visual acceptance.

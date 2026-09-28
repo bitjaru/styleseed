@@ -30,6 +30,8 @@ jobs:
       - name: Install Chromium for browser smoke tests
         run: npx playwright install --with-deps chromium
         working-directory: demo-pricing
+      - name: Verify spatial CSS in Chromium
+        run: node scripts/test-spacing-browser.mjs
       - name: Run browser smoke tests
         run: npm run test:browser
         working-directory: demo-pricing

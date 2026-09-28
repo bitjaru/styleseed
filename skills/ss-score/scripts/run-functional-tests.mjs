@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { spawnSync } from "node:child_process";
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, realpathSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { containedRegularFile, readStrictJson, sourceInventory, validateGateReport, verifyManifestFiles } from "./evidence-contract.mjs";
@@ -30,7 +30,7 @@ export function runFunctionalTests(options) {
   });
   const dir = safeProjectPath(root, `${prefix}/functional`);
   mkdirSync(dir, { mode: 0o700 }); // An existing run is never overwritten.
-  const reporter = fileURLToPath(new URL("./functional-reporter.mjs", import.meta.url));
+  const reporter = new URL("./functional-reporter.mjs", import.meta.url).href;
   const testEnv = { ...process.env };
   delete testEnv.NODE_TEST_CONTEXT; // A parent test runner must not suppress this runner's reporter.
   const result = spawnSync(process.execPath, ["--test", `--test-reporter=${reporter}`, "--", ...files], {
@@ -39,6 +39,7 @@ export function runFunctionalTests(options) {
   writeFileSync(resolve(dir, "events.jsonl"), result.stdout ?? "", { flag: "wx", mode: 0o600 });
   writeFileSync(resolve(dir, "stderr.txt"), result.stderr ?? "", { flag: "wx", mode: 0o600 });
   if (result.error || result.signal) throw new Error(`Functional runner interrupted: ${result.error?.message ?? result.signal}; retained output is incomplete`);
+  if (!result.stdout?.trim()) throw new Error(`Functional runner produced no test events (exit ${result.status}): ${(result.stderr ?? "").slice(0, 2000)}`);
   verifyManifestFiles(root, manifest);
   const after = sourceInventory(root, artifact.implementation.sourceRoots);
   if (after.hash !== before.hash) throw new Error("Implementation or tests changed during execution; no functional report issued");
@@ -55,7 +56,7 @@ export function runFunctionalTests(options) {
   return { ok, reportPath, checks: report.checks };
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (process.argv[1] && realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url))) {
   try {
     const args = process.argv.slice(2);
     if (args.length === 1 && args[0] === "--help") console.log(usage);

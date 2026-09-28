@@ -1,7 +1,7 @@
 {
   "schemaVersion": 5,
   "engineVersion": "4.2.0",
-  "engineRevision": "sha256:c89b269c2e7f22546735f5269dcbddec0678f6169fcff26acab8d829cd4793ba",
+  "engineRevision": "sha256:93cc13a5d2bab9a1bb9748b650247baa48221551682442934557b45a41f3df69",
   "distributionSource": {
     "schemaVersion": 1,
     "channel": "edge",
@@ -10,7 +10,7 @@
   },
   "distributions": {
     "core": {
-      "revision": "sha256:c89b269c2e7f22546735f5269dcbddec0678f6169fcff26acab8d829cd4793ba",
+      "revision": "sha256:93cc13a5d2bab9a1bb9748b650247baa48221551682442934557b45a41f3df69",
       "files": [
         {
           "path": "LICENSE",
@@ -224,8 +224,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-score/scripts/run-functional-tests.mjs",
-          "sha256": "7b23865a64a5c304ec4d46cc337ff378081a7066fb05044b034da4a2f38a8f79",
-          "bytes": 5679
+          "sha256": "ef833706ec391d3c199ae7b34fcbf8a875aa3e9ba7ba57e22108d327bdea7e16",
+          "bytes": 5859
         },
         {
           "path": "engine/.claude/skills/ss-score/scripts/styleseed-check.mjs",
@@ -440,7 +440,7 @@
       ]
     },
     "skills": {
-      "revision": "sha256:6f2bfe4537d3655d5ada3137dca3866aaef6bc632e475fe5d302d046ca433c6a",
+      "revision": "sha256:85c5ec35d644d91a6104fb8c430e54f6e239848181df2d3e1caa55dc7f7d1e05",
       "files": [
         {
           "path": "engine/.claude/skills/ss-a11y/SKILL.md",
@@ -644,8 +644,8 @@
         },
         {
           "path": "engine/.claude/skills/ss-score/scripts/run-functional-tests.mjs",
-          "sha256": "7b23865a64a5c304ec4d46cc337ff378081a7066fb05044b034da4a2f38a8f79",
-          "bytes": 5679
+          "sha256": "ef833706ec391d3c199ae7b34fcbf8a875aa3e9ba7ba57e22108d327bdea7e16",
+          "bytes": 5859
         },
         {
           "path": "engine/.claude/skills/ss-score/scripts/styleseed-check.mjs",
@@ -938,8 +938,8 @@
     },
     {
       "path": ".claude/skills/ss-score/scripts/run-functional-tests.mjs",
-      "sha256": "7b23865a64a5c304ec4d46cc337ff378081a7066fb05044b034da4a2f38a8f79",
-      "bytes": 5679
+      "sha256": "ef833706ec391d3c199ae7b34fcbf8a875aa3e9ba7ba57e22108d327bdea7e16",
+      "bytes": 5859
     },
     {
       "path": ".claude/skills/ss-score/scripts/styleseed-check.mjs",

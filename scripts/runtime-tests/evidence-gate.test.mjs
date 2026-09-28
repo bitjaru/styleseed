@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { existsSync, mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
@@ -283,6 +283,23 @@ test("a perfect code/visual fixture cannot pass until required functional scenar
     assert.equal(verifyFunctional(root).ok, true);
     assert.notEqual(runFunctional(root).status, 0, "must not overwrite an existing run");
   } finally { rmSync(root, { recursive: true, force: true }); }
+});
+
+test("physically installed functional reporters support spaces and URL-special characters", () => {
+  const root = makeProjectRoot("styleseed-functional-portable-");
+  const installed = makeProjectRoot("styleseed skills # reporter-");
+  try {
+    for (const skill of ["ss-score", "ss-resolve"]) cpSync(resolve(repoRoot, "engine/.claude/skills", skill), resolve(installed, skill), { recursive: true });
+    writeFixtureProject(root, { functionalTest: draftTest });
+    const result = spawnSync(process.execPath, [resolve(installed, "ss-score/scripts/run-functional-tests.mjs"), "--project-root", root, "--artifact", "app-dashboard", "--run", "run-001", "--test", "src/app/dashboard/flows.test.mjs"], { encoding: "utf8" });
+    assert.equal(result.status, 0, result.stderr + result.stdout);
+    const attached = attachFunctional(root);
+    assert.equal(attached.status, 0, attached.stderr + attached.stdout);
+    assert.equal(verifyFunctional(root).ok, true);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+    rmSync(installed, { recursive: true, force: true });
+  }
 });
 
 test("losing a draft on failed save blocks completion despite a perfect aesthetic score", () => {

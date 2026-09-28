@@ -41,7 +41,7 @@
       "type": "skill-md",
       "description": "Turn one design axis up or down — \"denser\", \"bolder\", \"flatter\", \"livelier\", \"sharper corners\". Use for a single-axis change, not a mood word (those go to /ss-restyle); updates the lock and re-runs the gate.",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-dial/SKILL.md",
-      "digest": "sha256:8fbe1afe228075fc2ac5761b5a7a2222ea84bfb8bb31f03384234aa48717f7e0"
+      "digest": "sha256:b9ee4a64861c03a46284fc6cb4bfd7c40dbae7724b85b3cf0e2003dcf9f51ae8"
     },
     {
       "name": "ss-feedback",
@@ -97,7 +97,7 @@
       "type": "skill-md",
       "description": "Compile the effective StyleSeed rule bundle for one artifact, or inspect install and evidence health read-only. Use before setup or build, or to diagnose rule drift.",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-resolve/SKILL.md",
-      "digest": "sha256:0c079222978ea9db5b11ceabf4ac7e69c9214a37b9843b7f81668e64ac393be7"
+      "digest": "sha256:1e3c97f0a72a7b2b57365c259f6643c7fdf8f08cec9e28e8f026edc135799229"
     },
     {
       "name": "ss-restyle",
@@ -153,7 +153,7 @@
       "type": "skill-md",
       "description": "Inspect rendered UI or visual artifacts against their StyleSeed contract. Report findings; fix and re-render only within an authorized build or repair task.",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-verify/SKILL.md",
-      "digest": "sha256:ed0e9ee78939d3d77f5402d811ae776c5111d4fb0ac586fda3245d8ac242806b"
+      "digest": "sha256:800f115491763f22d9833450f3978b339e2526cbd25cc2bcfad47f967466c41a"
     },
     {
       "name": "styleseed",

@@ -62,7 +62,9 @@ is a single-axis operation even when it does not change the qualitative density 
 
 - Recommend by task and grouping, inspecting existing tokens first. The read-only
   `ss-resolve/scripts/recommend-spacing.mjs --project-root . --artifact <id>` offers an unapplied
-  starting proposal for registry product UI; its values are not a measured diagnosis.
+  starting proposal for registry product UI; its values are not a measured diagnosis. Use the guide
+  to inspect current bindings and attach `--measurement` for targeted diagnostic advice before
+  changing numbers. Preserve native fallback tokens at nested artifact boundaries.
 - Persist only requested roles in `artifact.spacing.roles`; use project `spacing` only for an
   authorized project-wide change. An overridden role replaces both its responsive values.
 - Recompile and map the bundle's scoped CSS variables to the implementation. Preserve undeclared

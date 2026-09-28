@@ -97,7 +97,7 @@
       "type": "skill-md",
       "description": "Compile the effective StyleSeed rule bundle for one artifact, or inspect install and evidence health read-only. Use before setup or build, or to diagnose rule drift.",
       "url": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-resolve/SKILL.md",
-      "digest": "sha256:392044139ea3e62087cc6a3bdcbff7cd5428b33d5b75e0925dbfbb1d7ca23219"
+      "digest": "sha256:2d58d741885de762f7ba6718d29666ec5f759c6f233b94b1c3d12a26aceaf8e1"
     },
     {
       "name": "ss-restyle",

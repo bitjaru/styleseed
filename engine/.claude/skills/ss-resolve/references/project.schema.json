@@ -5,6 +5,7 @@
   "additionalProperties": false,
   "required": ["schemaVersion", "projectId", "defaults", "brand"],
   "properties": {
+    "spacing": { "$ref": "#/$defs/spacing" },
     "schemaVersion": { "const": 1 },
     "projectId": { "$ref": "#/$defs/id" },
     "defaults": {
@@ -41,5 +42,9 @@
       }
     }
   },
-  "$defs": { "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,63}$" } }
+  "$defs": {
+    "spacingLength": {"oneOf": [{"type": "number", "minimum": 0, "maximum": 256}, {"type": "string", "pattern": "^var\\(--[a-zA-Z][a-zA-Z0-9-]{0,63}\\)$"}]},
+    "spacingRole": {"type": "object", "additionalProperties": false, "required": ["base"], "properties": {"base": {"$ref": "#/$defs/spacingLength"}, "wide": {"$ref": "#/$defs/spacingLength"}}},
+    "spacing": {"type": "object", "additionalProperties": false, "required": ["roles"], "properties": {"wideMinWidth": {"type": "integer", "minimum": 320, "maximum": 3840}, "roles": {"type": "object", "additionalProperties": false, "minProperties": 1, "properties": {"pageInset": {"$ref": "#/$defs/spacingRole"}, "sectionGap": {"$ref": "#/$defs/spacingRole"}, "groupGap": {"$ref": "#/$defs/spacingRole"}, "stackGap": {"$ref": "#/$defs/spacingRole"}, "inlineGap": {"$ref": "#/$defs/spacingRole"}, "componentInset": {"$ref": "#/$defs/spacingRole"}}}}},
+ "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,63}$" } }
 }

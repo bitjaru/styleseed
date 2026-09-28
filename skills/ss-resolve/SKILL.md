@@ -21,6 +21,11 @@ Use the bundled `scripts/resolve-context.mjs`; do not hand-compose the rule stac
    `.styleseed/manifests/<artifact-id>.json`.
 6. Use `--check` to detect context drift without rewriting files.
 
+For spacing recommendations and scoped control, see the [spatial roles guide](references/spacing.md).
+Optional project/artifact `spacing` compiles into a role table and artifact-scoped CSS in the bundle.
+`recommend-spacing.mjs --project-root . --artifact <id>` emits a read-only starting proposal; it does
+not inspect or rewrite implementation tokens and does not establish design acceptance.
+
 For installation or project-health questions, run the read-only diagnostic first:
 
 For a requested legacy-to-registry migration, inspect `migrate-project.mjs --dry-run` first.

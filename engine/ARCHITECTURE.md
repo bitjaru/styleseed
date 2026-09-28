@@ -166,3 +166,12 @@ runner limitations. These tests do not establish production success or expert de
   is not part of the core install. Promote its output to team or core rules only after
   independent-project repetition, counterexamples, accessibility and grammar regressions, benchmark
   evidence, and named maintainer approval.
+
+## Scoped spatial roles
+
+Registry product UI can persist optional project/artifact `spacing`: six independent whitespace
+roles with base/wide values or existing CSS token references. The compiler includes effective
+roles and scoped CSS in the bundle and method hash; application code must consume those variables.
+Artifact overrides replace only named roles. Read-only starting proposals never overwrite config,
+and numeric compliance does not prove design quality. See
+[the spatial contract](.claude/skills/ss-resolve/references/spacing.md) for limits and verification.

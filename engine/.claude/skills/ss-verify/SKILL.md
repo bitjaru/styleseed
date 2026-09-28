@@ -57,6 +57,11 @@ gate calls for an honest report, not an invented pass or an unrelated installati
   if you didn't actually see a screenshot.**
 - A quick pre-commit pass → `/ss-lint`. `/ss-verify` is heavier (it boots a renderer).
 
+For a compiled spatial contract, follow the [spatial roles guide](../ss-resolve/references/spacing.md).
+At required narrow/wide viewports, check actual gaps, insets, token resolution, grouping, repeated
+alignment, overflow, and loading/error layout. Inspect screenshots as well as geometry. Numeric
+compliance cannot establish good rhythm or human acceptance. Preserve unrelated spacing when repairing.
+
 ## Step 1 — Render it through the active adapter
 
 For `social-carousel`, `slide-deck`, `document-report`, or `single-frame`, use the companion

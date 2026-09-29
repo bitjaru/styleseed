@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "engineVersion": "4.2.0",
-  "engineRevision": "sha256:4bed0a4ee7f2b559fbf7f02e22844b9340035ddc3d23de031781991360a66653",
+  "engineRevision": "sha256:abd0f4d0a4929cf1036315a97f1d627b684c056ff003e91d11cf4bae0a3964b3",
   "grammars": {
     "commerce-conversion": true,
     "consumer-service": true,

@@ -3,6 +3,9 @@ name: ss-studio
 description: Turn a brief into three creative directions, a human-selected interaction plan, prototype, and showcase reel. Use when a request needs more than one static screen — client concepts or interaction exploration.
 ---
 
+Before this workflow, follow the once-per-session [update preflight](../ss-update/references/update-preflight.md).
+
+
 # Build a directed interactive concept
 ## Registry-first artifact boundary
 

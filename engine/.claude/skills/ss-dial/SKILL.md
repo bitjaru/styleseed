@@ -5,6 +5,9 @@ argument-hint: "<axis> <direction>  — e.g. \"density denser\", \"radius sharpe
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash
 ---
 
+Before this workflow, follow the once-per-session [update preflight](../ss-update/references/update-preflight.md).
+
+
 # Dial an axis
 ## Registry-first artifact boundary
 

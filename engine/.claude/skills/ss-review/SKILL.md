@@ -5,6 +5,9 @@ argument-hint: "[file-path]"
 allowed-tools: Read, Grep, Glob
 ---
 
+Before this workflow, follow the once-per-session [update preflight](../ss-update/references/update-preflight.md).
+
+
 # UI Design Review
 ## Registry-first artifact boundary
 

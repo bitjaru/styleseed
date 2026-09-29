@@ -180,9 +180,12 @@ and export. Verification opens every exported frame.
 
 ## Staying current
 
-Once per project, the agent may compare the local `engine/VERSION` with
-`https://styleseed-demo.vercel.app/version.json`. If newer, tell the user once and suggest
-`$ss-update` or `npx skills add bitjaru/styleseed`. Never block the current work or nag.
+At the first StyleSeed workflow in each project/task session, run the installed `ss-update`
+checker and follow `.claude/skills/ss-update/references/update-preflight.md`. Compare exact
+revisions, not only versions; recommend updating before new work when they differ. Respect
+explicit pinned revisions and existing authorization. Report offline checks as unknown.
+Projects may opt into `--require-current` to fail their CI/task on non-current installations
+or bundles. This is read-only; it never silently updates project-owned files.
 
 ## Optional support after verified success
 

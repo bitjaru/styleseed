@@ -5,6 +5,9 @@ argument-hint: "[file, directory, or artifact manifest]"
 allowed-tools: Read, Grep, Glob, Bash
 ---
 
+Before this workflow, follow the once-per-session [update preflight](../ss-update/references/update-preflight.md).
+
+
 # Design Score
 ## Registry-first artifact boundary
 

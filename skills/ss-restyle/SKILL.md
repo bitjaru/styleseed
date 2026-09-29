@@ -5,6 +5,9 @@ argument-hint: "<profile> — swiss | editorial | technical | warm-dtc | minimal
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash
 ---
 
+Before this workflow, follow the once-per-session [update preflight](../ss-update/references/update-preflight.md).
+
+
 # Apply an aesthetic profile
 ## Registry-first artifact boundary
 

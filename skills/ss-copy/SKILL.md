@@ -5,6 +5,9 @@ argument-hint: "[context] [description]"
 allowed-tools: Read, Write, Edit, Grep, Glob
 ---
 
+Before this workflow, follow the once-per-session [update preflight](../ss-update/references/update-preflight.md).
+
+
 # UX Microcopy Generator
 ## Registry-first artifact boundary
 

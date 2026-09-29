@@ -5,6 +5,9 @@ argument-hint: "[pattern-type] [description]"
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash
 ---
 
+Before this workflow, follow the once-per-session [update preflight](../ss-update/references/update-preflight.md).
+
+
 # UI Pattern Generator
 ## Registry-first artifact boundary
 

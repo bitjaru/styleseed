@@ -449,3 +449,64 @@ test("adding, changing, or removing functional outcomes invalidates functional a
     } finally { rmSync(root, { recursive: true, force: true }); }
   }
 });
+
+test("freshness gate rejects same-version drift, unknown remote, and partial registries without writes", () => {
+  const root = makeRoot("styleseed-update-gate-");
+  try {
+    const catalog = readJson(resolve(repoRoot, "engine/.claude/skills/ss-resolve/references/catalog.json"));
+    const remotePath = resolve(root, "remote.json");
+    const current = { version: catalog.engineVersion, revision: catalog.engineRevision };
+    const run = (strict = true, remote = remotePath) => {
+      const result = spawnSync(process.execPath, [updateChecker, "--project-root", root,
+        "--remote", remote, "--json", ...(strict ? ["--require-current"] : [])], { encoding: "utf8" });
+      return { ...result, data: JSON.parse(result.stdout) };
+    };
+    writeJson(remotePath, current);
+    assert.equal(run().status, 0);
+    assert.deepEqual(run().data.gate, { required: true, passed: true });
+    writeJson(remotePath, { ...current, revision: `sha256:${"f".repeat(64)}` });
+    assert.equal(run().status, 1);
+    assert.equal(run().data.status, "update-available");
+    assert.equal(run(false).status, 0);
+    assert.equal(run(false).data.action, "run-ss-update");
+    writeJson(remotePath, { version: catalog.engineVersion });
+    assert.equal(run().data.status, "remote-revision-unavailable");
+    assert.equal(run().status, 1);
+    const offline = run(true, "http://127.0.0.1:1/version.json");
+    assert.equal(offline.status, 1);
+    assert.equal(offline.data.status, "remote-check-unavailable");
+    assert.equal(run(false, "http://127.0.0.1:1/version.json").status, 0);
+    writeJson(remotePath, current);
+    mkdirSync(resolve(root, ".styleseed"));
+    writeJson(resolve(root, ".styleseed/project.json"), { schemaVersion: 1 });
+    const before = readFileSync(resolve(root, ".styleseed/project.json"), "utf8");
+    const invalid = run();
+    assert.equal(invalid.status, 1);
+    assert.equal(invalid.data.status, "project-config-invalid");
+    assert.equal(readFileSync(resolve(root, ".styleseed/project.json"), "utf8"), before);
+  } finally { rmSync(root, { recursive: true, force: true }); }
+});
+
+test("freshness gate checks every registry artifact and clears after recompilation", () => {
+  const root = makeRoot("styleseed-update-registry-gate-");
+  try {
+    writeRegistryFixture(root);
+    const catalog = readJson(resolve(repoRoot, "engine/.claude/skills/ss-resolve/references/catalog.json"));
+    const remotePath = resolve(root, "remote.json");
+    writeJson(remotePath, { version: catalog.engineVersion, revision: catalog.engineRevision });
+    const check = () => spawnSync(process.execPath, [updateChecker, "--project-root", root,
+      "--remote", remotePath, "--json", "--require-current"], { encoding: "utf8" });
+    const stale = check();
+    assert.equal(stale.status, 1, stale.stderr || stale.stdout);
+    assert.equal(JSON.parse(stale.stdout).status, "project-bundle-stale");
+    const compile = spawnSync(process.execPath, [resolver, "--project-root", root, "--all"], { encoding: "utf8" });
+    assert.equal(compile.status, 0, compile.stderr || compile.stdout);
+    const fresh = check();
+    assert.equal(fresh.status, 0, fresh.stderr || fresh.stdout);
+    assert.equal(JSON.parse(fresh.stdout).status, "current");
+    writeFileSync(resolve(root, ".styleseed/bundles/app-dashboard.md"), "corrupt");
+    const corrupt = check();
+    assert.equal(corrupt.status, 1);
+    assert.equal(JSON.parse(corrupt.stdout).artifacts[0].status, "corrupt");
+  } finally { rmSync(root, { recursive: true, force: true }); }
+});

@@ -5,6 +5,9 @@ argument-hint: "[file-path or directory]"
 allowed-tools: Read, Grep, Glob, Bash
 ---
 
+Before this workflow, follow the once-per-session [update preflight](../ss-update/references/update-preflight.md).
+
+
 # Design Lint (Quick Check)
 ## Registry-first artifact boundary
 

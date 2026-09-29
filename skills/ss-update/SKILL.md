@@ -5,6 +5,9 @@ argument-hint: "(no arguments needed)"
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash
 ---
 
+Before this workflow, follow the once-per-session [update preflight](references/update-preflight.md).
+
+
 # StyleSeed update
 ## Registry-first artifact boundary
 
@@ -53,13 +56,17 @@ node <installed-ss-update>/scripts/check-update.mjs --project-root . --json
 
 Interpret the result exactly:
 
-- `current` — installed and published revisions match; stop unless the user explicitly wants a
-  reinstall.
+- `current` — installed and published revisions and existing registry artifacts match; stop
+  unless the user explicitly wants a reinstall. This is not a visual/evidence pass.
 - `update-available` — refresh the installed payload even when the semantic versions match.
 - `project-bundle-stale` — skills are current; skip reinstall and re-resolve the project.
 - `legacy-skill-conflict` — the retired standalone seven-category reviewer remains beside the
   canonical skills. Show its path and hash; remove it only after confirming it is not a
   project-modified skill.
+- `remote-check-unavailable` — the remote request failed; report unknown, not current.
+- `project-config-invalid` — repair the incomplete/invalid registry before claiming currency.
+- `installed-revision-unverified` / `installed-revision-tampered` — inspect the local payload;
+  never overwrite a fork blindly.
 - `remote-revision-unavailable` — version-only evidence cannot prove currency. Report the
   boundary and do not say “up to date.”
 

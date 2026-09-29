@@ -16,10 +16,11 @@ function parseArgs(argv) {
     const value = argv[index];
     if (!value.startsWith("--")) throw new Error(`Unexpected argument: ${value}`);
     const key = value.slice(2);
-    if (["json", "help"].includes(key)) {
+    if (["json", "help", "require-current"].includes(key)) {
       out[key] = true;
       continue;
     }
+    if (!["project-root", "remote"].includes(key)) throw new Error(`Unknown option: --${key}`);
     const next = argv[index + 1];
     if (!next || next.startsWith("--")) throw new Error(`Missing value for --${key}`);
     out[key] = next;
@@ -89,10 +90,12 @@ if (args.help) {
   console.log(`StyleSeed update checker
 
 Usage:
-  check-update.mjs [--project-root <path>] [--remote <URL-or-file>] [--json]
+  check-update.mjs [--project-root <path>] [--remote <URL-or-file>] [--json] [--require-current]
 
 Compares the installed distribution revision, the project's last resolved revision, and the
-published revision. It is read-only and never updates project or skill files.`);
+published revision. It is read-only and never updates project or skill files.
+--require-current exits 1 unless both installation and existing project bundles are current.
+Without this flag, diagnostic results exit 0; unavailable remote checks are explicitly unknown.`);
   process.exit(0);
 }
 
@@ -130,7 +133,14 @@ const legacyConflicts = [
     reason: "Retired standalone seven-category reviewer can conflict with canonical ss-score.",
   }];
 });
-const remote = normalizeRemote(await readRemote(remoteSource));
+let remoteError = null;
+let remote;
+try {
+  remote = normalizeRemote(await readRemote(remoteSource));
+} catch (error) {
+  remoteError = error instanceof Error ? error.message : String(error);
+  remote = normalizeRemote(null);
+}
 
 const installedVersion = installed?.value.engineVersion ?? null;
 const installedDeclaredRevision = installed?.value.distributions?.core?.revision ?? installed?.value.engineRevision ?? null;
@@ -167,13 +177,18 @@ const remoteDistributionRevision = installedDistribution === "skills"
   ? remote.skillsRevision
   : remoteRevision;
 const registryPresent = existsSync(resolve(projectRoot, ".styleseed/project.json"))
-  && existsSync(resolve(projectRoot, ".styleseed/artifacts/index.json"));
-const artifactImpact = registryPresent
-  ? (await import("./artifact-impact.mjs")).inspectArtifactImpact({
-      projectRoot,
-      installedCatalog: installed?.value ?? null,
-    })
-  : { artifacts: [] };
+  || existsSync(resolve(projectRoot, ".styleseed/artifacts/index.json"));
+let artifactImpact = { artifacts: [] };
+let projectError = null;
+if (registryPresent) {
+  try {
+    artifactImpact = (await import("./artifact-impact.mjs")).inspectArtifactImpact({
+      projectRoot, installedCatalog: installed?.value ?? null,
+    });
+  } catch (error) {
+    projectError = error instanceof Error ? error.message : String(error);
+  }
+}
 
 let status;
 let reason;
@@ -186,6 +201,9 @@ if (installed && installedVerification?.status === "unverified") {
 } else if (installedVerification?.status === "tampered") {
   status = "installed-revision-tampered";
   reason = `Installed ${installedDistribution ?? "core"} distribution bytes differ from the catalog inventory, so the declared revision is not current.`;
+} else if (remoteError) {
+  status = "remote-check-unavailable";
+  reason = `Could not verify the published revision: ${remoteError}`;
 } else if (!installedDistributionRevision && remoteDistributionRevision) {
   status = "update-available";
   reason = "The installed payload predates revision tracking; refresh it once to establish an exact baseline.";
@@ -208,7 +226,13 @@ if (installed && installedVerification?.status === "unverified") {
 } else if (legacyConflicts.length > 0) {
   status = "legacy-skill-conflict";
   reason = "The canonical payload is current, but a retired standalone reviewer still competes with ss-score.";
-} else if (projectManifest && projectRevision !== installedDeclaredRevision) {
+} else if (projectError) {
+  status = "project-config-invalid";
+  reason = projectError;
+} else if (artifactImpact.artifacts.some((entry) => entry.status !== "current")) {
+  status = "project-bundle-stale";
+  reason = "One or more registry artifacts need the update actions listed in artifacts.";
+} else if (!registryPresent && projectManifest && projectRevision !== installedDeclaredRevision) {
   status = "project-bundle-stale";
   reason = "The installed engine is current, but this project's effective bundle was resolved from another revision.";
 } else {
@@ -254,6 +278,12 @@ const result = {
   },
   legacyConflicts,
   artifacts: artifactImpact.artifacts,
+  projectError,
+  action: status === "current" ? "none"
+    : status === "project-bundle-stale" ? "review-artifact-impact-and-recompile"
+    : status.startsWith("remote-") ? "retry-check-or-explicitly-use-pinned-revision"
+    : status === "update-available" ? "run-ss-update" : "inspect-and-repair",
+  gate: { required: Boolean(args["require-current"]), passed: status === "current" },
 };
 
 if (args.json) {
@@ -267,3 +297,5 @@ if (args.json) {
   console.log(`published ${remoteVersion ?? "unknown"} @ ${shortRevision(remoteRevision)}`);
   console.log(reason);
 }
+
+if (args["require-current"] && status !== "current") process.exitCode = 1;

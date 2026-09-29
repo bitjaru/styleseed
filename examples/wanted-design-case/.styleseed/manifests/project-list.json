@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "artifactId": "project-list",
   "engineVersion": "4.2.0",
-  "engineRevision": "sha256:4bed0a4ee7f2b559fbf7f02e22844b9340035ddc3d23de031781991360a66653",
+  "engineRevision": "sha256:abd0f4d0a4929cf1036315a97f1d627b684c056ff003e91d11cf4bae0a3964b3",
   "distributionIntegrity": "verified",
   "selection": {
     "agent": "codex",
@@ -109,14 +109,14 @@
   "bundle": {
     "kind": "bundle",
     "path": ".styleseed/bundles/project-list.md",
-    "sha256": "sha256:01abc84b117e78636bc2015e907329db353a2b457c8ca3e5a0f7dc6584f5f84e",
+    "sha256": "sha256:39bcc5582465b2fbc6ad588307bf7285eee27925265a50f0498cfe65c660cbbe",
     "bytes": 19782
   },
   "outputs": [
     {
       "kind": "bundle",
       "path": ".styleseed/bundles/project-list.md",
-      "sha256": "sha256:01abc84b117e78636bc2015e907329db353a2b457c8ca3e5a0f7dc6584f5f84e",
+      "sha256": "sha256:39bcc5582465b2fbc6ad588307bf7285eee27925265a50f0498cfe65c660cbbe",
       "bytes": 19782
     },
     {

@@ -859,3 +859,17 @@ Full guide: [engine/UPDATE.md](engine/UPDATE.md)
 - Components based on [shadcn/ui](https://ui.shadcn.com/)
 - Brand skins sourced from [awesome-design-md](https://github.com/VoltAgent/awesome-design-md)
 - UX principles from [Laws of UX](https://lawsofux.com/) and [Nielsen Norman Group](https://www.nngroup.com/)
+
+### Update reminders and an optional freshness gate
+
+After a one-time refresh, StyleSeed skills require a read-only revision check at the first
+workflow of each project/task session. Outdated installs recommend `$ss-update` (Claude:
+`/ss-update`), including changes that keep the same version number. Updates preserve project
+design decisions; offline checks are reported as unknown. Old installed skills cannot receive
+this instruction until updated once.
+
+For CI/tasks that must use the current installed channel, run the installed
+`ss-update/scripts/check-update.mjs --project-root . --require-current --json` before your build.
+It exits 1 on outdated/unverifiable installs or any stale registry artifact; it never installs
+anything. Pinned projects can keep diagnostic mode without `--require-current`. See the
+[update preflight contract](engine/.claude/skills/ss-update/references/update-preflight.md).

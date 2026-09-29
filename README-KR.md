@@ -566,3 +566,17 @@ StyleSeed는 **살아있는 판단 프레임워크**입니다 — 룰은 고정�
 ## 라이선스
 
 [MIT](LICENSE)
+
+### 업데이트 안내와 선택적 강제 검사
+
+한 번 업데이트한 뒤에는 프로젝트 작업 세션의 첫 스킬 실행 시 정확한 리비전을 확인합니다.
+버전 번호가 같아도 변경이 있으면 `$ss-update`(Claude: `/ss-update`)를 권고합니다.
+오프라인은 확인 불가로 보고하며, 프로젝트 디자인 설정을 자동 덮어쓰지 않습니다.
+이미 설치된 옛 스킬은 최초 한 번 갱신해야 이 규칙을 받을 수 있습니다.
+
+CI에서 최신 상태를 강제하려면 빌드 전에 설치 경로의
+`ss-update/scripts/check-update.mjs --project-root . --require-current --json`을 실행하세요.
+설치본이 오래됐거나 확인 불가이거나 등록된 아티팩트 중 하나라도 최신 번들이 아니면
+종료 코드 1을 반환합니다. 자동 설치는 하지 않습니다. 버전을 고정한 프로젝트는
+`--require-current` 없이 진단만 사용할 수 있습니다.
+[업데이트 검사 규약](engine/.claude/skills/ss-update/references/update-preflight.md)

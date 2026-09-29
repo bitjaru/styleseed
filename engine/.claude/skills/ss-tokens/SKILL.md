@@ -5,6 +5,9 @@ argument-hint: "[action: generate|list|add|update] [token-type: color|spacing|sh
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash
 ---
 
+Before this workflow, follow the once-per-session [update preflight](../ss-update/references/update-preflight.md).
+
+
 # Design Token Manager
 ## Registry-first artifact boundary
 

@@ -5,6 +5,9 @@ argument-hint: "[request or goal]"
 allowed-tools: Read, Grep, Glob, Bash
 ---
 
+Before this workflow, follow the once-per-session [update preflight](../ss-update/references/update-preflight.md).
+
+
 # StyleSeed router
 ## Registry-first artifact boundary
 

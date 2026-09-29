@@ -3,6 +3,9 @@ name: ss-resolve
 description: Compile the effective StyleSeed rule bundle for one artifact, or inspect install and evidence health read-only. Use before setup or build, or to diagnose rule drift.
 ---
 
+Before this workflow, follow the once-per-session [update preflight](../ss-update/references/update-preflight.md).
+
+
 # Resolve effective StyleSeed context
 
 Use the bundled `scripts/resolve-context.mjs`; do not hand-compose the rule stack.

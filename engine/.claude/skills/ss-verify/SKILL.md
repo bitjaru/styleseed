@@ -5,6 +5,9 @@ argument-hint: "[route, file, artifact manifest, or export directory]"
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash
 ---
 
+Before this workflow, follow the once-per-session [update preflight](../ss-update/references/update-preflight.md).
+
+
 # Verify (look at it, don't just read it)
 ## Registry-first artifact boundary
 

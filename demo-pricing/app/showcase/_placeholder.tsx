@@ -31,7 +31,7 @@ export function Placeholder({
       </div>
       <div className="mt-2 max-w-md text-sm opacity-60">
         This entry has no layout yet — the routing skeleton just wires up the
-        skin and motion toggles. Run <code>/ss-page {id}</code> or hand-author
+        skin and motion toggles. Run <code>/styleseed page {id}</code> or hand-author
         a layout in <code>app/showcase/examples/{id}.tsx</code>.
       </div>
     </div>

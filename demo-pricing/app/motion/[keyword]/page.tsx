@@ -50,7 +50,7 @@ export async function generateMetadata({
   const m = MOTION_BY_KEY[keyword];
   if (!m) return {};
   const title = `${m.label} (${m.key}) — copy-paste framer-motion · StyleSeed`;
-  const description = `${m.vibe}. Copy-paste the ${m.key} framer-motion recipe — live demo + code you can drop into any React project, or run /ss-motion ${m.key} in Claude Code.`;
+  const description = `${m.vibe}. Copy-paste the ${m.key} framer-motion recipe — live demo + code you can drop into any React project, or run /styleseed motion ${m.key} in Claude Code.`;
   return {
     title,
     description,
@@ -151,7 +151,7 @@ export default async function MotionKeywordPage({
             </Card>
             <Card title="Or name it">
               In Claude Code / Cursor, run{" "}
-              <code className="rounded bg-neutral-100 px-1 text-[12px]">/ss-motion {m.key}</code>{" "}
+              <code className="rounded bg-neutral-100 px-1 text-[12px]">/styleseed motion {m.key}</code>{" "}
               and the recipe lands in your code.
             </Card>
             <Card title="Personality">

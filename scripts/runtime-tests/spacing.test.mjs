@@ -5,12 +5,12 @@ import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
-import { normalizeSpacing, effectiveSpacing, spacingSection, recommendSpacing, SPACING_ROLES } from '../../engine/.claude/skills/ss-resolve/scripts/spacing-contract.mjs';
-import { normalizeProject, normalizeArtifact } from '../../engine/.claude/skills/ss-resolve/scripts/runtime-contract.mjs';
-import { compileContext, defaultCatalog as catalog } from '../../engine/.claude/skills/ss-resolve/scripts/compiler.mjs';
-import { inspectArtifactImpact } from '../../engine/.claude/skills/ss-update/scripts/artifact-impact.mjs';
+import { normalizeSpacing, effectiveSpacing, spacingSection, recommendSpacing, SPACING_ROLES } from '../../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/spacing-contract.mjs';
+import { normalizeProject, normalizeArtifact } from '../../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/runtime-contract.mjs';
+import { compileContext, defaultCatalog as catalog } from '../../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/compiler.mjs';
+import { inspectArtifactImpact } from '../../engine/.claude/skills/styleseed/workflows/ss-update/scripts/artifact-impact.mjs';
 const repo = fileURLToPath(new URL('../../', import.meta.url));
-const script = name => resolve(repo, 'engine/.claude/skills/ss-resolve/scripts', name);
+const script = name => resolve(repo, 'engine/.claude/skills/styleseed/workflows/ss-resolve/scripts', name);
 const project = () => ({ schemaVersion: 1, projectId: 'spacing-test', defaults: { agent: 'codex', domain: 'saas', adapter: 'product-ui', recipe: 'enterprise-workbench', palette: 'cobalt-instrument', profile: 'none', fallback: null }, brand: { keyColor: '#0F766E', paletteCharacter: 'balanced', paletteMode: 'light', paletteHarmony: 'auto', surfaceTemperature: 'cool', fontFamilies: ['Inter'], radius: 'soft', elevation: 'flat', density: 'comfortable', motion: { seed: 'spring', intensity: 'restrained' }, imageryRole: 'data-first' } });
 const artifact = (id = 'settings') => ({ schemaVersion: 1, id, target: { kind: 'route', locator: `/${id}` }, selection: { grammar: 'operations-console', adapter: null, domain: null, page: 'settings', recipe: null, palette: null, profile: null, fallback: null }, decisions: { primaryDecision: 'Choose notification preferences', primaryAction: 'Save changes', signatureMove: 'Separate notification groups' }, implementation: { sourceRoots: ['src'], tokenFiles: [] }, validation: { scoreFloor: 80, requiredRenders: [{ id: 'mobile', state: 'loaded', viewport: { width: 390, height: 844 } }], temporal: { required: false, scenarios: [] }, humanAcceptance: false } });
 const shared = () => ({ wideMinWidth: 1024, roles: { sectionGap: { base: 24, wide: 40 }, componentInset: { base: 'var(--space-card)' } } });
@@ -110,7 +110,7 @@ test('proposal CLI is read-only, works from a spaced path, refuses malformed opt
   for (const args of [[], ['--artifact', 'missing'], ['--artifact', 'settings', '--write'], ['--artifact', 'settings', '--artifact', 'other']]) assert.equal(run(root, 'recommend-spacing.mjs', args).status, 1);
 });
 test('schema roles and length contracts agree with runtime and both configuration scopes', () => {
-  const schemas = ['project', 'artifact'].map(name => JSON.parse(readFileSync(resolve(repo, `engine/.claude/skills/ss-resolve/references/${name}.schema.json`), 'utf8')));
+  const schemas = ['project', 'artifact'].map(name => JSON.parse(readFileSync(resolve(repo, `engine/.claude/skills/styleseed/workflows/ss-resolve/references/${name}.schema.json`), 'utf8')));
   assert.deepEqual(schemas[0].$defs.spacing, schemas[1].$defs.spacing);
   assert.deepEqual(Object.keys(schemas[0].$defs.spacing.properties.roles.properties), Object.keys(SPACING_ROLES));
   assert.equal(schemas[0].$defs.spacingLength.oneOf[0].maximum, 256);
@@ -121,7 +121,7 @@ test('schema roles and length contracts agree with runtime and both configuratio
 test('skills-only physical installation runs the proposal CLI without repository engine files', t => {
   const root = fixture(t);
   const installed = join(root, 'installed skills #', 'ss-resolve');
-  cpSync(resolve(repo, 'engine/.claude/skills/ss-resolve'), installed, { recursive: true });
+  cpSync(resolve(repo, 'engine/.claude/skills/styleseed/workflows/ss-resolve'), installed, { recursive: true });
   const result = spawnSync(process.execPath, [join(installed, 'scripts/recommend-spacing.mjs'), '--project-root', root, '--artifact', 'settings'], { encoding: 'utf8' });
   assert.equal(result.status, 0, result.stderr);
   assert.equal(JSON.parse(result.stdout).spacing.roles.componentInset.base, 'var(--space-card)');
@@ -139,7 +139,7 @@ test('engine-owned spacing aliases cannot be used as project references, includi
   for (const name of ['section-gap', 'component-inset', 'anything']) {
     assert.throws(() => normalizeSpacing({ roles: { sectionGap: { base: `var(--ss-space-${name})` } } }), /reserved/);
   }
-  const schema = JSON.parse(readFileSync(resolve(repo, 'engine/.claude/skills/ss-resolve/references/project.schema.json'), 'utf8'));
+  const schema = JSON.parse(readFileSync(resolve(repo, 'engine/.claude/skills/styleseed/workflows/ss-resolve/references/project.schema.json'), 'utf8'));
   assert.equal(new RegExp(schema.$defs.spacingLength.oneOf[1].pattern).test('var(--ss-space-section-gap)'), false);
 });
 
@@ -147,7 +147,7 @@ async function measuredFixture(t) {
   const root = fixture(t);
   const p = JSON.parse(readFileSync(join(root, '.styleseed/project.json'), 'utf8'));
   const [pn, an] = normalized(p, artifact());
-  const { spacingSnapshot, measurementAdvice } = await import('../../engine/.claude/skills/ss-resolve/scripts/spacing-measurement.mjs');
+  const { spacingSnapshot, measurementAdvice } = await import('../../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/spacing-measurement.mjs');
   const snapshot = spacingSnapshot(root, pn, an, catalog.engineRevision);
   const effective = effectiveSpacing(pn, an);
   const report = { schemaVersion: 1, artifactId: an.id, provenance: snapshot, viewport: { width: 390, height: 844 }, contract: { wideMinWidth: effective.wideMinWidth, roles: effective.roles }, status: 'pass', measurements: [{ role: 'sectionGap', property: 'rowGap', expected: 24, actual: 24, delta: 0 }, { role: 'componentInset', property: 'paddingLeft', expected: 20, actual: 20, delta: 0 }], failures: [], unsupported: [], observations: [], scope: 'supplied-bindings-at-one-viewport', designAcceptance: 'not-assessed' };

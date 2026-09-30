@@ -24,7 +24,7 @@ function stageCoreDistribution(catalog, destinationRoot) {
 }
 
 const codexPlugin = readJson(".codex-plugin/plugin.json");
-const catalog = readJson("engine/.claude/skills/ss-resolve/references/catalog.json");
+const catalog = readJson("engine/.claude/skills/styleseed/workflows/ss-resolve/references/catalog.json");
 const searchableFields = [
   codexPlugin.description,
   codexPlugin.interface?.shortDescription,
@@ -64,7 +64,7 @@ try {
   mkdirSync(dirname(installedSkills), { recursive: true });
   cpSync(resolve(root, "skills"), installedSkills, { recursive: true });
 
-  const resolver = resolve(installedSkills, "ss-resolve/scripts/resolve-context.mjs");
+  const resolver = resolve(installedSkills, "styleseed/workflows/ss-resolve/scripts/resolve-context.mjs");
   const list = spawnSync(process.execPath, [resolver, "--list"], {
     cwd: skillsOnlyRoot,
     encoding: "utf8",
@@ -92,7 +92,7 @@ try {
   assert(existsSync(resolve(skillsOnlyRoot, ".styleseed/palette.json")), "skills-only resolver did not emit palette.json");
 
   const tokenOutput = resolve(skillsOnlyRoot, "token-smoke.json");
-  const tokenGenerator = resolve(installedSkills, "ss-tokens/scripts/generate-palette.mjs");
+  const tokenGenerator = resolve(installedSkills, "styleseed/workflows/ss-tokens/scripts/generate-palette.mjs");
   const generate = spawnSync(process.execPath, [
     tokenGenerator,
     "--key-color", "#0F766E",
@@ -111,7 +111,7 @@ try {
     revision: catalog.engineRevision,
     skillsRevision: catalog.distributions.skills.revision,
   }));
-  const updateChecker = resolve(installedSkills, "ss-update/scripts/check-update.mjs");
+  const updateChecker = resolve(installedSkills, "styleseed/workflows/ss-update/scripts/check-update.mjs");
   const update = spawnSync(process.execPath, [
     updateChecker,
     "--project-root", skillsOnlyRoot,

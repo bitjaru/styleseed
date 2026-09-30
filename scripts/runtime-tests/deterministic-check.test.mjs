@@ -8,8 +8,8 @@ import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const repoRoot = resolve(fileURLToPath(new URL("../../", import.meta.url)));
-const resolver = resolve(repoRoot, "engine/.claude/skills/ss-resolve/scripts/resolve-context.mjs");
-const checker = resolve(repoRoot, "engine/.claude/skills/ss-score/scripts/styleseed-check.mjs");
+const resolver = resolve(repoRoot, "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/resolve-context.mjs");
+const checker = resolve(repoRoot, "engine/.claude/skills/styleseed/workflows/ss-score/scripts/styleseed-check.mjs");
 
 function writeJson(path, value) { writeFileSync(path, `${JSON.stringify(value, null, 2)}\n`); }
 function hash(path) { const bytes = readFileSync(path); return { sha256: `sha256:${createHash("sha256").update(bytes).digest("hex")}`, bytes: bytes.byteLength }; }

@@ -26,7 +26,7 @@ export default function MotionLibraryPage() {
             Each card is a distinct, named move — not another fade. Click a card to
             replay it, then <span className="font-semibold text-neutral-900">Copy</span> the
             snippet, or say the keyword while vibe coding
-            (<code className="rounded bg-neutral-200 px-1.5 py-0.5 text-[12px]">/ss-motion toggle-flip</code>)
+            (<code className="rounded bg-neutral-200 px-1.5 py-0.5 text-[12px]">/styleseed motion toggle-flip</code>)
             and the same recipe lands in your code.
           </p>
           <Link

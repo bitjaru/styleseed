@@ -3,7 +3,7 @@
   "version": "6",
   "repository": "https://github.com/bitjaru/styleseed",
   "counts": {
-    "skills": 23,
+    "skills": 1,
     "grammars": 8,
     "adapters": 5,
     "domains": 12,
@@ -20,8 +20,8 @@
   },
   "context": {
     "engineVersion": "4.2.0",
-    "engineRevision": "sha256:abd0f4d0a4929cf1036315a97f1d627b684c056ff003e91d11cf4bae0a3964b3",
-    "resolverSkill": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/ss-resolve/SKILL.md",
+    "engineRevision": "sha256:95834f1fbbd9364589e29d83594916705be5d46c096342df5b57bc1a78e302cd",
+    "resolverSkill": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/styleseed/workflows/ss-resolve/WORKFLOW.md",
     "catalogUrl": "https://styleseed-demo.vercel.app/.well-known/styleseed/context-catalog.json",
     "grammarIds": [
       "consumer-service",

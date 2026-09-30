@@ -44,11 +44,11 @@ assert(!existsSync(resolve(root, "skills/styleseed-design-review/SKILL.md")), "l
 const skillsDir = resolve(root, "engine/.claude/skills");
 const skills = readdirSync(skillsDir, { withFileTypes: true })
   .filter((entry) => entry.isDirectory() && (entry.name === "styleseed" || entry.name.startsWith("ss-")) && existsSync(resolve(skillsDir, entry.name, "SKILL.md")));
-assert(skills.length === 23, `expected 23 canonical skills, found ${skills.length}`);
+assert(skills.length === 1, `expected one canonical skill, found ${skills.length}`);
 assert(publicVersion.skills === skills.length, `version.json skills ${publicVersion.skills} != ${skills.length}`);
-assert(skills.some((entry) => entry.name === "ss-reference"), "ss-reference is missing");
-assert(skills.some((entry) => entry.name === "ss-resolve"), "ss-resolve is missing");
-assert(skills.some((entry) => entry.name === "ss-studio"), "ss-studio is missing");
+assert(existsSync(resolve(skillsDir, "styleseed/workflows/ss-reference/WORKFLOW.md")), "ss-reference is missing");
+assert(existsSync(resolve(skillsDir, "styleseed/workflows/ss-resolve/WORKFLOW.md")), "ss-resolve is missing");
+assert(existsSync(resolve(skillsDir, "styleseed/workflows/ss-studio/WORKFLOW.md")), "ss-studio is missing");
 assert(skills.some((entry) => entry.name === "styleseed"), "primary styleseed router is missing");
 assert(!skills.some((entry) => entry.name === "ss-learn"), "core skills must not include the optional ss-learn extension");
 
@@ -90,13 +90,13 @@ const paletteRecipes = JSON.parse(read("engine/color/palettes.json"));
 assert(paletteRecipes.length === 8, `expected 8 palette recipes, found ${paletteRecipes.length}`);
 assert(publicVersion.palettes === paletteRecipes.length, `version.json palettes ${publicVersion.palettes} != ${paletteRecipes.length}`);
 
-const build = read("engine/.claude/skills/ss-build/SKILL.md");
+const build = read("engine/.claude/skills/styleseed/workflows/ss-build/WORKFLOW.md");
 assert(build.includes("/ss-score") && build.includes("/ss-verify"), "ss-build must require score and verify");
 assert(build.indexOf("/ss-score") < build.lastIndexOf("/ss-verify"), "ss-build must run score before verify");
 assert(build.includes(".styleseed/effective-rules.md"), "ss-build must consume compiled context");
 assert(!build.includes("Read and combine in authority order"), "ss-build must not hand-compose the full handbook");
 
-const score = read("engine/.claude/skills/ss-score/SKILL.md");
+const score = read("engine/.claude/skills/styleseed/workflows/ss-score/WORKFLOW.md");
 assert(score.includes("eight weighted categories"), "ss-score category count text drifted");
 const weights = [...score.matchAll(/^\| \*\*[^|]+\*\* \| (\d+) \|/gm)].map((match) => Number(match[1]));
 assert(weights.reduce((sum, value) => sum + value, 0) === 100, `ss-score weights sum to ${weights.reduce((a, b) => a + b, 0)}`);
@@ -104,8 +104,8 @@ assert(weights.reduce((sum, value) => sum + value, 0) === 100, `ss-score weights
 const coreFiles = [
   "engine/PRODUCT-PRINCIPLES.md", "engine/RULESETS.md", "engine/ADAPTERS.md",
   "engine/CLAUDE.md", "engine/AGENTS.md", "engine/.cursorrules",
-  "engine/.claude/skills/ss-setup/SKILL.md", "engine/.claude/skills/ss-build/SKILL.md",
-  "engine/.claude/skills/ss-score/SKILL.md", "engine/.claude/skills/ss-verify/SKILL.md",
+  "engine/.claude/skills/styleseed/workflows/ss-setup/WORKFLOW.md", "engine/.claude/skills/styleseed/workflows/ss-build/WORKFLOW.md",
+  "engine/.claude/skills/styleseed/workflows/ss-score/WORKFLOW.md", "engine/.claude/skills/styleseed/workflows/ss-verify/WORKFLOW.md",
 ];
 for (const path of coreFiles) {
   const text = read(path);
@@ -114,7 +114,7 @@ for (const path of coreFiles) {
   }
 }
 
-const catalog = JSON.parse(read("engine/.claude/skills/ss-resolve/references/catalog.json"));
+const catalog = JSON.parse(read("engine/.claude/skills/styleseed/workflows/ss-resolve/references/catalog.json"));
 assert(catalog.engineVersion === version, `context catalog ${catalog.engineVersion} != ${version}`);
 assert(catalog.schemaVersion === 5, `context catalog schema ${catalog.schemaVersion} != 5`);
 assert(catalog.distributionSource?.channel === "edge", "source catalog must identify the mutable edge channel");
@@ -132,13 +132,13 @@ assert(catalog.distributions.skills.files.every((file) => file.path.startsWith("
 assert(!catalog.distributions.core.files.some((file) => file.path === ".codex-plugin/plugin.json"), "mutable Codex cachebuster manifest must not define the core revision");
 assert(catalog.distributions.core.files.some((file) => file.path === "LICENSE"), "core distribution omits LICENSE");
 assert(catalog.distributions.core.files.some((file) => file.path === "SECURITY.md"), "core distribution omits SECURITY.md");
-assert(catalog.distributions.core.files.some((file) => file.path === "engine/.claude/skills/ss-update/scripts/check-update.mjs"), "core distribution omits the update checker");
+assert(catalog.distributions.core.files.some((file) => file.path === "engine/.claude/skills/styleseed/workflows/ss-update/scripts/check-update.mjs"), "core distribution omits the update checker");
 assert(!catalog.distributions.core.files.some((file) => file.path.startsWith("engine/.claude/skills/ss-learn/")), "core distribution must exclude ss-learn");
 assert(!catalog.distributions.core.files.some((file) => file.path.includes("/mcp/") || file.path.endsWith("/.mcp.json")), "core distribution must not include the learning MCP bridge");
 assert(!catalog.distributions.core.files.some((file) => file.path.endsWith("ss-resolve/references/catalog.json")), "distribution revision must not hash its generated catalog");
 assert(Array.isArray(catalog.distributionFiles) && catalog.distributionFiles.length === catalog.distributions.core.files.length, "legacy distributionFiles alias drifted from the core distribution");
 assert(!catalog.distributionFiles.some((file) => file.path === "root/.codex-plugin/plugin.json"), "mutable Codex cachebuster manifest must not define the engine revision");
-assert(catalog.distributionFiles.some((file) => file.path === ".claude/skills/ss-update/scripts/check-update.mjs"), "legacy distribution alias omits the update checker");
+assert(catalog.distributionFiles.some((file) => file.path === ".claude/skills/styleseed/workflows/ss-update/scripts/check-update.mjs"), "legacy distribution alias omits the update checker");
 assert(publicVersion.revision === catalog.engineRevision, "version.json revision differs from the canonical catalog");
 assert(publicVersion.revisionFiles === catalog.distributions.core.files.length, "version.json revision file count drifted");
 assert(publicVersion.skillsRevision === catalog.distributions.skills.revision, "version.json skills revision differs from the canonical catalog");
@@ -153,7 +153,7 @@ assert(Object.keys(catalog.profiles).length === 6, "context catalog profile coun
 const paletteGenerator = read("engine/color/generator.mjs");
 assert(paletteGenerator.includes("export function generatePalette"), "palette generator export missing");
 assert(paletteGenerator.includes('colorSpace: "OKLCH"'), "palette generator must declare OKLCH");
-const resolverSource = read("engine/.claude/skills/ss-resolve/scripts/resolve-context.mjs");
+const resolverSource = read("engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/resolve-context.mjs");
 assert(resolverSource.includes('--key-color'), "resolver key-color input missing");
 assert(resolverSource.includes('"palette.json"'), "resolver generated palette output missing");
 const publicCatalog = JSON.parse(read("demo-pricing/public/.well-known/styleseed/context-catalog.json"));
@@ -169,7 +169,7 @@ assert(registry.paletteEngine?.digest === registry.context?.paletteEngine?.diges
 assert(registry.context?.engineVersion === version, "registry engine version drifted");
 assert(registry.context?.engineRevision === catalog.engineRevision, "registry engine revision drifted");
 const llms = read("demo-pricing/public/llms.txt");
-assert(llms.includes("invoke `/ss-studio` or `$ss-studio`") && llms.includes("`/ss-resolve` or `$ss-resolve` directly"), "llms.txt does not route through Studio and ss-resolve");
+assert(llms.includes("invoke `/styleseed studio` or `$styleseed studio`") && llms.includes("`/styleseed resolve` or `$styleseed resolve` directly"), "llms.txt does not route through Studio and ss-resolve");
 assert(llms.includes("archive/debug mirror, not the"), "llms.txt must demote llms-full to archive/debug");
 
 const smokeRoot = mkdtempSync(join(tmpdir(), "styleseed-resolve-"));
@@ -188,7 +188,7 @@ try {
 - Primary action: #0F766E
 `,
   );
-  const resolver = resolve(root, "engine/.claude/skills/ss-resolve/scripts/resolve-context.mjs");
+  const resolver = resolve(root, "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/resolve-context.mjs");
   const run = spawnSync(process.execPath, [resolver, "--project-root", smokeRoot, "--from-lock", "STYLESEED.md", "--agent", "codex"], { encoding: "utf8" });
   assert(run.status === 0, `ss-resolve smoke failed: ${run.stderr || run.stdout}`);
   if (run.status === 0) {
@@ -199,7 +199,7 @@ try {
     assert(manifest.engineRevision === catalog.engineRevision, "resolver manifest omitted the engine revision");
     assert(manifest.bundle.bytes >= 5000 && manifest.bundle.bytes <= 30000, `resolver bundle is ${manifest.bundle.bytes} bytes`);
     assert(/^(?:sha256:)?[0-9a-f]{64}$/.test(manifest.bundle.sha256), "resolver bundle hash is invalid");
-    const updateChecker = resolve(root, "engine/.claude/skills/ss-update/scripts/check-update.mjs");
+    const updateChecker = resolve(root, "engine/.claude/skills/styleseed/workflows/ss-update/scripts/check-update.mjs");
     const remoteVersionPath = resolve(smokeRoot, "remote-version.json");
     writeFileSync(remoteVersionPath, JSON.stringify({ version, revision: catalog.engineRevision }));
     const currentUpdate = spawnSync(process.execPath, [updateChecker, "--project-root", smokeRoot, "--remote", remoteVersionPath, "--json"], { encoding: "utf8" });
@@ -365,7 +365,7 @@ try {
 
 const studioRoot = mkdtempSync(join(tmpdir(), "styleseed-studio-"));
 try {
-  const studio = resolve(root, "engine/.claude/skills/ss-studio/scripts/studio-run.mjs");
+  const studio = resolve(root, "engine/.claude/skills/styleseed/workflows/ss-studio/scripts/studio-run.mjs");
   const init = spawnSync(process.execPath, [studio, "init", "--project-root", studioRoot, "--name", "Focus OS", "--brief", "Create a mobile focus product where selecting a priority task transforms navigation into a reversible session controller with reduced-motion support.", "--surface", "mobile-app", "--platform", "web"], { encoding: "utf8" });
   assert(init.status === 0, `ss-studio init failed: ${init.stderr || init.stdout}`);
   if (init.status === 0) {
@@ -408,9 +408,6 @@ try {
   rmSync(studioRoot, { recursive: true, force: true });
 }
 
-for (const path of ["README.md", "README-KR.md", "demo-pricing/app/_home/hero.tsx", "demo-pricing/app/page.tsx"]) {
-  assert(read(path).includes("23"), `${path} does not expose the 23-skill release`);
-}
 
 if (failures.length) {
   console.error(`StyleSeed engine validation failed (${failures.length})`);
@@ -418,4 +415,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log(`StyleSeed ${version}: 8 grammars · 9 recipes · 8 palettes · 5 adapters · 23 core skills · Studio + context compiler verified; optional learning local contract verified through SEC-040 only`);
+console.log(`StyleSeed ${version}: 8 grammars · 9 recipes · 8 palettes · 5 adapters · 1 core skill + 22 internal workflows · Studio + context compiler verified; optional learning local contract verified through SEC-040 only`);

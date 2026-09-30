@@ -1,77 +1,66 @@
 ---
 name: styleseed
-description: Route a StyleSeed request to exactly one first workflow after resolving the current artifact boundary. Use when the user asks generally for StyleSeed help rather than invoking one specific ss-* skill.
-argument-hint: "[request or goal]"
-allowed-tools: Read, Grep, Glob, Bash
+description: Build, improve, or inspect UI with StyleSeed. Preserves project design choices and routes setup, layout, tokens, review, rendered verification, and updates through one entry point.
 ---
 
-Before this workflow, follow the once-per-session [update preflight](../ss-update/references/update-preflight.md).
+# StyleSeed
 
-
-# StyleSeed router
-## Registry-first artifact boundary
-
-When `.styleseed/project.json` and `.styleseed/artifacts/index.json` exist, resolve the requested artifact ID first, then read only `.styleseed/bundles/<artifact-id>.md` and `.styleseed/manifests/<artifact-id>.json`. Never fall back to the global legacy bundle for a registry project. Legacy projects may use `.styleseed/effective-rules.md` only when no registry exists.
-
-This router chooses exactly one first workflow. It is the primary entry skill when a user asks for
-StyleSeed help in general terms.
-
-## First principles
-
-- Help coding agents repeat expert design decisions, not replace expert authority with presets.
-  Preserve approved project choices; identify unsupported or unresolved choices before routing
-  to work that would change them. A score is not human acceptance.
-- Resolve the current artifact first when `.styleseed/project.json` and `.styleseed/artifacts/index.json`
-  exist.
-- Never fan out to “run every StyleSeed skill.”
-- Never copy the full design handbook into this router. Route to the maintained skill that already
-  owns the workflow.
-- Learning is an optional extension, not part of the core install. Only after an explicit capture
-  request such as “remember this lesson” may the router check whether `ss-learn` is separately
-  installed. If absent, state the dependency precisely; never auto-install it.
-- If the request is ambiguous, ask one bounded clarification question that decides the first workflow.
+Use the user's goal to choose one first workflow below. This is the only registered core
+skill; the 22 workflows and their executable dependencies ship inside this directory.
+Read only the selected workflow, then references needed for that task.
 
 ## Registry-first artifact boundary
 
-If the project uses the artifact registry:
+When `.styleseed/project.json` and `.styleseed/artifacts/index.json` exist, resolve the requested
+artifact first. Read its `.styleseed/bundles/<artifact-id>.md` and manifest. A partial or invalid
+registry is an error; never fall back to the global legacy bundle. Legacy projects may use
+`.styleseed/effective-rules.md` only when no registry exists.
 
-- read the current artifact context first;
-- when one artifact is clearly in scope, route with that artifact;
-- when multiple artifacts exist and the user did not name one, ask one bounded artifact question;
-- do not resolve all artifacts unless the user explicitly asks for all artifacts.
+Before the first workflow in a project/task session, follow the
+[update preflight](workflows/ss-update/references/update-preflight.md).
 
-## One-workflow routing table
+## Working contract
 
-Choose exactly one first workflow:
+- Preserve approved project design choices. Support expert judgment; a score is not human acceptance.
+- Resolve the current artifact first. For multiple plausible artifacts, ask one bounded clarification question.
+- Never fan out to run every workflow. Choose exactly one first workflow; it may call the required gates.
+- Honor the user's authorized scope. Audit, score, verify, and status requests do not authorize edits.
+  Workflow metadata records the intended tool/scope boundary even though it is not host registration metadata.
+- Paths in workflow files are relative to those files. Resolve installed scripts from this skill's
+  actual directory, never assume a particular agent folder or download a missing sibling skill.
+- In older instructions, `/ss-build`, `$ss-build`, and other `ss-*` names mean the corresponding
+  internal workflow. Read `workflows/<name>/WORKFLOW.md`; do not invoke an unregistered skill.
+  Users may say `StyleSeed build`, `$styleseed build`, or the old workflow name in natural language.
+- Learning is an optional extension, not part of the core install. Only for explicit learning capture,
+  use separately installed `ss-learn`; if absent, report that dependency and never auto-install it.
 
-- `ss-setup` for first-time method setup, missing lock/setup, or “set up StyleSeed for this project.”
-- `ss-build` for implementing or redesigning a concrete screen/component/page when the direction is already known.
-- `ss-reference` for compiling supplied references that are not already represented by a maintained grammar.
-- `ss-studio` for creative direction, exploration, concept generation, or multi-direction concept work.
-- `ss-audit` for critique, heuristic review, UX issue finding, or “what is wrong with this screen.”
-- `ss-score` for code/design quality scoring or gate-floor measurement.
-- `ss-verify` for rendered pixel inspection, screenshot review, or visual verification.
-- `ss-update` for refreshing an installed StyleSeed payload or checking whether it is current.
-- `ss-resolve` and its read-only `scripts/styleseed-doctor.mjs` for local installation integrity,
-  configuration, compiled-rule drift, or missing/stale evidence diagnosis. Do not substitute
-  an update, recompilation, or visual inspection for a status-only request.
-- separately installed `ss-learn` only for explicit learning capture requests; otherwise report that
-  the optional learning extension is unavailable.
+## Choose exactly one first workflow
 
-## Bounded clarification rules
+| Request | Read |
+|---|---|
+| Build or redesign a screen, page, or component | [build](workflows/ss-build/WORKFLOW.md) |
+| First setup or missing design lock | [setup](workflows/ss-setup/WORKFLOW.md) |
+| Explore creative directions; direction not yet selected | [studio](workflows/ss-studio/WORKFLOW.md) |
+| Use screenshot, URL, Figma export, or existing UI as a reference | [reference](workflows/ss-reference/WORKFLOW.md) |
+| What is wrong with this screen; UX critique | [audit](workflows/ss-audit/WORKFLOW.md) |
+| Review implementation against project design rules | [review](workflows/ss-review/WORKFLOW.md) |
+| Score implementation or run code/evidence gates | [score](workflows/ss-score/WORKFLOW.md) |
+| Inspect rendered output, screenshot, or spacing in pixels | [verify](workflows/ss-verify/WORKFLOW.md) |
+| Change spacing/density or another single design axis | [dial](workflows/ss-dial/WORKFLOW.md) |
+| Apply an aesthetic profile | [restyle](workflows/ss-restyle/WORKFLOW.md) |
+| Brand color, semantic palette, or design tokens | [tokens](workflows/ss-tokens/WORKFLOW.md) |
+| Named animation or motion treatment | [motion](workflows/ss-motion/WORKFLOW.md) |
+| Specifically scaffold a page | [page](workflows/ss-page/WORKFLOW.md) |
+| Specifically generate a reusable component | [component](workflows/ss-component/WORKFLOW.md) |
+| Compose existing primitives into a UI pattern | [pattern](workflows/ss-pattern/WORKFLOW.md) |
+| Accessibility audit and requested fixes | [a11y](workflows/ss-a11y/WORKFLOW.md) |
+| Quick design lint | [lint](workflows/ss-lint/WORKFLOW.md) |
+| Navigation and user flows | [flow](workflows/ss-flow/WORKFLOW.md) |
+| UX microcopy | [copy](workflows/ss-copy/WORKFLOW.md) |
+| Loading, empty, success, or error states | [feedback](workflows/ss-feedback/WORKFLOW.md) |
+| Update installation or consolidate old skill entries | [update](workflows/ss-update/WORKFLOW.md) |
+| Compile rules, inspect local install/bundle/evidence health | [resolve](workflows/ss-resolve/WORKFLOW.md) |
 
-Ask one bounded clarification question only when needed to choose the first workflow:
-
-- setup vs build: “Should I set up the design method first, or build the screen with the current method?”
-- build vs reference: “Should I build from the current method, or compile the supplied reference into a project-local grammar first?”
-- build vs studio: “Do you want one concrete implementation path, or three creative directions first?”
-- audit vs score vs verify: “Do you want UX critique, code-score gating, or pixel verification first?”
-- multi-artifact registry: “Which artifact should I resolve first: `<id-a>` or `<id-b>`?”
-
-After one bounded question is answered, route to exactly one first workflow.
-
-## Direct invocation compatibility
-
-Granular `ss-*` skills remain backward compatible. If the user explicitly invokes `ss-setup`,
-`ss-build`, `ss-reference`, `ss-studio`, `ss-audit`, `ss-score`, `ss-verify`, `ss-update`, or
-`ss-learn`, use that direct skill instead of rerouting.
+For status-only requests use resolve's read-only `scripts/styleseed-doctor.mjs`; do not update,
+recompile, or visually inspect instead. For vague requests infer the first step from project state
+and the user's goal; ask only when an unresolved choice materially changes the work.

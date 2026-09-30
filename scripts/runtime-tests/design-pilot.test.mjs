@@ -41,10 +41,10 @@ test('pilot inputs are deterministic and all conditions share exact tasks, libra
 test('condition context is additive without exposing operator or held-out materials', () => {
   const { A, B, C, D } = plan.arms;
   assert.equal(Object.keys(A).some(path => path.startsWith('.agents/') || path.startsWith('.styleseed/') || path.startsWith('context/')), false);
-  assert.equal(Object.keys(B).filter(path => path.endsWith('/SKILL.md')).length, 23);
-  const catalog = JSON.parse(B['.agents/skills/ss-resolve/references/catalog.json']);
+  assert.equal(Object.keys(B).filter(path => path.endsWith('/SKILL.md')).length, 1);
+  const catalog = JSON.parse(B['.agents/skills/styleseed/workflows/ss-resolve/references/catalog.json']);
   const expectedPayload = catalog.distributions.skills.files.map(entry => entry.path.replace('engine/.claude/skills/', '.agents/skills/'));
-  expectedPayload.push('.agents/skills/ss-resolve/references/catalog.json');
+  expectedPayload.push('.agents/skills/styleseed/workflows/ss-resolve/references/catalog.json');
   assert.deepEqual(Object.keys(B).filter(path => path.startsWith('.agents/')).sort(), expectedPayload.sort());
   assert.equal(B['context/component-contract.md'], undefined);
   assert.equal(C['context/plan.md'], undefined);
@@ -97,7 +97,7 @@ test('installed B/C/D resolver contracts compile three artifacts without replaci
   const output = writePilot(plan, { output: join(root, 'prepared') });
   for (const id of ['B', 'C', 'D']) {
     const app = join(output, 'arms', id);
-    const resolver = join(app, '.agents/skills/ss-resolve/scripts/resolve-context.mjs');
+    const resolver = join(app, '.agents/skills/styleseed/workflows/ss-resolve/scripts/resolve-context.mjs');
     const before = readFileSync(join(app, 'src/styles/theme.css'));
     const compile = run(resolver, ['--project-root', '.', '--all', '--agent', 'codex'], app);
     assert.equal(compile.status, 0, compile.stderr);
@@ -127,6 +127,6 @@ test('a tampered skill cannot be frozen under the previous catalog revision', t 
     mkdirSync(dirname(join(root, path)), { recursive: true });
     writeFileSync(join(root, path), readFileSync(join(repo, path)));
   }
-  writeFileSync(join(root, 'engine/.claude/skills/ss-component/SKILL.md'), '# Changed without catalog regeneration\n');
+  writeFileSync(join(root, 'engine/.claude/skills/styleseed/workflows/ss-component/WORKFLOW.md'), '# Changed without catalog regeneration\n');
   assert.throws(() => buildPilotPlan(root), /Stale skill inventory/u);
 });

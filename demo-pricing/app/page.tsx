@@ -178,7 +178,7 @@ export default function HomePage() {
                 <div className="font-mono text-[11px] font-bold text-teal-300">engineRevision</div>
                 <h3 className="mt-5 text-xl font-bold tracking-tight">Same version, exact payload</h3>
                 <p className="mt-2 text-[14px] leading-relaxed text-neutral-400">
-                  <code className="text-neutral-200">$ss-update</code> compares the installed,
+                  <code className="text-neutral-200">$styleseed update</code> compares the installed,
                   project-recorded, and published revision before refresh and re-resolution.
                 </p>
                 <Link href="/architecture" className="mt-5 inline-flex items-center gap-1.5 text-[14px] font-bold text-teal-300 hover:underline">
@@ -187,7 +187,7 @@ export default function HomePage() {
               </article>
               <article className="border border-neutral-200 bg-[#F5F8F7] p-6">
                 <div className="font-mono text-[11px] font-bold text-teal-700">Codex package</div>
-                <h3 className="mt-5 text-xl font-bold tracking-tight">23 core skills, no learning payload</h3>
+                <h3 className="mt-5 text-xl font-bold tracking-tight">one core skill, no learning payload</h3>
                 <p className="mt-2 text-[14px] leading-relaxed text-neutral-600">
                   The repository includes a repository development Codex package boundary. The
                   implemented default/core install contains neither ss-learn nor a learning MCP. Public installation
@@ -236,7 +236,7 @@ export default function HomePage() {
               <p className="mt-1.5 text-[15px] leading-relaxed text-neutral-400">
                 When invoked, StyleSeed resolves only the rules selected for the artifact, builds
                 against that bundle, records the code and rendered checks that actually ran, and
-                preserves the approved lock for later updates. The core package contains 23 skills;
+                preserves the approved lock for later updates. The core package contains 1 skill;
                 optional local-learning tools are distributed separately.
               </p>
               <div className="mt-4 space-y-1.5">
@@ -274,7 +274,7 @@ export default function HomePage() {
             <div className="mt-6 flex flex-wrap gap-2">
               {["swiss", "editorial", "technical", "warm-dtc", "minimal-mono", "brutalist-lite"].map((p) => (
                 <code key={p} className="rounded-lg bg-white/[0.06] px-3 py-1.5 font-mono text-[13px] text-neutral-300 ring-1 ring-white/10">
-                  /ss-restyle {p} · $ss-restyle {p}
+                  /styleseed restyle {p} · $styleseed restyle {p}
                 </code>
               ))}
             </div>
@@ -457,7 +457,7 @@ export default function HomePage() {
                 <p className="mt-2 max-w-md text-[13px] text-neutral-600">
                   Skins are <em>inspired-by</em> token sets — brand-flavored color/radius/shadow/motion
                   values, not recreations of those companies&rsquo; design languages. Restructuring the
-                  actual design is the presets&rsquo; job (<code className="rounded bg-neutral-100 px-1 font-mono text-[12px]">/ss-restyle</code>).
+                  actual design is the presets&rsquo; job (<code className="rounded bg-neutral-100 px-1 font-mono text-[12px]">/styleseed restyle</code>).
                 </p>
               </div>
               <Link

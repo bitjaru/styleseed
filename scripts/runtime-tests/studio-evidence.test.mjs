@@ -6,11 +6,11 @@ import { spawnSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { sourceInventory } from "../../engine/.claude/skills/ss-score/scripts/evidence-contract.mjs";
+import { sourceInventory } from "../../engine/.claude/skills/styleseed/workflows/ss-score/scripts/evidence-contract.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(here, "..", "..");
-const studioRun = resolve(repoRoot, "engine/.claude/skills/ss-studio/scripts/studio-run.mjs");
+const studioRun = resolve(repoRoot, "engine/.claude/skills/styleseed/workflows/ss-studio/scripts/studio-run.mjs");
 
 function sha256(value) {
   return `sha256:${createHash("sha256").update(value).digest("hex")}`;

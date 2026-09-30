@@ -9,7 +9,7 @@ const BASE = "https://styleseed-demo.vercel.app";
 const REPOSITORY = "https://github.com/bitjaru/styleseed";
 const RELEASE = `${REPOSITORY}/releases/tag/v${versionInfo.version}`;
 const DESCRIPTION =
-  "A reproducible three-minute StyleSeed evaluator path: clean project-local install, 23-skill discovery, release integrity, source gates, Windows evidence, and explicit claim boundaries.";
+  "A reproducible three-minute StyleSeed evaluator path: clean project-local install, single-skill discovery, release integrity, source gates, Windows evidence, and explicit claim boundaries.";
 
 const paletteStyle = {
   "--ss-page": palette.roles.background,
@@ -29,7 +29,7 @@ const INSTALL = [
 ];
 
 const EXPECTED = [
-  "23 project-local core skills",
+  "One project-local core skill",
   "styleseed router in .agents/skills",
   "No ss-learn or learning MCP in the core install",
   "A fresh Codex process can discover $styleseed",
@@ -53,7 +53,7 @@ const EVIDENCE = [
   {
     label: "03 · Windows",
     title: "Reproduce the PowerShell path",
-    body: "The Windows guide records the tested environment, npx.cmd fallback, expected 23-skill layout, and the distinction between the core installer and optional repository extensions.",
+    body: "The Windows guide records the tested environment, npx.cmd fallback, expected single-skill layout, and the distinction between the core installer and optional repository extensions.",
     href: `${REPOSITORY}/blob/main/docs/WINDOWS-INSTALL.md`,
     action: "Open Windows evidence",
   },

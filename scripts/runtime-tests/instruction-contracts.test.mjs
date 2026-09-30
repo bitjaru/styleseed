@@ -134,9 +134,9 @@ test("does not interpret fenced examples as executable instructions", () => {
 });
 
 test("canonical skills pass bounded static checks, not model behavior acceptance", () => {
-  const root = fileURLToPath(new URL("../../engine/.claude/skills/", import.meta.url));
+  const root = fileURLToPath(new URL("../../engine/.claude/skills/styleseed/workflows/", import.meta.url));
   const skills = Object.fromEntries(readdirSync(root, { withFileTypes: true })
     .filter((entry) => entry.isDirectory())
-    .map((entry) => [entry.name, readFileSync(resolve(root, entry.name, "SKILL.md"), "utf8")]));
+    .map((entry) => [entry.name, readFileSync(resolve(root, entry.name, "WORKFLOW.md"), "utf8")]));
   assert.deepEqual(inspectInstructionContracts(skills), []);
 });

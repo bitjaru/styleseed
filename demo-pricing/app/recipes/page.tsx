@@ -239,7 +239,7 @@ export default function RecipesPage() {
             </p>
             <h2 className="mt-2 text-3xl font-bold tracking-tight">Compile it from references.</h2>
             <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-neutral-600">
-              <code>$ss-reference</code> converts screenshots, URLs, Figma exports, or existing UI
+              <code>$styleseed reference</code> converts screenshots, URLs, Figma exports, or existing UI
               into a project-local evidence-backed grammar. It does not force the nearest built-in
               recipe and does not copy the source screen.
             </p>

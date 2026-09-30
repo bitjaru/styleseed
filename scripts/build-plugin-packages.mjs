@@ -23,7 +23,7 @@ const repoRoot = resolve(scriptDir, "..");
 const allowlistPath = resolve(repoRoot, "packaging/codex/allowlist.json");
 const catalogPath = resolve(
   repoRoot,
-  "engine/.claude/skills/ss-resolve/references/catalog.json",
+  "engine/.claude/skills/styleseed/workflows/ss-resolve/references/catalog.json",
 );
 
 const textDecoder = new TextDecoder("utf8", { fatal: false });
@@ -247,8 +247,8 @@ function stableDistributionSource({ version, tag, archiveName }) {
 function rewriteStagedCatalogs(stageRoot, distributionSource) {
   if (!distributionSource) return [];
   return [
-    "engine/.claude/skills/ss-resolve/references/catalog.json",
-    "skills/ss-resolve/references/catalog.json",
+    "engine/.claude/skills/styleseed/workflows/ss-resolve/references/catalog.json",
+    "skills/styleseed/workflows/ss-resolve/references/catalog.json",
   ].map((relativePath) => {
     const path = resolve(stageRoot, relativePath);
     const catalog = readJson(path);

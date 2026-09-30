@@ -19,7 +19,7 @@ type Version = {
 
 function getVersion(): Version {
   // Read at build time so the section stays in sync with version.json (the same file
-  // agents check via /ss-update). Single source of truth.
+  // agents check via /styleseed update). Single source of truth.
   const path = join(process.cwd(), "public", "version.json");
   return JSON.parse(readFileSync(path, "utf-8"));
 }
@@ -69,7 +69,7 @@ export function WhatsNew() {
               Full changelog
             </a>
             <span className="text-neutral-500">
-              Update with <code className="rounded bg-neutral-200 px-1.5 py-0.5 text-[13px] text-neutral-800">/ss-update · $ss-update</code>
+              Update with <code className="rounded bg-neutral-200 px-1.5 py-0.5 text-[13px] text-neutral-800">/styleseed update · $styleseed update</code>
             </span>
           </div>
         </div>

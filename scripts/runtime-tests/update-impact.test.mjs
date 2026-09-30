@@ -7,10 +7,10 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const artifactImpactModule = import("../../engine/.claude/skills/ss-update/scripts/artifact-impact.mjs");
+const artifactImpactModule = import("../../engine/.claude/skills/styleseed/workflows/ss-update/scripts/artifact-impact.mjs");
 const repoRoot = resolve(fileURLToPath(new URL("../../", import.meta.url)));
-const resolver = resolve(repoRoot, "engine/.claude/skills/ss-resolve/scripts/resolve-context.mjs");
-const updateChecker = resolve(repoRoot, "engine/.claude/skills/ss-update/scripts/check-update.mjs");
+const resolver = resolve(repoRoot, "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/resolve-context.mjs");
+const updateChecker = resolve(repoRoot, "engine/.claude/skills/styleseed/workflows/ss-update/scripts/check-update.mjs");
 
 function makeRoot(prefix) {
   return mkdtempSync(join(tmpdir(), prefix));
@@ -359,7 +359,7 @@ test("check-update CLI includes sorted computed artifact impact", () => {
   const root = makeRoot("styleseed-update-impact-cli-");
   try {
     writeRegistryFixture(root);
-    const catalog = readJson(resolve(repoRoot, "engine/.claude/skills/ss-resolve/references/catalog.json"));
+    const catalog = readJson(resolve(repoRoot, "engine/.claude/skills/styleseed/workflows/ss-resolve/references/catalog.json"));
     const remotePath = resolve(root, "remote-version.json");
     writeJson(remotePath, {
       version: catalog.engineVersion,
@@ -453,7 +453,7 @@ test("adding, changing, or removing functional outcomes invalidates functional a
 test("freshness gate rejects same-version drift, unknown remote, and partial registries without writes", () => {
   const root = makeRoot("styleseed-update-gate-");
   try {
-    const catalog = readJson(resolve(repoRoot, "engine/.claude/skills/ss-resolve/references/catalog.json"));
+    const catalog = readJson(resolve(repoRoot, "engine/.claude/skills/styleseed/workflows/ss-resolve/references/catalog.json"));
     const remotePath = resolve(root, "remote.json");
     const current = { version: catalog.engineVersion, revision: catalog.engineRevision };
     const run = (strict = true, remote = remotePath) => {
@@ -491,7 +491,7 @@ test("freshness gate checks every registry artifact and clears after recompilati
   const root = makeRoot("styleseed-update-registry-gate-");
   try {
     writeRegistryFixture(root);
-    const catalog = readJson(resolve(repoRoot, "engine/.claude/skills/ss-resolve/references/catalog.json"));
+    const catalog = readJson(resolve(repoRoot, "engine/.claude/skills/styleseed/workflows/ss-resolve/references/catalog.json"));
     const remotePath = resolve(root, "remote.json");
     writeJson(remotePath, { version: catalog.engineVersion, revision: catalog.engineRevision });
     const check = () => spawnSync(process.execPath, [updateChecker, "--project-root", root,

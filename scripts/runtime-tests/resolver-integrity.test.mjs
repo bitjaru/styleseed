@@ -10,7 +10,7 @@ const here = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(here, "..", "..");
 const resolver = resolve(
   repoRoot,
-  "engine/.claude/skills/ss-resolve/scripts/resolve-context.mjs",
+  "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/resolve-context.mjs",
 );
 
 function makeProjectRoot(prefix) {

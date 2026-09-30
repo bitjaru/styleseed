@@ -14,10 +14,10 @@ import {
   parseStrictJson,
   safeProjectPath,
   sha256,
-} from "../../engine/.claude/skills/ss-resolve/scripts/runtime-contract.mjs";
+} from "../../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/runtime-contract.mjs";
 
 const repoRoot = resolve(fileURLToPath(new URL("../../", import.meta.url)));
-const references = resolve(repoRoot, "engine/.claude/skills/ss-resolve/references");
+const references = resolve(repoRoot, "engine/.claude/skills/styleseed/workflows/ss-resolve/references");
 const catalog = JSON.parse(readFileSync(resolve(references, "catalog.json"), "utf8"));
 const projectSchema = JSON.parse(readFileSync(resolve(references, "project.schema.json"), "utf8"));
 const artifactSchema = JSON.parse(readFileSync(resolve(references, "artifact.schema.json"), "utf8"));

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "synthetic-css-regression",
-  "source": "engine/.claude/skills/ss-resolve/scripts/spacing-contract.mjs",
+  "source": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/spacing-contract.mjs",
   "sourceSha256": "275cc123618266e730082569d3d612220a98621eea2745c861d04252dbeeeb24",
   "nativeGap": 12,
   "parentGap": 64,

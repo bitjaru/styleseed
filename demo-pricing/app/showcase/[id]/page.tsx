@@ -163,11 +163,11 @@ export default async function ShowcaseDetailPage({
           <div className="mt-3 grid gap-2 sm:grid-cols-[auto_1fr] sm:items-center">
             <span className="font-bold uppercase tracking-[0.1em] text-neutral-400">Claude Code</span>
             <code className="w-fit rounded bg-gray-100 px-1.5 py-0.5 font-mono text-neutral-700">
-              {entry.reproduction?.claude ?? `/ss-build ${entry.id}`}
+              {entry.reproduction?.claude ?? `/styleseed build ${entry.id}`}
             </code>
             <span className="font-bold uppercase tracking-[0.1em] text-neutral-400">Codex</span>
             <code className="w-fit rounded bg-gray-100 px-1.5 py-0.5 font-mono text-neutral-700">
-              {entry.reproduction?.codex ?? `$ss-build ${entry.id}`}
+              {entry.reproduction?.codex ?? `$styleseed build ${entry.id}`}
             </code>
             {entry.reproduction?.exportCommand && (
               <>

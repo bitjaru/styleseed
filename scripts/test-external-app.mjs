@@ -67,7 +67,7 @@ try {
   const payload = snapshot(installed);
   summary.payloadHash = createHash('sha256').update(JSON.stringify(payload)).digest('hex');
   assert.deepEqual(payload, snapshot(join(repo, 'engine/.claude/skills')), 'public skill mirror drifted');
-  assert.equal(readdirSync(installed).filter(name => existsSync(join(installed, name, 'SKILL.md'))).length, 23);
+  assert.equal(readdirSync(installed).filter(name => existsSync(join(installed, name, 'SKILL.md'))).length, 1);
   assert.equal(existsSync(join(installed, 'ss-learn')), false);
   // Reuse the repository's locked dependencies; do not fetch or install inside the application.
   const dependencyVersions = {};
@@ -92,9 +92,9 @@ try {
   summary.toolchain.lockMatches = Object.values(summary.toolchain.packages).every(p => p.installed === p.locked);
   if (process.env.CI) assert.ok(summary.toolchain.lockMatches, 'CI dependencies differ from the lockfile; run npm ci');
   if (!summary.toolchain.lockMatches) console.warn('Local dependency versions differ from the lockfile; see summary.toolchain. CI reproduction is not verified.');
-  const resolver = join(installed, 'ss-resolve/scripts/resolve-context.mjs');
-  const doctor = join(installed, 'ss-resolve/scripts/styleseed-doctor.mjs');
-  const gate = join(installed, 'ss-score/scripts/evidence-gate.mjs');
+  const resolver = join(installed, 'styleseed/workflows/ss-resolve/scripts/resolve-context.mjs');
+  const doctor = join(installed, 'styleseed/workflows/ss-resolve/scripts/styleseed-doctor.mjs');
+  const gate = join(installed, 'styleseed/workflows/ss-score/scripts/evidence-gate.mjs');
   const { verifyEvidenceRun } = await import(pathToFileURL(gate));
   const compile = () => run(process.execPath, [resolver, '--project-root', root, '--all', '--agent', 'codex']);
   compile();

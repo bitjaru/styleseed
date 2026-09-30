@@ -9,9 +9,9 @@ import { fileURLToPath } from "node:url";
 
 const repo = fileURLToPath(new URL("../../", import.meta.url));
 const skills = resolve(repo, "engine/.claude/skills");
-const doctor = resolve(skills, "ss-resolve/scripts/styleseed-doctor.mjs");
-const resolver = resolve(skills, "ss-resolve/scripts/resolve-context.mjs");
-const gate = resolve(skills, "ss-score/scripts/evidence-gate.mjs");
+const doctor = resolve(skills, "styleseed/workflows/ss-resolve/scripts/styleseed-doctor.mjs");
+const resolver = resolve(skills, "styleseed/workflows/ss-resolve/scripts/resolve-context.mjs");
+const gate = resolve(skills, "styleseed/workflows/ss-score/scripts/evidence-gate.mjs");
 const digest = (bytes) => `sha256:${createHash("sha256").update(bytes).digest("hex")}`;
 const readJson = (path) => JSON.parse(readFileSync(path, "utf8"));
 function write(path, value) {
@@ -280,20 +280,20 @@ test("installed physical skill payload works outside the checkout and fails clos
   const root = temporary(t);
   const installed = resolve(root, ".agents/skills");
   cpSync(skills, installed, { recursive: true });
-  const installedDoctor = resolve(installed, "ss-resolve/scripts/styleseed-doctor.mjs");
+  const installedDoctor = resolve(installed, "styleseed/workflows/ss-resolve/scripts/styleseed-doctor.mjs");
   app(root);
-  compile(root, ["--all"], resolve(installed, "ss-resolve/scripts/resolve-context.mjs"));
+  compile(root, ["--all"], resolve(installed, "styleseed/workflows/ss-resolve/scripts/resolve-context.mjs"));
   const current = diagnose(root, [], installedDoctor);
   assert.equal(current.report.installation.status, "verified");
   assert.equal(current.report.installation.distribution, "skills");
   assert.ok(current.report.artifacts.every((entry) => entry.compilation.status === "current"));
-  syntheticEvidence(root, "dashboard", "installed-run", resolve(installed, "ss-score/scripts/evidence-gate.mjs"));
+  syntheticEvidence(root, "dashboard", "installed-run", resolve(installed, "styleseed/workflows/ss-score/scripts/evidence-gate.mjs"));
   assert.equal(diagnose(root, ["--artifact", "dashboard"], installedDoctor).exit, 0);
-  const scoreSkill = resolve(installed, "ss-score/SKILL.md");
+  const scoreSkill = resolve(installed, "styleseed/workflows/ss-score/WORKFLOW.md");
   write(scoreSkill, "tampered\n");
   assert.equal(diagnose(root, [], installedDoctor).report.installation.status, "tampered");
   unlinkSync(scoreSkill);
   assert.equal(diagnose(root, [], installedDoctor).report.installation.status, "incomplete");
-  write(resolve(installed, "ss-resolve/references/catalog.json"), "{");
+  write(resolve(installed, "styleseed/workflows/ss-resolve/references/catalog.json"), "{");
   assert.equal(diagnose(root, [], installedDoctor).report.installation.status, "invalid");
 });

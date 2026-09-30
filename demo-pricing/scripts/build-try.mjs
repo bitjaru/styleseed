@@ -6,7 +6,7 @@ import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const resolver = resolve(root, '../engine/.claude/skills/ss-resolve/scripts/resolve-context.mjs');
+const resolver = resolve(root, '../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/resolve-context.mjs');
 const output = resolve(root, 'content/try-bundles.json');
 const { input: paletteInput } = JSON.parse(readFileSync(resolve(root, 'content/site-docs-palette.json'), 'utf8'));
 

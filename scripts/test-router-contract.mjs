@@ -61,7 +61,7 @@ const requiredPhrases = [
   "never auto-install it",
   "ask one bounded clarification question",
   "Choose exactly one first workflow",
-  "Granular `ss-*` skills remain backward compatible",
+  "do not invoke an unregistered skill",
 ];
 
 for (const phrase of requiredPhrases) {

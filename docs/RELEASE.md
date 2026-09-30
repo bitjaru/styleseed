@@ -50,7 +50,7 @@ Before publishing, a maintainer must:
 1. download the candidate artifact from the successful workflow run;
 2. verify `SHA256SUMS` and the GitHub attestations;
 3. inspect `release-manifest.json` and confirm its `gitSha` is the signed tag target;
-4. run a disposable direct-archive install and confirm 23 physical core skills, no `ss-learn`, no
+4. run a disposable direct-archive install and confirm one physical core skill, no `ss-learn`, no
    MCP, a working resolver, and a `current` stable-channel update result against the candidate
    manifest;
 5. create a draft GitHub release, attach the six candidate files, review the release notes, and

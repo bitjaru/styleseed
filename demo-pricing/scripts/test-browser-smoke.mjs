@@ -227,14 +227,14 @@ try {
   await assertJson(baseUrl, "/version.json", (value) => {
     assert(/^\d+\.\d+\.\d+$/u.test(value.version), "version.json has no semantic version");
     assert(/^sha256:[0-9a-f]{64}$/u.test(value.revision), "version.json has no exact core revision");
-    assert(value.skills === 23, `version.json expected 23 skills, found ${String(value.skills)}`);
+    assert(value.skills === 1, `version.json expected one skill, found ${String(value.skills)}`);
   });
   await assertJson(baseUrl, "/.well-known/styleseed/registry.json", (value) => {
     assert(/^\d+\.\d+\.\d+$/u.test(value.context?.engineVersion), "registry has no engine version");
     assert(/^sha256:[0-9a-f]{64}$/u.test(value.context?.engineRevision), "registry has no engine revision");
   });
   await assertJson(baseUrl, "/.well-known/agent-skills/index.json", (value) => {
-    assert(Array.isArray(value.skills) && value.skills.length === 23, "agent skill index does not expose 23 skills");
+    assert(Array.isArray(value.skills) && value.skills.length === 1, "agent skill index does not expose exactly one skill");
   });
   await assertJson(baseUrl, "/api/github-stars", (value) => {
     assert(
@@ -255,7 +255,7 @@ try {
   ];
   if (failures.length > 0) throw new Error(`Browser smoke failures:\n- ${failures.join("\n- ")}`);
   console.log(`Browser smoke verified ${routes.length} routes at desktop and 390x844 mobile/reduced-motion viewports.`);
-  console.log("Public version, StyleSeed registry, and 23-skill discovery endpoints are readable.");
+  console.log("Public version, StyleSeed registry, and single-skill discovery endpoints are readable.");
 } catch (error) {
   console.error(error instanceof Error ? error.stack ?? error.message : String(error));
   if (serverOutput.length > 0) console.error(`Next.js output:\n${serverOutput.join("")}`);

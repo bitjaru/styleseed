@@ -43,9 +43,12 @@ function validateFrontmatter(skillName, text) {
 }
 
 if (matrix.schemaVersion !== 1 || !Array.isArray(matrix.evidenceLevels) || !matrix.skills) failures.push("skill contract matrix schema is invalid");
-const directories = readdirSync(skillRoot, { withFileTypes: true }).filter((entry) => entry.isDirectory() && existsSync(resolve(skillRoot, entry.name, "SKILL.md"))).map((entry) => entry.name).sort();
+const workflowRoot = resolve(skillRoot, "styleseed/workflows");
+const publicDirectories = readdirSync(skillRoot, { withFileTypes: true }).filter((entry) => entry.isDirectory() && existsSync(resolve(skillRoot, entry.name, "SKILL.md"))).map((entry) => entry.name).sort();
+const workflows = existsSync(workflowRoot) ? readdirSync(workflowRoot, { withFileTypes: true }).filter((entry) => entry.isDirectory()).map((entry) => entry.name).sort() : [];
+const directories = [...publicDirectories, ...workflows];
 for (const directory of directories) {
-  const text = readFileSync(resolve(skillRoot, directory, "SKILL.md"), "utf8");
+  const text = readFileSync(workflows.includes(directory) ? resolve(workflowRoot, directory, "WORKFLOW.md") : resolve(skillRoot, directory, "SKILL.md"), "utf8");
   skillTexts[directory] = text;
   validateFrontmatter(directory, text);
   const contract = matrix.skills[directory];
@@ -58,9 +61,10 @@ for (const name of Object.keys(matrix.skills)) if (!directories.includes(name)) 
 for (const finding of inspectInstructionContracts(skillTexts)) {
   failures.push(`${finding.skill}:${finding.line} ${finding.code}: ${finding.message}`);
 }
-const descriptionTotal = [...descriptionLengths.values()].reduce((sum, length) => sum + length, 0);
-for (const [name, length] of [...descriptionLengths].sort((a, b) => b[1] - a[1])) {
+const publicDescriptions = new Map([...descriptionLengths].filter(([name]) => publicDirectories.includes(name)));
+const descriptionTotal = [...publicDescriptions.values()].reduce((sum, length) => sum + length, 0);
+for (const [name, length] of [...publicDescriptions].sort((a, b) => b[1] - a[1])) {
   if (length > DESCRIPTION_SKILL_CEILING) failures.push(`${name} description is ${length} characters, over the ${DESCRIPTION_SKILL_CEILING} ceiling; lead with the trigger and move mechanism detail into the skill body`);
 }
 if (descriptionTotal > DESCRIPTION_TOTAL_CEILING) failures.push(`skill descriptions total ${descriptionTotal} characters, over the ${DESCRIPTION_TOTAL_CEILING} budget; shorten the longest descriptions before adding more`);
-if (failures.length) { console.error(failures.join("\n")); process.exitCode = 1; } else console.log(`skill contracts: ${directories.length} skills validated; descriptions ${descriptionTotal}/${DESCRIPTION_TOTAL_CEILING} characters`);
+if (failures.length) { console.error(failures.join("\n")); process.exitCode = 1; } else console.log(`skill contracts: ${publicDirectories.length} public skill + ${workflows.length} internal workflows validated; descriptions ${descriptionTotal}/${DESCRIPTION_TOTAL_CEILING} characters`);

@@ -10,7 +10,7 @@ node <installed-ss-resolve>/scripts/styleseed-doctor.mjs --project-root . --arti
 For contributors running from the StyleSeed checkout:
 
 ```sh
-node engine/.claude/skills/ss-resolve/scripts/styleseed-doctor.mjs --project-root /path/to/application --json
+node engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/styleseed-doctor.mjs --project-root /path/to/application --json
 ```
 
 The placeholder is not a package name or a shell command. For a project-local installation it

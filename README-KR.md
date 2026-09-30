@@ -42,7 +42,7 @@ Codex와 Claude Code에 필요한 코어 스킬을 한 번에 설치합니다. *
 - **Codex:** `$styleseed 이 화면을 개선해줘. 기존 디자인은 존중하고, 내가 결정해야 할 것부터 알려줘.`
 - **Claude Code:** `/styleseed 이 화면을 개선해줘. 기존 디자인은 존중하고, 내가 결정해야 할 것부터 알려줘.`
 
-23개 스킬 이름을 외울 필요는 없습니다. `styleseed`가 첫 작업을 선택합니다. 필요한 디자인 선택은 함께 확정하고 실제 렌더 결과를 확인하세요.
+`styleseed` 하나만 등록됩니다. 요청에 맞는 내부 작업을 자동으로 선택합니다. 필요한 디자인 선택은 함께 확정하고 실제 렌더 결과를 확인하세요.
 
 <details>
 <summary>한 에이전트만 쓰거나 직접 선택하고 싶나요?</summary>
@@ -66,6 +66,15 @@ README의 설명을 먼저 믿지 말고 **[3분 검증 경로](https://stylesee
 > **첫 PR을 올리고 싶나요?** 문서 수정, 회귀 테스트 fixture, 스킨 개선부터 시작하거나
 > [`good first issue`](https://github.com/bitjaru/styleseed/issues?q=is%3Aissue%20is%3Aopen%20label%3A%22good%20first%20issue%22)를 맡아주세요.
 > 작은 문서·테스트 수정은 사전 제안이 필요 없습니다. [15분 기여 가이드](CONTRIBUTING.md#first-pr-in-about-15-minutes)를 참고하세요.
+
+### 기존 다중 스킬 설치에서 전환하기
+
+같은 설치 경로로 재설치한 뒤 `StyleSeed, 기존 스킬 목록 통합해줘`라고 요청하세요.
+새 통합 패키지를 검증하고, 수정되지 않은 예전 `ss-*` 폴더만 검색 경로 밖으로 백업합니다.
+직접 수정한 항목은 보존합니다. 이후 에이전트 세션을 새로 시작하세요.
+예전 `$ss-build` / `/ss-build` 등록 대신 `$styleseed build` / `/styleseed build`를 사용합니다.
+22개 내부 절차가 함께 들어 있으므로 `styleseed` 하나만 설치해도 동작합니다.
+
 
 ## 현재 규칙이 검사하는 것들
 
@@ -117,7 +126,7 @@ StyleSeed는 **74개 craft 규칙**과 설치된 워크플로가 80점 미만 �
 
 <br /><br />
 
-[쉬운 시작](#쉬운-시작-30초) · [Studio 데모](https://styleseed-demo.vercel.app/studio) · [팔레트](https://styleseed-demo.vercel.app/palettes) · [상세 사용법](#상세-사용법) · [엔진 구조](engine/ARCHITECTURE.md) · [왜-필요한가](#왜-필요한가) · [모션](#네임드-모션-시스템) · [AI-스킬-23개](#ai-스킬-23개) · [Wiki](../../wiki)
+[쉬운 시작](#쉬운-시작-30초) · [Studio 데모](https://styleseed-demo.vercel.app/studio) · [팔레트](https://styleseed-demo.vercel.app/palettes) · [상세 사용법](#상세-사용법) · [엔진 구조](engine/ARCHITECTURE.md) · [왜-필요한가](#왜-필요한가) · [모션](#네임드-모션-시스템) · [통합-스킬-하나](#통합-스킬-하나) · [Wiki](../../wiki)
 
 <br />
 
@@ -147,7 +156,7 @@ StyleSeed의 목표는 의도·트레이드오프·승인 권한을 사람에게
 앞으로 할 일이지 이미 완료된 기능이 아닙니다.
 
 StyleSeed는 **디자인 방법 엔진**입니다. 74개 시각 룰, 8개 출력 문법, 5개 서피스
-어댑터, 컨텍스트·레퍼런스 컴파일러, 키 컬러를 OKLCH ramp·표면·동반색·시맨틱 역할·대비 증거로 바꾸는 팔레트 엔진(8개 기본 posture 포함), 48개 컴포넌트, 23개 `ss-*` 워크플로우 스킬이 LLM에게 데이터
+어댑터, 컨텍스트·레퍼런스 컴파일러, 키 컬러를 OKLCH ramp·표면·동반색·시맨틱 역할·대비 증거로 바꾸는 팔레트 엔진(8개 기본 posture 포함), 48개 컴포넌트, 22개 내부 워크플로우를 담은 통합 스킬이 LLM에게 데이터
 뿐 아니라 기록된 판단을 전달합니다:
 
 ```
@@ -232,7 +241,7 @@ claude plugin marketplace add bitjaru/styleseed
 claude plugin install styleseed@styleseed
 ```
 
-두 경로 모두 동일한 23개 정본 스킬을 설치합니다. 선택 확장인 `ss-learn`은 어느 쪽에도 포함되지 않습니다.
+두 경로 모두 동일한 통합 스킬 1개을 설치합니다. 선택 확장인 `ss-learn`은 어느 쪽에도 포함되지 않습니다.
 
 </details>
 
@@ -254,8 +263,8 @@ cp -r /tmp/styleseed/engine/.claude/skills/* .agents/skills/
 **2단계 — 새 에이전트 세션을 시작**한 뒤 setup을 실행하세요:
 
 ```text
-Claude Code: /ss-setup
-Codex:       $ss-setup   # 또는 /skills에서 ss-setup 선택
+Claude Code: /styleseed setup
+Codex:       $styleseed setup   # 또는 /skills에서 styleseed 선택
 ```
 
 그러면 Claude Code가 하나씩 물어봅니다:
@@ -317,7 +326,7 @@ AI 코딩 도구는 기능적인 UI를 잘 만듭니다. 하지만 **기능적 �
 | **CSS 테마** | Tailwind CSS v4 구현체 |
 | **컴포넌트** | UI 프리미티브 32개 + 패턴 컴포넌트 16개 |
 | **모션** | 네임드 시드 5종 + 복사-붙여넣기 키워드 라이브러리 |
-| **AI 스킬** | Claude Code·Codex 공용 워크플로우 23개 |
+| **AI 스킬** | Claude Code·Codex 공용 스킬 1개 · 내부 워크플로우 22개 |
 
 ### 이런 규칙이 차이를 만듭니다
 
@@ -343,50 +352,50 @@ AI 코딩 도구는 기능적인 UI를 잘 만듭니다. 하지만 **기능적 �
 
 이건 수십 개 규칙 중 6개. [전체 디자인 언어 보기 →](engine/DESIGN-LANGUAGE.md)
 
-## AI 스킬 23개
+## 통합 스킬 하나
 
-스킬을 복사하면 **에이전트 스킬 23개**를 쓸 수 있습니다 — Studio · 컨텍스트 컴파일 · 문법 컴파일 · 빌드 · 스타일 · UI · 모션 · UX · 로컬 학습:
+스킬을 복사하면 **통합 스킬 1개와 내부 워크플로우 22개**를 쓸 수 있습니다 — Studio · 컨텍스트 컴파일 · 문법 컴파일 · 빌드 · 스타일 · UI · 모션 · UX · 로컬 학습:
 
 ### 빌드 & 스타일 — 데모처럼 만들기
 
 | 스킬 | 기능 |
 |------|------|
-| `/ss-studio` | 역할별 레퍼런스 → 세 가지 방향 → 사람 선택 → 인터랙션·미디어 계획 → 실제 프로토타입 → 시간축·화면 검증까지 수행 |
-| `/ss-resolve` | STYLESEED.md에서 문법·어댑터·브랜드 레시피 등 선택값만 10–20KB 규칙 번들과 출처 해시 manifest로 컴파일 |
-| `/ss-build` | **화면 하나를 데모 방식 그대로** — 락 → 빌드 → 게이트(≥80) → 수정 후에만 보여줌. UI는 프리핸드 말고 이걸로 |
-| `/ss-reference` | 이미지·URL·Figma·기존 UI를 근거·신뢰도·토큰·금지규칙이 있는 프로젝트 전용 룰셋으로 컴파일 |
-| `/ss-setup` | 출력 문법·서피스 어댑터·9개 브랜드 레시피·도메인·아티팩트와 제한된 브랜드 값을 설정 |
-| `/ss-dial` | 디자인 축 하나를 결정론적으로 올리고/내리기 (density·radius·color 등 7축) |
-| `/ss-restyle` | 프리셋으로 룩 전체 교체 (swiss · editorial · technical · warm-dtc · minimal-mono · brutalist-lite) |
-| `/ss-verify` | **비주얼 게이트** — 렌더 → 스크린샷을 직접 보고 픽셀 기준 채점 (폰트 미로딩, 죽은 여백, 포컬 부재) |
+| `/styleseed studio` | 역할별 레퍼런스 → 세 가지 방향 → 사람 선택 → 인터랙션·미디어 계획 → 실제 프로토타입 → 시간축·화면 검증까지 수행 |
+| `/styleseed resolve` | STYLESEED.md에서 문법·어댑터·브랜드 레시피 등 선택값만 10–20KB 규칙 번들과 출처 해시 manifest로 컴파일 |
+| `/styleseed build` | **화면 하나를 데모 방식 그대로** — 락 → 빌드 → 게이트(≥80) → 수정 후에만 보여줌. UI는 프리핸드 말고 이걸로 |
+| `/styleseed reference` | 이미지·URL·Figma·기존 UI를 근거·신뢰도·토큰·금지규칙이 있는 프로젝트 전용 룰셋으로 컴파일 |
+| `/styleseed setup` | 출력 문법·서피스 어댑터·9개 브랜드 레시피·도메인·아티팩트와 제한된 브랜드 값을 설정 |
+| `/styleseed dial` | 디자인 축 하나를 결정론적으로 올리고/내리기 (density·radius·color 등 7축) |
+| `/styleseed restyle` | 프리셋으로 룩 전체 교체 (swiss · editorial · technical · warm-dtc · minimal-mono · brutalist-lite) |
+| `/styleseed verify` | **비주얼 게이트** — 렌더 → 스크린샷을 직접 보고 픽셀 기준 채점 (폰트 미로딩, 죽은 여백, 포컬 부재) |
 
 ### UI 스킬 — 잘 만들기
 
 | 스킬 | 기능 |
 |------|------|
-| `/ss-component` | 디자인 규칙에 맞는 새 컴포넌트 생성 |
-| `/ss-page` | 모바일 페이지 스캐폴딩 |
-| `/ss-pattern` | UI 패턴 조합 (카드 그리드, 테이블, 차트) |
-| `/ss-motion` | 네임드 모션 적용 — 시드 또는 키워드 무브 (`toggle-flip`, `tilt-3d`...) |
-| `/ss-review` | 디자인 시스템 위반 감사 |
-| `/ss-tokens` | 디자인 토큰 조회/추가/수정 |
-| `/ss-a11y` | 접근성 감사 (WCAG 2.2 AA) |
-| `/ss-lint` | 빠른 자동 린트 — 흔한 위반을 수초 안에 감지 |
-| `/ss-score` | UI 디자인 품질 0-100 점수 + 우선순위 수정 목록 |
-| `/ss-update` | 최신 엔진 업데이트 — 프로젝트 분석 후 안전하게 갱신 |
+| `/styleseed component` | 디자인 규칙에 맞는 새 컴포넌트 생성 |
+| `/styleseed page` | 모바일 페이지 스캐폴딩 |
+| `/styleseed pattern` | UI 패턴 조합 (카드 그리드, 테이블, 차트) |
+| `/styleseed motion` | 네임드 모션 적용 — 시드 또는 키워드 무브 (`toggle-flip`, `tilt-3d`...) |
+| `/styleseed review` | 디자인 시스템 위반 감사 |
+| `/styleseed tokens` | 디자인 토큰 조회/추가/수정 |
+| `/styleseed a11y` | 접근성 감사 (WCAG 2.2 AA) |
+| `/styleseed lint` | 빠른 자동 린트 — 흔한 위반을 수초 안에 감지 |
+| `/styleseed score` | UI 디자인 품질 0-100 점수 + 우선순위 수정 목록 |
+| `/styleseed update` | 최신 엔진 업데이트 — 프로젝트 분석 후 안전하게 갱신 |
 
 ### UX 스킬 — 디자인 판단을 구현에 연결하기
 
 | 스킬 | 기능 |
 |------|------|
-| `/ss-flow` | 유저 플로우 설계 (점진적 공개, 정보 피라미드) |
-| `/ss-audit` | 닐슨 10대 사용성 원칙으로 UX 평가 |
-| `/ss-copy` | UX 마이크로카피 생성 (버튼, 에러, 빈 상태, 토스트) |
-| `/ss-feedback` | 4가지 피드백 상태 추가 (로딩, 빈 상태, 에러, 성공) |
+| `/styleseed flow` | 유저 플로우 설계 (점진적 공개, 정보 피라미드) |
+| `/styleseed audit` | 닐슨 10대 사용성 원칙으로 UX 평가 |
+| `/styleseed copy` | UX 마이크로카피 생성 (버튼, 에러, 빈 상태, 토스트) |
+| `/styleseed feedback` | 4가지 피드백 상태 추가 (로딩, 빈 상태, 에러, 성공) |
 
 ### 선택형 저장소 전용 learning extension
 
-`/ss-learn`은 23개 core skill이나 공개 `npx skills add` 설치 경로에 포함되지 않습니다.
+`/ss-learn`은 통합 core skill이나 공개 `npx skills add` 설치 경로에 포함되지 않습니다.
 소스는 보안 개발과 로컬 계약 테스트를 위해 `extensions/learning/` 아래에 있습니다. 사람이 캡처를 요청해야
 후보를 만들고, 채택과 공유 패키지 준비에는 각각 별도 caller-attested 승인이 필요합니다.
 알려진 고위험 신원 패턴은 차단하지만 이것이 익명화 보장은 아닙니다. 노출 전에 정확한
@@ -400,7 +409,7 @@ CLI와 bridge 모두 레지스트리에 업로드하거나 코어 룰을 자동�
 ### Codex 플러그인 패키지
 
 저장소에는 로컬 테스트용 repository development `.codex-plugin/plugin.json` 패키지 경계와
-동일한 core 스킬 23개가 포함됩니다. 구현된 default/core 설치에는 `ss-learn`과 learning MCP가
+동일한 core 스킬 1개가 포함됩니다. 구현된 default/core 설치에는 `ss-learn`과 learning MCP가
 없습니다. 공개 플러그인 디렉터리 릴리스는 아직 검증되지 않았고, 지금의 공개 설치 경로는
 계속 `npx skills add bitjaru/styleseed`입니다.
 
@@ -408,20 +417,20 @@ CLI와 bridge 모두 레지스트리에 업로드하거나 코어 룰을 자동�
 
 ```bash
 # 1. 플로우 설계
-> /ss-flow "이메일 인증 포함 온보딩"
+> /styleseed flow "이메일 인증 포함 온보딩"
 
 # 2. 페이지 생성
-> /ss-page Onboarding "3단계 온보딩: 이름, 이메일 인증, 설정"
+> /styleseed page Onboarding "3단계 온보딩: 이름, 이메일 인증, 설정"
 
 # 3. UX 카피 생성
-> /ss-copy "온보딩 — 버튼 라벨, 에러 메시지, 성공 상태"
+> /styleseed copy "온보딩 — 버튼 라벨, 에러 메시지, 성공 상태"
 
 # 4. 피드백 상태 추가
-> /ss-feedback src/pages/Onboarding.tsx
+> /styleseed feedback src/pages/Onboarding.tsx
 
 # 5. 전체 검토
-> /ss-audit src/pages/Onboarding.tsx
-> /ss-review src/pages/Onboarding.tsx
+> /styleseed audit src/pages/Onboarding.tsx
+> /styleseed review src/pages/Onboarding.tsx
 ```
 
 목표: 기록된 디자인 결정에 맞게 구현하고, 접근성과 실제 사용 흐름을 검토할 수 있는 온보딩.
@@ -435,7 +444,7 @@ CLI와 bridge 모두 레지스트리에 업로드하거나 코어 룰을 자동�
 | **역할** | 브랜드 토큰 (피부) | 디자인 감각 (뇌) |
 | **AI에게 가르치는 것** | 어떤 색/폰트를 쓸지 | 어떻게 디자이너처럼 생각할지 |
 | **컴포넌트** | 없음 | 48개 |
-| **AI 스킬** | 없음 | 23개 |
+| **AI 스킬** | 없음 | 1개 |
 | **레이아웃 규칙** | 없음 | 섹션 타입, 정보 피라미드, 시각적 리듬 |
 | **금지 패턴** | 없음 | 수십 개의 "이러면 안 됨" 규칙 |
 
@@ -459,7 +468,7 @@ import { spring } from "@engine/motion";
 <motion.button {...spring.hover} {...spring.press}>저장</motion.button>
 ```
 
-**2. 키워드 = 독창적 무브.** 이름 하나로 호출하는 복사-붙여넣기 모션 라이브러리 — `toggle-flip`, `reveal-blur`, `tilt-3d`, `magnetic`, `glow-pulse`, `confetti-pop` 등. 바이브코딩 중에 키워드를 말하거나 (`/ss-motion toggle-flip`) 하면 같은 레시피가 코드에 들어갑니다.
+**2. 키워드 = 독창적 무브.** 이름 하나로 호출하는 복사-붙여넣기 모션 라이브러리 — `toggle-flip`, `reveal-blur`, `tilt-3d`, `magnetic`, `glow-pulse`, `confetti-pop` 등. 바이브코딩 중에 키워드를 말하거나 (`/styleseed motion toggle-flip`) 하면 같은 레시피가 코드에 들어갑니다.
 
 ▶ **[라이브 갤러리에서 모든 모션 미리보기 & 복사 →](https://styleseed-demo.vercel.app/motion)**
 &nbsp;·&nbsp; [직접 만들기 → 모션 가이드](https://styleseed-demo.vercel.app/motion/guide)
@@ -472,11 +481,11 @@ import { spring } from "@engine/motion";
 | **[stripe](skins/stripe/)** | 프로페셔널 — 인디고, 멀티 레이어 섀도우 |
 | **[linear](skins/linear/)** | 다크 우선 — 바이올렛, 개발자 지향 |
 | **[notion / raycast / arc / vercel](skins/)** | 그 외 내장 스킨 |
-| **[58+ 더보기](skins/_from-awesome-design-md/)** | awesome-design-md의 모든 브랜드 (`/ss-setup`로 자동 변환) |
+| **[58+ 더보기](skins/_from-awesome-design-md/)** | awesome-design-md의 모든 브랜드 (`/styleseed setup`로 자동 변환) |
 
 > 스킨은 *inspired-by* 토큰 세트입니다. 색과 타입 재료를 제공합니다. 디자인 구조
 > 자체를 바꾸는 것은 [`BRAND-RECIPES.md`](engine/BRAND-RECIPES.md)의 9개 레시피이며,
-> 프리셋(`/ss-restyle`)은 그 위에서 선택적으로 미감을 조정합니다.
+> 프리셋(`/styleseed restyle`)은 그 위에서 선택적으로 미감을 조정합니다.
 
 ## StyleSeed vs 대안
 
@@ -484,7 +493,7 @@ import { spring } from "@engine/motion";
 |---|---|---|---|---|---|
 | 컴포넌트 | ✅ 48개 | ✅ 50+ | ✅ | ✅ | ❌ |
 | 디자인 **판단 기준** (언제 뭘 쓸지) | ✅ 74개 룰 | ❌ | ❌ | 일부 | ❌ |
-| Claude Code / Cursor 통합 | ✅ 23개 스킬 | ❌ | ❌ | ❌ | — |
+| Claude Code / Cursor 통합 | ✅ 스킬 1개 | ❌ | ❌ | ❌ | — |
 | 브랜드 스킨 (Toss, Stripe, Linear...) | ✅ | ❌ | ❌ | ❌ | ❌ |
 | 가격 | 무료 (MIT) | 무료 | $299+ | 무료 | — |
 | AI 코딩툴과 *함께* 동작 | ✅ | 간접 | 간접 | 간접 | — |
@@ -501,9 +510,9 @@ import { spring } from "@engine/motion";
 | --- | --- | --- |
 | 일관된(coherent) 화면 | ✅ | ✅ |
 | 제네릭-AI 티를 이름 붙여 금지 | — | ✅ (기본 인디고, 아이콘칩, 무지개 리스트…) |
-| 보여주기 전에 채점·수정하는 게이트 | — | ✅ `/ss-score` ≥80 루프 |
+| 보여주기 전에 채점·수정하는 게이트 | — | ✅ `/styleseed score` ≥80 루프 |
 | 결정이 프롬프트를 넘어 유지 (락) | — | ✅ `STYLESEED.md` |
-| 프리셋·다이얼로 룩 전체 이동 | — | ✅ `/ss-restyle`, `/ss-dial` |
+| 프리셋·다이얼로 룩 전체 이동 | — | ✅ `/styleseed restyle`, `/styleseed dial` |
 
 공식 스킬은 *일관되게*, StyleSeed는 *템플릿 티 안 나게*. 공식으로 스캐폴딩하고 StyleSeed 게이트로 다듬으세요.
 
@@ -571,7 +580,7 @@ StyleSeed는 **살아있는 판단 프레임워크**입니다 — 룰은 고정�
 ### 업데이트 안내와 선택적 강제 검사
 
 한 번 업데이트한 뒤에는 프로젝트 작업 세션의 첫 스킬 실행 시 정확한 리비전을 확인합니다.
-버전 번호가 같아도 변경이 있으면 `$ss-update`(Claude: `/ss-update`)를 권고합니다.
+버전 번호가 같아도 변경이 있으면 `$styleseed update`(Claude: `/styleseed update`)를 권고합니다.
 오프라인은 확인 불가로 보고하며, 프로젝트 디자인 설정을 자동 덮어쓰지 않습니다.
 이미 설치된 옛 스킬은 최초 한 번 갱신해야 이 규칙을 받을 수 있습니다.
 
@@ -580,4 +589,4 @@ CI에서 최신 상태를 강제하려면 빌드 전에 설치 경로의
 설치본이 오래됐거나 확인 불가이거나 등록된 아티팩트 중 하나라도 최신 번들이 아니면
 종료 코드 1을 반환합니다. 자동 설치는 하지 않습니다. 버전을 고정한 프로젝트는
 `--require-current` 없이 진단만 사용할 수 있습니다.
-[업데이트 검사 규약](engine/.claude/skills/ss-update/references/update-preflight.md)
+[업데이트 검사 규약](engine/.claude/skills/styleseed/workflows/ss-update/references/update-preflight.md)

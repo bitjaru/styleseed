@@ -72,17 +72,17 @@ const WORKFLOW = [
   {
     n: "03",
     title: "Compile unfamiliar references",
-    body: "When references fall outside the built-ins, use $ss-reference to extract evidence-backed rules. Preserve relationships and judgment instead of cloning pixels.",
+    body: "When references fall outside the built-ins, use $styleseed reference to extract evidence-backed rules. Preserve relationships and judgment instead of cloning pixels.",
   },
   {
     n: "04",
     title: "Compile the selected context",
-    body: "Run $ss-resolve. Codex reads a small .styleseed/effective-rules.md bundle, while the manifest pins the exact selection and source hashes.",
+    body: "Run $styleseed resolve. Codex reads a small .styleseed/effective-rules.md bundle, while the manifest pins the exact selection and source hashes.",
   },
   {
     n: "05",
     title: "Build, inspect code and pixels",
-    body: "Run $ss-build with real content, score the implementation, then use $ss-verify to render required viewports. Repeat until both the code gate and visible result hold.",
+    body: "Run $styleseed build with real content, score the implementation, then use $styleseed verify to render required viewports. Repeat until both the code gate and visible result hold.",
   },
   {
     n: "06",
@@ -95,12 +95,12 @@ const MAPPING = [
   ["Durable repository guidance", "AGENTS.md"],
   ["Reusable Codex workflows", ".agents/skills/ss-*"],
   ["Approved project decisions", "STYLESEED.md"],
-  ["Compiled active context", "$ss-resolve"],
-  ["Build the selected method", "$ss-build"],
-  ["Deterministic code gate", "$ss-score ≥80"],
-  ["Rendered visual gate", "$ss-verify"],
+  ["Compiled active context", "$styleseed resolve"],
+  ["Build the selected method", "$styleseed build"],
+  ["Deterministic code gate", "$styleseed score ≥80"],
+  ["Rendered visual gate", "$styleseed verify"],
   ["Caller-attested local lesson", "$ss-learn"],
-  ["Exact engine revision update", "$ss-update"],
+  ["Exact engine revision update", "$styleseed update"],
 ];
 
 const FAQ = [
@@ -114,11 +114,11 @@ const FAQ = [
   },
   {
     q: "Will later Codex sessions keep the same design decisions?",
-    a: "Yes. Setup writes approved decisions to STYLESEED.md, and $ss-resolve compiles them into .styleseed/effective-rules.md plus a source-hash manifest. Repository guidance tells later sessions to resolve and read that bounded context instead of inventing a new direction.",
+    a: "Yes. Setup writes approved decisions to STYLESEED.md, and $styleseed resolve compiles them into .styleseed/effective-rules.md plus a source-hash manifest. Repository guidance tells later sessions to resolve and read that bounded context instead of inventing a new direction.",
   },
   {
     q: "How does StyleSeed handle updates in Codex?",
-    a: "StyleSeed compares the installed engineRevision, the revision recorded in the project manifest, and the published revision. A same-version rule or skill fix is still detectable. $ss-update refreshes through the original install channel, re-resolves STYLESEED.md, and checks the result without replacing project-owned code, tokens, assets, or decisions.",
+    a: "StyleSeed compares the installed engineRevision, the revision recorded in the project manifest, and the published revision. A same-version rule or skill fix is still detectable. $styleseed update refreshes through the original install channel, re-resolves STYLESEED.md, and checks the result without replacing project-owned code, tokens, assets, or decisions.",
   },
   {
     q: "Can Codex teach StyleSeed a design correction?",
@@ -126,7 +126,7 @@ const FAQ = [
   },
   {
     q: "Can I install StyleSeed from the public Codex plugin directory?",
-    a: `Not yet. The repository includes a repository development Codex plugin package with 23 skills, but public plugin-directory release is not verified. The implemented default/core install contains no learning MCP. Use ${install.codex} as the released portable installation path.`,
+    a: `Not yet. The repository includes a repository development Codex plugin package with one skill, but public plugin-directory release is not verified. The implemented default/core install contains no learning MCP. Use ${install.codex} as the released portable installation path.`,
   },
   {
     q: "Will StyleSeed ask me to star the repository?",
@@ -214,7 +214,7 @@ export default function CodexUiDesignPage() {
           <div className="border-l-4 border-emerald-600 pl-5">
             <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-emerald-700">Short answer</p>
             <p className="mt-2 text-[16px] font-semibold leading-relaxed">
-              AGENTS.md → grammar → STYLESEED.md → $ss-resolve → $ss-build → $ss-verify.
+              AGENTS.md → grammar → STYLESEED.md → $styleseed resolve → $styleseed build → $styleseed verify.
             </p>
           </div>
         </div>
@@ -302,9 +302,9 @@ export default function CodexUiDesignPage() {
             <h2 className="text-xl font-black">Codex로 UI를 예쁘고 일관되게 만드는 법</h2>
             <p className="mt-3 text-[15px] leading-relaxed text-neutral-700">
               저장소의 AGENTS.md에 디자인 방법을 두고, 프로젝트 결정을 STYLESEED.md에
-              고정한 뒤, $ss-resolve로 필요한 규칙만 컴파일하고 $ss-score와
-              $ss-verify로 코드와 실제 화면을 함께 검사합니다. 사람이 채택한 교정은 명시적으로
-              요청한 경우에만 $ss-learn의 로컬 후보가 되며, $ss-update는 버전뿐 아니라 정확한
+              고정한 뒤, $styleseed resolve로 필요한 규칙만 컴파일하고 $styleseed score와
+              $styleseed verify로 코드와 실제 화면을 함께 검사합니다. 사람이 채택한 교정은 명시적으로
+              요청한 경우에만 $styleseed learn의 로컬 후보가 되며, $styleseed update는 버전뿐 아니라 정확한
               revision을 비교합니다. StyleSeed는 이 과정을 Codex가 다시 사용할 수 있는 작업 흐름으로 제공합니다.
             </p>
           </div>

@@ -42,7 +42,7 @@ It copies the skills into this project. It does not install globally or change o
 - **Codex:** `$styleseed Help improve this screen. Preserve our existing design choices and show me what needs a decision.`
 - **Claude Code:** `/styleseed Help improve this screen. Preserve our existing design choices and show me what needs a decision.`
 
-You do not need to memorize 23 skill names. The `styleseed` router selects the first workflow.
+Only `styleseed` is registered. It selects the needed internal workflow from your request.
 Choose unresolved design decisions together, then inspect the actual rendered result.
 
 <details>
@@ -68,6 +68,15 @@ release manifest, Windows PowerShell evidence, CI, SBOM, benchmark boundary, and
 > **Want a first PR?** Fix a doc, add a regression fixture, improve a skin, or claim a
 > [`good first issue`](https://github.com/bitjaru/styleseed/issues?q=is%3Aissue%20is%3Aopen%20label%3A%22good%20first%20issue%22).
 > Small docs and test fixes need no proposal. See the [15-minute contribution path](CONTRIBUTING.md#first-pr-in-about-15-minutes).
+
+### Upgrading an existing 23-skill install
+
+Reinstall through the same channel. Then ask `StyleSeed, consolidate my old skill entries`.
+The update workflow verifies the new unified payload and archives only unmodified old `ss-*`
+directories outside skill discovery; modified copies remain for review. Restart the agent session.
+Use `$styleseed build` / `/styleseed build` instead of the former `$ss-build` / `/ss-build`
+registrations. All 22 workflows remain bundled; selecting only `styleseed` is now sufficient.
+
 
 ## What the current rules check
 
@@ -109,7 +118,7 @@ geometry, containment, controls, collections, density, and motion.
 [![▶ Motion Gallery](https://img.shields.io/badge/▶_Motion_Gallery-Live-8B5CF6?style=for-the-badge&logoColor=white)](https://styleseed-demo.vercel.app/motion)
 
 ![74 design rules](https://badgen.net/badge/rules/74/8B5CF6)
-![23 skills](https://badgen.net/badge/skills/23/6C5CE7)
+![1 skill](https://badgen.net/badge/skills/1/6C5CE7)
 ![8 output grammars](https://badgen.net/badge/grammars/8/2563EB)
 ![5 adapters](https://badgen.net/badge/adapters/5/0F766E)
 ![9 brand recipes](https://badgen.net/badge/recipes/9/DB2777)
@@ -133,9 +142,9 @@ a scored companion, semantic roles, contrast evidence, CSS tokens, and media anc
 recipes remain maintained product postures &nbsp;·&nbsp;
 **Studio pipeline** — three directions, human selection, interaction scenes, image/video jobs,
 working prototype, and a prototype-first reel &nbsp;·&nbsp;
-**References become rules** — `/ss-reference` compiles screenshots, URLs, Figma, or an existing
+**References become rules** — `/styleseed reference` compiles screenshots, URLs, Figma, or an existing
 UI into an evidence-backed project grammar &nbsp;·&nbsp;
-**Only the context you need** — `/ss-resolve` compiles the chosen method into a small,
+**Only the context you need** — `/styleseed resolve` compiles the chosen method into a small,
 hash-verifiable project bundle &nbsp;·&nbsp;
 **Beyond web UI** — adapters for product UI, social carousels, decks, documents, and graphics &nbsp;·&nbsp;
 **Fights the AI tells** — the default indigo, the icon-chip cliché, template layouts, rainbow lists &nbsp;·&nbsp;
@@ -164,11 +173,11 @@ hash-verifiable project bundle &nbsp;·&nbsp;
 
 <img src="showcase/style-gallery.png" width="840" alt="The same Relay product rendered in six StyleSeed presets — swiss (sharp grid, red), editorial (serif seasoning, oxblood), technical (dark, dense, teal), warm-dtc (pill, terracotta), minimal-mono (whitespace, one accent), brutalist-lite (hard borders, cobalt). Each is coherent and distinct, none looks generic." />
 
-<sub>Same product, six looks — each one `/ss-restyle <preset>` away. Coherent, distinct, never generic.</sub>
+<sub>Same product, six looks — each one `/styleseed restyle <preset>` away. Coherent, distinct, never generic.</sub>
 
 <br />
 
-[Easy Start](#easy-start-30-seconds) · [Studio](https://styleseed-demo.vercel.app/studio) · [Palettes](https://styleseed-demo.vercel.app/palettes) · [Claude Code UI guide](https://styleseed-demo.vercel.app/claude-code-ui-design) · [Codex UI guide](https://styleseed-demo.vercel.app/codex-ui-design) · [Brand recipes](https://styleseed-demo.vercel.app/recipes) · [Architecture](engine/ARCHITECTURE.md) · [Engine + Recipes + Skins](#how-it-works-engine--recipes--skins) · [Motion](#named-motion-system) · [Skills](#23-ai-powered-skills) · [Wiki](../../wiki) · [한국어](README-KR.md)
+[Easy Start](#easy-start-30-seconds) · [Studio](https://styleseed-demo.vercel.app/studio) · [Palettes](https://styleseed-demo.vercel.app/palettes) · [Claude Code UI guide](https://styleseed-demo.vercel.app/claude-code-ui-design) · [Codex UI guide](https://styleseed-demo.vercel.app/codex-ui-design) · [Brand recipes](https://styleseed-demo.vercel.app/recipes) · [Architecture](engine/ARCHITECTURE.md) · [Engine + Recipes + Skins](#how-it-works-engine--recipes--skins) · [Motion](#named-motion-system) · [Skills](#one-skill-22-internal-workflows) · [Wiki](../../wiki) · [한국어](README-KR.md)
 
 <br />
 
@@ -206,15 +215,15 @@ agent  ▸  ✓ 88/100 — one accent, grey normal states, real empty/error stat
 > [`llms.txt`](https://styleseed-demo.vercel.app/llms.txt) gives any agent the portable routing
 > contract, but it cannot provide the same reproducible local compile by itself.
 
-**Want the 23 core agent skills too** (the `styleseed` router plus 22 `ss-*` workflows for Studio, context resolution, setup, build, review, score, and verification)?
+**Want the single StyleSeed skill too** (the `styleseed` router plus 22 `ss-*` workflows for Studio, context resolution, setup, build, review, score, and verification)?
 
 ```bash
 npx -y skills add bitjaru/styleseed -a codex claude-code -y --copy
 ```
-Installs all 23 canonical core workflow skills into Codex and Claude Code in this project.
+Installs one self-contained StyleSeed skill into Codex and Claude Code in this project.
 For other agents, use the interactive command in Easy Start. Then run
-`/ss-setup` → `/ss-resolve` in Claude Code or `$ss-setup` → `$ss-resolve` in Codex (you can
-also choose them from Codex's `/skills` picker). The resolver writes a targeted
+`/styleseed setup` → `/styleseed resolve` in Claude Code or `$styleseed setup` → `$styleseed resolve` in Codex (you can
+also choose StyleSeed from Codex's `/skills` picker). The resolver writes a targeted
 `.styleseed/effective-rules.md` bundle plus a source-hash manifest, so the agent does not need
 the 220KB full handbook for every task. Your agent may ask you to approve tools on first use.
 No install possible? Read [`llms.txt`](https://styleseed-demo.vercel.app/llms.txt) for the
@@ -232,7 +241,7 @@ claude plugin marketplace add bitjaru/styleseed
 claude plugin install styleseed@styleseed
 ```
 
-Both paths install the same 23 canonical skills. The optional `ss-learn` extension is in neither.
+Both paths install the same public skill with 22 internal workflows. The optional `ss-learn` extension is in neither.
 
 </details>
 
@@ -240,9 +249,9 @@ Both paths install the same 23 canonical skills. The optional `ss-learn` extensi
 
 | Your agent | Reads | Fastest install |
 |---|---|---|
-| **Claude Code** | `CLAUDE.md` + `/ss-*` skills | `npx -y skills add bitjaru/styleseed -a claude-code -y --copy` |
+| **Claude Code** | `CLAUDE.md` + `/styleseed` | `npx -y skills add bitjaru/styleseed -a claude-code -y --copy` |
 | **Cursor** | `.cursorrules` | `cp engine/.cursorrules .cursorrules` — or paste the prompt above |
-| **Codex** | `AGENTS.md` + `$ss-*` skills (`.agents/skills`) | `npx -y skills add bitjaru/styleseed -a codex -y --copy` |
+| **Codex** | `AGENTS.md` + `$styleseed` (`.agents/skills`) | `npx -y skills add bitjaru/styleseed -a codex -y --copy` |
 | **Amp · Gemini CLI** | `AGENTS.md` + skills | `npx skills add bitjaru/styleseed` |
 | **Windsurf · Copilot · any other** | supported agent skills, or portable guidance | use the interactive installer; reading `llms.txt` alone does not execute local checks |
 
@@ -323,7 +332,7 @@ and independent human evaluation are the next steps, not completed capabilities.
 **[See the before/after →](https://styleseed-demo.vercel.app/why)** — the same dashboard brief, generated generically vs. with the 74 rules applied. Every fix annotated with the rule behind it.
 
 StyleSeed is a **design-method engine** — 74 craft rules, 8 output grammars, 5 surface
-adapters, 48 components, a reference compiler, a named motion system, and 23 agent skills:
+adapters, 48 components, a reference compiler, a named motion system, and one agent skill with 22 internal workflows:
 
 ```
 "Use the approved semantic roles rather than inventing component-local colors."
@@ -370,9 +379,9 @@ Use both — they solve different halves of the problem. Anthropic's official [`
 | --- | --- | --- |
 | Gets you a coherent screen | ✅ | ✅ |
 | Names & bans the generic-AI tells | — | ✅ by name (default indigo, icon-chip, rainbow lists…) |
-| Scored gate that fixes before you see it | — | ✅ `/ss-score` loops to ≥80 |
+| Scored gate that fixes before you see it | — | ✅ `/styleseed score` loops to ≥80 |
 | Locks decisions so they don't drift across prompts | — | ✅ `STYLESEED.md` |
-| Presets + dials to move the whole look at once | — | ✅ `/ss-restyle`, `/ss-dial` |
+| Presets + dials to move the whole look at once | — | ✅ `/styleseed restyle`, `/styleseed dial` |
 
 Official gets you *coherent*. StyleSeed keeps you from looking *templated*. Run the official skill to scaffold, then let StyleSeed's gate refine and enforce.
 
@@ -412,8 +421,8 @@ cp -r /tmp/styleseed/engine/.claude/skills/* .agents/skills/
 **Step 2 — Start a fresh agent session**, open your project, and invoke setup:
 
 ```text
-Claude Code: /ss-setup
-Codex:       $ss-setup   # or open /skills and choose ss-setup
+Claude Code: /styleseed setup
+Codex:       $styleseed setup   # or open /skills and choose styleseed
 ```
 
 The wizard then walks you through:
@@ -424,8 +433,8 @@ The wizard then walks you through:
 5. A compiled rule bundle, first build, score, and rendered verification
 
 > Don't see the skills? For Claude Code, check `.claude/skills/` and use the
-> `/ss-` prefix. For Codex, check `.agents/skills/`, open `/skills`, or invoke
-> `$ss-setup`. Start a new session after installing if discovery looks stale.
+> `/styleseed` command. For Codex, check `.agents/skills/`, open `/skills`, or invoke
+> `$styleseed setup`. Start a new session after installing if discovery looks stale.
 
 ### Option 2: Manual Setup
 
@@ -473,17 +482,17 @@ prompt (without the plan-mode + key-color + quality-gate steps [the prompt above
 includes), the agent reads a summary once and improvises — so colors land at random and there's
 no key color. The reference demo ([styleseed-demo.vercel.app](https://styleseed-demo.vercel.app))
 came out polished because it was built with the full rules in context and iterated with
-`/ss-review` — not one-shot. Recreate those conditions:
+`/styleseed review` — not one-shot. Recreate those conditions:
 
 1. **Plan first.** In Claude Code press <kbd>Shift</kbd>+<kbd>Tab</kbd> to enter **Plan Mode**, then decide the design **one step at a time, with full context**, before any code is written. This is the single biggest fix.
 2. **Select the output grammar, adapter, and primary action color.** Additional hues need stable
    semantic, categorical, editorial, or brand roles. No role = random color drift.
-3. **Compile only the selected rules:** run `/ss-resolve` or `$ss-resolve`, then make the agent
+3. **Compile only the selected rules:** run `/styleseed resolve` or `$styleseed resolve`, then make the agent
    read `.styleseed/effective-rules.md`. The manifest pins selections and hashes. Use
    `llms-full.txt` only to debug an unresolved source ambiguity.
-4. **Lock the decisions in a file.** Run `/ss-setup` (or just ask the agent to "write a `STYLESEED.md` design lock"). It records your skin, key color, radius, and motion in `STYLESEED.md` at the repo root. Install the provider's project entry (`CLAUDE.md`, `AGENTS.md`, or `.cursorrules`) or invoke the installed StyleSeed skill so visual tasks actually read the lock. This is the single strongest fix for inconsistency.
+4. **Lock the decisions in a file.** Run `/styleseed setup` (or just ask the agent to "write a `STYLESEED.md` design lock"). It records your skin, key color, radius, and motion in `STYLESEED.md` at the repo root. Install the provider's project entry (`CLAUDE.md`, `AGENTS.md`, or `.cursorrules`) or invoke the installed StyleSeed skill so visual tasks actually read the lock. This is the single strongest fix for inconsistency.
 5. **Be specific:** *"Build a dashboard in the Linear skin, one blue accent, Snap motion, following StyleSeed's rules"* beats *"build a dashboard."*
-6. **Check & iterate.** Run `/ss-review` or `/ss-score`, or tell it: *"self-check the effective grammar — coherent geometry, stable color roles, real empty/loading/error states — and fix violations."* If it drifts: *"re-read CLAUDE.md and fix the coherence violations."*
+6. **Check & iterate.** Run `/styleseed review` or `/styleseed score`, or tell it: *"self-check the effective grammar — coherent geometry, stable color roles, real empty/loading/error states — and fix violations."* If it drifts: *"re-read CLAUDE.md and fix the coherence violations."*
 
 > **More constraints = less variance.** Plan mode + a pinned key color + installed rules + a review pass is the difference between "looks generated" and "looks designed."
 
@@ -493,11 +502,11 @@ StyleSeed isn't only for new screens — it's **the design counterpart to a code
 already shipped. If an earlier build looks *coherent but generic* (default indigo, tiny desktop
 text, the same Lucide-icon-in-a-pale-chip on every card, no focal point):
 
-1. **`/ss-score src/…`** — grades the screen 0–100 and names the exact "AI-made" tells (default
+1. **`/styleseed score src/…`** — grades the screen 0–100 and names the exact "AI-made" tells (default
    accent, icon-chip cliché, sub-16px body on desktop, no focal point, missing states).
-2. **`/ss-review src/…`** — the design code-review: applies the fixes (retint to your key color,
+2. **`/styleseed review src/…`** — the design code-review: applies the fixes (retint to your key color,
    drop the chips, bump the type scale, create a focal point), then re-score to **≥80**.
-3. **`/ss-update` → Retrofit** — no design lock yet? It writes a `STYLESEED.md` (mood, key color,
+3. **`/styleseed update` → Retrofit** — no design lock yet? It writes a `STYLESEED.md` (mood, key color,
    font, surface) so the whole project stops drifting, then upgrades screen by screen.
 
 The rules got stronger in [v2.5.0](https://github.com/bitjaru/styleseed/releases/tag/v2.5.0), so a
@@ -510,7 +519,7 @@ stop looking AI-made.
 ┌─────────────────────────────────────────────────┐
 │  StyleSeed Engine (brand-agnostic)              │
 │                                                 │
-│  74 rules · 8 grammars · 5 adapters · 23 skills │
+│  74 rules · 8 grammars · 5 adapters · 1 skill │
 │  Layout · Composition · Typography · UX · A11y  │
 └──────────────────────┬──────────────────────────┘
                        │
@@ -531,7 +540,7 @@ stop looking AI-made.
 - 74 visual design rules (layout, composition, rhythm, forbidden patterns)
 - 48 React components (32 primitives + 16 patterns)
 - A named motion system (5 seeds + a copy-paste keyword library)
-- 23 cross-agent skills (Studio, context compiler, reference compiler, setup, UI, motion, UX, accessibility, private local learning)
+- 22 internal workflows (Studio, context compiler, reference compiler, setup, UI, motion, UX, accessibility, and accessibility; learning is a separate extension)
 - 8 maintained semantic palette recipes, with validated project overrides
 
 **Brand recipe** = how the artifact is shaped (morphology)
@@ -585,7 +594,7 @@ import { spring } from "@engine/motion";
 <motion.button {...spring.hover} {...spring.press}>Save</motion.button>
 ```
 
-**2. Keywords = distinctive moves.** A library of copy-paste named motions behind one handle — `toggle-flip`, `toggle-curtain`, `reveal-blur`, `pop-in`, `tilt-3d`, `magnetic`, `glow-pulse`, `confetti-pop`, `shimmer`, and more. Say the keyword while vibe coding (or run `/ss-motion toggle-flip`) and the same recipe lands in your code.
+**2. Keywords = distinctive moves.** A library of copy-paste named motions behind one handle — `toggle-flip`, `toggle-curtain`, `reveal-blur`, `pop-in`, `tilt-3d`, `magnetic`, `glow-pulse`, `confetti-pop`, `shimmer`, and more. Say the keyword while vibe coding (or run `/styleseed motion toggle-flip`) and the same recipe lands in your code.
 
 ▶ **[Preview & copy every motion at the live gallery →](https://styleseed-demo.vercel.app/motion)**
 &nbsp;·&nbsp; [Vibe-code your own → the motion guide](https://styleseed-demo.vercel.app/motion/guide)
@@ -599,7 +608,7 @@ import { spring } from "@engine/motion";
 
 The line StyleSeed draws: **scroll-_linked_** (native scroll drives it, you stay in control) is encouraged on brand pages; **scroll-_jacking_** (hijacking scroll speed, trapping you) is banned everywhere. The Cinematic tier keeps its guardrails — 60fps (`transform`/`opacity` only), never blocks the first read or the CTA, and `prefers-reduced-motion` always leaves a complete static page. So you can build a Stripe-grade landing page *and* a calm dashboard from the same engine, each with the right restraint. <sub>(Rules: DESIGN-LANGUAGE §43 · PAGE-TYPES → Landing)</sub>
 
-All seeds auto-respect `prefers-reduced-motion`, and the `/ss-motion` skill pulls every recipe from one source of truth — so motion stays consistent no matter who (or what) writes the code.
+All seeds auto-respect `prefers-reduced-motion`, and the `/styleseed motion` skill pulls every recipe from one source of truth — so motion stays consistent no matter who (or what) writes the code.
 
 ## Available Skins
 
@@ -612,7 +621,7 @@ All seeds auto-respect `prefers-reduced-motion`, and the `/ss-motion` skill pull
 | **[notion](skins/notion/)** | Warm — blue accent, friendly, warm neutrals | awesome-design-md |
 | **[raycast](skins/raycast/)** | Dark, punchy — red accent, snappy, launcher energy | awesome-design-md |
 | **[arc](skins/arc/)** | Playful — bold gradients, rounded, expressive | awesome-design-md |
-| **58+ more** | Any brand from [awesome-design-md](https://github.com/VoltAgent/awesome-design-md) | Auto-fetched via `/ss-setup` — nothing vendored |
+| **58+ more** | Any brand from [awesome-design-md](https://github.com/VoltAgent/awesome-design-md) | Auto-fetched via `/styleseed setup` — nothing vendored |
 
 ## Engine Contents
 
@@ -621,23 +630,13 @@ engine/
 ├── CLAUDE.md                 # AI reads this automatically
 ├── AGENTS.md                 # Codex and other AGENTS.md-compatible agents
 ├── DESIGN-LANGUAGE.md        # 74 visual design rules (brand-agnostic)
-├── .claude/skills/           # 23 core skills: router + 22 ss-* workflows
-│   ├── styleseed/            #   Route a general request to one first workflow
-│   ├── ss-setup/             #   Interactive setup wizard
-│   ├── ss-page/              #   Scaffold pages
-│   ├── ss-component/         #   Generate components
-│   ├── ss-pattern/           #   Compose layouts
-│   ├── ss-motion/            #   Apply named motion (seeds + keywords)
-│   ├── ss-review/            #   Design compliance check
-│   ├── ss-tokens/            #   Manage tokens
-│   ├── ss-a11y/              #   Accessibility audit
-│   ├── ss-lint/              #   Quick violation scan
-│   ├── ss-score/             #   Score UI 0-100 + fix list
-│   ├── ss-update/            #   Pull latest engine
-│   ├── ss-flow/              #   Design user flows
-│   ├── ss-audit/             #   UX heuristic evaluation
-│   ├── ss-copy/              #   Generate microcopy
-│   └── ss-feedback/          #   Add loading/error/empty states
+├── .claude/skills/styleseed/ # One registered skill
+│   ├── SKILL.md              # Route the user's request
+│   └── workflows/           # 22 internal workflows, each with WORKFLOW.md
+│       ├── ss-resolve/       # Compiler and runtime
+│       ├── ss-build/         # Build loop
+│       ├── ss-verify/        # Rendered evidence
+│       └── …                # Setup, tokens, review, motion, update, etc.
 ├── motion/                   # 5 motion seeds + keyword library
 ├── components/
 │   ├── ui/                   # 32 primitives (shadcn/ui + motion)
@@ -649,46 +648,46 @@ engine/
 └── scaffold/                 # Vite 6 + React 18 starter
 ```
 
-## 23 Core AI-Powered Skills
+## One Skill, 22 Internal Workflows
 
 ### Setup
 | Skill | What It Does |
 |-------|-------------|
 | `/styleseed` | **Route a general request** — resolve the current artifact and choose exactly one first StyleSeed workflow |
-| `/ss-studio` | **Run creative direction end to end** — role-based references → three directions → human selection → interaction/media plans → working prototype → temporal and visual evidence |
-| `/ss-resolve` | **Compile only the active context** — lock → grammar + adapter + domain/page + brand recipe + profile + craft baseline → small bundle + source-hash manifest |
-| `/ss-build` | **The whole loop, enforced** — lock the look → build → score → fix to ≥80 → *then* show. Use this instead of building UI free-hand |
-| `/ss-reference` | **Compile references into a project grammar** — evidence, confidence, semantic tokens, anti-patterns, and a transfer validation artifact |
-| `/ss-dial` | Turn one axis up/down deterministically — `density denser`, `radius sharper`, `color more-muted`, `weight bolder`. Moves many tokens together, keeps the guardrails, re-gates |
-| `/ss-restyle` | Re-style to a named aesthetic — `swiss` · `editorial` · `technical` · `warm-dtc` · `minimal-mono` · `brutalist-lite`. A coherent coordinate, not a stacked filter |
-| `/ss-setup` | **Interactive wizard** — select output grammar + adapter + brand recipe, then bounded brand/profile values |
+| `/styleseed studio` | **Run creative direction end to end** — role-based references → three directions → human selection → interaction/media plans → working prototype → temporal and visual evidence |
+| `/styleseed resolve` | **Compile only the active context** — lock → grammar + adapter + domain/page + brand recipe + profile + craft baseline → small bundle + source-hash manifest |
+| `/styleseed build` | **The whole loop, enforced** — lock the look → build → score → fix to ≥80 → *then* show. Use this instead of building UI free-hand |
+| `/styleseed reference` | **Compile references into a project grammar** — evidence, confidence, semantic tokens, anti-patterns, and a transfer validation artifact |
+| `/styleseed dial` | Turn one axis up/down deterministically — `density denser`, `radius sharper`, `color more-muted`, `weight bolder`. Moves many tokens together, keeps the guardrails, re-gates |
+| `/styleseed restyle` | Re-style to a named aesthetic — `swiss` · `editorial` · `technical` · `warm-dtc` · `minimal-mono` · `brutalist-lite`. A coherent coordinate, not a stacked filter |
+| `/styleseed setup` | **Interactive wizard** — select output grammar + adapter + brand recipe, then bounded brand/profile values |
 
 ### UI — Build It Right
 | Skill | What It Does |
 |-------|-------------|
-| `/ss-component` | Generate components following design conventions |
-| `/ss-page` | Scaffold pages with proper layout structure |
-| `/ss-pattern` | Compose UI patterns (card grid, chart, list) |
-| `/ss-motion` | Apply a named motion — a seed or a keyword move (`toggle-flip`, `tilt-3d`...) |
-| `/ss-review` | Audit code for design system violations |
-| `/ss-tokens` | View, add, or modify design tokens |
-| `/ss-a11y` | Accessibility audit (WCAG 2.2 AA) |
-| `/ss-lint` | Quick automated lint — catches common violations in seconds |
-| `/ss-score` | Score UI quality 0-100 with a category breakdown + prioritized fix list (reads the code) |
-| `/ss-verify` | **The visual gate** — render the screen, screenshot it, score what you *see* (dead whitespace, unloaded fonts, no focal, blank empty states), fix + re-render |
-| `/ss-update` | Pull latest engine updates — analyzes your project and updates safely |
+| `/styleseed component` | Generate components following design conventions |
+| `/styleseed page` | Scaffold pages with proper layout structure |
+| `/styleseed pattern` | Compose UI patterns (card grid, chart, list) |
+| `/styleseed motion` | Apply a named motion — a seed or a keyword move (`toggle-flip`, `tilt-3d`...) |
+| `/styleseed review` | Audit code for design system violations |
+| `/styleseed tokens` | View, add, or modify design tokens |
+| `/styleseed a11y` | Accessibility audit (WCAG 2.2 AA) |
+| `/styleseed lint` | Quick automated lint — catches common violations in seconds |
+| `/styleseed score` | Score UI quality 0-100 with a category breakdown + prioritized fix list (reads the code) |
+| `/styleseed verify` | **The visual gate** — render the screen, screenshot it, score what you *see* (dead whitespace, unloaded fonts, no focal, blank empty states), fix + re-render |
+| `/styleseed update` | Pull latest engine updates — analyzes your project and updates safely |
 
 ### UX — Design It Right (No Designer Needed)
 | Skill | What It Does |
 |-------|-------------|
-| `/ss-flow` | Design user flows (progressive disclosure, information pyramid) |
-| `/ss-audit` | Nielsen's 10 usability heuristics evaluation |
-| `/ss-copy` | Generate UX microcopy (buttons, errors, empty states, toasts) |
-| `/ss-feedback` | Add loading/success/error/empty states to any component |
+| `/styleseed flow` | Design user flows (progressive disclosure, information pyramid) |
+| `/styleseed audit` | Nielsen's 10 usability heuristics evaluation |
+| `/styleseed copy` | Generate UX microcopy (buttons, errors, empty states, toasts) |
+| `/styleseed feedback` | Add loading/success/error/empty states to any component |
 
 ### Optional repository-only learning extension
 
-`/ss-learn` is not part of the 23-skill core or the public `npx skills add` path. Its source lives
+`/ss-learn` is not part of the single-skill core or the public `npx skills add` path. Its source lives
 under `extensions/learning/` for security development and local contract testing. It records a generalized lesson only after a
 person asks for capture, then requires separate caller attestations before acceptance and before
 preparing a share package. Known high-risk identity patterns are blocked; this is a guardrail, not
@@ -702,21 +701,21 @@ CLI nor the bridge uploads to a registry or changes core rules automatically.
 ### Codex plugin package
 
 The repository now includes a repository development `.codex-plugin/plugin.json` package boundary
-for local testing alongside the same 23 core skills. The implemented default/core install contains
+for local testing alongside the same core skill. The implemented default/core install contains
 neither `ss-learn` nor a learning MCP. Public directory release is not verified. `npx skills add
 bitjaru/styleseed` remains the portable released installation path today.
 
 ### Example Workflow
 
 ```bash
-/ss-setup                    # Pick skin, configure project
-/ss-page Dashboard           # Scaffold main page
-/ss-copy "dashboard"         # Generate all microcopy
-/ss-feedback src/Dashboard   # Add loading/error states
-/ss-audit src/Dashboard      # Check UX quality
-/ss-lint src/Dashboard       # Quick violation scan
-/ss-review src/Dashboard     # Deep design compliance check
-/ss-update                   # Pull latest engine updates
+/styleseed setup                    # Pick skin, configure project
+/styleseed page Dashboard           # Scaffold main page
+/styleseed copy "dashboard"         # Generate all microcopy
+/styleseed feedback src/Dashboard   # Add loading/error states
+/styleseed audit src/Dashboard      # Check UX quality
+/styleseed lint src/Dashboard       # Quick violation scan
+/styleseed review src/Dashboard     # Deep design compliance check
+/styleseed update                   # Pull latest engine updates
 ```
 
 ### Example Prompts
@@ -732,7 +731,7 @@ Build a SaaS dashboard with revenue, users, and activity.
 ```
 Follow CLAUDE.md and DESIGN-LANGUAGE.md rules.
 Create a settings page with profile, notifications, and danger zone.
-Run /ss-review when done.
+Run /styleseed review when done.
 ```
 
 **Improve existing page:**
@@ -743,7 +742,7 @@ Check visual rhythm (rule 61) and KPI variation (rule 62).
 
 **Update engine:**
 ```
-/ss-update
+/styleseed update
 ```
 
 ## Tech Stack
@@ -756,7 +755,7 @@ React 18 · TypeScript · Tailwind CSS v4 · Radix UI · Vite 6 · Lucide Icons 
 |---|---|---|---|---|---|
 | Components | ✅ 48 | ✅ 50+ | ✅ | ✅ | ❌ |
 | Design **judgment** (when to use what) | ✅ 74 rules | ❌ | ❌ | Partial | ❌ |
-| Claude Code / Cursor integration | ✅ 23 skills | ❌ | ❌ | ❌ | — |
+| Claude Code / Cursor integration | ✅ 1 skill | ❌ | ❌ | ❌ | — |
 | Brand skins (Toss, Stripe, Linear...) | ✅ | ❌ | ❌ | ❌ | ❌ |
 | Price | Free (MIT) | Free | $299+ | Free | — |
 | Works *with* AI coding tools | ✅ | Indirect | Indirect | Indirect | — |
@@ -836,8 +835,8 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the full rule format and quality chec
 Already using StyleSeed? Check the exact rule/skill revision first:
 
 ```bash
-# Claude Code: /ss-update
-# Codex: $ss-update
+# Claude Code: /styleseed update
+# Codex: $styleseed update
 ```
 
 `ss-update` compares the installed `engineRevision`, the revision recorded in
@@ -865,8 +864,8 @@ Full guide: [engine/UPDATE.md](engine/UPDATE.md)
 ### Update reminders and an optional freshness gate
 
 After a one-time refresh, StyleSeed skills require a read-only revision check at the first
-workflow of each project/task session. Outdated installs recommend `$ss-update` (Claude:
-`/ss-update`), including changes that keep the same version number. Updates preserve project
+workflow of each project/task session. Outdated installs recommend `$styleseed update` (Claude:
+`/styleseed update`), including changes that keep the same version number. Updates preserve project
 design decisions; offline checks are reported as unknown. Old installed skills cannot receive
 this instruction until updated once.
 
@@ -874,4 +873,4 @@ For CI/tasks that must use the current installed channel, run the installed
 `ss-update/scripts/check-update.mjs --project-root . --require-current --json` before your build.
 It exits 1 on outdated/unverifiable installs or any stale registry artifact; it never installs
 anything. Pinned projects can keep diagnostic mode without `--require-current`. See the
-[update preflight contract](engine/.claude/skills/ss-update/references/update-preflight.md).
+[update preflight contract](engine/.claude/skills/styleseed/workflows/ss-update/references/update-preflight.md).

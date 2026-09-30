@@ -174,4 +174,4 @@ roles with base/wide values or existing CSS token references. The compiler inclu
 roles and scoped CSS in the bundle and method hash; application code must consume those variables.
 Artifact overrides replace only named roles. Read-only starting proposals never overwrite config,
 and numeric compliance does not prove design quality. See
-[the spatial contract](.claude/skills/ss-resolve/references/spacing.md) for limits and verification.
+[the spatial contract](.claude/skills/styleseed/workflows/ss-resolve/references/spacing.md) for limits and verification.

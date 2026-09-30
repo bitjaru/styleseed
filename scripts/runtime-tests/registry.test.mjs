@@ -5,10 +5,10 @@ import { spawnSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { loadArtifactConfig, loadProjectRegistry } from "../../engine/.claude/skills/ss-resolve/scripts/project-registry.mjs";
+import { loadArtifactConfig, loadProjectRegistry } from "../../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/project-registry.mjs";
 
 const repoRoot = resolve(fileURLToPath(new URL("../../", import.meta.url)));
-const migrateScript = resolve(repoRoot, "engine/.claude/skills/ss-resolve/scripts/migrate-project.mjs");
+const migrateScript = resolve(repoRoot, "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/migrate-project.mjs");
 
 function fixtureRoot() {
   return mkdtempSync(join(tmpdir(), "styleseed-registry-"));

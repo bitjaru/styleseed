@@ -145,7 +145,7 @@ async function runSelfTests() {
     assert.equal(built.inventory.distributionSource.channel, "edge");
 
     const releaseStage = resolve(sandbox, "release-stage");
-    const releaseVersion = readJson(resolve(cleanSource, "engine/.claude/skills/ss-resolve/references/catalog.json")).engineVersion;
+    const releaseVersion = readJson(resolve(cleanSource, "engine/.claude/skills/styleseed/workflows/ss-resolve/references/catalog.json")).engineVersion;
     const releaseArchiveName = `styleseed-core-${releaseVersion}.tar.gz`;
     const released = await buildPluginPackage({
       sourceRoot: cleanSource,
@@ -156,13 +156,13 @@ async function runSelfTests() {
     });
     assert.equal(released.inventory.distributionSource.channel, "stable");
     assert.equal(released.inventory.archive.path, releaseArchiveName);
-    const stableCatalog = readJson(resolve(releaseStage, "skills/ss-resolve/references/catalog.json"));
+    const stableCatalog = readJson(resolve(releaseStage, "skills/styleseed/workflows/ss-resolve/references/catalog.json"));
     assert.equal(stableCatalog.distributionSource.channel, "stable");
     assert.equal(stableCatalog.distributionSource.install.includes(`/${releaseArchiveName} --agent codex`), true);
 
     const secretSource = resolve(sandbox, "secret-source");
     copyAllowedFixture(secretSource);
-    writeFileSync(resolve(secretSource, "engine/.claude/skills/ss-build/.env"), "OPENAI_API_KEY=sk-test-secret\n");
+    writeFileSync(resolve(secretSource, "engine/.claude/skills/styleseed/workflows/ss-build/.env"), "OPENAI_API_KEY=sk-test-secret\n");
     await assert.rejects(
       () => buildPluginPackage({ sourceRoot: secretSource, stageRoot: resolve(sandbox, "secret-stage"), clean: true }),
       /Denied secret-like/,
@@ -170,7 +170,7 @@ async function runSelfTests() {
 
     const symlinkSource = resolve(sandbox, "symlink-source");
     copyAllowedFixture(symlinkSource);
-    symlinkSync("../ss-build/SKILL.md", resolve(symlinkSource, "engine/.claude/skills/ss-a11y/linked.md"));
+    symlinkSync("../ss-build/WORKFLOW.md", resolve(symlinkSource, "engine/.claude/skills/styleseed/workflows/ss-a11y/linked.md"));
     await assert.rejects(
       () => buildPluginPackage({ sourceRoot: symlinkSource, stageRoot: resolve(sandbox, "symlink-stage"), clean: true }),
       /Denied symlink/,
@@ -179,10 +179,10 @@ async function runSelfTests() {
     const hardlinkSource = resolve(sandbox, "hardlink-source");
     copyAllowedFixture(hardlinkSource);
     linkSync(
-      resolve(hardlinkSource, "engine/.claude/skills/ss-build/SKILL.md"),
-      resolve(hardlinkSource, "engine/.claude/skills/ss-build/SKILL-hardlink.md"),
+      resolve(hardlinkSource, "engine/.claude/skills/styleseed/workflows/ss-build/WORKFLOW.md"),
+      resolve(hardlinkSource, "engine/.claude/skills/styleseed/workflows/ss-build/SKILL-hardlink.md"),
     );
-    const hardlinkStats = lstatSync(resolve(hardlinkSource, "engine/.claude/skills/ss-build/SKILL-hardlink.md"));
+    const hardlinkStats = lstatSync(resolve(hardlinkSource, "engine/.claude/skills/styleseed/workflows/ss-build/SKILL-hardlink.md"));
     if (hardlinkStats.nlink > 1) {
       await assert.rejects(
         () => buildPluginPackage({ sourceRoot: hardlinkSource, stageRoot: resolve(sandbox, "hardlink-stage"), clean: true }),
@@ -192,7 +192,7 @@ async function runSelfTests() {
 
     const specialSource = resolve(sandbox, "special-source");
     copyAllowedFixture(specialSource);
-    const specialPath = resolve(specialSource, "engine/.claude/skills/ss-build/fifo");
+    const specialPath = resolve(specialSource, "engine/.claude/skills/styleseed/workflows/ss-build/fifo");
     const fifo = spawnSync("mkfifo", [specialPath], { encoding: "utf8" });
     if (fifo.status === 0) {
       await assert.rejects(
@@ -251,8 +251,8 @@ async function validateStage(stageRoot) {
   if (manifest.skills !== "./skills/") throw new Error("Staged manifest skills path drifted");
   if ("mcpServers" in manifest) throw new Error("Staged manifest must expose zero MCP servers");
   if (!existsSync(resolve(stageRoot, manifest.skills))) throw new Error("Staged manifest skills path does not resolve");
-  const canonicalCatalog = readJson(resolve(stageRoot, "engine/.claude/skills/ss-resolve/references/catalog.json"));
-  const discoveryCatalog = readJson(resolve(stageRoot, "skills/ss-resolve/references/catalog.json"));
+  const canonicalCatalog = readJson(resolve(stageRoot, "engine/.claude/skills/styleseed/workflows/ss-resolve/references/catalog.json"));
+  const discoveryCatalog = readJson(resolve(stageRoot, "skills/styleseed/workflows/ss-resolve/references/catalog.json"));
   if (JSON.stringify(canonicalCatalog.distributionSource) !== JSON.stringify(discoveryCatalog.distributionSource)) {
     throw new Error("Staged canonical and discovery catalogs disagree on distribution source");
   }
@@ -277,11 +277,11 @@ async function validateStage(stageRoot) {
     cpSync(stageRoot, projectRoot, { recursive: true });
     writeLock(projectRoot);
 
-    const listRun = runNode(projectRoot, ["skills/ss-resolve/scripts/resolve-context.mjs", "--list"]);
+    const listRun = runNode(projectRoot, ["skills/styleseed/workflows/ss-resolve/scripts/resolve-context.mjs", "--list"]);
     if (listRun.status !== 0) throw new Error(`Staged resolver --list failed:\n${listRun.stderr || listRun.stdout}`);
 
     const resolveRun = runNode(projectRoot, [
-      "skills/ss-resolve/scripts/resolve-context.mjs",
+      "skills/styleseed/workflows/ss-resolve/scripts/resolve-context.mjs",
       "--project-root",
       ".",
       "--from-lock",
@@ -292,7 +292,7 @@ async function validateStage(stageRoot) {
     if (resolveRun.status !== 0) throw new Error(`Staged resolver build failed:\n${resolveRun.stderr || resolveRun.stdout}`);
 
     const checkRun = runNode(projectRoot, [
-      "skills/ss-resolve/scripts/resolve-context.mjs",
+      "skills/styleseed/workflows/ss-resolve/scripts/resolve-context.mjs",
       "--project-root",
       ".",
       "--from-lock",
@@ -303,7 +303,7 @@ async function validateStage(stageRoot) {
     ]);
     if (checkRun.status !== 0) throw new Error(`Staged resolver --check failed:\n${checkRun.stderr || checkRun.stdout}`);
 
-    const catalog = readJson(resolve(projectRoot, "engine/.claude/skills/ss-resolve/references/catalog.json"));
+    const catalog = readJson(resolve(projectRoot, "engine/.claude/skills/styleseed/workflows/ss-resolve/references/catalog.json"));
     const versionJsonPath = resolve(projectRoot, "version.json");
     writeFileSync(versionJsonPath, `${JSON.stringify({
       version: catalog.engineVersion,
@@ -311,7 +311,7 @@ async function validateStage(stageRoot) {
       skillsRevision: catalog.distributions.skills.revision,
     }, null, 2)}\n`);
     const updateRun = runNode(projectRoot, [
-      "skills/ss-update/scripts/check-update.mjs",
+      "skills/styleseed/workflows/ss-update/scripts/check-update.mjs",
       "--project-root",
       ".",
       "--remote",

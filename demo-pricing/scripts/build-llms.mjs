@@ -72,7 +72,7 @@ if (catalogBuild.status !== 0) {
 }
 // build-context-catalog owns the physical Codex discovery mirror and refreshes its generated catalog.
 console.log('✓ mirrored canonical skills → plugin skills/')
-const contextCatalogPath = resolve(skillsDir, 'ss-resolve/references/catalog.json')
+const contextCatalogPath = resolve(skillsDir, 'styleseed/workflows/ss-resolve/references/catalog.json')
 const contextCatalog = JSON.parse(readFileSync(contextCatalogPath, 'utf8'))
 cpSync(contextCatalogPath, resolve(wellKnownSeed, 'context-catalog.json'))
 
@@ -246,15 +246,15 @@ and universal design-system import are not established capabilities; human revie
 ## Recommended path
 
 1. In the project terminal, run \`${install.default}\` for Codex and Claude Code.
-   This copies all core skills into the project and skips installer menus. Requires Node.js/npm.
+   This copies the single self-contained StyleSeed skill into the project and skips installer menus. Requires Node.js/npm.
    Codex only: \`${install.codex}\`. Claude Code only: \`${install.claude}\`.
    For other agents or interactive choices: \`${install.interactive}\` → agent → Project → Copy.
    Codex is already included in the interactive Universal group (.agents/skills).
 2. Invoke \`$styleseed\` in Codex or \`/styleseed\` in Claude Code and describe the task.
    The router selects the first workflow. Start a fresh session if skills are not discovered.
 3. Inspect approved project decisions before proposing changes. For an open direction,
-   invoke \`/ss-studio\` or \`$ss-studio\` and wait for the person's selection.
-   For a decided direction, invoke \`/ss-resolve\` or \`$ss-resolve\` directly.
+   invoke \`/styleseed studio\` or \`$styleseed studio\` and wait for the person's selection.
+   For a decided direction, invoke \`/styleseed resolve\` or \`$styleseed resolve\` directly.
    Use \`ss-reference\` for unmodeled references.
 4. With an artifact registry, resolve the selected artifact and read its bundle and manifest.
    Only legacy projects without a registry use \`STYLESEED.md\` and \`.styleseed/effective-rules.md\`.
@@ -502,7 +502,7 @@ writeFileSync(
       context: {
         engineVersion: contextCatalog.engineVersion,
         engineRevision: contextCatalog.engineRevision,
-        resolverSkill: `${REPO_RAW}/engine/.claude/skills/ss-resolve/SKILL.md`,
+        resolverSkill: `${REPO_RAW}/engine/.claude/skills/styleseed/workflows/ss-resolve/WORKFLOW.md`,
         catalogUrl: 'https://styleseed-demo.vercel.app/.well-known/styleseed/context-catalog.json',
         grammarIds,
         adapterIds,

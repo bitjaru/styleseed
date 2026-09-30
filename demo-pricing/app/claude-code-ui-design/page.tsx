@@ -96,7 +96,7 @@ const STEPS = [
   {
     n: "04",
     title: "Compile only the active method",
-    body: "Run /ss-resolve. It emits a small effective rule bundle and source-hash manifest, so Claude Code gets the selected method without loading the roughly 220KB full handbook.",
+    body: "Run /styleseed resolve. It emits a small effective rule bundle and source-hash manifest, so Claude Code gets the selected method without loading the roughly 220KB full handbook.",
   },
   {
     n: "05",

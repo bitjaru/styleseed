@@ -5,9 +5,9 @@ import { spawnSync } from "node:child_process";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
-import { loadProjectRegistry } from "../../engine/.claude/skills/ss-resolve/scripts/project-registry.mjs";
-import { readStrictJson, sourceInventory } from "../../engine/.claude/skills/ss-score/scripts/evidence-contract.mjs";
-import { safeProjectPath } from "../../engine/.claude/skills/ss-resolve/scripts/runtime-contract.mjs";
+import { loadProjectRegistry } from "../../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/project-registry.mjs";
+import { readStrictJson, sourceInventory } from "../../engine/.claude/skills/styleseed/workflows/ss-score/scripts/evidence-contract.mjs";
+import { safeProjectPath } from "../../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/runtime-contract.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const projectRoot = resolve(here, "..", "..");

@@ -11,7 +11,7 @@ const here = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(here, "..", "..");
 const gateScript = resolve(
   repoRoot,
-  "engine/.claude/skills/ss-score/scripts/evidence-gate.mjs",
+  "engine/.claude/skills/styleseed/workflows/ss-score/scripts/evidence-gate.mjs",
 );
 
 function makeProjectRoot(prefix) {
@@ -249,7 +249,7 @@ function runGate(args, projectRoot) {
   });
 }
 
-const functionalRunner = resolve(repoRoot, "engine/.claude/skills/ss-score/scripts/run-functional-tests.mjs");
+const functionalRunner = resolve(repoRoot, "engine/.claude/skills/styleseed/workflows/ss-score/scripts/run-functional-tests.mjs");
 const draftTest = `import test from 'node:test';
 import assert from 'node:assert/strict';
 import { saveSettings, hasUnsavedChanges } from './model.mjs';
@@ -289,7 +289,7 @@ test("physically installed functional reporters support spaces and URL-special c
   const root = makeProjectRoot("styleseed-functional-portable-");
   const installed = makeProjectRoot("styleseed skills # reporter-");
   try {
-    for (const skill of ["ss-score", "ss-resolve"]) cpSync(resolve(repoRoot, "engine/.claude/skills", skill), resolve(installed, skill), { recursive: true });
+    for (const skill of ["ss-score", "ss-resolve"]) cpSync(resolve(repoRoot, "engine/.claude/skills/styleseed/workflows", skill), resolve(installed, skill), { recursive: true });
     writeFixtureProject(root, { functionalTest: draftTest });
     const result = spawnSync(process.execPath, [resolve(installed, "ss-score/scripts/run-functional-tests.mjs"), "--project-root", root, "--artifact", "app-dashboard", "--run", "run-001", "--test", "src/app/dashboard/flows.test.mjs"], { encoding: "utf8" });
     assert.equal(result.status, 0, result.stderr + result.stdout);

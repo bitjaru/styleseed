@@ -105,7 +105,7 @@ export default function MotionGuidePage() {
               tagColor="#8B5CF6"
               title="Distinctive move"
               body="A specific, recognizable motion behind one handle — toggle-flip, reveal-blur, tilt-3d, glow-pulse, confetti-pop… Say the keyword, get that exact recipe."
-              example="/ss-motion toggle-flip"
+              example="/styleseed motion toggle-flip"
             />
           </div>
           <p className="mt-5 text-[15px] leading-relaxed text-neutral-700">

@@ -8,7 +8,7 @@ import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
 
 const repoRoot = resolve(fileURLToPath(new URL("../../", import.meta.url)));
-const resolver = resolve(repoRoot, "engine/.claude/skills/ss-resolve/scripts/resolve-context.mjs");
+const resolver = resolve(repoRoot, "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/resolve-context.mjs");
 
 function makeRoot(prefix) {
   return mkdtempSync(join(tmpdir(), prefix));

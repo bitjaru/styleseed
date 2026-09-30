@@ -5,11 +5,11 @@ import { spawnSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { analyzeLegacyLock } from "../../engine/.claude/skills/ss-resolve/scripts/legacy-lock-analysis.mjs";
-import { canonicalJson } from "../../engine/.claude/skills/ss-resolve/scripts/runtime-contract.mjs";
+import { analyzeLegacyLock } from "../../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/legacy-lock-analysis.mjs";
+import { canonicalJson } from "../../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/runtime-contract.mjs";
 import { createHash } from "node:crypto";
 
-const script = fileURLToPath(new URL("../../engine/.claude/skills/ss-resolve/scripts/migrate-project.mjs", import.meta.url));
+const script = fileURLToPath(new URL("../../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/migrate-project.mjs", import.meta.url));
 const baseLock = `# Synthetic design lock
 - App domain: saas
 - Surface adapter: product-ui
@@ -327,7 +327,7 @@ test("reviewed multi-surface plan keeps distinct artifacts and resolves both bun
     assert.equal(JSON.parse(preview.stdout).targets.length, 4);
     const applied = run(root, "--reviewed-plan", "plan.json", "--confirm-plan", planHash(plan), "--write");
     assert.equal(applied.status, 0, applied.stderr);
-    const resolver = fileURLToPath(new URL("../../engine/.claude/skills/ss-resolve/scripts/resolve-context.mjs", import.meta.url));
+    const resolver = fileURLToPath(new URL("../../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/resolve-context.mjs", import.meta.url));
     const compiled = spawnSync(process.execPath, [resolver, "--project-root", root, "--all"], { encoding: "utf8" });
     assert.equal(compiled.status, 0, compiled.stderr);
     const checked = spawnSync(process.execPath, [resolver, "--project-root", root, "--all", "--check"], { encoding: "utf8" });

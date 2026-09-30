@@ -5,14 +5,14 @@ import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
-import { verifyDistribution } from "../../engine/.claude/skills/ss-resolve/scripts/distribution-integrity.mjs";
+import { verifyDistribution } from "../../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/distribution-integrity.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(here, "..", "..");
 const catalog = JSON.parse(
-  readFileSync(resolve(repoRoot, "engine/.claude/skills/ss-resolve/references/catalog.json"), "utf8"),
+  readFileSync(resolve(repoRoot, "engine/.claude/skills/styleseed/workflows/ss-resolve/references/catalog.json"), "utf8"),
 );
-const stagedScriptPath = "engine/.claude/skills/ss-update/scripts/check-update.mjs";
+const stagedScriptPath = "engine/.claude/skills/styleseed/workflows/ss-update/scripts/check-update.mjs";
 
 function makeSandbox(prefix) {
   return mkdtempSync(join(tmpdir(), prefix));
@@ -25,7 +25,7 @@ function stageCoreDistribution(destinationRoot) {
     mkdirSync(dirname(destination), { recursive: true });
     cpSync(source, destination, { recursive: false });
   }
-  const catalogPath = "engine/.claude/skills/ss-resolve/references/catalog.json";
+  const catalogPath = "engine/.claude/skills/styleseed/workflows/ss-resolve/references/catalog.json";
   const destinationCatalog = resolve(destinationRoot, catalogPath);
   mkdirSync(dirname(destinationCatalog), { recursive: true });
   writeFileSync(destinationCatalog, `${JSON.stringify(catalog, null, 2)}\n`);
@@ -84,7 +84,7 @@ test("verifyDistribution maps the skills inventory onto a root Codex skills mirr
   try {
     stageCoreDistribution(sandbox);
     mirrorCanonicalSkillsAsRoot(sandbox);
-    const codexScript = resolve(sandbox, "skills/ss-update/scripts/check-update.mjs");
+    const codexScript = resolve(sandbox, "skills/styleseed/workflows/ss-update/scripts/check-update.mjs");
     const result = verifyDistribution({ catalog, scriptPath: codexScript });
     assert.equal(result.status, "verified");
     assert.equal(result.distribution, "skills");
@@ -178,13 +178,13 @@ test("verifyDistribution reports tampered, unsafe-file, and incomplete staged pa
   try {
     stageCoreDistribution(tamperedSandbox);
     writeFileSync(
-      resolve(tamperedSandbox, "engine/.claude/skills/ss-build/SKILL.md"),
+      resolve(tamperedSandbox, "engine/.claude/skills/styleseed/workflows/ss-build/WORKFLOW.md"),
       "# tampered skill\n",
     );
     const tampered = verifyDistribution({ catalog, scriptPath: stagedScript(tamperedSandbox) });
     assert.equal(tampered.status, "tampered");
     assert.equal(tampered.computedRevision.startsWith("sha256:"), true);
-    assert(tampered.mismatches.some((entry) => entry.path === "engine/.claude/skills/ss-build/SKILL.md"));
+    assert(tampered.mismatches.some((entry) => entry.path === "engine/.claude/skills/styleseed/workflows/ss-build/WORKFLOW.md"));
   } finally {
     rmSync(tamperedSandbox, { recursive: true, force: true });
   }
@@ -217,10 +217,10 @@ test("verifyDistribution reports tampered, unsafe-file, and incomplete staged pa
   const incompleteSandbox = makeSandbox("styleseed-distribution-incomplete-");
   try {
     stageCoreDistribution(incompleteSandbox);
-    unlinkSync(resolve(incompleteSandbox, "engine/.claude/skills/ss-update/SKILL.md"));
+    unlinkSync(resolve(incompleteSandbox, "engine/.claude/skills/styleseed/workflows/ss-update/WORKFLOW.md"));
     const incomplete = verifyDistribution({ catalog, scriptPath: stagedScript(incompleteSandbox) });
     assert.equal(incomplete.status, "incomplete");
-    assert(incomplete.mismatches.some((entry) => entry.path === "engine/.claude/skills/ss-update/SKILL.md" && entry.reason === "missing"));
+    assert(incomplete.mismatches.some((entry) => entry.path === "engine/.claude/skills/styleseed/workflows/ss-update/WORKFLOW.md" && entry.reason === "missing"));
   } finally {
     rmSync(incompleteSandbox, { recursive: true, force: true });
   }
@@ -244,7 +244,7 @@ test("check-update never reports tampered or incomplete installs as current", ()
   try {
     stageCoreDistribution(tamperedSandbox);
     writeFileSync(
-      resolve(tamperedSandbox, "engine/.claude/skills/ss-score/SKILL.md"),
+      resolve(tamperedSandbox, "engine/.claude/skills/styleseed/workflows/ss-score/WORKFLOW.md"),
       "# tampered score skill\n",
     );
     const tampered = runUpdateChecker(tamperedSandbox);
@@ -291,7 +291,7 @@ test("check-update follows the installed stable channel instead of mutable main"
         },
       },
     }, null, 2)}\n`);
-    const installedCatalogPath = resolve(sandbox, "engine/.claude/skills/ss-resolve/references/catalog.json");
+    const installedCatalogPath = resolve(sandbox, "engine/.claude/skills/styleseed/workflows/ss-resolve/references/catalog.json");
     const installedCatalog = JSON.parse(readFileSync(installedCatalogPath, "utf8"));
     installedCatalog.distributionSource = {
       schemaVersion: 1,

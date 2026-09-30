@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const engineVersion = readFileSync(resolve(root, "engine/VERSION"), "utf8").trim();
-const catalog = JSON.parse(readFileSync(resolve(root, "engine/.claude/skills/ss-resolve/references/catalog.json"), "utf8"));
+const catalog = JSON.parse(readFileSync(resolve(root, "engine/.claude/skills/styleseed/workflows/ss-resolve/references/catalog.json"), "utf8"));
 const coreFiles = catalog.distributions.core.files.map((file) => file.path);
 assert.equal(coreFiles.some((path) => /ss-learn|learning|mcp/i.test(path)), false, "core distribution contains learning or MCP paths");
 assert.equal(existsSync(resolve(root, "engine/.claude/skills/ss-learn")), false, "core source contains ss-learn");

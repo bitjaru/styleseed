@@ -170,7 +170,7 @@ export default function ArchitecturePage() {
             Give it references StyleSeed has never seen.
           </h2>
           <p className="mt-3 max-w-2xl text-[16px] leading-relaxed text-neutral-400">
-            <code className="text-violet-300">/ss-reference</code> observes and measures the
+            <code className="text-violet-300">/styleseed reference</code> observes and measures the
             visible system, resolves contradictions, records evidence and confidence, compiles
             tokens and anti-patterns, then proves transfer on a screen or artifact absent from
             the source set.

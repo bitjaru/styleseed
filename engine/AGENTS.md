@@ -30,15 +30,15 @@ resolve the named artifact first, then read its `.styleseed/bundles/<artifact-id
 global bundle. The legacy `.styleseed/effective-rules.md` path is supported only when no registry exists.
 
 When the user still needs creative direction, generated media, or an interaction concept, invoke
-`$ss-studio` first. It produces three directions, pauses for human selection, then compiles scenes
-and media jobs before implementation. Use `$ss-resolve` directly when the direction is already set.
+`$styleseed studio` first. It produces three directions, pauses for human selection, then compiles scenes
+and media jobs before implementation. Use `$styleseed resolve` directly when the direction is already set.
 
-Invoke `$ss-resolve` from the selected artifact config or `STYLESEED.md`, then read the artifact-bound
+Invoke `$styleseed resolve` from the selected artifact config or `STYLESEED.md`, then read the artifact-bound
 bundle and manifest and keep their provenance. The deterministic resolver composes core → grammar → adapter →
 domain/page → brand recipe → palette recipe → optional profile → lock → craft baseline and records source hashes. Do not load
 `llms-full.txt` after a bundle resolves successfully.
 
-Use `$ss-resolve --list` when selecting IDs. Open the full source handbook only when the
+Use `$styleseed resolve --list` when selecting IDs. Open the full source handbook only when the
 compiled bundle identifies a genuine ambiguity. See `ARCHITECTURE.md` for the full system.
 
 ## Composition model
@@ -120,26 +120,26 @@ contract. Unknown values are resolver errors; they are not exemptions.
 ## Setup and reference routing
 
 1. Understand the user, job, domain, artifact, platform, and primary decision.
-2. Use `$ss-resolve --list` to select one output grammar and one adapter.
-3. If supplied references are not represented, use `$ss-reference` and
+2. Use `$styleseed resolve --list` to select one output grammar and one adapter.
+3. If supplied references are not represented, use `$styleseed reference` and
    `REFERENCE-COMPILER.md`. Never reduce a reference to a palette swap or clone its protected
    assets, text, or trademarked arrangement.
 4. Select one brand recipe from `BRAND-RECIPES.md`; use `auto` only when its grammar mapping fits.
 5. Select one palette recipe from `PALETTE-RECIPES.md`; revalidate project overrides.
 6. Select domain/page bias and at most one optional aesthetic profile.
 7. Confirm bounded brand/type/density/radius/elevation/imagery/motion values, write the lock,
-   then run `$ss-resolve` and read the effective bundle before implementation.
+   then run `$styleseed resolve` and read the effective bundle before implementation.
 
 Reference compilation produces evidence, confidence, tokens, anti-patterns, adapter metadata,
 and a transfer validation artifact under `.styleseed/rulesets/<slug>/`.
 
 ## Build loop
 
-For an authorized build task, use `$ss-build` when installed:
+For an authorized build task, use `$styleseed build` when installed:
 
 ```text
 select or compile grammar → select adapter → lock → build with the composed method
-→ $ss-score → bounded authorized repairs → render → $ss-verify → bounded authorized repairs
+→ $styleseed score → bounded authorized repairs → render → $styleseed verify → bounded authorized repairs
 → report actual evidence and pass/fail (stop on pass or three correction passes per gate)
 ```
 
@@ -153,7 +153,7 @@ For interactive builds, declare and execute required user outcomes through the a
 Failed, skipped, missing, or stale outcomes block completion regardless of the appearance score.
 Omitted functional contracts preserve compatibility but cannot claim functional verification.
 
-`$ss-score` reads implementation evidence and names the effective rule set. It checks eight
+`$styleseed score` reads implementation evidence and names the effective rule set. It checks eight
 weighted categories: color, hierarchy/type, layout/rhythm, surfaces/elevation, states/a11y,
 motion/interaction, coherence, and distinctiveness. Within an authorized build/fix task, address
 core failures first and re-score after fixes. Stop on pass or after three correction passes and
@@ -161,7 +161,7 @@ report remaining failures; a plain scoring/review request does not authorize edi
 
 ### Pixel gate
 
-For every renderable artifact, `$ss-verify` must inspect actual output at the adapter's required
+For every renderable artifact, `$styleseed verify` must inspect actual output at the adapter's required
 viewports, frames, pages, and states. Check focal dominance, loaded type, balance, optical rhythm,
 crop/safe zones, contrast, responsive transformation, and grammar fit. Re-render after fixes.
 Never claim a visual pass without seeing the rendered artifact.
@@ -172,16 +172,16 @@ and export. Verification opens every exported frame.
 
 ## Skill invocation
 
-- Claude Code: `/ss-resolve`, `/ss-build`, `/ss-reference`, `/ss-score`, `/ss-verify`, etc.
-- Codex: `$ss-studio`, `$ss-resolve`, `$ss-build`, `$ss-reference`, `$ss-score`, `$ss-verify`, or the `/skills` picker.
-- The canonical 23 skills live in `engine/.claude/skills`; repository `.agents/skills` is a
+- Claude Code: `/styleseed resolve`, `/styleseed build`, `/styleseed reference`, `/styleseed score`, `/styleseed verify`, etc.
+- Codex: `$styleseed studio`, `$styleseed resolve`, `$styleseed build`, `$styleseed reference`, `$styleseed score`, `$styleseed verify`, or the `/skills` picker.
+- The canonical skill lives in `engine/.claude/skills`; repository `.agents/skills` is a
   symlink to that directory. Repository `skills/` is a generated physical mirror for Codex plugin
   archives and must remain byte-identical to the canonical directory.
 
 ## Staying current
 
 At the first StyleSeed workflow in each project/task session, run the installed `ss-update`
-checker and follow `.claude/skills/ss-update/references/update-preflight.md`. Compare exact
+checker and follow `.claude/skills/styleseed/workflows/ss-update/references/update-preflight.md`. Compare exact
 revisions, not only versions; recommend updating before new work when they differ. Respect
 explicit pinned revisions and existing authorization. Report offline checks as unknown.
 Projects may opt into `--require-current` to fail their CI/task on non-current installations
@@ -195,3 +195,10 @@ agent may ask once whether the user would like to star
 request, and never imply that a star changes access, output quality, updates, or support.
 
 Source: https://github.com/bitjaru/styleseed
+
+## Single skill entry
+
+The core registers only `styleseed`; use `$styleseed <request>` (Codex) or
+`/styleseed <request>` (Claude Code). Internal `ss-*` names in this handbook identify
+`styleseed/workflows/<name>/WORKFLOW.md`, not additional installed slash commands.
+Read the selected workflow from the installed skill directory and follow its scope limits.

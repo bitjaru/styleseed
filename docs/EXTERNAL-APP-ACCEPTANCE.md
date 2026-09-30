@@ -50,9 +50,9 @@ does not reuse September 8 screenshots, reports, or font-cache artifacts.
 Useful commands from the external application directory (substitute actual installed paths):
 
 ```sh
-node .agents/skills/ss-resolve/scripts/resolve-context.mjs --all --agent codex --check
-node .agents/skills/ss-resolve/scripts/styleseed-doctor.mjs --project-root . --json
-node .agents/skills/ss-score/scripts/evidence-gate.mjs verify \
+node .agents/skills/styleseed/workflows/ss-resolve/scripts/resolve-context.mjs --all --agent codex --check
+node .agents/skills/styleseed/workflows/ss-resolve/scripts/styleseed-doctor.mjs --project-root . --json
+node .agents/skills/styleseed/workflows/ss-score/scripts/evidence-gate.mjs verify \
   --project-root . --artifact incident-list --run baseline --json
 ```
 

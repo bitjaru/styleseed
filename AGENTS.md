@@ -25,12 +25,12 @@ demo artifacts in sync.
 - Read `engine/PRODUCT-PRINCIPLES.md`, `engine/RULESETS.md`, `engine/ADAPTERS.md`,
   `engine/BRAND-RECIPES.md`, `engine/PALETTE-RECIPES.md`, and
   `engine/ARCHITECTURE.md` before changing product behavior.
-- Treat `engine/.claude/skills/` as the canonical source for all 23 StyleSeed
-  skills. `.agents/skills` is a repository-scoped Codex symlink to that same
+- Treat `engine/.claude/skills/` as the canonical source for the single StyleSeed skill and its 22 internal
+  workflows. `.agents/skills` is a repository-scoped Codex symlink to that same
   directory. Root `skills/` is the generated physical mirror used by Codex plugin archives; never
   edit it directly.
-- Claude Code invokes a skill as `/ss-setup`, `/ss-build`, and so on. Codex
-  invokes it as `$ss-setup`, `$ss-build`, or from its Skills picker.
+- Claude Code invokes a skill as `/styleseed setup`, `/styleseed build`, and so on. Codex
+  invokes it as `$styleseed setup`, `$styleseed build`, or from its Skills picker.
 
 ## Generated files
 

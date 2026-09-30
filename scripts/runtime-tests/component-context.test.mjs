@@ -32,7 +32,7 @@ function setup(t) {
   cpSync(canonicalSkills, skills, { recursive: true });
   const root = resolve(sandbox, "external app with spaces");
   mkdirSync(root);
-  const text = readFileSync(resolve(skills, "ss-component/SKILL.md"), "utf8");
+  const text = readFileSync(resolve(skills, "styleseed/workflows/ss-component/WORKFLOW.md"), "utf8");
   const commands = [...text.matchAll(/```(?:sh|bash)\n([\s\S]*?)```/gu)]
     .map((match) => match[1].replace(/\\\r?\n\s*/gu, " ").trim())
     .filter((command) => command.startsWith("node ") && command.includes("resolve-context.mjs"));
@@ -46,7 +46,7 @@ function setup(t) {
     const tokens = [...command.matchAll(/"([^"\n]*)"|(\S+)/gu)].map((match) => match[1] ?? match[2]);
     assert.equal(tokens.shift(), "node");
     const args = tokens.map((token) => token
-      .replaceAll("<ss-resolve>", resolve(skills, "ss-resolve"))
+      .replaceAll("<ss-resolve>", resolve(skills, "styleseed/workflows/ss-resolve"))
       .replaceAll("<artifact-id>", artifact)
       .replaceAll("<agent>", "codex"));
     assert.ok(args.includes("--check"), "documented preflight must be read-only");

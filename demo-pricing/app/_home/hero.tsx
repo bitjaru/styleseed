@@ -32,7 +32,7 @@ const PRODUCT_LOOP = [
 
 const STATS = [
   { value: "74", label: "design rules" },
-  { value: "23", label: "core skills" },
+  { value: "1", label: "core skill" },
   { value: "8", label: "output grammars" },
   { value: "5", label: "surface adapters" },
 ];

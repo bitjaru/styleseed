@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const engine = resolve(root, "engine");
-const out = resolve(engine, ".claude/skills/ss-resolve/references/catalog.json");
+const out = resolve(engine, ".claude/skills/styleseed/workflows/ss-resolve/references/catalog.json");
 const canonicalSkills = resolve(engine, ".claude/skills");
 const discoverySkills = resolve(root, "skills");
 const read = (name) => readFileSync(resolve(engine, name), "utf8").trim();
@@ -14,9 +14,9 @@ function syncPortableSkillRuntime() {
   const generator = readFileSync(resolve(engine, "color/generator.mjs"));
   const generatorCli = readFileSync(resolve(engine, "color/generate-palette.mjs"));
   const targets = [
-    ["ss-resolve/scripts/palette-generator.mjs", generator],
-    ["ss-tokens/scripts/generator.mjs", generator],
-    ["ss-tokens/scripts/generate-palette.mjs", generatorCli],
+    ["styleseed/workflows/ss-resolve/scripts/palette-generator.mjs", generator],
+    ["styleseed/workflows/ss-tokens/scripts/generator.mjs", generator],
+    ["styleseed/workflows/ss-tokens/scripts/generate-palette.mjs", generatorCli],
   ];
   for (const [relativePath, content] of targets) {
     const target = resolve(canonicalSkills, relativePath);
@@ -60,7 +60,7 @@ const topLevelDistributionFiles = readdirSync(engine, { withFileTypes: true })
   .map((entry) => entry.name)
   .filter((name) => name === ".cursorrules" || name === "VERSION" || name.endsWith(".md"));
 const skillsDistributionPaths = walkFiles(canonicalSkills, "engine/.claude/skills")
-  .filter((path) => path !== "engine/.claude/skills/ss-resolve/references/catalog.json")
+  .filter((path) => path !== "engine/.claude/skills/styleseed/workflows/ss-resolve/references/catalog.json")
   .filter((path) => !path.startsWith("engine/.claude/skills/ss-learn/"))
   .sort();
 const coreDistributionPaths = [
@@ -269,16 +269,16 @@ const catalog = {
     claude: [
       "## Claude Code execution contract",
       "",
-      "- Invoke StyleSeed skills with `/ss-*`.",
+      "- Invoke `/styleseed <request>`; read only the selected internal workflow.",
       "- Read this compiled bundle before implementation; do not load the full handbook unless a named ambiguity remains.",
-      "- Use the selected renderer, run `/ss-score`, then inspect rendered output with `/ss-verify`.",
+      "- Use the selected renderer, run `/styleseed score`, then inspect rendered output with `/styleseed verify`.",
     ].join("\n"),
     codex: [
       "## Codex execution contract",
       "",
-      "- Invoke StyleSeed skills with `$ss-*` or the Skills picker.",
+      "- Invoke `$styleseed <request>` or select StyleSeed from the Skills picker.",
       "- Read this compiled bundle before implementation; do not load the full handbook unless a named ambiguity remains.",
-      "- Run project checks, then `$ss-score`; render and inspect the actual artifact with `$ss-verify` before claiming completion.",
+      "- Run project checks, then `$styleseed score`; render and inspect the actual artifact with `$styleseed verify` before claiming completion.",
     ].join("\n"),
     cursor: [
       "## Cursor execution contract",

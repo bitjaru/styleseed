@@ -56,7 +56,7 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "I applied StyleSeed but the design still looks bad / colors are random / there's no key color — what do I do?",
-    a: "Consistency comes from constraints, and the one-paste prompt is the least-constrained path. Fix it in five steps. 1) Select the output grammar and surface adapter before code. 2) Lock a primary action color and define stable roles for any additional hues. 3) If you have references that StyleSeed does not model, run /ss-reference instead of copying them. 4) Install the provider's project entry or invoke the installed StyleSeed skill so visual work reads STYLESEED.md. 5) Run /ss-score, then render and inspect with /ss-verify; the reference demo was not one-shot either.",
+    a: "Consistency comes from constraints, and the one-paste prompt is the least-constrained path. Fix it in five steps. 1) Select the output grammar and surface adapter before code. 2) Lock a primary action color and define stable roles for any additional hues. 3) If you have references that StyleSeed does not model, run /styleseed reference instead of copying them. 4) Install the provider's project entry or invoke the installed StyleSeed skill so visual work reads STYLESEED.md. 5) Run /styleseed score, then render and inspect with /styleseed verify; the reference demo was not one-shot either.",
   },
   {
     q: "Why does the same prompt give a great result one time and a generic one the next?",
@@ -87,12 +87,12 @@ const FAQ: { q: string; a: string }[] = [
     a: "No automatic upload exists. The repository-only learning contract rejects project code, prompt text, screenshots, URLs, local paths, brand tokens, and arbitrary extra fields. Its scanner is a guardrail, not an anonymization guarantee, so review the exact package before exposure. The development bridge stays disabled until a host-owned proof adapter is verified; enabling it would reveal one exact approved package to the connected client and model after a one-time grant.",
   },
   {
-    q: "Why can $ss-update find an update when the semantic version has not changed?",
-    a: "StyleSeed tracks both engineVersion and engineRevision. The version names the release line; the revision hashes the exact maintained method, 23 skills, plugin boundary, and palette engine. $ss-update compares installed, project-recorded, and published revisions, then refreshes the engine and re-resolves the project lock without replacing project-owned code or design decisions.",
+    q: "Why can $styleseed update find an update when the semantic version has not changed?",
+    a: "StyleSeed tracks both engineVersion and engineRevision. The version names the release line; the revision hashes the exact maintained method, 1 skill, plugin boundary, and palette engine. $styleseed update compares installed, project-recorded, and published revisions, then refreshes the engine and re-resolves the project lock without replacing project-owned code or design decisions.",
   },
   {
     q: "Is the StyleSeed Codex plugin available in a public plugin directory?",
-    a: "Not yet. The repository contains a development Codex package with 23 core skills, but public directory release is not verified. The default/core package contains neither ss-learn nor a learning MCP. Use the project-local CLI install above; a public plugin-directory release is a separate distribution path.",
+    a: "Not yet. The repository contains a development Codex package with one core skill, but public directory release is not verified. The default/core package contains neither ss-learn nor a learning MCP. Use the project-local CLI install above; a public plugin-directory release is a separate distribution path.",
   },
   {
     q: "Installing the skills asks for permission or gets blocked — is that normal? Do I even need them?",

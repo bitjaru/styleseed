@@ -16,7 +16,7 @@ const sha256 = (path) => createHash("sha256").update(readFileSync(path)).digest(
 const assert = (condition, message) => { if (!condition) throw new Error(message); };
 const manifest = readJson("release-manifest.json");
 const inventory = readJson("inventory.json");
-const catalog = JSON.parse(readFileSync(resolve(repoRoot, "engine/.claude/skills/ss-resolve/references/catalog.json"), "utf8"));
+const catalog = JSON.parse(readFileSync(resolve(repoRoot, "engine/.claude/skills/styleseed/workflows/ss-resolve/references/catalog.json"), "utf8"));
 const version = readFileSync(resolve(repoRoot, "engine/VERSION"), "utf8").trim();
 const archiveName = `styleseed-core-${version}.tar.gz`;
 const expectedFiles = [

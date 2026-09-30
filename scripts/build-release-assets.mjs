@@ -199,7 +199,7 @@ async function main() {
   writeJson(demoSbomPath, buildDemoCycloneDx(createdAt));
   const coreSbomAsset = asset(coreSbomPath);
   const demoSbomAsset = asset(demoSbomPath);
-  const catalog = readJson(resolve(repoRoot, "engine/.claude/skills/ss-resolve/references/catalog.json"));
+  const catalog = readJson(resolve(repoRoot, "engine/.claude/skills/styleseed/workflows/ss-resolve/references/catalog.json"));
   const workflowRunUrl = args["workflow-run-url"] ?? null;
   const tagVerified = args["tag-verified"] === "true";
   if (args["tag-verified"] && !["true", "false"].includes(args["tag-verified"])) {

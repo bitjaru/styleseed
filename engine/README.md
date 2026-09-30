@@ -19,7 +19,7 @@ and agent skills. See [the product constitution](PRODUCT-PRINCIPLES.md) for auth
 | `PRESETS.md` | Optional aesthetic profiles, separate from grammars |
 | `ARCHITECTURE.md` | Technical architecture and diagrams |
 | `DESIGN-LANGUAGE.md` | 74 visual design rules with Table of Contents |
-| `.claude/skills/` | 23 canonical agent skills (Claude `/ss-*`, Codex `$ss-*`) |
+| `.claude/skills/` | One public skill and 22 internal workflows (Claude `/styleseed`, Codex `$styleseed`) |
 | `components/ui/` | 32 shadcn/ui-based primitives (including motion.tsx) |
 | `components/patterns/` | 16 recipe-aware pattern components |
 | `css/` | base.css, fonts.css, recipes.css, index.css (theme.css comes from skins/) |
@@ -38,8 +38,8 @@ cp -r engine/* your-project/
 cp skins/stripe/theme.css your-project/src/styles/theme.css
 
 # Or use interactive setup
-# Claude Code: /ss-setup
-# Codex:       $ss-setup
+# Claude Code: /styleseed setup
+# Codex:       $styleseed setup
 ```
 
 The method works with any skin and across multiple artifact renderers. Select the output grammar,

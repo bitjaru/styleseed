@@ -793,7 +793,7 @@ outputs are committed; it is not required from an intentionally dirty implementa
 
 **Depends on:** `BLD-001`.
 
-- modify `engine/.claude/skills/ss-resolve/scripts/resolve-context.mjs`;
+- modify `engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/resolve-context.mjs`;
 - add focused runtime tests.
 
 `--check` must compare all three layers:
@@ -814,9 +814,9 @@ not redesign lock normalization; `ART-001/003` own that behavior.
 
 **Depends on:** `SEC-001`, `PKG-001`.
 
-- create `engine/.claude/skills/ss-resolve/scripts/distribution-integrity.mjs`;
+- create `engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/distribution-integrity.mjs`;
 - modify `scripts/build-context-catalog.mjs`;
-- modify `engine/.claude/skills/ss-update/scripts/check-update.mjs`;
+- modify `engine/.claude/skills/styleseed/workflows/ss-update/scripts/check-update.mjs`;
 - create `scripts/runtime-tests/distribution-integrity.test.mjs`.
 
 ```js
@@ -912,7 +912,7 @@ git diff --check
 ### ART-002 — Safe migration and registry loader
 
 > Migration safety update: the original CLI sketch below is historical. Bare `--write` now
-> refuses unreviewed defaults. Use the [reviewed migration workflow](../engine/.claude/skills/ss-resolve/references/migration.md)
+> refuses unreviewed defaults. Use the [reviewed migration workflow](../engine/.claude/skills/styleseed/workflows/ss-resolve/references/migration.md)
 > with a complete plan and exact confirmation hash. The implementation uses exclusive writes
 > and bounded rollback, rather than the overwrite-capable rename described in this early plan.
 
@@ -1108,7 +1108,7 @@ viewport, stale method, temporal required/not-applicable, and source change afte
 **Owner files**
 
 - create `ss-score/scripts/styleseed-check.mjs`;
-- modify canonical `ss-score/SKILL.md` and `ss-lint/SKILL.md`;
+- modify canonical `ss-score/WORKFLOW.md` and `ss-lint/WORKFLOW.md`;
 - create `scripts/runtime-tests/deterministic-check.test.mjs`.
 
 CLI:
@@ -1387,15 +1387,15 @@ artifact selections above.
 Execution:
 
 ```bash
-node engine/.claude/skills/ss-resolve/scripts/resolve-context.mjs --project-root . --all --agent codex
-node engine/.claude/skills/ss-resolve/scripts/resolve-context.mjs --project-root . --all --check
+node engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/resolve-context.mjs --project-root . --all --agent codex
+node engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/resolve-context.mjs --project-root . --all --check
 npm run build --prefix demo-pricing
 # Terminal A
 npm run start --prefix demo-pricing
 # Terminal B
 node demo-pricing/scripts/capture-artifact-evidence.mjs --base-url http://127.0.0.1:3000 --all
-node engine/.claude/skills/ss-score/scripts/styleseed-check.mjs scan --project-root . --all --format json
-node engine/.claude/skills/ss-score/scripts/evidence-gate.mjs verify --project-root . --all --json
+node engine/.claude/skills/styleseed/workflows/ss-score/scripts/styleseed-check.mjs scan --project-root . --all --format json
+node engine/.claude/skills/styleseed/workflows/ss-score/scripts/evidence-gate.mjs verify --project-root . --all --json
 ```
 
 The capture script refuses a dirty/built-source hash mismatch, writes new PNG/recording files under the
@@ -1449,9 +1449,9 @@ Acceptance:
 
 ```bash
 npm run build --prefix demo-pricing
-node engine/.claude/skills/ss-resolve/scripts/resolve-context.mjs --project-root . --artifact site-home --check
-node engine/.claude/skills/ss-score/scripts/styleseed-check.mjs scan --project-root . --artifact site-home --format json
-node engine/.claude/skills/ss-score/scripts/evidence-gate.mjs verify --project-root . --artifact site-home --run <new-run-id> --json
+node engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/resolve-context.mjs --project-root . --artifact site-home --check
+node engine/.claude/skills/styleseed/workflows/ss-score/scripts/styleseed-check.mjs scan --project-root . --artifact site-home --format json
+node engine/.claude/skills/styleseed/workflows/ss-score/scripts/evidence-gate.mjs verify --project-root . --artifact site-home --run <new-run-id> --json
 git diff --check
 ```
 

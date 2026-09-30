@@ -17,7 +17,7 @@ npx skills list --json --agent codex
 
 Expected result:
 
-- exactly 23 project-local skill directories under `.agents/skills/`;
+- exactly one project-local skill directory under `.agents/skills/`;
 - `.agents/skills/styleseed/SKILL.md` exists;
 - `ss-learn` and a learning MCP are absent from the core install;
 - the install contains physical copies rather than links back to another checkout.

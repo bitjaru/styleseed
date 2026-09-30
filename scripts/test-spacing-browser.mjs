@@ -5,8 +5,8 @@ import { mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { chromium } from '../demo-pricing/node_modules/playwright/index.mjs';
-import { inspectSpacing } from '../engine/.claude/skills/ss-verify/scripts/inspect-spacing.mjs';
-import { effectiveSpacing, spacingCss } from '../engine/.claude/skills/ss-resolve/scripts/spacing-contract.mjs';
+import { inspectSpacing } from '../engine/.claude/skills/styleseed/workflows/ss-verify/scripts/inspect-spacing.mjs';
+import { effectiveSpacing, spacingCss } from '../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/spacing-contract.mjs';
 const output = mkdtempSync(join(tmpdir(), 'styleseed-spacing-browser-'));
 const project = { spacing: { wideMinWidth: 900, roles: {
   pageInset: { base: 16, wide: 32 }, sectionGap: { base: 24, wide: 40 }, groupGap: { base: 24 },

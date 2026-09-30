@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 const repo = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const project = resolve(repo, 'examples/wanted-design-case');
 execFileSync(process.execPath, [
-  resolve(repo, 'engine/.claude/skills/ss-resolve/scripts/resolve-context.mjs'),
+  resolve(repo, 'engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/resolve-context.mjs'),
   '--project-root', project, '--all', '--agent', 'codex',
 ], { cwd: repo, stdio: 'inherit' });
 execFileSync(process.execPath, [resolve(project, 'build.mjs')], { cwd: repo, stdio: 'inherit' });

@@ -268,7 +268,7 @@ export default function ShowcasePage() {
               </p>
               <h2 className="mt-2 text-3xl font-bold tracking-tight">Compile it into a rule set.</h2>
               <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-neutral-300">
-                <code className="text-violet-200">$ss-reference</code> analyzes screenshots, URLs,
+                <code className="text-violet-200">$styleseed reference</code> analyzes screenshots, URLs,
                 Figma exports, or existing UI into an evidence-backed project grammar—without
                 cloning the source screen.
               </p>

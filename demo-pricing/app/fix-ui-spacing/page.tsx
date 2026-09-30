@@ -54,7 +54,7 @@ export default function SpacingGuide() {
         <h2 className="mb-5 text-2xl font-bold tracking-tight">Want a repeatable workflow?</h2>
         <ProofInstall />
         <p className="mt-4 text-base leading-relaxed text-neutral-700">Then use <code>$styleseed</code> in Codex or <code>/styleseed</code> in Claude Code with your screen and the prompt above. New projects choose a method; existing projects preserve approved choices.</p>
-        <p className="mt-4 text-base leading-relaxed text-neutral-700">Already installed? Run <code>$ss-update</code> or <code>/ss-update</code>, recompile affected bundles, and review any copied CSS. Updating skills alone does not repair an existing screen.</p>
+        <p className="mt-4 text-base leading-relaxed text-neutral-700">Already installed? Run <code>$styleseed update</code> or <code>/styleseed update</code>, recompile affected bundles, and review any copied CSS. Updating skills alone does not repair an existing screen.</p>
         <Link href="/evaluate" className="mt-5 inline-flex min-h-11 items-center text-sm font-semibold text-teal-800 underline underline-offset-4">Understand what the checks establish</Link>
       </section>
     </article>

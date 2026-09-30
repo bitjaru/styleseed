@@ -7,7 +7,7 @@ import { GithubStarCount } from "../_home/github-star-count";
 const BASE = "https://styleseed-demo.vercel.app";
 
 const description =
-  "We ran our own old landing page through our own quality gate (/ss-score). It scored 58/100. Here is the full category breakdown, every generic-AI tell it flagged, and how the fixes took it to 86.";
+  "We ran our own old landing page through our own quality gate (/styleseed score). It scored 58/100. Here is the full category breakdown, every generic-AI tell it flagged, and how the fixes took it to 86.";
 
 export const metadata: Metadata = {
   title: "We scored our own landing 58/100 — the StyleSeed self-own",
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
   },
 };
 
-/** The eight weighted categories of /ss-score (engine/.claude/skills/ss-score). Total = 100. */
+/** The eight weighted categories of /styleseed score (engine/.claude/skills/ss-score). Total = 100. */
 type Row = {
   category: string;
   weight: number;
@@ -139,7 +139,7 @@ export default function Scorecard() {
             <span className="text-red-600">{BEFORE_TOTAL}</span>.
           </h1>
           <p className="mt-6 max-w-xl text-[17px] leading-relaxed text-neutral-600">
-            StyleSeed ships a quality gate — <code className="rounded bg-neutral-100 px-1 font-mono text-[15px]">/ss-score</code>{" "}
+            StyleSeed ships a quality gate — <code className="rounded bg-neutral-100 px-1 font-mono text-[15px]">/styleseed score</code>{" "}
             reads a screen and scores it 0–100 across eight weighted categories. So we pointed it
             at an early version of this very page. It came back{" "}
             <strong className="font-bold text-neutral-900">{BEFORE_TOTAL}/100 ({band(BEFORE_TOTAL)})</strong>{" "}
@@ -264,7 +264,7 @@ export default function Scorecard() {
             Score your own UI in one line.
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-[16px] leading-relaxed text-neutral-300">
-            Install StyleSeed, then run <code className="rounded bg-white/10 px-1 font-mono text-[14px]">/ss-score</code>{" "}
+            Install StyleSeed, then run <code className="rounded bg-white/10 px-1 font-mono text-[14px]">/styleseed score</code>{" "}
             on any screen your agent built. You&rsquo;ll get the same category breakdown — and a
             prioritized fix list ordered by score gain.
           </p>

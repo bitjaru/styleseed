@@ -61,10 +61,10 @@ $skills.Count
 $skills.Name | Sort-Object
 ```
 
-Expected count:
+Expected count for the current unified package (the 23-skill log above is historical):
 
 ```text
-23
+1
 ```
 
 Confirm the `styleseed` router and installed StyleSeed version:
@@ -74,7 +74,7 @@ $router = Join-Path $skillRoot "styleseed\SKILL.md"
 Test-Path -LiteralPath $router
 Get-Content -LiteralPath $router -TotalCount 4
 
-$catalogPath = Join-Path $skillRoot "ss-resolve\references\catalog.json"
+$catalogPath = Join-Path $skillRoot "styleseed\workflows\ss-resolve\references\catalog.json"
 (Get-Content -Raw -LiteralPath $catalogPath | ConvertFrom-Json).engineVersion
 ```
 

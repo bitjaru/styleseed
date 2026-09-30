@@ -6,7 +6,7 @@ import { lstatSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, writeFil
 import { tmpdir } from 'node:os';
 import { basename, dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { normalizeArtifact, normalizeProject } from '../engine/.claude/skills/ss-resolve/scripts/runtime-contract.mjs';
+import { normalizeArtifact, normalizeProject } from '../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/runtime-contract.mjs';
 
 const repo = fileURLToPath(new URL('../', import.meta.url));
 const study = 'research/design-judgment';
@@ -101,8 +101,8 @@ export function buildPilotPlan(root = repo) {
 
   const skillFiles = {};
   const skillPrefix = 'engine/.claude/skills/';
-  skillFiles['.agents/skills/ss-resolve/references/catalog.json'] = read(`${skillPrefix}ss-resolve/references/catalog.json`);
-  const catalog = JSON.parse(skillFiles['.agents/skills/ss-resolve/references/catalog.json']);
+  skillFiles['.agents/skills/styleseed/workflows/ss-resolve/references/catalog.json'] = read(`${skillPrefix}styleseed/workflows/ss-resolve/references/catalog.json`);
+  const catalog = JSON.parse(skillFiles['.agents/skills/styleseed/workflows/ss-resolve/references/catalog.json']);
   for (const entry of catalog.distributions.skills.files) {
     validateOutputPath(entry.path);
     if (!entry.path.startsWith(skillPrefix)) throw new Error(`Non-skill inventory path: ${entry.path}`);

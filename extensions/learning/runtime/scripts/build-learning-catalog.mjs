@@ -6,7 +6,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../../../..");
-const coreCatalog = JSON.parse(readFileSync(resolve(root, "engine/.claude/skills/ss-resolve/references/catalog.json"), "utf8"));
+const coreCatalog = JSON.parse(readFileSync(resolve(root, "engine/.claude/skills/styleseed/workflows/ss-resolve/references/catalog.json"), "utf8"));
 const contextGroups = ["grammars", "adapters", "domains", "pages", "recipes", "palettes", "profiles"];
 const runtimeCatalog = {
   schemaVersion: 1,

@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "artifactId": "site-docs",
   "engineVersion": "4.2.0",
-  "engineRevision": "sha256:95834f1fbbd9364589e29d83594916705be5d46c096342df5b57bc1a78e302cd",
+  "engineRevision": "sha256:27d13481a8ce3b9bb1596905d0373f9106419f9f93e0b7505db9eb40b707bc97",
   "distributionIntegrity": "verified",
   "selection": {
     "agent": "codex",
@@ -36,8 +36,8 @@
     {
       "id": "artifact",
       "path": ".styleseed/artifacts/site-docs.json",
-      "sha256": "sha256:3b4c2e25eefd1a4a7bc70b97b134cec82457ec03dc5f00ae3789784aa04e9863",
-      "bytes": 1655
+      "sha256": "sha256:c44124e65c6248be41ba20ffaee23fec68b8ee822c21dc0748b0bcc55a5215b5",
+      "bytes": 1739
     }
   ],
   "sources": [
@@ -97,10 +97,10 @@
     }
   ],
   "methodHash": "sha256:6c13e05fdce161a9c4fbe982cc2296d41b9c84697f84ba2c9a3095145f8aa74c",
-  "validationHash": "sha256:da9193e7638c4e92f8d0af15b23d5f87a2bef5e737bf392d6e5225b72d9cefba",
+  "validationHash": "sha256:d9251f0315cbb27aefc960b424f44d06a05755b3892a898b8d358af50f17341c",
   "validationSlices": {
     "target": "sha256:66e3ea5ff532a9e7ac4b1f7203164a468ab2544b8069c5784b0dfeb7ff009e99",
-    "implementation": "sha256:4deeb97a1d850f218bde37027f777de6583aaf83f4f9f7b0a5ba3b5095fab756",
+    "implementation": "sha256:f846169197fc5c199438c9a5221e7a7fa39108677c8b94698b261f1ef27c9b92",
     "scoreFloor": "sha256:48449a14a4ff7d79bb7a1b6f3d488eba397c36ef25634c111b49baf362511afc",
     "requiredRenders": "sha256:e2cbc22ce7be59d23cd2e88d6fdbc576aa98f69928e4ff1e61fda02e15ccca2f",
     "temporal": "sha256:c5ec5a78d8447626a8d2c39addbf2843320eb8e491b9e7c1e92927a135b06bba",
@@ -109,14 +109,14 @@
   "bundle": {
     "kind": "bundle",
     "path": ".styleseed/bundles/site-docs.md",
-    "sha256": "sha256:8eb99f7fbe177fc15b3147cbb6be58a452e63ba7009371b17f382d3044adb93b",
+    "sha256": "sha256:164f011108defdbdef5b81622f22a483a670e17fef4f06b96cd41287fa79b358",
     "bytes": 19436
   },
   "outputs": [
     {
       "kind": "bundle",
       "path": ".styleseed/bundles/site-docs.md",
-      "sha256": "sha256:8eb99f7fbe177fc15b3147cbb6be58a452e63ba7009371b17f382d3044adb93b",
+      "sha256": "sha256:164f011108defdbdef5b81622f22a483a670e17fef4f06b96cd41287fa79b358",
       "bytes": 19436
     },
     {

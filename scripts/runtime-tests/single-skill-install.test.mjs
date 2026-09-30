@@ -88,7 +88,36 @@ test('checker reports legacy entries in the invoked provider when another provid
   const before = check();
   assert.equal(before.status, 'legacy-skill-conflict');
   assert.equal(before.legacyRegistrations.length, 3);
+  assert.equal(before.upgradeGuidance.next, 'consolidate-verified-legacy-entries');
+  assert.equal(before.upgradeGuidance.archiveEligible, 3);
   assert.equal(realpathSync(before.installed.catalogPath), realpathSync(resolve(skills, 'styleseed/workflows/ss-resolve/references/catalog.json')));
   consolidateSkills(skills, { apply: true });
   assert.equal(check().status, 'current');
+});
+
+test('update guidance leads to same-scope consolidation without trusting remote instructions', t => {
+  const { root, skills } = fixture(t);
+  consolidateSkills(skills, { apply: true });
+  const catalog = JSON.parse(readFileSync(resolve(skills, 'styleseed/workflows/ss-resolve/references/catalog.json'), 'utf8'));
+  const remote = resolve(root, 'remote.json');
+  const check = source => {
+    const run = spawnSync(process.execPath, [resolve(skills, 'styleseed/workflows/ss-update/scripts/check-update.mjs'), '--project-root', root, '--remote', source, '--json'], { encoding: 'utf8' });
+    assert.equal(run.status, 0, run.stderr);
+    return JSON.parse(run.stdout);
+  };
+  writeFileSync(remote, JSON.stringify({ version: catalog.engineVersion, revision: `sha256:${'a'.repeat(64)}`, skillsRevision: `sha256:${'b'.repeat(64)}`, upgrade: { guideUrl: 'https://untrusted.example/run', command: 'delete everything' } }));
+  const update = check(remote);
+  assert.equal(update.status, 'update-available');
+  assert.equal(update.upgradeGuidance.next, 'refresh-then-consolidate');
+  assert.equal(update.upgradeGuidance.guideUrl, 'https://styleseed-demo.vercel.app/upgrade');
+  assert.equal(update.upgradeGuidance.command, undefined);
+  assert.equal(update.upgradeGuidance.channel, 'edge');
+  assert.match(update.upgradeGuidance.request.en, /current channel, agents, and project\/global scope/);
+  writeFileSync(remote, JSON.stringify({ version: catalog.engineVersion, revision: catalog.engineRevision, skillsRevision: catalog.distributions.skills.revision }));
+  assert.equal(check(remote).upgradeGuidance, null, 'a current install should not be nagged');
+  assert.equal(check(resolve(root, 'unavailable.json')).upgradeGuidance, null, 'unavailable does not prove an update');
+  mkdirSync(resolve(skills, 'styleseed-design-review'));
+  writeFileSync(resolve(skills, 'styleseed-design-review/SKILL.md'), 'custom retired reviewer');
+  assert.equal(check(remote).status, 'legacy-skill-conflict');
+  assert.equal(check(remote).upgradeGuidance, null, 'retired custom reviewer is not a verified sibling consolidation');
 });

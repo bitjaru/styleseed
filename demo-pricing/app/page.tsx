@@ -110,6 +110,12 @@ export default function HomePage() {
       </header>
 
       <main>
+        <aside aria-label="Existing StyleSeed users" className="border-b border-neutral-200 bg-teal-50 px-6 py-3 text-sm text-neutral-700">
+          <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-6 gap-y-1">
+            <p>Already using StyleSeed? Keep the workflows, simplify the skill list.</p>
+            <Link href="/upgrade" className="inline-flex min-h-11 items-center font-semibold text-teal-800 underline underline-offset-4">Update your existing install →</Link>
+          </div>
+        </aside>
         {/* Hero */}
         <Hero />
 

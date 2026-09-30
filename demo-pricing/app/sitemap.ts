@@ -13,6 +13,7 @@ const SPACING_GUIDE_UPDATED = new Date("2026-09-30T00:00:00.000Z");
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes: MetadataRoute.Sitemap = [
+    { url: `${BASE}/upgrade`, lastModified: SPACING_GUIDE_UPDATED, changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE}/fix-ui-spacing`, lastModified: SPACING_GUIDE_UPDATED, changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE}/`, lastModified: SPACING_GUIDE_UPDATED, changeFrequency: "weekly", priority: 1 },
     { url: `${BASE}/claude-code-ui-design`, lastModified: CONTENT_UPDATED, changeFrequency: "monthly", priority: 0.9 },

@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "kind": "synthetic-css-regression",
+  "source": "engine/.claude/skills/ss-resolve/scripts/spacing-contract.mjs",
+  "sourceSha256": "275cc123618266e730082569d3d612220a98621eea2745c861d04252dbeeeb24",
+  "nativeGap": 12,
+  "parentGap": 64,
+  "expected": {
+    "before": 64,
+    "after": 12
+  },
+  "beforeCss": "[data-styleseed-artifact=\"proof-parent\"] { --ss-space-section-gap:64px; } [data-styleseed-artifact=\"proof-child\"] { --ss-space-component-inset:16px; }",
+  "afterCss": ":where([data-styleseed-artifact=\"proof-child\"] [data-styleseed-artifact]) {\n  --ss-space-page-inset: initial;\n  --ss-space-section-gap: initial;\n  --ss-space-group-gap: initial;\n  --ss-space-stack-gap: initial;\n  --ss-space-inline-gap: initial;\n  --ss-space-component-inset: initial;\n}\n[data-styleseed-artifact=\"proof-child\"] {\n  --ss-space-page-inset: initial;\n  --ss-space-section-gap: initial;\n  --ss-space-group-gap: initial;\n  --ss-space-stack-gap: initial;\n  --ss-space-inline-gap: initial;\n  --ss-space-component-inset: 16px;\n}\n\n:where([data-styleseed-artifact=\"proof-parent\"] [data-styleseed-artifact]) {\n  --ss-space-page-inset: initial;\n  --ss-space-section-gap: initial;\n  --ss-space-group-gap: initial;\n  --ss-space-stack-gap: initial;\n  --ss-space-inline-gap: initial;\n  --ss-space-component-inset: initial;\n}\n[data-styleseed-artifact=\"proof-parent\"] {\n  --ss-space-page-inset: initial;\n  --ss-space-section-gap: 64px;\n  --ss-space-group-gap: initial;\n  --ss-space-stack-gap: initial;\n  --ss-space-inline-gap: initial;\n  --ss-space-component-inset: initial;\n}\n"
+}

@@ -39,6 +39,7 @@ Start with one screen and the task a person needs to finish there. Check whether
 StyleSeed’s ss-audit and ss-build workflows can structure this review and repair. You still decide whether the result serves your users; a passing score is not that decision.
 
 Guide and prompt: https://styleseed-demo.vercel.app/faq#app-looks-amateur
+Evidence: https://styleseed-demo.vercel.app/why
 Example: https://styleseed-demo.vercel.app/why
 
 ### Why do all my AI-generated websites look the same?
@@ -48,6 +49,7 @@ If each brief leaves layout, density, typography, and imagery undecided, repeate
 StyleSeed’s ss-studio supports direction exploration and a human selection before the build. Its presets are starting points, not proof that a design fits your product.
 
 Guide and prompt: https://styleseed-demo.vercel.app/faq#ai-websites-look-the-same
+Evidence: https://styleseed-demo.vercel.app/studio
 Example: https://styleseed-demo.vercel.app/studio
 
 ### How do I stop Claude or Codex changing the design on every page?
@@ -57,6 +59,7 @@ Give the agent an approved screen, the actual components it must reuse, and a sm
 StyleSeed resolves project-local rules for an artifact and supports checks against them. Complete import of an arbitrary existing design system and guaranteed cross-session consistency are not established capabilities.
 
 Guide and prompt: https://styleseed-demo.vercel.app/faq#pages-look-inconsistent
+Evidence: https://styleseed-demo.vercel.app/architecture
 Example: https://styleseed-demo.vercel.app/architecture
 
 ### I gave the AI a screenshot. Why doesn’t the result feel like it?
@@ -66,7 +69,18 @@ A screenshot shows one state at one size. It does not specify how the layout ada
 StyleSeed’s ss-reference can turn supplied references into project-local rules. It does not guarantee pixel identity or infer every hidden interaction from a screenshot.
 
 Guide and prompt: https://styleseed-demo.vercel.app/faq#reference-does-not-match
+Evidence: https://styleseed-demo.vercel.app/showcase
 Example: https://styleseed-demo.vercel.app/showcase
+
+### Why does my AI-generated UI spacing feel wrong?
+
+Group related content first, then inspect the computed gap or padding and the CSS token that supplies it. Check whether a nested screen inherits its parent’s spacing. Re-render at desktop and phone widths with real labels, checking overflow and wrapped controls. Bigger padding alone does not establish better rhythm.
+
+StyleSeed supplies optional scoped spacing roles and rendered diagnostics. Recommendations are starting values; final rhythm still needs content-specific review.
+
+Guide and prompt: https://styleseed-demo.vercel.app/faq#ui-spacing-feels-wrong
+Evidence: https://styleseed-demo.vercel.app/fix-ui-spacing
+Example: https://styleseed-demo.vercel.app/fix-ui-spacing
 
 
 ## Context choices

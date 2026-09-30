@@ -261,6 +261,8 @@ Both paths install the same 23 canonical skills. The optional `ss-learn` extensi
 - You're building a **Claude Code skill** or **Cursor rules** setup for design
 - You ship fast with AI and need professional UI that doesn't look AI-generated
 
+Spacing feels wrong? [Inspect the live 64px → 12px CSS inheritance repair](https://styleseed-demo.vercel.app/fix-ui-spacing), then try the prompt on your own screen. This is a synthetic regression example, not a customer outcome or an optimal-spacing claim.
+
 ## Where StyleSeed fits among design-AI skills
 
 There are lots of "help your AI design" projects now. Most solve a slice. StyleSeed is the one that

@@ -206,6 +206,7 @@ Claude Code한테 "대시보드 만들어줘" 하면 보통 이런 결과가 나
 - [앱은 돌아가는데 디자인이 촌스러워요](https://styleseed-demo.vercel.app/faq#app-looks-amateur)
 - [AI로 만든 사이트는 왜 다 비슷해 보이죠?](https://styleseed-demo.vercel.app/faq#ai-websites-look-the-same)
 - [페이지마다 디자인이 달라져요](https://styleseed-demo.vercel.app/faq#pages-look-inconsistent)
+- [간격과 리듬이 어색해요 — 64px → 12px 적용값 직접 확인](https://styleseed-demo.vercel.app/fix-ui-spacing)
 - [레퍼런스 이미지를 줬는데 그 느낌이 안 나요](https://styleseed-demo.vercel.app/faq#reference-does-not-match)
 
 각 답변은 직접 점검할 순서, 에이전트에게 보낼 문장, StyleSeed가 도울 수 있는 범위와 예시를 연결합니다.

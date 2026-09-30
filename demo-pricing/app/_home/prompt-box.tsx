@@ -24,11 +24,13 @@ async function copyText(
   text: string,
   node: HTMLElement | null,
   setState: (state: CopyState) => void,
+  onCopied?: () => void,
 ) {
   try {
     if (!navigator.clipboard) throw new Error("Clipboard API unavailable");
     await navigator.clipboard.writeText(text);
     setState("copied");
+    onCopied?.();
     window.setTimeout(() => setState("idle"), 1800);
   } catch {
     selectForManualCopy(node);
@@ -36,9 +38,10 @@ async function copyText(
   }
 }
 
-export function InstallCommand({ tone = "light", agent = "default" }: {
+export function InstallCommand({ tone = "light", agent = "default", onCopied }: {
   tone?: "light" | "dark";
   agent?: "default" | "codex" | "claude";
+  onCopied?: () => void;
 }) {
   const [state, setState] = useState<CopyState>("idle");
   const commandRef = useRef<HTMLElement>(null);
@@ -50,7 +53,7 @@ export function InstallCommand({ tone = "light", agent = "default" }: {
     <div>
       <button
         type="button"
-        onClick={() => copyText(command, commandRef.current, setState)}
+        onClick={() => copyText(command, commandRef.current, setState, onCopied)}
         className="group flex w-full items-center justify-between gap-3 rounded-xl bg-teal-700 px-4 py-4 text-left text-white shadow-[0_14px_30px_-18px_rgba(15,118,110,0.9)] transition-colors hover:bg-teal-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-teal-700 sm:gap-4 sm:px-5"
         aria-label={`Copy install command: ${command}`}
       >
@@ -98,8 +101,10 @@ export function InstallCommand({ tone = "light", agent = "default" }: {
 export function PromptBox({
   prompt = STYLESEED_PROMPT,
   tone = "light",
+  onCopied,
 }: {
   prompt?: string;
+  onCopied?: () => void;
   tone?: "light" | "dark";
 }) {
   const [state, setState] = useState<CopyState>("idle");
@@ -121,7 +126,7 @@ export function PromptBox({
         </code>
         <button
           type="button"
-          onClick={() => copyText(prompt, promptRef.current, setState)}
+          onClick={() => copyText(prompt, promptRef.current, setState, onCopied)}
           className="absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-lg bg-white/10 px-2.5 py-2 text-[13px] font-bold text-white hover:bg-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
           aria-label={prompt === STYLESEED_PROMPT ? "Copy the advanced StyleSeed prompt" : "Copy this task prompt"}
         >

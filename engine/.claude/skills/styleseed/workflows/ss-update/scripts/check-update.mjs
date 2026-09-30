@@ -253,6 +253,17 @@ if (installed && installedVerification?.status === "unverified") {
   reason = "Installed and published distribution revisions match, and the project bundle is aligned when present.";
 }
 
+const notice = readJson(resolve(scriptDir, "../references/upgrade-notice.json"));
+// Guidance is owned by the installed payload, never executable text from remote metadata.
+const upgradeGuidance = (status === "update-available" || (status === "legacy-skill-conflict" && legacyRegistrations.length > 0)) ? {
+  ...notice,
+  next: status === "update-available" ? "refresh-then-consolidate" : "consolidate-verified-legacy-entries",
+  channel: installedSource.channel ?? null,
+  legacyEntries: legacyRegistrations.length,
+  archiveEligible: legacyRegistrations.filter(entry => entry.eligible).length,
+  authorization: "An update request covers verified sibling consolidation in the same scope; availability checks are read-only.",
+} : null;
+
 const result = {
   schemaVersion: 1,
   status,
@@ -291,6 +302,7 @@ const result = {
   },
   legacyConflicts,
   legacyRegistrations,
+  upgradeGuidance,
   artifacts: artifactImpact.artifacts,
   projectError,
   action: status === "current" ? "none"
@@ -310,6 +322,11 @@ if (args.json) {
   console.log(`project   ${projectVersion ?? "not resolved"} @ ${shortRevision(projectRevision)}`);
   console.log(`published ${remoteVersion ?? "unknown"} @ ${shortRevision(remoteRevision)}`);
   console.log(reason);
+  if (upgradeGuidance) {
+    console.log(`Next: ${upgradeGuidance.next}`);
+    console.log(`Guide: ${upgradeGuidance.guideUrl}`);
+    console.log(`Ask your agent: ${upgradeGuidance.request.en}`);
+  }
 }
 
 if (args["require-current"] && status !== "current") process.exitCode = 1;

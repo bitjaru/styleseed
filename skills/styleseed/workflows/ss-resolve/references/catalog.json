@@ -1,7 +1,7 @@
 {
   "schemaVersion": 5,
   "engineVersion": "4.2.0",
-  "engineRevision": "sha256:95834f1fbbd9364589e29d83594916705be5d46c096342df5b57bc1a78e302cd",
+  "engineRevision": "sha256:27d13481a8ce3b9bb1596905d0373f9106419f9f93e0b7505db9eb40b707bc97",
   "distributionSource": {
     "schemaVersion": 1,
     "channel": "edge",
@@ -10,7 +10,7 @@
   },
   "distributions": {
     "core": {
-      "revision": "sha256:95834f1fbbd9364589e29d83594916705be5d46c096342df5b57bc1a78e302cd",
+      "revision": "sha256:27d13481a8ce3b9bb1596905d0373f9106419f9f93e0b7505db9eb40b707bc97",
       "files": [
         {
           "path": "LICENSE",
@@ -314,13 +314,18 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-update/WORKFLOW.md",
-          "sha256": "8184604889fd33a485fba4c0078c79db018932631fbcaed15d52505ac9670e45",
-          "bytes": 11715
+          "sha256": "9c8152db33cfb6b445271f4db936fea726b5db2927d9f66d5d17d7e1e9f9e007",
+          "bytes": 12885
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-update/references/update-preflight.md",
-          "sha256": "63aede8e43af55c3271491a45cfa688a744c5d0e86a8d8433e2e52de5c1e1ef8",
-          "bytes": 3034
+          "sha256": "fb891abd9e3ef165cb45e6c9a73516e5877c14e35919fcf1dab7f2725c7ab4f3",
+          "bytes": 3596
+        },
+        {
+          "path": "engine/.claude/skills/styleseed/workflows/ss-update/references/upgrade-notice.json",
+          "sha256": "3a35b56fba12ed50e61ebac824249294dcafe3326c40726f178b0b67d3568642",
+          "bytes": 1619
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-update/scripts/artifact-impact.mjs",
@@ -329,8 +334,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-update/scripts/check-update.mjs",
-          "sha256": "a2d3e2bdd3affbe80580022a2264395aa424521d81ab357b7e26431fc8f51822",
-          "bytes": 14057
+          "sha256": "f7fb1bf8541e39c33be3b2988d59df032db5f14830da50ab6bc78ff9cf289e80",
+          "bytes": 15013
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-update/scripts/consolidate-skills.mjs",
@@ -439,8 +444,8 @@
         },
         {
           "path": "engine/UPDATE.md",
-          "sha256": "a4da84a7d603ffe765c72c01b59183580ded68709658e621e540bfec3e1b0aa1",
-          "bytes": 4778
+          "sha256": "f9e30825895e7d1bb82a613ac75a4e7a9454118500d74567b10fa79c371bcbd8",
+          "bytes": 8068
         },
         {
           "path": "engine/UX-WRITING.md",
@@ -485,7 +490,7 @@
       ]
     },
     "skills": {
-      "revision": "sha256:ef4f9d2e198c1524a76d41fe183e1b949fd11056035743ce5c1c6de525fbcfc2",
+      "revision": "sha256:c4a1d30e39e6529ed10a833b30bdab1cc751761aea2fe8cf7d5663f1de4eac00",
       "files": [
         {
           "path": "engine/.claude/skills/styleseed/SKILL.md",
@@ -779,13 +784,18 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-update/WORKFLOW.md",
-          "sha256": "8184604889fd33a485fba4c0078c79db018932631fbcaed15d52505ac9670e45",
-          "bytes": 11715
+          "sha256": "9c8152db33cfb6b445271f4db936fea726b5db2927d9f66d5d17d7e1e9f9e007",
+          "bytes": 12885
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-update/references/update-preflight.md",
-          "sha256": "63aede8e43af55c3271491a45cfa688a744c5d0e86a8d8433e2e52de5c1e1ef8",
-          "bytes": 3034
+          "sha256": "fb891abd9e3ef165cb45e6c9a73516e5877c14e35919fcf1dab7f2725c7ab4f3",
+          "bytes": 3596
+        },
+        {
+          "path": "engine/.claude/skills/styleseed/workflows/ss-update/references/upgrade-notice.json",
+          "sha256": "3a35b56fba12ed50e61ebac824249294dcafe3326c40726f178b0b67d3568642",
+          "bytes": 1619
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-update/scripts/artifact-impact.mjs",
@@ -794,8 +804,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-update/scripts/check-update.mjs",
-          "sha256": "a2d3e2bdd3affbe80580022a2264395aa424521d81ab357b7e26431fc8f51822",
-          "bytes": 14057
+          "sha256": "f7fb1bf8541e39c33be3b2988d59df032db5f14830da50ab6bc78ff9cf289e80",
+          "bytes": 15013
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-update/scripts/consolidate-skills.mjs",
@@ -1118,13 +1128,18 @@
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-update/WORKFLOW.md",
-      "sha256": "8184604889fd33a485fba4c0078c79db018932631fbcaed15d52505ac9670e45",
-      "bytes": 11715
+      "sha256": "9c8152db33cfb6b445271f4db936fea726b5db2927d9f66d5d17d7e1e9f9e007",
+      "bytes": 12885
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-update/references/update-preflight.md",
-      "sha256": "63aede8e43af55c3271491a45cfa688a744c5d0e86a8d8433e2e52de5c1e1ef8",
-      "bytes": 3034
+      "sha256": "fb891abd9e3ef165cb45e6c9a73516e5877c14e35919fcf1dab7f2725c7ab4f3",
+      "bytes": 3596
+    },
+    {
+      "path": ".claude/skills/styleseed/workflows/ss-update/references/upgrade-notice.json",
+      "sha256": "3a35b56fba12ed50e61ebac824249294dcafe3326c40726f178b0b67d3568642",
+      "bytes": 1619
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-update/scripts/artifact-impact.mjs",
@@ -1133,8 +1148,8 @@
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-update/scripts/check-update.mjs",
-      "sha256": "a2d3e2bdd3affbe80580022a2264395aa424521d81ab357b7e26431fc8f51822",
-      "bytes": 14057
+      "sha256": "f7fb1bf8541e39c33be3b2988d59df032db5f14830da50ab6bc78ff9cf289e80",
+      "bytes": 15013
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-update/scripts/consolidate-skills.mjs",
@@ -1243,8 +1258,8 @@
     },
     {
       "path": "UPDATE.md",
-      "sha256": "a4da84a7d603ffe765c72c01b59183580ded68709658e621e540bfec3e1b0aa1",
-      "bytes": 4778
+      "sha256": "f9e30825895e7d1bb82a613ac75a4e7a9454118500d74567b10fa79c371bcbd8",
+      "bytes": 8068
     },
     {
       "path": "UX-WRITING.md",

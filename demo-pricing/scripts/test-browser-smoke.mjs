@@ -11,7 +11,7 @@ import { chromium } from "playwright";
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const appRoot = resolve(scriptDir, "..");
 const host = "127.0.0.1";
-const routes = ["/", "/gate", "/learn", "/evaluate", "/faq", "/guides", "/codex-ui-design", "/claude-code-ui-design", "/fix-ui-spacing"];
+const routes = ["/", "/gate", "/learn", "/evaluate", "/faq", "/guides", "/codex-ui-design", "/claude-code-ui-design", "/fix-ui-spacing", "/upgrade"];
 const serverOutput = [];
 
 const sleep = (milliseconds) => new Promise((resolvePromise) => {
@@ -118,6 +118,24 @@ async function checkRoutes(browser, baseUrl, label, options) {
           pageFailures.push(`main document returned ${response?.status() ?? "no response"}`);
         }
         await page.waitForTimeout(300);
+        if (route === "/upgrade") {
+          const response = await page.request.get(`${baseUrl}/upgrade.md`);
+          assert(response.ok(), "agent upgrade guide is missing");
+          const guide = await response.text();
+          assert(guide.includes("newly installed") && guide.includes("--skills-root"), "upgrade guide does not include the install-to-consolidation handoff");
+          const expected = (await page.request.get(`${baseUrl}/version.json`));
+          const version = await expected.json();
+          assert(version.upgrade?.guideUrl === "https://styleseed-demo.vercel.app/upgrade", "version endpoint omits upgrade route");
+          await page.getByRole("button", { name: "Copy the update request", exact: true }).click();
+          const copied = await page.evaluate(() => navigator.clipboard.readText());
+          assert(copied.includes("https://styleseed-demo.vercel.app/upgrade.md") && copied.includes("project/global scope"), "update request copy lost the guide or scope");
+          await page.getByText("한국어 업데이트 요청 복사하기", { exact: true }).click();
+          await page.getByRole("button", { name: "한국어 업데이트 요청 복사", exact: true }).click();
+          assert((await page.evaluate(() => navigator.clipboard.readText())).includes("기존 설치 경로"), "Korean update request did not copy");
+          await page.evaluate(() => Object.defineProperty(navigator, "clipboard", { configurable: true, value: { writeText: async () => { throw new Error("blocked for regression"); } } }));
+          await page.getByRole("button", { name: "Copy the update request", exact: true }).click();
+          assert(await page.getByText("Clipboard access was blocked. The prompt is selected — copy it manually.", { exact: true }).count() === 1, "upgrade copy failure has no fallback");
+        }
         if (route === "/fix-ui-spacing") {
           const before = page.getByRole("button", { name: "Before: inherited gap" });
           const after = page.getByRole("button", { name: "After: isolated gap" });

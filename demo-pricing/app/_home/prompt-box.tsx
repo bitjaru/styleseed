@@ -78,7 +78,7 @@ export function InstallCommand({ tone = "light", agent = "default", onCopied }: 
           ? "Clipboard access was blocked. The command is selected — copy it manually."
           : state === "copied"
             ? "Copied. Run this in your project’s terminal."
-            : "Run in your project’s terminal. Copies all core skills into this project; skips the selection menus."}
+            : "Run in your project’s terminal. Copies the StyleSeed skill into this project; skips the selection menus."}
       </p>
       <details className={`mt-2 text-[12px] ${dark ? "text-neutral-300" : "text-neutral-600"}`}>
         <summary className="w-fit cursor-pointer py-3 underline underline-offset-4">Another agent or install options?</summary>
@@ -102,8 +102,12 @@ export function PromptBox({
   prompt = STYLESEED_PROMPT,
   tone = "light",
   onCopied,
+  hint,
+  copyLabel,
 }: {
   prompt?: string;
+  hint?: string;
+  copyLabel?: string;
   onCopied?: () => void;
   tone?: "light" | "dark";
 }) {
@@ -128,7 +132,7 @@ export function PromptBox({
           type="button"
           onClick={() => copyText(prompt, promptRef.current, setState, onCopied)}
           className="absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-lg bg-white/10 px-2.5 py-2 text-[13px] font-bold text-white hover:bg-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-          aria-label={prompt === STYLESEED_PROMPT ? "Copy the advanced StyleSeed prompt" : "Copy this task prompt"}
+          aria-label={copyLabel ?? (prompt === STYLESEED_PROMPT ? "Copy the advanced StyleSeed prompt" : "Copy this task prompt")}
         >
           {state === "copied" ? <Check size={13} /> : <Copy size={13} />}
           {state === "copied" ? "Copied" : "Copy"}
@@ -137,7 +141,7 @@ export function PromptBox({
       <p aria-live="polite" className={`mt-2 min-h-5 text-[12px] ${dark ? "text-neutral-400" : "text-neutral-500"}`}>
         {state === "failed"
           ? "Clipboard access was blocked. The prompt is selected — copy it manually."
-          : prompt === STYLESEED_PROMPT ? "Use this when you need the full workflow in one portable prompt." : "Paste into your coding agent and add your screen or reference."}
+          : hint ?? (prompt === STYLESEED_PROMPT ? "Use this when you need the full workflow in one portable prompt." : "Paste into your coding agent and add your screen or reference.")}
       </p>
     </div>
   );

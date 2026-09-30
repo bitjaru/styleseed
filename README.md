@@ -30,6 +30,8 @@ checks. A score does not replace human design acceptance.
 
 **1. Open a terminal in your project folder and run this command.** Requires Node.js/npm.
 
+> **Already installed?** [Update and consolidate your existing skill list](https://styleseed-demo.vercel.app/upgrade). One request covers the same install scope, verified backup, and revision checks.
+
 ```bash
 npx -y skills add bitjaru/styleseed -a codex claude-code -y --copy
 ```

@@ -13,11 +13,17 @@ Compare exact revisions, including same-version changes; follow the installed st
 channel. An offline/error result is unknown, never current. If ss-update is not installed,
 report that preflight is unavailable and recommend refreshing the complete skill pack once.
 
-- `update-available`: prominently recommend `$ss-update` (Claude: `/ss-update`) before new
+- `update-available`: prominently recommend `$styleseed update` (Claude: `/styleseed update`) before new
   work. State that a skill refresh, affected bundle recompilation, and copied implementation
   CSS review are separate steps. Continue an already-authorized update without asking again.
+  When `upgradeGuidance` is present, include its guide link and explain the one-request path.
   Without update authorization, report the recommendation and the revision used; do not
   silently refresh or interrupt independent work. An explicit pinned-version choice wins.
+- `legacy-skill-conflict`: when `legacyRegistrations` is non-empty, explain that a previous
+  install left extra commands behind. Offer one update request using `upgradeGuidance.request`
+  or https://styleseed-demo.vercel.app/upgrade. Within an already-authorized update, continue
+  directly to the installed update workflow's consolidation step; do not ask for a second task.
+  Retired/custom reviewer conflicts require their separate ownership review.
 - `project-bundle-stale`: use the artifact impact list to recompile only affected bundles
   within an authorized build/update; for a review-only request, report the required action.
 - Invalid/mixed installs or project config: report the repair needed; never claim current.

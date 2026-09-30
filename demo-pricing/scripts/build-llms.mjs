@@ -74,6 +74,11 @@ if (catalogBuild.status !== 0) {
 console.log('✓ mirrored canonical skills → plugin skills/')
 const contextCatalogPath = resolve(skillsDir, 'styleseed/workflows/ss-resolve/references/catalog.json')
 const contextCatalog = JSON.parse(readFileSync(contextCatalogPath, 'utf8'))
+const upgradeNoticePath = resolve(skillsDir, 'styleseed/workflows/ss-update/references/upgrade-notice.json')
+const upgradeNotice = JSON.parse(readFileSync(upgradeNoticePath, 'utf8'))
+cpSync(upgradeNoticePath, resolve(contentDir, 'upgrade-notice.json'))
+cpSync(resolve(engineDir, 'UPDATE.md'), resolve(publicDir, 'upgrade.md'))
+
 cpSync(contextCatalogPath, resolve(wellKnownSeed, 'context-catalog.json'))
 
 // ============================================================
@@ -225,6 +230,7 @@ writeFileSync(
       skillsRevisionFiles: contextCatalog.distributions.skills.files.length,
       rules: ruleCount,
       skills: skills.length,
+      upgrade: { id: upgradeNotice.id, title: upgradeNotice.title, guideUrl: upgradeNotice.guideUrl, agentGuideUrl: upgradeNotice.agentGuideUrl },
       skins: skinFolders.length,
       grammars: grammarIds.length,
       adapters: adapterIds.length,
@@ -340,6 +346,8 @@ job-specific grammars, targeted context compilation, reference compilation, and 
 
 ## Machine-readable discovery
 
+- Existing users / too many skills: https://styleseed-demo.vercel.app/upgrade
+- Agent-readable update and consolidation procedure: https://styleseed-demo.vercel.app/upgrade.md
 - Skill index: https://styleseed-demo.vercel.app/.well-known/agent-skills/index.json
 - Context catalog: https://styleseed-demo.vercel.app/.well-known/styleseed/context-catalog.json
 - Registry: https://styleseed-demo.vercel.app/.well-known/styleseed/registry.json

@@ -46,6 +46,13 @@ An update may change design-method behavior, especially across major versions. I
 through the user's version control, but it is not correct to promise that every update is
 additive or non-breaking.
 
+## One update request, one completed transition
+
+An authorized update includes refreshing the same install scope, checking old registrations,
+archiving verified unmodified siblings, recompiling affected existing bundles, and reporting
+verification plus remaining issues. Do not stop after reinstall to ask the user to request cleanup
+again. Availability-only checks remain read-only. Preserve explicit pins and channel choices.
+
 ## Step 1 — Read-only revision check
 
 From the user's project root, run the bundled checker by its installed path:
@@ -60,9 +67,9 @@ Interpret the result exactly:
   unless the user explicitly wants a reinstall. This is not a visual/evidence pass.
 - `update-available` — refresh the installed payload even when the semantic versions match.
 - `project-bundle-stale` — skills are current; skip reinstall and re-resolve the project.
-- `legacy-skill-conflict` — the retired standalone seven-category reviewer remains beside the
-  canonical skills. Show its path and hash; remove it only after confirming it is not a
-  project-modified skill.
+- `legacy-skill-conflict` — inspect `legacyRegistrations` and `legacyConflicts`. For old sibling
+  registrations, continue to consolidation below within this update request. A retired standalone
+  reviewer needs a separate ownership review; do not treat it as an automatically archivable file.
 - `remote-check-unavailable` — the remote request failed; report unknown, not current.
 - `project-config-invalid` — repair the incomplete/invalid registry before claiming currency.
 - `installed-revision-unverified` / `installed-revision-tampered` — inspect the local payload;
@@ -126,20 +133,29 @@ Do not silently change `stable` to `edge` or `edge` to `stable` during refresh.
 If this skill was invoked only to inspect availability, stop before the external refresh and
 present the report.
 
+After the installer returns, read the **newly installed**
+`styleseed/workflows/ss-update/WORKFLOW.md` and use its script paths. Do not keep invoking a
+leftover `ss-update/scripts/check-update.mjs` from the previous installation. Resolve the actual
+installed directory instead of assuming `.agents/skills` for every provider.
+
+If the authorized installer refreshed more than one provider directory, track those exact roots
+and complete consolidation and checks for each. Do not expand into unrelated global/project
+installs or remove a plugin just because a second provider exists.
+
 ## Consolidate old registrations after installing the unified skill
 
 The core now registers only `styleseed`. Its `workflows/ss-*` folders contain `WORKFLOW.md`,
 not additional host skills. Old `/ss-*` slash commands are no longer registered on a fresh
 install; use `/styleseed build`, `$styleseed build`, or describe the task normally.
 
-A normal reinstall may leave the previous 22 sibling skills behind. After installing the
+A normal reinstall may leave the previous 22 sibling skills behind. Continue within the same update request. After installing the
 complete unified skill through the same channel, run:
 
 ```bash
 node <installed-styleseed>/workflows/ss-update/scripts/consolidate-skills.mjs --skills-root <physical-skills-directory>
 ```
 
-Read the report. Within an authorized update/consolidation task, repeat with `--apply` to move
+Read the report. Within an authorized update/consolidation task, repeat with `--apply` without requesting another task to move
 only inventory-matching legacy directories into the sibling `styleseed-backups/<id>/` folder.
 Modified, unknown, linked, or incomplete entries remain untouched and need manual review.
 Report backup and remaining paths. Never delete them by a broad `ss-*` wildcard.

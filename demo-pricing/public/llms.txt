@@ -142,6 +142,8 @@ job-specific grammars, targeted context compilation, reference compilation, and 
 
 ## Machine-readable discovery
 
+- Existing users / too many skills: https://styleseed-demo.vercel.app/upgrade
+- Agent-readable update and consolidation procedure: https://styleseed-demo.vercel.app/upgrade.md
 - Skill index: https://styleseed-demo.vercel.app/.well-known/agent-skills/index.json
 - Context catalog: https://styleseed-demo.vercel.app/.well-known/styleseed/context-catalog.json
 - Registry: https://styleseed-demo.vercel.app/.well-known/styleseed/registry.json

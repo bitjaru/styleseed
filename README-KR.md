@@ -30,6 +30,8 @@
 
 **1. 프로젝트 폴더에서 터미널을 열고 실행하세요.** Node.js/npm이 필요합니다.
 
+> **이미 설치했다면:** [기존 스킬 업데이트·통합 안내](https://styleseed-demo.vercel.app/upgrade)를 이용하세요. 요청 한 번으로 기존 설치 범위 확인, 백업, 통합, 리비전 검사까지 진행합니다.
+
 ```bash
 npx -y skills add bitjaru/styleseed -a codex claude-code -y --copy
 ```

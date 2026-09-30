@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "id": "single-skill-entry",
+  "guideUrl": "https://styleseed-demo.vercel.app/upgrade",
+  "agentGuideUrl": "https://styleseed-demo.vercel.app/upgrade.md",
+  "title": "Update StyleSeed and simplify your skill list",
+  "summary": "The current core registers one StyleSeed skill and keeps 22 workflows inside it. An authorized update includes checking and archiving unmodified old entries in the same installation scope.",
+  "request": {
+    "en": "Read https://styleseed-demo.vercel.app/upgrade.md and update my existing StyleSeed installation through its current channel, agents, and project/global scope. Preserve my design decisions and any modified skill files. After installing, read the newly installed update workflow, back up and consolidate verified old skill entries, recompile only affected existing rule bundles, and verify the installed revision. Report remaining duplicates and the backup path. Do not redesign the application or switch a pinned version or release channel without my choice.",
+    "ko": "https://styleseed-demo.vercel.app/upgrade.md 를 읽고, 기존 설치 경로·사용 에이전트·프로젝트/전역 범위를 유지해서 StyleSeed를 업데이트해줘. 내 디자인 결정과 직접 수정한 스킬은 보존해. 설치 후 새 업데이트 절차를 읽고, 원본과 일치하는 옛 스킬을 백업해서 통합한 뒤 필요한 기존 규칙 번들만 다시 만들고 설치 리비전을 검증해줘. 남은 중복과 백업 위치를 알려줘. 앱을 재디자인하거나 고정 버전·릴리스 채널을 임의로 바꾸지는 마."
+  }
+}

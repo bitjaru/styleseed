@@ -1,7 +1,8 @@
 import test from 'node:test';
+import { spawnSync } from 'node:child_process';
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, realpathSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -71,4 +72,23 @@ test('incomplete unified installation refuses to archive any legacy workflows', 
   rmSync(resolve(skills, 'styleseed/workflows/ss-build/WORKFLOW.md'));
   assert.throws(() => consolidateSkills(skills, { apply: true }), /complete unified StyleSeed skill/);
   assert.ok(existsSync(resolve(skills, 'ss-build/SKILL.md')));
+});
+
+test('checker reports legacy entries in the invoked provider when another provider is already consolidated', t => {
+  const { root, skills } = fixture(t);
+  cpSync(resolve(skills, 'styleseed'), resolve(root, '.claude/skills/styleseed'), { recursive: true });
+  const catalog = JSON.parse(readFileSync(resolve(skills, 'styleseed/workflows/ss-resolve/references/catalog.json'), 'utf8'));
+  const remote = resolve(root, 'remote.json');
+  writeFileSync(remote, JSON.stringify({ version: catalog.engineVersion, revision: catalog.engineRevision, skillsRevision: catalog.distributions.skills.revision }));
+  const check = () => {
+    const run = spawnSync(process.execPath, [resolve(skills, 'styleseed/workflows/ss-update/scripts/check-update.mjs'), '--project-root', root, '--remote', remote, '--json'], { encoding: 'utf8' });
+    assert.equal(run.status, 0, run.stderr);
+    return JSON.parse(run.stdout);
+  };
+  const before = check();
+  assert.equal(before.status, 'legacy-skill-conflict');
+  assert.equal(before.legacyRegistrations.length, 3);
+  assert.equal(realpathSync(before.installed.catalogPath), realpathSync(resolve(skills, 'styleseed/workflows/ss-resolve/references/catalog.json')));
+  consolidateSkills(skills, { apply: true });
+  assert.equal(check().status, 'current');
 });

@@ -115,8 +115,8 @@ jobs:
             npx.cmd skills list --json --agent codex | Out-Null
             if ($LASTEXITCODE -ne 0) { throw "Installed skill listing failed ($LASTEXITCODE)" }
             $skills = @(Get-ChildItem ".agents/skills" -Directory)
-            if ($skills.Count -ne 23) {
-              throw "Expected 23 installed skills, found $($skills.Count)"
+            if ($skills.Count -ne 1) {
+              throw "Expected one installed skill, found $($skills.Count)"
             }
             if (-not (Test-Path ".agents/skills/styleseed/SKILL.md" -PathType Leaf)) {
               throw "Missing project-local StyleSeed router"

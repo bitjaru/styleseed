@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 import { createHash } from "node:crypto";
-import { existsSync, readFileSync } from "node:fs";
-import { dirname, resolve } from "node:path";
+import { existsSync, readFileSync, realpathSync } from "node:fs";
+import { dirname, isAbsolute, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { verifyDistribution } from "../../ss-resolve/scripts/distribution-integrity.mjs";
 
@@ -100,7 +100,13 @@ Without this flag, diagnostic results exit 0; unavailable remote checks are expl
 }
 
 const projectRoot = resolve(args["project-root"] ?? process.cwd());
+const ownCatalog = resolve(scriptDir, "../../ss-resolve/references/catalog.json");
+const ownRelative = relative(existsSync(projectRoot) ? realpathSync(projectRoot) : projectRoot, existsSync(ownCatalog) ? realpathSync(ownCatalog) : ownCatalog);
+const runningInsideProject = ownRelative !== ".." && !ownRelative.startsWith(`..${sep}`) && !isAbsolute(ownRelative);
 const installed = firstJson([
+  // If invoked from this project's install, inspect that exact provider's payload first.
+  // An external/global checker still discovers a project-local installation before itself.
+  ...(runningInsideProject ? [ownCatalog] : []),
   resolve(projectRoot, "engine/.claude/skills/styleseed/workflows/ss-resolve/references/catalog.json"),
   resolve(projectRoot, ".claude/skills/styleseed/workflows/ss-resolve/references/catalog.json"),
   resolve(projectRoot, ".agents/skills/styleseed/workflows/ss-resolve/references/catalog.json"),

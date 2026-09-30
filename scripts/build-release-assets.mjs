@@ -13,7 +13,7 @@ import {
 import { dirname, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { buildPluginPackage } from "./build-plugin-packages.mjs";
-import { assertReleaseCommit } from "./release-source.mjs";
+import { assertReleaseCommit, releaseSkillCounts } from "./release-source.mjs";
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const distRoot = resolve(repoRoot, "dist");
@@ -220,7 +220,7 @@ async function main() {
       coreRevisionFiles: catalog.distributions.core.files.length,
       skillsRevision: catalog.distributions.skills.revision,
       skillsRevisionFiles: catalog.distributions.skills.files.length,
-      coreSkills: 23,
+      ...releaseSkillCounts(inventory),
     },
     package: {
       name: inventory.packageName,

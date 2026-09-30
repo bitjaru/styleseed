@@ -69,6 +69,8 @@ README의 설명을 먼저 믿지 말고 **[3분 검증 경로](https://stylesee
 > [`good first issue`](https://github.com/bitjaru/styleseed/issues?q=is%3Aissue%20is%3Aopen%20label%3A%22good%20first%20issue%22)를 맡아주세요.
 > 작은 문서·테스트 수정은 사전 제안이 필요 없습니다. [15분 기여 가이드](CONTRIBUTING.md#first-pr-in-about-15-minutes)를 참고하세요.
 
+고정 버전으로 심사하려면 **[v5.0.0 릴리스 아카이브](https://github.com/bitjaru/styleseed/releases/tag/v5.0.0)**와 체크섬을 사용하세요. 기본 `bitjaru/styleseed` 명령은 변경 가능한 `main`을 따라갑니다.
+
 ### 기존 다중 스킬 설치에서 전환하기
 
 같은 설치 경로로 재설치한 뒤 `StyleSeed, 기존 스킬 목록 통합해줘`라고 요청하세요.

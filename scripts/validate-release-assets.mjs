@@ -4,7 +4,7 @@ import { createHash } from "node:crypto";
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { dirname, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
-import { assertReleaseCommit } from "./release-source.mjs";
+import { assertReleaseCommit, assertReleaseSkillCounts } from "./release-source.mjs";
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const outputRoot = resolve(repoRoot, process.argv[2] ?? "dist/release");
@@ -47,6 +47,7 @@ assert(manifest.schemaVersion === 2 && manifest.status === "draft-prepared", "Re
 assert(manifest.version === version && manifest.tag === `v${version}`, "Release version/tag drifted from engine/VERSION");
 assert(/^[0-9a-f]{40}$/u.test(manifest.gitSha), "Release manifest Git SHA is invalid");
 assertReleaseCommit(repoRoot, manifest.gitSha);
+assertReleaseSkillCounts(manifest, inventory);
 assert(manifest.engine.coreRevision === catalog.engineRevision, "Release core revision differs from the canonical catalog");
 assert(manifest.engine.skillsRevision === catalog.distributions.skills.revision, "Release skills revision differs from the canonical catalog");
 assert(manifest.package.optionalLearningIncluded === false, "Release manifest claims optional learning is included");

@@ -24,7 +24,7 @@ const paletteStyle = {
 const INSTALL = [
   "mkdir styleseed-evaluation && cd styleseed-evaluation",
   "git init",
-  "npx skills add bitjaru/styleseed --agent codex --yes --copy",
+  `npx skills add ${REPOSITORY}/releases/download/v${versionInfo.version}/styleseed-core-${versionInfo.version}.tar.gz --agent codex --yes --copy`,
   "npx skills list --json --agent codex",
 ];
 
@@ -60,7 +60,7 @@ const EVIDENCE = [
   {
     label: "04 · Benchmark",
     title: "Separate historical evidence from new claims",
-    body: "BENCH-V1 exposes its 120-cell result and raw evidence. Version 4.1 adds no new performance or superiority claim; the release records that waiver explicitly.",
+    body: "BENCH-V1 exposes its 120-cell result and raw evidence. This release adds no new performance or superiority claim; the release records that waiver explicitly.",
     href: `${BASE}/gate`,
     action: "Read BENCH-V1",
   },
@@ -214,8 +214,8 @@ export default function EvaluatePage() {
             the Skills picker. Discovery in the same pre-install process is not sufficient evidence.
           </p>
           <p className="mt-4 text-sm leading-relaxed text-[var(--ss-muted)]">
-            The GitHub shortcut resolves public repository state at install time. Treat the
-            separately published release assets as the immutable evidence boundary.
+            This command pins the published release archive. The shorter bitjaru/styleseed
+            command follows mutable main and is a separate development-channel check.
           </p>
         </aside>
       </section>
@@ -290,7 +290,7 @@ export default function EvaluatePage() {
             <p className="mt-6 border-l-2 border-[var(--ss-action)] pl-4 text-sm leading-relaxed text-[var(--ss-muted)]">
               Evidence boundary: a green local run is not a GitHub Actions run, an Actions run is
               not a production deployment, and BENCH-V1 is historical benchmark evidence rather
-              than a new v4.1 performance claim.
+              than a new release performance claim.
             </p>
           </div>
         </div>

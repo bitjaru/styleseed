@@ -1,9 +1,44 @@
 # Changelog
 
 All notable changes to StyleSeed. Agents can check the latest version at
-[version.json](https://styleseed-demo.vercel.app/version.json) and run `/ss-update`.
+[version.json](https://styleseed-demo.vercel.app/version.json) and run `$styleseed update` or `/styleseed update`.
 
 ## Unreleased
+
+## [5.0.0] — 2026-09-30
+
+**Theme: one entry point, the same 22 workflows.** This major release changes the public
+skill invocation surface. It does not claim new benchmark results or expert-level design quality.
+
+### Breaking change and migration
+
+- Register only `styleseed`; the former 22 `ss-*` skills are internal workflows rather than
+  separately registered slash commands. Use `$styleseed build` / `/styleseed build` instead of
+  `$ss-build` / `/ss-build`, and `$styleseed update` / `/styleseed update` for updates.
+- Reinstall through the same provider, channel, and project/global scope. The update workflow
+  reloads its new instructions, backs up inventory-matching old entries outside skill discovery,
+  and verifies the installed revision. Modified, unknown, or linked entries require review.
+- Preserve project-owned design decisions, application code, explicit pins, and channel choices.
+  See the [upgrade guide](https://styleseed-demo.vercel.app/upgrade).
+
+### Added and fixed since 4.2.0
+
+- Session update preflight and an opt-in `--require-current` gate compare exact revisions.
+- Scoped spatial-rhythm controls and proposals; rendered spacing checks detect unresolved tokens,
+  hidden/transformed targets, missing role coverage, overflow, and nested-role inheritance.
+- Declared functional outcomes require executed tests; legacy design-lock migration requires a
+  reviewed plan. Inspection-only workflows and repair limits are kept separate.
+- Public installation guidance, UI-question guides, and a reproducible project handoff example.
+- Release skill counts are derived from package inventory and checked against both discovery
+  mirrors so an obsolete count cannot silently enter the release manifest.
+- Updated production/development dependencies and Windows, package, and browser regression checks.
+
+### Evidence boundary
+
+- Core: one registered skill, 22 internal workflows, no optional learning extension or MCP.
+- BENCH-V1 remains historical evidence. This release adds no new performance, superiority, or
+  expert-acceptance claim. Public plugin-directory publication remains unverified.
+- Immutable archive evaluation and mutable `main` installation are explicitly distinguished.
 
 ## [4.2.0] — 2026-09-11
 

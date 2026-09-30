@@ -290,7 +290,7 @@ export default function EvaluatePage() {
             <p className="mt-6 border-l-2 border-[var(--ss-action)] pl-4 text-sm leading-relaxed text-[var(--ss-muted)]">
               Evidence boundary: a green local run is not a GitHub Actions run, an Actions run is
               not a production deployment, and BENCH-V1 is historical benchmark evidence rather
-              than a new v4.1 performance claim.
+              than a new release performance claim.
             </p>
           </div>
         </div>

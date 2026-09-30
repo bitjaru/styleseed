@@ -5,9 +5,21 @@ import { mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSyn
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { assertReleaseCommit } from "../release-source.mjs";
+import { assertReleaseCommit, assertReleaseSkillCounts, releaseSkillCounts } from "../release-source.mjs";
 
 const repo = fileURLToPath(new URL("../../", import.meta.url));
+test("release skill counts reject stale counts and divergent discovery mirrors", () => {
+  const relative = ["styleseed/SKILL.md", "styleseed/workflows/ss-build/WORKFLOW.md", "styleseed/workflows/ss-update/WORKFLOW.md"];
+  const inventory = { files: ["engine/.claude/skills/", "skills/"].flatMap(prefix => relative.map(path => ({ path: prefix + path }))) };
+  const engine = { coreSkills: 1, internalWorkflows: 2 };
+  assert.deepEqual(releaseSkillCounts(inventory), engine);
+  assert.deepEqual(assertReleaseSkillCounts({ engine }, inventory), engine);
+  assert.throws(() => assertReleaseSkillCounts({ engine: { ...engine, coreSkills: 23 } }, inventory), /coreSkills differs/u);
+  assert.throws(() => assertReleaseSkillCounts({ engine: { ...engine, internalWorkflows: 22 } }, inventory), /internalWorkflows differs/u);
+  assert.throws(() => releaseSkillCounts({ files: inventory.files.slice(1) }), /discovery mirrors disagree/u);
+  assert.throws(() => releaseSkillCounts({ files: inventory.files.slice(0, -1) }), /workflow mirrors disagree/u);
+  assert.throws(() => releaseSkillCounts({ files: [...inventory.files, inventory.files[0]] }), /Duplicate/u);
+});
 function git(root, args) {
   const result = spawnSync("git", args, { cwd: root, encoding: "utf8", timeout: 10000 });
   assert.equal(result.status, 0, result.stderr);

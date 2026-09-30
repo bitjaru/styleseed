@@ -20,7 +20,7 @@ archive inventory repeats that metadata so an evaluator can inspect it without e
 3. Manually run **Prepare StyleSeed release assets** from that same tag, not from `main`:
 
    ```bash
-   gh workflow run prepare-release.yml --ref v4.2.0 -f tag=v4.2.0
+   gh workflow run prepare-release.yml --ref v5.0.0 -f tag=v5.0.0
    ```
 
    Replace both tag arguments together for another version. The workflow requires its execution

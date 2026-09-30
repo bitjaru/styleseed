@@ -3,7 +3,7 @@
 This path checks the public install command before trusting the documentation, then separates local,
 CI, release, benchmark, and production evidence. Use Node.js 22, Git, and network access.
 
-## 1. Verify the public Codex install
+## 1. Verify the v5.0.0 release install
 
 Start outside any existing project so global or project-local skills cannot hide a packaging error.
 
@@ -11,7 +11,7 @@ Start outside any existing project so global or project-local skills cannot hide
 mkdir styleseed-evaluation
 cd styleseed-evaluation
 git init
-npx skills add bitjaru/styleseed --agent codex --yes --copy
+npx skills add https://github.com/bitjaru/styleseed/releases/download/v5.0.0/styleseed-core-5.0.0.tar.gz --agent codex --yes --copy
 npx skills list --json --agent codex
 ```
 
@@ -26,9 +26,10 @@ Start a fresh Codex process in this directory. Invoke `$styleseed` or open the S
 router should identify the current artifact boundary and choose one first workflow. Discovery in a
 process that was already running before installation is not sufficient evidence.
 
-The `bitjaru/styleseed` shortcut resolves public repository state at install time. It is an install
-smoke, not immutable release evidence; inspect the separately published tag and assets in the next
-step.
+This command installs the immutable v5.0.0 archive. Its core registers one `styleseed` skill
+and contains 22 internal workflows. The former `/ss-*` commands are no longer registered.
+For a separate development-channel smoke, use `npx skills add bitjaru/styleseed`; that shortcut
+follows mutable `main` and must not be presented as the same immutable release evidence.
 
 ### Windows PowerShell
 
@@ -38,7 +39,7 @@ Use `npx.cmd` if PowerShell resolves the `npx.ps1` wrapper through a restrictive
 New-Item -ItemType Directory -Path styleseed-evaluation
 Set-Location styleseed-evaluation
 git init
-npx.cmd skills add bitjaru/styleseed --agent codex --yes --copy
+npx.cmd skills add https://github.com/bitjaru/styleseed/releases/download/v5.0.0/styleseed-core-5.0.0.tar.gz --agent codex --yes --copy
 npx.cmd skills list --json --agent codex
 ```
 
@@ -47,10 +48,12 @@ and troubleshooting boundary.
 
 ## 2. Inspect the published release
 
-Open the [latest published release](https://github.com/bitjaru/styleseed/releases/latest) and verify:
+Open the [v5.0.0 release](https://github.com/bitjaru/styleseed/releases/tag/v5.0.0) and verify:
 
 - the core archive, `inventory.json`, and `release-manifest.json` are attached;
-- the manifest records the Git SHA, engine revision, skills revision, archive checksum, and tests;
+- the manifest records version `5.0.0`, `coreSkills: 1`, `internalWorkflows: 22`, the Git SHA,
+  exact revisions, archive checksum, and tests;
+- verify `SHA256SUMS` and provenance attestations before treating the archive as release evidence;
 - the release body distinguishes the historical BENCH-V1 result from claims added by the release;
 - optional learning code and the repository development plugin boundary are not represented as a
   public plugin-directory release.
@@ -63,7 +66,7 @@ state, but it is not an immutable release by itself.
 Clone the repository, then run the same generated-file and product checks used by CI:
 
 ```bash
-git clone https://github.com/bitjaru/styleseed.git
+git clone --branch v5.0.0 --depth 1 https://github.com/bitjaru/styleseed.git
 cd styleseed
 npm ci --prefix demo-pricing
 node scripts/verify-repo.mjs
@@ -83,7 +86,7 @@ separately; a green local run is not CI evidence.
 | Local source gates | The checked-out source passes on this machine | GitHub Actions or Vercel state |
 | GitHub Actions | The exact pushed SHA passed its runner matrix | Public pages are serving that SHA |
 | Release assets | The published archive and manifest are immutable and inspectable | A newer `main` commit is released |
-| BENCH-V1 | Historical 120-cell benchmark evidence and its stated method | A new v4.1 performance or superiority claim |
+| BENCH-V1 | Historical 120-cell benchmark evidence and its stated method | A new v5.0 performance or superiority claim |
 | Production render | The public site serves and renders the deployed revision | Installer behavior on every client |
 
 Also inspect [THIRD_PARTY.md](../THIRD_PARTY.md), [SECURITY.md](../SECURITY.md), and the

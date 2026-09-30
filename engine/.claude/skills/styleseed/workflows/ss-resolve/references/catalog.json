@@ -1,7 +1,7 @@
 {
   "schemaVersion": 5,
-  "engineVersion": "4.2.0",
-  "engineRevision": "sha256:27d13481a8ce3b9bb1596905d0373f9106419f9f93e0b7505db9eb40b707bc97",
+  "engineVersion": "5.0.0",
+  "engineRevision": "sha256:6376162eccff713a99183ec8f7c70826794d0402acab2c5359ee3490df7844cc",
   "distributionSource": {
     "schemaVersion": 1,
     "channel": "edge",
@@ -10,7 +10,7 @@
   },
   "distributions": {
     "core": {
-      "revision": "sha256:27d13481a8ce3b9bb1596905d0373f9106419f9f93e0b7505db9eb40b707bc97",
+      "revision": "sha256:6376162eccff713a99183ec8f7c70826794d0402acab2c5359ee3490df7844cc",
       "files": [
         {
           "path": "LICENSE",
@@ -454,7 +454,7 @@
         },
         {
           "path": "engine/VERSION",
-          "sha256": "8fb33dadbe981cf5847df269c10c2a3fe107f2b269d5ccb6db37d1f61ffc3bba",
+          "sha256": "1cc3d76ac7c21a664e79848fd481e9791016451b244e7de5feeeb9bea5fd2184",
           "bytes": 6
         },
         {
@@ -1268,7 +1268,7 @@
     },
     {
       "path": "VERSION",
-      "sha256": "8fb33dadbe981cf5847df269c10c2a3fe107f2b269d5ccb6db37d1f61ffc3bba",
+      "sha256": "1cc3d76ac7c21a664e79848fd481e9791016451b244e7de5feeeb9bea5fd2184",
       "bytes": 6
     },
     {

@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "artifactId": "site-learn",
-  "engineVersion": "4.1.0",
-  "engineRevision": "sha256:f563a15b158ecef506f213c45ef54a71b34b4b1410c92529673b97ab34840772",
+  "engineVersion": "5.0.0",
+  "engineRevision": "sha256:6376162eccff713a99183ec8f7c70826794d0402acab2c5359ee3490df7844cc",
   "distributionIntegrity": "verified",
   "selection": {
     "agent": "codex",
@@ -44,14 +44,14 @@
     {
       "id": "agent-execution",
       "path": "catalog:agents",
-      "sha256": "sha256:dfe4b0a2de36209ca50a04b39e35c248ac13fb8b059428fdb68a484cffc190cb",
-      "bytes": 329
+      "sha256": "sha256:7432f369c99d3d0b10a5c96d76b418b7dfbfb83e57a6b25e480f79ee86a1cd81",
+      "bytes": 358
     },
     {
       "id": "core",
       "path": "catalog:core",
-      "sha256": "sha256:6002465c13e879fb190387117049eb4484a3ce908c9f8af1648882c870194266",
-      "bytes": 5394
+      "sha256": "sha256:b8386021967bb5cea954dbe3b3f8c36574457457d5e4bbe7277b5218a539af54",
+      "bytes": 7968
     },
     {
       "id": "grammar",
@@ -96,7 +96,7 @@
       "bytes": 3564
     }
   ],
-  "methodHash": "sha256:c69caf6516e35a8071ec388b6aa513a130b271e0825a6d366515338afda71605",
+  "methodHash": "sha256:806a9be296b8145a7c33165c0f20a9c91e7ed6127c7266bdebb6c293f8840bc1",
   "validationHash": "sha256:5e84b491f159579a662990376c5877e339d3030a7b96c4dc8638545ed6ed0f55",
   "validationSlices": {
     "target": "sha256:73345f5db927a2a0d349f7a90d4b66bfa36695783068c2b13271c6ba67bfd0a5",
@@ -109,15 +109,15 @@
   "bundle": {
     "kind": "bundle",
     "path": ".styleseed/bundles/site-learn.md",
-    "sha256": "sha256:0639e29bbe9eb4c96027a6f75aac114b8c2fae0589e03bb89ee081f22722151a",
-    "bytes": 16833
+    "sha256": "sha256:2db3381cef0cf096fe84e0dbf2e51b64a40d32a6dbc62129a50bfbd53f4bb914",
+    "bytes": 19436
   },
   "outputs": [
     {
       "kind": "bundle",
       "path": ".styleseed/bundles/site-learn.md",
-      "sha256": "sha256:0639e29bbe9eb4c96027a6f75aac114b8c2fae0589e03bb89ee081f22722151a",
-      "bytes": 16833
+      "sha256": "sha256:2db3381cef0cf096fe84e0dbf2e51b64a40d32a6dbc62129a50bfbd53f4bb914",
+      "bytes": 19436
     },
     {
       "kind": "palette-json",

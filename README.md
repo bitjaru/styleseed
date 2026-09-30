@@ -71,6 +71,8 @@ release manifest, Windows PowerShell evidence, CI, SBOM, benchmark boundary, and
 > [`good first issue`](https://github.com/bitjaru/styleseed/issues?q=is%3Aissue%20is%3Aopen%20label%3A%22good%20first%20issue%22).
 > Small docs and test fixes need no proposal. See the [15-minute contribution path](CONTRIBUTING.md#first-pr-in-about-15-minutes).
 
+For a fixed evaluation version, use the **[v5.0.0 release archive](https://github.com/bitjaru/styleseed/releases/tag/v5.0.0)** and its checksums. The default `bitjaru/styleseed` command follows mutable `main`.
+
 ### Upgrading an existing 23-skill install
 
 Reinstall through the same channel. Then ask `StyleSeed, consolidate my old skill entries`.

@@ -62,6 +62,7 @@ const coreChecks = [
   ["Build context catalog", node, ["scripts/build-context-catalog.mjs"]],
   ["Build learning catalog", node, ["extensions/learning/runtime/scripts/build-learning-catalog.mjs"]],
   ["Build public catalogs", node, ["demo-pricing/scripts/build-llms.mjs"]],
+  ["Build spacing proof", node, ["demo-pricing/scripts/build-spacing-proof.mjs"]],
   ["Validate skill contracts", node, ["scripts/validate-skill-contracts.mjs"]],
   ["Test router contract", node, ["scripts/test-router-contract.mjs"]],
   ["Test core/learning isolation", node, ["scripts/test-core-learning-isolation.mjs"]],

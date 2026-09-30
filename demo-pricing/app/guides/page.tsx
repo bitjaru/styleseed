@@ -56,6 +56,8 @@ export default function GuidesIndex() {
           <Link href="/faq" className="font-semibold text-teal-700 underline underline-offset-4">Start with common AI UI problems and concrete fixes</Link>.
         </p>
 
+        <p className="mb-8 text-base text-neutral-600">Spacing feels wrong? <Link href="/fix-ui-spacing" className="font-semibold text-teal-800 underline underline-offset-4">Try a measured CSS fix before changing your design.</Link></p>
+
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {DOMAINS.map((d) => (
             <Link

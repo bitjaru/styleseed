@@ -3,6 +3,7 @@
 import { spawn } from "node:child_process";
 import { once } from "node:events";
 import { createServer } from "node:net";
+import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
@@ -10,7 +11,7 @@ import { chromium } from "playwright";
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const appRoot = resolve(scriptDir, "..");
 const host = "127.0.0.1";
-const routes = ["/", "/gate", "/learn", "/evaluate", "/faq", "/guides", "/codex-ui-design", "/claude-code-ui-design"];
+const routes = ["/", "/gate", "/learn", "/evaluate", "/faq", "/guides", "/codex-ui-design", "/claude-code-ui-design", "/fix-ui-spacing"];
 const serverOutput = [];
 
 const sleep = (milliseconds) => new Promise((resolvePromise) => {
@@ -85,6 +86,10 @@ async function checkRoutes(browser, baseUrl, label, options) {
   try {
     for (const route of routes) {
       const page = await context.newPage();
+      if (route === "/fix-ui-spacing") await page.addInitScript(() => {
+        window.__proofEvents = [];
+        window.va = (...args) => { if (args[0] === "event") window.__proofEvents.push(args[1]); };
+      });
       const pageFailures = [];
       page.on("pageerror", (error) => pageFailures.push(`pageerror: ${error.message}`));
       page.on("console", (message) => {
@@ -113,6 +118,35 @@ async function checkRoutes(browser, baseUrl, label, options) {
           pageFailures.push(`main document returned ${response?.status() ?? "no response"}`);
         }
         await page.waitForTimeout(300);
+        if (route === "/fix-ui-spacing") {
+          const before = page.getByRole("button", { name: "Before: inherited gap" });
+          const after = page.getByRole("button", { name: "After: isolated gap" });
+          await page.getByTestId("measured-gap").filter({ hasText: "64" }).waitFor();
+          assert(await before.getAttribute("aria-pressed") === "true", "Spacing before state is not exposed");
+          const gap = () => page.getByTestId("proof-stack").evaluate(el => parseFloat(getComputedStyle(el).rowGap));
+          assert(await gap() === 64, "Spacing fixture did not reproduce inherited gap");
+          const capture = process.env.STYLESEED_PROOF_CAPTURE;
+          if (capture) { mkdirSync(capture, { recursive: true }); await page.screenshot({ path: resolve(capture, `${label}-before.png`), fullPage: true }); }
+          await after.focus();
+          await page.keyboard.press("Enter");
+          await page.getByTestId("measured-gap").filter({ hasText: "12" }).waitFor();
+          assert(await gap() === 12 && await after.getAttribute("aria-pressed") === "true", "Spacing fix or keyboard state failed");
+          if (capture) await page.screenshot({ path: resolve(capture, `${label}-after.png`), fullPage: true });
+          await before.click();
+          assert(await gap() === 64, "Spacing demo cannot return to before state");
+          const share = page.getByRole("button", { name: "Copy example link" });
+          await share.click();
+          assert(await page.evaluate(() => navigator.clipboard.readText()) === "https://styleseed-demo.vercel.app/fix-ui-spacing", "Proof share URL differs");
+          const task = page.getByRole("button", { name: "Copy this task prompt" });
+          await task.click();
+          assert((await page.evaluate(() => navigator.clipboard.readText())).startsWith("The spacing on this screen feels wrong."), "Proof task prompt was not copied");
+          const sourceResponse = await fetch(`${baseUrl}/fix-ui-spacing`);
+          const source = await sourceResponse.text();
+          assert(source.includes("Three checks before changing the numbers"), "Guide answer missing from server HTML");
+          assert(await page.locator('link[rel="canonical"]').getAttribute("href") === "https://styleseed-demo.vercel.app/fix-ui-spacing", "Proof canonical URL differs");
+          const article = await page.locator('script[type="application/ld+json"]').evaluateAll(nodes => nodes.map(n => JSON.parse(n.textContent)).find(x => x["@type"] === "TechArticle"));
+          assert(article?.headline === "Why is my AI-generated UI spacing wrong?", "Proof structured data differs");
+        }
         const installButton = page.getByRole("button", { name: /^Copy install command:/ }).first();
         if (await installButton.count()) {
           const command = await installButton.locator("code").innerText();
@@ -125,6 +159,21 @@ async function checkRoutes(browser, baseUrl, label, options) {
           await installButton.click();
           assert(await page.evaluate(() => window.getSelection()?.toString()) === command, `${route}: manual-copy selection differs`);
           assert(await page.getByText("Clipboard access was blocked. The command is selected — copy it manually.").count() > 0, `${route}: missing manual-copy guidance`);
+        }
+        if (route === "/fix-ui-spacing") {
+          await page.getByRole("button", { name: "Copy example link" }).click();
+          assert(await page.getByText("Copy this link: https://styleseed-demo.vercel.app/fix-ui-spacing").count() === 1, "Share clipboard fallback missing");
+          await page.getByRole("button", { name: "Copy this task prompt" }).click();
+          assert(await page.getByText("Clipboard access was blocked. The prompt is selected — copy it manually.").count() === 1, "Task clipboard fallback missing");
+          const events = await page.evaluate(() => window.__proofEvents);
+          for (const name of ["spacing-proof-view", "spacing-proof-before", "spacing-proof-after", "spacing-proof-share-copy", "spacing-proof-prompt-copy", "spacing-proof-install-copy"]) {
+            assert(events.filter(event => event.name === name).length === 1, `${name}: event missing, duplicated, or emitted after clipboard failure`);
+          }
+          assert(events.every(event => !event.data), "Proof events must not carry project or clipboard data");
+          const ogUrl = await page.locator('meta[property="og:image"]').first().getAttribute("content");
+          const og = await fetch(`${baseUrl}${new URL(ogUrl, baseUrl).pathname}`);
+          assert(og.ok && og.headers.get("content-type")?.startsWith("image/"), "Proof share card is not readable");
+          if (process.env.STYLESEED_PROOF_CAPTURE && label === "desktop") writeFileSync(resolve(process.env.STYLESEED_PROOF_CAPTURE, "share-card.png"), Buffer.from(await og.arrayBuffer()));
         }
         if (route === "/faq") {
           assert(await page.title() === "AI app looks amateur? Fix common UI problems · StyleSeed", "FAQ title does not match the page's search intent");

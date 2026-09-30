@@ -277,6 +277,7 @@ ${q.answer}
 ${q.fit}
 
 Guide and prompt: https://styleseed-demo.vercel.app/faq#${q.id}
+Evidence: https://styleseed-demo.vercel.app${q.evidence.href}
 Example: https://styleseed-demo.vercel.app${q.evidence.href}
 `).join('\n')}
 

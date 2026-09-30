@@ -9,9 +9,12 @@ import versionInfo from "../public/version.json";
 const BASE = "https://styleseed-demo.vercel.app";
 const CONTENT_UPDATED = new Date(`${versionInfo.siteUpdated}T00:00:00.000Z`);
 
+const SPACING_GUIDE_UPDATED = new Date("2026-09-30T00:00:00.000Z");
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes: MetadataRoute.Sitemap = [
-    { url: `${BASE}/`, lastModified: CONTENT_UPDATED, changeFrequency: "weekly", priority: 1 },
+    { url: `${BASE}/fix-ui-spacing`, lastModified: SPACING_GUIDE_UPDATED, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${BASE}/`, lastModified: SPACING_GUIDE_UPDATED, changeFrequency: "weekly", priority: 1 },
     { url: `${BASE}/claude-code-ui-design`, lastModified: CONTENT_UPDATED, changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE}/codex-ui-design`, lastModified: CONTENT_UPDATED, changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE}/evaluate`, lastModified: CONTENT_UPDATED, changeFrequency: "monthly", priority: 0.9 },
@@ -27,8 +30,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE}/studio`, lastModified: CONTENT_UPDATED, changeFrequency: "weekly", priority: 0.9 },
     { url: `${BASE}/palettes`, lastModified: CONTENT_UPDATED, changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE}/learn`, lastModified: CONTENT_UPDATED, changeFrequency: "monthly", priority: 0.9 },
-    { url: `${BASE}/faq`, lastModified: CONTENT_UPDATED, changeFrequency: "monthly", priority: 0.8 },
-    { url: `${BASE}/guides`, lastModified: CONTENT_UPDATED, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${BASE}/faq`, lastModified: SPACING_GUIDE_UPDATED, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${BASE}/guides`, lastModified: SPACING_GUIDE_UPDATED, changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE}/screens`, lastModified: CONTENT_UPDATED, changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE}/interactions`, lastModified: CONTENT_UPDATED, changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE}/gallery`, lastModified: CONTENT_UPDATED, changeFrequency: "monthly", priority: 0.7 },

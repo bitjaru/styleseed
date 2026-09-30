@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "artifactId": "site-docs",
-  "engineVersion": "4.1.0",
-  "engineRevision": "sha256:f563a15b158ecef506f213c45ef54a71b34b4b1410c92529673b97ab34840772",
+  "engineVersion": "4.2.0",
+  "engineRevision": "sha256:abd0f4d0a4929cf1036315a97f1d627b684c056ff003e91d11cf4bae0a3964b3",
   "distributionIntegrity": "verified",
   "selection": {
     "agent": "codex",
@@ -36,8 +36,8 @@
     {
       "id": "artifact",
       "path": ".styleseed/artifacts/site-docs.json",
-      "sha256": "sha256:d1545eb7940493c3940f1d2fb757a0bcf3e0e06210753c6403c5778a6dc0f9f9",
-      "bytes": 1483
+      "sha256": "sha256:3b4c2e25eefd1a4a7bc70b97b134cec82457ec03dc5f00ae3789784aa04e9863",
+      "bytes": 1655
     }
   ],
   "sources": [
@@ -50,8 +50,8 @@
     {
       "id": "core",
       "path": "catalog:core",
-      "sha256": "sha256:6002465c13e879fb190387117049eb4484a3ce908c9f8af1648882c870194266",
-      "bytes": 5394
+      "sha256": "sha256:b8386021967bb5cea954dbe3b3f8c36574457457d5e4bbe7277b5218a539af54",
+      "bytes": 7968
     },
     {
       "id": "grammar",
@@ -96,11 +96,11 @@
       "bytes": 3564
     }
   ],
-  "methodHash": "sha256:3b85de8475bbf990f49b17da4ef58a06cfb37d3126657035b8f4d60548ffecb7",
-  "validationHash": "sha256:5bc8cdc0aef3ed2297d19e2b59eb3dcdd2df1b59fff006c3824c4a4685f76d52",
+  "methodHash": "sha256:cf7e5e2d991ef47e78a7495c4f94809c52a24b918adbdc8c048ca662969ada54",
+  "validationHash": "sha256:da9193e7638c4e92f8d0af15b23d5f87a2bef5e737bf392d6e5225b72d9cefba",
   "validationSlices": {
     "target": "sha256:66e3ea5ff532a9e7ac4b1f7203164a468ab2544b8069c5784b0dfeb7ff009e99",
-    "implementation": "sha256:158eacdf2dde11f23eca998870e1db7b1d019429872651acb6308822bf8753d9",
+    "implementation": "sha256:4deeb97a1d850f218bde37027f777de6583aaf83f4f9f7b0a5ba3b5095fab756",
     "scoreFloor": "sha256:48449a14a4ff7d79bb7a1b6f3d488eba397c36ef25634c111b49baf362511afc",
     "requiredRenders": "sha256:e2cbc22ce7be59d23cd2e88d6fdbc576aa98f69928e4ff1e61fda02e15ccca2f",
     "temporal": "sha256:c5ec5a78d8447626a8d2c39addbf2843320eb8e491b9e7c1e92927a135b06bba",
@@ -109,15 +109,15 @@
   "bundle": {
     "kind": "bundle",
     "path": ".styleseed/bundles/site-docs.md",
-    "sha256": "sha256:0639e29bbe9eb4c96027a6f75aac114b8c2fae0589e03bb89ee081f22722151a",
-    "bytes": 16833
+    "sha256": "sha256:773aef96457ec293637e264ad1561a364f57c9a91fc62f334e6b7b4ac1cab44c",
+    "bytes": 19407
   },
   "outputs": [
     {
       "kind": "bundle",
       "path": ".styleseed/bundles/site-docs.md",
-      "sha256": "sha256:0639e29bbe9eb4c96027a6f75aac114b8c2fae0589e03bb89ee081f22722151a",
-      "bytes": 16833
+      "sha256": "sha256:773aef96457ec293637e264ad1561a364f57c9a91fc62f334e6b7b4ac1cab44c",
+      "bytes": 19407
     },
     {
       "kind": "palette-json",

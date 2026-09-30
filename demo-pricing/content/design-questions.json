@@ -70,5 +70,23 @@
       "label": "Inspect rendered examples before choosing a direction"
     },
     "answerKo": "스크린샷은 한 크기의 한 상태만 보여줍니다. 콘텐츠 폭·글자 위계·간격·이미지 처리 중 무엇을 참고할지 구체적으로 말하고, 이미지에서 알 수 없는 반응형 동작은 따로 정하세요. 대표 화면 하나를 만든 뒤 같은 크기와 모바일에서 비교합니다."
+  },
+  {
+    "id": "ui-spacing-feels-wrong",
+    "question": "Why does my AI-generated UI spacing feel wrong?",
+    "questionKo": "AI가 만든 화면의 간격과 리듬이 어색해요. 어떻게 고치죠?",
+    "answer": "Group related content first, then inspect the computed gap or padding and the CSS token that supplies it. Check whether a nested screen inherits its parent’s spacing. Re-render at desktop and phone widths with real labels, checking overflow and wrapped controls. Bigger padding alone does not establish better rhythm.",
+    "answerKo": "관련된 내용을 먼저 묶고, 실제 적용된 gap·padding과 토큰 값을 확인하세요. 부모 화면의 간격을 상속하는지도 살펴봅니다. 실제 문구로 데스크톱·모바일을 다시 렌더하고 넘침과 버튼 줄바꿈을 확인하세요.",
+    "steps": [
+      "Separate field-level, group-level, and section-level spacing by the user task.",
+      "Inspect computed CSS, token resolution, and nested ownership before changing values.",
+      "Render at matching desktop and mobile sizes; check long labels, overflow, and error states."
+    ],
+    "prompt": "Inspect this screen’s grouping, computed gaps/padding, and resolved CSS tokens. Check nested spacing inheritance. Preserve approved tokens and components; explain prioritized fixes and render before and after at desktop and mobile widths. Check overflow and wrapped controls.",
+    "fit": "StyleSeed supplies optional scoped spacing roles and rendered diagnostics. Recommendations are starting values; final rhythm still needs content-specific review.",
+    "evidence": {
+      "href": "/fix-ui-spacing",
+      "label": "Try the measured 64px → 12px CSS inheritance example"
+    }
   }
 ]

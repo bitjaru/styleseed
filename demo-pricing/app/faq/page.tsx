@@ -104,7 +104,7 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "My spacing feels off and my layout looks cramped — how do I fix it?",
-    a: "StyleSeed enforces spatial rhythm: a consistent 8pt spacing scale, “inside vs. outside” grouping so related items sit tighter than unrelated ones, and intentional whitespace around focal elements. The agent stops emitting ad-hoc paddings, so your React or Next layout reads as deliberate and scannable rather than cramped or arbitrary.",
+    a: "Start with grouping, computed spacing values, and the actual project tokens. StyleSeed can compile scoped spatial roles and inspect explicitly mapped rendered consumers for token failures or mismatches. Its numeric recommendations are starting values; responsive content and final rhythm still need review. See the live example at /fix-ui-spacing.",
   },
   {
     q: "How do I give my dashboard better visual hierarchy?",

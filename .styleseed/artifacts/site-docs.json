@@ -31,7 +31,9 @@
       "demo-pricing/content/design-questions.json",
       "demo-pricing/content/spacing-proof.json",
       "demo-pricing/app/upgrade",
-      "demo-pricing/content/upgrade-notice.json"
+      "demo-pricing/content/upgrade-notice.json",
+      "demo-pricing/app/how-it-thinks",
+      "demo-pricing/app/why"
     ],
     "tokenFiles": [
       "demo-pricing/app/globals.css",

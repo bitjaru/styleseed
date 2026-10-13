@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "artifactId": "site-home",
   "engineVersion": "5.0.0",
-  "engineRevision": "sha256:6376162eccff713a99183ec8f7c70826794d0402acab2c5359ee3490df7844cc",
+  "engineRevision": "sha256:9d7fc19eb52eea84c210f06ed6be385b8d80e16eccc97a414a71e3772f805536",
   "distributionIntegrity": "verified",
   "selection": {
     "agent": "codex",
@@ -50,14 +50,14 @@
     {
       "id": "core",
       "path": "catalog:core",
-      "sha256": "sha256:b8386021967bb5cea954dbe3b3f8c36574457457d5e4bbe7277b5218a539af54",
-      "bytes": 7968
+      "sha256": "sha256:c266458625238fc647b40eb15a80476ee116d3b8e4fbd9bee71db917f2c7a33d",
+      "bytes": 8400
     },
     {
       "id": "grammar",
       "path": "built-in:expressive-marketing",
-      "sha256": "sha256:35ab4a8c3d959463d0d1507ac49304d365f60be240f5977496c69172a32954c6",
-      "bytes": 910
+      "sha256": "sha256:c4fbfe1dbecf6d6b5b0300dc4e4573452177464cac0d43640436acba59deae55",
+      "bytes": 967
     },
     {
       "id": "adapter",
@@ -68,20 +68,20 @@
     {
       "id": "domain",
       "path": "catalog:domains/developer-tools",
-      "sha256": "sha256:75abbca1f53f589841658c4f596bc5b5fe4ea6f768cf72e0ddd078950668dd16",
-      "bytes": 849
+      "sha256": "sha256:f7c340fa7be0cf2bf67aeb5a4fdf80eca1128a27fd5ad244eb3cecad722f45eb",
+      "bytes": 1173
     },
     {
       "id": "page",
       "path": "catalog:pages/landing",
-      "sha256": "sha256:2875da6524db84e956d4a79c460eafec11cf44836b2d13936f11af2679853a81",
-      "bytes": 1685
+      "sha256": "sha256:f4da394144f34d3f1aa256b9caf0320b82c4523b068bae893c92413e622c82ef",
+      "bytes": 2044
     },
     {
       "id": "recipe",
       "path": "catalog:recipes/expressive-brand",
-      "sha256": "sha256:3b5a536c7127554a106219c26d39c502f53eea1fefe87b7d350a03a0af7c171a",
-      "bytes": 1924
+      "sha256": "sha256:95befeb0a0a3ffaecdfebde333231f33cb29052a13523c087d3b10ffc3c3be82",
+      "bytes": 1984
     },
     {
       "id": "palette",
@@ -92,11 +92,11 @@
     {
       "id": "craft",
       "path": "catalog:craft",
-      "sha256": "sha256:9f8b9c38d3ec1dc6d476a149b7c3502b27c51cbb55bce397a696b44335a22d21",
-      "bytes": 3564
+      "sha256": "sha256:cf337a06f68960ee01e99fa734da2955fe67db990e7cda3fb1d2729acd0bd1bd",
+      "bytes": 4870
     }
   ],
-  "methodHash": "sha256:5e7e1b9706d065ae1ad612b0e713afdb3fffd2534c4afac9e2c2b2900878f2bd",
+  "methodHash": "sha256:b64c6ff0535e4ca26b2b04d489d51889906e19cdf6429f437a713c89394569be",
   "validationHash": "sha256:0ec7d75ee76c479b1107717acb8ae8411fdb1dfaeab57d3a8b8b3e098c7ee3de",
   "validationSlices": {
     "target": "sha256:fd89b3b7c61fa08e9a1055ecd5c5678651b23752e9a5d07d80a2fb7f5ac1ae14",
@@ -109,15 +109,15 @@
   "bundle": {
     "kind": "bundle",
     "path": ".styleseed/bundles/site-home.md",
-    "sha256": "sha256:087c8ffd85942044eca838d2c0ca516dc85acd21aefad23472652a9d1424620e",
-    "bytes": 21084
+    "sha256": "sha256:5f40e685ec1148c863498c5cc414a498c22fae0fecedc54122bf31a99effd15a",
+    "bytes": 23622
   },
   "outputs": [
     {
       "kind": "bundle",
       "path": ".styleseed/bundles/site-home.md",
-      "sha256": "sha256:087c8ffd85942044eca838d2c0ca516dc85acd21aefad23472652a9d1424620e",
-      "bytes": 21084
+      "sha256": "sha256:5f40e685ec1148c863498c5cc414a498c22fae0fecedc54122bf31a99effd15a",
+      "bytes": 23622
     },
     {
       "kind": "palette-json",

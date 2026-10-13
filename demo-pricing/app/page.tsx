@@ -311,9 +311,9 @@ export default function HomePage() {
             />
             <div className="mt-7 grid gap-3 sm:grid-cols-3">
               {[
-                { k: "The decision", v: "Balance 48px, unit 24px" },
-                { k: "The rule", v: "Rule 4 · Numbers 2:1 with units" },
-                { k: "Why it works", v: "The eye locks onto magnitude first; equal sizes flatten it into noise." },
+                { k: "The decision", v: "Example: balance 48px, unit 24px" },
+                { k: "The rule", v: "Rule 4 · Task-appropriate numeric hierarchy" },
+                { k: "Why it works", v: "A large balance helps this summary. Tables and comparison panels may use equal sizes." },
               ].map((c, i) => (
                 <div key={c.k} className="rounded-2xl bg-neutral-50 p-5" style={{ boxShadow: "inset 0 0 0 1px rgba(0,0,0,0.04)" }}>
                   <div className="text-[11px] font-bold uppercase tracking-widest" style={{ color: i === 2 ? "#0F766E" : "#6B7280" }}>{c.k}</div>

@@ -8,7 +8,7 @@ const BASE = "https://styleseed-demo.vercel.app";
 const description =
   "Why does AI-generated UI look the same? Because models pick the same defaults " +
   "every time. A side-by-side of generic AI-generated UI vs the same dashboard with " +
-  "StyleSeed's 74 design rules applied: grayscale discipline, one accent, 2:1 numbers, " +
+  "a selected StyleSeed consumer-summary treatment: deliberate hierarchy, stable color roles, " +
   "visual rhythm, intentional motion.";
 
 export const metadata: Metadata = {

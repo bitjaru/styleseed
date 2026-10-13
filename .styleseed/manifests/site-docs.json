@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "artifactId": "site-docs",
   "engineVersion": "5.0.0",
-  "engineRevision": "sha256:6376162eccff713a99183ec8f7c70826794d0402acab2c5359ee3490df7844cc",
+  "engineRevision": "sha256:9d7fc19eb52eea84c210f06ed6be385b8d80e16eccc97a414a71e3772f805536",
   "distributionIntegrity": "verified",
   "selection": {
     "agent": "codex",
@@ -36,8 +36,8 @@
     {
       "id": "artifact",
       "path": ".styleseed/artifacts/site-docs.json",
-      "sha256": "sha256:c44124e65c6248be41ba20ffaee23fec68b8ee822c21dc0748b0bcc55a5215b5",
-      "bytes": 1739
+      "sha256": "sha256:a709c41032d56e45c0247081bcb2ccb4e67ff6228c9a9db258970129d5f99995",
+      "bytes": 1809
     }
   ],
   "sources": [
@@ -50,14 +50,14 @@
     {
       "id": "core",
       "path": "catalog:core",
-      "sha256": "sha256:b8386021967bb5cea954dbe3b3f8c36574457457d5e4bbe7277b5218a539af54",
-      "bytes": 7968
+      "sha256": "sha256:c266458625238fc647b40eb15a80476ee116d3b8e4fbd9bee71db917f2c7a33d",
+      "bytes": 8400
     },
     {
       "id": "grammar",
       "path": "built-in:editorial-reading",
-      "sha256": "sha256:ffc4cb18738d1a36b9ce564fc1fa18987e22a5bbb5787683841e25c401718fca",
-      "bytes": 970
+      "sha256": "sha256:ff1f3ca417cb27454cc7d7dcf2d2b4454761b6a9d5709d4c19ad7b80faa39986",
+      "bytes": 991
     },
     {
       "id": "adapter",
@@ -68,20 +68,20 @@
     {
       "id": "domain",
       "path": "catalog:domains/developer-tools",
-      "sha256": "sha256:75abbca1f53f589841658c4f596bc5b5fe4ea6f768cf72e0ddd078950668dd16",
-      "bytes": 849
+      "sha256": "sha256:f7c340fa7be0cf2bf67aeb5a4fdf80eca1128a27fd5ad244eb3cecad722f45eb",
+      "bytes": 1173
     },
     {
       "id": "page",
       "path": "catalog:pages/detail",
-      "sha256": "sha256:0b4321abc5e338d444ee8ac569f6d03059e33eae2a70bfc5502876cf48b15fc7",
-      "bytes": 679
+      "sha256": "sha256:379a0fb01c98674ff4dc048bd107bada304c12196398637abc70dd531d569bce",
+      "bytes": 910
     },
     {
       "id": "recipe",
       "path": "catalog:recipes/editorial-authority",
-      "sha256": "sha256:97634faa4de0c7d681d5708fd420276618eef2e96f420d0e2770d9649cc06e27",
-      "bytes": 1249
+      "sha256": "sha256:34887c03855fa416be0f2f21581029eac8e9d51d7f58f09164352bad1e7479dc",
+      "bytes": 1347
     },
     {
       "id": "palette",
@@ -92,15 +92,15 @@
     {
       "id": "craft",
       "path": "catalog:craft",
-      "sha256": "sha256:9f8b9c38d3ec1dc6d476a149b7c3502b27c51cbb55bce397a696b44335a22d21",
-      "bytes": 3564
+      "sha256": "sha256:cf337a06f68960ee01e99fa734da2955fe67db990e7cda3fb1d2729acd0bd1bd",
+      "bytes": 4870
     }
   ],
-  "methodHash": "sha256:6c13e05fdce161a9c4fbe982cc2296d41b9c84697f84ba2c9a3095145f8aa74c",
-  "validationHash": "sha256:d9251f0315cbb27aefc960b424f44d06a05755b3892a898b8d358af50f17341c",
+  "methodHash": "sha256:512811b46475ab350c70fc5781d89c52f41270001f89bba83207d29f92df463c",
+  "validationHash": "sha256:62b4ff83affc6fa2f8585599ec07d2ab03b7eb51372364544b4a14dff550f87c",
   "validationSlices": {
     "target": "sha256:66e3ea5ff532a9e7ac4b1f7203164a468ab2544b8069c5784b0dfeb7ff009e99",
-    "implementation": "sha256:f846169197fc5c199438c9a5221e7a7fa39108677c8b94698b261f1ef27c9b92",
+    "implementation": "sha256:2a68f2dbaed6e2716f3ff66548d4120e2f00c2591da0b9f5b3e68825f73f4fba",
     "scoreFloor": "sha256:48449a14a4ff7d79bb7a1b6f3d488eba397c36ef25634c111b49baf362511afc",
     "requiredRenders": "sha256:e2cbc22ce7be59d23cd2e88d6fdbc576aa98f69928e4ff1e61fda02e15ccca2f",
     "temporal": "sha256:c5ec5a78d8447626a8d2c39addbf2843320eb8e491b9e7c1e92927a135b06bba",
@@ -109,15 +109,15 @@
   "bundle": {
     "kind": "bundle",
     "path": ".styleseed/bundles/site-docs.md",
-    "sha256": "sha256:2db3381cef0cf096fe84e0dbf2e51b64a40d32a6dbc62129a50bfbd53f4bb914",
-    "bytes": 19436
+    "sha256": "sha256:951f8a9e6d3b29d49ca8188be41013a83a16a8af98fc8cb29d032f567f7ba98d",
+    "bytes": 21848
   },
   "outputs": [
     {
       "kind": "bundle",
       "path": ".styleseed/bundles/site-docs.md",
-      "sha256": "sha256:2db3381cef0cf096fe84e0dbf2e51b64a40d32a6dbc62129a50bfbd53f4bb914",
-      "bytes": 19436
+      "sha256": "sha256:951f8a9e6d3b29d49ca8188be41013a83a16a8af98fc8cb29d032f567f7ba98d",
+      "bytes": 21848
     },
     {
       "kind": "palette-json",

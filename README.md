@@ -296,22 +296,19 @@ draft. StyleSeed is the **judgment + enforcement layer** the others don't have.
 
 ## What it actually enforces (a taste)
 
-The kind of specific, named calls a senior designer makes without thinking — written down so an AI
-applies them every time:
+The engine records decisions with their task, allowed variation, and verification needs:
 
-- **The refined black is `#2A2A2A`, not `#000`** — a 5-step grayscale ramp, never pure black
-- **One accent, everything else greyscale** — the single-accent law; a second hue is the fastest "un-designed" tell
-- **Numbers 2:1 with their unit** — a 48px value over a 24px unit; equal sizes flatten magnitude into noise
-- **Nested-radius law: `inner = outer − padding`** — concentric corners, so a card and its inner button agree
-- **Layered, low-opacity shadows (≤8%) lit from one direction** — not one hard drop shadow
-- **Tabular numbers** for anything that updates — no width jitter as values change
-- **Status color = severity only** — a "normal" row is grey; color marks the exception, never a rainbow list
-- **No emoji icons, and no Lucide-in-a-pale-chip on every card** (§CC-9b) — the two opposite AI icon tells
-- **8px spatial grid; gap-around-a-group > gap-inside it** — proximity that reads as structure
-- **Optical, not pixel, alignment** — nudge arrows/play glyphs; center type by cap-height
-- **Desktop body ≥16px, one focal point per screen** — the tight mobile scale and an all-even grid both read "machine-made"
-- **One radius personality · one icon set · one shadow language** — the coherence laws (§C0), the #1 fix for "looks AI-generated"
-- **Motion scoped by surface** — a dashboard stays calm; a landing page gets the *Cinematic tier* (scroll-linked reveals, 3D hero, animated gradients — the Stripe/Linear playbook). Scroll-*jacking* is still banned everywhere (§43)
+- **Attention follows the task** — a personal summary may lead with one value; monitoring may use equally weighted comparison panels.
+- **Color has stable roles** — action, status, category, brand, and content can use different hues while remaining distinguishable without color alone.
+- **Type preserves meaning** — a large balance with a smaller unit is one option; tabular values, prose, and approved script-specific scales need other relationships.
+- **Geometry follows component roles** — containers, controls, focus outlines, and avatars can differ coherently within one system.
+- **Separation fits the context** — whitespace, tone, borders, and shadows may work separately or together; there is no mandatory shadow recipe.
+- **Equivalent information repeats** — use consistent rows and comparison panels; vary when priority, data question, or narrative role changes.
+- **Content supplies specificity** — use real product evidence, actual data series, and relevant media with intentional crops and fallbacks.
+- **Access and function remain binding** — preserve contrast, labels, focus, operable targets, meaningful states, and a complete reduced-motion result.
+
+Defaults guide a project without an established system; they do not replace approved choices.
+[Research scope, counterexamples, and the 18 corrections →](research/design-patterns-2026-10-13/README.md)
 
 [See all 74 rules →](engine/DESIGN-LANGUAGE.md) · [the craft & coherence laws →](engine/VISUAL-CRAFT.md)
 
@@ -809,9 +806,12 @@ find a pattern that reliably makes UI better, teach it to everyone's AI by propo
 A good rule is a **decision + the reason it works**, written so a model can apply it — not an opinion.
 
 ```markdown
-**Rule:** Numbers are 2:1 with their unit (a 48px value over a 24px unit).
-**Why it works:** The eye locks onto magnitude first; equal sizes flatten the value into noise.
-**Source:** Refactoring UI.
+**Decision:** Keep equivalent metrics comparable.
+**Applies to:** Monitoring or comparison tasks.
+**Allowed variation:** Repeated panels, aligned rows, or small multiples.
+**Failure case:** Decorative chart changes make equivalent values harder to compare.
+**Verify:** Check labels, units, scale, period, and the actual comparison task.
+**Evidence:** Cite inspected examples and distinguish observation from hypotheses.
 ```
 
 Open a **["Propose a design rule"](https://github.com/bitjaru/styleseed/issues/new?template=design_rule.yml)**

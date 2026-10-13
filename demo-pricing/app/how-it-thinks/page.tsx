@@ -129,9 +129,9 @@ export default function HowItThinks() {
 
         <Reason
           n={1}
-          decision="The balance is huge; its unit is half its size."
-          rule="Rule 4 · Numbers 2:1 with units"
-          why="The eye locks onto magnitude first. A 48px number over a 24px unit creates instant hierarchy — make them the same size and the value flattens into noise. The 2:1 ratio is the difference between 'a number' and 'the number that matters.'"
+          decision="This personal summary emphasizes the balance; its unit is smaller."
+          rule="Rule 4 · Task-appropriate numeric hierarchy"
+          why="The 48px value and 24px unit emphasize the balance in this example. A financial table or monitoring grid may keep values and units closer in size. Preserve readability, comparable scales, and the approved type roles."
         >
           <div className="rounded-xl bg-white p-5" style={{ boxShadow: "0 1px 2px rgba(0,0,0,0.05), 0 6px 18px rgba(0,0,0,0.06)" }}>
             <div className="text-[11px] font-bold uppercase tracking-widest text-neutral-400">Total balance</div>
@@ -148,9 +148,9 @@ export default function HowItThinks() {
         <Reason
           n={2}
           flip
-          decision="One blue. Everything else is grey."
-          rule="Rule 2 · Single accent  +  VISUAL-CRAFT §C0 · Coherence"
-          why="A second accent splits the question 'where do I look?' Scarcity is what makes the primary action unmissable — the accent earns its meaning by being the only thing wearing it. The rest goes greyscale so the one colored thing is always the answer."
+          decision="Blue identifies the transfer action in this decision region."
+          rule="Rule 2 · Stable color roles  +  VISUAL-CRAFT §C0 · Coherence"
+          why="The action stays identifiable beside a quieter cancel control. Status, categories, brand media, and a separate dialog can use other colors when their meanings remain clear. Count conflicting roles, not hues."
         >
           <div className="rounded-xl bg-white p-5" style={{ boxShadow: "0 1px 2px rgba(0,0,0,0.05), 0 6px 18px rgba(0,0,0,0.06)" }}>
             <div className="text-[13px] font-semibold text-neutral-700">Send a transfer</div>
@@ -162,15 +162,15 @@ export default function HowItThinks() {
                 Cancel
               </button>
             </div>
-            <p className="mt-3 text-[12px] text-neutral-400">Only the primary action is colored — the eye never has to choose.</p>
+            <p className="mt-3 text-[12px] text-neutral-400">Here blue marks the transfer action; the text makes its consequence explicit.</p>
           </div>
         </Reason>
 
         <Reason
           n={3}
-          decision="Content sits in cards, separated by tone — not borders."
-          rule="Rule 1 · Everything in cards  +  Rule 7 · Shadows ≤ 8%"
-          why="Borders everywhere read as busy and cluttered. A soft tonal background plus a faint shadow separates surfaces without adding a single line — the page feels calm because nothing is fighting for an edge. Reach for a border only when space and tone can't do the job."
+          decision="This summary groups transactions with tone and restrained depth."
+          rule="Rule 1 · Task-fit grouping  +  Rule 7 · Coherent elevation"
+          why="Tone and light shadows separate these transaction groups. An operational table may use borders; an article may use whitespace. A border and shadow can coexist when one defines an edge and the other a layer."
         >
           <div className="space-y-2.5 rounded-xl bg-neutral-100 p-4">
             {[
@@ -214,9 +214,9 @@ export default function HowItThinks() {
 
         <Reason
           n={5}
-          decision="One corner personality — the card, its thumbnail, and its button all agree."
-          rule="VISUAL-CRAFT §C0 · One radius, nested law"
-          why="Mixing sharp and round corners is the #1 tell of un-designed UI. Pick one personality and apply it everywhere. And a nested element uses inner = outer − padding, so its corner shares a center with the card's — otherwise it visibly bulges past the arc."
+          decision="The card, thumbnail, and control follow deliberate radius roles."
+          rule="VISUAL-CRAFT §C0 · Coherent geometry roles"
+          why="Equivalent components reuse the same role tokens. Sharp containers, rounded controls, and circular avatars can coexist. For inset concentric contours, inner = outer − padding is a useful geometric relation; it is not a rule that every child shares the container shape."
         >
           <div className="rounded-2xl bg-white p-4" style={{ boxShadow: "0 1px 2px rgba(0,0,0,0.05), 0 6px 18px rgba(0,0,0,0.06)" }}>
             <div className="flex items-center gap-3">

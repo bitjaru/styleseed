@@ -19,12 +19,12 @@ const ORDERS = [
 
 const FIXES = [
   { n: 1, rule: "Rule 3", before: "Pure #000 headings", after: "Darkest text is #2A2A2A — 5-level grayscale hierarchy" },
-  { n: 2, rule: "Rule 2", before: "Blue, green, purple, orange all fighting", after: "One accent. Everything else grayscale — restraint is elegance" },
-  { n: 3, rule: "Rule 7", before: "1px gray borders on every box", after: "Borderless cards — tone + ≤8% shadow do the separation" },
-  { n: 4, rule: "Rule 4", before: "Number and unit the same size", after: "Numbers 2:1 with units — 48px value, 24px unit" },
-  { n: 5, rule: "Rule 6", before: "Four identical KPI boxes in a row", after: "Varied sections — hero, mixed KPIs, list. Rhythm, not repetition" },
-  { n: 6, rule: "Rule 1", before: "Content sits on bare background", after: "Everything lives in cards on a toned page" },
-  { n: 7, rule: "Motion", before: "No motion, or a random fade", after: "Named seed entrance — intentional, consistent, replayable" },
+  { n: 2, rule: "Rule 2", before: "Blue, green, purple, orange all fighting", after: "A clear action color with quieter supporting content in this example" },
+  { n: 3, rule: "Rule 7", before: "1px gray borders on every box", after: "Tone and restrained depth separate these groups; borders fit other contexts" },
+  { n: 4, rule: "Rule 4", before: "Number and unit the same size", after: "This summary uses 48px value / 24px unit; comparable table values may share size" },
+  { n: 5, rule: "Rule 6", before: "Four identical KPI boxes in a row", after: "Sections vary by information role; equivalent comparisons may repeat" },
+  { n: 6, rule: "Rule 1", before: "Content sits on bare background", after: "Cards group this consumer summary; other grammars use rows or flat sections" },
+  { n: 7, rule: "Motion", before: "No motion, or a random fade", after: "A purposeful entrance with a complete reduced-motion result; a seed is optional" },
 ];
 
 export function Comparison() {

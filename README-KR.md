@@ -462,7 +462,7 @@ cp /tmp/styleseed/skins/stripe/theme.css src/styles/theme.css
 
 ## 네임드 모션 시스템
 
-AI가 만드는 모션은 대부분 똑같은 기본 페이드입니다. StyleSeed는 모션에 **어휘**를 줍니다 — 느낌에 이름을 붙여서, 모든 페이지에 일관된 의도적 애니메이션을 적용합니다. 두 레이어:
+StyleSeed는 모션이 필요한 프로젝트에 **공통 어휘**를 제공합니다. 승인된 모션의 역할을 먼저 보존합니다. 네임드 레시피, 페이드, 즉각적인 상태 전환, 정적인 화면 모두 과제에 맞는 선택이 될 수 있습니다. 선택적으로 쓰는 라이브러리는 두 레이어로 구성됩니다:
 
 **1. 시드 = 성격.** 5개의 네임드 프리셋 (Spring 통통 · Silk 부드러움 · Snap 즉각 · Float 부유 · Pulse 박동), 각각 `entrance`/`exit`/`hover`/`press`/`layout` 5개 컨텍스트의 framer-motion 레시피.
 

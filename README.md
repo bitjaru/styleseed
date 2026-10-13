@@ -324,7 +324,7 @@ and independent human evaluation are the next steps, not completed capabilities.
 
 <div align="center">
   <a href="https://styleseed-demo.vercel.app/how-it-thinks">
-    <img src="assets/coherence-mixed-vs-unified.svg" width="840" alt="Same content, two cards. The 'mixed' card uses three accent colors and three corner radii and looks off; the 'one system' card uses one accent and one radius and looks designed. The only difference is coherence." />
+    <img src="assets/coherence-mixed-vs-unified.svg" width="840" alt="Two consumer-summary cards illustrate one way to coordinate action colors, type, and container shapes. Other role systems can use multiple colors and radii." />
   </a>
 </div>
 
@@ -577,7 +577,7 @@ StyleSeed provides the brain. (Full comparison in [Where StyleSeed fits](#where-
 
 <br />
 
-Most AI-generated motion is the same default fade. StyleSeed gives motion a **vocabulary** — so you (and the LLM) can name a feel and get consistent, intentional animation across every page. Two layers:
+StyleSeed gives motion a **vocabulary** for projects that need it. Preserve approved motion roles first; a named recipe, a fade, an instant state change, or a static page can each fit the task. The optional library has two layers:
 
 **1. Seeds = personality.** Five named presets, each a spreadable framer-motion recipe in five contexts (`entrance` / `exit` / `hover` / `press` / `layout`):
 
@@ -600,14 +600,14 @@ import { spring } from "@engine/motion";
 ▶ **[Preview & copy every motion at the live gallery →](https://styleseed-demo.vercel.app/motion)**
 &nbsp;·&nbsp; [Vibe-code your own → the motion guide](https://styleseed-demo.vercel.app/motion/guide)
 
-**3. Motion is scoped by *surface* — calm apps, cinematic landing pages.** This is the part most rule-sets get wrong: they ban scroll animation everywhere (so your marketing page ends up flat), or allow it everywhere (so your dashboard scroll-jacks). StyleSeed splits it:
+**Motion is scoped by the task and surface.** Choose it for feedback, orientation, or an approved narrative purpose:
 
 | Surface | Motion posture |
 |---|---|
-| **App / dashboard / data / forms** | **Calm.** No scroll-jacking, no gimmick 3D, never animate a balance. The UI gets out of the way. |
-| **Marketing / landing / brand pages** | **Cinematic tier.** Scroll-**linked** reveals, pinned/sticky sections, the "product assembles as you scroll" move, subtle parallax, a 3D/tilt hero, animated gradient/mesh or video backgrounds, rich hover — the family.co / stripe.com / linear.app playbook. |
+| **App / dashboard / data / forms** | Keep reading and interaction responsive. Motion may explain state or provide feedback; it must not delay essential values or obscure comparisons. |
+| **Marketing / landing / brand pages** | A static page is valid. When the narrative benefits, optional scroll-linked reveals, sticky sequences, parallax, or richer media may support it. |
 
-The line StyleSeed draws: **scroll-_linked_** (native scroll drives it, you stay in control) is encouraged on brand pages; **scroll-_jacking_** (hijacking scroll speed, trapping you) is banned everywhere. The Cinematic tier keeps its guardrails — 60fps (`transform`/`opacity` only), never blocks the first read or the CTA, and `prefers-reduced-motion` always leaves a complete static page. So you can build a Stripe-grade landing page *and* a calm dashboard from the same engine, each with the right restraint. <sub>(Rules: DESIGN-LANGUAGE §43 · PAGE-TYPES → Landing)</sub>
+Preserve native scroll control, immediate access to content and actions, and a complete reduced-motion result. Prefer compositor-friendly animation where suitable, and measure performance and behavior on the target devices. Motion is optional; a preset name or animation count is not a quality test. <sub>(Rules: DESIGN-LANGUAGE §43 · PAGE-TYPES → Landing)</sub>
 
 All seeds auto-respect `prefers-reduced-motion`, and the `/styleseed motion` skill pulls every recipe from one source of truth — so motion stays consistent no matter who (or what) writes the code.
 

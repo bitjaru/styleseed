@@ -111,13 +111,14 @@ export default function HowItThinks() {
           <p className="mt-4 text-[17px] leading-relaxed text-neutral-600">
             Below is one screen. We&rsquo;ll walk every decision in it: what we chose, which rule it
             follows, and <strong className="font-semibold text-neutral-900">why that makes it work</strong>.
-            This is the framework your AI is reading.
+            These choices fit this consumer summary; they are examples, not a required appearance
+            for every product.
           </p>
         </div>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/coherence-mixed-vs-unified.svg"
-          alt="Same content, two cards: a 'mixed' card with three accent colors and mixed corner radii looks off; a 'one system' card with one accent and one radius looks designed. The only difference is coherence."
+          alt="Two consumer-summary cards illustrate one way to coordinate action colors, type, and container shapes. Other role systems can use multiple colors and radii."
           width={1200}
           height={680}
           className="mx-auto mt-2 w-full max-w-3xl px-6 pb-10"
@@ -174,7 +175,7 @@ export default function HowItThinks() {
         >
           <div className="space-y-2.5 rounded-xl bg-neutral-100 p-4">
             {[
-              { name: "Acme Corp", meta: "Downt<wbr/>own · 2:14 PM", amt: "+$8,400" },
+              { name: "Acme Corp", meta: "Downtown · 2:14 PM", amt: "+$8,400" },
               { name: "Northwind", meta: "Refund · 1:09 PM", amt: "−$320" },
             ].map((t) => (
               <div key={t.name} className="flex items-center justify-between rounded-lg bg-white px-4 py-3" style={{ boxShadow: "0 1px 2px rgba(0,0,0,0.04)" }}>
@@ -253,9 +254,9 @@ export default function HowItThinks() {
 
         <Reason
           n={7}
-          decision="Motion is one named seed — confident on the CTA, invisible on a balance."
-          rule="Motion system · named seeds, not ad-hoc fades"
-          why="A random fade on everything is the motion equivalent of a rainbow palette. One named seed (here: Spring on press) gives every interaction the same personality, and motion never delays the thing the user came to see — you never bounce a balance into view. Consistent feel, zero latency where it counts."
+          decision="Motion supports feedback while the balance stays immediately readable."
+          rule="Motion system · purpose, consistency, and reduced motion"
+          why="This example uses Spring on press to acknowledge an action. A named seed is one implementation option; an approved fade or an instant change can serve the same role. Choose timing for the task, preserve the project's motion language, and keep essential content available when reduced motion is requested."
         >
           <div className="rounded-xl bg-white p-5" style={{ boxShadow: "0 1px 2px rgba(0,0,0,0.05), 0 6px 18px rgba(0,0,0,0.06)" }}>
             <div className="space-y-2 text-[12px]">

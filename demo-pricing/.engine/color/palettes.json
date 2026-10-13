@@ -25,7 +25,7 @@
       "danger": "#B42318",
       "dangerForeground": "#FFFFFF"
     },
-    "usage": "Let warm neutrals carry most of the canvas. Reserve green for the primary action and current-state reassurance; keep coral below ten percent.",
+    "usage": "Let warm neutrals carry most of the canvas. Use green for the primary action and current-state reassurance; coral is a restrained supporting accent unless an approved content or brand role calls for greater emphasis.",
     "assetBrief": { "anchors": ["#F3F0E8", "#276B5E", "#D56A45"], "avoid": ["neon blue", "rainbow gradients", "blue-purple AI glow"] }
   },
   {

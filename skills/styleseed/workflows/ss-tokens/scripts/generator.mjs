@@ -283,7 +283,7 @@ export function generatePalette(options = {}) {
       accent: { hue: Number(accentChoice.hue.toFixed(2)), offset: accentChoice.offset, method: harmony, avoidsStatusCollisionBy: Number(accentChoice.semanticDistance.toFixed(2)) },
       primaryAdjustedForContrast: primary.adjusted,
       accentAdjustedForContrast: accent.adjusted,
-      allocation: { dominant: "60% canvas and surfaces", secondary: "30% chrome, type, and supporting structure", accent: "10% primary/accent emphasis combined" },
+      allocation: { dominant: "canvas and surfaces", secondary: "chrome, type, and supporting structure", accent: "task-appropriate primary/accent emphasis; no universal percentage" },
     },
     ramps: { primary: makeRamp(keyHue, primaryChroma), accent: makeRamp(accentChoice.hue, accentChroma) },
     roles,

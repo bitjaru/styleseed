@@ -82,6 +82,31 @@ for (const [label, grammar, recipe, domain, page, taskClause] of cases) {
   });
 }
 
+test("key-color overrides preserve semantic color gates without reintroducing area quotas", (t) => {
+  const project = mkdtempSync(join(tmpdir(), "styleseed-color-guidance-"));
+  t.after(() => rmSync(project, { recursive: true, force: true }));
+  for (const agent of ["codex", "claude"]) {
+    const run = spawnSync(process.execPath, [resolver, "--project-root", project,
+      "--agent", agent, "--grammar", "consumer-service", "--recipe", "calm-consumer",
+      "--domain", "fintech", "--page", "dashboard", "--adapter", "product-ui",
+      "--palette", "quiet-mineral", "--key-color", "#0F766E"], { encoding: "utf8" });
+    assert.equal(run.status, 0, run.stderr);
+    const bundle = readFileSync(join(project, ".styleseed/effective-rules.md"), "utf8");
+    const palette = JSON.parse(readFileSync(join(project, ".styleseed/palette.json"), "utf8"));
+    assert.match(bundle, /Allocation follows the task and approved color roles/u);
+    assert.doesNotMatch(bundle, /60% canvas|at most 10%|below ten percent/u);
+    assert.doesNotMatch(JSON.stringify(palette.decisions.allocation), /\d+%/u);
+    assert.equal(palette.input.keyColor, "#0F766E");
+    assert.equal(palette.valid, true);
+    assert.ok(palette.contrast.length > 0 && palette.contrast.every((pair) => pair.pass));
+    const check = spawnSync(process.execPath, [resolver, "--project-root", project,
+      "--agent", agent, "--grammar", "consumer-service", "--recipe", "calm-consumer",
+      "--domain", "fintech", "--page", "dashboard", "--adapter", "product-ui",
+      "--palette", "quiet-mineral", "--key-color", "#0F766E", "--check"], { encoding: "utf8" });
+    assert.equal(check.status, 0, check.stderr || check.stdout);
+  }
+});
+
 test("reference compilation keeps observation limits and alternatives rather than promoting preview aesthetics", () => {
   const compiler = read("engine/REFERENCE-COMPILER.md");
   assert.match(compiler, /Deduplicate the\s+same project across galleries/u);

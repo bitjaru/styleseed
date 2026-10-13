@@ -32,9 +32,9 @@
     "primaryAdjustedForContrast": false,
     "accentAdjustedForContrast": false,
     "allocation": {
-      "dominant": "60% canvas and surfaces",
-      "secondary": "30% chrome, type, and supporting structure",
-      "accent": "10% primary/accent emphasis combined"
+      "dominant": "canvas and surfaces",
+      "secondary": "chrome, type, and supporting structure",
+      "accent": "task-appropriate primary/accent emphasis; no universal percentage"
     }
   },
   "ramps": {

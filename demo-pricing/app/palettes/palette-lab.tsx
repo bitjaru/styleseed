@@ -184,8 +184,8 @@ export function PaletteLab() {
                     ].map((item, index) => <li key={item} className="flex gap-3 text-[11px] leading-relaxed text-black/58"><span className="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-black text-[9px] font-bold text-white">{index + 1}</span>{item}</li>)}
                   </ol>
                   <div className="mt-5 rounded-xl bg-black/[0.045] p-4">
-                    <div className="flex items-center gap-2 text-[10px] font-bold"><Sparkles size={13} /> Allocation rule</div>
-                    <p className="mt-2 text-[10px] leading-relaxed text-black/50">60% canvas and surfaces · 30% chrome, text, and structure · at most 10% primary and companion emphasis combined.</p>
+                    <div className="flex items-center gap-2 text-[10px] font-bold"><Sparkles size={13} /> Color allocation</div>
+                    <p className="mt-2 text-[10px] leading-relaxed text-black/50">Choose canvas, structural, and accent emphasis for the task and approved color roles. No fixed percentage is required.</p>
                   </div>
                   <div className="mt-4 flex flex-wrap gap-1.5">{result.contrast.slice(0, 6).map((item) => <span key={`${item.foreground}-${item.background}`} className="inline-flex items-center gap-1 rounded-full bg-[#E4F5E8] px-2 py-1 text-[8px] font-bold text-[#17663A]"><Check size={9} />{item.ratio}:1</span>)}</div>
                 </div>

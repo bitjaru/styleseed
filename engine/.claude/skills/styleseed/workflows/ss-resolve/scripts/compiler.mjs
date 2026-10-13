@@ -250,7 +250,7 @@ export function compileContext({
       `- Surface temperature: ${paletteGeneration.input.temperature}`,
       `- Semantic roles: ${Object.entries(paletteGeneration.roles).map(([role, value]) => `${role}=${value}`).join(" · ")}`,
       `- Contrast gates: ${paletteGeneration.contrast.map((item) => `${item.foreground}/${item.background}=${item.ratio}:1`).join(" · ")}`,
-      "- Allocation: 60% canvas/surfaces · 30% chrome/type/structure · at most 10% primary and accent emphasis combined.",
+      "- Allocation follows the task and approved color roles; there is no universal surface-area percentage for canvas, structure, or accent emphasis.",
       "- This override replaces the recipe hex values while preserving its product posture and semantic restrictions.",
       "- Components consume semantic roles. Raw ramp values remain reference tokens.",
     ].join("\n");

@@ -20,7 +20,7 @@
   },
   "context": {
     "engineVersion": "5.0.0",
-    "engineRevision": "sha256:9d7fc19eb52eea84c210f06ed6be385b8d80e16eccc97a414a71e3772f805536",
+    "engineRevision": "sha256:e0581da992aa79dec04e49c6d4d9d8c265f8f22e8bc277439ed7446cb2f1e1e2",
     "resolverSkill": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/styleseed/workflows/ss-resolve/WORKFLOW.md",
     "catalogUrl": "https://styleseed-demo.vercel.app/.well-known/styleseed/context-catalog.json",
     "grammarIds": [
@@ -107,7 +107,7 @@
       "source": "engine/color/generator.mjs",
       "sourceUrl": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/color/generator.mjs",
       "cliUrl": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/color/generate-palette.mjs",
-      "digest": "sha256:b66ee274ddefbd8a8e4ab6bebeb35d5474e772bd05174e592b16ba41bf81e131"
+      "digest": "sha256:64f8f556a16e7b0573605de7170ace44bbf631b9bce6090fcc7bde28a1f84340"
     },
     "profileIds": [
       "swiss",
@@ -1187,8 +1187,8 @@
       "id": "quiet-mineral",
       "source": "engine/color/palettes.json",
       "sourceUrl": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/color/palettes.json",
-      "contract": "### quiet-mineral\n\n- Name: Quiet mineral\n- Mode: light\n- Best for: Calm consumer products, health, benefits, and personal utilities\n- Recipe bias: calm-consumer, native-mobile\n- Semantic roles: background=#F3F0E8 · surface=#FFFDF8 · chrome=#DCE7E0 · foreground=#19211F · mutedForeground=#56635F · chromeForeground=#19211F · border=#BFC9C2 · primary=#276B5E · primaryForeground=#FFFFFF · accent=#D56A45 · accentForeground=#211713 · focus=#155EEF · success=#1E6F50 · successForeground=#FFFFFF · warning=#8A5700 · warningForeground=#FFFFFF · danger=#B42318 · dangerForeground=#FFFFFF\n- Usage: Let warm neutrals carry most of the canvas. Reserve green for the primary action and current-state reassurance; keep coral below ten percent.\n- Generated-media anchors: #F3F0E8, #276B5E, #D56A45\n- Avoid in generated media: neon blue, rainbow gradients, blue-purple AI glow\n- Re-run deterministic contrast validation after any project override.",
-      "digest": "sha256:8d01adb8c3cdfe17fa9cc96ee430323e94789473b06ea5c29c13fcbd8d17e589"
+      "contract": "### quiet-mineral\n\n- Name: Quiet mineral\n- Mode: light\n- Best for: Calm consumer products, health, benefits, and personal utilities\n- Recipe bias: calm-consumer, native-mobile\n- Semantic roles: background=#F3F0E8 · surface=#FFFDF8 · chrome=#DCE7E0 · foreground=#19211F · mutedForeground=#56635F · chromeForeground=#19211F · border=#BFC9C2 · primary=#276B5E · primaryForeground=#FFFFFF · accent=#D56A45 · accentForeground=#211713 · focus=#155EEF · success=#1E6F50 · successForeground=#FFFFFF · warning=#8A5700 · warningForeground=#FFFFFF · danger=#B42318 · dangerForeground=#FFFFFF\n- Usage: Let warm neutrals carry most of the canvas. Use green for the primary action and current-state reassurance; coral is a restrained supporting accent unless an approved content or brand role calls for greater emphasis.\n- Generated-media anchors: #F3F0E8, #276B5E, #D56A45\n- Avoid in generated media: neon blue, rainbow gradients, blue-purple AI glow\n- Re-run deterministic contrast validation after any project override.",
+      "digest": "sha256:92169e71005b9f2a48d731b204368b58bdf875a96fc3843b83d7de231b04e03c"
     },
     {
       "id": "deep-lime-studio",
@@ -1263,7 +1263,7 @@
     "source": "engine/color/generator.mjs",
     "sourceUrl": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/color/generator.mjs",
     "cliUrl": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/color/generate-palette.mjs",
-    "digest": "sha256:b66ee274ddefbd8a8e4ab6bebeb35d5474e772bd05174e592b16ba41bf81e131"
+    "digest": "sha256:64f8f556a16e7b0573605de7170ace44bbf631b9bce6090fcc7bde28a1f84340"
   },
   "skins": [
     {

@@ -1047,8 +1047,10 @@ node engine/color/generate-palette.mjs \
   arbitrary swatches directly.
 - **Contrast corrects the result.** Text/fill and focus pairs are checked after role mapping. A
   failing fill moves in lightness while retaining its hue identity.
-- **Allocation stays bounded.** Canvas and surfaces dominate, structural color supports, and
-  primary plus companion emphasis stays near ten percent of the rendered field.
+- **Allocation follows the task.** Choose relative canvas, structural, and accent emphasis for
+  the selected grammar and approved color roles. A neutral canvas with restrained accents is
+  one valid option; brand-led or categorical content may allocate color differently. Preserve
+  readable hierarchy and contrast without imposing a universal surface-area percentage.
 
 The deterministic output records inputs, normalized OKLCH, chosen accent logic, ramps, semantic
 roles, contrast evidence, generated-media anchors, and CSS variables. The eight built-ins remain

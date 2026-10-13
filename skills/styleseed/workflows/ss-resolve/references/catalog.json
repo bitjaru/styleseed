@@ -1,7 +1,7 @@
 {
   "schemaVersion": 5,
   "engineVersion": "5.0.0",
-  "engineRevision": "sha256:9d7fc19eb52eea84c210f06ed6be385b8d80e16eccc97a414a71e3772f805536",
+  "engineRevision": "sha256:e0581da992aa79dec04e49c6d4d9d8c265f8f22e8bc277439ed7446cb2f1e1e2",
   "distributionSource": {
     "schemaVersion": 1,
     "channel": "edge",
@@ -10,7 +10,7 @@
   },
   "distributions": {
     "core": {
-      "revision": "sha256:9d7fc19eb52eea84c210f06ed6be385b8d80e16eccc97a414a71e3772f805536",
+      "revision": "sha256:e0581da992aa79dec04e49c6d4d9d8c265f8f22e8bc277439ed7446cb2f1e1e2",
       "files": [
         {
           "path": "LICENSE",
@@ -129,8 +129,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/compiler.mjs",
-          "sha256": "f881a8cf84814f836bba6026f2c6a3fe10079a10756bd0e4c3f670ecfd36c84c",
-          "bytes": 19506
+          "sha256": "0924182f430e61710d7ebe96216e6fa4f3a13ad79ce0c1f98ed34ebaa2b7e578",
+          "bytes": 19535
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/distribution-integrity.mjs",
@@ -149,8 +149,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/palette-generator.mjs",
-          "sha256": "b66ee274ddefbd8a8e4ab6bebeb35d5474e772bd05174e592b16ba41bf81e131",
-          "bytes": 14209
+          "sha256": "64f8f556a16e7b0573605de7170ace44bbf631b9bce6090fcc7bde28a1f84340",
+          "bytes": 14230
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/project-registry.mjs",
@@ -309,8 +309,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-tokens/scripts/generator.mjs",
-          "sha256": "b66ee274ddefbd8a8e4ab6bebeb35d5474e772bd05174e592b16ba41bf81e131",
-          "bytes": 14209
+          "sha256": "64f8f556a16e7b0573605de7170ace44bbf631b9bce6090fcc7bde28a1f84340",
+          "bytes": 14230
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-update/WORKFLOW.md",
@@ -409,8 +409,8 @@
         },
         {
           "path": "engine/PALETTE-RECIPES.md",
-          "sha256": "4c0e7537d577b183ed9acbc7be5f7477c6178dbae93f5d7a9d302e7e9b28a435",
-          "bytes": 6978
+          "sha256": "538dbd1668bbd9d9da2b1e84dc29a18867bc4265650a76f272fffeee6909a801",
+          "bytes": 7175
         },
         {
           "path": "engine/PRESETS.md",
@@ -474,8 +474,8 @@
         },
         {
           "path": "engine/color/generator.mjs",
-          "sha256": "b66ee274ddefbd8a8e4ab6bebeb35d5474e772bd05174e592b16ba41bf81e131",
-          "bytes": 14209
+          "sha256": "64f8f556a16e7b0573605de7170ace44bbf631b9bce6090fcc7bde28a1f84340",
+          "bytes": 14230
         },
         {
           "path": "engine/color/index.ts",
@@ -484,13 +484,13 @@
         },
         {
           "path": "engine/color/palettes.json",
-          "sha256": "d4d52423a078140f672820f13378b8e63f1ab97431542feced7f903927099dc5",
-          "bytes": 8967
+          "sha256": "b2c7eb30c5d3a746d1cd612813d2c111ff04d8864e3f299c13f1d91d4bc605e8",
+          "bytes": 9042
         }
       ]
     },
     "skills": {
-      "revision": "sha256:6de6dabe67a3ca7506e5e352b0f7a697368eacfe3dba528cf690deb8f98d323b",
+      "revision": "sha256:73a15b076e67dcb57bcd24a8f7da802ddb09ada10673ea21011e4f0ab95e90a1",
       "files": [
         {
           "path": "engine/.claude/skills/styleseed/SKILL.md",
@@ -599,8 +599,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/compiler.mjs",
-          "sha256": "f881a8cf84814f836bba6026f2c6a3fe10079a10756bd0e4c3f670ecfd36c84c",
-          "bytes": 19506
+          "sha256": "0924182f430e61710d7ebe96216e6fa4f3a13ad79ce0c1f98ed34ebaa2b7e578",
+          "bytes": 19535
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/distribution-integrity.mjs",
@@ -619,8 +619,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/palette-generator.mjs",
-          "sha256": "b66ee274ddefbd8a8e4ab6bebeb35d5474e772bd05174e592b16ba41bf81e131",
-          "bytes": 14209
+          "sha256": "64f8f556a16e7b0573605de7170ace44bbf631b9bce6090fcc7bde28a1f84340",
+          "bytes": 14230
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/project-registry.mjs",
@@ -779,8 +779,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-tokens/scripts/generator.mjs",
-          "sha256": "b66ee274ddefbd8a8e4ab6bebeb35d5474e772bd05174e592b16ba41bf81e131",
-          "bytes": 14209
+          "sha256": "64f8f556a16e7b0573605de7170ace44bbf631b9bce6090fcc7bde28a1f84340",
+          "bytes": 14230
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-update/WORKFLOW.md",
@@ -943,8 +943,8 @@
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-resolve/scripts/compiler.mjs",
-      "sha256": "f881a8cf84814f836bba6026f2c6a3fe10079a10756bd0e4c3f670ecfd36c84c",
-      "bytes": 19506
+      "sha256": "0924182f430e61710d7ebe96216e6fa4f3a13ad79ce0c1f98ed34ebaa2b7e578",
+      "bytes": 19535
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-resolve/scripts/distribution-integrity.mjs",
@@ -963,8 +963,8 @@
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-resolve/scripts/palette-generator.mjs",
-      "sha256": "b66ee274ddefbd8a8e4ab6bebeb35d5474e772bd05174e592b16ba41bf81e131",
-      "bytes": 14209
+      "sha256": "64f8f556a16e7b0573605de7170ace44bbf631b9bce6090fcc7bde28a1f84340",
+      "bytes": 14230
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-resolve/scripts/project-registry.mjs",
@@ -1123,8 +1123,8 @@
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-tokens/scripts/generator.mjs",
-      "sha256": "b66ee274ddefbd8a8e4ab6bebeb35d5474e772bd05174e592b16ba41bf81e131",
-      "bytes": 14209
+      "sha256": "64f8f556a16e7b0573605de7170ace44bbf631b9bce6090fcc7bde28a1f84340",
+      "bytes": 14230
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-update/WORKFLOW.md",
@@ -1223,8 +1223,8 @@
     },
     {
       "path": "PALETTE-RECIPES.md",
-      "sha256": "4c0e7537d577b183ed9acbc7be5f7477c6178dbae93f5d7a9d302e7e9b28a435",
-      "bytes": 6978
+      "sha256": "538dbd1668bbd9d9da2b1e84dc29a18867bc4265650a76f272fffeee6909a801",
+      "bytes": 7175
     },
     {
       "path": "PRESETS.md",
@@ -1288,8 +1288,8 @@
     },
     {
       "path": "color/generator.mjs",
-      "sha256": "b66ee274ddefbd8a8e4ab6bebeb35d5474e772bd05174e592b16ba41bf81e131",
-      "bytes": 14209
+      "sha256": "64f8f556a16e7b0573605de7170ace44bbf631b9bce6090fcc7bde28a1f84340",
+      "bytes": 14230
     },
     {
       "path": "color/index.ts",
@@ -1298,8 +1298,8 @@
     },
     {
       "path": "color/palettes.json",
-      "sha256": "d4d52423a078140f672820f13378b8e63f1ab97431542feced7f903927099dc5",
-      "bytes": 8967
+      "sha256": "b2c7eb30c5d3a746d1cd612813d2c111ff04d8864e3f299c13f1d91d4bc605e8",
+      "bytes": 9042
     }
   ],
   "generatedFrom": [
@@ -1368,7 +1368,7 @@
     "expressive-brand": "## `expressive-brand`\n\n- **Best fit:** campaigns, launches, portfolios, brand pages, posters, and social stories.\n  Strong with `expressive-marketing` and `sequential-story`.\n- **Containment:** section form varies with the narrative; proof, product media, and display type\n  create rhythm instead of a repeated feature-card template.\n- **Geometry:** project-specific and intentionally consistent; one signature geometry may be\n  sharp, soft, or sculptural, but nested and control shapes stay coherent.\n- **Type/icons:** distinctive display hierarchy plus readable body; commissioned or licensed\n  imagery carries identity more than generic icons.\n- **Controls/collections:** identifiable next actions within each decision region, demonstrations, outcomes, and examples;\n  repeated collections earn their repetition.\n- **Motion/responsive:** cinematic choreography is allowed when native scroll remains under user\n  control and reduced motion yields a complete result.\n- **Characteristic move:** one product-specific visual mechanism that could not be swapped into\n  an unrelated landing page.\n- **Reject:** generic treatments that obscure the proposition, feature rows without useful proof,\n  fake metrics, scroll-jacking,\n  copied campaign compositions, or motion that substitutes for a proposition.\n- **Lineage:** independent brand/campaign research; compile supplied references with\n  `ss-reference` when a particular visual language matters.\n\n## Legal and promotion boundary\n\n- Reference-family names document provenance; never present a recipe as official, endorsed, or\n  pixel-compatible with those systems.\n- Do not redistribute protected logos, proprietary icons, fonts, illustrations, product copy,\n  screenshots, or trademarked arrangements.\n- A project-local reference grammar remains the correct path for a specific brand. Promote it to\n  a built-in recipe only after multiple independent sources and transfer tests prove that the\n  morphology is reusable and not a clone."
   },
   "palettes": {
-    "quiet-mineral": "### quiet-mineral\n\n- Name: Quiet mineral\n- Mode: light\n- Best for: Calm consumer products, health, benefits, and personal utilities\n- Recipe bias: calm-consumer, native-mobile\n- Semantic roles: background=#F3F0E8 · surface=#FFFDF8 · chrome=#DCE7E0 · foreground=#19211F · mutedForeground=#56635F · chromeForeground=#19211F · border=#BFC9C2 · primary=#276B5E · primaryForeground=#FFFFFF · accent=#D56A45 · accentForeground=#211713 · focus=#155EEF · success=#1E6F50 · successForeground=#FFFFFF · warning=#8A5700 · warningForeground=#FFFFFF · danger=#B42318 · dangerForeground=#FFFFFF\n- Usage: Let warm neutrals carry most of the canvas. Reserve green for the primary action and current-state reassurance; keep coral below ten percent.\n- Generated-media anchors: #F3F0E8, #276B5E, #D56A45\n- Avoid in generated media: neon blue, rainbow gradients, blue-purple AI glow\n- Re-run deterministic contrast validation after any project override.",
+    "quiet-mineral": "### quiet-mineral\n\n- Name: Quiet mineral\n- Mode: light\n- Best for: Calm consumer products, health, benefits, and personal utilities\n- Recipe bias: calm-consumer, native-mobile\n- Semantic roles: background=#F3F0E8 · surface=#FFFDF8 · chrome=#DCE7E0 · foreground=#19211F · mutedForeground=#56635F · chromeForeground=#19211F · border=#BFC9C2 · primary=#276B5E · primaryForeground=#FFFFFF · accent=#D56A45 · accentForeground=#211713 · focus=#155EEF · success=#1E6F50 · successForeground=#FFFFFF · warning=#8A5700 · warningForeground=#FFFFFF · danger=#B42318 · dangerForeground=#FFFFFF\n- Usage: Let warm neutrals carry most of the canvas. Use green for the primary action and current-state reassurance; coral is a restrained supporting accent unless an approved content or brand role calls for greater emphasis.\n- Generated-media anchors: #F3F0E8, #276B5E, #D56A45\n- Avoid in generated media: neon blue, rainbow gradients, blue-purple AI glow\n- Re-run deterministic contrast validation after any project override.",
     "deep-lime-studio": "### deep-lime-studio\n\n- Name: Deep lime studio\n- Mode: dark\n- Best for: Creative work, focused productivity, and high-craft prototypes\n- Recipe bias: creative-professional, expressive-brand\n- Semantic roles: background=#0B0D0F · surface=#15191D · chrome=#262C31 · foreground=#F5F4ED · mutedForeground=#A8AFAB · chromeForeground=#F5F4ED · border=#465057 · primary=#B8FF5A · primaryForeground=#10140C · accent=#7AA7FF · accentForeground=#0B1020 · focus=#B8FF5A · success=#75E6A4 · successForeground=#0B1A10 · warning=#FFC857 · warningForeground=#1B1300 · danger=#FF766E · dangerForeground=#200704\n- Usage: Use lime for selection and one decisive action, never as body text. Layer chrome one step lighter than the canvas; let generated imagery remain low-luminance.\n- Generated-media anchors: #0B0D0F, #B8FF5A, #7AA7FF\n- Avoid in generated media: pure-white bloom, multicolor neon, lime on light backgrounds\n- Re-run deterministic contrast validation after any project override.",
     "cobalt-instrument": "### cobalt-instrument\n\n- Name: Cobalt instrument\n- Mode: light\n- Best for: Developer platforms, data products, and operational workbenches\n- Recipe bias: developer-platform, enterprise-workbench\n- Semantic roles: background=#F1F5FA · surface=#FFFFFF · chrome=#101828 · foreground=#101828 · mutedForeground=#475467 · chromeForeground=#F9FAFB · border=#C7D1E0 · primary=#175CD3 · primaryForeground=#FFFFFF · accent=#6941C6 · accentForeground=#FFFFFF · focus=#175CD3 · success=#067647 · successForeground=#FFFFFF · warning=#934F00 · warningForeground=#FFFFFF · danger=#B42318 · dangerForeground=#FFFFFF\n- Usage: Use neutral layers for evidence and cobalt for action/selection. Violet belongs to secondary categorization, not a second primary action.\n- Generated-media anchors: #101828, #175CD3, #F1F5FA\n- Avoid in generated media: cyan terminal glow, decorative gradients, low-contrast gray text\n- Re-run deterministic contrast validation after any project override.",
     "warm-clay-commerce": "### warm-clay-commerce\n\n- Name: Warm clay commerce\n- Mode: light\n- Best for: Commerce, hospitality, booking, and human service brands\n- Recipe bias: commerce-operator, calm-consumer\n- Semantic roles: background=#FFF8F2 · surface=#FFFFFF · chrome=#2B201B · foreground=#2B201B · mutedForeground=#6B5549 · chromeForeground=#FFF8F2 · border=#DCCBC0 · primary=#A64005 · primaryForeground=#FFFFFF · accent=#6441C4 · accentForeground=#FFFFFF · focus=#1D5FD0 · success=#187451 · successForeground=#FFFFFF · warning=#8A5700 · warningForeground=#FFFFFF · danger=#B42318 · dangerForeground=#FFFFFF\n- Usage: Let product imagery and warm paper carry identity. Clay marks purchase intent; violet is reserved for saved or personalized context.\n- Generated-media anchors: #FFF8F2, #A64005, #2B201B\n- Avoid in generated media: orange sale walls, high-saturation red urgency, generic purple gradient\n- Re-run deterministic contrast validation after any project override.",

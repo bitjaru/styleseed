@@ -33,7 +33,8 @@
       "demo-pricing/app/upgrade",
       "demo-pricing/content/upgrade-notice.json",
       "demo-pricing/app/how-it-thinks",
-      "demo-pricing/app/why"
+      "demo-pricing/app/why",
+      "demo-pricing/app/palettes"
     ],
     "tokenFiles": [
       "demo-pricing/app/globals.css",

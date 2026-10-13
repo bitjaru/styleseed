@@ -20,17 +20,27 @@ Do not merely imitate the supplied screen. Read `PRODUCT-PRINCIPLES.md`, `RULESE
 
 1. Ingest every supplied reference and assign evidence IDs (`R1`, `R2`, ...). If a URL can be
    rendered, capture it. If an image cannot be seen, stop claiming visual analysis for it.
+   Distinguish discovery, inspected previews, and live states; deduplicate repeated projects
+   and note shared creator/template lineage. Awards and preview counts are not usability evidence.
 2. Separate references by surface adapter and job. Do not merge a marketing homepage with an app
    dashboard unless the user explicitly wants both languages connected.
 3. Observe and measure the twelve axes. Every rule cites evidence IDs and a confidence level.
+   Prefer readable Figma variables and components to pixel guesses. Do not infer unseen
+   interaction, motion, or responsive states from a static screenshot. Mark measurements as
+   measured, estimated, or unknown. For media record subject, role, crop, text-safe area,
+   caption/source, and fallback where applicable; do not invent absent assets or behavior.
 4. Resolve contradictions instead of averaging them. Explain any material choice briefly.
+   For each proposed decision record task/applicability, allowed variation, a counterexample,
+   verification needed, and unresolved human choices. Preserve equivalent comparison patterns;
+   do not convert gallery recurrence into a mandatory shape or component-count rule.
 5. Choose the nearest built-in fallback grammar and adapter, then compile the project artifacts required by
    `REFERENCE-COMPILER.md` under `.styleseed/rulesets/<slug>/`.
-6. Select `reference:<slug>` in the chosen artifact's project-owned configuration for registry
+6. After explicit approval of the inferred grammar, select `reference:<slug>` in the chosen artifact's project-owned configuration for registry
    projects; only when neither registry file exists, update the legacy `STYLESEED.md`.
    Preserve bounded brand choices. A partial or invalid registry is an error, not a fallback.
 7. Validate transfer: apply the grammar to one representative screen not present in the source
-   set, run `/ss-score`, then `/ss-verify` if renderable. Within the authorized validation scope,
+   set, including valid alternatives and a failure case in its checks. Run `/ss-score`, then
+   `/ss-verify` if renderable. Within the authorized validation scope,
    fix and repeat until passing or three correction passes per gate, counting delegated passes.
    Do not reset the budget by switching skills; report actual scores and unresolved failures.
 8. Report what was learned, what remains low-confidence, where the artifacts live, and the

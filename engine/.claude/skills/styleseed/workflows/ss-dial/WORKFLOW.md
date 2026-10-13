@@ -91,9 +91,9 @@ plus display tracking.
 | **strong** | ~3.2:1 | 700–800 | `-0.02em` |
 | **dramatic** | ~4:1 | 800 | `-0.03em` |
 
-**Guardrails:** pick sizes from the Font Size table only (don't invent); body stays at the
-surface floor regardless; keep the number-to-unit 2:1 pairing intact; one focal element still
-dominates (dialing contrast up must not create two competing heroes).
+**Guardrails:** preserve the approved role scale and readable body text, script, measure,
+and zoom. The ratios above are starting points, not mandatory sizes or a universal 2:1
+value/unit pairing. Keep the task's reading, decision, or comparison attention model clear.
 
 ### 3. Radius — the corner personality (categorical swap, not a slider)
 
@@ -120,11 +120,11 @@ the one that matches the theme.
 | **layered** | `0 1px 3px /4%` + `0 4px 12px /8%` | two surface steps + hairline |
 | **lifted** | add `0 8px 24px /8%` on raised | three steps; brightest = highest |
 
-**Guardrails:** never exceed ~8% shadow opacity in light; **never a drop shadow in dark** (use
-the tonal surface ramp + hairline borders); one shadow language / one light direction across
-the whole UI.
+**Guardrails:** preserve the approved depth/material roles and readable boundaries.
+Opacity examples are not universal ceilings. Dark surfaces often use tonal levels and
+hairlines; a justified overlay boundary and shadow can coexist. Inspect the actual layer.
 
-### 5. Color — saturation and temperature (two sub-dials, accent stays single)
+### 5. Color — saturation and temperature (preserve the existing palette roles)
 
 `saturation: muted ↔ balanced ↔ vivid` · `temperature: cooler ↔ neutral ↔ warmer`. Shifts the
 **one** accent in HSL and re-derives its tints; may nudge the neutral greys' chroma. Does NOT
@@ -137,9 +137,10 @@ add a hue.
 | **warmer** | hue toward 20–40° (amber/terracotta) | `--brand`; optionally greys +2–4% warm chroma |
 | **cooler** | hue toward 200–220° (blue/teal) | `--brand`; greys toward cool |
 
-**Guardrails:** still **one accent** — this shifts the existing hue, never introduces a second;
-tints follow the 10–14%-alpha-over-card formula (light + dark); accent keeps ≥4.5:1 where it
-carries text; a warm/cool grey shift must stay near-neutral (chroma ≤ ~6%), not become a tint.
+**Guardrails:** this dial adjusts the selected role; it does not remove existing category,
+status, brand, or content colors. Preserve approved semantic mappings and revalidate all
+affected text, focus, and control contrast pairs in each theme. Sample percentages above
+are starting points, not substitutes for the palette generator or rendered checks.
 
 ### 6. Font weight — the weight ramp
 
@@ -180,8 +181,10 @@ or blocks an action.
 - **Scope is explicit.** Apply all uses of a changed token within the authorized boundary; do not propagate an artifact adjustment into unrelated screens.
 - **Clamp at the ends.** Bounded ramp, not an infinite "more" — if already at `spacious`/`sharp`/
   `bold`, say so and stop.
-- **Guardrails beat the dial.** Preserve task fitness and applicable accessibility requirements;
-  the current artifact bundle and approved project tokens govern contextual visual choices.
+- **Guardrails beat the dial.** Preserve core accessibility and functional floors, stable
+  semantic roles, and applicable approved project contracts. Historical hue counts, shadow
+  percentages, and font-size examples are defaults, not universal limits on a direction.
+  Report actual conflicts without silently replacing the approved system.
 - **Persist + re-gate.** Update the authoritative registry config, or the legacy lock only when
   no registry exists, then recompile and run affected code and rendered gates. Report
   `axis: old → new`, scope, and actual evidence; do not treat a score as visual acceptance.

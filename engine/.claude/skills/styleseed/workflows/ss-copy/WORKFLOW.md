@@ -50,7 +50,7 @@ Format: [Action verb] + [Object] (optional)
 Good: "Place order", "Get started", "Save changes", "Try again"
 Bad:  "Submit", "OK", "Click here", "Proceed to next step"
 ```
-- One primary CTA per screen
+- Make the next action clear within each decision region; a popover can own a local action
 - Label must clearly describe what happens next
 - Max 3 words for primary CTA
 

@@ -84,15 +84,21 @@ When instructions disagree, use this order:
 a violation into a sound design decision. Unknown values are resolver errors, not permission
 to silently choose a different grammar. Use only an explicitly configured, supported fallback.
 
+This order governs requirements, not every illustrative default in a document. Preserve
+accessibility and functional floors; interpret sizes, component names, and aesthetic examples
+through the selected task and approved project system. Report unresolved conflicts rather
+than silently replacing that system.
+
 ## Core invariants
 
 These apply to every grammar, profile, domain, page, skin, and agent:
 
 - One deliberate visual system per product: radius, spacing, elevation, icon language,
   typography, color roles, imagery, and motion agree.
-- One focal point per screen and a clear information hierarchy.
-- Color communicates role or meaning. One primary action remains identifiable even when
-  semantic, categorical, or product colors are present.
+- A clear attention structure appropriate to the task: a reading promise, primary decision,
+  or comparable monitoring regions. A hero metric is not mandatory.
+- Color communicates role or meaning. Primary actions, where the task has them, remain
+  identifiable even when semantic, categorical, or product colors are present.
 - Semantic tokens replace component-level hardcoded colors.
 - Spacing follows a repeatable scale; proximity communicates grouping.
 - Typography fits the surface and task, with readable measure, contrast, and hierarchy.
@@ -100,8 +106,8 @@ These apply to every grammar, profile, domain, page, skin, and agent:
 - Controls remain operable: visible focus, sufficient targets, labels, reduced-motion
   support, and no dark patterns.
 - Motion fits the surface and never delays comprehension or action.
-- Distinctiveness comes from the product, its content, and its selected grammar — not a
-  copied demo, generic indigo, repeated icon chips, emoji chrome, or template uniformity.
+- Design expression serves the product, its content, and its selected grammar. Do not copy
+  demo content or introduce decorative novelty where predictable repetition serves the task.
 
 ## What the lock may select
 

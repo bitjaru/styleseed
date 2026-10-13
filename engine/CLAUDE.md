@@ -29,27 +29,27 @@ examples below are not permission to replace approved systems. Never waive core 
 ```
  1. Use the selected output grammar's grouping model — cards, whitespace, rules, or tonal
     surfaces are tools, not a universal answer
- 2. Color has stable roles and one identifiable primary action; extra hues require semantic,
-    categorical, or brand meaning defined by the grammar
+ 2. Color has stable action, status, category, brand, and content roles; identify the next
+    action within each decision region rather than imposing one hue or action per viewport
  3. No accidental pure black (#000); structural hard black is allowed only when an exact
-    maintained grammar/profile contract calls for it
+    approved project or grammar/profile contract calls for it
  4. Prominent numbers distinguish value and unit clearly; the selected grammar and recipe
     decide whether that relationship is 2:1, compact/tabular, or prose-like
  5. One repeatable spatial rhythm, normally built from an 8px major unit with smaller detail
     increments when needed; gutters and density come from the selected recipe, not mx-6 everywhere
- 6. Never repeat same section type consecutively — create visual rhythm
+ 6. Use deliberate rhythm; repeated rows, fields, and comparison panels are valid when the task needs consistency
  7. Elevation, one language selected by the recipe: flat rules, hairlines, tonal layers, or
     restrained shadows; never mix them casually. Dark surfaces favor tonal levels + hairlines
  8. Touch targets ≥ 44×44px on touch surfaces; pointer-first desktop controls may be 36–40px
     (keep visible focus rings either way)
  9. Semantic tokens only (text-brand, bg-card) — NEVER hardcode hex in components
-10. Font sizes from the "Font Size by Context" table ONLY — don't guess
-11. NO emoji as UI icons (🚗🧺⭐) — one line-icon set in currentColor; emoji inject many colors
-12. Status color = severity only — a normal/"보통" state is grey, not colored; don't color every row
+10. Use the approved role-based type scale; the "Font Size by Context" table provides defaults
+11. Use predictable functional icons with accessible labels; user content and reactions have separate roles
+12. Status colors encode stable meanings; preserve anomaly emphasis and non-color cues, including when healthy signals repeat
 13. After generating UI → run the Quality Gate; report failures without claiming acceptance
-14. NEVER ship the default/unlocked accent (generic indigo #5E6AD2/#4F46E5) or a copied demo layout — lock a domain-fit key color + font FIRST (Quick Setup). A coherent-but-generic screen STILL reads "an AI made this"; coherent ≠ distinctive
-15. One focal point per screen — the hero/primary element must visually dominate. An all-even grid of same-weight cards, centered and evenly spaced, is the #1 "machine-composed" tell
-16. Match the type scale to the surface — mobile app uses the tight scale; desktop/web B2B uses the LARGER scale (body ≥16px). Don't ship 14px body on a 1440px screen
+14. Preserve approved brand choices and use product-specific content; an unchosen default or copied demo is not an intentional design system
+15. Match attention to the task: a reading promise, primary decision, or comparable monitoring regions; do not force a hero metric
+16. Match type to role, script, reading distance, and input mode. An approved 14px productive desktop scale is valid when readable and usable at zoom
 ```
 
 Reference this guide when Claude Code sets up a new project or implements UI.
@@ -79,7 +79,7 @@ Reference this guide when Claude Code sets up a new project or implements UI.
 > - **METHODOLOGY.md**: UI/UX reasoning patterns (progressive disclosure, info density, atomic design, skeleton/empty/microinteraction, contextual onboarding, Linear/Toss aesthetic, color discipline, motion vibe vocabulary) — read **before scaffolding a new dashboard** or when wondering *why* the rules in DESIGN-LANGUAGE.md exist. Chapter 8 (Motion Vibe Vocabulary) is the entry point for the `engine/motion/` seed system.
 > - **APP-PLAYBOOKS.md**: How to **bias** the rules for the app's domain (fintech, SaaS, e-commerce, social, content, productivity, health, education, dev-tools, marketplace, booking, AI/chat). Read **right after you know what kind of app this is** (e.g. from `/ss-setup`), before scaffolding — a fintech dashboard and a social dashboard apply the same 74 rules differently.
 > - **PAGE-TYPES.md**: How to bias the rules for the **screen type** (dashboard / form / landing / detail / list / settings / onboarding). Read before building a specific page. Domain × page-type together = the actual design judgment.
-> - **VISUAL-CRAFT.md**: Research-backed **craft** — the concrete numeric decisions that make a component look intentional and keep the *whole* UI **coherent** (one radius personality, one shadow language, one accent, layered shadows, nested-radius law, type recipe by app type, contrast floors). **§C0 (Coherence Laws) is the antidote to "AI-generated UI looks off."** Read before scaffolding a product surface, and whenever a UI looks wrong but you can't say why. Grounded in Refactoring UI, Material 3, Apple HIG, WCAG 2.2, FT Visual Vocabulary.
+> - **VISUAL-CRAFT.md**: Contextual craft guidance for coherent roles, grouping, type, color, containment, and data. Numeric examples and techniques are defaults; preserved project decisions, task fitness, and rendered evidence govern their application. Accessibility and functional floors remain binding.
 > - **UX-WRITING.md**: Verbal judgment — how to write the **text inside the UI** (buttons that name the action not "Submit", errors that help instead of blame, empty states that invite, calm money copy). Read before writing any user-facing text, and whenever copy "sounds like a robot." Includes Korean/CJK notes (the clear-calm-human "Toss feel"). Pairs with `/ss-copy` and `/ss-feedback`.
 
 ## Design Lock — read this EVERY prompt before building UI
@@ -123,7 +123,7 @@ registry file exists. Do not restart setup to recover from an invalid registry.
 - Density:           comfortable
 - Imagery palette:   (optional) sand #E5CBAA · oak #D9B084 · charcoal #3A2E27  # locked content tones, not accents
 - Semantic resolve:  (if accent ≈ green/red) positive-progress uses accent; success reserved for confirmation moments
-- Signature move:    (optional) oversized serif index on the hero step ONLY  # one treatment, not a uniform (CC-9c)
+- Signature move:    (optional) typographic chapter markers  # repeat or vary by information role (CC-9c)
 - Locked:            2026-06-23
 ```
 
@@ -200,9 +200,9 @@ Resolve the missing setup choices with the user, then build:
 9. **Write the lock, then build, then check.** Save app type / surface / output grammar / page
    type / brand recipe / palette recipe / optional profile / **mood** / accent / skin / **font**
    / motion / density to `STYLESEED.md` (see Design Lock above). Apply the full rules (read
-   DESIGN-LANGUAGE.md + VISUAL-CRAFT.md — not a summary), pick the type scale for the surface
-   (mobile-tight vs **desktop-larger, body ≥16px**), give the page **one focal point** (don't
-   ship an all-even grid), then **self-check** (VISUAL-CRAFT §C0) and run the Quality Gate.
+   the compiled bundle first; consult DESIGN-LANGUAGE.md + VISUAL-CRAFT.md only for ambiguity),
+   use the approved role-based type scale and task attention model, then **self-check**
+   (VISUAL-CRAFT §C0) and run the Quality Gate.
    **Iterate** — the reference demo wasn't one-shot either.
 
 Confirm each choice before building. **More constraints = less variance.** For the most
@@ -223,18 +223,14 @@ review; it must not be labeled passed, accepted, or ready to ship.
                (#5E6AD2/#4F46E5); layout is NOT the StyleSeed demo copied verbatim; the hero
                shows THIS product (not a stock chat card); the escape hatch isn't a new
                uniform (ghost 01/02/03 on EVERY section, §CC-9c); and distinctive stayed
-               MODERN — white/fresh base, serif as seasoning not diet, whitespace kept
-               (beige-paper + serif everywhere = dated brochure, §CC-9d).
-               Coherent-but-generic = FAIL · distinctive-but-dated = FAIL
-□ Focal      — one element clearly dominates; NOT an all-even grid of same-weight, centered,
-               evenly-spaced cards (that flatness is the machine-composed tell)
-□ Type fit   — scale matches the surface: desktop/web B2B body ≥16px; PAGE-level section
-               titles ≥20px (card overline labels 11–12px uppercase are fine — they're labels);
-               dense-data chrome (chart ticks, mono SHAs/timestamps) may be 12–13px; a font was
-               chosen (not the bare default). No 14px body paragraphs on a wide screen
-□ Color=meaning — normal/OK/"보통" rows are GREY; color marks only the minority that needs
-               attention; no rainbow list; same value → same color  (§65, CL-2a)
-□ Hierarchy  — one clear primary per screen; numbers 2:1 with unit; sizes from the table
+               appropriate to the product. Beige, serif, or dark surfaces are not failures
+               by themselves; functional repetition need not be distinctive.
+□ Focal      — the selected reading, decision, or comparison attention model is clear
+□ Type fit   — approved role scale, readable measure and script, robust zoom/reflow;
+               a 14px productive desktop body is valid when these conditions hold
+□ Color=meaning — stable semantic roles and non-color cues; anomalies remain identifiable
+               even when healthy states repeat
+□ Hierarchy  — task-appropriate primary emphasis; numeric relationships follow the grammar
 □ Layout     — grouping matches the output grammar; repeatable spacing rhythm;
                gap-around-group > gap-inside
 □ States     — every data surface has empty + loading + error (not just the full state).
@@ -341,7 +337,7 @@ Other semantic tokens (`--background`, `--foreground`, `--muted`, etc.) typicall
 - **600 (semibold)**: Nav labels, emphasized captions
 - **700 (bold)**: Metric values, list titles, section headers
 
-#### Font Size by Context (USE THIS — don't guess sizes)
+#### Font Size by Context (consumer-summary examples)
 
 | Context | Number | Unit | Label | Tailwind Example |
 |---------|--------|------|-------|-----------------|
@@ -356,52 +352,24 @@ Other semantic tokens (`--background`, `--foreground`, `--muted`, etc.) typicall
 | **Status dot text** | — | — | `text-[11px] font-bold` | `<span class="text-[11px] font-bold" style="color: #22C55E">Completed</span>` |
 | **Badge label** | — | — | `text-[12px] uppercase tracking-wide` | `<span class="text-[12px] font-bold uppercase tracking-[0.05em]">ALERT</span>` |
 
-**Rule: NEVER pick a font size that's not in this table.** If unsure, use the closest context match.
+Use the approved type roles first. This table illustrates one consumer-summary scale;
+it cannot override an applicable project, script, or platform decision.
 
-#### Font Size by SURFACE — the table above is the MOBILE-APP scale (tight, dense)
+#### Type roles by surface, task, and script
 
-The context table is tuned for a **mobile app** (375–430px, dense, thumb-first). On a **desktop
-/ web B2B** screen (marketing site, admin, dashboard at ≥1024px) that scale reads *too small* —
-14px body on a 1440px canvas is the "AI made this" tell the user notices. **Pick the scale for
-the surface** (locked in `STYLESEED.md`):
+Use the approved project scale. General reading may start around 16–18px; productive
+desktop tables may use 14px, with smaller metadata where it remains readable. A 14px
+body on a wide canvas is not automatically a defect. Marketing, editing, comparison,
+and reading need different role relationships even at the same viewport width.
 
-| Role | Mobile app | **Desktop / web B2B** |
-|------|-----------|----------------------|
-| Hero display number | `text-[48px]` | `text-[64–80px]` |
-| Page / hero headline | `text-[24px]` | `text-[40–56px]` |
-| Section title | `text-[18px]` | `text-[22–28px]` |
-| Body / description | `text-[14–15px]` | **`text-[16–18px]`** |
-| Supporting / caption | `text-[12–13px]` | `text-[14–15px]` |
-| Label / overline | `text-[11–12px]` | `text-[12–13px]` |
+Scale headings, values, units, leading, and measure to the task rather than applying a
+universal desktop floor or mandatory 2:1 ratio. Compound durations and tabular values
+can keep units at the same readable scale. Do not shrink essential text just to fit.
+Verify loaded fonts, long labels, zoom, contrast, and actual viewing distance.
 
-Desktop also gets **more line-height on body** (`leading-relaxed`) and **wider max-width on text
-blocks** (`max-w-2xl`/`max-w-3xl`, never full-bleed paragraphs). When in doubt on web, go one
-step **up**, not down.
-
-**Desktop floor — the small end is where it reads "AI-made":** on a web/B2B surface, **no UI text
-below 14px.** Section labels, feature descriptions, pricing sub-text, and **footer text land at
-14–15px, not 11–13px** (that includes text on dark sections — small light-on-dark reads even
-smaller). Reserve 12px *only* for true legal fine print. If you just shipped a screen, the tell to
-check is: are the labels/footer 11–13px? Bump them a step.
-
-**Desktop APP-CHROME scale (dashboards/tools — not marketing pages):** the 40–56px marketing
-headline is wrong inside a product. Use: page h1 **22–24px** · card overline label **11–12px
-UPPERCASE** (this is a *label*, not a "section title" — the ≥20px title rule applies to
-page-level sections, not card labels) · hero KPI number **48–64px** with unit at 2:1 · table body
-**14px** (data tables may be denser than marketing chrome).
-
-**Dense-data exceptions to the 14px floor** (legit, don't "fix" these): chart axis ticks, git
-SHAs / IDs / timestamps in mono, sparkline annotations, and table metadata may be **12–13px** —
-mono + `tabular-nums` + muted color. The floor protects *reading text*, not *data chrome*.
-
-**Duration / compound values** ("7시간 20분", "1h 32m"): treat each number+unit pair at 2:1 within
-the pair, one size step down from a plain KPI (e.g. 28/14px in a half-width card, 36/18px in a
-full-width card) so two pairs fit without wrapping.
-
-**Korean / CJK:** the tracking table assumes Latin. For Korean text: **no positive letter-spacing**
-(0 to −0.01em at all sizes — wide tracking fragments 한글), the uppercase-overline style doesn't
-exist (use size/weight/color for labels instead), and prefer one family (Pretendard) with weight
-doing the work.
+Tracking values are font/script-specific starting points. CJK labels do not acquire
+Latin uppercase semantics; use meaningful size, weight, and positioning. Inspect real
+Korean/CJK text rather than treating one tracking range or family as mandatory.
 
 #### Font Pairing — choose one, don't leave the default (lock it)
 
@@ -412,8 +380,9 @@ doing the work.
 | Dev-tool / dark (Linear/Vercel) | Geist / Inter tight | Geist / Inter | slightly tighter tracking |
 | Editorial / content (Notion) | a serif display (Fraunces/Newsreader) | Inter | serif headline = personality |
 
-One display + one body family, max. A distinctive-but-legible display face is a cheap way to
-escape the "default sans everything" look. Set both in the lock and `css/fonts.css`.
+One or two families are economical defaults; additional script, code, or editorial roles
+can be valid. Preserve approved pairings and check actual reading. Serif body text and
+neutral sans systems are both valid without requiring novelty.
 
 #### IMPORTANT: Font Size Anti-Pattern
 
@@ -557,25 +526,20 @@ For components not included in the seed, check shadcn/ui registry for additional
 | Alert badge | `bg-alert-badge` | Defined by skin |
 | Border | `border-border` | Defined by skin |
 
-### When the accent collides with a semantic color
+### When action and semantic colors are similar
 
-If your locked accent is in the green family (health) → it will read as "success", red/orange
-family (commerce) → as "error/warning". Resolve it ONE way and write it in the lock:
-- **Route positive-progress through the accent** and drop the separate success green (progress
-  bars, rings, "done" moments use the accent; keep only warning + destructive as semantics), or
-- **Shift the semantic hues away from the accent** (e.g. accent teal `#0D9488` + success moved to
-  a clearly different green, rarely shown).
-Never ship two near-identical greens/reds doing different jobs. And **"completed / normal" defaults
-to NEUTRAL GREY** everywhere — success color is for a *just-happened confirmation moment*, not a
-resting state.
+Preserve the palette's action/status/category roles and inspect whether they remain
+identifiable through position, labels, shape, and contrast. A green brand does not
+require removing success or recoloring all normal states. Adjust through the approved
+palette workflow when meanings conflict; keep the user's decision explicit.
+Neutral normal states suit exception queues; repeated healthy signals can suit monitors.
 
-### Content / imagery palette (product art ≠ accent)
+### Content / imagery palette (product art ≠ action color)
 
-Product illustrations, photos-as-shapes, and material swatches may need 2–3 tones beyond the
-accent (wood, sand, charcoal…). That's legal **if you lock them**: declare `Imagery palette:
-sand #E5CBAA · oak #D9B084 · charcoal #3A2E27` in `STYLESEED.md` and reuse ONLY those tones in
-every illustration. Locked content tones ≠ a second accent; a new random hue per image = the
-violation (CL-2b still applies to UI chrome).
+Content, avatars, product photos, and illustrations may contain multiple hues. Record
+brand/media direction and stable categorical meanings where they matter; do not reduce
+all images to two or three accent-compatible tones. Check subject, role, crop, text-safe
+area, and fallback. Action, focus, and severity must stay identifiable around the media.
 
 ### No skin loaded? Derive tints, don't hand-mix
 
@@ -892,10 +856,9 @@ the skills aren't installed, follow the same loop by hand:
 
 1. **Resolve the artifact FIRST** — preserve registry configuration; only a legacy project
    without `STYLESEED.md` needs Quick Setup. Preserve approved choices before writing UI code.
-2. **Read the real rules** — DESIGN-LANGUAGE.md (ToC → 14, 18, 19, 61-63) + VISUAL-CRAFT.md
-   (§C0, §CC-9x) + the domain/page bias — not a one-shot summary.
-3. **Build** with one focal point, the surface's type scale, no icon-chip cliché, the lock's
-   accent/font/mood everywhere.
+2. **Read the compiled bundle** — consult the relevant handbook section only for an ambiguity.
+3. **Build** with task-appropriate attention, approved type and color roles, and real product
+   content. Equivalent comparison regions may repeat without a forced hero or decorative change.
 4. **Gate loop (don't skip)** — `/ss-score` (code) → if < 80, fix the top items → re-score →
    stop on pass or after three correction passes and report remaining failures. **Then, if it renders,
    `/ss-verify` (pixels)** — screenshot it, look, fix what only shows up rendered (dead

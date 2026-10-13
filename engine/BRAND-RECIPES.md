@@ -115,9 +115,10 @@ Every built-in recipe defines:
   comparison tables, and preserved loading geometry.
 - **Motion/responsive:** fast state changes; panels reflow or collapse by task priority rather
   than merely shrinking.
-- **Characteristic move:** one operational focal panel connected directly to an actionable
-  queue or evidence table.
-- **Reject:** identical KPI cards, oversized mobile typography on desktop, decorative
+- **Characteristic move:** the operational question connects directly to an actionable queue
+  or evidence table; comparable monitoring regions remain coordinated when comparison is the task.
+- **Reject:** equal emphasis that hides operational priority, unnecessary card wrappers,
+  oversized mobile typography on desktop, decorative
   gradients, hidden scope controls, or floating shadows on every panel.
 - **Lineage:** [IBM Carbon 2x Grid](https://carbondesignsystem.com/elements/2x-grid/overview/),
   [Microsoft Fluent 2](https://fluent2.microsoft.design/design-principles),
@@ -158,7 +159,7 @@ Every built-in recipe defines:
 - **Characteristic move:** a resource row or order state exposes the next operational action
   without opening a decorative card.
 - **Reject:** promotional rainbow admin UI, buried costs or constraints, ambiguous statuses,
-  equal-weight analytics tiles, or urgency dark patterns.
+  analytics tiles that hide the current task, or urgency dark patterns.
 - **Lineage:** [Shopify Polaris](https://polaris-react.shopify.com/) and StyleSeed commerce
   research. Reuse concepts, not Shopify trade dress.
 
@@ -219,8 +220,9 @@ Every built-in recipe defines:
 - **Motion/responsive:** reading position and disclosure only; narrow screens preserve hierarchy
   and source relationships rather than stacking arbitrary cards.
 - **Characteristic move:** an authoritative opening promise followed by inspectable evidence.
-- **Reject:** dashboard chrome around prose, every section in a card, overly wide measure, serif
-  everywhere, fake print texture, or interruption-heavy interactions.
+- **Reject:** dashboard chrome around prose, every section in a card, unreadable measure,
+  type choices that erase reading roles, decorative texture that impairs reading, or
+  interruption-heavy interactions. Serif body and warm paper can fit the approved system.
 - **Lineage:** StyleSeed editorial research and public-content accessibility guidance.
 
 ## `expressive-brand`
@@ -233,13 +235,14 @@ Every built-in recipe defines:
   sharp, soft, or sculptural, but nested and control shapes stay coherent.
 - **Type/icons:** distinctive display hierarchy plus readable body; commissioned or licensed
   imagery carries identity more than generic icons.
-- **Controls/collections:** one identifiable CTA, product demonstrations, outcomes, and examples;
+- **Controls/collections:** identifiable next actions within each decision region, demonstrations, outcomes, and examples;
   repeated collections earn their repetition.
 - **Motion/responsive:** cinematic choreography is allowed when native scroll remains under user
   control and reduced motion yields a complete result.
 - **Characteristic move:** one product-specific visual mechanism that could not be swapped into
   an unrelated landing page.
-- **Reject:** generic gradient headlines, equal three-card rows, fake metrics, scroll-jacking,
+- **Reject:** generic treatments that obscure the proposition, feature rows without useful proof,
+  fake metrics, scroll-jacking,
   copied campaign compositions, or motion that substitutes for a proposition.
 - **Lineage:** independent brand/campaign research; compile supplied references with
   `ss-reference` when a particular visual language matters.

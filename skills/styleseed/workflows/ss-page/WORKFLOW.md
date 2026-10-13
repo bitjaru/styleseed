@@ -79,12 +79,12 @@ export default function PageName() {
 
 7. **Post-generation verification (MANDATORY):**
    Run `/ss-score` then `/ss-verify`. Confirm:
-   - [ ] The first viewport exposes the grammar's user job and one focal point
+   - [ ] The first viewport exposes the grammar's task, reading promise, or coordinated comparison regions
    - [ ] Containment, geometry, controls, collections, density, and navigation fit the recipe
-   - [ ] One identifiable primary action; additional colors have contract-defined roles
+   - [ ] The next action is clear within each decision region; color roles are stable
    - [ ] No hardcoded hex values (all semantic tokens)
-   - [ ] Section types alternate (no two identical types in a row)
-   - [ ] Spacing uses one repeatable recipe-fit rhythm
+   - [ ] Equivalent information keeps equivalent presentation; variation follows priority or meaning
+   - [ ] Spacing uses one repeatable recipe-fit rhythm; section counts and chart types are not quotas
    - [ ] Touch targets ≥ 44px on touch surfaces; pointer-first desktop controls follow the
          approved adapter/component contract, which may allow 36–40px
    Follow the bounded build gate loops. Report actual results and remaining failures even when

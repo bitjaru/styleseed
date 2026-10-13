@@ -65,7 +65,7 @@ Review the file: **$ARGUMENTS**
 - [ ] Form inputs have associated labels
 
 ### 4. Surface Best Practices
-- [ ] No horizontal overflow
+- [ ] No accidental page-wide overflow; bounded data scrolling preserves comparison, labels, keyboard access, and a clear affordance
 - [ ] Touch-friendly spacing between interactive elements
 - [ ] Mobile safe area insets handled when the adapter requires them
 - [ ] Desktop density/type and non-web canvas/export rules follow the selected adapter
@@ -91,25 +91,34 @@ Review the file: **$ARGUMENTS**
 - [ ] Uses `ms-*/me-*` instead of `ml-*/mr-*` (logical properties)
 - [ ] Motion transitions use design tokens (`duration-[var(--duration-fast)]`)
 
-### 8. Coherence (VISUAL-CRAFT.md §C0 — the "one choice per axis" laws)
-> The biggest reason a UI reads as "AI-generated" isn't ugly parts — it's *mixed*
-> parts. Check for one deliberate system of roles, not identical values on every component.
+### 8. Coherence (VISUAL-CRAFT.md §C0 — repeatable role relationships)
+> Check the deliberate system of roles, not identical values on every component.
+> Cite an applicable task/contract failure; aesthetic preference alone is a suggestion.
 - [ ] **Recipe-bound radius scale** — surfaces, controls, compact choices, and nested elements
       follow their approved roles. For example, `calm-consumer` permits 12–20px outer surfaces
       and pill controls for true compact choices. Flag unexplained drift, not that valid pairing.
-- [ ] **One identifiable primary action** plus only the selected grammar's stable semantic,
-      categorical, or brand roles — no competing decorative emphasis hues.
-- [ ] **No emoji as UI icons** (🚗🧺⭐ as list/nav/status/category markers) — they inject many uncontrolled hues; use one line-icon set in `currentColor`.
+- [ ] **Identifiable next action within each decision region**; stable semantic,
+      categorical, editorial, brand, and content roles keep meanings distinct.
+- [ ] **Predictable functional icons** use the approved family; platform-dependent emoji
+      do not replace critical controls. User content and reactions have separate roles.
 - [ ] **Status and category colors have stable roles** under the selected grammar and palette;
       severity remains distinguishable, and a normal state does not compete with urgent states
 - [ ] **No uncontracted decorative hues** — additional colors need a documented semantic,
       categorical, editorial, or brand role
-- [ ] **One shadow language** — same light direction, same scale/tint; not some black + some tinted, some up-lit + some down-lit.
-- [ ] **One icon family / fill mode / stroke weight** across the file.
+- [ ] **Coordinated depth/material roles** — no unexplained drift; a functional boundary
+      and floating-layer shadow may coexist without a mandatory shadow-layer count.
+- [ ] **Coordinated icon family, optical weight, and state variants** — outline/filled
+      differences are valid when their meaning repeats.
 - [ ] **Nested contours** — use the recipe's nested-radius relationship; for concentric rounded
       rectangles, `max(0, outer − padding)` is a useful default, not a rule for every shape
 - [ ] **Consistent control heights** — buttons, inputs, selects share a height set (e.g. 40px).
 - [ ] Errors/states never rely on color alone (icon + text too).
+- [ ] Equivalent data and collection items keep equivalent presentation; no forced variety,
+      hero, section count, sparkline, or stat footer without a task/data reason.
+- [ ] Type, surface, and media fit the approved context; serif, warm paper, structural black,
+      and repeated functional controls are not defects by themselves.
+- [ ] Chart labels, units, periods, and baselines are nearby or clearly shared; no invented data.
+- [ ] Approved project motion is respected; a named seed is not required or proof of quality.
 
 ## Output Format
 

@@ -1,8 +1,10 @@
 # StyleSeed — Page-Type Playbooks
 
-The second axis of design judgment (see `APP-PLAYBOOKS.md` for the first). The 74
-rules in `DESIGN-LANGUAGE.md` always apply; this file says **what a given kind of
-screen needs to get right**, regardless of domain.
+The second axis of design judgment (see `APP-PLAYBOOKS.md` for the first). These
+playbooks describe task requirements and contextual starting points, not universal
+component, geometry, or font-size mandates. `PRODUCT-PRINCIPLES.md` owns authority.
+Use the selected grammar and approved project decisions to interpret the defaults;
+`DESIGN-LANGUAGE.md` examples cannot override them.
 
 > **Domain × page type = the actual call.** A fintech *dashboard* and a social
 > *dashboard* differ by domain; a *dashboard* and a *form* differ by page type.
@@ -16,30 +18,32 @@ For each type: **the job**, **structure**, **hierarchy**, **signature patterns**
 ## Dashboard / Home / Overview
 
 - **Job:** answer "how are things?" in 3 seconds, then let the user drill down.
-- **Structure:** information pyramid — one hero metric → a small KPI set →
-  supporting list/chart. Vary section types (Rule 14/61): never four identical
-  cards in a row.
-- **Hierarchy:** density increases as you scroll. Top = 48px hero number; bottom
-  = 13–14px detailed rows.
-- **Patterns:** HeroCard, KPI grid (mixed: trend / progress / comparison),
-  ChartCard, RankedList, BriefingCarousel for alerts.
-- **Anti-patterns:** wall of identical KPIs, no clear primary metric, charts with
-  6 legend colors, everything the same visual weight.
-- **Mobile:** single column, hero first, horizontal-scroll carousels for KPI sets,
-  `mx-6` single cards / `px-6` grids.
+- **Structure:** expose the state that supports the next decision, then its evidence
+  and drill-down. A personal summary may lead with a metric; operations may lead with
+  a queue, and monitoring with a timeline or comparable panels.
+- **Hierarchy:** use the grammar's attention model and approved type/density tokens.
+  Do not require a hero number or progressive density when comparison is the task.
+- **Patterns:** summary, actionable queue, trend, comparison panel, evidence table.
+  Choose project-native components rather than mandatory StyleSeed card names.
+- **Anti-patterns:** decorative KPI walls, unclear scope or freshness, charts without
+  a decision, and inconsistent emphasis between comparable values.
+- **Mobile:** preserve task priority, filters, and access to comparison evidence;
+  reflow using the project's gutters and input-mode scale.
 
 ## Form / Create / Edit
 
 - **Job:** get accurate input with the least friction and the most confidence.
-- **Structure:** **single column**, logical grouping into `SectionCard`s, one
-  clear primary action (bottom or sticky). Labels **above** fields, not beside.
+- **Structure:** logical field groups with explicit labels and a clear completion
+  action. Single-column flow is a useful default; related short fields may share a
+  row when order, zoom, and narrow-screen reflow remain clear. Use the selected
+  recipe's containment: public-service forms use flat sections, not forced cards.
 - **Hierarchy:** the field you're on > the next field > everything else. Primary
   action visually dominant; secondary/cancel quiet.
-- **Patterns:** labeled inputs, inline validation (validate on blur, not on every
-  keystroke), grouped sections, sticky save bar, `wiggle` + helper text on error,
-  clear required/optional marking.
-- **Anti-patterns:** multi-column forms (eye zig-zags), placeholder-as-label,
-  validating before the user finishes, two primary buttons, error states with no
+- **Patterns:** labeled inputs, validation timed to the input task, grouped sections,
+  explicit save state, associated error/help text, clear required/optional marking.
+  Sticky actions and error motion are optional, never required for comprehension.
+- **Anti-patterns:** ambiguous field order, placeholder-as-label,
+  validating before the user finishes, competing completion actions in one decision region, error states with no
   recovery guidance, disabled submit with no explanation.
 - **Mobile:** full-width fields, ≥44px touch targets, numeric keyboards for number
   fields, sticky primary above the keyboard.
@@ -47,39 +51,43 @@ For each type: **the job**, **structure**, **hierarchy**, **signature patterns**
 ## Landing / Marketing / Home (public)
 
 - **Job:** in one screen, say what it is + why it matters + one next action.
-- **Structure:** hero (headline + subhead + single primary CTA) → proof
-  (features/social proof) → CTA again. One conversion goal per page.
-- **Hierarchy:** headline dominates; CTA is the single brightest element; supporting
-  text recedes. The accent belongs to the CTA.
-- **Patterns:** hero with one CTA, feature grid, social proof (logos/stats/quotes),
-  before/after, comparison, closing CTA.
-- **Motion — this is the ONE surface where the Cinematic tier applies (DESIGN-LANGUAGE §43).**
-  Unlike an app/dashboard, a brand page *should* use motion as craft: **scroll-LINKED reveals,
+- **Structure:** establish a proposition with relevant evidence and a clear next step.
+  Image-led, type-led, editorial, and demonstration-led openings are alternatives.
+  Choose sections and order by the visitor's questions, not a fixed hero/proof/CTA template.
+- **Hierarchy:** make the reading promise and next action perceptually clear through
+  position, scale, imagery, contrast, and spacing. The headline need not be largest,
+  nor the CTA the brightest element; a quiet visible link can fit the task.
+- **Patterns:** product media, demonstrations, meaningful comparisons, sourced proof,
+  and local or closing actions. Use real content; no feature-grid or repeated-CTA quota.
+- **Motion — expressive choreography is optional when it serves the proposition.**
+  Possible techniques include **scroll-LINKED reveals,
   pinned/sticky sections, sequential "the product assembles as you scroll" choreography, subtle
   parallax, a 3D/tilt hero or showcase card, an animated gradient/mesh or video background, rich
-  hover** (magnetic/glow/lift). This is how family.co / stripe.com / linear.app read premium —
-  don't apply dashboard restraint here. Guardrails still hold: purposeful (not jitter), 60fps
+  hover** (magnetic/glow/lift). A static brand page is also valid.
+  Guardrails still hold: purposeful (not jitter), target smooth rendering
   (`transform`/`opacity` only), never blocks the first read or the CTA/LCP, `prefers-reduced-motion`
   leaves a complete static page, one motion language.
 - **Anti-patterns:** multiple competing CTAs, wall of text, every section the same rhythm,
   autoplaying *audio*, motion that **delays the headline or hides content until you scroll**,
-  **scroll-JACKING** (hijacking scroll speed / trapping — different from scroll-linked, which is
-  fine), six accent colors, no reduced-motion fallback.
-- **Mobile:** stack everything, keep the CTA reachable, don't shrink the headline
-  into mush.
+  **scroll-JACKING** (hijacking scroll speed / trapping — different from scroll-linked),
+  unstable color roles, no reduced-motion fallback. Purposeful repetition is valid.
+- **Mobile:** recompose by task priority, preserving the proposition, media crop,
+  evidence, and reachable actions. Stack or regroup where useful; preserve comparison
+  with legible columns or a bounded data region when needed. Test navigation and zoom.
 
 ## Detail / Profile / Item
 
-- **Job:** show one thing deeply, with its primary action obvious.
+- **Job:** show one thing deeply, with its next action clear when the task calls for one.
 - **Structure:** identity header (title/image/status) → key facts → body/sections →
-  one primary action (often sticky on mobile).
-- **Hierarchy:** the subject's name/title and its primary action win. Metadata is
-  tertiary.
+  a clear next action within the relevant decision region (optionally sticky on mobile).
+- **Hierarchy:** the subject and its evidence lead. In reading contexts, save/share
+  and other controls recede; in commerce, the commitment action stays easy to find.
 - **Patterns:** hero/identity block, key-value facts, tabbed or sectioned body,
   sticky primary action, related items rail, status indicators.
 - **Anti-patterns:** burying the primary action, equal weight on everything, no
   clear "what is this," metadata louder than the subject.
-- **Mobile:** sticky action bar, collapse long sections, single column.
+- **Mobile:** preserve subject, evidence, and action; use a sticky action or disclosure
+  only when useful. Keep important comparison context and terms accessible.
 
 ## List / Index / Browse / Search
 
@@ -99,13 +107,13 @@ For each type: **the job**, **structure**, **hierarchy**, **signature patterns**
 ## Settings / Account / Preferences
 
 - **Job:** let the user find and change one setting with confidence, safely.
-- **Structure:** grouped `SectionCard`s by topic (profile / notifications /
+- **Structure:** grouped sections by topic (profile / notifications /
   billing / danger), each setting a labeled row with its control on the trailing
   edge. Destructive actions isolated and clearly marked.
 - **Hierarchy:** flat and scannable — settings are equal-weight within a group;
   group titles orient. Danger zone visually separated.
-- **Patterns:** toggle rows, select rows, account header, billing card, **danger
-  zone** (the one place a functional border + destructive tone is right),
+- **Patterns:** toggle rows, select rows, account header, billing summary, **danger
+  zone** (clearly distinguish destructive actions using the approved system),
   inline-save or explicit-save (be consistent).
 - **Anti-patterns:** destructive actions next to benign ones, unclear save model,
   settings with no labels, toggles whose state is ambiguous, no confirmation on
@@ -132,14 +140,8 @@ For each type: **the job**, **structure**, **hierarchy**, **signature patterns**
 
 ## Resolving conflicts
 
-When a domain playbook, a page-type playbook, and a Golden Rule seem to pull
-different directions, resolve in this order:
-
-1. **Golden Rules** (`DESIGN-LANGUAGE.md` §Prohibition) — never violated.
-2. **Page-type job** — the screen must do its job (a form must be fillable; a
-   landing must convert).
-3. **Domain bias** — within the above, lean into the domain's DNA.
-
-Example: a fintech (restraint) onboarding (rewards) → keep the palette restrained
-(domain), but a single celebratory `confetti-pop` on first deposit is fine
-(page-type job: reward the first win) — as long as no Golden Rule breaks.
+Use `PRODUCT-PRINCIPLES.md`. Preserve core floors, the selected grammar's job, and
+adapter constraints. Component names, sizes, animation examples, and layouts here
+are defaults; approved project decisions and the selected recipe specialize them.
+If two applicable approved decisions disagree, report the conflict rather than
+silently choosing one. A page default is not permission to replace the project system.

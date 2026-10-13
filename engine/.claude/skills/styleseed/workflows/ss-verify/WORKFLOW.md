@@ -28,14 +28,14 @@ compliance claim. Judge pixels against that compiled method.
 A lock value cannot excuse a core failure, and a recipe/profile cannot replace the output grammar.
 
 `/ss-score` reads the **code** and scores it. But some of the worst "AI-made" tells never appear
-in source — they only exist in **pixels**: a hero that doesn't actually dominate, a lower third
+in source — they only exist in **pixels**: a required priority that is hard to locate, a lower third
 of dead whitespace, cramped cards, a web font that silently failed to load and fell back to
-Times, two colors that *look* like two accents once rendered, text that's unreadable on its real
+Times, competing emphasis that hides the next action, text that's unreadable on its real
 background. A human sees these in half a second; a code-reading gate misses all of them.
 
 `/ss-verify` closes that gap: it **renders the UI, screenshots it, and you look at the image** —
 then score the same StyleSeed gate against what you see, fix, and re-render. This is the gate
-that most predicts whether a real user will say "this looks designed."
+that supplies rendered evidence; it does not establish human design acceptance.
 
 During a build, run it as the final gate after `/ss-score`. A direct screenshot/pixel inspection
 does not require a new code-score loop; report code evidence as not checked if unavailable.
@@ -111,29 +111,29 @@ Look at the image and run the StyleSeed gate **perceptually**. These are the che
 eyes, not source:
 
 ```
-□ Squint test    — blur your focus / imagine it at 50%. Does it still read "AI-generated"?
-                   (bland gradient, pill button + generic sans, icon-chip row, even flat grid) → FAIL
-□ Focal          — does ONE element actually dominate at a glance? If your eye lands nowhere,
-                   or on an all-even grid, the focal point failed regardless of what code intended
+□ Attention      — can the user locate the reading promise, decision, or comparable regions?
+                   Equivalent panels may share weight. Name a hidden priority or task failure;
+                   an even grid, gradient, serif, or pill shape alone is not a failure.
 □ Balance        — dead whitespace (a lower third of empty), or cramped/colliding elements?
                    Is the visual weight distributed, or all top-left / all-centered?
 □ Fonts loaded   — is the intended typeface actually rendering, or a Times/Arial fallback?
                    (a silent font-load fail is a top "looks cheap" tell — invisible in code)
-□ One accent (seen) — count the hues you actually SEE. Two things competing for "the color" = FAIL,
-                   even if the code named one token
+□ Color roles    — are actions, status, categories, brand, and content roles distinguishable?
+                   Judge conflicting meanings and emphasis, not the number of visible hues.
 □ Contrast (seen) — any text you have to strain to read on its real rendered background?
                    Light-grey-on-white labels, low-contrast on a colored/照片 panel
 □ Rhythm/optics  — are edges aligned, gaps consistent, cards optically even? Off-by-a-few-px
                    misalignments that read as "sloppy" but pass a code check
-□ Type scale fit — on desktop, does the body text look too small for the canvas? does the hero
-                   feel undersized? (the surface-scale tell, judged by eye)
+□ Type scale fit — is the approved role scale readable for the task, script, distance, and zoom?
+                   Check actual reading and hierarchy, not a universal desktop size or hero quota.
 □ Grammar fit   — does the screen visually serve the selected grammar's user job, attention
                    model, composition, density, action hierarchy, and characteristic tells?
 □ Recipe fit    — do geometry, containment, controls, collections, navigation, density, and
                    motion visibly match the selected recipe rather than the old universal soft-card look?
-                   Would the same layout still appear if the product changed? If yes, FAIL
-□ Motion (if any) — capture before/after or a mid-transition frame; is it purposeful, or the
-                   "cheap fade/bounce on everything" tell? does it block the first read?
+                   Reusable functional patterns may fit multiple products; verify real content
+                   and appropriate project decisions rather than demanding a unique layout.
+□ Motion (if any) — observe the transition and reduced-motion result; does it explain state or
+                   sequence without blocking reading or action? Still frames cannot prove timing.
 ```
 
 ## Step 3 — Render states or sequence variants too

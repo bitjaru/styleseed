@@ -55,7 +55,8 @@ accessibility.
 ## Step 3 — Build with design judgment
 
 - Make the grammar's user job and primary decision visible in the first viewport.
-- Establish one focal point; avoid equal-weight template grids.
+- Establish task-appropriate attention: a primary decision, reading promise, or coordinated
+  comparison regions. Equivalent panels may share weight; do not add novelty to break repetition.
 - Use the grammar's composition, density, type, color, surface, imagery/data, action, state,
   responsive, and motion contracts.
 - Use the recipe's containment, geometry, control, collection, and navigation morphology.

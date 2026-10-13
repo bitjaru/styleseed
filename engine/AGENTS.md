@@ -63,7 +63,8 @@ containment, controls, and collection patterns without cloning the companies in 
 ## Core invariants
 
 - One coherent system for radius, spacing, elevation, type, icons, color roles, imagery, and motion.
-- One focal point and one identifiable primary action.
+- Task-appropriate attention and identifiable primary actions where the task has them;
+  comparison and monitoring may need multiple coordinated regions rather than one hero.
 - Additional color requires a stable semantic, categorical, editorial, data, or brand role.
 - Semantic tokens replace component-local hardcoded colors.
 - Spacing and proximity create repeatable grouping.
@@ -71,8 +72,8 @@ containment, controls, and collection patterns without cloning the companies in 
 - Data surfaces have useful loading, empty, and error states.
 - Focus, contrast, targets, labels, reduced motion, and honest consent remain intact.
 - Motion fits the artifact and never delays comprehension or action.
-- Distinctiveness comes from product content and the selected grammar, never copied demos,
-  generic indigo, repeated icon chips, emoji chrome, or template uniformity.
+- Product content and the selected grammar guide expression; predictable functional repetition
+  is valid. Do not introduce novelty merely to avoid looking like a template.
 
 The design lock persists valid selections. It cannot waive these invariants or invent a new
 palette mode.
@@ -162,7 +163,7 @@ report remaining failures; a plain scoring/review request does not authorize edi
 ### Pixel gate
 
 For every renderable artifact, `$styleseed verify` must inspect actual output at the adapter's required
-viewports, frames, pages, and states. Check focal dominance, loaded type, balance, optical rhythm,
+viewports, frames, pages, and states. Check task-appropriate attention, loaded type, balance, optical rhythm,
 crop/safe zones, contrast, responsive transformation, and grammar fit. Re-render after fixes.
 Never claim a visual pass without seeing the rendered artifact.
 

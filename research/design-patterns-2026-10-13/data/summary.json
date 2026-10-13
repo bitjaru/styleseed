@@ -1,0 +1,52 @@
+{
+  "records": 225,
+  "by_source": {
+    "Awwwards": 124,
+    "CSSDA": 21,
+    "Siteinspire": 40,
+    "Recent": 20,
+    "Lazyweb": 20
+  },
+  "sheets_reviewed": 21,
+  "detailed_observation_cards": 65,
+  "known_duplicate_groups": [
+    [
+      "AW020",
+      "CD010"
+    ],
+    [
+      "AW024",
+      "SI008"
+    ],
+    [
+      "AW064",
+      "SI023"
+    ],
+    [
+      "AW091",
+      "SI035"
+    ],
+    [
+      "AW106",
+      "RE013"
+    ],
+    [
+      "AW108",
+      "RE014"
+    ],
+    [
+      "LW010",
+      "LW015"
+    ]
+  ],
+  "records_after_known_dedup": 218,
+  "dedup_limit": "Same-name cross-gallery entries and one exact duplicate image merged. Creator independence and all domains not exhaustively verified; two Shopify Editions are separate artifacts, same brand.",
+  "product_interface_controls": 11,
+  "live_content_sites": 3,
+  "live_attempts_not_completed": [
+    "SI024",
+    "CD004"
+  ],
+  "pattern_candidates": 12,
+  "activation": "none"
+}

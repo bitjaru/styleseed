@@ -134,7 +134,7 @@ quality fail in different ways:
 
 - `ss-score` reads implementation evidence: tokens, hierarchy, states, semantics, coherence,
   and characteristic grammar tells.
-- `ss-verify` renders the result and checks pixels: actual focal dominance, type loading,
+- `ss-verify` renders the result and checks pixels: task-appropriate attention, type loading,
   balance, optical rhythm, responsive behavior, and state rendering.
 
 Both gates return to the build loop. Interactive Studio runs add a temporal gate for actual

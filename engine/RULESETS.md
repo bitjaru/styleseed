@@ -48,17 +48,19 @@ Every built-in or compiled grammar defines these twelve axes:
   progressive detail. Mobile-first, thumb-reachable, explicit bottom navigation where needed.
 - **Density/type:** comfortable to airy; friendly sans; large plain-language numbers; short copy.
 - **Color/surface:** calm neutral base, one brand action color, semantic colors only for real
-  status. Soft grouped surfaces are common but a card is used only when it groups a decision.
+  status. Brand/content and category palettes can have separate stable roles. Soft grouped
+  surfaces are common but a card is used only when it groups a decision.
 - **Feedback:** immediate, reassuring, reversible; money and health values do not animate
   theatrically.
-- **Reject:** every service as equal card, promotional clutter above state, rainbow categories,
+- **Reject:** equal service cards that obscure priority, promotional clutter above state,
+  category colors without stable meaning,
   cute language in serious moments, or copying Toss component-for-component.
 
 ### `operations-console`
 
 - **Job:** scan system or business state, compare changes, find exceptions, act efficiently.
-- **Attention:** one operational focal panel; supporting KPIs form hierarchy rather than a
-  uniform card wall.
+- **Attention:** prioritize the current operational question or exception. Comparable regions
+  may share weight when comparison is the task; decorative KPI tiles must not obscure action.
 - **Composition:** persistent navigation → scope/time controls → focal trend or queue →
   comparable metrics → actionable table/list. Detail lives below or on demand.
 - **Density/type:** comfortable to compact; neutral grotesk; tabular numerals; labels may be
@@ -67,13 +69,14 @@ Every built-in or compiled grammar defines these twelve axes:
   semantics. Tone, alignment, and grouping carry more hierarchy than decoration.
 - **Feedback:** filters and mutations respond instantly; loading preserves layout; bulk action
   consequences are explicit.
-- **Reject:** same-weight KPI tiles everywhere, decorative gradients, mobile-tight type on a
+- **Reject:** KPI tiles that hide the operational question, decoration that impairs scanning, mobile-tight type on a
   1440px canvas, or charts without a decision they support.
 
 ### `technical-instrument`
 
 - **Job:** observe live state, isolate anomalies, and diagnose a system.
-- **Attention:** current incident, trace, monitor, or performance state dominates.
+- **Attention:** make the current incident or diagnostic question easy to locate; a monitor
+  overview may give comparable regions equal weight while keeping anomalies distinguishable.
 - **Composition:** stable navigation and scope → live status/timeline → dense evidence table or
   trace → drill-down. Group by diagnostic relationship, not visual symmetry.
 - **Density/type:** compact to dense; sans for UI, mono only for identifiers, timestamps, code,
@@ -96,7 +99,7 @@ Every built-in or compiled grammar defines these twelve axes:
   accent for links and editorial signals. Whitespace and type replace gratuitous cards.
 - **Feedback:** reading position, save, share, and footnotes are calm and unobtrusive.
 - **Reject:** forcing all content into cards, app-dashboard chrome around prose, overly wide
-  measures, serif everywhere, or interaction patterns that interrupt reading.
+  measures, type choices that erase reading roles, or interaction patterns that interrupt reading.
 
 ### `commerce-conversion`
 
@@ -138,10 +141,10 @@ Every built-in or compiled grammar defines these twelve axes:
   Section forms vary to create rhythm; repetition is deliberate, not template filler.
 - **Density/type:** airy with confident display hierarchy; body copy remains readable.
 - **Color/surface:** wider brand palette and expressive media are allowed when roles remain
-  coherent and one action is primary.
+  coherent and the next action is clear within each decision region.
 - **Feedback:** cinematic motion may support sequence, but first read and CTA work without it;
   reduced motion yields a complete page.
-- **Reject:** generic gradient headline, equal three-card feature rows, fake metrics, copied
+- **Reject:** generic presentation that hides the proposition, feature rows without useful proof, fake metrics, copied
   demo visuals, scroll-jacking, or motion used as a substitute for a proposition.
 
 ### `sequential-story`
@@ -150,7 +153,8 @@ Every built-in or compiled grammar defines these twelve axes:
 - **Attention:** slide/frame one earns the next gesture; each following frame has one dominant
   message and a visible place in the sequence.
 - **Composition:** hook → context/why → evidence or mechanism → useful action → reframe/close.
-  Alternate big type, evidence, image, and utility frames so the sequence has rhythm.
+  Change frame composition when the message or evidence role changes; comparable steps
+  can repeat a layout to preserve orientation.
 - **Density/type:** designed for the adapter's viewing distance and dwell time; one message per
   frame; body copy is bounded and never shrunk to rescue an overloaded slide.
 - **Color/surface:** project grammar and brand tokens carry across all frames; emphasis roles
@@ -159,8 +163,8 @@ Every built-in or compiled grammar defines these twelve axes:
   replaced during deterministic rendering.
 - **Feedback/navigation:** folio, progress, swipe cue, and CTA fit the publishing surface without
   occupying its unsafe UI zones.
-- **Reject:** ten identical cards, a weak explanatory cover, one composition repeated on every
-  frame, content that works only as a caption, missing source attribution, or platform crop loss.
+- **Reject:** repeated frames without meaningful progression, a weak explanatory cover,
+  content that works only as a caption, missing source attribution, or platform crop loss.
 
 ## Promotion rule
 

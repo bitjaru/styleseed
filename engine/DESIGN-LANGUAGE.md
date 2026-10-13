@@ -29,10 +29,10 @@ adapter contracts override contextual recipes, but never the core invariants.
 | 15 | [Card Division](#15-card-internal-division-rules) | border-t between chart and stats |
 | 16 | [Title Margins](#16-title-margin-rules) | Varies by content type |
 | 17 | [Chart Style](#17-chart-style-rules) | Area/bar chart styling |
-| 18 | [**Prohibition Rules**](#18-prohibition-rules-absolute-donts) | **30+ "never do this" rules** |
+| 18 | [**Prohibition Rules**](#18-prohibition-rules-absolute-donts) | **Core floors and contextual defaults** |
 | 19 | [**Page Checklist**](#19-new-page-creation-checklist) | **Step-by-step build guide** |
 | 20 | [Information Pyramid](#20-information-pyramid-structure) | Top = important, bottom = detail |
-| 21 | [Data Density](#21-data-density-rules) | Max 4 items per card |
+| 21 | [Data Density](#21-data-density-rules) | Density by task and viewport |
 
 ### Part 2: Extended Rules
 | # | Rule | Key Point |
@@ -42,7 +42,7 @@ adapter contracts override contextual recipes, but never the core invariants.
 | 30 | [Empty/Error States](#30-empty-state--error-state-rules) | Suggest next action |
 | 34 | [Microcopy Tone](#34-microcopy-tone-guide) | Casual, active voice, positive |
 | 38 | [Chart Selection](#38-chart-type-selection-guide) | When to use which chart |
-| 40 | [Applying to Projects](#40-design-system-application-guide) | Change brand color, keep structure |
+| 40 | [Applying to Projects](#40-design-system-application-guide) | Preserve intent; adapt the structure |
 | 45 | [Dark Mode](#45-dark-mode-guide) | Card brighter than background |
 | 46 | [Button Design](#46-button-design-rules) | 7 variants, 4 sizes |
 | 50 | [Dark Pattern Prevention](#50-dark-pattern-prevention-rules) | No forced sheets, always dismissable |
@@ -51,20 +51,20 @@ adapter contracts override contextual recipes, but never the core invariants.
 ### Part 3: Page Composition & Visual Rhythm
 | # | Rule | Key Point |
 |---|------|-----------|
-| 61 | [**Visual Rhythm**](#61-visual-rhythm--breaking-monotony) | **Never repeat same section type** |
-| 62 | [**KPI Card Variation**](#62-kpi-card-variation--the-4-card-rule) | **Vary secondary elements** |
+| 61 | [**Visual Rhythm**](#61-visual-rhythm--breaking-monotony) | **Repeat by meaning; vary by priority** |
+| 62 | [**KPI Comparison**](#62-kpi-comparison-and-meaning) | **Real baselines and comparable encodings** |
 | 63 | [**Composition Recipes**](#63-section-composition-recipes) | **SaaS, e-commerce, fintech, analytics** |
-| 64 | [Element Diversity](#64-element-diversity-within-cards) | Mix content types across page |
-| 65 | [Accent Distribution](#65-color-accent-distribution) | Scarcity rule |
-| 66 | [Card Size Variation](#66-card-size-variation) | Skyline rule |
-| 67 | [Progressive Density](#67-progressive-information-density) | Font size decreases down page |
-| 68 | [Min Section Count](#68-empty-page-prevention) | Min 4, max 7 sections |
-| 69 | [Chart + Context](#69-chart--context-pairing) | Never chart alone |
+| 64 | [Element Choice](#64-element-choice-by-data-question) | Match the data question |
+| 65 | [Accent Distribution](#65-color-accent-distribution) | Stable color roles |
+| 66 | [Card Size Variation](#66-card-size-variation) | Size by content and comparison |
+| 67 | [Progressive Density](#67-progressive-information-density) | Task-driven density |
+| 68 | [Task Completeness](#68-task-completeness-and-empty-regions) | Required questions, actions, and states |
+| 69 | [Chart + Context](#69-chart--context-pairing) | Clear interpretation context |
 | 70 | [Form & Input Rules](#70-form--input-rules) | Labels above, 40px height, errors never color-alone |
 | 71 | [State Rules](#71-state-rules-empty--loading--error--success) | Empty / loading / error / success on every data surface |
 | 72 | [Accessibility Rules](#72-accessibility-rules-non-negotiable) | Contrast floors, focus rings, 44px targets |
 | 73 | [Responsive & Mobile](#73-responsive--mobile-rules) | Mobile-first, touch, safe areas |
-| 74 | [Rule Priority & Conflict](#74-rule-priority--conflict-resolution) | Golden Rules > page-type > domain bias |
+| 74 | [Rule Priority & Conflict](#74-rule-priority--conflict-resolution) | Product constitution and applicability |
 
 > **Start here:** Rules 14, 18, 19, 61-63 are the most critical for page construction.
 
@@ -699,162 +699,60 @@ The gap between title and content varies by content type:
 
 ## 18. Prohibition Rules (Absolute Don'ts)
 
-### Key Color Overuse Forbidden
-```
-✗ Painting entire card background with bg-brand
-✗ Key color background + white text large-area card
-✗ Key color gradient background
-✗ Using key color across 2+ sections simultaneously at large scale
-```
-Key color is for **small elements only**: icon badges (10% opacity), progress fill, selected dots, active nav, badge pills.
-Card backgrounds are **always `bg-card` (white)** or `bg-surface-subtle`.
+The binding prohibitions concern broken meaning, operability, or the approved
+contract: fabricated data, color-only status, hidden essential actions, inaccessible
+controls, and unexplained role drift. They do not ban an aesthetic by name.
 
-### Pure Black Forbidden
-```
-✗ #000000, text-black, bg-black
-✗ No pure black usage under any circumstances
-```
-Darkest color: `#2A2A2A` (strong), default text: `#3C3C3C` (primary).
+The original consumer-dashboard examples use quiet neutrals, soft cards, and a small
+accent allocation. Their hex values, section gaps, card shapes, number ratios, and
+small status dots are contextual examples, not universal prohibitions. Structural
+black, branded backgrounds, flat reading flow, selectable rows, native form controls,
+and purposeful overlays are valid when supported by the selected contract.
 
-### Ad-hoc Components Forbidden
-```
-✗ Creating new patterns not in the seed
-✗ CTA buttons FIXED to the bottom of the viewport on a dashboard (a full-width button INLINE in the scroll flow is fine — this bans the floating/fixed bottom bar, not width)
-✗ Card overlapping on top of card
-✗ Dropdown selectors placed inside cards
-```
-If a new component is needed, **compose it from one of the 4 section types (A/B/C/D)**.
-If existing pattern combinations cannot solve it, confirm with the user first.
-
-### Layout Forbidden
-```
-✗ Placing content directly outside cards (text, metrics, lists, etc.)
-✗ Placing dividers (hr, border-b, Separator) between sections
-✗ Changing section gap to anything other than space-y-6
-✗ Using left/right margin/padding other than mx-6/px-6
-✗ Changing card padding to anything other than p-6/p-8
-✗ Changing card radius to anything other than rounded-2xl
-✗ Placing floating buttons above bottom nav
-```
-**Section separation is achieved through cards + spacing (space-y-6) only.**
-The difference between page background (#FAFAFA) and card background (#FFFFFF) serves as a natural divider.
-Dividers (border-t) are used **only inside cards** to separate chart from stats.
-
-### Selection UI Forbidden
-```
-✗ Select dropdown (▼ arrow) inside cards
-✗ Radio buttons / checkbox filters
-✗ Expressing 5+ options as a toggle (use a separate page)
-✗ Placing toggles in card content area (header right only)
-```
-
-### Typography Forbidden
-```
-✗ Using grays outside the defined 5-level grayscale
-✗ Displaying numbers and units at the same size
-✗ Displaying numbers without units (context is lost)
-✗ Omitting uppercase + tracking on labels
-```
-
-### Shadow Forbidden
-```
-✗ Strong shadows (opacity 15% or above)
-✗ Colored shadows (adding color in rgba)
-✗ Different shadow levels per card
-```
+Reuse project components where they fit. Compose or extend them for an authorized task
+when a needed pattern is missing; a fixed set of four section types cannot cover every
+product. Surface genuinely unresolved design decisions rather than silently replacing
+the system. Preserve labels, contrast, focus, keyboard access, and safe recovery.
 
 ---
 
 ## 19. New Page Creation Checklist
 
-When building a new page from scratch, follow this order:
-
-### Step 1: Page Skeleton
-```tsx
-<PageShell>           {/* bg-surface-page, max-w-[430px] */}
-  <TopBar />          {/* logo + actions + date */}
-  <PageContent>       {/* pb-24 space-y-6 */}
-    {/* Sections */}
-  </PageContent>
-  <BottomNav />       {/* fixed bottom */}
-</PageShell>
-```
-
-### Step 2: Choose One of 4 Types for Each Section
-| Data Type | Recommended Section Type |
-|-----------|------------------------|
-| 1 key metric (large number) | **Type D** Hero card |
-| 2-4 key metrics | **Type B** Grid (grid-cols-2) |
-| Chart + supporting data | **Type A** Full card (border-t divider) |
-| List (orders, rankings, etc.) | **Type A** Full card (space-y-3 list) |
-| Multiple alerts/briefings | **Type C** Carousel (w-[280px]) |
-| Status summary (donut, etc.) | **Type A** Full card (chart + legend) |
-
-### Step 3: Internal Structure for Each Card
-```
-1. Header: [icon badge] + [label 12px uppercase]      (gap-2, mb-3)
-2. Metric: [large number] + [small unit]               (2:1 ratio, ms-0.5)
-3. Supporting: [trend % + icon] or [gauge]             (mb-3)
-4. (Optional) divider + bottom stats grid
-```
-
-### Step 4: Color Check
-- [ ] Is the key color used only for active/selected states?
-- [ ] Are all card backgrounds white (bg-card)?
-- [ ] Do all text elements use only 5-level gray tokens?
-- [ ] Are status colors limited to dot + text (11px) or smaller?
-- [ ] Is there no pure black (#000)?
-
-### Step 5: Layout Check
-- [ ] Are all section gaps space-y-6?
-- [ ] Single cards use mx-6, multiple use px-6?
-- [ ] Card padding is p-6 (hero only p-8)?
-- [ ] Card radius is rounded-2xl?
-- [ ] No overlapping elements?
+1. Resolve the selected artifact's grammar, adapter, page, recipe, and approved tokens.
+2. Name the user's question, comparison, reading promise, or action. Put necessary
+   evidence and controls where that task needs them.
+3. Choose project-native components and containment. Cards, rows, flat sections,
+   images, canvases, and shared panels are options, not a fixed four-type menu.
+4. Check stable color/type/spacing roles and interpretation context. A media-led page
+   and a type-led page can satisfy the same job through different means.
+5. Preserve equivalent presentation in comparisons and collections; change composition
+   where priority or meaning changes, not to force variety.
+6. Implement the owned data/interaction states, keyboard/focus/contrast requirements,
+   responsive transformation, and complete reduced motion.
+7. Run the code and rendered gates. Report actual evidence and unresolved decisions;
+   passing checks does not establish human design acceptance.
 
 ---
 
 ## 20. Information Pyramid Structure
 
-The page follows a **pyramid structure with importance decreasing from top to bottom**:
-
-```
-▲ Hero (48px) — The single most important metric
-▲▲ KPI grid (36px) — 2-4 key metrics
-▲▲▲ Status summary (donut/gauge) — Current situation
-▲▲▲▲ Alerts/briefings — Items requiring attention
-▲▲▲▲▲ Charts — Trends/changes
-▲▲▲▲▲▲ Lists — Detailed data
-```
-
-Rules:
-- **First screen (above the fold)**: only hero + KPI grid should be visible
-- Number sizes decrease going down (48 → 36 → 24 → 18 → 14px)
-- Information density increases going down (1 → 4 → many)
+A summary → supporting evidence → detail pyramid is useful for some personal overviews.
+It is not mandatory for every screen: an exception queue, search result, document,
+or live monitor may lead with a different region. Keep critical evidence available
+without forcing users to hunt below a decorative hero. See §§63 and 67 for alternatives.
 
 ---
 
 ## 21. Data Density Rules
 
-### Data Items per Card
-| Context | Max Items | Reason |
-|---------|-----------|--------|
-| KPI grid | **4** (2x2) | Maximum for at-a-glance comparison |
-| Donut legend | **4** | Limit of distinguishable colors |
-| List (orders) | **3-4** | Amount visible without scrolling |
-| Rankings | **4** | Only top items + my position needed |
-| Bottom stats | **3-4** (grid-cols-3/4) | Amount that fits in one row |
-| Carousel cards | **3+** | Flexible since scrollable |
+Choose visible items from the decision, available width, labels, and input mode.
+There is no universal four-item card limit. Small multiples and dense rows are valid
+when they preserve comparison and operability; split or disclose details when they
+impair the current task. Show scope and access to omitted items.
 
-### Things That Should NOT Go Inside Cards
-```
-✗ CTA buttons (Order, View More, etc.)
-✗ Input fields (input, textarea, select)
-✗ Images/illustrations
-✗ 5 or more list items
-✗ 2+ levels of nested cards
-```
-Cards are **for displaying data**, not **for prompting actions**.
+Containment may group data, actions, forms, or media when that relationship is useful.
+Avoid nesting and chrome that duplicate hierarchy. Do not prohibit an input or action
+inside a panel merely because the original consumer example was display-only.
 
 ---
 
@@ -1037,56 +935,19 @@ Layer 2: Content             → relative z-10
 
 ## Consumer-service recipe summary
 
-> This summary captures the original mobile dashboard recipe. Use it only when the effective
-> grammar is `consumer-service` (or a compiled grammar explicitly inherits it). It is not the
-> cross-output StyleSeed constitution.
+The original mobile overview uses a personal summary, soft grouping, brief next actions,
+and progressive detail. Its tables and code above illustrate one implementation.
+Use them only where they fit the selected grammar and approved project system.
 
-### Color (4)
-1. Unity through one key color, used only for active/selected states
-2. Pure #000 absolutely forbidden, #3C3C3C is the default
-3. Impact colors limited to dot (6px) + text (11px) or smaller
-4. Status indicators use same color for dot and text
+- Preserve stable semantic colors, readable values and units, and identifiable actions.
+- Use summary-first order when personal state is the question; prioritize urgent work
+  when it is not. Neither a KPI count nor a card count defines completeness.
+- Soft cards, small accent areas, and reduced unit sizes are options, not universal floors.
+- Use project typography, spacing, geometry, elevation, and state tokens consistently.
+- Keep data meaning, controls, loading/empty/error recovery, and mobile operability intact.
+- Prefer explicit transition properties and complete reduced motion; do not animate
+  consequential values theatrically or delay access to real information.
 
-### Typography (3)
-5. Large numbers, small units, 2:1 ratio, `ms-0.5`
-6. Labels are 12px uppercase + tracking-wide
-7. 5-level grayscale (#2A → #3C → #6A → #7A → #9B)
-
-### Layout (4)
-8. `mx-6` = single card, `px-6` = multiple/carousel
-9. `space-y-6` unified section gap
-10. 4 section types (A/B/C/D)
-11. Section separation through cards + spacing only (dividers forbidden)
-
-### Information Structure (3)
-12. Top → bottom information pyramid (hero → KPI → detail)
-13. Maximum 4 data items per card
-14. Cards are for data display (CTAs/inputs forbidden)
-
-### Numbers (2)
-15. `whitespace-nowrap` required (prevent number + unit wrapping)
-16. Currency as integers, pricing/storage as 1 decimal place
-
-### Interaction (2)
-17. Only donut/toggle are interactive; cards/list rows are static
-18. `transition-all` default, donut uses `duration-300`
-
-### Details (4)
-19. Background #FAFAFA (not pure white)
-20. Shadow opacity 4-8%
-21. 6 opacity levels (0.06-1.0) distinguished by purpose
-22. Background decoration only in hero cards, `overflow-hidden` required
-
-### Prohibitions (7)
-23. In this recipe, data modules live inside cards; navigation, headings, actions, editorial
-    prose, and other grammar-owned structures do not need card containers
-24. No key-color background cards
-25. No ad-hoc components
-26. No card overlap/stacking
-27. No dividers between sections
-28. No CTA buttons/input fields inside cards
-29. No more than 5 list items per card
----
 ---
 
 # Part 2: Extended Rules — General Application + Detailed Specs
@@ -1512,48 +1373,18 @@ NO  More than 1 chart per card
 
 ## 40. Design System Application Guide
 
-### Applying to Other Projects
+Adapt by job and approved system, not by swapping a brand color into one fixed page.
 
-#### Step 1: Change Key Color
-```css
-:root {
-  --brand: /* your brand color here */;  /* <- Change only this to shift the entire tone */
-}
-```
-- Changing just the key color updates: icon badges, progress, toggles, nav -- everything
-- Keep the rest of the grayscale **as-is** (works with any key color)
-
-#### Step 2: Domain Adaptation
-| Original (Generic) | E-Commerce App | Healthcare App | Finance App |
-|--------------------|---------------|----------------|-------------|
-| Sales Hero | Sales Hero | Steps Today | Total Assets |
-| 4 KPIs | Orders/Shipping/Returns/Visits | Heart Rate/BP/Sleep/Calories | Income/Expenses/Savings/Investments |
-| Inventory Donut | Category Breakdown | Nutrient Ratio | Asset Allocation |
-| Price Chart | Sales Trend | Weight Change | Returns Trend |
-| Order List | Recent Orders | Recent Records | Recent Transactions |
-| Competitor Ranking | Popular Products | Rankings | Fund Returns |
-
-#### Step 3: Keep the Structure
-```
-The page structure stays the same for any project:
-1. TopBar (logo + actions)
-2. Hero card (the single most important metric)
-3. KPI grid (2-4 key indicators)
-4. Detail sections (charts, lists, donuts)
-5. BottomNav (3-5 tabs)
-```
-
-#### Step 4: Do NOT Change These
-```
-NO  5-level grayscale modification
-NO  Card radius (rounded-2xl)
-NO  Card shadow (opacity 4%)
-NO  Section spacing (space-y-6)
-NO  Number + unit 2:1 ratio
-NO  Label uppercase + tracking
-NO  Page background #FAFAFA
-```
-These are the **essence of the design system**. Changing only the key color and domain maintains a unified feel.
+1. Resolve the artifact's output grammar and adapter before selecting domain/page bias.
+2. Preserve approved tokens and component roles. A new key color requires semantic
+   role mapping and contrast checks through `PALETTE-RECIPES.md`, not an assumption
+   that unchanged grays will work against every new surface.
+3. Select composition for the actual page: the same finance brand can have a marketing
+   story, a transaction queue, and a personal summary with different structures.
+4. Reuse the design language across those structures through stable type, alignment,
+   color, control, and state roles. Keep task-specific differences explicit.
+5. Render required viewports/states and verify function. Do not call a palette swap
+   a transferred grammar or treat similarity to the demo as success.
 
 ---
 
@@ -2418,359 +2249,185 @@ formatRelativeTime(date)     // "3 min ago" / "Yesterday" / "Mar 20"
 
 # Part 3: Page Composition & Visual Rhythm
 
-> These rules prevent pages from looking monotonous and repetitive.
-> Follow them to create pages that feel designed, not generated.
+Composition follows the user's questions and the selected grammar. These principles
+support multiple valid layouts; they do not prescribe one hero, a section count, or
+a quota of chart types. Preserve approved project choices and real data meaning.
 
 ---
 
 ## 61. Visual Rhythm — Breaking Monotony
 
-### The Core Problem
-AI tends to generate repetitive layouts: 4 identical StatCards, then a list, then another list.
-Professional designers create **visual rhythm** — alternating density, height, and element types.
+Preserve equivalent presentation for equivalent information. Vary composition when
+priority, data question, or narrative role changes. Repetition in comparisons,
+collections, and workflows is valid; decorative variation must not change data
+meaning or interaction expectations.
 
-### The Rhythm Rule: Never Repeat the Same Section Type Twice in a Row
+| Situation | Useful relationship | Failure to avoid |
+|---|---|---|
+| Compare four regions over the same period | Same chart, scale, labels, and panel dimensions | Different chart types make equal questions harder to compare |
+| Scan a work queue | Repeated row structure and stable action positions | Novel anatomy for each item |
+| Explain a product | Composition changes as proposition, evidence, and action change | Repeating generic feature cards that add no evidence |
+| Browse a portfolio | Consistent captions and navigation across different media | Forcing every image into one crop or inventing variation in controls |
 
-```
-✗ Bad: Grid → Grid → Grid (monotonous)
-✗ Bad: Full Card → Full Card → Full Card (wall of cards)
-
-✓ Good: Hero (D) → Grid (B) → Full Card (A) → Carousel (C) → Full Card (A)
-✓ Good: Hero (D) → Grid (B) → Full Card with chart (A) → Full Card with list (A)
-```
-
-Even within the same type, **vary the internal content**:
-```
-✗ Bad: Two Full Cards both with lists
-✓ Good: Full Card with chart → Full Card with list
-```
-
-### Height Variation Rule
-Alternate between **tall** and **compact** sections:
-
-| Section | Height Feel | Examples |
-|---------|------------|---------|
-| **Tall** | 200-300px | Hero card, chart card, donut card |
-| **Medium** | 120-180px | KPI grid (2×2), usage breakdown with progress bars |
-| **Compact** | 80-120px | Briefing carousel, ranked list (3 items) |
-
-```
-✓ Tall → Compact → Medium → Tall → Compact
-✗ Tall → Tall → Tall (overwhelming)
-✗ Compact → Compact → Compact (feels empty)
-```
+A run of equal-height panels may be correct. Tall/compact alternation is an option
+for narrative pacing, not a test every page must pass.
 
 ---
 
-## 62. KPI Card Variation — The 4-Card Rule
+## 62. KPI Comparison and Meaning
 
-### Never Make All 4 KPI Cards Identical
-When displaying a 2×2 KPI grid, **vary the secondary element** in each card:
+Choose supporting elements from the metric's meaning, not from a need to vary a grid.
 
-| Card | Primary | Secondary Element | Example |
-|------|---------|------------------|---------|
-| Card 1 | Metric + unit | **Trend arrow** (up/down %) | Revenue $48.2K ↑+8.2% |
-| Card 2 | Metric only | **Trend arrow** (up/down %) | Users 12,840 ↑+3.1% |
-| Card 3 | Metric + unit | **Mini progress bar** (h-2) | Storage 68% [████░░] |
-| Card 4 | Metric + unit | **Comparison text** | Orders 342 (vs 380 last week) |
+| Element | Apply when | Do not imply |
+|---|---|---|
+| Delta and comparison label | A real, named baseline exists | An improvement merely because the value increased |
+| Progress/capacity bar | A bounded part-to-whole or target exists | A time trend converted to progress for variety |
+| Sparkline | Actual time-series data exists | A decorative or invented history |
+| Status and label | State mapping supports a decision | Severity from an arbitrary color |
+| Value and unit alone | The current value answers the question | A mandatory trend or chart |
 
-### Variation Toolkit for KPI Cards
-
-| Element | When to Use | Visual |
-|---------|------------|--------|
-| **Trend % + arrow** | Time-based comparison | `+8.2% ↑` in green/red |
-| **Mini progress bar** | Ratio/capacity metric | Thin bar (h-2) below metric |
-| **Comparison text** | Period comparison | `vs 380 last week` in tertiary |
-| **Sparkline** | Trend without specific % | Tiny inline chart (h-8, no axes) |
-| **Status dot** | State indicator | `● Active` / `● Warning` |
-| **Sub-metric** | Breakdown hint | `Desktop 60% · Mobile 40%` in caption |
-
-### Rules
-- Use **at most 2 cards with the same secondary element** in a 4-card grid
-- If all 4 metrics have trends, still vary: 2 with trend %, 1 with progress, 1 with comparison
-- The most important metric gets the **top-left** position (reading order)
+Four comparable KPIs may use the same secondary element. Preserve equal scales and
+context for comparison; change weight only when priority differs. Order by task and
+reading direction, not a universal top-left priority.
 
 ---
 
 ## 63. Section Composition Recipes
 
-### Recipe 1: SaaS Dashboard
-```
-1. Hero Card (D)          — MRR or total revenue, big number
-2. KPI Grid (B)           — 4 varied cards (revenue, users, churn, conversion)
-3. Chart Card (A)         — Revenue trend (area chart) + period toggle
-4. Carousel (C)           — AI insights / alerts / briefings
-5. Progress Card (A)      — Usage breakdown (3 progress bars)
-6. List Card (A)          — Recent activity (3-4 items with status dots)
-```
+These are alternatives selected by the current task, not lists of required sections.
 
-### Recipe 2: E-commerce Dashboard
-```
-1. Hero Card (D)          — Today's sales, big number
-2. KPI Grid (B)           — Orders, AOV, returns, conversion
-3. Donut Card (A)         — Sales by category (interactive donut)
-4. Chart Card (A)         — Weekly sales trend (bar chart)
-5. Carousel (C)           — Top products (horizontal scroll cards)
-6. List Card (A)          — Recent orders (status: shipped/pending/delivered)
-```
+| Task | Possible composition | Why this order |
+|---|---|---|
+| Fulfill orders | Scope/filter → exception queue → selected order detail | The next action is an order, not a revenue hero |
+| Compare regional performance | Shared period/units → equal trend panels → accessible data | Stable repeated encodings support comparison |
+| Check personal finances | Balance and scope → useful actions → transactions; optional trend | Summary helps orientation when personal state is the job |
+| Understand a campaign | Product image or type-led promise → relevant proof → next step | Media and copy establish the proposition together |
+| Diagnose an incident | Alert and freshness → timeline/logs → affected resources | Critical evidence leads, even when dense |
 
-### Recipe 3: Analytics Dashboard
-```
-1. Hero Card (D)          — Total users or key metric
-2. KPI Grid (B)           — DAU, session duration, bounce rate, pages/session
-3. Chart Card (A)         — Traffic trend (area chart)
-4. Split Card (A)         — Traffic sources (donut) + top pages (ranked list)
-5. Chart Card (A)         — Conversion funnel (horizontal bar)
-6. List Card (A)          — Real-time events (3-4 items)
-```
-
-### Recipe 4: Finance/Fintech
-```
-1. Hero Card (D)          — Total balance or portfolio value
-2. KPI Grid (B)           — Income, expenses, savings rate, investments
-3. Donut Card (A)         — Asset allocation (interactive)
-4. Chart Card (A)         — Balance trend (area chart, 1W/1M/3M toggle)
-5. List Card (A)          — Recent transactions (amount + status)
-6. Carousel (C)           — Financial tips / alerts
-```
-
-### Recipe Rules
-- **First screen (above the fold)**: Always Hero + KPI Grid — answer "how am I doing?" instantly
-- **Middle sections**: Alternate between charts and lists — never two charts in a row
-- **Bottom sections**: Lower priority info (activity logs, alerts)
-- Every recipe has **exactly one chart type per card** — never combine two charts
-- Every recipe includes **at least one non-data section** (carousel/briefing) to break the pattern
+No universal Hero + KPI opening, chart/list alternation, or non-data carousel is
+required. Related charts can share a region when the relationship is clear. Urgent
+alerts must not be pushed to the bottom to satisfy a density pattern.
 
 ---
 
-## 64. Element Diversity Within Cards
+## 64. Element Choice by Data Question
 
-### Section Card Content Types (mix these across your page)
+Select representations that answer a question. A ranked list supports ordering;
+a trend supports change over time; a comparison table supports differences;
+a distribution plot supports spread. A dashboard can be a queue without any chart.
 
-| Content Type | Visual Character | Best Paired After |
-|-------------|-----------------|------------------|
-| **Progress bars** (2-4 items) | Horizontal lines, compact | Chart card or KPI grid |
-| **Ranked list** (3-4 items) | Numbers + names, dense | Donut chart or hero |
-| **Status list** (3-4 items) | Dots + labels, scannable | Chart card |
-| **Stat grid** (3-4 items below divider) | Numbers in columns | Chart (as footer below border-t) |
-| **Donut + legend** | Circular + list, interactive | KPI grid |
-| **Area/Bar chart** | Flowing/blocky, visual | List card |
-| **Metric + trend** | Big number, minimal | Anything (versatile) |
-
-### Forbidden Same-Page Combinations
-```
-✗ Two donut charts on one page (competing circular elements)
-✗ Two area charts on one page (repetitive waves)
-✗ Three list cards in a row (feels like a spreadsheet)
-✗ Chart card immediately after chart card (visual fatigue)
-```
-
-### Required Variety
-```
-✓ At least 1 chart-based section per dashboard page
-✓ At least 1 list-based section per dashboard page
-✓ At least 1 metric-focused section (KPI grid or hero)
-✓ Maximum 2 of the same content type per page
-```
+Small multiples may repeat area charts, bars, or lists on the same page. Keep scales,
+labels, and legends comparable and surface exceptions. Do not cap a content type at
+two uses or require one chart, one list, and one hero. Conversely, repeated decorative
+containers that obscure distinct priorities need redesign.
 
 ---
 
 ## 65. Color Accent Distribution
 
-### The Accent Scarcity Rule
-Key color creates impact through **scarcity**. Distribute it sparingly:
+Assign stable roles to action, status, category, brand, and content color. Decide
+allocation from the task and palette; there is no per-page quota of colored badges,
+charts, or sections. A brand field can be large while controls stay legible.
 
-```
-Per page, key color should appear in:
-✓ 1 hero card icon badge
-✓ 4 KPI card icon badges (small, 10% opacity)
-✓ 1 active bottom nav item
-✓ 1-2 progress bar fills
-✓ 1 chart highlight (selected segment or line)
+- **Exception queue:** neutral normal states can reserve attention for blocked work.
+- **Health monitor:** repeated healthy signals can verify live coverage when anomalies
+  remain distinguishable. A mostly green grid is not automatically a hierarchy failure.
+- **Categorical comparison:** stable repeated category colors can help match series.
+- **Brand/content:** multicolored imagery or editorial fields need not become action colors.
 
-That's it. Everything else is grayscale.
-```
-
-### Status Color Reflects Real State — never "varied for interest"
-
-Status color **encodes meaning, not decoration.** Color the item by its *actual* state; if
-three items are genuinely "Completed," they are all green. **Never scatter different hues
-across rows for visual variety** — that destroys the signal (color stops meaning anything)
-and produces the "rainbow list" that reads as un-designed.
-
-```
-✗ Bad: recolor rows for variety → 1 green + 1 blue + 1 yellow when states are unrelated to color
-✗ Bad: a colored badge on EVERY row (no row stands out → no hierarchy)
-✓ Good: rows in a normal/OK state are NEUTRAL grey; color marks only the few that need attention
-✓ Good: same state → same color, every time (3 Completed = 3 green)
-```
-
-**Quality / score scales (good → bad), e.g. air-quality, health, life-index:** there is no
-"4 task hues" mapping for these. Use ONE of:
-- **Neutral + exception (preferred):** show the number in grey; flag only "needs attention"
-  rows in amber and "bad" rows in red. Most rows stay grey. Cleanest, most coherent.
-- **One sequential ramp:** a single hue light→saturated (or a green→amber→red *diverging*
-  scale) applied **consistently by value** and confined to a small dot/chip — like a data-viz
-  legend, not a row-by-row paint job. Never mix process hues (info-blue, pending-amber) into a
-  quality scale; "보통/normal" is grey, not blue.
-
-A list where 80% of rows carry color has no hierarchy. Color is the exception that says
-"look here."
-
-**Which mode?** Default to **neutral + exception** for *lists and badges* (a dashboard of
-many indices) — it keeps the surface calm and is hardest to get wrong. Use the **sequential/
-diverging ramp** only when the *whole point* of the view is to compare values at a glance (a
-single dedicated air-quality gauge, a heatmap, a legend) — and then commit to it fully (good
-**is** green, bad **is** red, everywhere, by value). Don't mix the two modes on one screen.
-"Good = grey" is intentional in exception mode: a high score is communicated by the **number**,
-not by painting it — saving color for what needs action. If positive reinforcement matters for
-the product, switch the *whole* list to the diverging ramp; don't green-paint one row inside an
-otherwise-grey list.
-
-**A single hero score gauge (ring/arc) uses the brand accent fill, regardless of the value.**
-The score is read from the **arc length + the number**, not from the color — a 48 and a 95 both
-show a brand-accent ring, just filled differently. This keeps the hero on-brand and avoids a
-value-driven color flip competing with the accent. Only swap the fill to a severity color if the
-gauge is *explicitly* a risk/health indicator **and** the accent isn't used elsewhere on the
-screen — otherwise keep one color.
+Same meaning → same mapping within its scope. Never recolor equivalent states for
+variety. Sequential/diverging scales require an explicit value mapping and legend;
+use a diverging scale only when a meaningful reference separates directions.
+A gauge can encode progress through length and brand color, or risk through an
+explicit severity scale. Choose by meaning, provide a non-color cue, and preserve
+an identifiable action. See `PALETTE-RECIPES.md` for validated roles.
 
 ---
 
 ## 66. Card Size Variation
 
-### Not All Cards Should Be the Same Height
+Size follows content, comparison, and priority. Equal-height panels help compare
+equivalent information; a larger canvas or image may deserve more space than its
+caption or toolbar. Reuse padding/alignment roles and preserve readable charts.
 
-| Card Purpose | Padding | Internal Spacing | Resulting Height |
-|-------------|---------|-----------------|-----------------|
-| **Hero** | `p-8` (32px) | Generous `gap-3` | ~200px (tallest) |
-| **Stat/KPI** | `p-6` (24px) | Tight `gap-2` | ~140px |
-| **Chart** | `p-6` (24px) | Chart `h-40` + stats | ~280px |
-| **List** | `p-6` (24px) | `space-y-3` items | ~200px (3 items) |
-| **Progress** | `p-6` (24px) | `space-y-4` bars | ~180px |
-
-### The Skyline Rule
-Looking at your page from the side, the card heights should create an **interesting skyline**, not a flat wall:
-
-```
-✓ Good skyline:  ██ ▄▄ ████ ▄▄ ██ ▄▄▄
-✗ Bad skyline:   ██ ██ ██ ██ ██ ██
-```
-
-Achieve this by alternating between:
-- KPI Grid (short individual cards) and Full Cards (taller)
-- Chart cards (tall) and list cards (medium)
-- Carousel (compact, horizontal) after any tall section
+An uneven skyline is not a goal. Do not add empty space, truncate evidence, or change
+chart meaning to alternate heights. Inspect real long labels, empty/error states,
+and responsive layouts before deciding whether a size difference helps.
 
 ---
 
 ## 67. Progressive Information Density
 
-### Top-to-Bottom Density Gradient
+Overview → detail is useful when users need orientation before drilling down.
+It is one attention model. Monitoring, editing, and search may begin with dense
+working regions and use detail panes, filters, or disclosure instead of vertical layers.
 
-| Position | Density | Elements | Font Sizes |
-|----------|---------|----------|-----------|
-| **Top** (Hero) | Low — 1 big number | Single metric + trend | 48px / 24px |
-| **Upper** (KPI) | Medium — 4 numbers | Grid of metrics | 36px / 18px |
-| **Middle** (Charts) | Medium — visual data | Chart + 3-4 stat items | 18px / 11px |
-| **Lower** (Lists) | High — many items | 3-4 rows of data | 14px / 11px |
-| **Bottom** (Activity) | Highest — detailed | Timestamps, statuses | 13px / 11px |
-
-### Rules
-- Information density **increases** as you scroll down
-- Font sizes **decrease** as you scroll down
-- White space **decreases** as you scroll down
-- This creates a natural "zooming in" effect: overview → details
+Density, type size, and whitespace do not have to increase or decrease monotonically
+as the page scrolls. Keep comparison evidence together and urgent actions visible.
+Judge whether information needed for the current decision is present and readable.
 
 ---
 
-## 68. Empty Page Prevention
+## 68. Task Completeness and Empty Regions
 
-### Minimum Section Count
-A dashboard page should have **at least 4 sections** to feel complete:
+A page is complete when it supports its intended questions, actions, and states.
+There is no minimum or maximum section count. One useful queue can be enough;
+complex tasks may need multiple related regions or separate views.
 
-```
-✗ Too sparse: Hero + KPI Grid only (2 sections — feels empty)
-✗ Too sparse: Hero + KPI + one list (3 sections — almost there)
-✓ Minimum viable: Hero + KPI + chart/progress + list (4 sections)
-✓ Ideal: Hero + KPI + chart + progress/donut + list + carousel (5-6 sections)
-✗ Too dense: 8+ sections (overwhelming, consider splitting into tabs)
-```
-
-### When a Section Has No Data
-- Show the section with an EmptyState — don't remove it
-- Removing sections changes the page rhythm and makes it feel broken
-- Empty states maintain layout consistency: "No activity yet. Create your first project."
+Preserve stable geometry during loading, filtering, or temporary failure when a shift
+would disrupt orientation. Show an empty state with a relevant explanation or recovery
+where a user expects data. An inapplicable optional section may be omitted or collapsed
+when that does not hide essential scope, permissions, or a next step. Do not manufacture
+content or leave empty cards simply to maintain a composition quota.
 
 ---
 
 ## 69. Chart + Context Pairing
 
-### Never Show a Chart Alone — Always Pair with Context
+Place the labels, units, timeframe, reference, and explanation needed to interpret
+a view close to that view or in an unambiguous shared scope. Context should prevent
+misreading, not impose the same anatomy on every chart.
 
-| Chart Type | Required Context | Placement |
-|-----------|-----------------|-----------|
-| **Area chart** | Period toggle (1W/1M/3M) + 2-3 stat items below border-t | Toggle in header, stats in footer |
-| **Bar chart** | Category labels on X-axis + highlight color on max bar | Labels below bars |
-| **Donut chart** | Center value + legend list (3-4 items) with click interaction | Legend beside or below |
-| **Progress bars** | Label + percentage text on each bar | Label left, % right |
+| Question | Context to check | Valid variation |
+|---|---|---|
+| Change over time | Series label, units, period, scale, baseline when comparing | Shared period controls; no mandatory stat footer |
+| Rank categories | Category/value mapping, order, unit | Highlight the selected or relevant item, not automatically the maximum |
+| Part to whole | Whole, parts, units, legend or direct labels | A bar or table may communicate the relation better than a donut |
+| Correlation or distribution | Axes, units, sample/scope, relevant reference | A prominent current-value KPI may be meaningless |
 
-### Stat Footer Patterns (below border-t in chart cards)
-
-```tsx
-{/* 3-column stat footer */}
-<div className="grid grid-cols-3 gap-3 pt-5 border-t border-surface-muted">
-  <div className="text-center">
-    <p className="text-[11px] text-text-secondary font-medium uppercase mb-1.5">Web</p>
-    <p className="text-text-primary font-bold text-[18px]">$1,648<span className="text-[10px] ms-0.5">/mo</span></p>
-  </div>
-  {/* ... more columns */}
-</div>
-```
-
-### Rules
-- A chart without context numbers is **decoration, not information**
-- Always show the **current value** prominently (not just the trend line)
-- Period toggles: max 3 options (1W / 1M / 3M), use pill toggle style
-- Stat footer items: max 4 columns (`grid-cols-3` or `grid-cols-4`)
+A footer, sparkline, center value, or three-option pill is optional. Shared legends
+and controls must have clear scope, including in narrow layouts. Keep equivalent
+accessible data and source/freshness information where the decision requires it.
 
 ---
 
 ## Core Composition Principles Summary
 
-### Rhythm (3)
-1. Never repeat the same section type twice in a row
-2. Alternate between tall and compact sections (skyline rule)
-3. Every page needs at least 1 chart, 1 list, 1 metric section
-
-### Variety (3)
-4. Vary KPI card secondary elements (trend, progress, comparison, sparkline)
-5. Maximum 2 of the same content type per page
-6. Status color reflects each item's REAL state (same state → same color); normal/OK rows are neutral grey, color marks only the few needing attention — never recolor rows for "variety" (§65)
-
-### Density (3)
-7. Information density increases top-to-bottom
-8. Font sizes decrease top-to-bottom (48→36→18→14→11px)
-9. Minimum 4 sections per dashboard, maximum 7
-
-### Context (2)
-10. Charts always paired with stat context (footer or header)
-11. Empty sections show EmptyState, never removed from layout
+1. Equivalent information keeps equivalent presentation.
+2. Vary composition when meaning, priority, or narrative role changes.
+3. Choose charts and supporting metrics from real questions and available data.
+4. Color has stable action, status, category, brand, or content roles.
+5. Density and size follow the current task, not a page-wide numeric quota.
+6. Labels and interpretation context stay attached or clearly shared.
+7. Complete required actions and states; do not invent sections to fill a layout.
+8. Preserve functional/accessibility floors and inspect the actual rendered result.
 
 ---
 
 ## 70. Form & Input Rules
 
-Forms are where StyleSeed was historically thin (dashboard-heavy). These are
-binding rules, not suggestions.
+Apply the form task and selected recipe. Labels, recovery, consent, and operability
+are binding; layout and animation examples are contextual.
 
 1. **Single column.** Multi-column forms make the eye zig-zag. One column, top to
    bottom. (Exception: short, tightly-related pairs like City/Zip.)
 2. **Labels above fields, never as placeholder.** Placeholder-as-label disappears
    on focus and fails accessibility. Placeholders are for *examples* only.
-3. **Group into SectionCards** by topic. A 12-field form is three 4-field cards,
-   not one wall.
-4. **One primary action.** Bottom or sticky. Primary is visually dominant;
-   secondary/cancel is quiet (ghost/text). Never two primaries.
+3. **Group by topic** using the selected containment: flat sections, fieldsets, or
+   cards. Neither card wrappers nor a fixed number of fields per group is required.
+4. **Clear completion action within each decision region.** Save and cancel have
+   distinct roles; a nested dialog or popover has its own local decision. Placement
+   and emphasis follow the task without competing actions in the same region.
 5. **Validate on blur, not on every keystroke.** Don't yell at someone mid-typing.
    Show success/error after the field loses focus or on submit.
 6. **Errors must guide recovery.** "Invalid email" is bad; "Use the format
@@ -2788,13 +2445,15 @@ binding rules, not suggestions.
 Every data surface has four states, not one. Designing only the "happy, full"
 state is the most common AI omission.
 
-1. **Empty is onboarding.** `EmptyState` = icon + title + one-line description +
-   a primary action. Never a blank area, never just "No data."
+1. **Empty explains the state.** Distinguish first use, no matches, no permission,
+   and genuine absence. Offer an applicable next step without inventing an action
+   or requiring an icon + title + button anatomy in every region.
 2. **Loading uses skeletons, not spinners,** for content that has a known shape
    (lists, cards, tables) — `shimmer` over the real layout. Spinners only for
    indeterminate, full-page waits.
-3. **Never lay out around missing data.** An empty section keeps its slot with an
-   EmptyState (Rule 11) — don't collapse the layout and shift everything.
+3. **Preserve orientation through state changes.** Keep expected regions stable
+   during loading/filtering/failure. An inapplicable optional section may collapse
+   when essential scope and recovery remain available (§68).
 4. **Error states are recoverable.** Show what failed + a retry/next action. Don't
    dump a stack trace; don't leave a dead screen.
 5. **Success is felt, briefly.** A toast or inline confirmation, then get out of
@@ -2820,16 +2479,19 @@ state is the most common AI omission.
 
 ## 73. Responsive & Mobile Rules
 
-StyleSeed is mobile-first; desktop is the enhancement.
+Use the artifact's declared viewports and input modes; preserve the task at each size.
 
-1. **One column on mobile.** Multi-column grids collapse to a single column or a
-   horizontal-scroll carousel — never shrink 4 columns into unreadable slivers.
-2. **`mx-6` for single cards, `px-6` for grids/carousels** — at every breakpoint.
-   Never `px-4`/`px-8`.
+1. **Reflow by task priority.** Stack, regroup, disclose, or preserve a bounded
+   horizontal data region when comparison requires it. Keep its scope and scroll
+   affordance clear; avoid page-wide overflow or shrinking columns into unreadable
+   slivers. Keyboard, zoom, labels, and access to all data still apply.
+2. **Use the project's responsive gutter tokens.** `mx-6`/`px-6` are examples for
+   one consumer layout, not mandatory values for every grammar or breakpoint.
 3. **Thumb reach:** primary actions in the bottom third on mobile; sticky
    action/save bars sit above the keyboard.
-4. **Type scales, hierarchy doesn't.** A 48px hero may become 36px on mobile, but
-   it stays the largest thing — don't flatten the hierarchy to fit.
+4. **Preserve meaningful hierarchy.** Type, media, and controls can recompose at
+   narrow widths; do not require a hero to remain the largest element if that
+   hides the task. Inspect real text, image crops, and comparison context.
 5. **Touch affordances:** swipe-to-act on list rows, bottom sheets instead of
    center modals, ≥44px everything.
 6. **Hover is a bonus, not a requirement** — anything reachable only on hover must
@@ -2837,22 +2499,13 @@ StyleSeed is mobile-first; desktop is the enhancement.
 
 ## 74. Rule Priority & Conflict Resolution
 
-When rules, domain bias, and page-type needs pull different directions, resolve in
-this fixed order — higher wins:
+`PRODUCT-PRINCIPLES.md` is the single authority definition. This handbook's historic
+prohibitions and numeric examples do not override the selected grammar, adapter,
+or applicable approved project decisions. Preserve accessibility and functional
+floors; interpret card, color, radius, type, and motion examples as contextual
+defaults, not universal bans. Report unresolved conflicts instead of restyling silently.
 
-1. **Accessibility (§72)** — never traded away. A "prettier" choice that fails
-   contrast or focus is wrong, full stop.
-2. **Prohibition Rules (§18)** — the absolute don'ts (#000, content outside cards,
-   6 accents, visible shadows…).
-3. **Page-type job** (`PAGE-TYPES.md`) — the screen must do its job (a form must
-   be fillable, a landing must convert, a dashboard must be scannable).
-4. **Core hierarchy rules** (color discipline, 2:1 numbers, rhythm, density).
-5. **Domain bias** (`APP-PLAYBOOKS.md`) — lean into the domain's DNA *within* all
-   of the above.
-6. **Local aesthetic preference** — only after 1–5 are satisfied.
-
-> Worked example: a fintech app (domain: maximum restraint) onboarding screen
-> (page-type job: reward the first win). Restraint loses to neither accessibility
-> nor the page-type job — so one celebratory `confetti-pop` on the first deposit
-> is correct, while a rainbow palette across the app is not. The domain biases the
-> *resting* state; the page-type earns the *exception*.
+> Worked example: the same finance product may use equal repeated panels for
+> comparison and a warm image-led landing page. Each uses the approved brand and
+> supports its page task. Neither decorative variation in the panels nor a white
+> landing canvas is required; operability and truthful financial data still are.

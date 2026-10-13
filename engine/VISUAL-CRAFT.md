@@ -1,4 +1,4 @@
-# Visual Craft — research-backed rules for beautiful, coherent UI
+# Visual Craft — contextual guidance for coherent UI
 
 DESIGN-LANGUAGE.md tells you the **rules**. METHODOLOGY.md tells you **why** they
 exist. This file tells you the **craft** — the concrete, numeric decisions that
@@ -6,8 +6,10 @@ separate "designed by one mind" from "assembled from parts": how to make a
 component look intentional, how to space it, which type to pick for which kind of
 app, and — most importantly — how to keep the *whole* UI **coherent**.
 
-Every rule here is grounded in primary design literature (sources at the bottom).
-Numbers are defaults, not dogma — but don't deviate without a reason.
+This guide combines design-system guidance with contextual craft heuristics; not every
+number is an empirically validated threshold. Preserve the approved project system.
+Numbers and techniques below are starting points; task fitness and rendered evidence decide.
+Contrast, operability, truthful content, and other core floors remain binding.
 
 > **Read this:** before scaffolding a new product surface, and whenever a UI
 > "looks off" but you can't say why. Pair with **APP-PLAYBOOKS.md** (domain bias)
@@ -21,99 +23,104 @@ Numbers are defaults, not dogma — but don't deviate without a reason.
 
 ## §C0 — The Coherence Laws (read this first)
 
-The single biggest reason AI-generated UI looks "off" isn't ugly components — it's
-**incoherence**: a sharp-cornered dialog next to pill-shaped buttons, two competing
-accent colors, icons from three families, shadows lit from different directions. A
-UI reads as professional when it feels **shaped by one deliberate mind**
-([UX Collective], [Tubik]).
+Unexplained changes in repeated roles make an interface harder to read: the same
+control changes shape, severity changes color, or identical layers imply different depth.
+Judge these relationships against the approved system, not against one preferred look.
 
-**The meta-law: for each design axis below, choose exactly ONE coordinated family, encode
-it as a token, and apply it everywhere.** Coherence is not "every screen is identical"
-— it's that the same decisions repeat. The user's instinct — *"if the corners are
-sharp, everything must be sharp"* — is exactly right, and it generalizes to every row
-of this table.
+**The meta-law: encode a repeatable relationship between roles, not one identical
+value for every component.** Coherence means the same decisions repeat under the
+same conditions. Sharp panels, rounded controls, and circular avatars can coexist
+when their roles are explicit in the approved system. The examples below are defaults.
 
-| Axis | Pick ONE, system-wide | Failure mode when mixed |
+| Axis | Coordinate system-wide | Failure mode |
 |---|---|---|
-| **Corner / radius** | One personality: **sharp 0–4px** · **soft 8–12px** · **pill 9999px**. Card, button, input, modal, image, avatar all obey it. | Sharp dialog + rounded buttons = "two products glued together." The #1 tell of un-designed UI. |
-| **Shadow** | One scale, one light source (**above-left**), one hue tint. A modal and a card use the *same* family, different tiers. | Mixed light directions / some-black-some-tinted = "scene with two suns." |
-| **Color roles** | One primary action plus the grammar's stable semantic/categorical/brand roles. | Competing emphasis hues or local decorative colors collapse hierarchy. |
-| **Spacing unit** | One base grid: **8px** (4px allowed as a half-step for icon↔label). Every margin/padding/gap is a multiple. | Off-grid values (7, 13, 19px) read as "sloppy" without users knowing why. |
-| **Icon style** | One family, one fill mode (all outline **or** all filled), one stroke weight (e.g. **2px @ 24px**). | Mixing Material + Feather + emoji, or 1.5px and 2px strokes, looks "out of place." |
-| **Type scale** | One modular scale, ≤2 font families, one weight ramp. | Arbitrary sizes destroy rhythm; >2 families looks amateur. |
+| **Corner / radius** | A role-based token family for containers, nested surfaces, controls, and avatars. Follow the recipe and approved project system. | The same component role changes shape without a reason. |
+| **Shadow** | A depth/material family where depth is needed; direction, softness, and tint follow that intent. | Equivalent layers imply unrelated materials or depth. |
+| **Color roles** | Identifiable actions in each decision region; stable status, category, brand, and content roles. | Conflicting emphasis or unstable meanings collapse hierarchy. |
+| **Spacing unit** | The approved token scale, with documented optical, script, canvas, or platform adjustments. | Unexplained local gaps obscure grouping or alignment. |
+| **Icon style** | A coordinated family with documented optical sizes and selected/unselected variants. | Unrelated icon languages or inconsistent state meanings. |
+| **Type scale** | Coordinated display, reading, utility, numeric, and script-fallback roles. | Arbitrary role changes impair hierarchy or reading. |
 | **Motion / easing** | One duration set (~150/200/300ms) + one easing family; same enter/exit logic everywhere. | Some snappy, some sluggish = feels like different apps. |
-| **Border** | One hairline weight (**1px**) and one low-contrast neutral border token. | Mixed 1px/2px borders and random grays look unintentional. |
-| **State layers** | One opacity ramp for hover/focus/pressed on *all* interactive elements. | Buttons darken, links underline, cards scale — feedback feels random. |
+| **Border** | Role tokens for separators, controls, focus, and errors; widths and contrast may differ by purpose. | Random boundaries or invisible required focus/control edges. |
+| **State layers** | Repeatable feedback per control role; links may underline while buttons change fill. | The same state on the same role behaves unpredictably. |
 | **Control height** | Buttons, inputs, selects share a height set (e.g. **40px** default). | A 44px input next to a 32px button breaks the baseline. |
 
-**Treat a mixed axis as a lint error, not a style choice.** When in doubt, copy the
-decision already made elsewhere in the product rather than inventing a new one.
+**Treat unexplained drift within a role as a violation, not variation between
+documented roles.** Reuse approved decisions rather than inventing local exceptions.
 
 ---
 
 ## §C1 — Spacing & rhythm
 
-**CR-1 · Snap everything to one scale.** Use `{2, 4, 8, 12, 16, 24, 32, 40, 48, 64, 80, 96}`px.
-No arbitrary values (no 13px, no 7px). 8px base; 4px only as a half-step for
-icon↔text and tightly stacked small text. *Why: a constrained scale forces
-deliberate, repeatable layout; 8px divides cleanly across 1x/1.5x/2x/3x densities.*
-([Refactoring UI], [Material 3 Spacing], [IBM Carbon 2x Grid])
+**CR-1 · Reuse the approved spacing scale.** Without one, start from
+`{2, 4, 8, 12, 16, 24, 32, 40, 48, 64, 80, 96}`px. These are examples, not a ban on
+7px or 13px. Optical alignment, script, canvas, and platform constraints may justify
+other tokens. Explain the role and inspect repeated uses.
 
-**CR-2 · Proximity = relatedness.** The space *around* a group must be **≥ 2×** the
-space *within* it. Uniform spacing everywhere is the #1 beginner failure — it
-destroys all grouping signal. *Why: Gestalt — the eye reads tight items as one unit,
-loose items as separate.* ([Refactoring UI "Avoid ambiguous spacing"])
+**CR-2 · Proximity communicates relatedness.** Make groups distinguishable from
+items within them. Around twice the internal gap is a useful starting point when
+space alone groups content. Dense panels may use alignment, tone, or a hairline
+instead. Check that the visual groups match the information groups.
 
 **CR-3 · The form spacing ladder.** label→input **4–8px** · field→field **12–16px** ·
 section→section **24–32px** mobile / **32–48px** desktop. Each tier ~doubles the last,
 so hierarchy is unambiguous. ([Designary], [Atlassian Spacing])
 
-**CR-4 · Card padding by size.** compact **12–16px** · standard **16–24px** · large/marketing
-**24–32px** · hero **48–64px+**. And the outer margin between cards must be **≥** the
-card's inner padding, so each card reads as self-contained. ([Refactoring UI], [UX Lab])
+**CR-4 · Padding follows content and containment.** Starting ranges: compact
+12–16px, standard 16–24px, marketing 24–32px, display 48px+. Shared alignments and
+readable internal groups matter more than equal padding on every edge. Clear
+boundaries can support an outer gap smaller than a panel's inner padding.
 
-**CR-5 · Start over-spaced, then reduce.** Designers under-space by default; "ample"
-usually turns out to be "just enough." When unsure, go one step *up* the scale.
-([Refactoring UI "Start with too much white space"])
+**CR-5 · Adjust space to the task.** Generous space can clarify reading and a brand
+promise; excessive space can separate related controls or hide comparison evidence.
+Start from the selected density and test with real content.
 
-**CR-6 · Separate with the lightest tool first:** whitespace → background tint →
-shadow → border (last resort). Don't put a border on everything. *Why: borders
-everywhere read as busy/cluttered; space and tone separate without noise.* ([Refactoring UI])
+**CR-6 · Use the lightest effective separation for the context.** Whitespace,
+alignment, tone, hairlines, and depth are options, not a mandatory sequence.
+A dense inspector may need a hairline; an overlay may need both a boundary and
+shadow. Remove boundaries that duplicate a signal without helping comprehension.
 
-**CR-7 · Measure (line length) 50–75 characters**, ~66 ideal; `max-width: 65ch` (≈680–720px).
-Never exceed 80ch — wider copy gets skipped ~41% more (Baymard) and breaks the
-return sweep. Dashboards go edge-to-edge, but any text column inside still obeys 75ch.
-([Baymard Line Length], [Butterick])
+**CR-7 · Bound prose for comfortable reading.** Roughly 50–75 characters per line
+is a useful starting range for Latin long-form prose, not a universal limit for
+labels, tables, or CJK. CSS `ch` measures the font's zero glyph, not actual character
+count, and cannot be converted to one fixed pixel width. Inspect real language,
+font, size, wrapping, and zoom; data regions may use a wider area.
+[Baymard's line-length guidance](https://baymard.com/research-articles/line-length-readability)
+supports a prose starting range, not a universal measured improvement percentage.
 
-**CR-8 · Data-table density tiers.** row height **32–40px** compact · **48px** default ·
-**56px** spacious. Default to 48px and expose a density toggle for power users. Each
-density step changes control height by exactly **4px** (Material density 0 / −1 / −2 / −3).
-([Pencil&Paper], [Material Density])
+**CR-8 · Choose table density by task and input.** Row heights such as 32–40px
+compact, 48px standard, and 56px spacious are starting points. Preserve comparable
+rows, required touch targets, readable labels, and expanded/error states. Offer a
+density control when repeated use benefits; do not import another system's exact
+step size as a universal requirement.
 
 **CR-9 · Don't enforce a strict pixel baseline grid on responsive web** — it assumes
 fixed heights it doesn't have. Repetition of the spacing scale creates rhythm; a
 baseline grid does not. ([Imperavi Vertical Rhythm])
 
-**CR-10 · Everything lines up to something.** Establish a small set of shared
-left/right edges (a 12-col grid, 16px gutters) and align all content to them. Apply
-*optical* (not pixel) alignment for weighted glyphs: nudge arrow/play icons, trim
-the icon-side padding of icon-buttons, center type by cap-height. ([IBM Carbon], [Liferay Optical Alignment])
+**CR-10 · Share alignment relationships.** Establish meaningful edges, columns,
+caption lines, or axes. Symmetry and a fixed column count are optional: an asymmetric
+image can share its edge with a text column. Preserve alignment for numeric
+comparison; inspect real wrapping. Optical correction of glyphs and icons may
+improve alignment beyond their bounding boxes.
 
 ---
 
 ## §C2 — Typography
 
-**CT-1 · Base body = 16px;** build a 5–7 step modular scale, e.g. `12 · 14 · 16 · 20 · 24 · 32 · 48`.
-*Why: a shared multiplier makes sizes harmonize like musical intervals; 16px is the
-WCAG-practical body minimum.* ([Material 3 Type], [FontFYI])
+**CT-1 · Use readable type roles.** Start general body text near 16px; an approved
+productive desktop scale can use 14px. WCAG does not prescribe a minimum font size.
+Verify actual script, contrast, zoom, viewing distance, and task. A scale such as
+`12 · 14 · 16 · 20 · 24 · 32 · 48` is an example, not a required set.
 
 **CT-2 · Ratio by density.** dense product UI/dashboards **1.125–1.2** · general default **1.25** ·
 content/editorial **1.333** · marketing/display **1.5–1.618**. Run *two* scales in one
 system if needed (tight UI scale + loose editorial scale). ([Cieden Type Scales])
 
-**CT-3 · Max 2 typefaces** — or one superfamily (e.g. IBM Plex Sans/Serif/Mono). Pair
-by **contrast**: geometric/grotesque heading + humanist body. Reach for a serif display
-only to signal **editorial / trust / luxury**. ([EightShapes], [Pangram Pangram])
+**CT-3 · Limit families through roles, not a font-count score.** One or two families
+are economical defaults. Script fallbacks, code, data, or editorial expression may
+need more when their roles are stable. Serif and sans are both valid; judge readable
+roles and the relationship between type, content, and the approved brand.
 
 **CT-4 · Tabular numerals are mandatory** (`font-variant-numeric: tabular-nums`) for
 tables, money, dashboards, timers — applied to the *whole* numeric grid, never
@@ -121,24 +128,30 @@ selectively. Proportional figures inline in prose; lining figures in UI. Pick a 
 with disambiguated `0/O` and `1/l/I` for anything numeric or financial.
 ([MyFonts Figures], [TypeType Numerals])
 
-**CT-5 · Build hierarchy with weight, not just size.** 400 body · 500–600 labels/subheads ·
-700 headings. Ship 3 weights (add 800–900 for marketing display only). **Never go
-below 400** for body/UI — de-emphasize with color or size instead. ([Refactoring UI], [Fontfabric Weight])
+**CT-5 · Combine weight, size, position, and contrast.** A 400 body / 500–600 label /
+700 heading ramp is a common example; font weight numbers are not optically equal
+across families. Preserve the approved ramp and inspect legibility rather than
+requiring a fixed weight count or judging hierarchy by size alone.
 
 **CT-6 · Line-height tightens as type grows.** body **1.5** (long-form 1.5–1.7) ·
 headings 1.2–1.35 · display/hero **1.0–1.2** · captions 1.4–1.6. *Why: big type already
 reads as a shape and needs less leading; small text needs more air.* ([Butterick], [Material 3 Type])
 
-**CT-7 · Letter-spacing.** display **−0.01 to −0.03em** (never past −0.03) · UPPERCASE
-labels **+0.05 to +0.12em** · body **0** (leave the font's default alone). Express in
-`em` so it scales with size. ([Butterick], [DesignYourWay])
+**CT-7 · Tracking depends on font, script, size, and role.** Latin display text may
+start around −0.01 to −0.03em and uppercase labels around +0.05 to +0.12em. These
+are examples, not lower/upper bounds. Body usually keeps its font default; CJK and
+connected scripts need their own checks. Reject collisions and impaired reading,
+not a value merely outside an example range.
 
-**CT-8 · Optical sizing.** Text-optical faces ≤19px, Display-optical ≥20px (the SF
-Text ≤19pt / SF Display ≥20pt split). ([Apple HIG Typography])
+**CT-8 · Use the font's optical-size contract.** Prefer supported optical sizing
+and the font/provider's guidance. A Text/Display split from one platform is not
+a universal 19px/20px threshold. Inspect the actual loaded font at each role size.
 
 ### Type recipe by app type
 
-Use this as the **type half** of the domain bias in APP-PLAYBOOKS.md.
+Use this as the **type half** of the domain bias in APP-PLAYBOOKS.md. These are
+possible starting recipes, applied only after the page task and approved type roles;
+the Hero column is unused when there is no hero. Reading measures depend on language.
 
 | App type | Typeface character | Hero | Body | Numerals | Weights | Signature |
 |---|---|---|---|---|---|---|
@@ -149,19 +162,20 @@ Use this as the **type half** of the domain bias in APP-PLAYBOOKS.md.
 | **Content / editorial** | High-contrast serif display + humanist body | 40–64 | 18–21 | Oldstyle/proportional in prose | 400 / 700 | Serif authority, 60–75ch measure |
 | **Health** | Warm humanist sans, open counters | 32–44 | 16–18 | Proportional (tabular for vitals) | 400 / 600 | Generous air, line-height 1.6 |
 | **Dev tools** | Grotesque + matched mono superfamily (Geist, Plex) | 32–48 | 14–16 (code 13–14 mono) | Tabular / mono | 400 / 500 / 600 | Mono for code/logs, Swiss precision |
-| **Marketing** | Expressive oversized display + clean sans | 64–120+ | 18 | Lining proportional | 400 / 700–900 | Hero dominates, loose 1.5–1.618 scale |
+| **Marketing** | Expressive oversized display + clean sans | 64–120+ | 18 | Lining proportional | 400 / 700–900 | Display-led option; image-led openings are also valid |
 
 ---
 
 ## §C3 — Component craft
 
 ### Depth & elevation
-**CC-1 · Layered shadows, never one hard shadow.** Stack 3–6 `box-shadow`s with
-increasing offset/blur and decreasing opacity (8–20% per layer, lower at higher
-elevation). One light source, **above and slightly left**, vertical offset ≈ **2×**
-horizontal — every shadow on the page shares it. **Tint the shadow toward the surface
-hue**, never pure `rgba(0,0,0)`. *Why: real penumbra is a gradient; one black shadow
-looks like a cutout sticker.* ([Josh Comeau Shadows], [Tobias Ahlin])
+**CC-1 · Establish a reason for depth before choosing a shadow.** Flat, tonal,
+soft-shadow, and intentional hard-shadow treatments can all fit a selected system.
+When a soft material calls for it, layered shadows can approximate a penumbra;
+the number of CSS layers is not a quality test. Coordinate direction, softness,
+tint, and elevation by role. Do not require an above-left source or tinted shadow
+for every material. [Josh Comeau's shadow guide](https://www.joshwcomeau.com/css/designing-shadows/)
+is a technique reference, not a universal layer-count requirement.
 
 **CC-2 · Two shadow intents:** small/tight = element sits *near* the page (buttons,
 inputs); large/blurry = element *floats toward* the user (modals, popovers, dragged
@@ -180,16 +194,19 @@ corner "bulges" past the outer arc.* Apple's Liquid Glass formalizes this. ([Clo
 **CC-5 · Heights 36 / 40 / 44–48px;** touch target ≥ **44px** (iOS) / **48dp** (Android).
 Horizontal padding ≈ **2× vertical**, on grid. Icon+label gap **8px** (4px dense). ([Justinmind], [Apple HIG])
 
-**CC-6 · One primary button per view.** Hierarchy by **contrast** (filled → outline →
-ghost), never by size. Destructive is red but **never** more prominent than the
-primary. All buttons in a row share one height. ([Cieden Button Hierarchy], [Carbon])
+**CC-6 · Make the next action clear within each decision region.** A page-level
+Share action and a filter popover's Apply action can coexist because their scopes
+are distinct. Use placement, label, contrast, size, and grouping appropriate to
+the task; filled/outline/ghost is one possible hierarchy. A destructive confirmation
+may have a locally prominent destructive action with explicit consequences and a
+safe cancel/recovery path. Avoid competing actions within the same decision.
 
 ### Cards
-**CC-7 · Padding 16 / 24 / 32px** equal on all sides; radius obeys the system
-personality and the nested law for inner media/buttons. **Border XOR shadow, never
-both** — flat/dense UI uses a 1px border (elevation 0); standalone/floating uses a soft
-shadow (elevation 1). Hover on an interactive card = raise **one** elevation tier over
-~200ms, not a scale jump. ([Material 3 Elevation], [Refactoring UI])
+**CC-7 · Containment serves the content.** Reuse role-based padding, radius, and
+elevation tokens. Equal padding is a starting point; optical alignment or attached
+media may justify different edges. Border and shadow can coexist when one defines
+the boundary and the other a floating layer. Reject redundant emphasis, not the
+combination itself. Hover communicates interactivity without requiring lift or scale.
 
 ### Inputs & forms
 **CC-8 · Input height = button height** (default 40px; 44–48 touch). Label **above** the
@@ -199,125 +216,89 @@ Focus ring **≥2px, 3:1 contrast**, visible on light *and* dark (WCAG 2.2). Err
 it. Rhythm: 8px label→field, 4px field→helper, 16–24px between fields. ([UX Collective Text Fields], [WCAG 2.2])
 
 ### Icons
-**CC-9 · One family, one fill mode, one stroke weight** (typically **2px @ 24px**).
-Optically size and center (tall/wide glyphs get nudged), align to text via
-`currentColor` at ~1em–1.25em. Semantics: **outline = default/inactive, filled =
-active/selected** — and if you use both, make filled optically lighter so weights
-match. ([Material 3 Icons], [Dutchicon])
+**CC-9 · Coordinate icon family, optical weight, and state variants.** A 2px stroke
+at 24px is one example. Outline default and filled selected can coexist when their
+meaning is repeated and accessible; neither one fill mode nor one absolute stroke
+width is mandatory at every size. Align icons optically with their labels.
 
-**CC-9a · NEVER use emoji as UI icons** (🚗 🧺 🔥 ☀️ ⭐ …). Emoji render in fixed
-multi-color across platforms, so they **inject 5–10 uncontrolled hues** and break the
-single-accent rule instantly — this is one of the most common reasons an AI-built screen
-"looks random/noisy." Emoji also vary per OS and ignore your stroke/size system. Use a
-**single line-icon set** (Lucide, Heroicons, Phosphor) in **`currentColor`**, tinted
-greyscale or the accent — not emoji. Emoji are acceptable *only* as user-generated content
-(a reaction, a name a user typed), never as interface chrome (list bullets, nav, status,
-category markers, favorite stars).
+**CC-9a · Use predictable functional icons.** Platform-dependent emoji are poor
+substitutes for navigation, status, or action symbols because their glyphs and
+meaning vary and may ignore the project's icon system. Use the approved functional
+icon family with accessible labels. User content, reactions, and approved brand
+illustrations have separate roles; their hue count alone is not a defect.
 
-**CC-9b · Avoid the "AI-generated" icon-chip cliché.** The opposite failure from emoji: a
-**generic Lucide line-icon inside an identical pale-tinted rounded-square chip** (`bg-{accent}-50
-rounded-lg p-2` + icon), repeated for *every* feature card, step, and bullet. Because every AI
-agent reaches for the same default icon set and the same default chip treatment, this exact
-pattern has become one of the most recognizable "a coding agent built this" tells — coherent, but
-anonymous. Escape it by choosing at least one: (a) **drop the chip** and let a slightly larger
-mono icon sit inline with the heading; (b) vary treatment by role instead of one uniform chip;
-(c) use an icon set with more character (Phosphor duotone, a custom set) or a signature accent
-shape; (d) replace decorative feature-icons with **numbered/typographic markers** (01 · 02 · 03).
-Icons should earn their place, not auto-decorate every row. One distinctive treatment beats the
-default chip on everything.
+**CC-9b · Decorative markers need a purpose.** A generic icon chip on every feature
+may add noise without explaining the product. Omit unhelpful markers or use a
+project-appropriate icon, image, or typographic treatment. Repeated chips are valid
+for repeated navigation or categories; switching icon sets just to appear original
+is not an improvement.
 
-**CC-9c · Don't let the escape hatch become the new uniform (the 2nd-generation tells).** When
-every agent flees the same cliché through the same exit, the exit becomes the next cliché. Already
-recognizable as "an agent did this":
-- **Ghost index numbers (01 · 02 · 03) on every section** — great once, a tell when it's the
-  default replacement for every icon chip
-- **UPPERCASE-overline + big-number card** repeated identically for every KPI
-- **Text-left / visual-right hero + two pill CTAs + a rating row** — the stock DTC composition
-- **The symmetric 8+4 / 8+4 dashboard grid** — correct, but machine-neat
+**CC-9c · Preserve equivalent presentation for equivalent information.** Repeated
+KPI labels, index numbers, panels, or collections are valid when they aid comparison
+or navigation. Vary composition when priority, data question, or narrative role
+changes. Do not impose a signature count or redesign adjacent sections merely
+because their anatomy repeats. Consistent image treatment, type roles, alignment,
+and content can express identity without decorative novelty.
 
-The rule: **pick ONE signature treatment per project and vary the section anatomy.** Rotate from a
-wider menu — oversized serif index on the *single most important* step only, hairline-joined grids
-(one border-box, no per-card chrome), side-margin labels, inline annotations/underlines, a
-full-bleed color band for ONE section, bento variation (one 2×-weight cell), numbered *text*
-headers (no ghost styling). If two adjacent sections have identical anatomy (marker + heading +
-body ×N), redesign one of them. Signature = used once or twice with intent; uniform = the tell.
+**CC-9d · Evaluate type, surface, and imagery together in context.** Serif, warm
+paper across the whole canvas, hard black, dense tool panels, and quiet neutral UI
+are not violations by themselves. Judge reading, task focus, and the approved
+brand language. A creator's colorful work can sit inside restrained editing chrome;
+an editorial site can use serif body text. Neither a white base nor a fashion date
+is a universal quality floor. Inspect real text, content, and surface relationships.
 
-**CC-9d · Distinctive must not cost freshness ("generic → dated" is a different failure, not an
-escape).** Overshooting the editorial direction — a full beige/paper page background + a serif
-face on *everything* + heavy ink blocks — stops reading "designed" and starts reading "government
-pamphlet / insurance terms," especially in Korean (명조 전면 사용 = 신문/약관 느낌). The modern
-floor:
-- **Base stays fresh**: page background white or near-white; warm/tinted paper tones are a
-  *section* accent (one band, a card), never the whole canvas.
-- **Serif is seasoning, not the diet**: display serif on the hero headline or ONE key number —
-  body, labels, UI chrome stay in a modern sans (Pretendard/Inter). Never serif body on a SaaS/
-  product surface. Prefer contemporary serifs (Fraunces, Newsreader; KR: 본명조 display cuts) over
-  dated ones.
-- **Keep the air**: distinctive treatments must preserve whitespace and lightness — density +
-  dark blocks + serif compounds into "old", not "premium".
-- Quick self-check: *"would this pass as a 2026 product site, or does it look like a 2010s
-  brochure?"* If unsure, pull the base back to white and re-check.
-**CC-10 · One state-layer ramp everywhere** (Material 3 canonical: hover **8%**, focus
-**10%**, pressed **10%**, dragged **16%**; disabled = 38% content / 12% container) — a
-translucent overlay of the on-color, one state at a time. Transitions **150–200ms**
-for hover/press, ~300ms for larger moves, one shared easing; animate transform &
-opacity, not layout. *"Polished" = layered low-opacity shadow + crisp focus ring +
-real hover/active/disabled states + on-grid spacing. "Flat/unfinished" = one hard
-shadow, no focus state, color-only errors, off-grid spacing.* ([Material 3 States])
+**CC-10 · Repeat state feedback by control role.** Preserve the approved project's
+hover, focus, press, drag, selected, and disabled treatment. Material state-layer
+percentages are implementation examples for that system, not mandatory opacity
+values for every UI. Links may underline while buttons change fill. Keep visible
+focus, non-color error cues, and coherent timing; motion must not delay interaction.
+Flat or hard-shadow designs still need complete functional states.
 
 ---
 
 ## §C4 — Color & dark mode
 
-**CL-1 · Build every color as a ramp,** 9–11 steps (`50 → 950`), **500 = base**. Author
-in **HSL / OKLCH / LCH, never raw hex** — and **raise chroma at the extremes** (L<20%,
-L>90%) to fight wash-out. *Why: hue/saturation/lightness map to human vision; hex
-doesn't.* ([Refactoring UI Color], [UX Bootcamp HSL])
+**CL-1 · Map values to semantic roles.** Reuse the approved palette and its primitive
+ramps. Perceptual spaces such as OKLCH are useful for generation and gamut correction;
+raw hex is a valid token representation, not a design flaw. Do not hand-adjust chroma
+at extreme lightness without checking gamut and contrast. `PALETTE-RECIPES.md` owns
+StyleSeed's generator and validated role pairs.
 
-**CL-2 · One accent + a full grey ramp.** Greys (8–10 steps) carry text/surfaces/borders.
-Add only **4 semantic hues** — success/warning/error/info — used strictly by meaning,
-never decoration. Prefer role-named **semantic tokens** (`primary`, `surface`, `error`)
-so themes swap automatically. ([Refactoring UI], [Apple HIG Color])
+**CL-2 · Assign stable roles to action, status, category, brand, and content color.**
+Neutral chrome with one action accent is a useful option, not a hue-count limit.
+A multicolored brand, product photo, avatar, or categorical visualization can coexist
+with identifiable actions and severity. Judge conflicting emphasis and lost meaning.
 
-**CL-2a · Status color is for *severity*, not for every row.** The fastest way to make a
-list look noisy is to put a colored badge on **every** item. Rules: (1) **A normal / OK /
-"보통" / default state is NEUTRAL grey — never colored.** Color is an exception that means
-"look here," so coloring the default makes everything shout and nothing reads. (2) Map color
-to severity **consistently**: positive/good = success green (or neutral), needs-attention =
-warning amber, bad/blocked = error red — and the same score must always get the same color.
-(3) Reserve color for the **minority** of items that actually need attention; if most rows
-are "fine," most rows are grey. (4) Pair the color with text/icon (CL-4) so it survives
-colorblindness and greyscale. *A screen where 80% of badges are colored has no hierarchy.*
-For the **soft chip background** behind a status label, use the skin's tint tokens —
-`bg-success-tint`, `bg-warning-tint`, `bg-destructive-tint`, `bg-info-tint` (a foreground
-of the matching `text-success`/`text-warning`/… ) — **don't hand-mix a one-off hex**; the
-tints auto-adapt to dark mode.
+**CL-2a · Status reflects actual state.** Neutral normal states can help an exception
+queue; repeated green healthy states may help a monitor. Choose by the user's task,
+apply the same mapping consistently, and keep anomalies easy to distinguish. Do not
+recolor equivalent states to add variety or use the proportion of colored badges as
+a quality score. Pair color with text/icon/shape. Use semantic foreground and tint
+tokens, revalidated for each theme, instead of local color mixtures.
 
-**CL-2b · No decorative hues.** Favorite stars, category dots, avatars, section markers, and
-illustrations must use the **accent or the grey ramp** — not a new color each (gold stars,
-rainbow category dots, a different hue per card). Decoration is exactly where the 2nd, 3rd,
-4th accent sneaks in. One accent + greys, everywhere, including the "fun" bits.
+**CL-2b · Content color is not automatically an extra action accent.** Categories,
+editorial fields, avatars, and illustrations may use their own coordinated palettes.
+Record what the colors mean and which belong to content rather than controls. Check
+that action, focus, and severity remain identifiable in the actual composition.
 
-**CL-2c · Favorite / saved / rating affordances use shape, not a special color.** A
-bookmark/favorite/star/heart toggle conveys on/off by **fill, not hue**: **filled in the
-accent = on, outline in grey = off** (or filled grey if the accent is already busy nearby).
-A rating shows N filled accent/grey icons of M. Do **not** reach for gold stars, a red heart,
-or any one-off color — that's a hidden second accent. This is the compliant way to express
-"saved/favorite," so the affordance never has to be dropped for coherence.
+**CL-2c · Saved and rating affordances need stable meaning.** Fill/outline plus an
+accessible selected state can distinguish on/off. A gold rating or red favorite is
+valid when it is a maintained role, not a new ad-hoc emphasis on each component.
+Retain labels or shape cues; color alone must not convey the state.
 
-**CL-3 · Tint your greys.** Give the neutral ramp a **5–15% tint** toward the brand hue
-(or a deliberate warm/cool bias), consistent across all steps. **No pure `#000` text** —
-use the 900/950 neutral. *Why: pure grey looks lifeless and clashes with the accent.*
-([Refactoring UI neutrals])
+**CL-3 · Neutral temperature follows the palette.** Tinted, neutral, warm-paper,
+and structural hard-black tokens are valid when the project system coordinates them.
+Choose through contrast and content relationships, not a fixed tint percentage or
+an automatic ban on black.
 
 **CL-4 · Contrast floors (WCAG 2.2 AA):** body **≥4.5:1**, large text (≥24px / ≥18.66px
 bold) **≥3:1**, UI components & graphics **≥3:1**. AAA = 7:1 / 4.5:1. **Never convey
 info by color alone** — pair with text/icon/shape. ([WCAG 2.2], [WebAIM])
 
-**CL-5 · Dark mode is not an invert.** Base = **#121212** (not `#000`); raise elevation
-with white overlays (~5% @1dp, 8% @2dp, 12% @8dp, 16% @24dp). **Desaturate accents
-~25%** (Material: primary tone 40→80). Re-derive each role from the tonal palette.
-([Material Dark Theme], [Material 3 Color])
+**CL-5 · Re-derive dark roles rather than inverting colors.** Preserve readable
+foreground/surface pairs, focus, status, and distinguishable layers. Tonal elevation
+is often useful; a fixed #121212 base, overlay percentage, or desaturation amount
+is not universal. Follow the selected palette and inspect every relevant state.
 
 ---
 
@@ -336,35 +317,33 @@ spatial, flow. Don't use a pie for a trend. ([FT Visual Vocabulary])
 gridlines, borders. **Direct-label instead of legends** (also helps color-blind users
 and cuts eye travel). ([Tufte data-ink], [NN/g Clutter])
 
-**CD-4 · Number craft.** Tabular numerals, **right-aligned** numbers (decimals stack),
-left-aligned text labels. A single KPI = **one big bold number + ▲/▼ delta + inline
-sparkline**; a big number beats a chart when the answer is one value. KPIs 4-per-row,
-≤2 rows. Series **≥3:1 vs background**; colorblind-safe; always offer **"View as data
-table."** ([Five Rules for Tables], [Tufte sparklines])
+**CD-4 · Number craft follows the question.** Align comparable numeric columns and
+use tabular figures where alignment matters. A KPI needs a label, value/unit, and
+interpretation context; a delta needs a real baseline, and a sparkline needs real
+time-series data. Equal questions may use identical panels. Choose row/column counts
+by comparison and viewport, not a four-per-row or two-row quota. Provide equivalent
+accessible data; chart marks and labels meet their applicable contrast requirements.
+A shared scope or legend can supply context without duplicating a footer on each chart.
 
 ---
 
-## §C6 — 2025–2026 trends: durable vs fad
+## §C6 — Dated style signals and functional requirements
 
-**Durable** (adopt): design tokens for every value · **bento grids** (mixed-size cards,
-8pt gaps) for overview/dashboard surfaces · **big type** as a hierarchy tool · matured,
-*subtle* glassmorphism (Apple Liquid Glass — translucency + real-time lensing, not
-heavy blur) · **soft layered shadows** · **curated information density** (Linear/Notion/
-Stripe — pack more per screen but let hierarchy carry it) · transparent, controllable
-**AI UX**.
+The 2025–2026 discussion of bento grids, large type, translucent materials, layered
+shadows, and denser tools is a set of contextual style options, not evidence that
+these forms are durable or required. Mixed-size cells suit unequal priorities;
+comparable data may need equal panels. Glass needs legibility and a solid fallback;
+flat or hard-shadow systems remain valid. Never add a trend just to clear a score.
 
-**Fad / use sparingly** (brand-expression only): neumorphism (fails contrast) ·
-neubrutalism (poor for dense/utility UI) · kinetic/morphing type in product chrome ·
-hiding info behind clicks in the name of minimalism · low-contrast "calm" palettes
-that drop below the 4.5:1 floor.
+Judge any style by the same functional floors: readable contrast, identifiable
+controls, honest content, safe interaction, and complete reduced motion. Low contrast
+or hidden essential information is a defect whatever aesthetic name it uses.
 
-**AI-product UX specifics:** stream output with explicit **listening → thinking →
-doing** states + a **Stop** button; place **citations inline next to the claim** with
-meaningful labels; use **neutral, non-anthropomorphic** copy + a "verify outputs"
-disclaimer near the input; never present step-by-step "reasoning" as ground truth.
-([NN/g Explainable AI], [Envato Trends], [MyDesigner Density])
-
----
+**AI-product feedback:** expose actual waiting/streaming/tool/error states, cancellation
+where supported, and sources near the claims they support. State uncertainty where it
+matters to the decision. Avoid invented progress, anthropomorphic claims of knowledge,
+or presenting generated explanations as verified reasoning. This is a functional
+contract, not a requirement for a particular chat layout or animation.
 
 ## Sources
 
@@ -377,6 +356,7 @@ FT Visual Vocabulary & Edward Tufte (data-ink, sparklines) · Nielsen Norman Gro
 Cloud Four (nested radius) · Baymard Institute (line length) · Atlassian Design,
 Shopify Polaris, EightShapes, Cieden, Designary (spacing & type systems).
 
-*Numbers are sourced defaults; treat the structural laws (one-choice-per-axis,
-layered shadows, nested radius, proximity, contrast floors) as load-bearing and the
-exact figures as sensible starting points.*
+*Applicability and evidence matter more than numeric conformity. Required accessibility
+and functional floors remain intact; token examples, layer counts, and aesthetic treatments
+remain contextual. Static reference observations do not prove mobile usability, motion
+quality, conversion lift, or expert acceptance.*

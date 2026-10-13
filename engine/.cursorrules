@@ -26,9 +26,10 @@ Core rules:
 - Fix the design method, not one Toss-like aesthetic.
 - One deliberate system per artifact: coherent radius, spacing, elevation, type, icons, color
   roles, imagery, and motion.
-- One focal point and one identifiable primary action.
+- Task-appropriate attention and identifiable primary actions within decision regions;
+  comparable monitoring regions may share weight.
 - Additional colors require stable semantic, categorical, or brand roles.
-- Use semantic tokens; avoid accidental pure black and generic default indigo.
+- Use semantic tokens and approved brand choices; unchosen defaults are not project intent.
 - Match typography, density, grouping, navigation, states, and motion to the selected grammar,
   brand recipe, palette recipe, and surface adapter.
 - Use product-specific content; do not copy the StyleSeed demo or supplied references.

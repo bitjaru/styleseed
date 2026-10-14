@@ -178,6 +178,24 @@ test("current evidence is rechecked read-only and success is artifact-scoped", (
   assert.equal(diagnose(root, ["--artifact", "dashboard"]).report.artifacts[0].evidence.status, "invalid");
 });
 
+test("an empty run directory from an interrupted init is incomplete, not invalid evidence", (t) => {
+  const root = temporary(t);
+  app(root);
+  compile(root);
+  mkdirSync(resolve(root, ".styleseed/evidence/dashboard/interrupted-run"), { recursive: true });
+  const before = snapshot(root);
+  const interrupted = diagnose(root, ["--artifact", "dashboard"]);
+  assert.equal(interrupted.exit, 1);
+  assert.equal(interrupted.report.artifacts[0].evidence.status, "missing");
+  assert.deepEqual(interrupted.report.artifacts[0].evidence.runs.map((run) => [run.id, run.status]), [["interrupted-run", "incomplete"]]);
+  assert.deepEqual(snapshot(root), before);
+  assert.equal(existsSync(resolve(root, ".styleseed/evidence/dashboard/interrupted-run")), true);
+  syntheticEvidence(root, "dashboard");
+  const recovered = diagnose(root, ["--artifact", "dashboard"]);
+  assert.equal(recovered.exit, 0);
+  assert.deepEqual(recovered.report.artifacts[0].evidence.currentRunIds, ["fixture-run"]);
+});
+
 test("shared UI edits invalidate both artifacts while preserving approved DNA and bundles", (t) => {
   const root = temporary(t);
   app(root);

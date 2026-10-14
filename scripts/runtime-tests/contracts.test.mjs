@@ -15,6 +15,7 @@ import {
   safeProjectPath,
   sha256,
 } from "../../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/runtime-contract.mjs";
+import { compileContext } from "../../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/compiler.mjs";
 
 const repoRoot = resolve(fileURLToPath(new URL("../../", import.meta.url)));
 const references = resolve(repoRoot, "engine/.claude/skills/styleseed/workflows/ss-resolve/references");
@@ -37,6 +38,26 @@ const artifactInput = {
   implementation: { sourceRoots: ["src/app/dashboard"], tokenFiles: ["src/styles/tokens.css"] },
   validation: { scoreFloor: 80, requiredRenders: [{ id: "desktop-loaded", state: "loaded", viewport: { width: 1440, height: 1000 } }], temporal: { required: false, scenarios: [] }, humanAcceptance: false },
 };
+// Covers the JSON Schema subset used by the shipped StyleSeed reference schemas.
+function schemaErrors(schema, value, root = schema, path = "$") {
+  if (schema.$ref) return schemaErrors(schema.$ref.split("/").slice(1).reduce((node, key) => node[key], root), value, root, path);
+  const type = Array.isArray(value) ? "array" : value === null ? "null" : Number.isInteger(value) ? "integer" : typeof value;
+  if (schema.type && schema.type !== type) return [`${path}: expected ${schema.type}, got ${type}`];
+  const errors = [];
+  if ("const" in schema && canonicalJson(schema.const) !== canonicalJson(value)) errors.push(`${path}: expected ${JSON.stringify(schema.const)}`);
+  if (schema.enum && !schema.enum.includes(value)) errors.push(`${path}: ${JSON.stringify(value)} is not allowed`);
+  if (schema.pattern && !new RegExp(schema.pattern, "u").test(value)) errors.push(`${path}: does not match ${schema.pattern}`);
+  if (schema.minimum !== undefined && value < schema.minimum) errors.push(`${path}: below ${schema.minimum}`);
+  if (type === "object") {
+    for (const key of schema.required ?? []) if (!Object.hasOwn(value, key)) errors.push(`${path}: missing ${key}`);
+    for (const [key, child] of Object.entries(value)) {
+      if (schema.properties?.[key]) errors.push(...schemaErrors(schema.properties[key], child, root, `${path}.${key}`));
+      else if (schema.additionalProperties === false) errors.push(`${path}: unexpected ${key}`);
+    }
+  }
+  if (type === "array" && schema.items) value.forEach((item, index) => errors.push(...schemaErrors(schema.items, item, root, `${path}[${index}]`)));
+  return errors;
+}
 const reverseKeys = (value) => Array.isArray(value)
   ? value.map(reverseKeys)
   : value && typeof value === "object"
@@ -137,4 +158,26 @@ test("functional outcomes are optional, sorted, nonempty and unique safe IDs", (
     assert.throws(() => normalize(functional));
   }
   assert.equal(Object.hasOwn(normalizeArtifact(artifactInput, project, catalog).validation, "functional"), false);
+});
+
+test("compiled registry manifests satisfy the published manifest schema", () => {
+  const manifestSchema = JSON.parse(readFileSync(resolve(references, "manifest.schema.json"), "utf8"));
+  const project = normalizeProject(projectInput, catalog);
+  const functionalArtifactInput = { ...artifactInput, validation: { ...artifactInput.validation, functional: { scenarios: ["save"] } } };
+  for (const input of [artifactInput, functionalArtifactInput]) {
+    const { manifest } = compileContext({
+      catalog,
+      projectRoot: repoRoot,
+      agent: "codex",
+      normalizedProject: project,
+      normalizedArtifact: normalizeArtifact(input, project, catalog),
+      inputFiles: {
+        project: { path: ".styleseed/project.json", content: `${JSON.stringify(projectInput)}\n` },
+        artifact: { path: ".styleseed/artifacts/app-dashboard.json", content: `${JSON.stringify(input)}\n` },
+      },
+      mode: "registry",
+    });
+    assert.ok(manifest.outputs.some((entry) => entry.kind === "palette-json"), "fixture should exercise palette outputs");
+    assert.deepEqual(schemaErrors(manifestSchema, manifest), []);
+  }
 });

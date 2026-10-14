@@ -3,7 +3,7 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { generatePalette } from "../engine/color/generator.mjs";
+import { generatePalette, hexToOklch } from "../engine/color/generator.mjs";
 
 const root = resolve(fileURLToPath(new URL("../", import.meta.url)));
 const palettes = JSON.parse(readFileSync(resolve(root, "engine/color/palettes.json"), "utf8"));
@@ -69,6 +69,21 @@ for (const input of generatedCases) {
   if (!generated.css.includes("--ss-primary-950") || !generated.css.includes("--ss-accent-950")) failures.push(`${label}: CSS must include both ramps`);
   if (generated.contrast.some((item) => !item.pass)) failures.push(`${label}: generated contrast gate failed`);
   if (JSON.stringify(generated) !== JSON.stringify(generatePalette(input))) failures.push(`${label}: generator is not deterministic`);
+}
+
+// Achromatic keys have no hue to preserve: the primary must stay ink/paper, never a fallback hue.
+for (const keyColor of ["#000000", "#111111", "#2B2B2B", "#808080", "#F5F5F5"]) {
+  for (const mode of ["light", "dark"]) {
+    for (const temperature of ["neutral", "warm", "cool"]) {
+      const generated = generatePalette({ keyColor, mode, temperature });
+      const label = `${keyColor}/${mode}/${temperature}`;
+      const primary = hexToOklch(generated.roles.primary);
+      if (primary.c >= 0.025) failures.push(`${label}: achromatic key produced a chromatic primary ${generated.roles.primary}`);
+      if (Object.values(generated.ramps.primary).some((hex) => hexToOklch(hex).c >= 0.025)) failures.push(`${label}: achromatic key produced a chromatic primary ramp`);
+      if (mode === "light" ? primary.l > 0.36 : primary.l < 0.89) failures.push(`${label}: achromatic primary must stay near ink/paper, got ${generated.roles.primary}`);
+      if (temperature === "neutral" && hexToOklch(generated.roles.background).c >= 0.002) failures.push(`${label}: neutral surfaces were tinted by a fallback hue`);
+    }
+  }
 }
 
 for (const [label, input] of [

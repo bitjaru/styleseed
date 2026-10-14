@@ -200,14 +200,22 @@ export function generatePalette(options = {}) {
   const temperature = option(options.temperature, "neutral", Object.keys(TEMPERATURE_HUE), "temperature");
   const config = CHARACTER[character];
   const key = hexToOklch(keyColor);
-  const keyHue = key.c < 0.025 ? 250 : key.h;
-  const neutralHue = TEMPERATURE_HUE[temperature] ?? keyHue;
-  const neutralChroma = temperature === "neutral" ? Math.min(config.surface, Math.max(0.004, key.c * 0.08)) : config.surface;
+  // Black, charcoal, and grey keys have no hue to preserve: their identity is ink. The fallback
+  // hue only seeds companion scoring; it must not tint the primary, its ramp, or neutral surfaces.
+  const achromatic = key.c < 0.025;
+  const keyHue = achromatic ? 250 : key.h;
+  const identityHue = achromatic ? key.h : keyHue;
+  const neutralHue = TEMPERATURE_HUE[temperature] ?? identityHue;
+  const neutralChroma = temperature !== "neutral" ? config.surface : achromatic ? key.c * 0.08 : Math.min(config.surface, Math.max(0.004, key.c * 0.08));
   const darkInk = surfaceColor(mode === "dark" ? 0.10 : 0.15, neutralHue, neutralChroma * 0.55);
   const lightPaper = surfaceColor(mode === "dark" ? 0.96 : 0.99, neutralHue, neutralChroma * 0.42);
 
-  const primaryChroma = clamp(Math.max(key.c, 0.095) * config.chroma, 0.075, character === "vivid" ? 0.25 : 0.19);
-  const primary = accessibleFill({ l: mode === "dark" ? config.primaryDark : config.primaryLight, c: primaryChroma, h: keyHue }, darkInk, lightPaper);
+  const primaryChroma = achromatic ? key.c : clamp(Math.max(key.c, 0.095) * config.chroma, 0.075, character === "vivid" ? 0.25 : 0.19);
+  // A mid-grey action reads as disabled, so achromatic primaries stay near the mode's ink or paper.
+  const primaryLightness = achromatic
+    ? mode === "dark" ? clamp(key.l, 0.90, 0.96) : clamp(key.l, 0.15, 0.35)
+    : mode === "dark" ? config.primaryDark : config.primaryLight;
+  const primary = accessibleFill({ l: primaryLightness, c: primaryChroma, h: identityHue }, darkInk, lightPaper);
   const accentChoice = chooseAccentHue(keyHue, harmony, character);
   const accentChroma = clamp(Math.max(primary.color.c * config.accent, 0.085), 0.075, character === "vivid" ? 0.22 : 0.17);
   const accent = accessibleFill({ l: mode === "dark" ? 0.79 : 0.48, c: accentChroma, h: accentChoice.hue }, darkInk, lightPaper);
@@ -283,9 +291,10 @@ export function generatePalette(options = {}) {
       accent: { hue: Number(accentChoice.hue.toFixed(2)), offset: accentChoice.offset, method: harmony, avoidsStatusCollisionBy: Number(accentChoice.semanticDistance.toFixed(2)) },
       primaryAdjustedForContrast: primary.adjusted,
       accentAdjustedForContrast: accent.adjusted,
+      ...(achromatic ? { achromaticKey: "The key has no hue; the primary stays ink-neutral and only the companion accent carries hue." } : {}),
       allocation: { dominant: "canvas and surfaces", secondary: "chrome, type, and supporting structure", accent: "task-appropriate primary/accent emphasis; no universal percentage" },
     },
-    ramps: { primary: makeRamp(keyHue, primaryChroma), accent: makeRamp(accentChoice.hue, accentChroma) },
+    ramps: { primary: makeRamp(identityHue, primaryChroma), accent: makeRamp(accentChoice.hue, accentChroma) },
     roles,
     contrast: contrastChecks,
     valid: contrastChecks.every((item) => item.pass),

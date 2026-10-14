@@ -20,7 +20,7 @@
   },
   "context": {
     "engineVersion": "5.0.0",
-    "engineRevision": "sha256:e0581da992aa79dec04e49c6d4d9d8c265f8f22e8bc277439ed7446cb2f1e1e2",
+    "engineRevision": "sha256:05d92b67570f83c3a451ba849c085e25281622c610b53bbd3281e398fa90858b",
     "resolverSkill": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/styleseed/workflows/ss-resolve/WORKFLOW.md",
     "catalogUrl": "https://styleseed-demo.vercel.app/.well-known/styleseed/context-catalog.json",
     "grammarIds": [
@@ -107,7 +107,7 @@
       "source": "engine/color/generator.mjs",
       "sourceUrl": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/color/generator.mjs",
       "cliUrl": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/color/generate-palette.mjs",
-      "digest": "sha256:64f8f556a16e7b0573605de7170ace44bbf631b9bce6090fcc7bde28a1f84340"
+      "digest": "sha256:c7b7faa41d90158bf0d9f871573d2892ed2c4df919511af3965eb6740ff2118f"
     },
     "profileIds": [
       "swiss",
@@ -1263,7 +1263,7 @@
     "source": "engine/color/generator.mjs",
     "sourceUrl": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/color/generator.mjs",
     "cliUrl": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/color/generate-palette.mjs",
-    "digest": "sha256:64f8f556a16e7b0573605de7170ace44bbf631b9bce6090fcc7bde28a1f84340"
+    "digest": "sha256:c7b7faa41d90158bf0d9f871573d2892ed2c4df919511af3965eb6740ff2118f"
   },
   "skins": [
     {

@@ -53,13 +53,18 @@ function evidenceCheck(root, entry, verifyEvidenceRun) {
       runs.push({ id: name, status: "invalid", errors: ["Expected a safe run ID and directory"] });
       continue;
     }
+    // An interrupted init can leave an empty run directory; it makes no evidence claim either way.
+    if (readdirSync(path).length === 0) {
+      runs.push({ id: name, status: "incomplete", errors: ["Empty run directory from an interrupted evidence init; it holds no evidence and can be removed."] });
+      continue;
+    }
     const result = verifyEvidenceRun({ projectRoot: root, artifactId: entry.id, runId: name, writeSummary: false });
     runs.push({ id: name, status: result.ok ? "current" : "invalid", gates: result.gates, errors: result.errors, warnings: result.warnings });
   }
   // Old invalid runs are history, not a veto on a run bound to current inputs.
   const currentRunIds = runs.filter((run) => run.status === "current").map((run) => run.id);
   return {
-    status: currentRunIds.length ? "current" : runs.length ? "invalid" : "missing",
+    status: currentRunIds.length ? "current" : runs.some((run) => run.status !== "incomplete") ? "invalid" : "missing",
     currentRunIds,
     runs,
     ...(currentRunIds.length ? {} : { next: "Collect fresh evidence for the current artifact; cached verification.json is not proof." }),

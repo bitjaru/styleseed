@@ -1040,7 +1040,9 @@ node engine/color/generate-palette.mjs \
 - **Character precedes harmony.** Lightness and chroma determine calm, intensity, depth, and
   legibility more reliably than complementary or triadic hue geometry alone.
 - **Key hue is preserved.** Out-of-gamut colors reduce chroma at fixed lightness and hue instead
-  of clipping RGB channels and shifting identity.
+  of clipping RGB channels and shifting identity. An achromatic key (black, charcoal, grey) has no
+  hue to preserve: its primary stays ink in light mode and paper in dark mode, neutral surfaces
+  stay untinted, and only the companion accent carries hue.
 - **Companions are scored.** Candidate hues are evaluated for distance from the key and reserved
   success, warning, and danger families. `auto` changes its search envelope by character.
 - **Roles are derived.** Reference ramps feed stable semantic tokens; components never consume

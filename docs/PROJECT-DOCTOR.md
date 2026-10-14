@@ -30,7 +30,9 @@ No project files, Git index, lock choices, reports, approvals, or settings are w
 does not run application scripts, install dependencies, access the network, or trigger rendering.
 It does not trust cached `verification.json`; the verifier reads the underlying reports and
 attachments again. Old failed runs remain visible but do not invalidate a passing run bound to
-current inputs. No run is selected as "latest" using its name or file modification time.
+current inputs. No run is selected as "latest" using its name or file modification time. An
+empty run directory (left by an evidence init that failed before writing `gate-run.json`) is
+listed as `incomplete`; it is neither evidence nor proof of tampering, and can be removed.
 
 Registry mode always takes priority. A partial registry is an error, not a reason to use an old
 `STYLESEED.md`. Legacy compilation is checked, but registry evidence is `unsupported` until an

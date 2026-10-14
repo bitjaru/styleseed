@@ -291,8 +291,8 @@ export function generatePalette(options = {}) {
     valid: contrastChecks.every((item) => item.pass),
     assetBrief: {
       anchors: [background, primary.hex, accent.hex],
-      hierarchy: "background dominant; primary identifies the product/action; accent is rare supporting emphasis",
-      avoid: ["equal-area competing accents", "rainbow category decoration", "text baked into generated imagery"],
+      hierarchy: "Assign background, primary, and accent emphasis to the approved image role and content; preserve readable relationships without a fixed area ratio",
+      avoid: ["color roles that conflict with the approved task or brand", "decorative color that obscures content or state meaning", "essential text baked into generated imagery"],
     },
     reasoning: [
       "Character is chosen before harmony: lightness and chroma drive perceived calm or intensity more reliably than hue geometry alone.",

@@ -18,7 +18,7 @@ test("historical shape quotas and unsupported claims do not return through handb
     "engine/CRAFT-BASELINE.md", "engine/BRAND-RECIPES.md", "engine/PAGE-TYPES.md",
     "engine/APP-PLAYBOOKS.md", "engine/METHODOLOGY.md", "engine/PRODUCT-PRINCIPLES.md",
     "engine/AGENTS.md", "engine/.cursorrules",
-    ...["ss-build", "ss-score", "ss-review", "ss-page", "ss-dial", "ss-copy", "ss-verify"].map((id) => `engine/.claude/skills/styleseed/workflows/${id}/WORKFLOW.md`),
+    ...["ss-build", "ss-score", "ss-review", "ss-page", "ss-dial", "ss-copy", "ss-verify", "ss-audit", "ss-motion"].map((id) => `engine/.claude/skills/styleseed/workflows/${id}/WORKFLOW.md`),
   ];
   // Deliberately narrow historical directives; this is not a general natural-language linter.
   const regressions = [
@@ -38,6 +38,8 @@ test("historical shape quotas and unsupported claims do not return through handb
     /Establish one focal point; avoid equal-weight template grids/u,
     /does ONE element actually dominate|count the hues you actually SEE/u,
     /One focal point per screen and a clear information hierarchy/u,
+    /most important = biggest|one hero metric per page/u,
+    /[Oo]ne seed per product|framer-motion already throttles|motion seeds already do this/u,
   ];
   for (const path of sources) for (const obsolete of regressions) {
     assert.doesNotMatch(read(path), obsolete, `${path}: historical directive ${obsolete}`);
@@ -96,6 +98,7 @@ test("key-color overrides preserve semantic color gates without reintroducing ar
     assert.match(bundle, /Allocation follows the task and approved color roles/u);
     assert.doesNotMatch(bundle, /60% canvas|at most 10%|below ten percent/u);
     assert.doesNotMatch(JSON.stringify(palette.decisions.allocation), /\d+%/u);
+    assert.doesNotMatch(JSON.stringify(palette.assetBrief), /background dominant|accent is rare|equal-area competing/u);
     assert.equal(palette.input.keyColor, "#0F766E");
     assert.equal(palette.valid, true);
     assert.ok(palette.contrast.length > 0 && palette.contrast.every((pair) => pair.pass));

@@ -64,7 +64,7 @@ state", "items in a feed") rather than a feeling, recommend from the use-case ma
 | Number / balance / KPI / price reveal | **none** | don't animate the payload — it must read instantly |
 
 **Two anti-rules override the table** (state them if you deviate):
-1. **One seed per product.** If the project already uses a seed, match it — don't introduce a second personality.
+1. **One coherent motion language.** Preserve the approved default; task-specific page or element overrides are valid when their purpose and timing remain coordinated.
 2. **Never delay the payload.** Don't animate a balance, price, or search result into view; motion is for affordance, not content.
 
 ## Named motion keywords (distinctive moves)
@@ -97,9 +97,10 @@ own runnable `snippet`. Pull the snippet from there; never hand-write the params
 
 **Applying a keyword:**
 
-1. Read the exact recipe from `engine/motion/library.ts` — find the entry whose
-   `key` matches, copy its `snippet` verbatim (it is calibrated and runnable).
-2. Adapt only the element/content to the user's JSX; keep the transition values.
+1. Read the recipe in `engine/motion/library.ts` whose `key` matches. Its snippet is a
+   starting implementation, not a complete accessibility or state-handling contract.
+2. Preserve approved timing where applicable; adapt the component API, reduced-motion behavior,
+   interruption, and state handling to the real target. Do not copy unsupported imports.
 3. If the keyword is stateful (toggles, ripple), wire the `useState` shown in the
    snippet. If it's a one-shot reveal, a `key` bump replays it.
 4. Tell the user the keyword you applied so they can reuse it elsewhere for
@@ -154,11 +155,21 @@ Apply seed: **$0** · Context: **$1** · Target: **$ARGUMENTS**
 
 4. **Do NOT inline the params**. The whole point of the seed is that the values come from one source. Never expand `{ type: "spring", stiffness: 300, damping: 18 }` into the JSX — always spread the recipe.
 
-5. **Respect `prefers-reduced-motion`** in long-running surfaces. For one-off interactions (hover/press), framer-motion already throttles. For mount/exit/layout sequences in a long-lived page, import `usePrefersReducedMotion` and `REDUCED_TRANSITION` from `@engine/motion` and override the transition when reduced motion is on.
+5. **Wire reduced motion explicitly, including hover/press.** Seeds and snippets are static
+   configs. Inspect the host's `MotionConfig reducedMotion="user"` or preference-hook handling;
+   do not assume the library reduces motion without configuration. That MotionConfig disables
+   transform/layout animation, not every opacity, color, filter, video, or repeating effect.
+   Disable or replace nonessential movement and repetition while preserving state feedback.
+   `REDUCED_TRANSITION` alone shortens duration; it does not remove transforms or `repeat`.
+   See the [official Motion accessibility guide](https://motion.dev/docs/react-accessibility).
 
-6. **Validate** by re-reading the file and confirming the JSX still parses (matching brackets, motion tag closed, AnimatePresence in place if `exit` was used).
+6. **Validate the actual transition** through the existing `ss-verify` path: relevant pointer
+   and keyboard input, opening/closing, repeated input or interruption, and reduced motion.
+   Capture the relevant sequence when temporal evidence is required. JSX parsing alone is
+   insufficient. Report a blocked/unobserved transition rather than claiming it works.
 
-7. **Tell the user which seed and context you applied**, and offer one related context they might want next ("Want `press` too so it feels clickable?").
+7. **Report the purpose, seed/context, observed states, and remaining limits.** A simple
+   component change does not require the full Studio workflow or additional effects.
 
 ## Defaults if the user is vague
 
@@ -175,4 +186,6 @@ Apply seed: **$0** · Context: **$1** · Target: **$ARGUMENTS**
 - Do not add scroll-linked, parallax, or infinite animations *via this skill* — it does
   per-component seeds/moves. (Scroll-linked/parallax/3D ARE allowed on a marketing/landing/brand
   page per DESIGN-LANGUAGE §43 Cinematic tier — build those directly with a scroll lib; on
-  app/data surfaces they stay forbidden.) Infinite loops remain banned everywhere except skeleton pulse.
+  app/data surfaces they stay forbidden.) Repeating motion needs a real ongoing state,
+  an end condition or applicable pause control, and a reduced-motion alternative. Loading or live
+  indicators can qualify; decorative repetition alone does not. Stop the effect when its state ends.

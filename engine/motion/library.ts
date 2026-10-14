@@ -54,7 +54,7 @@ export const MOTION_CATEGORIES: { id: MotionCategory; label: string; blurb: stri
  * motion when" cheat on /motion and the recommend mode in /ss-motion.
  *
  * Two anti-rules override everything below:
- *   1. ONE seed per product — pick a personality and keep it; mixing reads as sloppy.
+ *   1. Preserve one coherent motion language; purposeful page/element overrides are valid.
  *   2. NEVER delay content the user came for — don't animate a balance, a search
  *      result, or a price into view. Motion is for affordance, not for the payload.
  */

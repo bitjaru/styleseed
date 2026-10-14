@@ -68,6 +68,13 @@ narrow/wide viewports, check actual gaps, insets, token resolution, grouping, re
 alignment, overflow, and loading/error layout. Inspect screenshots as well as geometry. Numeric
 compliance cannot establish good rhythm or human acceptance. Preserve unrelated spacing when repairing.
 
+For color/type changes and actual-content review, use the
+[applied checks](references/applied-checks.md): bind relevant consumers to their actual states and
+backgrounds, exercise representative mixed-script/fallback specimens, and preserve observed
+findings before reconciling automatic warnings. The shipped read-only `inspect-appearance.mjs`
+records scoped CSS/color/font observations; reuse the spacing inspector for no-wrap/overflow.
+Unsupported paint or unknown glyph fallback is unresolved, never a visual pass.
+
 ## Step 1 — Render it through the active adapter
 
 For `social-carousel`, `slide-deck`, `document-report`, or `single-frame`, use the companion
@@ -107,8 +114,11 @@ the component with realistic props, then screenshot that.
 
 ## Step 2 — Score what you SEE (the visual gate)
 
-Look at the image and run the StyleSeed gate **perceptually**. These are the checks that need
-eyes, not source:
+First record what the actual image communicates for the task, using the
+[observation procedure](references/applied-checks.md#observe-before-reconciling). Then reconcile
+code/automatic warnings with those observations and the compiled contract. If earlier scores
+were already visible, report an informed review rather than claiming blind independence.
+These are the checks that need eyes, not source:
 
 ```
 □ Attention      — can the user locate the reading promise, decision, or comparable regions?

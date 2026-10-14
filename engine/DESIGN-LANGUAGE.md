@@ -1473,7 +1473,8 @@ NO  Scroll-JACKING (hijacking scroll speed, trapping the user, shrinking header 
 NO  Scroll-linked timelines on an app/data surface
 NO  Pill toggle sliding (selection sliding effect)
 NO  Card zoom in/out on hover in a data grid
-NO  Infinite loop animations (except skeleton pulse)
+NO  Decorative repetition unrelated to an ongoing state
+    Loading/live indicators require an end condition and a reduced-motion alternative
 NO  Animating numbers / balances / money (except the ONE hero-metric count on load)
 ```
 
@@ -2474,8 +2475,10 @@ state is the most common AI omission.
 5. **Semantic structure** — one `h1`, logical heading order, real `<button>`/
    `<a>` (not click-divs), `alt` on images, `aria-label` on icon-only controls,
    `sr-only` for visually-hidden context.
-6. **Respect `prefers-reduced-motion`** — all entrance/loop/parallax motion drops
-   to ~0.01s (the motion seeds already do this; custom motion must too).
+6. **Respect `prefers-reduced-motion`** — explicitly disable or substitute nonessential
+   entrance/loop/parallax and interaction movement while preserving useful state feedback.
+   Seeds are static configs: the caller must wire preference handling and verify both modes.
+   Shortening duration alone does not remove spatial changes or repeated motion.
 
 ## 73. Responsive & Mobile Rules
 

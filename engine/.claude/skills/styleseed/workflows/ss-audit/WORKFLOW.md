@@ -22,20 +22,32 @@ When `.styleseed/project.json` and `.styleseed/artifacts/index.json` exist, reso
 
 Target: **$ARGUMENTS**
 
+## Scope and findings
+
+Inspect and recommend within the user's request. Read the compiled task and approved choices
+before using the checklist. Mark inapplicable checks N/A with a reason. Nielsen's heuristics
+are questions about usability; example widgets, palette conventions, and platform gestures
+are not universal requirements.
+
+Use the [observation and critique procedure](../ss-verify/references/applied-checks.md#observe-before-reconciling)
+when rendered evidence is available. Record the user's job and what the screen communicates
+before reconciling automatic warnings. If you only read source, label visual judgments unverified.
+Do not invent a rendered observation or turn a normal comparison grid into a hierarchy failure.
+
 ## Audit Framework
 
 ### Nielsen's 10 Usability Heuristics
 
 #### 1. Visibility of System Status
-- [ ] Loading states present (skeleton screens, not spinners)
-- [ ] Success/error feedback after actions (toast notifications)
+- [ ] Loading feedback suits the wait and known content shape; preserve orientation
+- [ ] Success/error feedback appears where the user needs it; inline or toast as appropriate
 - [ ] Progress indicators for multi-step flows
 - [ ] Active state clearly shown on navigation items
 - [ ] Real-time data has timestamp showing freshness
 
 #### 2. Match Between System and Real World
 - [ ] Labels use user's language, not technical jargon
-- [ ] Icons are universally recognizable (Lucide standard set)
+- [ ] Critical icons use the approved family and have understandable labels
 - [ ] Number formats match user expectations (comma separators, currency symbols)
 - [ ] Date formats are locale-appropriate
 
@@ -48,14 +60,14 @@ Target: **$ARGUMENTS**
 
 #### 4. Consistency and Standards
 - [ ] Same action = same appearance everywhere
-- [ ] Color meanings are consistent (green=success, red=error, brand=active)
-- [ ] Text hierarchy follows the 5-level grayscale system
+- [ ] Color meanings are stable in the product and accompanied by non-color cues
+- [ ] Text roles follow the approved system; contrast, weight, position, and size support reading
 - [ ] Surface treatment follows the resolved grammar and brand recipe
 - [ ] Spacing follows the resolved token scale and adapter constraints
 
 #### 5. Error Prevention
 - [ ] Destructive buttons are visually distinct (destructive variant)
-- [ ] Form validation happens on blur (not while typing)
+- [ ] Validation timing supports recovery; avoid premature errors and retain entered data
 - [ ] Dangerous actions require explicit confirmation
 - [ ] Input constraints are visible before errors occur (character limits, format hints)
 
@@ -72,11 +84,11 @@ Target: **$ARGUMENTS**
 - [ ] Frequently used actions are placed according to the resolved navigation adapter
 
 #### 8. Aesthetic and Minimalist Design
-- [ ] Each screen focuses on ONE primary task
+- [ ] The reading, decision, or monitoring task and its relevant regions are identifiable
 - [ ] No decorative elements that don't serve a purpose
-- [ ] Information pyramid respected (most important = biggest)
+- [ ] Priority is conveyed through task-appropriate position, grouping, contrast, type, and scale
 - [ ] Card and collection density follows the resolved grammar and task complexity
-- [ ] No competing visual elements (one hero metric per page)
+- [ ] Emphasis supports the task; equivalent comparison or monitoring regions may share weight
 
 #### 9. Help Users Recover from Errors
 - [ ] Error messages explain what went wrong in plain language
@@ -99,8 +111,8 @@ Target: **$ARGUMENTS**
 - [ ] Swipe gestures have visible affordances (carousel indicators)
 
 #### Performance Perception
-- [ ] Skeleton screens appear within 300ms
-- [ ] Optimistic updates for user actions
+- [ ] Loading feedback matches expected latency without flashing or delaying available content
+- [ ] Optimistic updates are used only when safe, with visible recovery on failure
 - [ ] Above-the-fold content loads first
 - [ ] No layout shift after content loads
 
@@ -118,8 +130,10 @@ Target: **$ARGUMENTS**
 
 ## Output Format
 
-1. **Score**: A+ to F rating with breakdown
-2. **Critical Issues**: Must fix (blocks usability)
-3. **Major Issues**: Should fix (degrades experience)
-4. **Minor Issues**: Nice to fix (polish)
-5. **Recommendations**: Specific code changes for each issue
+1. **Task and evidence**: artifact, approved choices, source/rendered states and unchecked scope.
+2. **Findings**: observed behavior → task impact → applicable contract, with a location or render ID.
+3. **Severity**: functional/accessibility failure, contract drift, or optional design suggestion.
+4. **Repair**: smallest in-scope change, decisions to preserve, and the state to recheck.
+5. **Unresolved**: conflicting evidence, N/A reasons, unsupported checks, and human decisions.
+
+An aggregate grade is optional and cannot replace the findings or imply human acceptance.

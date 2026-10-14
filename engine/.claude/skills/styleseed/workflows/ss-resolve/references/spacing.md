@@ -131,7 +131,7 @@ rem, em, and unitless zero. `calc`, `clamp`, percentages and other units require
 A valid CSS expression is not invalid design merely because this inspector cannot resolve it.
 
 Example within an existing Node browser harness (replace installed paths and bindings with the
-actual project; all 23 core skills are needed for source-bound measurement support):
+actual project; the single StyleSeed install includes the required internal dependencies):
 
 ```js
 import assert from 'node:assert/strict';

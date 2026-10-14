@@ -175,3 +175,13 @@ roles and scoped CSS in the bundle and method hash; application code must consum
 Artifact overrides replace only named roles. Read-only starting proposals never overwrite config,
 and numeric compliance does not prove design quality. See
 [the spatial contract](.claude/skills/styleseed/workflows/ss-resolve/references/spacing.md) for limits and verification.
+
+## Applied color and typography observations
+
+The installed verify workflow includes a read-only browser probe for explicitly bound color
+consumers and type specimens. It observes one artifact, viewport, state, and font condition;
+unsupported paint and unknown glyph selection are not a visual pass. It reuses the existing
+spatial probe for wrapping/overflow and leaves source binding, screenshots, applicable state
+coverage, and human judgment with the host workflow. See
+[applied checks](.claude/skills/styleseed/workflows/ss-verify/references/applied-checks.md).
+These observations introduce no registry fields, aesthetic score, or automatic gate promotion.

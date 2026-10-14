@@ -29,6 +29,11 @@ expansion of this read-only skill. Honor a narrower user request. Cite the selec
 each violation; distinguish core failures, contract drift, optional suggestions, and missing
 evidence. Library conventions below apply only when the project uses those conventions.
 
+When rendered evidence accompanies a review, use the
+[observation and reconciliation procedure](../ss-verify/references/applied-checks.md#observe-before-reconciling).
+Tie recommendations to an observed task/contract problem and preserve valid alternatives.
+Source-only findings do not establish actual font delivery, image contrast, or visual quality.
+
 ## When NOT to use
 
 - For accessibility-only issues → use `/ss-a11y`

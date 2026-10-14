@@ -66,6 +66,9 @@ converting a trend into progress for visual variety is not. Test repeated collec
 long/translated content, missing media/data, and relevant narrow-screen transformations.
 Do not turn every observed pattern into a mandatory scoring item. Inspect the actual
 transfer artifact before claiming visual quality; expert acceptance remains separate.
+Bind source versions to concrete copy/media/state specimens using the
+[applied transfer procedure](.claude/skills/styleseed/workflows/ss-verify/references/applied-checks.md#reference-transfer).
+An old case-study article and a changed live URL are not evidence of the same implementation.
 
 ## Generated project artifacts
 

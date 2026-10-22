@@ -57,6 +57,13 @@ node engine/color/generate-palette.mjs \
   one valid option; brand-led or categorical content may allocate color differently. Preserve
   readable hierarchy and contrast without imposing a universal surface-area percentage.
 
+A generated `valid` result covers the declared role pairs only. Actual consumers, state colors,
+required control boundaries, and photo/gradient backgrounds need their own applicability and render
+checks. Reuse existing project tokens and follow the
+[applied color procedure](.claude/skills/styleseed/workflows/ss-verify/references/applied-checks.md#color-inspect-the-consumer-state-and-background).
+Generated-media anchors support the approved image role; they do not impose a universal background
+or accent area hierarchy on categorical, editorial, or multicolor brand content.
+
 The deterministic output records inputs, normalized OKLCH, chosen accent logic, ramps, semantic
 roles, contrast evidence, generated-media anchors, and CSS variables. The eight built-ins remain
 tested defaults and useful fallbacks for projects without a real key color.
@@ -132,7 +139,7 @@ For each direction state:
 
 1. palette recipe ID and product reason;
 2. navigation chrome ↔ content canvas relationship;
-3. primary/action usage and maximum visual share;
+3. primary/action usage and task-specific visual emphasis; use area observations only when useful;
 4. semantic status mapping and non-color cue;
 5. generated-image anchor colors and colors to avoid;
 6. contrast validation result and any project override requiring revalidation.

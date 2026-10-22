@@ -406,6 +406,16 @@ Artifact overrides replace only named roles. Read-only starting proposals never 
 and numeric compliance does not prove design quality. See
 [the spatial contract](.claude/skills/styleseed/workflows/ss-resolve/references/spacing.md) for limits and verification.
 
+## Applied color and typography observations
+
+The installed verify workflow includes a read-only browser probe for explicitly bound color
+consumers and type specimens. It observes one artifact, viewport, state, and font condition;
+unsupported paint and unknown glyph selection are not a visual pass. It reuses the existing
+spatial probe for wrapping/overflow and leaves source binding, screenshots, applicable state
+coverage, and human judgment with the host workflow. See
+[applied checks](.claude/skills/styleseed/workflows/ss-verify/references/applied-checks.md).
+These observations introduce no registry fields, aesthetic score, or automatic gate promotion.
+
 
 ---
 
@@ -1054,6 +1064,13 @@ node engine/color/generate-palette.mjs \
   one valid option; brand-led or categorical content may allocate color differently. Preserve
   readable hierarchy and contrast without imposing a universal surface-area percentage.
 
+A generated `valid` result covers the declared role pairs only. Actual consumers, state colors,
+required control boundaries, and photo/gradient backgrounds need their own applicability and render
+checks. Reuse existing project tokens and follow the
+[applied color procedure](.claude/skills/styleseed/workflows/ss-verify/references/applied-checks.md#color-inspect-the-consumer-state-and-background).
+Generated-media anchors support the approved image role; they do not impose a universal background
+or accent area hierarchy on categorical, editorial, or multicolor brand content.
+
 The deterministic output records inputs, normalized OKLCH, chosen accent logic, ramps, semantic
 roles, contrast evidence, generated-media anchors, and CSS variables. The eight built-ins remain
 tested defaults and useful fallbacks for projects without a real key color.
@@ -1129,7 +1146,7 @@ For each direction state:
 
 1. palette recipe ID and product reason;
 2. navigation chrome ↔ content canvas relationship;
-3. primary/action usage and maximum visual share;
+3. primary/action usage and task-specific visual emphasis; use area observations only when useful;
 4. semantic status mapping and non-color cue;
 5. generated-image anchor colors and colors to avoid;
 6. contrast validation result and any project override requiring revalidation.
@@ -1400,6 +1417,9 @@ converting a trend into progress for visual variety is not. Test repeated collec
 long/translated content, missing media/data, and relevant narrow-screen transformations.
 Do not turn every observed pattern into a mandatory scoring item. Inspect the actual
 transfer artifact before claiming visual quality; expert acceptance remains separate.
+Bind source versions to concrete copy/media/state specimens using the
+[applied transfer procedure](.claude/skills/styleseed/workflows/ss-verify/references/applied-checks.md#reference-transfer).
+An old case-study article and a changed live URL are not evidence of the same implementation.
 
 ## Generated project artifacts
 
@@ -3836,7 +3856,8 @@ NO  Scroll-JACKING (hijacking scroll speed, trapping the user, shrinking header 
 NO  Scroll-linked timelines on an app/data surface
 NO  Pill toggle sliding (selection sliding effect)
 NO  Card zoom in/out on hover in a data grid
-NO  Infinite loop animations (except skeleton pulse)
+NO  Decorative repetition unrelated to an ongoing state
+    Loading/live indicators require an end condition and a reduced-motion alternative
 NO  Animating numbers / balances / money (except the ONE hero-metric count on load)
 ```
 
@@ -4837,8 +4858,10 @@ state is the most common AI omission.
 5. **Semantic structure** — one `h1`, logical heading order, real `<button>`/
    `<a>` (not click-divs), `alt` on images, `aria-label` on icon-only controls,
    `sr-only` for visually-hidden context.
-6. **Respect `prefers-reduced-motion`** — all entrance/loop/parallax motion drops
-   to ~0.01s (the motion seeds already do this; custom motion must too).
+6. **Respect `prefers-reduced-motion`** — explicitly disable or substitute nonessential
+   entrance/loop/parallax and interaction movement while preserving useful state feedback.
+   Seeds are static configs: the caller must wire preference handling and verify both modes.
+   Shortening duration alone does not remove spatial changes or repeated motion.
 
 ## 73. Responsive & Mobile Rules
 

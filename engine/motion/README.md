@@ -70,9 +70,10 @@ and the recommend mode in `/ss-motion`.
 | Page transition | `silk · entrance` | smooth, minimal |
 | Number / balance / price reveal | **none** | never animate the payload — it must read instantly |
 
-**Two anti-rules override the table:** (1) **one seed per product** — keep one
-personality; (2) **never delay the payload** — don't animate a balance, price, or
-search result into view. Motion is for affordance, not content.
+**Two principles override the table:** (1) preserve one coherent motion language;
+task-specific page or element overrides may express different feedback within it;
+(2) never delay the information or action the user needs. Repetition must represent an
+ongoing state, stop when that state ends, and have an appropriate reduced-motion alternative.
 
 ## Brand → seed defaults
 
@@ -86,7 +87,18 @@ search result into view. Motion is for affordance, not content.
 
 ## Accessibility
 
-`usePrefersReducedMotion()` exports a React hook over `matchMedia("(prefers-reduced-motion: reduce)")`. Use it to swap any seed transition for `REDUCED_TRANSITION` (`{ duration: 0.01 }`) when the OS asks for reduced motion. The seeds themselves are static configs — wiring respect to the user's preference is the caller's job, by design, so that page transitions, list animations, and one-shot moments can be tuned independently.
+Seeds and library snippets are static configs; the caller must connect reduced-motion behavior,
+including hover/press. Inspect the host's `MotionConfig reducedMotion="user"` or preference-hook
+handling. That MotionConfig suppresses transform/layout animation, while opacity/color and custom
+effects need appropriate decisions. See [Motion's official guide](https://motion.dev/docs/react-accessibility).
+
+`usePrefersReducedMotion()` observes the preference after hydration. Its server/initial value is
+`false`, so it alone cannot guarantee that initial entrance motion is suppressed before hydration.
+Use an appropriate host/CSS strategy for first paint. `REDUCED_TRANSITION` only shortens duration:
+it does not remove spatial changes, inherited spring parameters, delay, or repetition. Replace the
+relevant recipe/transition rather than merely merging a short duration into a spring. Disable or
+substitute nonessential movement and loops, retain understandable state feedback, and test both
+preferences plus interruption on the real component. No seed import establishes an accessibility pass.
 
 ## Relationship to `engine/components/ui/motion.tsx`
 

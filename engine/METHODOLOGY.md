@@ -222,14 +222,20 @@ Every skin ships a recommended default seed. Override per page when the feel sho
 
 ### Reduced motion
 
-`usePrefersReducedMotion()` lives next to the seeds. Long-running surfaces (multi-step entrances, page transitions, animated counters) should swap the seed's transition for `REDUCED_TRANSITION` when the hook returns true. One-off hover/press doesn't need explicit handling — framer-motion already throttles.
+Seeds are static configurations, including hover/press. The host must wire `MotionConfig
+reducedMotion="user"` or explicit preference handling and verify the actual transition.
+`REDUCED_TRANSITION` only changes duration; it does not remove transforms or repetition.
+Disable/substitute nonessential movement while preserving feedback. The hook initially returns
+false before hydration, so initial motion needs an appropriate host/CSS strategy too.
+See [motion accessibility](motion/README.md#accessibility).
 
 ### Cross-reference
 
 - `engine/motion/` — the seeds, types, and hook
 - `engine/components/ui/motion.tsx` — opinionated wrappers (FadeIn, FadeUp, Stagger) that pre-compose seeds for the most common cases
 - `DESIGN-LANGUAGE.md` §43 — motion allowed/forbidden **by surface**: app/dashboard surfaces stay
-  calm (no scroll-jacking, no scroll-linked timelines, no infinite loops); marketing/landing/brand
+  calm (no scroll-jacking or decorative repetition; state-bound indicators need an end condition
+  and reduced-motion alternative); marketing/landing/brand
   pages get the **Cinematic tier** (scroll-linked reveals, pinned sections, subtle parallax, 3D
   hero, animated gradient/video bg, rich hover — with the 60fps + reduced-motion + "never blocks
   the first read" guardrails)

@@ -32,6 +32,8 @@ jobs:
         working-directory: demo-pricing
       - name: Verify spatial CSS in Chromium
         run: node scripts/test-spacing-browser.mjs
+      - name: Verify applied color and typography checks in Chromium
+        run: node scripts/test-applied-checks-browser.mjs
       - name: Run browser smoke tests
         run: npm run test:browser
         working-directory: demo-pricing

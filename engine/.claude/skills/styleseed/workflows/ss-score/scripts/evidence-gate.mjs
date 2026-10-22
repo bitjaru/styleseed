@@ -281,7 +281,7 @@ function init(options) {
   verifyManifestFiles(root, manifest);
   const inventory = sourceInventory(root, artifact.implementation.sourceRoots);
   const dir = safeProjectPath(root, `.styleseed/evidence/${artifactId}/${runId}`);
-  mkdirSync(dir, { recursive: true, mode: 0o700 });
+  // Every precondition must pass before the run directory exists; a half-created run is not evidence.
   const value = {
     schemaVersion: 1,
     artifactId,
@@ -296,6 +296,7 @@ function init(options) {
     implementation: { sourceRoots: artifact.implementation.sourceRoots, inventoryHash: inventory.hash },
     gates: Object.fromEntries(GATES.map((gate) => [gate, { attached: false, reportPath: null, reportSha256: null, reportBytes: null }])),
   };
+  mkdirSync(dir, { recursive: true, mode: 0o700 });
   writeFileSync(resolve(dir, "gate-run.json"), `${JSON.stringify(value, null, 2)}\n`, { mode: 0o600, flag: "wx" });
   return { ok: true, value };
 }

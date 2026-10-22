@@ -6,6 +6,7 @@ import {
   lstatSync,
   mkdirSync,
   readFileSync,
+  realpathSync,
   renameSync,
   writeFileSync,
 } from "node:fs";
@@ -246,6 +247,6 @@ function main(argv = process.argv.slice(2)) {
   return findings.some((item) => item.severity === "error") ? 2 : 0;
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (process.argv[1] && realpathSync(resolve(process.argv[1])) === realpathSync(fileURLToPath(import.meta.url))) {
   try { process.exitCode = main(); } catch (error) { console.error(`styleseed check: ${error.message}`); process.exitCode = 2; }
 }

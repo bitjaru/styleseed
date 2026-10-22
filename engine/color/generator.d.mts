@@ -21,6 +21,7 @@ export type GeneratedPalette = {
     accent: { hue: number; offset: number; method: PaletteHarmony; avoidsStatusCollisionBy: number };
     primaryAdjustedForContrast: boolean;
     accentAdjustedForContrast: boolean;
+    achromaticKey?: string;
     allocation: { dominant: string; secondary: string; accent: string };
   };
   ramps: { primary: Record<string, string>; accent: Record<string, string> };

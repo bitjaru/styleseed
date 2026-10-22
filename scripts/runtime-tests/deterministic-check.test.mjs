@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { mkdtempSync, mkdirSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
@@ -73,6 +73,20 @@ test("scan turns manifest and source-root drift into hard errors", () => {
     writeFileSync(resolve(projectRoot, ".styleseed/bundles/app-dashboard.md"), "tampered\n");
     const result = run(projectRoot, ["--artifact", "app-dashboard", "--format", "json"]);
     assert.equal(result.status, 2);
+    const report = JSON.parse(result.stdout);
+    assert.ok(report.findings.some((item) => item.id === "SS000" && item.severity === "error"));
+  } finally { rmSync(projectRoot, { recursive: true, force: true }); }
+});
+
+test("scan runs when invoked through a symlinked skill directory", () => {
+  const projectRoot = root("styleseed-check-symlink-");
+  try {
+    fixture(projectRoot);
+    const linkedSkills = resolve(projectRoot, "linked-skills");
+    symlinkSync(resolve(repoRoot, "engine/.claude/skills"), linkedSkills, "dir");
+    const linkedChecker = resolve(linkedSkills, "styleseed/workflows/ss-score/scripts/styleseed-check.mjs");
+    const result = spawnSync(process.execPath, [linkedChecker, "scan", "--project-root", projectRoot, "--artifact", "missing-artifact"], { encoding: "utf8" });
+    assert.equal(result.status, 2, `${result.stderr}\n${result.stdout}`);
     const report = JSON.parse(result.stdout);
     assert.ok(report.findings.some((item) => item.id === "SS000" && item.severity === "error"));
   } finally { rmSync(projectRoot, { recursive: true, force: true }); }

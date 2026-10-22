@@ -438,6 +438,7 @@ test("init records a Git commit and refuses dirty implementation roots", () => {
     const dirty = runGate(["init", "--project-root", ".", "--artifact", "app-dashboard", "--run", "run-dirty", "--json"], projectRoot);
     assert.notEqual(dirty.status, 0);
     assert.match(`${dirty.stdout}\n${dirty.stderr}`, /source roots must be clean/i);
+    assert.equal(existsSync(resolve(projectRoot, ".styleseed/evidence/app-dashboard/run-dirty")), false, "a refused init must not leave a run directory");
   } finally {
     rmSync(projectRoot, { recursive: true, force: true });
   }

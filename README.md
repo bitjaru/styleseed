@@ -94,7 +94,7 @@ a markdown file alone cannot block delivery, and 80 points is not expert approva
 | Unselected default accent | require an intentional, recorded color role |
 | Emoji as UI icons 🚗 🧺 ⭐ | inject random colors, render differently per OS |
 | The icon-in-a-chip above every feature card | gen-1 AI tell — decoration pretending to be information |
-| All-even grid of same-weight centered cards | the #1 machine-composed tell: no focal point |
+| Same-weight cards that hide the current priority | the #1 machine-composed tell; truly equivalent options may share weight |
 | Accidental flat-black backgrounds | use the selected grammar's surface model; explicit supported exceptions differ |
 | Type sizes outside the selected scale | prevent unintentional hierarchy drift |
 | Hardcoded hex in components | tokens only — otherwise the lock can't hold across screens |
@@ -500,13 +500,16 @@ came out polished because it was built with the full rules in context and iterat
 ## Already built something generic? Retrofit it
 
 StyleSeed isn't only for new screens — it's **the design counterpart to a code review** for UI you
-already shipped. If an earlier build looks *coherent but generic* (default indigo, tiny desktop
-text, the same Lucide-icon-in-a-pale-chip on every card, no focal point):
+already shipped. If an earlier build looks *coherent but generic* (an unchosen default indigo, body
+text that is hard to read at its real viewport, the same Lucide-icon-in-a-pale-chip on every card,
+equal emphasis that hides what matters now):
 
-1. **`/styleseed score src/…`** — grades the screen 0–100 and names the exact "AI-made" tells (default
-   accent, icon-chip cliché, sub-16px body on desktop, no focal point, missing states).
-2. **`/styleseed review src/…`** — the design code-review: applies the fixes (retint to your key color,
-   drop the chips, bump the type scale, create a focal point), then re-score to **≥80**.
+1. **`/styleseed score src/…`** — grades the screen 0–100 and names the exact "AI-made" tells (unchosen
+   default accent, icon-chip cliché, body type outside the approved scale or unreadable at its real
+   viewport, missing task-appropriate attention, missing states).
+2. **`/styleseed review src/…`** — the design code-review. It is read-only: it cites the selected
+   contract for each problem and recommends fixes (retint to your key color, drop the chips, correct
+   the type roles, restore the current priority). Ask the agent to apply them, then re-score to **≥80**.
 3. **`/styleseed update` → Retrofit** — no design lock yet? It writes a `STYLESEED.md` (mood, key color,
    font, surface) so the whole project stops drifting, then upgrades screen by screen.
 
@@ -541,7 +544,7 @@ stop looking AI-made.
 - 74 visual design rules (layout, composition, rhythm, forbidden patterns)
 - 48 React components (32 primitives + 16 patterns)
 - A named motion system (5 seeds + a copy-paste keyword library)
-- 22 internal workflows (Studio, context compiler, reference compiler, setup, UI, motion, UX, accessibility, and accessibility; learning is a separate extension)
+- 22 internal workflows (Studio, context compiler, reference compiler, setup, UI, motion, UX, and accessibility; learning is a separate extension)
 - 8 maintained semantic palette recipes, with validated project overrides
 
 **Brand recipe** = how the artifact is shaped (morphology)
@@ -675,7 +678,7 @@ engine/
 | `/styleseed a11y` | Accessibility audit (WCAG 2.2 AA) |
 | `/styleseed lint` | Quick automated lint — catches common violations in seconds |
 | `/styleseed score` | Score UI quality 0-100 with a category breakdown + prioritized fix list (reads the code) |
-| `/styleseed verify` | **The visual gate** — render the screen, screenshot it, score what you *see* (dead whitespace, unloaded fonts, no focal, blank empty states), fix + re-render |
+| `/styleseed verify` | **The visual gate** — render the screen, screenshot it, score what you *see* (dead whitespace, unloaded fonts, a priority that is hard to find, blank empty states), fix + re-render in a build or fix task |
 | `/styleseed update` | Pull latest engine updates — analyzes your project and updates safely |
 
 ### UX — Design It Right (No Designer Needed)

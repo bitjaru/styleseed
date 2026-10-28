@@ -133,7 +133,7 @@ export default function RecipesPage() {
             <ArrowLeft size={14} /> StyleSeed home
           </Link>
           <p className="mt-12 text-[11px] font-bold uppercase tracking-[0.2em] text-violet-600">
-            New in v3.2 · morphology layer
+            Brand recipes · morphology layer
           </p>
           <h1 className="mt-3 max-w-5xl text-[clamp(44px,7vw,78px)] font-bold leading-[0.98] tracking-[-0.05em]">
             One design method.

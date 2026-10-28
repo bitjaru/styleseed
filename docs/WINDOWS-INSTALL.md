@@ -78,12 +78,14 @@ $catalogPath = Join-Path $skillRoot "styleseed\workflows\ss-resolve\references\c
 (Get-Content -Raw -LiteralPath $catalogPath | ConvertFrom-Json).engineVersion
 ```
 
-Expected output includes:
+Expected output includes the lines below. The last line is the installed engine version, so it
+changes with each release; compare it with [`engine/VERSION`](../engine/VERSION) in the source you
+installed.
 
 ```text
 True
 name: styleseed
-4.1.0
+5.0.0
 ```
 
 For Codex discovery, start a fresh Codex session in this workspace, open `/skills`, and choose
@@ -107,7 +109,7 @@ Expected output is `False` for `ss-learn` and no paths from the second command.
 
 ## Troubleshooting
 
-- **The skill count is not 23:** confirm that the command ran in the intended empty workspace and
+- **The skill count is not 1:** confirm that the command ran in the intended empty workspace and
   that `$skillRoot` is `.agents\skills`. Remove or replace files only after reviewing them.
 - **`styleseed` is missing from Codex:** confirm the router file exists, then start a fresh Codex
   session in the workspace. Discovery is session-scoped.

@@ -68,7 +68,7 @@ Brad Frost's 5-tier UI component hierarchy. The most widely referenced model for
 
 **Why it matters in 2026:** Adoption shortens new-feature time-to-build, reduces visual bugs in production, and unblocks distributed teams.
 
-**Cross-reference:** StyleSeed's `engine/components/{ui,patterns}/` already follows this — `ui/` ≈ atoms+molecules, `patterns/` ≈ organisms. The 8 skins under `skins/` are the design-token implementations.
+**Cross-reference:** StyleSeed's `engine/components/{ui,patterns}/` already follows this — `ui/` ≈ atoms+molecules, `patterns/` ≈ organisms. The 7 skins under `skins/` are the design-token implementations.
 
 ---
 

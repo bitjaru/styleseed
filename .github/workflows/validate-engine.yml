@@ -17,7 +17,7 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 22
           cache: npm
@@ -41,7 +41,7 @@ jobs:
         run: node scripts/test-external-app.mjs --output "$RUNNER_TEMP/styleseed-external-app-report"
       - name: Upload external application diagnostics
         if: ${{ always() }}
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: external-app-regression-${{ github.run_attempt }}
           path: ${{ runner.temp }}/styleseed-external-app-report/
@@ -57,7 +57,7 @@ jobs:
       # holds the build fixture, whose node_modules is a symlink into the checkout.
       - name: Preserve pilot library evidence
         if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: styleseed-pilot-library-${{ github.run_attempt }}
           path: |
@@ -67,7 +67,7 @@ jobs:
           retention-days: 14
       - name: Preserve browser calibration evidence
         if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: styleseed-pilot-browser-${{ github.run_attempt }}
           path: ${{ runner.temp }}/styleseed-pilot-browser
@@ -81,7 +81,7 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 22
       # Keep each native check in its own step so a later success cannot mask its exit code.

@@ -76,6 +76,7 @@ const coreChecks = [
   ["Validate core plugin package", node, ["scripts/validate-plugin-packages.mjs"]],
   ["Check Markdown links", node, ["scripts/check-markdown-links.mjs"]],
   ["Validate design-decision cases", node, ["scripts/validate-cases.mjs"]],
+  ["Validate rule catalog", node, ["scripts/validate-rules.mjs"]],
 ];
 for (const [label, command, args] of coreChecks) run(label, command, args);
 

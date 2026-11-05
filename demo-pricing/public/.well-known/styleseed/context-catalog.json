@@ -1,7 +1,7 @@
 {
   "schemaVersion": 5,
   "engineVersion": "5.0.0",
-  "engineRevision": "sha256:a82b4f9e00c63f7ecf1a968a99ebb3227792df5ed7d288f3038d8caa3bfaf6d6",
+  "engineRevision": "sha256:3381dd22eb2067a03605557a6a8c0d8351aa65f919eec56379ac72f6203994d0",
   "distributionSource": {
     "schemaVersion": 1,
     "channel": "edge",
@@ -10,7 +10,7 @@
   },
   "distributions": {
     "core": {
-      "revision": "sha256:a82b4f9e00c63f7ecf1a968a99ebb3227792df5ed7d288f3038d8caa3bfaf6d6",
+      "revision": "sha256:3381dd22eb2067a03605557a6a8c0d8351aa65f919eec56379ac72f6203994d0",
       "files": [
         {
           "path": "LICENSE",
@@ -149,8 +149,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/compiler.mjs",
-          "sha256": "0924182f430e61710d7ebe96216e6fa4f3a13ad79ce0c1f98ed34ebaa2b7e578",
-          "bytes": 19535
+          "sha256": "0232c3f0ec8b7d2c01bbe603490eb4a5ea913cc225775b95e05ae626dba0ee94",
+          "bytes": 19912
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/distribution-integrity.mjs",
@@ -186,6 +186,11 @@
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/resolve-context.mjs",
           "sha256": "834b9acc27137a86b1fbd210703a00d8a32e62df9d74760a1a7d3550b790e92a",
           "bytes": 16677
+        },
+        {
+          "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/rules-in-scope.mjs",
+          "sha256": "6b632c4096752d1bece89d868d52774fadbe995b9ea709569f39a2e6232c7227",
+          "bytes": 2970
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/runtime-contract.mjs",
@@ -521,11 +526,26 @@
           "path": "engine/color/palettes.json",
           "sha256": "b2c7eb30c5d3a746d1cd612813d2c111ff04d8864e3f299c13f1d91d4bc605e8",
           "bytes": 9042
+        },
+        {
+          "path": "engine/rules/README.md",
+          "sha256": "e22f406c747becf858a7e7bacf934431ce52883eb2c6d0033a8f69b2523f5591",
+          "bytes": 2799
+        },
+        {
+          "path": "engine/rules/catalog.json",
+          "sha256": "06d9c94740537497188773d2663bed5fb934a4c11dddf61975987e6d6f92ff4d",
+          "bytes": 18151
+        },
+        {
+          "path": "engine/rules/catalog.schema.json",
+          "sha256": "6ef2640f1286c89f85dc61c59713e06d19fefb7f9c8f30db8bdb1baf30bd5fc0",
+          "bytes": 4243
         }
       ]
     },
     "skills": {
-      "revision": "sha256:ff4fe09afdc43d56e5c95a994bce2421de191d6fba90cd8ae10cdd1f02d7ff8a",
+      "revision": "sha256:aea9a5bf2f94834bfa318d3faf51579cfe223b62647b32ea5eec1727054ca2be",
       "files": [
         {
           "path": "engine/.claude/skills/styleseed/SKILL.md",
@@ -654,8 +674,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/compiler.mjs",
-          "sha256": "0924182f430e61710d7ebe96216e6fa4f3a13ad79ce0c1f98ed34ebaa2b7e578",
-          "bytes": 19535
+          "sha256": "0232c3f0ec8b7d2c01bbe603490eb4a5ea913cc225775b95e05ae626dba0ee94",
+          "bytes": 19912
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/distribution-integrity.mjs",
@@ -691,6 +711,11 @@
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/resolve-context.mjs",
           "sha256": "834b9acc27137a86b1fbd210703a00d8a32e62df9d74760a1a7d3550b790e92a",
           "bytes": 16677
+        },
+        {
+          "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/rules-in-scope.mjs",
+          "sha256": "6b632c4096752d1bece89d868d52774fadbe995b9ea709569f39a2e6232c7227",
+          "bytes": 2970
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/runtime-contract.mjs",
@@ -1033,8 +1058,8 @@
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-resolve/scripts/compiler.mjs",
-      "sha256": "0924182f430e61710d7ebe96216e6fa4f3a13ad79ce0c1f98ed34ebaa2b7e578",
-      "bytes": 19535
+      "sha256": "0232c3f0ec8b7d2c01bbe603490eb4a5ea913cc225775b95e05ae626dba0ee94",
+      "bytes": 19912
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-resolve/scripts/distribution-integrity.mjs",
@@ -1070,6 +1095,11 @@
       "path": ".claude/skills/styleseed/workflows/ss-resolve/scripts/resolve-context.mjs",
       "sha256": "834b9acc27137a86b1fbd210703a00d8a32e62df9d74760a1a7d3550b790e92a",
       "bytes": 16677
+    },
+    {
+      "path": ".claude/skills/styleseed/workflows/ss-resolve/scripts/rules-in-scope.mjs",
+      "sha256": "6b632c4096752d1bece89d868d52774fadbe995b9ea709569f39a2e6232c7227",
+      "bytes": 2970
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-resolve/scripts/runtime-contract.mjs",
@@ -1405,6 +1435,21 @@
       "path": "color/palettes.json",
       "sha256": "b2c7eb30c5d3a746d1cd612813d2c111ff04d8864e3f299c13f1d91d4bc605e8",
       "bytes": 9042
+    },
+    {
+      "path": "rules/README.md",
+      "sha256": "e22f406c747becf858a7e7bacf934431ce52883eb2c6d0033a8f69b2523f5591",
+      "bytes": 2799
+    },
+    {
+      "path": "rules/catalog.json",
+      "sha256": "06d9c94740537497188773d2663bed5fb934a4c11dddf61975987e6d6f92ff4d",
+      "bytes": 18151
+    },
+    {
+      "path": "rules/catalog.schema.json",
+      "sha256": "6ef2640f1286c89f85dc61c59713e06d19fefb7f9c8f30db8bdb1baf30bd5fc0",
+      "bytes": 4243
     }
   ],
   "generatedFrom": [
@@ -1417,10 +1462,592 @@
     "BRAND-RECIPES.md",
     "PALETTE-RECIPES.md",
     "color/palettes.json",
-    "PRESETS.md"
+    "PRESETS.md",
+    "rules/catalog.json"
   ],
   "core": "# StyleSeed Product Constitution\n\nStyleSeed makes expert design judgment repeatable by coding agents. It is not a collection\nof aesthetic preferences that replaces designers.\n\n**StyleSeed는 전문가를 대체하는 디자인 취향 모음이 아니라, 전문가의 디자인 판단을\n코딩 에이전트가 반복해서 실행할 수 있게 만드는 시스템입니다.**\n\nThis is the project's goal, not a claim that today's engine reproduces expert-level quality.\nThe current design-method engine compiles selected rules, preserves project decisions, and\nsupports implementation and evidence workflows. Components, skins, scores, and screenshots\nsupport that purpose; neither their count nor a passing score proves that the goal is achieved.\n\n## Decisions stay with people\n\n- Experts define intent, applicability, tradeoffs, and acceptable exceptions. The agent applies\n  recorded decisions; it does not acquire the expert's authority by reading them.\n- Preserve the project's approved design system. Do not replace its identity, tokens, or\n  components with a StyleSeed preset merely to make the output look different.\n- Distinguish accessibility and functional floors, approved project choices, adjustable\n  heuristics, and unresolved human decisions. A recommendation is not approval.\n- If an approved choice cannot be expressed by the current engine, report that limitation and\n  propose a bounded change. Do not silently remap it or pretend arbitrary design-system import\n  already works. This goal does not change the resolver's supported values or authority order.\n- People may deliberately revise durable choices and re-run checks. Generated scores and\n  byte-bound evidence do not authenticate expertise or substitute for design acceptance.\n\n## Development decision test\n\nBefore changing the engine, name the design decision being made repeatable, its owner and\napplicability, the implementation context the agent needs, and the evidence that would show\nan improvement. Maintenance fixes may instead name the existing contract they preserve.\n\nPrioritize task-specific component APIs, token mappings, working state examples, and tests\nover adding more aesthetic rules. Evaluate new-system creation and existing-system adoption\nseparately. Measure functional correctness, expert-reviewed visual quality, correct reuse,\ncross-screen/session consistency, and human rework alongside model cost.\n\nA compliant but poorly designed screen is not success; neither is an attractive screen that\nbreaks the approved system. Use independent human evaluation before claiming expert-level\nquality. The research sequence and unimplemented work live in the repository `ROADMAP.md`.\n\n## The fixed method, not one fixed look\n\nStyleSeed enforces a stable way of judging design. It does **not** force every product to\nlook like Toss, a SaaS dashboard, or the StyleSeed demo. A trustworthy consumer-finance\nhome, an observability console, an editorial story, and a product-detail page solve\ndifferent jobs and therefore need different design grammars.\n\nThe effective rule set is composed:\n\n```text\nCore judgment\n  × one output grammar from RULESETS.md (built-in or reference-compiled)\n  × one surface adapter from ADAPTERS.md\n  × one domain playbook from APP-PLAYBOOKS.md\n  × one page type from PAGE-TYPES.md\n  × one brand recipe from BRAND-RECIPES.md\n  × one semantic palette posture plus an optional key-color generation from PALETTE-RECIPES.md\n  × optional aesthetic profile from PRESETS.md\n  × bounded project tokens from STYLESEED.md\n= the rules for this screen\n```\n\n## Authority order\n\nWhen instructions disagree, use this order:\n\n1. **Core invariants** below.\n2. **Output grammar** — the functional visual language selected in `RULESETS.md`, or a\n   project-local grammar compiled by `REFERENCE-COMPILER.md`.\n3. **Surface adapter** — the renderer contract and physical constraints in `ADAPTERS.md`.\n4. **Domain playbook** and **page/artifact type**.\n5. **Brand recipe** — a reusable morphology and component-selection contract from\n   `BRAND-RECIPES.md`.\n6. **Palette system** — a maintained semantic posture plus deterministic key-color generation,\n   role mapping, gamut handling, and contrast correction from `PALETTE-RECIPES.md`.\n7. **Aesthetic profile** — an optional coordinated restyle from `PRESETS.md`.\n8. **Design lock** — records selections and bounded project parameters.\n9. **Skins and components** — implementation material, not sources of judgment.\n10. **Score and visual verification** — evidence that the method was applied.\n\n`STYLESEED.md` is persistence, not permission. An arbitrary value in the lock never turns\na violation into a sound design decision. Unknown values are resolver errors, not permission\nto silently choose a different grammar. Use only an explicitly configured, supported fallback.\n\nThis order governs requirements, not every illustrative default in a document. Preserve\naccessibility and functional floors; interpret sizes, component names, and aesthetic examples\nthrough the selected task and approved project system. Report unresolved conflicts rather\nthan silently replacing that system.\n\n## Core invariants\n\nThese apply to every grammar, profile, domain, page, skin, and agent:\n\n- One deliberate visual system per product: radius, spacing, elevation, icon language,\n  typography, color roles, imagery, and motion agree.\n- A clear attention structure appropriate to the task: a reading promise, primary decision,\n  or comparable monitoring regions. A hero metric is not mandatory.\n- Color communicates role or meaning. Primary actions, where the task has them, remain\n  identifiable even when semantic, categorical, or product colors are present.\n- Semantic tokens replace component-level hardcoded colors.\n- Spacing follows a repeatable scale; proximity communicates grouping.\n- Typography fits the surface and task, with readable measure, contrast, and hierarchy.\n- Data surfaces include useful loading, empty, and error states.\n- Controls remain operable: visible focus, sufficient targets, labels, reduced-motion\n  support, and no dark patterns.\n- Motion fits the surface and never delays comprehension or action.\n- Design expression serves the product, its content, and its selected grammar. Do not copy\n  demo content or introduce decorative novelty where predictable repetition serves the task.\n\n## What the lock may select\n\nThe lock may select only inputs the engine understands:\n\n- domain, surface adapter, page/artifact type, and one output grammar;\n- one maintained brand recipe, one semantic palette posture, optional bounded key-color generation,\n  one optional aesthetic profile, and one skin or project token implementation;\n- primary action/accent, type pairing, density, radius, elevation, imagery, and motion values\n  inside the selected grammar's allowed ranges;\n- one product-specific signature move that still obeys the invariants;\n- a project-local reference grammar with provenance and confidence recorded by the compiler.\n\nThe lock may not invent a palette mode, waive accessibility, legalize mixed systems, or\noverride a core invariant. A reusable built-in grammar requires research, examples, and\nregression evaluation. A reference-derived grammar stays project-local until it meets that bar.\n\n## The product loop\n\n```text\nunderstand the job → choose or compile a grammar → lock bounded decisions\n→ build with judgment → score the implementation → visually verify rendered output\n→ present the result and evidence\n```\n\nRepeatable application of expert decisions is the product goal. The build method implements\nthat goal; scoring and verification are supporting gates. They find drift, but never choose\nor rewrite the design philosophy after the fact or replace the responsible human's judgment.\n\n## Learning without surveillance\n\nStyleSeed may preserve a design lesson only when a person explicitly asks it to capture an\naccepted correction. The stored candidate contains generalized conditions, counterexamples, and\nmeasured evidence—not source code, prompts, screenshots, brand tokens, product identity, or user\ncontent. Local review and export approval are separate decisions. Preparing a package does not\ntransmit it. Returning it through MCP requires another one-time human grant and must be reported as\nclient/model exposure. No candidate may automatically modify project or core rules.",
   "craft": "# StyleSeed Compact Craft Baseline\n\nThis is the small, task-independent craft layer used by the Context Compiler. It preserves\nthe highest-leverage rules without injecting the full design handbook into every agent turn.\nThe selected output grammar, adapter, domain, page type, brand recipe, profile, and project lock narrow these\ndefaults. `PRODUCT-PRINCIPLES.md` remains the higher authority.\n\n## Coherence\n\n- Choose one coordinated family for radius, elevation, borders, icon style, typography, motion,\n  control heights, and interaction states. Encode each family as semantic tokens and reuse it.\n- A coherent system may contain multiple component shapes and colors, but every variation must\n  have a repeatable purpose: functional, semantic, editorial, or brand expression.\n  Unexplained local variation is not a role.\n- Preserve strengths and already-set project decisions. Do not restyle unrelated surfaces while\n  fixing one screen.\n\n## Hierarchy and composition\n\n- Follow the task's attention model: a primary decision, reading promise, or coordinated\n  comparison regions. Scale, position, contrast, imagery, density, and disclosure are options;\n  no universal hero, brightest CTA, section count, or chart quota is required.\n- Proximity communicates grouping: distinguish space around groups from space within them;\n  no fixed ratio fits every density or containment model. Vary narrative sections purposefully;\n  keep functional rows and comparison\n  regions consistent when repetition helps the task. Equivalent information keeps equivalent\n  presentation; vary by priority, data question, or narrative role, not for novelty.\n- Use real product content and evidence. Placeholder dashboards, fake metrics, stock chat panels,\n  and decorative card walls obscure the task. Use data encodings that preserve meaning;\n  deltas need real baselines and sparklines need actual series. Attach interpretation context\n  (labels, units, period, reference) nearby or in an unambiguous shared scope.\n- Start Latin prose near 50–75 characters per line; inspect the actual language, font, and zoom.\n  CSS `ch` is a glyph-width unit, not actual character count. Let data regions use needed width.\n- Media should show the relevant subject or evidence. Record its role, crop, text-safe area,\n  and fallback where needed; a task that needs no image should not receive decorative filler.\n\n## Spacing and type\n\n- Reuse the approved spacing scale. Without one, start from `{4, 8, 12, 16, 24, 32, 40, 48, 64, 80, 96}`.\n  Document optical, script, canvas, or platform reasons for adjustments; preserve grouping.\n- Default body text to 16px on general surfaces; an approved productive desktop scale may use\n  14px body. Smaller metadata and identifiers still need readable measure, contrast, and zoom.\n- Coordinate type roles and weights; one or two families are economical defaults, not a cap on\n  script fallbacks or approved editorial/code roles. Use tabular figures for numeric comparison.\n- Tighten leading as type grows: body about 1.5, headings 1.2–1.35, display 1.0–1.2.\n\n## Components and interaction\n\n- Use the lightest effective separation for the context: alignment, whitespace, tone, hairlines,\n  or depth. There is no fixed order. A border and shadow may serve distinct boundary/layer roles.\n- Buttons, inputs, and selects in one context share a height. Touch surfaces provide at least\n  44px targets; pointer-first dense desktop controls may be smaller when still operable.\n- Labels remain visible. Errors name the problem and recovery and never rely on color alone.\n- Use coordinated icon roles, optical sizes, and state variants. Do not mix unrelated families.\n- Loading, empty, error, success, disabled, and permission states preserve orientation and offer\n  applicable recovery. Inapplicable optional sections need not occupy empty slots.\n- Reflow by task priority; preserve comparison, controls, and interpretation context at narrow\n  widths. A bounded scrollable data region can be valid; unreadable shrinking is not.\n\n## Color, accessibility, and motion\n\n- Use semantic tokens for stable action, status, category, brand, and content roles. Identify\n  the next action within each decision region; a popover and its page may have distinct actions.\n  Judge conflicting meanings, not hue count, warm paper, serif type, or hard black by themselves.\n- Body text targets WCAG AA contrast; large text and meaningful graphics meet their applicable\n  threshold. Focus is visible, controls have names, and keyboard order follows visual order.\n- Motion uses one duration/easing family, communicates state or sequence, and never delays the\n  first read or an action. Provide a complete reduced-motion result.\n- Inspect the real render at the target viewport. Source review cannot certify optical balance,\n  font loading, crop, responsive transformation, or visual states.",
+  "rules": [
+    {
+      "id": "INV-01-no-fabricated-data",
+      "axis": "imagery-data",
+      "statement": "Never fabricate data. Placeholder metrics, invented deltas, and stock content are not evidence; use real product content or fixtures labelled as such.",
+      "kind": "invariant",
+      "scope": {},
+      "priority": "blocks",
+      "rationale": "A screen built on invented numbers cannot be judged for hierarchy or interpretation, and it misleads whoever reviews it.",
+      "evidence": {
+        "level": "inferred",
+        "sources": [
+          "engine/DESIGN-LANGUAGE.md#18",
+          "engine/PRODUCT-PRINCIPLES.md"
+        ]
+      },
+      "check": {
+        "mode": "human"
+      },
+      "source": "engine/DESIGN-LANGUAGE.md#18",
+      "anchor": "fabricated data"
+    },
+    {
+      "id": "INV-02-status-not-color-only",
+      "axis": "color",
+      "statement": "Status never relies on colour alone. Pair every status colour with text, an icon, or a shape that carries the same meaning.",
+      "kind": "invariant",
+      "scope": {},
+      "priority": "blocks",
+      "rationale": "Colour-blind users, monochrome prints, and dim screens lose colour-only meaning; the pairing is the meaning.",
+      "evidence": {
+        "level": "inferred",
+        "sources": [
+          "engine/DESIGN-LANGUAGE.md#18",
+          "engine/CRAFT-BASELINE.md"
+        ]
+      },
+      "check": {
+        "mode": "model"
+      },
+      "source": "engine/DESIGN-LANGUAGE.md#18",
+      "anchor": "color-only status"
+    },
+    {
+      "id": "INV-03-essential-actions-visible",
+      "axis": "navigation-action",
+      "statement": "Essential actions stay visible and named. Do not hide the next action behind hover, overflow, or an icon without an accessible name.",
+      "kind": "invariant",
+      "scope": {},
+      "priority": "blocks",
+      "rationale": "An action the user cannot find or a screen reader cannot announce does not exist for them.",
+      "evidence": {
+        "level": "inferred",
+        "sources": [
+          "engine/DESIGN-LANGUAGE.md#18"
+        ]
+      },
+      "check": {
+        "mode": "machine",
+        "detectors": [
+          "SS006"
+        ]
+      },
+      "source": "engine/DESIGN-LANGUAGE.md#18",
+      "anchor": "hidden essential actions"
+    },
+    {
+      "id": "INV-04-controls-operable",
+      "axis": "states-motion",
+      "statement": "Controls keep visible labels, readable contrast, a visible focus state, keyboard order that follows visual order, and a safe way to recover from errors.",
+      "kind": "invariant",
+      "scope": {},
+      "priority": "blocks",
+      "rationale": "Operability is the floor under every aesthetic decision; a suppressed focus ring or an unlabeled field breaks the task for keyboard and assistive-technology users.",
+      "evidence": {
+        "level": "inferred",
+        "sources": [
+          "engine/DESIGN-LANGUAGE.md#18",
+          "engine/CRAFT-BASELINE.md"
+        ]
+      },
+      "check": {
+        "mode": "machine",
+        "detectors": [
+          "SS005"
+        ]
+      },
+      "source": "engine/DESIGN-LANGUAGE.md#18",
+      "anchor": "Preserve labels, contrast, focus, keyboard access, and safe recovery."
+    },
+    {
+      "id": "INV-05-no-unexplained-role-drift",
+      "axis": "tells",
+      "statement": "Semantic roles (accent, status, canvas, type roles) do not change between screens without a recorded decision. Unexplained local variation is not a role.",
+      "kind": "invariant",
+      "scope": {},
+      "priority": "blocks",
+      "rationale": "Drift between screens is how a design system dissolves; the drift report measures it and the lock records the allowed exceptions.",
+      "evidence": {
+        "level": "inferred",
+        "sources": [
+          "engine/DESIGN-LANGUAGE.md#18",
+          "engine/CRAFT-BASELINE.md"
+        ]
+      },
+      "check": {
+        "mode": "model"
+      },
+      "source": "engine/DESIGN-LANGUAGE.md#18",
+      "anchor": "unexplained role drift"
+    },
+    {
+      "id": "CRAFT-semantic-tokens",
+      "axis": "color",
+      "statement": "Use semantic tokens for stable action, status, category, brand, and content roles. Hardcoded colours live only in registered token or theme files.",
+      "kind": "default",
+      "scope": {},
+      "priority": "strong",
+      "exceptions": [
+        "one-off illustration or chart series colours declared as tokens in the artifact's token files"
+      ],
+      "rationale": "A colour named by its role can be changed in one place and checked against contrast; a literal cannot.",
+      "evidence": {
+        "level": "inferred",
+        "sources": [
+          "engine/CRAFT-BASELINE.md"
+        ]
+      },
+      "check": {
+        "mode": "machine",
+        "detectors": [
+          "SS001"
+        ]
+      },
+      "source": "engine/CRAFT-BASELINE.md",
+      "anchor": "Use semantic tokens for stable action, status, category, brand, and content roles"
+    },
+    {
+      "id": "CRAFT-spacing-scale",
+      "axis": "density",
+      "statement": "Reuse the approved spacing scale. Without one, start from {4, 8, 12, 16, 24, 32, 40, 48, 64, 80, 96} and record any optical, script, canvas, or platform adjustment.",
+      "kind": "default",
+      "scope": {},
+      "priority": "strong",
+      "exceptions": [
+        "documented optical corrections",
+        "platform-mandated insets"
+      ],
+      "rationale": "A shared scale is what makes grouping legible across screens; arbitrary pixel values are the first visible drift.",
+      "evidence": {
+        "level": "inferred",
+        "sources": [
+          "engine/CRAFT-BASELINE.md"
+        ]
+      },
+      "check": {
+        "mode": "machine",
+        "detectors": [
+          "SS002"
+        ]
+      },
+      "source": "engine/CRAFT-BASELINE.md",
+      "anchor": "Reuse the approved spacing scale"
+    },
+    {
+      "id": "CRAFT-motion-family",
+      "axis": "states-motion",
+      "statement": "Motion uses one duration and easing family, names the properties it transitions, communicates state or sequence, never delays the first read, and provides a complete reduced-motion result.",
+      "kind": "default",
+      "scope": {},
+      "priority": "strong",
+      "rationale": "transition-all and missing reduced-motion paths are the two ways motion stops being a decision and becomes noise.",
+      "evidence": {
+        "level": "inferred",
+        "sources": [
+          "engine/CRAFT-BASELINE.md"
+        ]
+      },
+      "check": {
+        "mode": "machine",
+        "detectors": [
+          "SS003",
+          "SS004"
+        ]
+      },
+      "source": "engine/CRAFT-BASELINE.md",
+      "anchor": "Provide a complete reduced-motion result"
+    },
+    {
+      "id": "CRAFT-control-heights",
+      "axis": "composition",
+      "statement": "Buttons, inputs, and selects in one context share a height. Touch surfaces provide at least 44px targets; pointer-first dense desktop controls may be smaller when still operable.",
+      "kind": "default",
+      "scope": {},
+      "priority": "strong",
+      "exceptions": [
+        "inline text controls inside dense tables when the row itself is the target"
+      ],
+      "rationale": "Mixed control heights read as several products on one screen; the drift report lists control-height families per screen for this reason.",
+      "evidence": {
+        "level": "inferred",
+        "sources": [
+          "engine/CRAFT-BASELINE.md"
+        ]
+      },
+      "check": {
+        "mode": "model"
+      },
+      "source": "engine/CRAFT-BASELINE.md",
+      "anchor": "share a height"
+    },
+    {
+      "id": "DL-10-selection-pills",
+      "axis": "navigation-action",
+      "statement": "Inside consumer-service cards, 2–4 options use a pill toggle and 5 or more move to a dedicated page. Native selects, radio groups, and checkbox filters stay valid under other contracts.",
+      "kind": "default",
+      "scope": {
+        "grammars": [
+          "consumer-service"
+        ],
+        "adapters": [
+          "product-ui"
+        ]
+      },
+      "priority": "advisory",
+      "exceptions": [
+        "settings pages, forms, and dense consoles use native controls and keep platform behaviour (§18)"
+      ],
+      "rationale": "In a mobile card the pill keeps the choice visible and the touch target large; the same control inside a settings form would hide the platform semantics people expect.",
+      "evidence": {
+        "level": "inferred",
+        "sources": [
+          "engine/DESIGN-LANGUAGE.md#10"
+        ]
+      },
+      "check": {
+        "mode": "model"
+      },
+      "source": "engine/DESIGN-LANGUAGE.md#10",
+      "anchor": "Scope: the `consumer-service` mobile card recipe"
+    },
+    {
+      "id": "DL-14-cards-default",
+      "axis": "composition",
+      "statement": "In consumer-service dashboards, content lives inside cards; only TopBar, BottomNav, and carousel titles sit outside. Flat reading flow, selectable rows, and uncarded sections are valid under other contracts.",
+      "kind": "default",
+      "scope": {
+        "grammars": [
+          "consumer-service"
+        ],
+        "pageTypes": [
+          "dashboard"
+        ]
+      },
+      "priority": "advisory",
+      "exceptions": [
+        "operations consoles, editorial pages, and settings forms (DESIGN-LANGUAGE §18, METHODOLOGY §2)"
+      ],
+      "rationale": "The card is the recipe's unit of rhythm on a phone; forcing it onto a dense console doubles the chrome without adding grouping.",
+      "evidence": {
+        "level": "inferred",
+        "sources": [
+          "engine/DESIGN-LANGUAGE.md#14"
+        ]
+      },
+      "check": {
+        "mode": "model"
+      },
+      "source": "engine/DESIGN-LANGUAGE.md#14",
+      "anchor": "Scope: `consumer-service` dashboards"
+    },
+    {
+      "id": "DL-23-amounts-never-wrap",
+      "axis": "typography",
+      "statement": "Displayed amounts never wrap mid-value. Keep the sign, number, and unit on one line (whitespace-nowrap) for hero metrics, KPI metrics, list amounts, chart prices, donut centres, and storage quantities.",
+      "kind": "default",
+      "scope": {},
+      "priority": "strong",
+      "rationale": "A value split across lines reads as two values; the eye locks onto magnitude first and loses it at the break.",
+      "evidence": {
+        "level": "inferred",
+        "sources": [
+          "engine/DESIGN-LANGUAGE.md#23"
+        ]
+      },
+      "check": {
+        "mode": "model"
+      },
+      "source": "engine/DESIGN-LANGUAGE.md#23",
+      "anchor": "Applies to every displayed amount"
+    },
+    {
+      "id": "DL-49-tone-default",
+      "axis": "user-job",
+      "statement": "Product UI copy uses a friendly, conversational voice by default. Regulated or legal copy follows UX-WRITING.md and keeps the same clarity.",
+      "kind": "default",
+      "scope": {
+        "adapters": [
+          "product-ui"
+        ]
+      },
+      "priority": "advisory",
+      "exceptions": [
+        "legal, medical, and financial disclosures with mandated wording"
+      ],
+      "rationale": "Plain language lowers the cost of every decision the interface asks for; mandated wording is the one place it yields.",
+      "evidence": {
+        "level": "inferred",
+        "sources": [
+          "engine/DESIGN-LANGUAGE.md#49",
+          "engine/UX-WRITING.md"
+        ]
+      },
+      "check": {
+        "mode": "model"
+      },
+      "source": "engine/DESIGN-LANGUAGE.md#49",
+      "anchor": "Conversational tone (default voice)"
+    },
+    {
+      "id": "DL-02-number-leads-unit",
+      "axis": "attention",
+      "statement": "Numbers lead and units follow small: set a value at about twice the size of its unit so magnitude reads first, and always use thousands separators.",
+      "kind": "default",
+      "scope": {
+        "pageTypes": [
+          "dashboard",
+          "detail"
+        ]
+      },
+      "priority": "advisory",
+      "exceptions": [
+        "tabular columns where every cell shares one unit shown in the header"
+      ],
+      "rationale": "Equal sizes flatten value and unit into one token; the ratio is what makes a metric scannable.",
+      "evidence": {
+        "level": "inferred",
+        "sources": [
+          "engine/DESIGN-LANGUAGE.md#2"
+        ]
+      },
+      "check": {
+        "mode": "model"
+      },
+      "source": "engine/DESIGN-LANGUAGE.md#2",
+      "anchor": "Large Numbers + Small Units"
+    },
+    {
+      "id": "DL-29-skeleton-matches-content",
+      "axis": "states-motion",
+      "statement": "Loading skeletons match the shape of the final content (same padding, radius, and text heights); no spinner inside a card. Show a skeleton after a 300ms delay and keep it for at least 300ms.",
+      "kind": "default",
+      "scope": {
+        "adapters": [
+          "product-ui"
+        ]
+      },
+      "priority": "strong",
+      "exceptions": [
+        "sub-200ms responses that never show a loading state"
+      ],
+      "rationale": "A skeleton that matches the layout keeps the reader's place; a spinner or an empty card that fills later makes the screen jump twice.",
+      "evidence": {
+        "level": "inferred",
+        "sources": [
+          "engine/DESIGN-LANGUAGE.md#29"
+        ]
+      },
+      "check": {
+        "mode": "model"
+      },
+      "source": "engine/DESIGN-LANGUAGE.md#29",
+      "anchor": "Skeletons match the shape of final content"
+    },
+    {
+      "id": "DL-30-states-stay-in-place",
+      "axis": "states-motion",
+      "statement": "Empty and error states stay in place: a failing card shows its own error while the rest renders; zero displays as 0, never as a dash; every message names the problem and a recovery.",
+      "kind": "default",
+      "scope": {
+        "adapters": [
+          "product-ui"
+        ]
+      },
+      "priority": "strong",
+      "exceptions": [
+        "a full-page failure uses the full-screen error pattern"
+      ],
+      "rationale": "Partial failure handled locally preserves the rest of the decision; hiding a zero or a failure behind a dash hides the state the user needs to act on.",
+      "evidence": {
+        "level": "inferred",
+        "sources": [
+          "engine/DESIGN-LANGUAGE.md#30"
+        ]
+      },
+      "check": {
+        "mode": "model"
+      },
+      "source": "engine/DESIGN-LANGUAGE.md#30",
+      "anchor": "Empty State & Error State Rules"
+    },
+    {
+      "id": "DL-31-negative-amounts",
+      "axis": "typography",
+      "statement": "Negative amounts use a minus sign (-$1.8K), never parentheses, and the destructive text role; at zero use the default text colour and no trend icon.",
+      "kind": "default",
+      "scope": {
+        "pageTypes": [
+          "dashboard",
+          "detail",
+          "list"
+        ]
+      },
+      "priority": "advisory",
+      "exceptions": [
+        "accounting exports that must follow a client's statement format"
+      ],
+      "rationale": "The minus sign reads in every locale and font; parentheses are an accounting convention most product users do not share.",
+      "evidence": {
+        "level": "inferred",
+        "sources": [
+          "engine/DESIGN-LANGUAGE.md#31"
+        ]
+      },
+      "check": {
+        "mode": "model"
+      },
+      "source": "engine/DESIGN-LANGUAGE.md#31",
+      "anchor": "Use minus sign"
+    },
+    {
+      "id": "DL-33-cjk-wrapping",
+      "axis": "typography",
+      "statement": "CJK text breaks at word boundaries, a number stays on one line with its CJK unit, and Pretendard's tall ascender is corrected only at 36px and above.",
+      "kind": "default",
+      "scope": {},
+      "priority": "advisory",
+      "rationale": "Mid-syllable breaks and orphaned numbers are the most common Korean typography tells in generated UI.",
+      "evidence": {
+        "level": "inferred",
+        "sources": [
+          "engine/DESIGN-LANGUAGE.md#33"
+        ]
+      },
+      "check": {
+        "mode": "model"
+      },
+      "source": "engine/DESIGN-LANGUAGE.md#33",
+      "anchor": "CJK Typography Notes"
+    },
+    {
+      "id": "DL-21-density-by-task",
+      "axis": "density",
+      "statement": "The number of visible items follows the decision, the available width, the labels, and the input mode. There is no universal four-item limit; dense rows and small multiples are valid.",
+      "kind": "default",
+      "scope": {},
+      "priority": "advisory",
+      "rationale": "A fixed item quota optimises for one phone dashboard; monitoring and editing tasks need coordinated dense regions immediately.",
+      "evidence": {
+        "level": "inferred",
+        "sources": [
+          "engine/DESIGN-LANGUAGE.md#21",
+          "engine/METHODOLOGY.md"
+        ]
+      },
+      "check": {
+        "mode": "model"
+      },
+      "source": "engine/DESIGN-LANGUAGE.md#21",
+      "anchor": "There is no universal four-item card limit"
+    },
+    {
+      "id": "DL-12-shadow-opacity",
+      "axis": "surfaces",
+      "statement": "In the consumer-service recipe, shadows stay between 4% and 12% opacity: subtle depth, not a floating card.",
+      "kind": "default",
+      "scope": {
+        "grammars": [
+          "consumer-service"
+        ]
+      },
+      "priority": "advisory",
+      "exceptions": [
+        "overlays and sheets that must separate from the page"
+      ],
+      "rationale": "Heavy shadows multiply across a card grid and compete with the content they were meant to lift.",
+      "evidence": {
+        "level": "inferred",
+        "sources": [
+          "engine/DESIGN-LANGUAGE.md#12"
+        ]
+      },
+      "check": {
+        "mode": "model"
+      },
+      "source": "engine/DESIGN-LANGUAGE.md#12",
+      "anchor": "Opacity is very low"
+    },
+    {
+      "id": "DL-24-hover-belongs-to-controls",
+      "axis": "states-motion",
+      "statement": "In consumer-service cards, hover and click effects belong to controls, not to cards or list rows; no swipe gestures outside carousels and no long-press menus.",
+      "kind": "default",
+      "scope": {
+        "grammars": [
+          "consumer-service"
+        ]
+      },
+      "priority": "advisory",
+      "exceptions": [
+        "selectable rows in consoles and lists where the row is the action (§18)"
+      ],
+      "rationale": "A card that reacts to hover promises an action it does not have; the recipe keeps affordance on the controls.",
+      "evidence": {
+        "level": "inferred",
+        "sources": [
+          "engine/DESIGN-LANGUAGE.md#24"
+        ]
+      },
+      "check": {
+        "mode": "model"
+      },
+      "source": "engine/DESIGN-LANGUAGE.md#24",
+      "anchor": "Hover/click effects on cards themselves"
+    },
+    {
+      "id": "DL-03-type-roles",
+      "axis": "typography",
+      "statement": "In the consumer-service recipe, type is set by role on the five-level scale (display, headline, title, body, label/caption), and category labels are uppercase with tracking.",
+      "kind": "default",
+      "scope": {
+        "grammars": [
+          "consumer-service"
+        ]
+      },
+      "priority": "advisory",
+      "exceptions": [
+        "an approved project type scale replaces the recipe's sizes while keeping the roles"
+      ],
+      "rationale": "Roles travel across screens; raw sizes do not. The drift report compares type sizes per screen for the same reason.",
+      "evidence": {
+        "level": "inferred",
+        "sources": [
+          "engine/DESIGN-LANGUAGE.md#3"
+        ]
+      },
+      "check": {
+        "mode": "model"
+      },
+      "source": "engine/DESIGN-LANGUAGE.md#3",
+      "anchor": "5-Level Typography"
+    },
+    {
+      "id": "DL-09-status-dot-with-text",
+      "axis": "color",
+      "statement": "List status uses a same-colour dot together with same-colour text; the dot never carries the status alone.",
+      "kind": "default",
+      "scope": {
+        "grammars": [
+          "consumer-service"
+        ],
+        "pageTypes": [
+          "list",
+          "dashboard"
+        ]
+      },
+      "priority": "strong",
+      "rationale": "The recipe's way of satisfying the status invariant (INV-02) inside dense list rows.",
+      "evidence": {
+        "level": "inferred",
+        "sources": [
+          "engine/DESIGN-LANGUAGE.md#9"
+        ]
+      },
+      "check": {
+        "mode": "model"
+      },
+      "source": "engine/DESIGN-LANGUAGE.md#9",
+      "anchor": "Same-color dot + same-color text"
+    }
+  ],
   "grammars": {
     "consumer-service": "### `consumer-service`\n\n- **Job:** understand personal state without anxiety and take one useful next action.\n- **Attention:** one dominant balance, status, benefit, or briefing; secondary services recede.\n- **Composition:** short contextual heading → dominant summary → small set of next actions →\n  progressive detail. Mobile-first, thumb-reachable, explicit bottom navigation where needed.\n- **Density/type:** comfortable to airy; friendly sans; large plain-language numbers; short copy.\n- **Color/surface:** calm neutral base, one brand action color, semantic colors only for real\n  status. Brand/content and category palettes can have separate stable roles. Soft grouped\n  surfaces are common but a card is used only when it groups a decision.\n- **Feedback:** immediate, reassuring, reversible; money and health values do not animate\n  theatrically.\n- **Reject:** equal service cards that obscure priority, promotional clutter above state,\n  category colors without stable meaning,\n  cute language in serious moments, or copying Toss component-for-component.",
     "operations-console": "### `operations-console`\n\n- **Job:** scan system or business state, compare changes, find exceptions, act efficiently.\n- **Attention:** prioritize the current operational question or exception. Comparable regions\n  may share weight when comparison is the task; decorative KPI tiles must not obscure action.\n- **Composition:** persistent navigation → scope/time controls → focal trend or queue →\n  comparable metrics → actionable table/list. Detail lives below or on demand.\n- **Density/type:** comfortable to compact; neutral grotesk; tabular numerals; labels may be\n  small but body and decisions remain readable on desktop.\n- **Color/surface:** restrained brand accent; categorical colors only for stable, repeated data\n  semantics. Tone, alignment, and grouping carry more hierarchy than decoration.\n- **Feedback:** filters and mutations respond instantly; loading preserves layout; bulk action\n  consequences are explicit.\n- **Reject:** KPI tiles that hide the operational question, decoration that impairs scanning, mobile-tight type on a\n  1440px canvas, or charts without a decision they support.",

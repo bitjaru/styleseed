@@ -4,6 +4,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { sha256, safeProjectPath } from "./runtime-contract.mjs";
+import { renderRulesSection } from "./rules-in-scope.mjs";
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const skillDir = resolve(scriptDir, "..");
@@ -274,6 +275,12 @@ export function compileContext({
   };
 
   const spatialContent = registryMode ? spacingSection(normalizedProject, normalizedArtifact) : null;
+  const rulesContent = renderRulesSection(catalog.rules ?? [], {
+    grammar: reference ? selection.fallback : selection.grammar,
+    adapter: selection.adapter,
+    domain: selection.domain,
+    page: selection.page,
+  });
   const sections = [
     { id: "agent-execution", path: "catalog:agents", content: catalog.agents[agent] },
     { id: "core", path: "catalog:core", content: catalog.core },
@@ -286,6 +293,7 @@ export function compileContext({
     ...(profileContent ? [{ id: "profile", path: `catalog:profiles/${selection.profile}`, content: profileContent }] : []),
     ...(legacyLock ? [{ id: "lock", path: legacyLock.path ?? "legacy:STYLESEED.md", content: buildLegacyLockSection(legacyLock) }] : []),
     ...(spatialContent ? [{ id: "spacing", path: "config:spacing", content: spatialContent }] : []),
+    ...(rulesContent ? [{ id: "rules", path: "catalog:rules", content: rulesContent }] : []),
     { id: "craft", path: "catalog:craft", content: catalog.craft },
   ].filter((section) => section.content && section.content.trim().length > 0);
 

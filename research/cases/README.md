@@ -54,7 +54,7 @@ not absence.
 6. **Validate.** Build one screen the case did not show, with the candidate rules applied, and
    record the StyleSeed score and the bundle used. A candidate that only recreates the source
    screen has not been validated.
-7. **Promote.** A promoted candidate points at the playbook or grammar line it changed. Promotion
+7. **Promote.** A promoted candidate points at the playbook or grammar line it changed and, once the rules-as-data step ships, at its entry in `engine/rules/catalog.json` (see `engine/rules/README.md`). Promotion
    is a maintainer merge after review; `approved` requires a reviewer.
 
 `node scripts/validate-cases.mjs` checks every `case.json` against the schema, the evidence

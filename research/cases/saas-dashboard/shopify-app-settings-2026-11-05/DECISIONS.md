@@ -87,9 +87,25 @@ own spacing comes from its code (D4), not from this run.
 
 ## Validation
 
-Not yet validated. The next step is a settings screen in the demo project built from R1–R5
-with the `operations-console × saas-dashboard × settings` bundle, scored and rendered at 1440
-and 390.
+Built on 2026-11-05: a payment-settings page (merchant info, settlement, retry policy, connected
+providers, reset) in the local demo project `styleseed-demo-v6/payments-console`
+(`settings.html`, commit `853ac16`), a screen none of the sources show. Bundle
+`operations-console × product-ui × fintech × settings`, artifact `payment-settings`, StyleSeed 5.0.0.
+
+- R1: five groups stacked, each `2fr : 5fr` from 768px and one column below; page width capped at
+  1040px instead of scaling the ratio.
+- R2: group title plus one-line description; no body paragraphs.
+- R3: save bar hidden until a change exists, "저장하지 않은 변경 n건", confirmation dialog for reset
+  and disconnect, toast after save, leave guard; a failed save keeps the draft.
+- R4: provider rows with name, status badge (neutral when connected, warning dot when not) and one
+  action each; the reset card is the only card with a functional danger border.
+- R5: spacing only from the project's 4px scale and the bundle's spatial roles.
+
+Self-score 92/100 with the ss-score rubric (colour 14, hierarchy 15, layout 11, cards 10, states 17,
+motion 6, coherence 10, distinctiveness 9), read from the code plus renders at 1440 and 390. The
+deterministic scan reports only media-query breakpoint warnings that the sibling screens share.
+This is the maintainer's agent scoring its own screen; it is not expert approval, and the
+candidates stay `candidate` until a named review.
 
 ## What this case does not claim
 

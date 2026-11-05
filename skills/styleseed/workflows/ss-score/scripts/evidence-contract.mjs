@@ -193,6 +193,8 @@ function validateFindings(projectRoot, findings, label) {
       const path = projectRelative(finding.path, `${label}[${index}].path`);
       containedRegularFile(projectRoot, path, { maxBytes: MAX_REPORT_BYTES, label: `${label}[${index}].path` });
     }
+    if (finding.blocking !== undefined && typeof finding.blocking !== "boolean") fail(`${label}[${index}].blocking must be a boolean`);
+    if (finding.priority !== undefined && !["blocks", "strong", "advisory"].includes(finding.priority)) fail(`${label}[${index}].priority must be blocks, strong, or advisory`);
   }
 }
 

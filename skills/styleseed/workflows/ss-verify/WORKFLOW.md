@@ -186,6 +186,10 @@ and scale, type sizes, radii, fonts, and control heights per screen with a basel
 palette roles when `--project-root` points at a StyleSeed project, otherwise the majority across
 the screens. `DRIFT.md` holds the table and a one-line verdict; `drift.json` holds the same data.
 
+With `--gate`, at-rest drift on accent, ink, canvas, or spacing base exits 3 (INV-05: no unexplained
+role drift) so CI can block on it; record approved exceptions in the project lock instead of
+lowering the gate.
+
 Read it as measurement, not judgment. A `different` accent may be an approved exception. A `none`
 accent usually means the primary action only appears in a state (a save bar, a dialog), so
 re-measure with `--states`. No page text, screenshots, or URLs beyond the ones you passed are

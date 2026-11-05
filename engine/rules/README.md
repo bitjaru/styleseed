@@ -30,6 +30,10 @@ id · axis · statement · kind · scope · priority · exceptions · rationale 
 - The resolver (`ss-resolve/scripts/compiler.mjs`) appends a **Rules in scope** section to every
   bundle: all invariants, then the defaults whose scope matches the selection, ordered by
   priority and id.
+- `styleseed-check.mjs` (ss-score) stamps every deterministic finding with its catalog `rule`,
+  `priority`, and `blocking`; the evidence gate refuses a run with a blocking finding, SARIF
+  reports it at `error` level, and `scan --gate` exits 3. `drift-report.mjs --gate` does the same
+  for at-rest drift (INV-05).
 - `scripts/validate-rules.mjs` runs in `verify-repo --core`: schema, unique ids, known scope
   values, existing sources, present anchors, detector ids, and that invariants carry no scope.
 

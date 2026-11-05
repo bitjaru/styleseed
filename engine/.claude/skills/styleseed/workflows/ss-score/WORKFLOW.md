@@ -36,9 +36,13 @@ project containment before scanning. Contract/path/hash/coverage failures are ha
 detectors are warning-only until their fixture precision is measured and a maintainer promotes them.
 Stable detector IDs are `SS001` hardcoded colors, `SS002` arbitrary pixel values, `SS003`
 `transition-all`, `SS004` motion without reduced-motion handling, `SS005` focus suppression, and
-`SS006` high-confidence unlabeled icon controls. A deterministic JSON report contains only
-`detectorRevision`, `inventoryHash`, and sorted `findings`, so it can be attached to the evidence
-gate without caller-supplied pass claims.
+`SS006` high-confidence unlabeled icon controls. Each detector belongs to a rule in
+`engine/rules/catalog.json`, so every finding carries `rule`, `priority` (`blocks` · `strong` ·
+`advisory`), and `blocking`. A `blocks` priority (the §18 invariants behind `SS005` and `SS006`,
+and every contract error) is a fail state independent of any score: the evidence gate refuses the
+run, SARIF reports it at `error` level, and `--gate` exits 3. A deterministic JSON report contains
+only `detectorRevision`, `inventoryHash`, and sorted `findings`, so it can be attached to the
+evidence gate without caller-supplied pass claims.
 
 Within an authorized evidence-writing/build task, attach the generated JSON through the same
 typed gate path as other reports. Plain scoring reports findings without attaching evidence:
@@ -213,19 +217,31 @@ Distinctiveness          7/10  ▓▓▓░  generic placeholder imagery obscure
 3. Restore consistent panel depth; preserve justified overlay boundaries → +4 cards
 
 Expected gains are estimates; run a new review after repairs before reporting a new score.
+
+### Fail state (independent of the score)
+- INV-03-essential-actions-visible · src/app/Dashboard.tsx:48 · icon-only button without a name (SS006) · blocks · autofix: no
+- INV-02-status-not-color-only · src/app/Dashboard.tsx:71 · order status conveyed by colour alone · blocks · autofix: no
+Gate: FAIL — 2 blocking finding(s). The score above does not offset them.
 ```
 
 Use letter bands: 90+ A · 80-89 B · 70-79 C · 60-69 D · <60 F.
+
+Every finding, deterministic or judged, carries the same five fields: **rule** (the catalog id
+when one applies), **location**, **evidence** (what was observed, not the rule restated),
+**priority** (`blocks` · `strong` · `advisory`, from the catalog), and **autofix** (yes/no). Findings
+with `blocks` go in the fail state, never in the category deductions; an invariant violation is not
+a −4.
 
 ## Gate mode (use this as the Quality Gate before showing the user UI)
 
 Gate mode applies within an authorized build or fix task. Plain scoring stays read-only with
 respect to implementation and configuration. A low score is not permission to begin editing.
 
-1. Score the just-generated UI.
-2. If **< 80**, return findings to the authorized implementation step, then re-score after fixes.
+1. Score the just-generated UI and run the deterministic check with `--gate`.
+2. If **< 80** or **any blocking finding** exists, return findings to the authorized implementation
+   step (blocking first), then re-score after fixes.
    `/ss-review` can explain findings but is read-only; it is not the editing step.
-3. Stop when ≥ 80 or after at most three fix-and-re-score passes. Do not restart the budget
+3. Stop when ≥ 80 with no blocking findings, or after at most three fix-and-re-score passes. Do not restart the budget
    by switching skills. Stop earlier on a permission boundary or an unavailable dependency.
 4. Report the actual score, fixes, and unresolved failures even when the gate did not pass.
    Label incomplete work as failed or blocked, not accepted or ready to ship.

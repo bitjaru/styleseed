@@ -56,7 +56,7 @@ export function InstallCommand({ tone = "light", agent = "default", onCopied, va
     return (
       <div>
         <div className={styles.installLine}>
-          <code ref={commandRef} className={styles.installCode}>{command}</code>
+          <code ref={commandRef} className={styles.installCode} tabIndex={0} aria-label="Install command; scroll horizontally to read">{command}</code>
           <button type="button" className={styles.copyButton}
             onClick={() => copyText(command, commandRef.current, setState, onCopied)}
             aria-label={`Copy install command: ${command}`}>

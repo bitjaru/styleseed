@@ -32,9 +32,9 @@ not absence.
 
 | Level | Meaning | Example |
 |---|---|---|
-| `observed` | measured or seen directly on the public surface | spacing scale read from computed styles; the fare shown as a range before selection |
+| `observed` | measured on the public surface, or stated by the product's own public documentation | spacing scale read from computed styles; the fare shown as a range before selection; a pattern page saying why the left column exists |
 | `derived` | computed from observations | accent used on 3 of 3 primary actions, so the accent role is the button fill |
-| `inferred` | a reason we supply or take from public writing; the author's intent is not confirmed | "the range hides price uncertainty before matching" (our reading) |
+| `inferred` | a reason we supply, or read into third-party writing; the author did not state it | "the range hides price uncertainty before matching" (our reading) |
 | `approved` | a named reviewer with design expertise accepted the rule candidate | reviewer handle and date in `ruleCandidates[].review` |
 
 ## Workflow

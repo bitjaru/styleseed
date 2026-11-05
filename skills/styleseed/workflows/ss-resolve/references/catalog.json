@@ -1,7 +1,7 @@
 {
   "schemaVersion": 5,
   "engineVersion": "5.0.0",
-  "engineRevision": "sha256:cbb8718fd5e04c2eb2bf483709819f9cb6a86a9e33be8a187dbb546b52d80463",
+  "engineRevision": "sha256:a82b4f9e00c63f7ecf1a968a99ebb3227792df5ed7d288f3038d8caa3bfaf6d6",
   "distributionSource": {
     "schemaVersion": 1,
     "channel": "edge",
@@ -10,7 +10,7 @@
   },
   "distributions": {
     "core": {
-      "revision": "sha256:cbb8718fd5e04c2eb2bf483709819f9cb6a86a9e33be8a187dbb546b52d80463",
+      "revision": "sha256:a82b4f9e00c63f7ecf1a968a99ebb3227792df5ed7d288f3038d8caa3bfaf6d6",
       "files": [
         {
           "path": "LICENSE",
@@ -429,13 +429,13 @@
         },
         {
           "path": "engine/DESIGN-LANGUAGE.md",
-          "sha256": "2dc7196fafcd06dcbd298c9e5e10059cd03d054b447923f534cef7d2657b8fd9",
-          "bytes": 97876
+          "sha256": "094ffafdbaa80e082f1f3355c42978158be78b9a2b794b1f5a844e63cd786f58",
+          "bytes": 98402
         },
         {
           "path": "engine/METHODOLOGY.md",
-          "sha256": "cd04ad6b71d090dd4c457ed318ab2cd18e5fd58c7f6693b69e9e43fcbb698a17",
-          "bytes": 14567
+          "sha256": "d44df4a35cabad4cc9e235674c7e8f640af7df076fa0d7e683cacdd6ec68d88b",
+          "bytes": 14911
         },
         {
           "path": "engine/PAGE-TYPES.md",
@@ -1313,13 +1313,13 @@
     },
     {
       "path": "DESIGN-LANGUAGE.md",
-      "sha256": "2dc7196fafcd06dcbd298c9e5e10059cd03d054b447923f534cef7d2657b8fd9",
-      "bytes": 97876
+      "sha256": "094ffafdbaa80e082f1f3355c42978158be78b9a2b794b1f5a844e63cd786f58",
+      "bytes": 98402
     },
     {
       "path": "METHODOLOGY.md",
-      "sha256": "cd04ad6b71d090dd4c457ed318ab2cd18e5fd58c7f6693b69e9e43fcbb698a17",
-      "bytes": 14567
+      "sha256": "d44df4a35cabad4cc9e235674c7e8f640af7df076fa0d7e683cacdd6ec68d88b",
+      "bytes": 14911
     },
     {
       "path": "PAGE-TYPES.md",

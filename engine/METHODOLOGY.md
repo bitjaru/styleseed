@@ -243,15 +243,17 @@ See [motion accessibility](motion/README.md#accessibility).
 
 ---
 
-## Application priority — generic dashboard scaffolding
+## Application priority — example: a consumer-service dashboard
 
-When you're starting a new dashboard, work in this order:
+One worked schedule for the `consumer-service` dashboard recipe, not the default for every
+surface. Density, type base, and navigation follow §1–2 and the selected grammar; an operations
+console or a settings page picks differently.
 
 **Day 0–3 — get the bones right**
 - Activate a skin via `data-skin` (e.g., `toss` for clean/trust, `linear` for keyboard-power, `arc` for playful)
-- Lock in 14px base text and 8px spacing grid
-- Split the page into above-the-fold (KPI strip + briefing) and below (detail widgets)
-- Make every table row tappable to a detail view
+- Lock the type base and spacing grid the grammar prescribes (this recipe uses 14px text on an 8px grid)
+- Split the page into above-the-fold (the first decision's evidence + briefing) and below (detail widgets); there is no KPI quota (§1)
+- Give rows a detail path where the task needs one: tap-through, inline expand, or drilldown (§1)
 
 **Week 1–2 — quality lift**
 - Replace spinners with card-shaped skeletons that match the final layout

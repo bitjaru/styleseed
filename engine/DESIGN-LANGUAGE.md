@@ -418,20 +418,25 @@ My name:      text-brand
 
 ## 10. Selection UI Rules (Toggle / Select)
 
-### Only 2 Allowed Selection UI Patterns
+### Selection UI inside consumer-service cards
+
+Scope: the `consumer-service` mobile card recipe. Native selects, radio groups, and checkbox
+filters are valid under other contracts (§18); settings pages, forms, and dense consoles use
+them by default and keep the platform behaviour.
 
 | Pattern | Usage | Position |
 |---------|-------|----------|
 | **Pill toggle** | Period/category switch (2-4 options) | Card header right |
 | **Chart item selection** | Donut/legend item highlight | Inside chart |
 
+Avoid inside consumer-service cards:
 ```
-✗ Select dropdown forbidden (inside cards)
+✗ Select dropdown inside a card
 ✗ Dropdown selector (with ▼ arrow)
 ✗ Radio button groups
 ✗ Checkbox filters
 ```
-If there are 2-4 options, use a **Pill toggle**. If 5 or more, **separate into a dedicated page**.
+In that recipe, 2-4 options use a **Pill toggle**; 5 or more move to a dedicated page.
 
 ### Pattern 1: Capsule Pill Toggle
 ```
@@ -537,15 +542,19 @@ Rule: **Opacity is very low** (4-12%). Shadows create **subtle depth** rather th
 
 ## 14. Four Section Types
 
-### Absolute Rule: All Content Lives Inside Cards
+### Consumer-service default: content lives inside cards
+
+Scope: `consumer-service` dashboards. Flat reading flow, selectable rows, and uncarded
+sections are valid under other contracts (§18, `METHODOLOGY.md` §2); do not force every view
+into cards there.
 ```
 ✗ Placing text, metrics, lists, etc. directly outside cards
 ✗ Exposing content directly on the page background (#FAFAFA)
-✓ All data/content must exist inside a card (bg-card rounded-2xl shadow-card)
+✓ All data/content lives inside a card (bg-card rounded-2xl shadow-card)
 ```
-**No exceptions.** Only TopBar, BottomNav, and carousel titles may sit outside cards.
-Everything else (metrics, charts, lists, text) must be wrapped in a card.
-Placing content directly on the page background without a card breaks the design.
+In this recipe only TopBar, BottomNav, and carousel titles sit outside cards. Everything else
+(metrics, charts, lists, text) is wrapped in a card; content placed directly on the page
+background breaks the recipe's rhythm.
 
 ### Type A: Full Card — Title Inside Card
 ```
@@ -793,7 +802,7 @@ inside a panel merely because the original consumer example was display-only.
 <p className="...">$48.2K</p>
 ```
 
-Applies to: hero metrics, KPI metrics, list amounts, chart prices, donut center, storage quantities — **no exceptions**.
+Applies to every displayed amount: hero metrics, KPI metrics, list amounts, chart prices, donut center, storage quantities.
 
 ### Wrapping Behavior by Text Type
 
@@ -1838,8 +1847,9 @@ NO  Vertical dividers
 
 > Principles for a casual-but-polite voice and tone. An extension of section 34 (Microcopy Tone).
 
-### 1. Conversational Tone -- No Exceptions
-Use a friendly, conversational voice everywhere. No context is too serious for clear, human language.
+### 1. Conversational tone (default voice)
+Use a friendly, conversational voice across product UI. Plain language stays even where the
+content is serious; regulated or legal copy follows `UX-WRITING.md` and keeps the same clarity.
 ```
 OK  "Your order is complete"
 NO  "Your order has been successfully processed"

@@ -194,6 +194,7 @@ export function verifyEvidenceRun({ projectRoot, artifactId, runId, writeSummary
       if (gate === "deterministic") {
         if (report.inventoryHash !== inventory?.hash) throw new Error("deterministic inventory is stale");
         if (report.findings.some((finding) => finding.severity === "error" || finding.severity === "fail")) throw new Error("deterministic evidence contains hard findings");
+        if (report.findings.some((finding) => finding.blocking === true)) throw new Error("deterministic evidence contains blocking findings (catalog priority `blocks`)");
       } else if (gate === "functional") {
         if (report.inventoryHash !== inventory?.hash) throw new Error("functional inventory is stale");
         if (report.exitCode !== 0) throw new Error(`functional runner failed with exit ${report.exitCode}`);
@@ -210,6 +211,7 @@ export function verifyEvidenceRun({ projectRoot, artifactId, runId, writeSummary
           if (!found) throw new Error(`required viewport is missing: ${render.id}`);
         }
         if (report.findings.some((finding) => finding.severity === "error" || finding.severity === "fail")) throw new Error("visual evidence contains hard findings");
+        if (report.findings.some((finding) => finding.blocking === true)) throw new Error("visual evidence contains blocking findings (catalog priority `blocks`)");
       } else if (gate === "temporal") {
         const contract = artifact.validation.temporal ?? { required: false, scenarios: [] };
         if (contract.required && report.applicability === "not-applicable") throw new Error("temporal evidence is required but marked not-applicable");

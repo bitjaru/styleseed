@@ -18,7 +18,7 @@ import { compareScreens, baselineFromRoles, renderDriftMarkdown } from '../../ss
 const USAGE = 'usage: drift-report.mjs <url>… --out <dir> [--browser <module>] [--project-root <dir>] [--palette <id>] [--states a,b] [--labels a,b]';
 
 export function parseArgs(argv) {
-  const args = { urls: [], out: null, browser: process.env.STYLESEED_BROWSER_MODULE || null, projectRoot: null, palette: null, states: [], labels: [], maxElements: 5000, timeout: 45000 };
+  const args = { urls: [], out: null, browser: process.env.STYLESEED_BROWSER_MODULE || null, projectRoot: null, palette: null, states: [], labels: [], maxElements: 5000, timeout: 45000, gate: false };
   const list = value => String(value ?? '').split(',').map(s => s.trim()).filter(Boolean);
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
@@ -28,6 +28,7 @@ export function parseArgs(argv) {
     else if (a === '--palette') args.palette = argv[++i];
     else if (a === '--states') args.states = list(argv[++i]);
     else if (a === '--labels') args.labels = list(argv[++i]);
+    else if (a === '--gate') args.gate = true;
     else if (a === '--max-elements') args.maxElements = Number(argv[++i]);
     else if (a === '--timeout') args.timeout = Number(argv[++i]);
     else if (a.startsWith('--')) throw new Error(`unknown option ${a}\n${USAGE}`);
@@ -100,6 +101,11 @@ export async function report(args, log = console.log) {
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  try { await report(parseArgs(process.argv.slice(2))); }
+  try {
+    const args = parseArgs(process.argv.slice(2));
+    const result = await report(args);
+    // --gate: at-rest drift on accent, ink, canvas, or spacing base is INV-05 territory; exit 3 so CI can block on it.
+    if (args.gate && result.screensWithDrift.length) { console.error(`drift gate: FAIL — ${result.screensWithDrift.join(', ')}`); process.exit(3); }
+  }
   catch (e) { console.error(e.message); process.exit(1); }
 }

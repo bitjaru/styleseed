@@ -1,7 +1,7 @@
 {
   "schemaVersion": 5,
   "engineVersion": "5.0.0",
-  "engineRevision": "sha256:7fb43a50459e22ea1e06b0de2cf438c9bfaaa562e244ba7233dcd1c6e5a99c43",
+  "engineRevision": "sha256:ebdae0feb833e3969d469d3ab4d2e15bbcce44226da540f51c130f0233af1d34",
   "distributionSource": {
     "schemaVersion": 1,
     "channel": "edge",
@@ -10,7 +10,7 @@
   },
   "distributions": {
     "core": {
-      "revision": "sha256:7fb43a50459e22ea1e06b0de2cf438c9bfaaa562e244ba7233dcd1c6e5a99c43",
+      "revision": "sha256:ebdae0feb833e3969d469d3ab4d2e15bbcce44226da540f51c130f0233af1d34",
       "files": [
         {
           "path": "LICENSE",
@@ -89,8 +89,23 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-reference/WORKFLOW.md",
-          "sha256": "3f7abb1f1d01d2a682cdc346cfc5723c65af1a86d40ff03e723141a3cb9a582e",
-          "bytes": 3986
+          "sha256": "68cfa32d0eb8e28c862a0ca2bc0a70fac799be3bc1738ef33f47506bac018f6c",
+          "bytes": 4612
+        },
+        {
+          "path": "engine/.claude/skills/styleseed/workflows/ss-reference/scripts/analyze-observations.mjs",
+          "sha256": "19a1a1d40b628e7ceb621ae9811776ff2c1751a8a5362aca65fdabe3655adcad",
+          "bytes": 8398
+        },
+        {
+          "path": "engine/.claude/skills/styleseed/workflows/ss-reference/scripts/measure-reference.mjs",
+          "sha256": "981b4abd53f0260131b1cf903ce128302bd5641daf0d84ce5ed8c362004fd19c",
+          "bytes": 8891
+        },
+        {
+          "path": "engine/.claude/skills/styleseed/workflows/ss-reference/scripts/observe-design.mjs",
+          "sha256": "f81a4d523897d1af71d82bc9e91b36902d299ff6774a6e7c8e14528f52002a3e",
+          "bytes": 6166
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/WORKFLOW.md",
@@ -439,8 +454,8 @@
         },
         {
           "path": "engine/REFERENCE-COMPILER.md",
-          "sha256": "70919dd41a78478a5639c57761a248ffe32d50f02673206b411d51d7a9d0e741",
-          "bytes": 6137
+          "sha256": "d6d69ee215e5b3f2803a0d36b84823bdfa97c24f14d5c129017f8152b69b7d03",
+          "bytes": 7356
         },
         {
           "path": "engine/RULESETS.md",
@@ -500,7 +515,7 @@
       ]
     },
     "skills": {
-      "revision": "sha256:12009b4baea883d23289eac221cd8617cacf1e058fd3dadea9aeac7a9ad1c96b",
+      "revision": "sha256:5ee059bd033b45941b7b785e64670d275a2c2b09229e0b16edfa51b7cb44048a",
       "files": [
         {
           "path": "engine/.claude/skills/styleseed/SKILL.md",
@@ -569,8 +584,23 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-reference/WORKFLOW.md",
-          "sha256": "3f7abb1f1d01d2a682cdc346cfc5723c65af1a86d40ff03e723141a3cb9a582e",
-          "bytes": 3986
+          "sha256": "68cfa32d0eb8e28c862a0ca2bc0a70fac799be3bc1738ef33f47506bac018f6c",
+          "bytes": 4612
+        },
+        {
+          "path": "engine/.claude/skills/styleseed/workflows/ss-reference/scripts/analyze-observations.mjs",
+          "sha256": "19a1a1d40b628e7ceb621ae9811776ff2c1751a8a5362aca65fdabe3655adcad",
+          "bytes": 8398
+        },
+        {
+          "path": "engine/.claude/skills/styleseed/workflows/ss-reference/scripts/measure-reference.mjs",
+          "sha256": "981b4abd53f0260131b1cf903ce128302bd5641daf0d84ce5ed8c362004fd19c",
+          "bytes": 8891
+        },
+        {
+          "path": "engine/.claude/skills/styleseed/workflows/ss-reference/scripts/observe-design.mjs",
+          "sha256": "f81a4d523897d1af71d82bc9e91b36902d299ff6774a6e7c8e14528f52002a3e",
+          "bytes": 6166
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/WORKFLOW.md",
@@ -923,8 +953,23 @@
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-reference/WORKFLOW.md",
-      "sha256": "3f7abb1f1d01d2a682cdc346cfc5723c65af1a86d40ff03e723141a3cb9a582e",
-      "bytes": 3986
+      "sha256": "68cfa32d0eb8e28c862a0ca2bc0a70fac799be3bc1738ef33f47506bac018f6c",
+      "bytes": 4612
+    },
+    {
+      "path": ".claude/skills/styleseed/workflows/ss-reference/scripts/analyze-observations.mjs",
+      "sha256": "19a1a1d40b628e7ceb621ae9811776ff2c1751a8a5362aca65fdabe3655adcad",
+      "bytes": 8398
+    },
+    {
+      "path": ".claude/skills/styleseed/workflows/ss-reference/scripts/measure-reference.mjs",
+      "sha256": "981b4abd53f0260131b1cf903ce128302bd5641daf0d84ce5ed8c362004fd19c",
+      "bytes": 8891
+    },
+    {
+      "path": ".claude/skills/styleseed/workflows/ss-reference/scripts/observe-design.mjs",
+      "sha256": "f81a4d523897d1af71d82bc9e91b36902d299ff6774a6e7c8e14528f52002a3e",
+      "bytes": 6166
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-resolve/WORKFLOW.md",
@@ -1273,8 +1318,8 @@
     },
     {
       "path": "REFERENCE-COMPILER.md",
-      "sha256": "70919dd41a78478a5639c57761a248ffe32d50f02673206b411d51d7a9d0e741",
-      "bytes": 6137
+      "sha256": "d6d69ee215e5b3f2803a0d36b84823bdfa97c24f14d5c129017f8152b69b7d03",
+      "bytes": 7356
     },
     {
       "path": "RULESETS.md",

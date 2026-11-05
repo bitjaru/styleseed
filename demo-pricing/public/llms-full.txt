@@ -1391,6 +1391,24 @@ consistently to new screens.
 9. **Validate** — build at least one screen not shown in the references; score and visually
    verify it. A grammar that only recreates the source screen has failed abstraction.
 
+## Measurement and evidence levels
+
+`ss-reference/scripts/measure-reference.mjs` opens a public URL at 1440×900 and 390×844 in a
+browser the caller supplies and runs the read-only `observe-design.mjs` probe: computed-style
+counts for actions, links, text, surfaces, spacing, type, radii, controls, and fonts. No text,
+URLs, screenshots, or form values leave the page. `analyze-observations.mjs` turns the counts
+into a spacing base and scale, type steps, radius families, and derived roles. The accent is
+the colour of filled primary actions, then of coloured links; a colour that only appears in
+large surfaces or pictures is never promoted. Each derived role carries the counts behind it so
+a reviewer can keep the observation and reject the derivation.
+
+Record every value, decision, and rule candidate with one evidence level from
+[`research/cases/README.md`](../research/cases/README.md): `observed` (measured, or stated in
+the product's own public documentation), `derived` (computed from observations), `inferred`
+(a reason we supply), `approved` (a named design reviewer accepted it). The measurement step
+produces `observed` and `derived` rows and leaves the other axes `unknown`; it does not fill
+them in.
+
 ## Twelve-axis output
 
 The compiler must fill the same twelve-axis contract as `RULESETS.md`: user job, attention,

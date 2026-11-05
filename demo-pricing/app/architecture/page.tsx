@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import versionInfo from "../../public/version.json";
+import { WhatsNew } from "../_home/whats-new";
 
 const BASE = "https://styleseed-demo.vercel.app";
 const ENGINE_SERIES = `v${versionInfo.version.split(".")[0]}`;
@@ -50,8 +51,8 @@ const layers = [
   ["Core judgment", "Non-negotiable coherence, hierarchy, semantics, accessibility, and task fitness."],
   ["Output grammar", "Consumer service, operations, technical, editorial, commerce, institutional, marketing, or sequential story."],
   ["Surface adapter", "Web/mobile, carousel, slide deck, document/report, or single-frame renderer contract."],
-  ["Brand recipe", "Nine reusable morphologies change containment, geometry, controls, collections, density, and motion without cloning a company."],
-  ["Palette recipe", "Eight semantic systems bind canvas, chrome, action, status, focus, and generated-media anchors with deterministic contrast checks."],
+  ["Brand recipe", `${versionInfo.recipes} reusable morphologies change containment, geometry, controls, collections, density, and motion without cloning a company.`],
+  ["Palette recipe", `${versionInfo.palettes} semantic systems bind canvas, chrome, action, status, focus, and generated-media anchors with deterministic contrast checks.`],
   ["Reference compiler", "Turns screenshots, URLs, Figma exports, or an existing UI into a local grammar with evidence and confidence."],
   ["Studio director", "Produces native, signature, and experimental directions, records human selection, then compiles interaction scenes and image/video jobs."],
   ["Context compiler", "ss-resolve emits only the selected 10–20KB method plus a manifest of selections, source hashes, and bundle hash."],
@@ -135,8 +136,22 @@ export default function ArchitecturePage() {
           </p>
         </div>
 
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/styleseed-architecture.svg" alt="StyleSeed engine architecture" className="mt-12 w-full rounded-3xl border border-neutral-200 bg-white" />
+        <section className="mt-16" aria-labelledby="studio-pipeline">
+          <div className="text-[11px] font-bold uppercase tracking-widest text-violet-600">Studio pipeline</div>
+          <h2 id="studio-pipeline" className="mt-3 text-[clamp(26px,4vw,38px)] font-bold tracking-tight">Direction, color, motion. One working scene.</h2>
+          <p className="mt-3 max-w-3xl text-[15px] leading-relaxed text-neutral-600">
+            Studio turns a brief into three structurally different directions, requires a human
+            selection, then compiles interaction scenes, image and video jobs, and a working
+            prototype before recording a showcase reel. The {versionInfo.palettes} semantic palette
+            recipes supply contrast-checked roles; color does not replace the selected design grammar.
+          </p>
+          <div className="mt-4 flex flex-wrap gap-x-6 gap-y-3 text-[14px] font-semibold text-violet-700">
+            <Link href="/studio" className="inline-flex min-h-11 items-center gap-2 hover:underline">Open Studio workbench <ArrowRight size={14} /></Link>
+            <Link href="/palettes" className="inline-flex min-h-11 items-center gap-2 hover:underline">Browse {versionInfo.palettes} palettes <ArrowRight size={14} /></Link>
+          </div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/styleseed-architecture.svg" alt="StyleSeed architecture: direction, grammar, palette, interaction and media plans feed the context compiler and evidence gates" className="mt-8 w-full rounded-3xl border border-neutral-200 bg-white" />
+        </section>
 
         <section className="mt-16 grid gap-4 md:grid-cols-2">
           {layers.map(([title, body], index) => (
@@ -160,7 +175,7 @@ export default function ArchitecturePage() {
             a fashionable swatch from pretending to be a complete design system.
           </p>
           <Link href="/recipes" className="mt-6 inline-flex items-center gap-1.5 font-bold text-violet-700 hover:underline">
-            Compare all nine recipes <ArrowRight size={14} />
+            Compare all {versionInfo.recipes} recipes <ArrowRight size={14} />
           </Link>
         </section>
 
@@ -189,6 +204,11 @@ export default function ArchitecturePage() {
               screenshots, prompts, identity, local paths, and brand secrets; records bounded
               applicability and counterexamples; and requires separate review and export attestations.
             </p>
+            <p className="mt-3 text-[15px] leading-relaxed text-neutral-600">
+              This optional extension is not included in the core install. A caller-attested accepted
+              correction becomes a local candidate. Blocking known high-risk identity patterns is a
+              guardrail, not an anonymization guarantee; review the exact package before exposure.
+            </p>
             <Link href="/learn" className="mt-6 inline-flex items-center gap-1.5 font-bold text-emerald-800 hover:underline">
               Inspect the learning boundary <ArrowRight size={14} />
             </Link>
@@ -201,12 +221,29 @@ export default function ArchitecturePage() {
               hashes. Refresh happens through the original install channel, then the lock is
               re-resolved and checked. Project code, tokens, assets, and approved decisions stay owned by the project.
             </p>
+            <p className="mt-3 text-[15px] leading-relaxed text-neutral-600">
+              Every maintained engine payload carries an exact <code>engineRevision</code>, so a
+              same-version rule or skill fix remains detectable. Use <code>$styleseed update</code>
+              {' '}in Codex or <code>/styleseed update</code> in Claude Code.
+            </p>
             <a href="https://github.com/bitjaru/styleseed/blob/main/engine/UPDATE.md" className="mt-6 inline-flex items-center gap-1.5 font-bold text-violet-700 hover:underline">
               Read the update contract <ArrowRight size={14} />
             </a>
           </article>
+          <article className="border border-neutral-200 bg-white p-8 md:p-10 lg:col-span-2">
+            <div className="text-[11px] font-bold uppercase tracking-widest text-violet-700">Codex package</div>
+            <h2 className="mt-3 text-[clamp(26px,4vw,36px)] font-bold tracking-tight">Core installation and optional learning stay separate.</h2>
+            <p className="mt-3 max-w-3xl text-[15px] leading-relaxed text-neutral-600">
+              The repository includes a repository development Codex package boundary. The implemented
+              default/core install contains neither ss-learn nor a learning MCP. Public installation
+              remains <code>npx skills add bitjaru/styleseed</code> until a plugin-directory release
+              is independently verified.
+            </p>
+            <Link href="/codex-ui-design" className="mt-6 inline-flex items-center gap-1.5 font-bold text-violet-700 hover:underline">Open the Codex guide <ArrowRight size={14} /></Link>
+          </article>
         </section>
       </div>
+      <WhatsNew />
     </main>
   );
 }

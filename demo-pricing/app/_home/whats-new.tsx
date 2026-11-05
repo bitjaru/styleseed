@@ -24,7 +24,7 @@ function getVersion(): Version {
   return JSON.parse(readFileSync(path, "utf-8"));
 }
 
-/** A compact, self-updating "What's new" band on the landing page — pulls the latest
+/** A compact, self-updating "What's new" band on the architecture page — pulls the latest
  *  release straight from version.json and links to the release notes + changelog. */
 export function WhatsNew() {
   const v = getVersion();

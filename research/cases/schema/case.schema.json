@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/bitjaru/styleseed/research/cases/schema/case.schema.json",
+  "title": "StyleSeed design-decision case",
+  "type": "object",
+  "required": ["id", "product", "surface", "domain", "pageType", "observedAt", "sources", "measurements", "decisions", "ruleCandidates", "contributors"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*-[0-9]{4}-[0-9]{2}-[0-9]{2}$", "description": "<product>-<task>-<YYYY-MM-DD>, matches the folder name" },
+    "product": { "type": "string", "minLength": 1 },
+    "task": { "type": "string", "description": "the user job on this screen, e.g. request a ride" },
+    "surface": { "enum": ["web", "mobile-web", "design-system-docs"] },
+    "domain": { "enum": ["fintech", "saas-dashboard", "ecommerce", "social", "content", "productivity", "health", "education", "devtools", "marketplace", "booking", "ai-assistant"] },
+    "pageType": { "enum": ["dashboard", "form", "landing", "detail", "list", "settings", "onboarding"] },
+    "grammarNearest": { "enum": ["consumer-service", "operations-console", "technical-instrument", "editorial-reading", "commerce-conversion", "institutional-service", "expressive-marketing", "sequential-story"] },
+    "observedAt": { "type": "string", "format": "date" },
+    "sources": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "kind", "url", "accessedAt", "evidence"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^S[0-9]+$" },
+          "kind": { "enum": ["public-screen", "design-system-doc", "article", "talk", "measurement"] },
+          "url": { "type": "string", "format": "uri" },
+          "title": { "type": "string" },
+          "accessedAt": { "type": "string", "format": "date" },
+          "evidence": { "$ref": "#/$defs/evidence" },
+          "note": { "type": "string" }
+        }
+      }
+    },
+    "measurements": {
+      "type": "object",
+      "required": ["tool", "version", "files"],
+      "additionalProperties": false,
+      "properties": {
+        "tool": { "type": "string" },
+        "version": { "type": "string" },
+        "files": { "type": "array", "minItems": 1, "items": { "type": "string", "pattern": "^measurements/" } },
+        "summary": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "spacingBase": { "type": "integer" },
+            "spacingScale": { "type": "array", "items": { "type": "number" } },
+            "typeSteps": { "type": "integer" },
+            "colorCount": { "type": "integer" },
+            "radii": { "type": "array", "items": { "type": "number" } },
+            "accentDerived": { "type": "string", "description": "accent re-derived from primary actions; the tool's brand.primary is not trusted" }
+          }
+        }
+      }
+    },
+    "decisions": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "statement", "driver", "evidence", "sources"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^D[0-9]+$" },
+          "statement": { "type": "string", "minLength": 10 },
+          "why": { "type": "string" },
+          "driver": { "enum": ["task", "brand", "platform", "unknown"] },
+          "evidence": { "$ref": "#/$defs/evidence" },
+          "sources": { "type": "array", "items": { "type": "string", "pattern": "^S[0-9]+$" } },
+          "counterexample": { "type": "string" }
+        }
+      }
+    },
+    "ruleCandidates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "axis", "statement", "applicability", "allowedVariation", "counterexample", "verification", "confidence", "evidence", "decisions", "status"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^R[0-9]+$" },
+          "axis": { "enum": ["user-job", "attention", "composition", "density", "typography", "color", "surfaces", "imagery-data", "navigation-action", "states-motion", "responsive", "tells"] },
+          "statement": { "type": "string", "minLength": 10 },
+          "applicability": { "type": "string", "minLength": 5 },
+          "allowedVariation": { "type": "string", "minLength": 5 },
+          "counterexample": { "type": "string", "minLength": 5 },
+          "verification": { "type": "string", "minLength": 5 },
+          "confidence": { "enum": ["high", "medium", "low"] },
+          "evidence": { "$ref": "#/$defs/evidence" },
+          "decisions": { "type": "array", "minItems": 1, "items": { "type": "string", "pattern": "^D[0-9]+$" } },
+          "status": { "enum": ["candidate", "reviewed", "promoted", "rejected"] },
+          "review": {
+            "type": "object",
+            "required": ["reviewer", "date", "verdict"],
+            "additionalProperties": false,
+            "properties": {
+              "reviewer": { "type": "string" },
+              "date": { "type": "string", "format": "date" },
+              "verdict": { "enum": ["agree", "conditional", "disagree"] },
+              "note": { "type": "string" }
+            }
+          },
+          "promotedTo": { "type": "string", "description": "repository path of the playbook or grammar line this candidate changed" }
+        }
+      }
+    },
+    "validation": {
+      "type": "object",
+      "required": ["screen", "score", "scoredAt", "bundle"],
+      "additionalProperties": false,
+      "properties": {
+        "screen": { "type": "string", "description": "a screen the sources did not show, built with the candidates applied" },
+        "score": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "scoredAt": { "type": "string", "format": "date" },
+        "bundle": { "type": "string", "description": "rule set used, e.g. operations-console × booking × form" },
+        "note": { "type": "string" }
+      }
+    },
+    "contributors": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+    "license": { "type": "string", "default": "measurements and prose CC BY 4.0; no third-party assets stored" }
+  },
+  "$defs": {
+    "evidence": { "enum": ["observed", "derived", "inferred", "approved"] }
+  }
+}

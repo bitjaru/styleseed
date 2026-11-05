@@ -1,0 +1,49 @@
+{
+  "id": "product-task-2026-01-01",
+  "product": "Product name as shown publicly",
+  "task": "the user job on this screen, in one line",
+  "surface": "web",
+  "domain": "booking",
+  "pageType": "form",
+  "grammarNearest": "consumer-service",
+  "observedAt": "2026-01-01",
+  "sources": [
+    { "id": "S1", "kind": "public-screen", "url": "https://example.com/screen", "title": "Screen title", "accessedAt": "2026-01-01", "evidence": "observed" },
+    { "id": "S2", "kind": "measurement", "url": "https://example.com/screen", "title": "designlang 13.4.0 run", "accessedAt": "2026-01-01", "evidence": "observed", "note": "measurements/ holds the tool output; the tool's brand.primary is not trusted" },
+    { "id": "S3", "kind": "article", "url": "https://example.com/design-blog-post", "title": "Public post by the product's design team", "accessedAt": "2026-01-01", "evidence": "inferred", "note": "the reason for D1 as the author states it" }
+  ],
+  "measurements": {
+    "tool": "designlang",
+    "version": "13.4.0",
+    "files": ["measurements/design-tokens.json", "measurements/DESIGN.md", "measurements/variables.css"],
+    "summary": { "spacingBase": 4, "spacingScale": [4, 8, 12, 16, 24, 32, 48], "typeSteps": 6, "colorCount": 12, "radii": [4, 8, 16], "accentDerived": "#000000" }
+  },
+  "decisions": [
+    {
+      "id": "D1",
+      "statement": "What the screen does, stated as a decision (e.g. the price is shown as a range until the option is chosen).",
+      "why": "The reason, with its source. Mark it inferred unless the source says it outright.",
+      "driver": "task",
+      "evidence": "inferred",
+      "sources": ["S1", "S3"],
+      "counterexample": "A product or task where this decision would be wrong."
+    }
+  ],
+  "ruleCandidates": [
+    {
+      "id": "R1",
+      "axis": "navigation-action",
+      "statement": "The rule as an agent would apply it.",
+      "applicability": "Which tasks, domains and page types it applies to.",
+      "allowedVariation": "What may differ while the rule still holds.",
+      "counterexample": "Where the rule must not be applied.",
+      "verification": "How a reviewer or a check confirms it on a built screen.",
+      "confidence": "low",
+      "evidence": "inferred",
+      "decisions": ["D1"],
+      "status": "candidate"
+    }
+  ],
+  "contributors": ["github-handle"],
+  "license": "measurements and prose CC BY 4.0; no third-party assets stored"
+}

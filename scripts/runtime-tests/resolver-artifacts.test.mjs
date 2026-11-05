@@ -96,7 +96,10 @@ test("two artifacts compile independently and only one drifts after config edit"
       const entry = manifestInputs.find((candidate) => candidate.id === id);
       assert.deepEqual({ sha256: entry.sha256, bytes: entry.bytes }, fileDigest(resolve(root, path)));
     }
-    assert.ok(readFileSync(resolve(root, ".styleseed/bundles/app-dashboard.md"), "utf8").includes("operations-console"));
+    const appBundle = readFileSync(resolve(root, ".styleseed/bundles/app-dashboard.md"), "utf8");
+    assert.ok(appBundle.includes("operations-console"));
+    assert.ok(appBundle.includes("# Rules in scope") && appBundle.includes("INV-01-no-fabricated-data"), "bundles carry the catalog invariants");
+    assert.ok(!appBundle.includes("DL-14-cards-default"), "a consumer-service default does not reach an operations-console bundle");
     assert.ok(readFileSync(resolve(root, ".styleseed/bundles/site-home.md"), "utf8").includes("asymmetric evidence rail"));
     const appManifestBefore = readFileSync(resolve(root, ".styleseed/manifests/app-dashboard.json"), "utf8");
     const homeManifestBefore = readFileSync(resolve(root, ".styleseed/manifests/site-home.json"), "utf8");

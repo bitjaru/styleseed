@@ -8,6 +8,7 @@
     ".codex-plugin/plugin.json",
     "LICENSE",
     "SECURITY.md",
+    "engine/.cursorrules",
     "engine/ADAPTERS.md",
     "engine/AGENTS.md",
     "engine/APP-PLAYBOOKS.md",
@@ -29,12 +30,14 @@
     "engine/UX-WRITING.md",
     "engine/VERSION",
     "engine/VISUAL-CRAFT.md",
-    "engine/.cursorrules",
     "engine/color/generate-palette.mjs",
     "engine/color/generator.d.mts",
     "engine/color/generator.mjs",
     "engine/color/index.ts",
-    "engine/color/palettes.json"
+    "engine/color/palettes.json",
+    "engine/rules/README.md",
+    "engine/rules/catalog.json",
+    "engine/rules/catalog.schema.json"
   ],
   "skillTrees": [
     "engine/.claude/skills/styleseed"

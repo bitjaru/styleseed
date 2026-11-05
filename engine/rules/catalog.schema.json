@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://styleseed.dev/schemas/rules-catalog.json",
+  "title": "StyleSeed rule catalog",
+  "description": "Structured rules the resolver compiles into bundles and the checker reads for severity. One entry per rule; prose handbooks remain the reading surface and must agree with these statements.",
+  "type": "object",
+  "required": ["schemaVersion", "rules"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "rules": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/rule" } }
+  },
+  "$defs": {
+    "evidenceLevel": { "enum": ["observed", "derived", "inferred", "approved"] },
+    "rule": {
+      "type": "object",
+      "required": ["id", "axis", "statement", "kind", "scope", "priority", "rationale", "evidence", "check", "source", "anchor"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[A-Z]+-[0-9A-Za-z-]+$" },
+        "axis": { "enum": ["user-job", "attention", "composition", "density", "typography", "color", "surfaces", "imagery-data", "navigation-action", "states-motion", "responsive", "tells"] },
+        "statement": { "type": "string", "minLength": 20 },
+        "kind": {
+          "enum": ["invariant", "default", "project-decision"],
+          "description": "invariant: binds everywhere (constitution, DESIGN-LANGUAGE §18). default: a recipe's choice, scoped, yields to a recorded project decision. project-decision: set in a project lock; listed here only as a template."
+        },
+        "scope": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Empty arrays mean any. The resolver includes an entry when every non-empty list intersects the selection.",
+          "properties": {
+            "grammars": { "type": "array", "items": { "type": "string" } },
+            "adapters": { "type": "array", "items": { "type": "string" } },
+            "domains": { "type": "array", "items": { "type": "string" } },
+            "pageTypes": { "type": "array", "items": { "type": "string" } },
+            "components": { "type": "array", "items": { "type": "string" } },
+            "states": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "priority": { "enum": ["blocks", "strong", "advisory"], "description": "blocks: a violation is a fail state independent of the score. strong: weighs heavily. advisory: a default to prefer." },
+        "exceptions": { "type": "array", "items": { "type": "string", "minLength": 5 } },
+        "rationale": { "type": "string", "minLength": 10 },
+        "evidence": {
+          "type": "object",
+          "required": ["level", "sources"],
+          "additionalProperties": false,
+          "properties": {
+            "level": { "$ref": "#/$defs/evidenceLevel" },
+            "sources": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 5 } }
+          }
+        },
+        "check": {
+          "type": "object",
+          "required": ["mode"],
+          "additionalProperties": false,
+          "properties": {
+            "mode": { "enum": ["machine", "model", "human"] },
+            "detectors": { "type": "array", "items": { "type": "string", "pattern": "^SS[0-9]{3}$" } }
+          }
+        },
+        "source": { "type": "string", "pattern": "^engine/[A-Za-z0-9./-]+\\.md(#[0-9A-Za-z-]+)?$", "description": "Repository path of the prose that states this rule, with an optional section fragment." },
+        "anchor": { "type": "string", "minLength": 6, "description": "An exact phrase that must appear in the source file. Keeps the prose and the catalog from drifting apart." },
+        "supersedes": { "type": "array", "items": { "type": "string" } },
+        "review": {
+          "type": "object",
+          "required": ["reviewer", "date", "verdict"],
+          "additionalProperties": false,
+          "properties": {
+            "reviewer": { "type": "string" },
+            "date": { "type": "string", "format": "date" },
+            "verdict": { "enum": ["agree", "conditional", "disagree"] },
+            "note": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

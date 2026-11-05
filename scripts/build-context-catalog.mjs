@@ -69,6 +69,7 @@ const coreDistributionPaths = [
   ...topLevelDistributionFiles.map((path) => `engine/${path}`),
   ...skillsDistributionPaths,
   ...walkFiles(resolve(engine, "color"), "engine/color"),
+  ...walkFiles(resolve(engine, "rules"), "engine/rules"),
 ].sort();
 function distributionInventory(paths) {
   return paths.map((path) => {
@@ -213,9 +214,11 @@ const catalog = {
     "PALETTE-RECIPES.md",
     "color/palettes.json",
     "PRESETS.md",
+    "rules/catalog.json",
   ],
   core: read("PRODUCT-PRINCIPLES.md"),
   craft: read("CRAFT-BASELINE.md"),
+  rules: JSON.parse(read("rules/catalog.json")).rules,
   grammars: Object.fromEntries(
     grammarIds.map((id) => [
       id,

@@ -5,7 +5,7 @@
         "primary": {
           "$value": "#3182F6",
           "$type": "color",
-          "$description": "Main brand accent color (purple)"
+          "$description": "Main brand accent color (blue)"
         },
         "dark": {
           "$value": "#030213",

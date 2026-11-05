@@ -67,7 +67,7 @@ Bad:  "No data found."
 #### Error Messages
 ```
 Format: [What happened] + [What to do]
-Good: "Couldn't load the data. Please try again."
+Good: "Couldn't load the data. Try again."
 Bad:  "Error 500: Internal Server Error"
 ```
 - Never show technical errors to users
@@ -96,8 +96,8 @@ Error: Specific issue ("This email is already registered")
 ```
 Title: [Question about the action]
 Body: [Consequence explanation]
-Primary: [Action verb] ("Delete", "Confirm")
-Secondary: "Close" (not "Cancel" — avoids confusion)
+Primary: [Verb + object] ("Delete project", "Save changes"). Never "Confirm", "OK", or "Yes" (UX-WRITING WB-1).
+Secondary: [the safe choice, named] ("Keep project"). Not an "OK / Cancel" pair (UX-WRITING WB-3).
 ```
 
 3. Generate copy for the requested context, providing:

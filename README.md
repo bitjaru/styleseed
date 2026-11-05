@@ -4,9 +4,9 @@
 
 # StyleSeed
 
-### Make expert design judgment<br />repeatable by coding agents.
+### Make AI coding agents keep your design system<br />across screens, sessions, and teammates.
 
-<sub>StyleSeed turns recorded design decisions into project-local rules and implementation workflows. <b>Support experts, not replace them with a collection of tastes.</b> Open source, for Claude Code · Codex · Cursor.</sub>
+<sub>You choose the design decisions. StyleSeed compiles them into the rules an agent reads before each screen, then checks the rendered result. <b>Support experts, not replace them with a collection of tastes.</b> Open source, for Claude Code · Codex · Cursor.</sub>
 
 <br />
 <br />
@@ -278,21 +278,23 @@ Spacing feels wrong? [Inspect the live 64px → 12px CSS inheritance repair](htt
 
 ## Where StyleSeed fits among design-AI skills
 
-There are lots of "help your AI design" projects now. Most solve a slice. StyleSeed is the one that
-targets the whole *"looks AI-generated"* problem — and **enforces** the fix.
+Design skills for coding agents are a crowded field now. Hallmark, Impeccable and Taste Skill make a
+new screen look designed; Impeccable also keeps a `DESIGN.md` and checks code against its tokens.
+StyleSeed works on what happens after the first screen: keeping one product consistent across
+screens, sessions and teammates.
 
-| | **StyleSeed** | Brand / `DESIGN.md` collections | "Make-it-prettier" skills | UI generators (Claude Design, v0…) |
-|---|:---:|:---:|:---:|:---:|
-| Teaches design **judgment** (how designers *think*) | ✅ | ❌ data only | ⚠️ a few tips | ❌ |
-| **Fights the AI-look itself** — default indigo, icon-chip cliché, template layouts, rainbow lists | ✅ | ❌ | ❌ | ❌ |
-| **Scored Quality Gate** — reviews + fixes the UI *before you see it* | ✅ | ❌ | ❌ | ❌ |
-| **Anti-drift design lock** — decisions persist across sessions | ✅ | ❌ | ❌ | ❌ |
-| Works across **every agent** (Claude Code · Cursor · Codex · Amp · Gemini) | ✅ | ⚠️ | ⚠️ | ❌ one tool |
-| Brand **skins** + named **motion** system | ✅ | ⚠️ colors only | ❌ | ⚠️ |
-| Free & MIT | ✅ | ✅ | usually | freemium |
+| | **StyleSeed** | Design skills (Hallmark, Impeccable, Taste) | `DESIGN.md` collections | UI generators (Claude Design, v0…) |
+|---|---|---|---|---|
+| Keeping decisions across sessions | a rule bundle compiled per screen from a settings file; same settings give the same bundle, hash-checked | Impeccable: `DESIGN.md` plus a detector; Hallmark: optional `design.md` lock | the agent re-reads the file | ❌ |
+| What is stored | decisions (domain, page type, grammar, palette posture) and the per-screen rules built from them | token values and prose | token values | ❌ |
+| Palette | computed from one key colour in OKLCH, contrast-corrected, deterministic | chosen by the agent or from a theme catalogue | listed | the model's choice |
+| Checks | 6 deterministic source checks, rendered measurement at 1440 and 390, an 8-category rubric score | Impeccable: 62 deterministic rules and an edit hook; Hallmark and Taste: browser lint | ❌ | ❌ |
+| Where the rules come from | [`research/cases`](research/cases/README.md): public sources, evidence levels, counterexamples | the author's experience; Taste: a 247-site study | scraped brands | ❌ |
+| Best at | many screens of one product | one striking new page (Hallmark, Taste); refining an existing screen (Impeccable) | the brand look | a first draft |
 
-They're not all competitors — a `DESIGN.md` gives StyleSeed a skin; a generator gives it a first
-draft. StyleSeed is the **judgment + enforcement layer** the others don't have.
+They combine. A `DESIGN.md` or a generator's first draft can feed StyleSeed's rules, and where
+another skill already does a job well, StyleSeed does not claim it. Checked against each project's
+README on 2026-11-02.
 
 ## What it actually enforces (a taste)
 

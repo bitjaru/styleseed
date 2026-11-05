@@ -167,6 +167,31 @@ passes, or at a permission/tool blocker. Do not reset the limit by switching ski
 Always report the latest image if available, effective rule set, changes, gate status, and
 unresolved failures. A failed result may be shown for review, but never labeled accepted.
 
+## Step 5 — Drift across screens (measured, optional)
+
+A screen can pass its own gate and still disagree with the rest of the product: a second teal,
+a 12px gap on an 8px grid, one more type size, a 10px radius among 4px ones. After adding a
+screen, before a release, or when you take over someone else's work, measure the screens
+together instead of trusting the diff:
+
+```bash
+node <installed-ss-verify>/scripts/drift-report.mjs \
+  http://localhost:3000/ http://localhost:3000/settings http://localhost:3000/billing \
+  --out .styleseed/evidence/drift/<date> --project-root . --states error
+```
+
+It runs the read-only probe from `ss-reference` on every URL (http(s) or `file:`), and on
+`?state=<name>` variants when `--states` is given, then compares accent, ink, canvas, spacing base
+and scale, type sizes, radii, fonts, and control heights per screen with a baseline: the registry
+palette roles when `--project-root` points at a StyleSeed project, otherwise the majority across
+the screens. `DRIFT.md` holds the table and a one-line verdict; `drift.json` holds the same data.
+
+Read it as measurement, not judgment. A `different` accent may be an approved exception. A `none`
+accent usually means the primary action only appears in a state (a save bar, a dialog), so
+re-measure with `--states`. No page text, screenshots, or URLs beyond the ones you passed are
+written. The method is described in `engine/REFERENCE-COMPILER.md`, "Measurement and evidence
+levels".
+
 ## Rules
 
 - **You must actually see the rendered artifact.** No render, no visual verdict — fall back to `/ss-score`

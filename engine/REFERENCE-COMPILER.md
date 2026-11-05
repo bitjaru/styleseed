@@ -51,6 +51,14 @@ the colour of filled primary actions, then of coloured links; a colour that only
 large surfaces or pictures is never promoted. Each derived role carries the counts behind it so
 a reviewer can keep the observation and reject the derivation.
 
+The same probe compares screens of one project. `ss-verify/scripts/drift-report.mjs` measures
+several URLs (and `?state=` variants on request), derives the same values per screen, and
+compares them with a baseline: the registry palette roles when a project root is given, otherwise
+the majority across the screens (`compare-screens.mjs`, pure). It writes `drift.json` and
+`DRIFT.md` with per-axis statuses `same`, `near`, `different`, `none`, and the values present on
+one screen but absent from the shared set. It does not score; a `different` value is a question
+for the owner of the design system.
+
 Record every value, decision, and rule candidate with one evidence level from
 [`research/cases/README.md`](../research/cases/README.md): `observed` (measured, or stated in
 the product's own public documentation), `derived` (computed from observations), `inferred`

@@ -125,6 +125,8 @@ export function summarize(observations) {
   const spacing = clusterSpacing(mergeCounts(list.map(o => o.spacing)));
   const type = typeSteps(mergeCounts(list.map(o => o.type)));
   const radii = radiusFamilies(mergeCounts(list.map(o => o.radii)));
+  // Control heights cluster the same way radii do: families with at least a 3% share.
+  const controlHeights = radiusFamilies(mergeCounts(list.map(o => o.controlHeights || {})));
   const merged = {
     actions: mergeCounts(list.map(o => o.actions)), links: mergeCounts(list.map(o => o.links)), text: mergeCounts(list.map(o => o.text)),
     surfaces: mergeCounts(list.map(o => o.surfaces)), body: list[0]?.body || {},
@@ -137,7 +139,7 @@ export function summarize(observations) {
   return {
     spacingBase: spacing.base, spacingScale: spacing.scale, spacingCoverage: spacing.coverage, offScale: spacing.offScale,
     typeSteps: type.steps.length, typeStepDetail: type.steps, distinctFontSizes: type.distinctSizes,
-    radii, fonts, colorCount,
+    radii, controlHeights, fonts, colorCount,
     accentDerived: roles.accent, accentFrom: roles.accentFrom, accentAgreesAcrossViewports: accentAgrees, perViewport,
     ink: roles.ink, canvas: roles.canvas, inkContrast: roles.inkContrast, accentContrast: roles.accentContrast,
     roleEvidence: roles.evidence,

@@ -23,7 +23,7 @@ import { loadProjectRegistry } from "../../ss-resolve/scripts/project-registry.m
 import { compileContext, defaultCatalog } from "../../ss-resolve/scripts/compiler.mjs";
 import { safeProjectPath } from "../../ss-resolve/scripts/runtime-contract.mjs";
 
-export const DETECTOR_REVISION = "styleseed-check-v2";
+export const DETECTOR_REVISION = "styleseed-check-v3";
 const HARD_ID = "SS000";
 const RULES = Object.freeze({
   SS001: { name: "hardcoded-color", help: "Use a registered semantic token or theme value." },
@@ -34,6 +34,12 @@ const RULES = Object.freeze({
   SS006: { name: "unlabeled-icon-control", help: "Add an aria-label or accessible visible label." },
   [HARD_ID]: { name: "contract-error", help: "Fix the StyleSeed artifact contract or evidence boundary." },
 });
+// Each detector belongs to a catalog rule (engine/rules/catalog.json, compiled into the context
+// catalog). The rule supplies the priority; `blocks` makes a finding a fail state independent of
+// any score. Contract errors (SS000) always block.
+const DETECTOR_RULES = Object.freeze(Object.fromEntries(
+  (defaultCatalog.rules ?? []).flatMap((rule) => (rule.check?.detectors ?? []).map((detector) => [detector, { rule: rule.id, priority: rule.priority }])),
+));
 
 function sha256(value) {
   return `sha256:${createHash("sha256").update(value).digest("hex")}`;
@@ -50,7 +56,7 @@ function parseArgs(argv) {
     const token = rest[index];
     if (!token.startsWith("--")) fail(`unexpected argument ${token}`);
     const key = token.slice(2);
-    if (["all", "json"].includes(key)) { options[key] = true; continue; }
+    if (["all", "json", "gate"].includes(key)) { options[key] = true; continue; }
     const value = rest[index + 1];
     if (!value || value.startsWith("--")) fail(`missing value for --${key}`);
     options[key] = value;
@@ -69,7 +75,25 @@ function safeId(value, label) {
 }
 
 function finding(id, file, line, evidence, message, fix, severity = "warning") {
-  return { id, file, line, evidence, severity, message, fix };
+  const owner = id === HARD_ID ? { rule: null, priority: "blocks" } : (DETECTOR_RULES[id] ?? { rule: null, priority: "advisory" });
+  const blocking = severity === "error" || owner.priority === "blocks";
+  return { id, rule: owner.rule, priority: owner.priority, blocking, file, line, evidence, severity, message, fix };
+}
+
+// `outline-none` is a finding only when no focus replacement is visible nearby: the same line or
+// the two lines above it (a `focus-visible:` utility, a `:focus-visible` rule, or a ring).
+const FOCUS_REPLACEMENT = /focus-visible|focus:|:focus\b|\bring-\d|\bring\b|outline-offset/u;
+function focusSuppressionFindings(content, file) {
+  const lines = content.split("\n");
+  const output = [];
+  for (const [index, text] of lines.entries()) {
+    for (const match of text.matchAll(/\b(?:outline-none|outline\s*:\s*none)\b/gu)) {
+      const window = lines.slice(Math.max(0, index - 2), index + 1).join("\n");
+      if (FOCUS_REPLACEMENT.test(window)) continue;
+      output.push(finding("SS005", file, index + 1, match[0], "Focus outline is suppressed without a detected replacement.", "Add focus-visible, focus:ring, or another visible replacement."));
+    }
+  }
+  return output;
 }
 
 function lineOf(text, offset) {
@@ -124,7 +148,7 @@ function scanSource(root, artifact, inventory) {
     findings.push(...hexColorFindings(file.content, file.path));
     findings.push(...lineFindings(file.content, file.path, /(?:\b(?:p|m|gap|space-[xy]|inset|top|right|bottom|left|w|h|min-w|max-w|min-h|max-h)-[^\s"']*\[[^\]]*px\]|\b(?:padding|margin|gap|width|height)\s*:\s*[^;\n]*\b\d+px)/giu, "SS002", "Arbitrary pixel value found in a supported utility or CSS property.", "Use the selected spacing or sizing token."));
     findings.push(...lineFindings(file.content, file.path, /\btransition-all\b/gu, "SS003", "transition-all makes motion scope implicit.", "Name the transitioned properties explicitly."));
-    findings.push(...lineFindings(file.content, file.path, /\b(?:outline-none|outline\s*:\s*none)\b/gu, "SS005", "Focus outline is suppressed without a detected replacement.", "Add focus-visible, focus:ring, or another visible replacement."));
+    findings.push(...focusSuppressionFindings(file.content, file.path));
     findings.push(...lineFindings(file.content, file.path, /<button\b(?![^>]*(?:aria-label|aria-labelledby|title)=)[^>]*>[^<]*(?:<[A-Z][A-Za-z0-9]*Icon\b|<\w*Icon\b)[^<]*<\/button>/gu, "SS006", "High-confidence icon-only control has no accessible label.", "Add aria-label or a visible text label."));
   }
 
@@ -200,13 +224,13 @@ function sarif(report) {
     "$schema": "https://json.schemastore.org/sarif-2.1.0.json",
     version: "2.1.0",
     runs: [{
-      tool: { driver: { name: "StyleSeed deterministic check", version: DETECTOR_REVISION, rules: ruleIds.map((id) => ({ id, name: RULES[id]?.name ?? "diagnostic", help: { text: RULES[id]?.help ?? "Fix this diagnostic." } })) } },
+      tool: { driver: { name: "StyleSeed deterministic check", version: DETECTOR_REVISION, rules: ruleIds.map((id) => ({ id, name: RULES[id]?.name ?? "diagnostic", help: { text: RULES[id]?.help ?? "Fix this diagnostic." } , properties: { catalogRule: DETECTOR_RULES[id]?.rule ?? null, priority: id === HARD_ID ? "blocks" : (DETECTOR_RULES[id]?.priority ?? "advisory") } })) } },
       results: report.findings.map((item) => ({
         ruleId: item.id,
-        level: item.severity === "error" ? "error" : "warning",
+        level: item.blocking ? "error" : "warning",
         message: { text: `${item.message} Fix: ${item.fix}` },
         locations: [{ physicalLocation: { artifactLocation: { uri: item.file }, region: { startLine: item.line } } }],
-        properties: { evidence: item.evidence, severity: item.severity, fix: item.fix },
+        properties: { evidence: item.evidence, severity: item.severity, fix: item.fix, rule: item.rule, priority: item.priority, blocking: item.blocking },
       })),
     }],
   };
@@ -260,7 +284,16 @@ function main(argv = process.argv.slice(2)) {
   writeOutput(root, options.out, output);
   console.log(JSON.stringify(output, null, 2));
   const findings = options.all ? result.artifacts.flatMap((item) => item.findings) : result.findings;
-  return findings.some((item) => item.severity === "error") ? 2 : 0;
+  if (findings.some((item) => item.severity === "error")) return 2;
+  const blocking = findings.filter((item) => item.blocking);
+  if (options.gate) {
+    const summary = blocking.length
+      ? `FAIL — ${blocking.length} blocking finding(s): ${[...new Set(blocking.map((item) => `${item.rule ?? "contract"} (${item.id})`))].join(", ")}`
+      : `PASS — no blocking findings (${findings.length} advisory/strong finding(s))`;
+    console.error(`styleseed check gate: ${summary}`);
+    if (blocking.length) return 3;
+  }
+  return 0;
 }
 
 if (process.argv[1] && realpathSync(resolve(process.argv[1])) === realpathSync(fileURLToPath(import.meta.url))) {

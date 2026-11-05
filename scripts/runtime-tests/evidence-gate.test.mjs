@@ -413,6 +413,35 @@ test("attach accepts and binds a generated deterministic report", () => {
   }
 });
 
+test("a blocking catalog finding fails the deterministic gate even when every score is perfect", () => {
+  const projectRoot = makeProjectRoot("styleseed-gate-blocking-");
+  try {
+    writeFixtureProject(projectRoot);
+    const reportPath = resolve(projectRoot, ".styleseed/evidence/app-dashboard/run-001/deterministic.json");
+    const report = JSON.parse(readFileSync(reportPath, "utf8"));
+    report.findings = [{
+      id: "SS006", rule: "INV-03-essential-actions-visible", priority: "blocks", blocking: true,
+      file: "src/app/dashboard/page.tsx", line: 1, evidence: "<button><Icon /></button>", severity: "warning",
+      message: "High-confidence icon-only control has no accessible name.", fix: "Add an aria-label or a visible label.",
+    }];
+    writeJson(reportPath, report);
+    const gateRunPath = resolve(projectRoot, ".styleseed/evidence/app-dashboard/run-001/gate-run.json");
+    const gateRun = JSON.parse(readFileSync(gateRunPath, "utf8"));
+    gateRun.gates.deterministic = { attached: false, reportPath: null, reportSha256: null, reportBytes: null };
+    writeJson(gateRunPath, gateRun);
+    const attach = runGate([
+      "attach", "--project-root", ".", "--artifact", "app-dashboard", "--run", "run-001",
+      "--gate", "deterministic", "--report", ".styleseed/evidence/app-dashboard/run-001/deterministic.json", "--json",
+    ], projectRoot);
+    assert.equal(attach.status, 0, attach.stdout || attach.stderr);
+    const verify = runGate(["verify", "--project-root", ".", "--artifact", "app-dashboard", "--run", "run-001", "--json"], projectRoot);
+    assert.notEqual(verify.status, 0, "a warning-severity finding with priority blocks must fail the gate");
+    assert.match(verify.stdout + verify.stderr, /blocking findings/u);
+  } finally {
+    rmSync(projectRoot, { recursive: true, force: true });
+  }
+});
+
 test("init records a Git commit and refuses dirty implementation roots", () => {
   const projectRoot = makeProjectRoot("styleseed-gate-git-revision-");
   try {

@@ -53,8 +53,12 @@ test("scan emits stable warning-only JSON and SARIF", () => {
     assert.equal(json.status, 0, `${json.stderr}\n${json.stdout}`);
     const report = JSON.parse(json.stdout);
     assert.deepEqual(Object.keys(report), ["detectorRevision", "inventoryHash", "findings"]);
-    assert.equal(report.detectorRevision, "styleseed-check-v2");
+    assert.equal(report.detectorRevision, "styleseed-check-v3");
     assert.ok(report.findings.some((item) => item.id === "SS001" && item.severity === "warning"));
+    const ss001 = report.findings.find((item) => item.id === "SS001");
+    assert.deepEqual({ rule: ss001.rule, priority: ss001.priority, blocking: ss001.blocking }, { rule: "CRAFT-semantic-tokens", priority: "strong", blocking: false }, "detectors carry their catalog rule");
+    const ss006 = report.findings.find((item) => item.id === "SS006");
+    assert.deepEqual({ rule: ss006.rule, priority: ss006.priority, blocking: ss006.blocking }, { rule: "INV-03-essential-actions-visible", priority: "blocks", blocking: true }, "an invariant's detector blocks");
     assert.deepEqual(report.findings.filter((item) => item.id === "SS001").map((item) => item.evidence), ["#123456"], "anchors, ids, url(#…) and 5-digit strings are not colours");
     assert.ok(report.findings.some((item) => item.id === "SS004" && item.file === "src/app/dashboard/page.tsx"));
     assert.ok(report.findings.some((item) => item.id === "SS002"));
@@ -64,8 +68,33 @@ test("scan emits stable warning-only JSON and SARIF", () => {
     assert.equal(sarif.status, 0, sarif.stderr);
     const document = JSON.parse(sarif.stdout);
     assert.equal(document.version, "2.1.0");
-    assert.equal(document.runs[0].results[0].level, "warning");
+    assert.equal(document.runs[0].results.find((item) => item.ruleId === "SS001").level, "warning");
+    assert.equal(document.runs[0].results.find((item) => item.ruleId === "SS006").level, "error", "blocking findings surface as SARIF errors");
+    assert.equal(document.runs[0].results.find((item) => item.ruleId === "SS006").properties.rule, "INV-03-essential-actions-visible");
+    assert.equal(document.runs[0].tool.driver.rules.find((rule) => rule.id === "SS006").properties.priority, "blocks");
+
+    const gated = run(projectRoot, ["--artifact", "app-dashboard", "--format", "json", "--gate"]);
+    assert.equal(gated.status, 3, "--gate exits 3 on blocking findings");
+    assert.match(gated.stderr, /gate: FAIL — 1 blocking finding\(s\): INV-03-essential-actions-visible \(SS006\)/u);
     assert.ok(document.runs[0].results.every((item) => /^SS00[1-6]$/u.test(item.ruleId)));
+  } finally { rmSync(projectRoot, { recursive: true, force: true }); }
+});
+
+test("approved decisions are not flagged: token-file colours, chart series, and focus replacements", () => {
+  const projectRoot = root("styleseed-check-approved-");
+  try {
+    fixture(projectRoot, {
+      "src/app/dashboard/tokens.css": ":root { --ink: #000000; --chart-1: #2563eb; --chart-2: #f59e0b; --chart-3: #16a34a; }\n",
+      "src/app/dashboard/chart.tsx": "export const Chart = () => <svg><rect fill=\"var(--chart-1)\" /><rect fill=\"var(--chart-2)\" /><button className=\"outline-none focus-visible:ring-2\" aria-label=\"Zoom\"><ZoomIcon /></button></svg>;\n",
+      "src/app/dashboard/naked.tsx": "export const Naked = () => <button className=\"outline-none\">Save</button>;\n",
+    });
+    const report = JSON.parse(run(projectRoot, ["--artifact", "app-dashboard", "--format", "json"]).stdout);
+    const inFile = (file, id) => report.findings.filter((item) => item.file === file && item.id === id);
+    assert.deepEqual(inFile("src/app/dashboard/tokens.css", "SS001"), [], "approved black and chart series live in a token file");
+    assert.deepEqual(inFile("src/app/dashboard/chart.tsx", "SS001"), [], "consuming tokens is not a hardcoded colour");
+    assert.deepEqual(inFile("src/app/dashboard/chart.tsx", "SS005"), [], "outline-none with a focus-visible replacement is a decision, not a suppression");
+    assert.equal(inFile("src/app/dashboard/naked.tsx", "SS005").length, 1, "outline-none without any replacement is still reported");
+    assert.equal(inFile("src/app/dashboard/naked.tsx", "SS005")[0].blocking, true, "focus suppression maps to the operability invariant");
   } finally { rmSync(projectRoot, { recursive: true, force: true }); }
 });
 

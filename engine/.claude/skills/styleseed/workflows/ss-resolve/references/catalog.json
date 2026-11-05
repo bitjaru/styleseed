@@ -1,7 +1,7 @@
 {
   "schemaVersion": 5,
   "engineVersion": "5.0.0",
-  "engineRevision": "sha256:1f604929b7bf00b05dc432ed38bfd00c213fce3b0e951691505ac6b757edecf1",
+  "engineRevision": "sha256:cbb8718fd5e04c2eb2bf483709819f9cb6a86a9e33be8a187dbb546b52d80463",
   "distributionSource": {
     "schemaVersion": 1,
     "channel": "edge",
@@ -10,7 +10,7 @@
   },
   "distributions": {
     "core": {
-      "revision": "sha256:1f604929b7bf00b05dc432ed38bfd00c213fce3b0e951691505ac6b757edecf1",
+      "revision": "sha256:cbb8718fd5e04c2eb2bf483709819f9cb6a86a9e33be8a187dbb546b52d80463",
       "files": [
         {
           "path": "LICENSE",
@@ -94,13 +94,18 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-reference/scripts/analyze-observations.mjs",
-          "sha256": "19a1a1d40b628e7ceb621ae9811776ff2c1751a8a5362aca65fdabe3655adcad",
-          "bytes": 8398
+          "sha256": "a586d53cd8f504a286a93d3236cac104f969f5207f03bf1521422f4fee1fdd61",
+          "bytes": 8594
+        },
+        {
+          "path": "engine/.claude/skills/styleseed/workflows/ss-reference/scripts/compare-screens.mjs",
+          "sha256": "00617b6df675100208f10ac36b45e478a8c711f0e5f25e0b3fb8198bd681ea50",
+          "bytes": 9612
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-reference/scripts/measure-reference.mjs",
-          "sha256": "981b4abd53f0260131b1cf903ce128302bd5641daf0d84ce5ed8c362004fd19c",
-          "bytes": 8891
+          "sha256": "d913d66b89ca800217f414909a314804f5feaf243ff9a9493e4a9bb6589639ae",
+          "bytes": 9301
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-reference/scripts/observe-design.mjs",
@@ -359,13 +364,18 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-verify/WORKFLOW.md",
-          "sha256": "ff3137b7335c22de06289bb7a7c99ebdfc746394bfe7089378a766f8864f9c3e",
-          "bytes": 12003
+          "sha256": "f720ab1a79c4ae7533a46b782f0d4a719e925e23197053b5a27312892263e402",
+          "bytes": 13474
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-verify/references/applied-checks.md",
           "sha256": "cfff446e4d8637cd8439408d55ad2e2a780b476027a4b5b2f91f2ced07056db2",
           "bytes": 11352
+        },
+        {
+          "path": "engine/.claude/skills/styleseed/workflows/ss-verify/scripts/drift-report.mjs",
+          "sha256": "f316a391a98bff7a896453fb803d2837876fed43749f3b89724b937478d0964f",
+          "bytes": 5708
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-verify/scripts/inspect-appearance.mjs",
@@ -454,8 +464,8 @@
         },
         {
           "path": "engine/REFERENCE-COMPILER.md",
-          "sha256": "d6d69ee215e5b3f2803a0d36b84823bdfa97c24f14d5c129017f8152b69b7d03",
-          "bytes": 7356
+          "sha256": "67da8dca261b83aacd90ce8b2376510bac636340d06885928cb04e67d65a7ef0",
+          "bytes": 7958
         },
         {
           "path": "engine/RULESETS.md",
@@ -515,7 +525,7 @@
       ]
     },
     "skills": {
-      "revision": "sha256:9237b32fdbb7a241b14e311c079f9c355824738620a5ca10e964e101aeb7a8da",
+      "revision": "sha256:ff4fe09afdc43d56e5c95a994bce2421de191d6fba90cd8ae10cdd1f02d7ff8a",
       "files": [
         {
           "path": "engine/.claude/skills/styleseed/SKILL.md",
@@ -589,13 +599,18 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-reference/scripts/analyze-observations.mjs",
-          "sha256": "19a1a1d40b628e7ceb621ae9811776ff2c1751a8a5362aca65fdabe3655adcad",
-          "bytes": 8398
+          "sha256": "a586d53cd8f504a286a93d3236cac104f969f5207f03bf1521422f4fee1fdd61",
+          "bytes": 8594
+        },
+        {
+          "path": "engine/.claude/skills/styleseed/workflows/ss-reference/scripts/compare-screens.mjs",
+          "sha256": "00617b6df675100208f10ac36b45e478a8c711f0e5f25e0b3fb8198bd681ea50",
+          "bytes": 9612
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-reference/scripts/measure-reference.mjs",
-          "sha256": "981b4abd53f0260131b1cf903ce128302bd5641daf0d84ce5ed8c362004fd19c",
-          "bytes": 8891
+          "sha256": "d913d66b89ca800217f414909a314804f5feaf243ff9a9493e4a9bb6589639ae",
+          "bytes": 9301
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-reference/scripts/observe-design.mjs",
@@ -854,13 +869,18 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-verify/WORKFLOW.md",
-          "sha256": "ff3137b7335c22de06289bb7a7c99ebdfc746394bfe7089378a766f8864f9c3e",
-          "bytes": 12003
+          "sha256": "f720ab1a79c4ae7533a46b782f0d4a719e925e23197053b5a27312892263e402",
+          "bytes": 13474
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-verify/references/applied-checks.md",
           "sha256": "cfff446e4d8637cd8439408d55ad2e2a780b476027a4b5b2f91f2ced07056db2",
           "bytes": 11352
+        },
+        {
+          "path": "engine/.claude/skills/styleseed/workflows/ss-verify/scripts/drift-report.mjs",
+          "sha256": "f316a391a98bff7a896453fb803d2837876fed43749f3b89724b937478d0964f",
+          "bytes": 5708
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-verify/scripts/inspect-appearance.mjs",
@@ -958,13 +978,18 @@
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-reference/scripts/analyze-observations.mjs",
-      "sha256": "19a1a1d40b628e7ceb621ae9811776ff2c1751a8a5362aca65fdabe3655adcad",
-      "bytes": 8398
+      "sha256": "a586d53cd8f504a286a93d3236cac104f969f5207f03bf1521422f4fee1fdd61",
+      "bytes": 8594
+    },
+    {
+      "path": ".claude/skills/styleseed/workflows/ss-reference/scripts/compare-screens.mjs",
+      "sha256": "00617b6df675100208f10ac36b45e478a8c711f0e5f25e0b3fb8198bd681ea50",
+      "bytes": 9612
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-reference/scripts/measure-reference.mjs",
-      "sha256": "981b4abd53f0260131b1cf903ce128302bd5641daf0d84ce5ed8c362004fd19c",
-      "bytes": 8891
+      "sha256": "d913d66b89ca800217f414909a314804f5feaf243ff9a9493e4a9bb6589639ae",
+      "bytes": 9301
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-reference/scripts/observe-design.mjs",
@@ -1223,13 +1248,18 @@
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-verify/WORKFLOW.md",
-      "sha256": "ff3137b7335c22de06289bb7a7c99ebdfc746394bfe7089378a766f8864f9c3e",
-      "bytes": 12003
+      "sha256": "f720ab1a79c4ae7533a46b782f0d4a719e925e23197053b5a27312892263e402",
+      "bytes": 13474
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-verify/references/applied-checks.md",
       "sha256": "cfff446e4d8637cd8439408d55ad2e2a780b476027a4b5b2f91f2ced07056db2",
       "bytes": 11352
+    },
+    {
+      "path": ".claude/skills/styleseed/workflows/ss-verify/scripts/drift-report.mjs",
+      "sha256": "f316a391a98bff7a896453fb803d2837876fed43749f3b89724b937478d0964f",
+      "bytes": 5708
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-verify/scripts/inspect-appearance.mjs",
@@ -1318,8 +1348,8 @@
     },
     {
       "path": "REFERENCE-COMPILER.md",
-      "sha256": "d6d69ee215e5b3f2803a0d36b84823bdfa97c24f14d5c129017f8152b69b7d03",
-      "bytes": 7356
+      "sha256": "67da8dca261b83aacd90ce8b2376510bac636340d06885928cb04e67d65a7ef0",
+      "bytes": 7958
     },
     {
       "path": "RULESETS.md",

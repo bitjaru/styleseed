@@ -38,7 +38,7 @@ export function parseArgs(argv) {
   return args;
 }
 
-async function loadBrowser(explicit) {
+export async function loadBrowser(explicit) {
   const candidates = [];
   if (explicit) candidates.push(explicit);
   try { candidates.push(createRequire(join(process.cwd(), 'package.json')).resolve('playwright')); } catch {}
@@ -104,25 +104,32 @@ function runDesignlang(url, outDir) {
   return { ok: true, kept };
 }
 
-export async function measure(args, log = console.log) {
-  const { chromium, from } = await loadBrowser(args.browser);
+// Observe each URL at every viewport with a caller-supplied chromium; returns the raw counts and
+// the summary per URL, in input order. Shared by measure-reference and ss-verify's drift report.
+export async function observeUrls(urls, { chromium, timeout = 45000, maxElements = 5000, viewports = VIEWPORTS } = {}) {
   const results = [];
   const browser = await chromium.launch({ headless: true });
   try {
-    for (const url of args.urls) {
+    for (const url of urls) {
       const observations = [];
-      for (const viewport of VIEWPORTS) {
+      for (const viewport of viewports) {
         const context = await browser.newContext({ viewport, deviceScaleFactor: 1 });
         const page = await context.newPage();
-        await page.goto(url, { waitUntil: 'networkidle', timeout: args.timeout }).catch(async () => page.goto(url, { waitUntil: 'load', timeout: args.timeout }));
+        await page.goto(url, { waitUntil: 'networkidle', timeout }).catch(async () => page.goto(url, { waitUntil: 'load', timeout }));
         await page.evaluate(() => document.fonts.ready).catch(() => {});
         await page.waitForTimeout(500);
-        observations.push(await page.evaluate(observeDesign, { maxElements: args.maxElements }));
+        observations.push(await page.evaluate(observeDesign, { maxElements }));
         await context.close();
       }
       results.push({ url, observations, summary: summarize(observations) });
     }
   } finally { await browser.close(); }
+  return results;
+}
+
+export async function measure(args, log = console.log) {
+  const { chromium, from } = await loadBrowser(args.browser);
+  const results = await observeUrls(args.urls, { chromium, timeout: args.timeout, maxElements: args.maxElements });
 
   const observedAt = new Date().toISOString().slice(0, 10);
   const written = [];

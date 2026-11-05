@@ -87,6 +87,7 @@ if (!flags.has("--core")) {
     run("Verify spatial CSS in the browser", node, ["scripts/test-spacing-browser.mjs"]);
     run("Verify applied color and typography checks", node, ["scripts/test-applied-checks-browser.mjs"]);
     run("Verify reference measurement probe", node, ["scripts/test-reference-browser.mjs"]);
+    run("Verify drift report across screens", node, ["scripts/test-drift-browser.mjs"]);
     run("Run browser smoke tests", npmCommand, ["run", "test:browser"], demoRoot);
     run("Check pilot React and CSS integration", node, ["scripts/test-design-pilot-library.mjs"]);
     run("Calibrate design-pilot browser acceptance", node, ["scripts/test-design-pilot-browser.mjs", "--calibrate"]);

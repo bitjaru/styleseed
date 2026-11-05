@@ -19,7 +19,14 @@ Do not merely imitate the supplied screen. Read `PRODUCT-PRINCIPLES.md`, `RULESE
 ## Workflow
 
 1. Ingest every supplied reference and assign evidence IDs (`R1`, `R2`, ...). If a URL can be
-   rendered, capture it. If an image cannot be seen, stop claiming visual analysis for it.
+   rendered, measure it first with `scripts/measure-reference.mjs <url> --out <dir>` (a browser
+   module from `--browser`, `STYLESEED_BROWSER_MODULE`, or the project's own `playwright`; nothing
+   is installed). It writes `measurements/observations.json`, `measurements/summary.json`, a
+   twelve-axis draft, and `case.draft.json` in the format of `research/cases/README.md`. The
+   derived accent is the colour of filled primary actions, then of coloured links; read the
+   `roleEvidence` counts before trusting it. `--designlang` adds a pinned third-party token
+   extraction when `npx` is available; its `brand.primary` is not a role decision. If an image
+   cannot be seen, stop claiming visual analysis for it.
    Distinguish discovery, inspected previews, and live states; deduplicate repeated projects
    and note shared creator/template lineage. Awards and preview counts are not usability evidence.
 2. Separate references by surface adapter and job. Do not merge a marketing homepage with an app

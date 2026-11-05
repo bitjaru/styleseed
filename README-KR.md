@@ -196,7 +196,7 @@ Claude Code한테 "대시보드 만들어줘" 하면 보통 이런 결과가 나
 <div align="center">
   <img src="showcase/light-hero.png" width="280" alt="StyleSeed로 만든 SaaS 대시보드" />
   <br />
-  <em>Claude Code + Toss seed로 생성. 디자이너 개입 0.</em>
+  <em>Claude Code + Toss seed로 생성. 규칙은 레포에, 검수는 사람이.</em>
 </div>
 
 <details>
@@ -317,7 +317,7 @@ AI 코딩 도구는 기능적인 UI를 잘 만듭니다. 하지만 **기능적 �
 - 시각적 리듬 없음 (카드가 다 똑같음)
 - 색 남용 (컬러가 너무 많거나 대비가 안 맞음)
 
-**디자이너를 고용하거나... StyleSeed를 쓰거나.**
+**StyleSeed는 디자이너의 판단 기준을 규칙으로 적어 두고, 에이전트가 화면마다 지키게 합니다.**
 
 ### StyleSeed이 다른 점
 

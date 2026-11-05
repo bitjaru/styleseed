@@ -41,7 +41,8 @@ function DonutChartCard({
   className,
   ...props
 }: DonutChartCardProps) {
-  const grayColors = ["#D4D4D4", "#A8A8A8", "#8B8B8B", "#6B6B6B"]
+  // Unselected segments step through the foreground at four strengths so they follow the theme instead of fixed grays.
+  const grayColors = [20, 35, 50, 65].map((percent) => `color-mix(in srgb, var(--foreground) ${percent}%, transparent)`)
 
   return (
     <div

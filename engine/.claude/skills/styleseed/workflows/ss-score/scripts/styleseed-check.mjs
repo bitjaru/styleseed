@@ -23,7 +23,7 @@ import { loadProjectRegistry } from "../../ss-resolve/scripts/project-registry.m
 import { compileContext, defaultCatalog } from "../../ss-resolve/scripts/compiler.mjs";
 import { safeProjectPath } from "../../ss-resolve/scripts/runtime-contract.mjs";
 
-export const DETECTOR_REVISION = "styleseed-check-v1";
+export const DETECTOR_REVISION = "styleseed-check-v2";
 const HARD_ID = "SS000";
 const RULES = Object.freeze({
   SS001: { name: "hardcoded-color", help: "Use a registered semantic token or theme value." },
@@ -85,6 +85,22 @@ function lineFindings(content, file, pattern, id, message, fix) {
   return output;
 }
 
+const HEX_COLOR = /#(?:[0-9a-f]{8}|[0-9a-f]{6}|[0-9a-f]{3,4})\b/giu;
+// `#add` in href="#add", id/for/name/aria-*/data-* references, and url(#clip) are anchors, not colours.
+const HEX_NON_COLOR_CONTEXT = /(?:\b(?:href|id|for|name|target|form|list|xlink:href|aria-[a-z-]+|data-[a-z-]+)\s*=\s*["'{]?|url\(\s*["']?)$/iu;
+const MOTION = /\b(?:transition|animate-|motion\.|framer-motion|@keyframes)\b/u;
+const REDUCED_MOTION = /prefers-reduced-motion|useReducedMotion|reducedMotion/u;
+
+function hexColorFindings(content, file) {
+  const output = [];
+  for (const match of content.matchAll(HEX_COLOR)) {
+    const index = match.index ?? 0;
+    if (HEX_NON_COLOR_CONTEXT.test(content.slice(Math.max(0, index - 32), index))) continue;
+    output.push(finding("SS001", file, lineOf(content, index), match[0], "Hardcoded color found outside a registered token/theme file.", "Use a semantic color token."));
+  }
+  return output;
+}
+
 function isTokenOrThemeFile(file, tokenFiles) {
   const normalized = file.toLowerCase();
   return tokenFiles.has(file)
@@ -105,18 +121,18 @@ function scanSource(root, artifact, inventory) {
 
   const findings = [];
   for (const file of files.filter((entry) => entry.scan)) {
-    findings.push(...lineFindings(file.content, file.path, /#[0-9a-f]{3,8}\b/giu, "SS001", "Hardcoded color found outside a registered token/theme file.", "Use a semantic color token."));
+    findings.push(...hexColorFindings(file.content, file.path));
     findings.push(...lineFindings(file.content, file.path, /(?:\b(?:p|m|gap|space-[xy]|inset|top|right|bottom|left|w|h|min-w|max-w|min-h|max-h)-[^\s"']*\[[^\]]*px\]|\b(?:padding|margin|gap|width|height)\s*:\s*[^;\n]*\b\d+px)/giu, "SS002", "Arbitrary pixel value found in a supported utility or CSS property.", "Use the selected spacing or sizing token."));
     findings.push(...lineFindings(file.content, file.path, /\btransition-all\b/gu, "SS003", "transition-all makes motion scope implicit.", "Name the transitioned properties explicitly."));
     findings.push(...lineFindings(file.content, file.path, /\b(?:outline-none|outline\s*:\s*none)\b/gu, "SS005", "Focus outline is suppressed without a detected replacement.", "Add focus-visible, focus:ring, or another visible replacement."));
     findings.push(...lineFindings(file.content, file.path, /<button\b(?![^>]*(?:aria-label|aria-labelledby|title)=)[^>]*>[^<]*(?:<[A-Z][A-Za-z0-9]*Icon\b|<\w*Icon\b)[^<]*<\/button>/gu, "SS006", "High-confidence icon-only control has no accessible label.", "Add aria-label or a visible text label."));
   }
 
-  const motionFile = files.find((entry) => /\b(?:transition|animate-|motion\.|framer-motion|@keyframes)\b/u.test(entry.content));
-  const reducedMotion = files.some((entry) => /prefers-reduced-motion|useReducedMotion|reducedMotion/u.test(entry.content));
-  if (motionFile && !reducedMotion) {
-    const match = motionFile.content.match(/\b(?:transition|animate-|motion\.|framer-motion|@keyframes)\b/u);
-    findings.push(finding("SS004", motionFile.path, lineOf(motionFile.content, match?.index ?? 0), match?.[0] ?? "motion", "Motion was detected without a reduced-motion handling path in the declared source set.", "Add prefers-reduced-motion or useReducedMotion handling."));
+  const sharedReducedMotion = files.some((entry) => (!entry.scan || /\.(?:css|scss|sass|less)$/iu.test(entry.path)) && REDUCED_MOTION.test(entry.content));
+  for (const file of files.filter((entry) => entry.scan)) {
+    const match = file.content.match(MOTION);
+    if (!match || REDUCED_MOTION.test(file.content) || sharedReducedMotion) continue;
+    findings.push(finding("SS004", file.path, lineOf(file.content, match.index ?? 0), match[0], "Motion was detected without a reduced-motion handling path in this file, a stylesheet, or a registered token/theme file.", "Add a prefers-reduced-motion or useReducedMotion fallback."));
   }
 
   return findings.sort((left, right) => left.file.localeCompare(right.file) || left.line - right.line || left.id.localeCompare(right.id) || left.evidence.localeCompare(right.evidence));

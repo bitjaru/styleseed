@@ -266,7 +266,7 @@ Both paths install the same public skill with 22 internal workflows. The optiona
 ## Who is this for?
 
 - You asked **Claude Code** or **Cursor** to build a dashboard and it came out amateur-looking
-- You're **vibe coding** a SaaS app and don't want to hire a designer
+- You're **vibe coding** a SaaS app with no design system yet, so every new screen comes out different
 - You use **shadcn/ui** but the output still feels generic
 - You want Toss-like consumer refinement **only where that grammar fits**, not on every output
 - You make social carousels, decks, reports, covers, or other vibe-coded visual artifacts
@@ -683,7 +683,7 @@ engine/
 | `/styleseed verify` | **The visual gate** — render the screen, screenshot it, score what you *see* (dead whitespace, unloaded fonts, a priority that is hard to find, blank empty states), fix + re-render in a build or fix task |
 | `/styleseed update` | Pull latest engine updates — analyzes your project and updates safely |
 
-### UX — Design It Right (No Designer Needed)
+### UX — Flows, audits, and copy with the reasoning written down
 | Skill | What It Does |
 |-------|-------------|
 | `/styleseed flow` | Design user flows (progressive disclosure, information pyramid) |

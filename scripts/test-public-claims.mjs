@@ -46,7 +46,11 @@ const denylist = [
   "makes AI reason like a strong UI/UX designer",
   "디자인 팀 없이도 디자인된 티가 나는 제품",
   "Zero designer.",
-  "StyleSeed is built for vibe coding without a designer."
+  "StyleSeed is built for vibe coding without a designer.",
+  "No Designer Needed",
+  "hire a designer",
+  "디자이너 개입 0",
+  "디자이너를 고용하거나"
 ];
 const failures = [];
 const texts = files.map((path) => ({ path, text: readFileSync(resolve(root, path), "utf8") }));

@@ -15,7 +15,7 @@ function writeJson(path, value) { writeFileSync(path, `${JSON.stringify(value, n
 function hash(path) { const bytes = readFileSync(path); return { sha256: `sha256:${createHash("sha256").update(bytes).digest("hex")}`, bytes: bytes.byteLength }; }
 function root(prefix) { return mkdtempSync(join(tmpdir(), prefix)); }
 
-function fixture(projectRoot) {
+function fixture(projectRoot, extraFiles = {}) {
   mkdirSync(resolve(projectRoot, ".styleseed/artifacts"), { recursive: true });
   mkdirSync(resolve(projectRoot, "src/app/dashboard"), { recursive: true });
   writeJson(resolve(projectRoot, ".styleseed/project.json"), {
@@ -31,7 +31,8 @@ function fixture(projectRoot) {
     implementation: { sourceRoots: ["src/app/dashboard"], tokenFiles: [] },
     validation: { scoreFloor: 80, requiredRenders: [{ id: "desktop-loaded", state: "loaded", viewport: { width: 1440, height: 1000 } }], temporal: { required: false, scenarios: [] }, humanAcceptance: false },
   });
-  writeFileSync(resolve(projectRoot, "src/app/dashboard/page.tsx"), "export default function Page(){ return <button className=\"text-[#123456] p-[13px] transition-all\"><SearchIcon /></button>; }\n");
+  writeFileSync(resolve(projectRoot, "src/app/dashboard/page.tsx"), "export default function Page(){ return <section style={{ clipPath: \"url(#frame)\" }}><a href=\"#add\" id=\"face\">#12345</a><button className=\"text-[#123456] p-[13px] transition-all\"><SearchIcon /></button></section>; }\n");
+  for (const [path, content] of Object.entries(extraFiles)) writeFileSync(resolve(projectRoot, path), content);
   const resolved = spawnSync(process.execPath, [resolver, "--project-root", projectRoot, "--artifact", "app-dashboard", "--agent", "codex"], { encoding: "utf8" });
   assert.equal(resolved.status, 0, resolved.stderr || resolved.stdout);
   const manifestPath = resolve(projectRoot, ".styleseed/manifests/app-dashboard.json");
@@ -52,8 +53,10 @@ test("scan emits stable warning-only JSON and SARIF", () => {
     assert.equal(json.status, 0, `${json.stderr}\n${json.stdout}`);
     const report = JSON.parse(json.stdout);
     assert.deepEqual(Object.keys(report), ["detectorRevision", "inventoryHash", "findings"]);
-    assert.equal(report.detectorRevision, "styleseed-check-v1");
+    assert.equal(report.detectorRevision, "styleseed-check-v2");
     assert.ok(report.findings.some((item) => item.id === "SS001" && item.severity === "warning"));
+    assert.deepEqual(report.findings.filter((item) => item.id === "SS001").map((item) => item.evidence), ["#123456"], "anchors, ids, url(#…) and 5-digit strings are not colours");
+    assert.ok(report.findings.some((item) => item.id === "SS004" && item.file === "src/app/dashboard/page.tsx"));
     assert.ok(report.findings.some((item) => item.id === "SS002"));
     assert.ok(report.findings.some((item) => item.id === "SS003"));
 
@@ -64,6 +67,23 @@ test("scan emits stable warning-only JSON and SARIF", () => {
     assert.equal(document.runs[0].results[0].level, "warning");
     assert.ok(document.runs[0].results.every((item) => /^SS00[1-6]$/u.test(item.ruleId)));
   } finally { rmSync(projectRoot, { recursive: true, force: true }); }
+});
+
+test("SS004 accepts a reduced-motion fallback declared in a stylesheet of the source set, and still flags files without one", () => {
+  const projectRoot = root("styleseed-check-motion-");
+  try {
+    fixture(projectRoot, { "src/app/dashboard/motion.css": "@media (prefers-reduced-motion: reduce) { * { transition: none; } }\n" });
+    const json = run(projectRoot, ["--artifact", "app-dashboard", "--format", "json"]);
+    assert.equal(json.status, 0, `${json.stderr}\n${json.stdout}`);
+    const report = JSON.parse(json.stdout);
+    assert.ok(!report.findings.some((item) => item.id === "SS004"), "a shared stylesheet fallback satisfies SS004");
+  } finally { rmSync(projectRoot, { recursive: true, force: true }); }
+  const lonely = root("styleseed-check-motion-lonely-");
+  try {
+    fixture(lonely, { "src/app/dashboard/widget.tsx": "export const Widget = () => <div className=\"animate-pulse\" />;\n" });
+    const report = JSON.parse(run(lonely, ["--artifact", "app-dashboard", "--format", "json"]).stdout);
+    assert.deepEqual(report.findings.filter((item) => item.id === "SS004").map((item) => item.file).sort(), ["src/app/dashboard/page.tsx", "src/app/dashboard/widget.tsx"], "every file with motion and no fallback is reported");
+  } finally { rmSync(lonely, { recursive: true, force: true }); }
 });
 
 test("scan turns manifest and source-root drift into hard errors", () => {

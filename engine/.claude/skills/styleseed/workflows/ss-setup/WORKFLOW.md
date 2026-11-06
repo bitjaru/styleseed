@@ -70,6 +70,11 @@ status cues, and validated contrast. The recipe is a product posture, not a fini
 When the user supplies a key color, select perceptual character, light/dark environment, surface
 temperature, and accent relationship; `$ss-resolve` then derives the actual OKLCH ramps and roles.
 Palette selection is not permission to recolor every surface.
+When the team already has a design system, pick no palette and no key colour: record its token file
+as the canon (`tokens` in `.styleseed/project.json`, DTCG · Tokens Studio · Figma Variables) so the
+resolver maps roles onto the imported values and the generator does not run. Roles the file cannot
+supply are mapped explicitly, never generated. See the resolver's
+[token canon guide](../ss-resolve/references/tokens.md).
 
 ### 6. Optional aesthetic profile
 

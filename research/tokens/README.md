@@ -73,12 +73,20 @@ Not allowed:
 
 ## What happens to this
 
+- **Done (#104):** projects with an existing system import their own DTCG / Tokens Studio / Figma
+  Variables file as the canon through `tokens` in `.styleseed/project.json`. The layer checker moved
+  into the installed resolver (`ss-resolve/scripts/token-canon.mjs`); `scripts/check-token-layers.mjs`
+  re-exports it for this sample. The resolver maps StyleSeed's roles onto the canon paths above
+  (`semantic.bg.base` → background, `semantic.bg.brand.base` → primary, …), so this sample imports
+  without configuration except the accent pair. See the
+  [token canon guide](../../engine/.claude/skills/styleseed/workflows/ss-resolve/references/tokens.md).
+  Two sample edits came out of that: `semantic.bg.warning.emphasis` was added (the other status
+  roles had it), and `semantic.fg.muted` now aliases `neutral.600` because `neutral.500` on white
+  measured 4.29:1, under the 4.5:1 gate the import checks.
 - The engine's palette generator already produces 50–950 ramps and roles; the next step maps its
   output onto this layering so semantic roles alias the ramp instead of copying values.
 - `engine/docs/tokens-studio.json` (hand-maintained today) becomes generated from the canon,
   together with CSS variables and the Tailwind theme; a drift check in CI compares them.
-- Projects with an existing system import their own DTCG / Tokens Studio / Figma Variables file as
-  the canon (#104); the same checker runs on it.
 
 References: [DTCG Format Module 2025.10](https://www.w3.org/community/reports/design-tokens/CG-FINAL-format-20251028/) ·
 [Primer colour overview](https://primer.style/foundations/color/overview) ·

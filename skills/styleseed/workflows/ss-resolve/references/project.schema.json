@@ -6,6 +6,7 @@
   "required": ["schemaVersion", "projectId", "defaults", "brand"],
   "properties": {
     "spacing": { "$ref": "#/$defs/spacing" },
+    "tokens": { "$ref": "#/$defs/tokens" },
     "schemaVersion": { "const": 1 },
     "projectId": { "$ref": "#/$defs/id" },
     "defaults": {
@@ -46,5 +47,11 @@
     "spacingLength": {"oneOf": [{"type": "number", "minimum": 0, "maximum": 256}, {"type": "string", "pattern": "^var\\(--(?!ss-space-)[a-zA-Z][a-zA-Z0-9-]{0,63}\\)$"}]},
     "spacingRole": {"type": "object", "additionalProperties": false, "required": ["base"], "properties": {"base": {"$ref": "#/$defs/spacingLength"}, "wide": {"$ref": "#/$defs/spacingLength"}}},
     "spacing": {"type": "object", "additionalProperties": false, "required": ["roles"], "properties": {"wideMinWidth": {"type": "integer", "minimum": 320, "maximum": 3840}, "roles": {"type": "object", "additionalProperties": false, "minProperties": 1, "properties": {"pageInset": {"$ref": "#/$defs/spacingRole"}, "sectionGap": {"$ref": "#/$defs/spacingRole"}, "groupGap": {"$ref": "#/$defs/spacingRole"}, "stackGap": {"$ref": "#/$defs/spacingRole"}, "inlineGap": {"$ref": "#/$defs/spacingRole"}, "componentInset": {"$ref": "#/$defs/spacingRole"}}}}},
+ "tokenPath": { "type": "string", "minLength": 1, "maxLength": 240, "pattern": "^[^\\u0000-\\u001f\\u007f{}]+$" },
+ "tokens": { "type": "object", "additionalProperties": false, "required": ["source", "format"], "description": "Imported token canon: the project's own token file. Palette generation does not run; roles map onto imported tokens.", "properties": {
+   "source": { "type": "string", "pattern": "\\.json$", "description": "Project-relative path to the token file" },
+   "format": { "enum": ["dtcg", "tokens-studio", "figma-variables"] },
+   "modes": { "type": "object", "additionalProperties": false, "minProperties": 1, "properties": { "light": { "type": "string", "maxLength": 80 }, "dark": { "type": "string", "maxLength": 80 } }, "description": "Figma mode or Tokens Studio theme name per StyleSeed mode; not for dtcg" },
+   "roles": { "type": "object", "additionalProperties": false, "minProperties": 1, "properties": {"background": {"$ref": "#/$defs/tokenPath"}, "surface": {"$ref": "#/$defs/tokenPath"}, "chrome": {"$ref": "#/$defs/tokenPath"}, "foreground": {"$ref": "#/$defs/tokenPath"}, "mutedForeground": {"$ref": "#/$defs/tokenPath"}, "chromeForeground": {"$ref": "#/$defs/tokenPath"}, "border": {"$ref": "#/$defs/tokenPath"}, "primary": {"$ref": "#/$defs/tokenPath"}, "primaryForeground": {"$ref": "#/$defs/tokenPath"}, "accent": {"$ref": "#/$defs/tokenPath"}, "accentForeground": {"$ref": "#/$defs/tokenPath"}, "focus": {"$ref": "#/$defs/tokenPath"}, "success": {"$ref": "#/$defs/tokenPath"}, "successForeground": {"$ref": "#/$defs/tokenPath"}, "warning": {"$ref": "#/$defs/tokenPath"}, "warningForeground": {"$ref": "#/$defs/tokenPath"}, "danger": {"$ref": "#/$defs/tokenPath"}, "dangerForeground": {"$ref": "#/$defs/tokenPath"}}, "description": "Role to token path overrides; the canon default map covers files that follow semantic.{fg|bg|bd}[.role].{emphasis}" } } },
  "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,63}$" } }
 }

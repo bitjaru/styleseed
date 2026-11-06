@@ -1,7 +1,7 @@
 {
   "schemaVersion": 5,
   "engineVersion": "5.0.0",
-  "engineRevision": "sha256:2b5f131828d36d9484cfe75c08c3ec474107a15966b307a7f79a3c36c0c1014f",
+  "engineRevision": "sha256:0c4bd5777dda0710f1103b168c706438f9e2de3a4988084cecad8f4ff8857a07",
   "distributionSource": {
     "schemaVersion": 1,
     "channel": "edge",
@@ -10,7 +10,7 @@
   },
   "distributions": {
     "core": {
-      "revision": "sha256:2b5f131828d36d9484cfe75c08c3ec474107a15966b307a7f79a3c36c0c1014f",
+      "revision": "sha256:0c4bd5777dda0710f1103b168c706438f9e2de3a4988084cecad8f4ff8857a07",
       "files": [
         {
           "path": "LICENSE",
@@ -114,8 +114,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/WORKFLOW.md",
-          "sha256": "5bf33cfe9b1430a77c41f63d7c7e70296b1e54b600239b4a4bff121473d4bc0b",
-          "bytes": 5360
+          "sha256": "1adc57188c95be5ec2d30a59f99ac4ca06d2a6f8c174c81d6c580aeea2976a5a",
+          "bytes": 5926
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/references/artifact-index.schema.json",
@@ -139,8 +139,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/references/project.schema.json",
-          "sha256": "f25d06166f66918ea2c3c75aeb89524f8761f0824c9b35fc51ce1e802f7a95a9",
-          "bytes": 4242
+          "sha256": "ae76173263d756a92d1bede9b0cf0fefdaf20f44c3d919804fdbf1316459c6b4",
+          "bytes": 6182
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/references/spacing.md",
@@ -148,14 +148,24 @@
           "bytes": 11859
         },
         {
+          "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/references/tokens.md",
+          "sha256": "f241be7c9dc8dfef164cc2d37178b7277e1f7c3ce141257f8cbf0dd29c1cf05b",
+          "bytes": 6399
+        },
+        {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/compiler.mjs",
-          "sha256": "0232c3f0ec8b7d2c01bbe603490eb4a5ea913cc225775b95e05ae626dba0ee94",
-          "bytes": 19912
+          "sha256": "734df07ec40147d214baad1d7a318535f4e50f0ff20934e8e062c5a6fe42f39a",
+          "bytes": 22754
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/distribution-integrity.mjs",
           "sha256": "067f80bb2f6b881e840c5c3e7ffe00bc1d744fb477059c887ea23cabc981e1ba",
           "bytes": 6480
+        },
+        {
+          "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/import-tokens.mjs",
+          "sha256": "dca853e73acee85b0bef1e4de762a19409f99c79be7e5c241aad9f34acedbcec",
+          "bytes": 5809
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/legacy-lock-analysis.mjs",
@@ -194,8 +204,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/runtime-contract.mjs",
-          "sha256": "99168be4e2511b378e41e81f8fa33c57f5b4abe19645c492654f1e0c669ab097",
-          "bytes": 18191
+          "sha256": "faf24f9f8d8b68e7ee57c47503b2d08b367345dd0b38c1a71159c53771770dc3",
+          "bytes": 20163
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/spacing-contract.mjs",
@@ -211,6 +221,11 @@
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/styleseed-doctor.mjs",
           "sha256": "8324345d792a67af6957fbc2079d9ec2a663d1a58b751c71639db3ee6d5f45e9",
           "bytes": 11917
+        },
+        {
+          "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/token-canon.mjs",
+          "sha256": "09189f8bc60ee64d87627650856be0a71caee7be16f54496c7b8eb8379513bb9",
+          "bytes": 30837
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-restyle/WORKFLOW.md",
@@ -294,8 +309,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-setup/WORKFLOW.md",
-          "sha256": "84f64b7ba68329c45ad3c39293b82c5aac83bffabdc5a0eb67b05f9dacd06d12",
-          "bytes": 7145
+          "sha256": "681d89c29c14af0c723ed44905478df1d4960c04b51f854017d8ea4b87b41c44",
+          "bytes": 7569
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-studio/WORKFLOW.md",
@@ -324,8 +339,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-tokens/WORKFLOW.md",
-          "sha256": "4c176cf1652c3025ecf8fa7cb56fad55d5985f7359cf385619922e427d6a7f34",
-          "bytes": 4525
+          "sha256": "5d4b5a92e41e6265ba8d3a1409d8649f98baa489dd35373d829e6527fc6a963b",
+          "bytes": 5862
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-tokens/scripts/generate-palette.mjs",
@@ -414,8 +429,8 @@
         },
         {
           "path": "engine/ARCHITECTURE.md",
-          "sha256": "6ba4c258f96d8c45aa08ed6728e3aab1977b200a4c8ec110af1ceb6f0810b9c2",
-          "bytes": 10928
+          "sha256": "05fbb63128161d31484c3d88dfd9fdaf3a9ad285504badea7efc15e8d83cb29a",
+          "bytes": 11996
         },
         {
           "path": "engine/BRAND-RECIPES.md",
@@ -449,8 +464,8 @@
         },
         {
           "path": "engine/PALETTE-RECIPES.md",
-          "sha256": "729ee86506c37186d7f995f997ffbc691b840743e743906283a112b90ab5784a",
-          "bytes": 8009
+          "sha256": "1a12adceb5545913eb071a0c385b2a67d219ef67feb24e0e5bc4c84f06e662df",
+          "bytes": 8630
         },
         {
           "path": "engine/PRESETS.md",
@@ -545,7 +560,7 @@
       ]
     },
     "skills": {
-      "revision": "sha256:e54ff322b71d76c4d1fdf4ebcce52e168f0a015512a42e3f35ad1499d4f473d8",
+      "revision": "sha256:33c58922e92f10a094e73c2c5023c5416ae2d0b9cbf14b15c6aafab01af40513",
       "files": [
         {
           "path": "engine/.claude/skills/styleseed/SKILL.md",
@@ -639,8 +654,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/WORKFLOW.md",
-          "sha256": "5bf33cfe9b1430a77c41f63d7c7e70296b1e54b600239b4a4bff121473d4bc0b",
-          "bytes": 5360
+          "sha256": "1adc57188c95be5ec2d30a59f99ac4ca06d2a6f8c174c81d6c580aeea2976a5a",
+          "bytes": 5926
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/references/artifact-index.schema.json",
@@ -664,8 +679,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/references/project.schema.json",
-          "sha256": "f25d06166f66918ea2c3c75aeb89524f8761f0824c9b35fc51ce1e802f7a95a9",
-          "bytes": 4242
+          "sha256": "ae76173263d756a92d1bede9b0cf0fefdaf20f44c3d919804fdbf1316459c6b4",
+          "bytes": 6182
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/references/spacing.md",
@@ -673,14 +688,24 @@
           "bytes": 11859
         },
         {
+          "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/references/tokens.md",
+          "sha256": "f241be7c9dc8dfef164cc2d37178b7277e1f7c3ce141257f8cbf0dd29c1cf05b",
+          "bytes": 6399
+        },
+        {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/compiler.mjs",
-          "sha256": "0232c3f0ec8b7d2c01bbe603490eb4a5ea913cc225775b95e05ae626dba0ee94",
-          "bytes": 19912
+          "sha256": "734df07ec40147d214baad1d7a318535f4e50f0ff20934e8e062c5a6fe42f39a",
+          "bytes": 22754
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/distribution-integrity.mjs",
           "sha256": "067f80bb2f6b881e840c5c3e7ffe00bc1d744fb477059c887ea23cabc981e1ba",
           "bytes": 6480
+        },
+        {
+          "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/import-tokens.mjs",
+          "sha256": "dca853e73acee85b0bef1e4de762a19409f99c79be7e5c241aad9f34acedbcec",
+          "bytes": 5809
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/legacy-lock-analysis.mjs",
@@ -719,8 +744,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/runtime-contract.mjs",
-          "sha256": "99168be4e2511b378e41e81f8fa33c57f5b4abe19645c492654f1e0c669ab097",
-          "bytes": 18191
+          "sha256": "faf24f9f8d8b68e7ee57c47503b2d08b367345dd0b38c1a71159c53771770dc3",
+          "bytes": 20163
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/spacing-contract.mjs",
@@ -736,6 +761,11 @@
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/styleseed-doctor.mjs",
           "sha256": "8324345d792a67af6957fbc2079d9ec2a663d1a58b751c71639db3ee6d5f45e9",
           "bytes": 11917
+        },
+        {
+          "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/token-canon.mjs",
+          "sha256": "09189f8bc60ee64d87627650856be0a71caee7be16f54496c7b8eb8379513bb9",
+          "bytes": 30837
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-restyle/WORKFLOW.md",
@@ -819,8 +849,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-setup/WORKFLOW.md",
-          "sha256": "84f64b7ba68329c45ad3c39293b82c5aac83bffabdc5a0eb67b05f9dacd06d12",
-          "bytes": 7145
+          "sha256": "681d89c29c14af0c723ed44905478df1d4960c04b51f854017d8ea4b87b41c44",
+          "bytes": 7569
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-studio/WORKFLOW.md",
@@ -849,8 +879,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-tokens/WORKFLOW.md",
-          "sha256": "4c176cf1652c3025ecf8fa7cb56fad55d5985f7359cf385619922e427d6a7f34",
-          "bytes": 4525
+          "sha256": "5d4b5a92e41e6265ba8d3a1409d8649f98baa489dd35373d829e6527fc6a963b",
+          "bytes": 5862
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-tokens/scripts/generate-palette.mjs",
@@ -1023,8 +1053,8 @@
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-resolve/WORKFLOW.md",
-      "sha256": "5bf33cfe9b1430a77c41f63d7c7e70296b1e54b600239b4a4bff121473d4bc0b",
-      "bytes": 5360
+      "sha256": "1adc57188c95be5ec2d30a59f99ac4ca06d2a6f8c174c81d6c580aeea2976a5a",
+      "bytes": 5926
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-resolve/references/artifact-index.schema.json",
@@ -1048,8 +1078,8 @@
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-resolve/references/project.schema.json",
-      "sha256": "f25d06166f66918ea2c3c75aeb89524f8761f0824c9b35fc51ce1e802f7a95a9",
-      "bytes": 4242
+      "sha256": "ae76173263d756a92d1bede9b0cf0fefdaf20f44c3d919804fdbf1316459c6b4",
+      "bytes": 6182
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-resolve/references/spacing.md",
@@ -1057,14 +1087,24 @@
       "bytes": 11859
     },
     {
+      "path": ".claude/skills/styleseed/workflows/ss-resolve/references/tokens.md",
+      "sha256": "f241be7c9dc8dfef164cc2d37178b7277e1f7c3ce141257f8cbf0dd29c1cf05b",
+      "bytes": 6399
+    },
+    {
       "path": ".claude/skills/styleseed/workflows/ss-resolve/scripts/compiler.mjs",
-      "sha256": "0232c3f0ec8b7d2c01bbe603490eb4a5ea913cc225775b95e05ae626dba0ee94",
-      "bytes": 19912
+      "sha256": "734df07ec40147d214baad1d7a318535f4e50f0ff20934e8e062c5a6fe42f39a",
+      "bytes": 22754
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-resolve/scripts/distribution-integrity.mjs",
       "sha256": "067f80bb2f6b881e840c5c3e7ffe00bc1d744fb477059c887ea23cabc981e1ba",
       "bytes": 6480
+    },
+    {
+      "path": ".claude/skills/styleseed/workflows/ss-resolve/scripts/import-tokens.mjs",
+      "sha256": "dca853e73acee85b0bef1e4de762a19409f99c79be7e5c241aad9f34acedbcec",
+      "bytes": 5809
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-resolve/scripts/legacy-lock-analysis.mjs",
@@ -1103,8 +1143,8 @@
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-resolve/scripts/runtime-contract.mjs",
-      "sha256": "99168be4e2511b378e41e81f8fa33c57f5b4abe19645c492654f1e0c669ab097",
-      "bytes": 18191
+      "sha256": "faf24f9f8d8b68e7ee57c47503b2d08b367345dd0b38c1a71159c53771770dc3",
+      "bytes": 20163
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-resolve/scripts/spacing-contract.mjs",
@@ -1120,6 +1160,11 @@
       "path": ".claude/skills/styleseed/workflows/ss-resolve/scripts/styleseed-doctor.mjs",
       "sha256": "8324345d792a67af6957fbc2079d9ec2a663d1a58b751c71639db3ee6d5f45e9",
       "bytes": 11917
+    },
+    {
+      "path": ".claude/skills/styleseed/workflows/ss-resolve/scripts/token-canon.mjs",
+      "sha256": "09189f8bc60ee64d87627650856be0a71caee7be16f54496c7b8eb8379513bb9",
+      "bytes": 30837
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-restyle/WORKFLOW.md",
@@ -1203,8 +1248,8 @@
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-setup/WORKFLOW.md",
-      "sha256": "84f64b7ba68329c45ad3c39293b82c5aac83bffabdc5a0eb67b05f9dacd06d12",
-      "bytes": 7145
+      "sha256": "681d89c29c14af0c723ed44905478df1d4960c04b51f854017d8ea4b87b41c44",
+      "bytes": 7569
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-studio/WORKFLOW.md",
@@ -1233,8 +1278,8 @@
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-tokens/WORKFLOW.md",
-      "sha256": "4c176cf1652c3025ecf8fa7cb56fad55d5985f7359cf385619922e427d6a7f34",
-      "bytes": 4525
+      "sha256": "5d4b5a92e41e6265ba8d3a1409d8649f98baa489dd35373d829e6527fc6a963b",
+      "bytes": 5862
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-tokens/scripts/generate-palette.mjs",
@@ -1323,8 +1368,8 @@
     },
     {
       "path": "ARCHITECTURE.md",
-      "sha256": "6ba4c258f96d8c45aa08ed6728e3aab1977b200a4c8ec110af1ceb6f0810b9c2",
-      "bytes": 10928
+      "sha256": "05fbb63128161d31484c3d88dfd9fdaf3a9ad285504badea7efc15e8d83cb29a",
+      "bytes": 11996
     },
     {
       "path": "BRAND-RECIPES.md",
@@ -1358,8 +1403,8 @@
     },
     {
       "path": "PALETTE-RECIPES.md",
-      "sha256": "729ee86506c37186d7f995f997ffbc691b840743e743906283a112b90ab5784a",
-      "bytes": 8009
+      "sha256": "1a12adceb5545913eb071a0c385b2a67d219ef67feb24e0e5bc4c84f06e662df",
+      "bytes": 8630
     },
     {
       "path": "PRESETS.md",

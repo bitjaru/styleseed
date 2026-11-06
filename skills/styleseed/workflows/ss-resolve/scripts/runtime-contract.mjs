@@ -1,4 +1,5 @@
 import { normalizeSpacing } from "./spacing-contract.mjs";
+import { PALETTE_ROLES, TOKEN_FORMATS } from "./token-canon.mjs";
 import { createHash } from "node:crypto";
 import { existsSync, lstatSync, realpathSync } from "node:fs";
 import { isAbsolute, relative, resolve, sep } from "node:path";
@@ -22,6 +23,7 @@ const enums = {
   imageryRole: ["data-first", "product-proof-first", "editorial-media", "people-context", "generated-atmosphere", "none"],
   targetKind: ["route", "component", "document", "deck", "carousel", "single-frame"],
   renderState: ["loaded", "loading", "empty", "error", "success", "disabled", "focused", "reduced-motion"],
+  tokenFormat: TOKEN_FORMATS,
 };
 
 function fail(message) { throw new Error(message); }
@@ -144,8 +146,39 @@ export function safeProjectPath(projectRoot, relativePath) {
   return target;
 }
 
+// Optional imported token canon: the project's own DTCG / Tokens Studio / Figma Variables file.
+// When present, palette generation does not run; the compiler maps roles onto the imported tokens.
+const TOKEN_PATH = /^[^\u0000-\u001f\u007f{}]{1,240}$/u;
+function normalizeTokens(input, label) {
+  exactObject(input, ["source", "format", "modes", "roles"], label);
+  const source = projectPath(required(input.source, `${label}.source`), `${label}.source`);
+  if (!source.endsWith(".json")) fail(`${label}.source must be a .json token file`);
+  const format = oneOf(required(input.format, `${label}.format`), enums.tokenFormat, `${label}.format`);
+  const normalized = { source, format };
+  if (input.modes !== undefined) {
+    exactObject(input.modes, ["light", "dark"], `${label}.modes`);
+    const modes = {};
+    for (const mode of ["light", "dark"]) if (input.modes[mode] !== undefined) modes[mode] = text(input.modes[mode], `${label}.modes.${mode}`, 80);
+    if (!Object.keys(modes).length) fail(`${label}.modes must name a light or dark mode`);
+    if (format === "dtcg") fail(`${label}.modes does not apply to dtcg; the format module has no modes`);
+    normalized.modes = modes;
+  }
+  if (input.roles !== undefined) {
+    exactObject(input.roles, [...PALETTE_ROLES], `${label}.roles`);
+    const roles = {};
+    for (const role of PALETTE_ROLES) {
+      if (input.roles[role] === undefined) continue;
+      if (typeof input.roles[role] !== "string" || !TOKEN_PATH.test(input.roles[role])) fail(`${label}.roles.${role} must be a token path such as semantic.bg.base`);
+      roles[role] = input.roles[role].trim();
+    }
+    if (!Object.keys(roles).length) fail(`${label}.roles must not be empty`);
+    normalized.roles = roles;
+  }
+  return normalized;
+}
+
 export function normalizeProject(input, catalog) {
-  exactObject(input, ["schemaVersion", "projectId", "defaults", "brand", "spacing"], "project");
+  exactObject(input, ["schemaVersion", "projectId", "defaults", "brand", "spacing", "tokens"], "project");
   if (required(input.schemaVersion, "project.schemaVersion") !== 1) fail("project.schemaVersion must be 1");
   const defaults = exactObject(required(input.defaults, "project.defaults"), ["agent", "domain", "adapter", "recipe", "palette", "profile", "fallback"], "project.defaults");
   const brand = exactObject(required(input.brand, "project.brand"), ["keyColor", "paletteCharacter", "paletteMode", "paletteHarmony", "surfaceTemperature", "fontFamilies", "radius", "elevation", "density", "motion", "imageryRole"], "project.brand");
@@ -159,6 +192,7 @@ export function normalizeProject(input, catalog) {
   return {
     schemaVersion: 1,
     ...(input.spacing === undefined ? {} : { spacing: normalizeSpacing(input.spacing, "project.spacing") }),
+    ...(input.tokens === undefined ? {} : { tokens: normalizeTokens(input.tokens, "project.tokens") }),
     projectId: id(required(input.projectId, "project.projectId"), "project.projectId"),
     defaults: {
       agent: oneOf(required(defaults.agent, "defaults.agent"), enums.agents, "defaults.agent"),

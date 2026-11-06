@@ -28,6 +28,7 @@ export function ShowcaseRibbon({ children, count }: { children: ReactNode; count
     const sync = () => {
       cancelAnimationFrame(frame);
       root.classList.toggle(styles.ribbonEnhanced, !reduced.matches);
+      root.dataset.running = String(visible && !reduced.matches && !document.hidden);
       root.style.setProperty("--fan-centre", String(root.clientWidth / 2));
       if (visible && !reduced.matches && !document.hidden) frame = requestAnimationFrame(syncPosition);
     };

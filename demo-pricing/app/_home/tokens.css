@@ -1,0 +1,18 @@
+/* Hallmark · theme: brand · scoped StyleSeed tokens from site-docs-palette.json · v2.0.0 */
+[data-styleseed-home] {
+  --font-display: var(--font-inter), Inter, sans-serif;
+  --font-body: var(--font-display);
+  --font-outlier: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --home-font: var(--font-body);
+  --home-mono: var(--font-outlier);
+  --home-section-space: 240px;
+  --home-motion-duration: 190ms;
+  --home-motion-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --home-display: 64px;
+  --home-heading: 48px;
+  --home-object-shadow: 0 28px 52px -32px color-mix(in srgb, var(--home-foreground) 34%, transparent);
+  --home-rule: color-mix(in srgb, var(--home-border) 50%, var(--home-surface));
+  --home-darkRule: color-mix(in srgb, var(--home-fieldInk) 22%, var(--home-fieldDeep));
+  --home-signal: var(--home-mint);
+  --home-empty: transparent;
+}

@@ -33,14 +33,16 @@ export function RulesInScope() {
   const { cards, provenance, markdown } = readRulesInScope();
   return (
     <div className={styles.rulesObject}>
+      <div className={styles.rulesFile}><span>folio / project-detail.md</span><span>Compiled at build time</span></div>
       <ul className={styles.ruleGrid}>
-        {cards.map((card) => <li className={styles.ruleCard} key={card.id} data-invariant={card.priority === "blocks" || undefined} data-rule-id={card.id}>
-          <div className={styles.ruleMeta}><code>{card.chip}</code><span>{card.priority}</span></div>
-          <h3>{card.title}</h3>
-          <p title={card.sentence}>{card.sentence}</p>
+        {cards.map((card, index) => <li className={styles.ruleCard} key={card.id} data-invariant={card.priority === "blocks" || undefined} data-rule-id={card.id}>
+          <details open={index === 0}>
+            <summary><code>{card.chip}</code><h3>{card.title}</h3><span className={styles.rulePriority}>{card.priority}</span><span className={styles.ruleExpand} aria-hidden="true">+</span></summary>
+            <p>{card.sentence}</p>
+          </details>
         </li>)}
       </ul>
-      <p className={styles.bundleCaption}>folio / project-detail.md · compiled at build time <a href="/case-study/folio/project-detail.md">Read full bundle ↗</a></p>
+      <p className={styles.bundleCaption}><a href="/case-study/folio/project-detail.md">Read the full bundle</a></p>
       <details className={styles.disclosure}>
         <summary>Provenance and verbatim rules</summary>
         <p className={styles.outputMeta}>{provenance}</p>

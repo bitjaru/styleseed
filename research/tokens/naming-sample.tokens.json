@@ -9,7 +9,7 @@
           "colorSpace": "srgb",
           "components": [
             0.898,
-            1.0,
+            1,
             0.9843
           ],
           "hex": "#E5FFFB"
@@ -85,7 +85,7 @@
         "$value": {
           "colorSpace": "srgb",
           "components": [
-            0.0,
+            0,
             0.3882,
             0.3608
           ],
@@ -96,7 +96,7 @@
         "$value": {
           "colorSpace": "srgb",
           "components": [
-            0.0,
+            0,
             0.2824,
             0.2588
           ],
@@ -107,7 +107,7 @@
         "$value": {
           "colorSpace": "srgb",
           "components": [
-            0.0,
+            0,
             0.1804,
             0.1647
           ],
@@ -118,7 +118,7 @@
         "$value": {
           "colorSpace": "srgb",
           "components": [
-            0.0,
+            0,
             0.0863,
             0.0784
           ],
@@ -265,7 +265,7 @@
         "$value": {
           "colorSpace": "srgb",
           "components": [
-            0.0,
+            0,
             0.3922,
             0.1451
           ],
@@ -326,7 +326,7 @@
           "components": [
             0.4314,
             0.2941,
-            0.0
+            0
           ],
           "hex": "#6E4B00"
         }
@@ -336,9 +336,9 @@
       "$value": {
         "colorSpace": "srgb",
         "components": [
-          1.0,
-          1.0,
-          1.0
+          1,
+          1,
+          1
         ],
         "hex": "#FFFFFF"
       }
@@ -354,7 +354,7 @@
         "$value": "{primitive.neutral.700}"
       },
       "muted": {
-        "$value": "{primitive.neutral.500}"
+        "$value": "{primitive.neutral.600}"
       },
       "emphasis": {
         "$value": "{primitive.brand.700}"
@@ -429,6 +429,9 @@
       "warning": {
         "subtle": {
           "$value": "{primitive.amber.50}"
+        },
+        "emphasis": {
+          "$value": "{primitive.amber.700}"
         }
       }
     },

@@ -176,6 +176,20 @@ Artifact overrides replace only named roles. Read-only starting proposals never 
 and numeric compliance does not prove design quality. See
 [the spatial contract](.claude/skills/styleseed/workflows/ss-resolve/references/spacing.md) for limits and verification.
 
+## Imported token canon
+
+A project with an existing design system records its token file in `project.json` (`tokens`:
+`source`, `format` dtcg · tokens-studio · figma-variables, `modes`, `roles`). The compiler then reads
+that file instead of running the palette generator: it resolves aliases, checks the designer's
+layering (primitive → semantic fg/bg/bd → type → component) when the file uses it, reads one named
+mode per collection, maps the eighteen semantic roles onto imported tokens (canon paths by default,
+explicit `roles` otherwise), and measures the eleven contrast gates. Structural problems stop the
+resolve; a missing role is an error that names the mapping to add. Only imported values reach the
+bundle, the palette JSON and the `--ss-*` CSS; the recipe keeps its posture and withholds its hex.
+The token file is a manifest input and part of the method hash, so `--check` reports when it changes.
+Presets and generation remain the greenfield path. See
+[the token canon guide](.claude/skills/styleseed/workflows/ss-resolve/references/tokens.md).
+
 ## Applied color and typography observations
 
 The installed verify workflow includes a read-only browser probe for explicitly bound color

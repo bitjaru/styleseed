@@ -24,6 +24,13 @@ Use the bundled `scripts/resolve-context.mjs`; do not hand-compose the rule stac
    `.styleseed/manifests/<artifact-id>.json`.
 6. Use `--check` to detect context drift without rewriting files.
 
+A project with an existing design system imports its own token file instead of generating a palette:
+optional project `tokens` (`source`, `format` dtcg · tokens-studio · figma-variables, `modes`, `roles`)
+maps StyleSeed's roles onto the imported tokens, checks aliases, layering, modes and contrast, and
+compiles only imported values into the bundle, palette JSON and CSS. A role the file cannot supply is
+an error naming the mapping to add, never a generated colour. Preview read-only with
+`import-tokens.mjs`; see the [token canon guide](references/tokens.md).
+
 For spacing recommendations and scoped control, see the [spatial roles guide](references/spacing.md).
 Optional project/artifact `spacing` compiles into a role table and artifact-scoped CSS in the bundle.
 `recommend-spacing.mjs --project-root . --artifact <id>` emits a read-only starting proposal; it does

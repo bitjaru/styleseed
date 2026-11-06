@@ -1,4 +1,5 @@
 import { spacingSection } from "./spacing-contract.mjs";
+import { importTokenCanonOrThrow, tokenCanonSection } from "./token-canon.mjs";
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
@@ -101,7 +102,32 @@ function buildLegacyLockSection(legacyLock) {
   return `## Project design lock\n\n${lines.join("\n")}`;
 }
 
-function resolveRecipeAndPalette(selection, projectBrand, catalog) {
+// An imported token canon replaces palette generation. The file is read from the project root, hashed
+// into the manifest inputs and method hash, and every role must map onto an imported colour.
+const MAX_TOKEN_FILE_BYTES = 16 * 1024 * 1024;
+function resolveTokenCanon({ projectRoot, normalizedProject, catalog }) {
+  const tokens = normalizedProject.tokens;
+  if (!tokens) return null;
+  const target = safeProjectPath(projectRoot, tokens.source);
+  if (!existsSync(target)) throw new Error(`Token canon file is missing: ${tokens.source}`);
+  const content = readFileSync(target, "utf8");
+  if (Buffer.byteLength(content) > MAX_TOKEN_FILE_BYTES) throw new Error(`Token canon file exceeds ${MAX_TOKEN_FILE_BYTES} bytes: ${tokens.source}`);
+  let document;
+  try { document = JSON.parse(content); } catch (error) { throw new Error(`Token canon file is not valid JSON: ${tokens.source} (${error.message})`); }
+  const result = importTokenCanonOrThrow({
+    document,
+    format: tokens.format,
+    mode: normalizedProject.brand.paletteMode,
+    modes: tokens.modes ?? null,
+    roles: tokens.roles ?? {},
+    source: tokens.source,
+    sha256: sha256(content),
+    version: catalog.engineVersion,
+  });
+  return { path: tokens.source, content, result };
+}
+
+function resolveRecipeAndPalette(selection, projectBrand, catalog, { skipGeneration = false } = {}) {
   const recipeGrammar = selection.grammar.startsWith("reference:") ? selection.fallback : selection.grammar;
   const recipe = selection.recipeSelection === "auto"
     ? AUTO_RECIPE_BY_GRAMMAR[recipeGrammar]
@@ -114,7 +140,7 @@ function resolveRecipeAndPalette(selection, projectBrand, catalog) {
   if (!palette) throw new Error(`No automatic palette recipe for brand recipe "${recipe}". Pass an explicit palette.`);
   if (!catalog.palettes?.[palette]) throw new Error(`Unknown palette recipe "${palette}"`);
   const defaults = PALETTE_DEFAULTS_BY_RECIPE[recipe] ?? { character: "balanced", temperature: "neutral" };
-  const paletteGeneration = projectBrand.keyColor
+  const paletteGeneration = projectBrand.keyColor && !skipGeneration
     ? generatePalette({
         keyColor: projectBrand.keyColor,
         mode: projectBrand.paletteMode,
@@ -186,6 +212,7 @@ function buildBundle({ catalog, selected, sections }) {
     `- Brand recipe: ${selected.recipe}${selected.recipeSelection === "auto" ? " (auto)" : ""}`,
     `- Palette recipe: ${selected.palette}${selected.paletteSelection === "auto" ? " (auto)" : ""}`,
     ...(selected.paletteGeneration ? [`- Generated palette: ${selected.paletteGeneration.keyColor} · ${selected.paletteGeneration.mode} · ${selected.paletteGeneration.character} · ${selected.paletteGeneration.harmony}`] : []),
+    ...(selected.tokenCanon ? [`- Imported token canon: ${selected.tokenCanon.source} · ${selected.tokenCanon.format} · ${selected.tokenCanon.sha256}`] : []),
     `- Aesthetic profile: ${selected.profile}`,
     "",
     "Read this bundle before implementation. The agent execution contract is operational; method authority then runs core → grammar → adapter → domain/page → brand recipe → palette recipe → profile → lock → compact craft baseline, with the earlier method layer winning conflicts. Run the code gate and rendered visual gate.",
@@ -219,7 +246,8 @@ export function compileContext({
     profile: normalizedArtifact.selection.profile ?? normalizedProject.defaults.profile,
     fallback: normalizedArtifact.selection.fallback ?? normalizedProject.defaults.fallback,
   };
-  const { recipe, palette, paletteGeneration } = resolveRecipeAndPalette(selection, normalizedProject.brand, catalog);
+  const tokenCanon = resolveTokenCanon({ projectRoot, normalizedProject, catalog });
+  const { recipe, palette, paletteGeneration } = resolveRecipeAndPalette(selection, normalizedProject.brand, catalog, { skipGeneration: Boolean(tokenCanon) });
   const reference = resolveReferenceGrammar({
     projectRoot,
     grammar: selection.grammar,
@@ -255,6 +283,17 @@ export function compileContext({
       "- This override replaces the recipe hex values while preserving its product posture and semantic restrictions.",
       "- Components consume semantic roles. Raw ramp values remain reference tokens.",
     ].join("\n");
+  } else if (tokenCanon) {
+    // The recipe keeps its posture and semantic restrictions; its hex values are withheld so the
+    // bundle names no colour outside the imported file.
+    const withheld = paletteContent.split("\n").filter((line) => !/#[0-9A-Fa-f]{6}\b/u.test(line));
+    paletteContent = [
+      ...withheld,
+      "",
+      "Recipe hex values are withheld: the imported token canon below owns every colour in this bundle.",
+      "",
+      tokenCanonSection(tokenCanon.result),
+    ].join("\n");
   }
 
   const selected = {
@@ -271,6 +310,7 @@ export function compileContext({
     palette,
     paletteSelection: selection.paletteSelection,
     paletteGeneration: paletteGeneration ? paletteGeneration.input : null,
+    tokenCanon: tokenCanon ? { source: tokenCanon.result.input.source, format: tokenCanon.result.input.format, sha256: tokenCanon.result.input.sha256, mode: tokenCanon.result.input.mode, modeName: tokenCanon.result.input.modeName } : null,
     profile: selection.profile,
   };
 
@@ -311,8 +351,10 @@ export function compileContext({
     ? `.styleseed/manifests/${normalizedArtifact.id}.json`
     : ".styleseed/manifest.json";
 
-  const paletteJson = paletteGeneration ? `${stableStringify(paletteGeneration)}\n` : null;
-  const paletteCss = paletteGeneration ? `${paletteGeneration.css}\n` : null;
+  // Generated palette or imported canon: the same JSON/CSS outputs feed the drift report and the demo.
+  const paletteOutput = paletteGeneration ?? tokenCanon?.result ?? null;
+  const paletteJson = paletteOutput ? `${stableStringify(paletteOutput)}\n` : null;
+  const paletteCss = paletteOutput ? `${paletteOutput.css}\n` : null;
   const bundleEntry = outputEntry("bundle", bundlePath, bundle);
   const outputs = [
     bundleEntry,
@@ -338,7 +380,7 @@ export function compileContext({
       selection: selected,
       bundle: legacyBundle,
       outputs: legacyOutputs,
-      palette: paletteGeneration
+      palette: paletteOutput
         ? {
             json: legacyPaletteJson,
             css: legacyPaletteCss,
@@ -354,9 +396,11 @@ export function compileContext({
   }
   const projectInput = toNamedInput("project", inputFiles.project.path, inputFiles.project.content);
   const artifactInput = toNamedInput("artifact", inputFiles.artifact.path, inputFiles.artifact.content);
+  const tokenInput = tokenCanon ? toNamedInput("tokens", tokenCanon.path, tokenCanon.content) : null;
   const methodHash = sha256({
     project: normalizedProject.defaults,
     brand: normalizedProject.brand,
+    ...(tokenCanon ? { tokens: { ...normalizedProject.tokens, sha256: tokenCanon.result.input.sha256 } } : {}),
     selection: {
       grammar: selected.grammar,
       adapter: selected.adapter,
@@ -391,7 +435,7 @@ export function compileContext({
     engineRevision: catalog.engineRevision,
     distributionIntegrity: "verified",
     selection: selected,
-    inputs: [projectInput.entry, artifactInput.entry],
+    inputs: [projectInput.entry, artifactInput.entry, ...(tokenInput ? [tokenInput.entry] : [])],
     sources,
     methodHash,
     validationHash,

@@ -1,7 +1,7 @@
 ---
 name: ss-tokens
 description: Generate an accessible semantic palette from a key color, or view, add, and modify design tokens. Use when a user supplies a brand color or needs light/dark theme roles.
-argument-hint: "[action: generate|list|add|update] [token-type: color|spacing|shadow|radius|typography]"
+argument-hint: "[action: generate|import|list|add|update] [token-type: color|spacing|shadow|radius|typography]"
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash
 ---
 
@@ -17,7 +17,7 @@ When `.styleseed/project.json` and `.styleseed/artifacts/index.json` exist, reso
 
 - For applying tokens in components → use `/ss-component` or `/ss-pattern`
 - For finding token violations in existing code → use `/ss-lint`
-- For non-CSS token systems (Figma, native iOS/Android) — Tailwind v4 / CSS variables only
+- For native iOS/Android token pipelines — the CSS implementation below is Tailwind v4 / CSS variables only; a DTCG, Tokens Studio or Figma Variables file is imported with `import`, not re-typed here
 
 Action: **$0** | Token type: **$1**
 Arguments: $ARGUMENTS
@@ -65,6 +65,29 @@ when implementing the roles. Preserve an existing approved multicolor system; un
 is a limitation to report, not permission to regenerate its identity. In `STYLESEED.md`, persist
 `Key color`, `Palette character`, `Palette mode`, `Palette harmony`, and `Surface temperature`,
 then run `$ss-resolve`; the resolver emits the same `.styleseed/palette.json` and `palette.css`.
+
+### `import` — Use the project's own token file as the canon
+
+When the team already has a design system, do not generate a palette and do not re-type its values.
+Point the registry at the file and let the resolver map StyleSeed's roles onto it:
+
+```json
+"tokens": { "source": "design/tokens.json", "format": "dtcg", "roles": { "accent": "semantic.bg.accent.base", "accentForeground": "semantic.fg.inverse" } }
+```
+
+Preview before writing config, then resolve as usual:
+
+```bash
+node <installed-ss-resolve>/scripts/import-tokens.mjs --source design/tokens.json --token-format dtcg
+node <installed-ss-resolve>/scripts/resolve-context.mjs --project-root . --artifact <id>
+```
+
+Formats: DTCG 2025.10, Tokens Studio export, Figma Variables (REST local-variables JSON). The import
+checks aliases, the designer's layering (primitive → semantic fg/bg/bd → type → component), modes, and
+the eleven contrast gates. A role the file cannot supply is an error naming the mapping to add; a
+failing contrast pair is reported to the system's owner, not corrected. Only imported values reach the
+bundle, palette JSON and `--ss-*` CSS. Fields, default role map and limits:
+[token canon guide](../ss-resolve/references/tokens.md).
 
 ### `list` — Show current tokens
 Read and display the requested token file in a formatted table.

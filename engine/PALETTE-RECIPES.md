@@ -25,6 +25,15 @@ key color + light/dark environment
 → JSON + CSS + generated-media anchors
 ```
 
+## Existing design systems
+
+A project that already owns a token system does not generate a palette. Its DTCG, Tokens Studio or
+Figma Variables file is recorded as the canon (`tokens` in `.styleseed/project.json`); the resolver maps
+the semantic roles below onto the imported tokens, measures the same contrast gates, and compiles only
+imported values. The recipe still supplies posture and semantic restrictions; its hex values are
+withheld. Roles the file cannot supply are mapped explicitly or reported, never generated. See the
+[token canon guide](.claude/skills/styleseed/workflows/ss-resolve/references/tokens.md).
+
 ## Generation model
 
 Use `engine/color/generate-palette.mjs` directly, `$ss-tokens generate color`, or persist the

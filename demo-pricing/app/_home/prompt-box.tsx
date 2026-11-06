@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { Fragment, useRef, useState } from "react";
 import { Check, Copy } from "lucide-react";
 import install from "@/content/install.json";
 import styles from "./home.module.css";
@@ -56,7 +56,9 @@ export function InstallCommand({ tone = "light", agent = "default", onCopied, va
     return (
       <div>
         <div className={styles.installLine}>
-          <code ref={commandRef} className={styles.installCode} tabIndex={0} aria-label="Install command; scroll horizontally to read">{command}</code>
+          <code ref={commandRef} className={styles.installCode} tabIndex={0} aria-label="Install command">
+            {command.split(" ").map((argument, index) => <Fragment key={`${index}-${argument}`}>{index > 0 ? " " : ""}<span className={styles.commandArgument}>{argument}</span></Fragment>)}
+          </code>
           <button type="button" className={styles.copyButton}
             onClick={() => copyText(command, commandRef.current, setState, onCopied)}
             aria-label={`Copy install command: ${command}`}>

@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { Comparison } from "./comparison";
+import competitorSource from "@/content/competitor-source.json";
+import versionInfo from "../../public/version.json";
 
 const BASE = "https://styleseed-demo.vercel.app";
 
@@ -77,12 +79,41 @@ export default function WhyPage() {
           <p className="mt-4 text-[16px] leading-relaxed text-neutral-600">
             Both dashboards below were &ldquo;built by AI&rdquo; from the same brief, with the
             same component library available. The left is what models ship by default. The
-            right is the same model reading StyleSeed&rsquo;s 74 design rules. Every fix is
+            right is the same model reading StyleSeed&rsquo;s {versionInfo.rules} design rules. Every fix is
             annotated with the rule that caused it.
           </p>
         </header>
 
         <Comparison />
+
+        <section id="workflow-fit" className="mt-20 scroll-mt-8 border-t border-neutral-200 pt-12">
+          <h2 className="max-w-3xl text-3xl font-bold tracking-tight">Why not just use the official frontend-design skill?</h2>
+          <p className="mt-5 max-w-3xl text-base leading-relaxed text-neutral-600">
+            Use both. Anthropic&rsquo;s official <code>frontend-design</code> skill helps establish
+            visual direction. StyleSeed carries recorded decisions across screens, sessions,
+            reference sets, and verification: it compiles only the rules selected for an artifact,
+            gives each rule an ID and priority, and records the checks that actually ran.
+            A blocking invariant fails independently of the score. People still own the design
+            judgment and any exceptions; passing a gate is not approval.
+          </p>
+          <div className="mt-6 flex flex-wrap gap-6 text-sm font-semibold text-teal-800">
+            <Link href="/claude-code-ui-design" className="inline-flex min-h-11 items-center underline underline-offset-4">Claude Code UI design workflow →</Link>
+            <Link href="/codex-ui-design" className="inline-flex min-h-11 items-center underline underline-offset-4">Codex UI design workflow →</Link>
+          </div>
+          <article className="mt-10 rounded-xl border border-neutral-200 bg-white p-6 sm:p-8">
+            <p className="text-sm text-neutral-500">Named peer · observed {competitorSource.observedAt}</p>
+            <h3 className="mt-3 text-xl font-semibold">{competitorSource.impeccable.name} is an execution-layer reference.</h3>
+            <p className="mt-4 max-w-3xl text-base leading-relaxed text-neutral-600">{competitorSource.impeccable.capabilitySummary}</p>
+            <p className="mt-4 max-w-3xl text-base leading-relaxed text-neutral-600">
+              {competitorSource.styleseedFocus} This is a capability-specific snapshot, not an overall ranking.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-6 text-sm font-semibold text-teal-800">
+              <a href={competitorSource.impeccable.repositoryUrl} target="_blank" rel="noreferrer" className="inline-flex min-h-11 items-center underline underline-offset-4">Repository ↗</a>
+              <a href={competitorSource.impeccable.cliSourceUrl} target="_blank" rel="noreferrer" className="inline-flex min-h-11 items-center underline underline-offset-4">CLI evidence ↗</a>
+              <a href={competitorSource.impeccable.hooksSourceUrl} target="_blank" rel="noreferrer" className="inline-flex min-h-11 items-center underline underline-offset-4">Hook evidence ↗</a>
+            </div>
+          </article>
+        </section>
       </div>
     </main>
   );

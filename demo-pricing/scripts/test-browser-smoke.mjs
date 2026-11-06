@@ -167,7 +167,9 @@ async function checkRoutes(browser, baseUrl, label, options) {
         }
         const installButton = page.getByRole("button", { name: /^Copy install command:/ }).first();
         if (await installButton.count()) {
-          const command = await installButton.locator("code").innerText();
+          // The landing's terminal variant keeps selectable code beside the copy button.
+          const command = (await installButton.getAttribute("aria-label")).replace(/^Copy install command: /, "");
+          assert(await page.getByText(command, { exact: true }).first().isVisible(), `${route}: install command is not visible`);
           await installButton.click();
           assert(await page.evaluate(() => navigator.clipboard.readText()) === command, `${route}: clipboard command differs from visible command`);
           // Clipboard denial must leave an exact, selectable command and readable recovery text.

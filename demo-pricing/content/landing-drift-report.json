@@ -1,0 +1,171 @@
+{
+  "measuredAt": "2026-11-05",
+  "measuredWith": "playwright/index.mjs",
+  "command": "node engine/.claude/skills/styleseed/workflows/ss-verify/scripts/drift-report.mjs --project-root <project> --states error index.html notifications.html settings.html",
+  "viewports": [
+    {
+      "width": 1440,
+      "height": 900
+    },
+    {
+      "width": 390,
+      "height": 844
+    }
+  ],
+  "baseline": "registry roles from .styleseed/palettes/payments-dashboard.json for colours, majority across screens for the rest. States re-measured: error.",
+  "verdict": "1 of 6 screens drift from the baseline on spacing base (settings). Values outside the shared set: radii (index); fonts (index); control heights (notifications, settings). On index, notifications, settings the primary action appears only in a state; the accent was read from the state variant.",
+  "axes": [
+    {
+      "axis": "accent",
+      "baseline": "#00736b",
+      "values": [
+        "none",
+        "#00736b",
+        "none",
+        "#00736b",
+        "none",
+        "#00736b"
+      ]
+    },
+    {
+      "axis": "ink",
+      "baseline": "#090c0b",
+      "values": [
+        "#090c0b",
+        "#4d5150 (different)",
+        "#090c0b",
+        "#4d5150 (different)",
+        "#090c0b",
+        "#4d5150 (different)"
+      ]
+    },
+    {
+      "axis": "canvas",
+      "baseline": "#eff5f4",
+      "values": [
+        "#eff5f4",
+        "#eff5f4",
+        "#eff5f4",
+        "#eff5f4",
+        "#eff5f4",
+        "#eff5f4"
+      ]
+    },
+    {
+      "axis": "spacing base",
+      "baseline": "4",
+      "values": [
+        "4",
+        "8 (different)",
+        "4",
+        "8 (different)",
+        "8 (different)",
+        "8 (different)"
+      ]
+    },
+    {
+      "axis": "spacing scale",
+      "baseline": "4, 8, 12, 16, 24",
+      "values": [
+        "4, 8, 12, 16",
+        "8, 16, 24, 32 (+32)",
+        "4, 8, 12, 16, 24",
+        "8, 16, 24, 32, 48 (+32, 48)",
+        "8, 16, 24, 32 (+32)",
+        "8, 16, 24, 32, 64 (+32, 64)"
+      ]
+    },
+    {
+      "axis": "type sizes",
+      "baseline": "12, 13, 14, 16",
+      "values": [
+        "12, 13, 14, 16",
+        "12, 13, 14, 16, 24 (+24)",
+        "12, 13, 14, 16",
+        "12, 14, 16, 24 (+24)",
+        "13, 14, 16",
+        "12, 14, 16, 24 (+24)"
+      ]
+    },
+    {
+      "axis": "radii",
+      "baseline": "0, 4, 6, 8",
+      "values": [
+        "0, 4, 6, 8, 999 (+999)",
+        "0, 4, 6, 8, 999 (+999)",
+        "0, 4, 6, 8",
+        "0, 4, 6, 8, 999 (+999)",
+        "0, 6, 8",
+        "0, 4, 6, 8, 999 (+999)"
+      ]
+    },
+    {
+      "axis": "fonts",
+      "baseline": "Pretendard Variable",
+      "values": [
+        "Pretendard Variable, ui-monospace (+ui-monospace)",
+        "Pretendard Variable",
+        "Pretendard Variable",
+        "Pretendard Variable",
+        "Pretendard Variable",
+        "Pretendard Variable"
+      ]
+    },
+    {
+      "axis": "control heights",
+      "baseline": "36, 44",
+      "values": [
+        "36, 44",
+        "36, 44",
+        "18, 36, 44 (+18)",
+        "36, 44",
+        "24, 32, 36, 44 (+24, 32)",
+        "36, 44"
+      ]
+    }
+  ],
+  "screens": [
+    {
+      "name": "index",
+      "url": "file:///Users/Shared/styleseed-demo-v6/payments-console/index.html"
+    },
+    {
+      "name": "index?state=error",
+      "url": "file:///Users/Shared/styleseed-demo-v6/payments-console/index.html?state=error",
+      "offScaleSpacing": [
+        12,
+        4
+      ]
+    },
+    {
+      "name": "notifications",
+      "url": "file:///Users/Shared/styleseed-demo-v6/payments-console/notifications.html"
+    },
+    {
+      "name": "notifications?state=error",
+      "url": "file:///Users/Shared/styleseed-demo-v6/payments-console/notifications.html?state=error",
+      "offScaleSpacing": [
+        12,
+        4
+      ]
+    },
+    {
+      "name": "settings",
+      "url": "file:///Users/Shared/styleseed-demo-v6/payments-console/settings.html",
+      "offScaleSpacing": [
+        4,
+        12
+      ]
+    },
+    {
+      "name": "settings?state=error",
+      "url": "file:///Users/Shared/styleseed-demo-v6/payments-console/settings.html?state=error",
+      "offScaleSpacing": [
+        12,
+        4
+      ]
+    }
+  ],
+  "statuses": "Statuses: `same`, `near` (within a shade of the baseline), `different`, `none` (not derived on that screen), `+values` (present here, absent from the shared set).",
+  "howToRead": "These are measurements of computed styles, not a score. The accent is what filled primary actions\nare painted with, then what links are coloured with; a screen whose primary action only appears in\na state (a save bar, a dialog) reads `none` at rest, so re-measure it with `--states`. A\n`different` value is a question for the owner of the design system, who may already have approved\nit. State variants (`?state=…`) count toward the verdict on the accent only; their text and\nspacing distributions describe the state, not the screen. No page text, screenshots, or URLs\nbeyond the ones passed in are written."
+}

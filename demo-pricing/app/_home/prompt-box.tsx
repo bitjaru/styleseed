@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { Check, Copy } from "lucide-react";
 import install from "@/content/install.json";
+import styles from "./home.module.css";
 
 export const INSTALL_COMMAND = install.default;
 
@@ -38,16 +39,47 @@ async function copyText(
   }
 }
 
-export function InstallCommand({ tone = "light", agent = "default", onCopied }: {
+export function InstallCommand({ tone = "light", agent = "default", onCopied, variant = "default", showOptions = true }: {
   tone?: "light" | "dark";
   agent?: "default" | "codex" | "claude";
   onCopied?: () => void;
+  variant?: "default" | "terminal";
+  showOptions?: boolean;
 }) {
   const [state, setState] = useState<CopyState>("idle");
   const commandRef = useRef<HTMLElement>(null);
   const dark = tone === "dark";
   const command = install[agent];
   const target = agent === "default" ? "Codex + Claude Code" : agent === "codex" ? "Codex" : "Claude Code";
+
+  if (variant === "terminal") {
+    return (
+      <div>
+        <div className={styles.installLine}>
+          <code ref={commandRef} className={styles.installCode} tabIndex={0} aria-label="Install command; scroll horizontally to read">{command}</code>
+          <button type="button" className={styles.copyButton}
+            onClick={() => copyText(command, commandRef.current, setState, onCopied)}
+            aria-label={`Copy install command: ${command}`}>
+            {state === "copied" ? <Check size={16} aria-hidden="true" /> : <Copy size={16} aria-hidden="true" />}
+            {state === "copied" ? "Copied" : "Copy"}
+          </button>
+        </div>
+        <p aria-live="polite" className={styles.copyStatus}>
+          {state === "failed"
+            ? "Clipboard access was blocked. The command is selected — copy it manually."
+            : state === "copied" ? "Copied. Run this in your project’s terminal." : ""}
+        </p>
+        {showOptions && (
+          <details className={`${styles.disclosure} ${styles.installOptions}`}>
+            <summary>Another agent or install options?</summary>
+            <p>Run in your project’s terminal. This copies the skill for {target} into this project and skips the selection menus.</p>
+            <p>For Cursor or another agent, run <code>{install.interactive}</code>. Choose your agent, Project, then Copy. Codex is included under Universal.</p>
+            <p><a href="/codex-ui-design">Codex setup</a> · <a href="/claude-code-ui-design">Claude Code setup</a>. If skills do not appear after installation, start a fresh agent session.</p>
+          </details>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -104,16 +136,40 @@ export function PromptBox({
   onCopied,
   hint,
   copyLabel,
+  variant = "default",
 }: {
   prompt?: string;
   hint?: string;
   copyLabel?: string;
   onCopied?: () => void;
   tone?: "light" | "dark";
+  variant?: "default" | "terminal";
 }) {
   const [state, setState] = useState<CopyState>("idle");
   const promptRef = useRef<HTMLElement>(null);
   const dark = tone === "dark";
+
+  if (variant === "terminal") {
+    return (
+      <div className={styles.prompt}>
+        <div className={styles.promptBody}>
+          <code ref={promptRef}>{prompt}</code>
+          <button type="button" className={styles.copyButton}
+            onClick={() => copyText(prompt, promptRef.current, setState, onCopied)}
+            aria-label={copyLabel ?? "Copy the advanced StyleSeed prompt"}>
+            {state === "copied" ? <Check size={16} aria-hidden="true" /> : <Copy size={16} aria-hidden="true" />}
+            {state === "copied" ? "Copied" : "Copy"}
+          </button>
+        </div>
+        <p aria-live="polite" className={styles.copyStatus}>
+          {state === "failed"
+            ? "Clipboard access was blocked. The prompt is selected — copy it manually."
+            : state === "copied" ? "Copied. Paste into your coding agent."
+            : hint ?? "Use this when you need the full workflow in one portable prompt."}
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div>

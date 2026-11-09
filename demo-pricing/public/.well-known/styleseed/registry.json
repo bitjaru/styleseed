@@ -20,7 +20,7 @@
   },
   "context": {
     "engineVersion": "5.0.0",
-    "engineRevision": "sha256:0c4bd5777dda0710f1103b168c706438f9e2de3a4988084cecad8f4ff8857a07",
+    "engineRevision": "sha256:37b8f0ececef29c0084f988b06b01a5ef0ed5504f098b8b4f380dd2f53b7fba7",
     "resolverSkill": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/styleseed/workflows/ss-resolve/WORKFLOW.md",
     "catalogUrl": "https://styleseed-demo.vercel.app/.well-known/styleseed/context-catalog.json",
     "grammarIds": [
@@ -191,7 +191,8 @@
       "exports": [
         "Badge"
       ],
-      "description": "",
+      "description": "A short, static label for a status, a category or a count.",
+      "contract": "engine/components/contracts/badge.md",
       "source": "engine/components/ui/badge.tsx",
       "sourceUrl": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/components/ui/badge.tsx",
       "imports": [
@@ -211,7 +212,8 @@
       "exports": [
         "Button"
       ],
-      "description": "",
+      "description": "Starts an action on the current screen: submit, save, open, delete.",
+      "contract": "engine/components/contracts/button.md",
       "source": "engine/components/ui/button.tsx",
       "sourceUrl": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/components/ui/button.tsx",
       "imports": [
@@ -420,7 +422,8 @@
       "exports": [
         "Input"
       ],
-      "description": "",
+      "description": "Single-line text entry: a name, an email, an amount, a search term.",
+      "contract": "engine/components/contracts/input.md",
       "source": "engine/components/ui/input.tsx",
       "sourceUrl": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/components/ui/input.tsx",
       "imports": [
@@ -593,7 +596,8 @@
         "SelectTrigger",
         "SelectValue"
       ],
-      "description": "",
+      "description": "Chooses one option from a list that is too long to show at once (five or more).",
+      "contract": "engine/components/contracts/select.md",
       "source": "engine/components/ui/select.tsx",
       "sourceUrl": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/components/ui/select.tsx",
       "imports": [
@@ -676,7 +680,8 @@
       "exports": [
         "Switch"
       ],
-      "description": "",
+      "description": "Turns one setting on or off, and the change applies immediately: notifications, dark mode, auto-renew.",
+      "contract": "engine/components/contracts/switch.md",
       "source": "engine/components/ui/switch.tsx",
       "sourceUrl": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/components/ui/switch.tsx",
       "imports": [
@@ -702,7 +707,8 @@
         "TableCell",
         "TableCaption"
       ],
-      "description": "",
+      "description": "Compares records across the same columns: orders, invoices, team members.",
+      "contract": "engine/components/contracts/table.md",
       "source": "engine/components/ui/table.tsx",
       "sourceUrl": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/components/ui/table.tsx",
       "imports": [
@@ -723,7 +729,8 @@
         "TabsTrigger",
         "TabsContent"
       ],
-      "description": "",
+      "description": "Switches between views of the same content in place, without leaving the page: Overview / Activity, Week / Month.",
+      "contract": "engine/components/contracts/tabs.md",
       "source": "engine/components/ui/tabs.tsx",
       "sourceUrl": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/components/ui/tabs.tsx",
       "imports": [

@@ -61,6 +61,7 @@ const initialSnapshot = gitSnapshot();
 const coreChecks = [
   ["Build context catalog", node, ["scripts/build-context-catalog.mjs"]],
   ["Build learning catalog", node, ["extensions/learning/runtime/scripts/build-learning-catalog.mjs"]],
+  ["Build component contracts", node, ["scripts/build-component-contracts.mjs"]],
   ["Build public catalogs", node, ["demo-pricing/scripts/build-llms.mjs"]],
   ["Build spacing proof", node, ["demo-pricing/scripts/build-spacing-proof.mjs"]],
   ["Validate skill contracts", node, ["scripts/validate-skill-contracts.mjs"]],

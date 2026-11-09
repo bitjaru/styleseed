@@ -144,7 +144,7 @@ function Section({
           >
             <div className="flex items-baseline justify-between">
               <h3 className="font-semibold group-hover:text-blue-600">{c.name}</h3>
-              <span className="text-[11px] text-gray-400">{(c.bytes / 1024).toFixed(1)}KB</span>
+              <span className="text-[11px] text-gray-400">{c.contract ? "Contract · " : ""}{(c.bytes / 1024).toFixed(1)}KB</span>
             </div>
             <code className="mt-1 block font-mono text-[11px] text-gray-500">{c.id}</code>
             {c.exports.length > 1 && (

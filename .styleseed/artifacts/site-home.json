@@ -29,7 +29,11 @@
     ],
     "tokenFiles": [
       "demo-pricing/app/globals.css",
-      "demo-pricing/app/skins.css"
+      "demo-pricing/app/skins.css",
+      "demo-pricing/app/_home/tokens.css",
+      "demo-pricing/app/_home/brand-palette.json",
+      "demo-pricing/app/_home/generate-brand-palette.mjs",
+      "demo-pricing/app/_home/STYLESEED.md"
     ]
   },
   "validation": {
@@ -67,6 +71,9 @@
         "hero-reduced-motion"
       ]
     },
-    "humanAcceptance": false
+    "humanAcceptance": false,
+    "functional": {
+      "scenarios": ["palette-selection", "clipboard-success-and-denial", "type-hierarchy", "spacing-preview", "recorded-gap-diagrams", "rule-disclosure", "manual-showcase-navigation", "keyboard-and-touch", "reduced-motion", "no-js-content"]
+    }
   }
 }

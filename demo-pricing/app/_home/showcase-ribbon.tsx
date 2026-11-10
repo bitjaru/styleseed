@@ -1,71 +1,24 @@
 "use client";
 
-import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
-import { Pause, Play } from "lucide-react";
+import { useRef, type ReactNode } from "react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import styles from "./home.module.css";
 
 export function ShowcaseRibbon({ children, count }: { children: ReactNode; count: number }) {
-  const rootRef = useRef<HTMLDivElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
-  const [paused, setPaused] = useState(false);
-
-  useEffect(() => {
-    const root = rootRef.current;
-    const track = trackRef.current;
-    if (!root || !track) return;
-    // CSS owns the loop. Its current time also locates every index on the fan's arc,
-    // so the nearest-to-centre cards stay upright and largest as the track moves.
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
-    let frame = 0;
-    let visible = false;
-    const syncPosition = () => {
-      const animation = track.getAnimations()[0];
-      const time = Number(animation?.currentTime ?? 0);
-      const groupWidth = (track.firstElementChild as HTMLElement).offsetWidth;
-      root.style.setProperty("--fan-offset", String((time % 90000) / 90000 * groupWidth));
-      if (visible && !reduced.matches && !document.hidden) frame = requestAnimationFrame(syncPosition);
-    };
-    const sync = () => {
-      cancelAnimationFrame(frame);
-      root.classList.toggle(styles.ribbonEnhanced, !reduced.matches);
-      root.dataset.running = String(visible && !reduced.matches && !document.hidden);
-      root.style.setProperty("--fan-centre", String(root.clientWidth / 2));
-      if (visible && !reduced.matches && !document.hidden) frame = requestAnimationFrame(syncPosition);
-    };
-    const resize = new ResizeObserver(sync);
-    resize.observe(root);
-    const observer = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; sync(); });
-    observer.observe(root);
-    reduced.addEventListener("change", sync);
-    document.addEventListener("visibilitychange", sync);
-    sync();
-    return () => {
-      cancelAnimationFrame(frame); resize.disconnect(); observer.disconnect();
-      reduced.removeEventListener("change", sync); document.removeEventListener("visibilitychange", sync);
-    };
-  }, []);
-
-  return (
-    <div ref={rootRef} className={styles.ribbon} data-paused={paused} style={{ "--fan-count": count } as CSSProperties}>
-      <div className={styles.ribbonViewport}>
-        <div ref={trackRef} className={styles.ribbonTrack} onFocusCapture={(event) => {
-          // Reset the paused track for keyboard browsing: an early link must not remain
-          // translated off the left edge, where native horizontal scrolling cannot reach it.
-          if (event.target instanceof HTMLElement && event.target.matches(":focus-visible")) {
-            for (const animation of trackRef.current?.getAnimations() ?? []) animation.currentTime = 0;
-            event.target.scrollIntoView({ block: "nearest", inline: "nearest", behavior: "instant" });
-          }
-        }}>
-          {children}
-        </div>
-      </div>
-      <div className={`${styles.container} ${styles.ribbonControls}`}>
-        <button type="button" className={styles.motionControl} aria-pressed={paused}
-          onClick={() => setPaused((value) => !value)}>
-          {paused ? <Play size={14} aria-hidden="true" /> : <Pause size={14} aria-hidden="true" />}
-          {paused ? "Resume motion" : "Pause motion"}
-        </button>
-      </div>
+  const viewport = useRef<HTMLDivElement>(null);
+  function move(direction: number) {
+    const element = viewport.current;
+    if (!element) return;
+    element.scrollBy({ left: direction * element.clientWidth * .8, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
+  }
+  return <div className={styles.ribbon}>
+    <div ref={viewport} className={styles.ribbonViewport} role="region" aria-label={`${count} StyleSeed showcase examples`} tabIndex={0}>
+      <div className={styles.ribbonTrack}>{children}</div>
     </div>
-  );
+    <div className={styles.ribbonControls}>
+      <button type="button" onClick={() => move(-1)} aria-label="Previous showcase examples"><ArrowLeft size={18} aria-hidden="true" /></button>
+      <span>{count} products. Their own design language.</span>
+      <button type="button" onClick={() => move(1)} aria-label="Next showcase examples"><ArrowRight size={18} aria-hidden="true" /></button>
+    </div>
+  </div>;
 }

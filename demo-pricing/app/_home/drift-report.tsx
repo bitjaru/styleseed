@@ -21,7 +21,6 @@ export function DriftReport() {
       <DriftExplorer />
       <div className={styles.terminalCommand}>
         <code data-command-source>{report.command}</code>
-        <code className={styles.typedCommand} data-command-typed aria-hidden="true" />
       </div>
     </ReportReveal>
     <div className={styles.reportCaption}>

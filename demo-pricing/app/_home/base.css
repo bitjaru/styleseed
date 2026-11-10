@@ -3,7 +3,7 @@ html:has([data-styleseed-home]), body:has([data-styleseed-home]) { overflow-x: c
 html:has([data-styleseed-home]) { scroll-padding-top: 32px; }
 [data-styleseed-home] { font-family: var(--home-font); font-synthesis: none; caret-color: var(--home-primary); scrollbar-color: var(--home-primary) var(--home-surface); }
 [data-styleseed-home] *, [data-styleseed-home] *::before, [data-styleseed-home] *::after { box-sizing: border-box; }
-[data-styleseed-home] ::selection { background: var(--home-mint); color: var(--home-foreground); }
+[data-styleseed-home] ::selection { background: var(--home-primaryTint); color: var(--home-foreground); }
 [data-styleseed-home] :focus-visible { outline: 2px solid var(--home-focus); outline-offset: 4px; }
 [data-styleseed-home] :is(h1, h2, h3) { overflow-wrap: break-word; min-width: 0; text-wrap: balance; }
 [data-styleseed-home] p { text-wrap: pretty; }

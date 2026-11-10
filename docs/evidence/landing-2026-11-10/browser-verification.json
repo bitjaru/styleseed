@@ -1,0 +1,146 @@
+{
+  "results": [
+    {
+      "scenario": "palette selection and actual clipboard",
+      "pass": true
+    },
+    {
+      "scenario": "keyboard palette selection",
+      "pass": true
+    },
+    {
+      "scenario": "type and spacing previews change rendered styles",
+      "pass": true
+    },
+    {
+      "scenario": "manual showcase navigation",
+      "pass": true
+    },
+    {
+      "scenario": "install copies, contracts to citrus check and preserves layout",
+      "pass": true
+    },
+    {
+      "scenario": "clipboard denial preserves manual copy",
+      "pass": true
+    },
+    {
+      "scenario": "desktop geometry",
+      "overflow": false,
+      "font": "Inter, \"Inter Fallback\", Inter, sans-serif",
+      "pass": true
+    },
+    {
+      "scenario": "recorded 4/4/8 values become exact 4x gap diagrams; all report tabs respond",
+      "pass": true
+    },
+    {
+      "scenario": "all 9 source rules remain accessible through native disclosure",
+      "pass": true
+    },
+    {
+      "scenario": "390px touch selection, 44px targets and no overflow",
+      "pass": true
+    },
+    {
+      "scenario": "install clipboard denial selects full command and does not overlap links on mobile",
+      "pass": true
+    },
+    {
+      "scenario": "reduced motion has complete visible result and no animation",
+      "pass": true
+    },
+    {
+      "scenario": "no-JS headline, installation, palette, report and all rules",
+      "pass": true
+    },
+    {
+      "scenario": "rendered brand, specimen, controls and action contrast",
+      "pairs": [
+        {
+          "label": "type display",
+          "foreground": "#0457f8",
+          "background": "#fbfcff",
+          "ratio": 5.5,
+          "minimum": 4.5
+        },
+        {
+          "label": "gap annotation",
+          "foreground": "#090b0f",
+          "background": "#e3f977",
+          "ratio": 16.96,
+          "minimum": 4.5
+        },
+        {
+          "label": "primary specimen",
+          "foreground": "#fafcff",
+          "background": "#0457f8",
+          "ratio": 5.49,
+          "minimum": 4.5
+        },
+        {
+          "label": "type stage",
+          "foreground": "#090b0f",
+          "background": "#f1f2f5",
+          "ratio": 17.59,
+          "minimum": 4.5
+        },
+        {
+          "label": "type selected",
+          "foreground": "#fafcff",
+          "background": "#0457f8",
+          "ratio": 5.49,
+          "minimum": 4.5
+        },
+        {
+          "label": "type unselected",
+          "foreground": "#090b0f",
+          "background": "#f1f2f5",
+          "ratio": 17.59,
+          "minimum": 4.5
+        },
+        {
+          "label": "spacing stage",
+          "foreground": "#090b0f",
+          "background": "#f1f2f5",
+          "ratio": 17.59,
+          "minimum": 4.5
+        },
+        {
+          "label": "spacing selected",
+          "foreground": "#fafcff",
+          "background": "#0457f8",
+          "ratio": 5.49,
+          "minimum": 4.5
+        },
+        {
+          "label": "spacing unselected",
+          "foreground": "#090b0f",
+          "background": "#f1f2f5",
+          "ratio": 17.59,
+          "minimum": 4.5
+        },
+        {
+          "label": "installation button",
+          "foreground": "#fafcff",
+          "background": "#0457f8",
+          "ratio": 5.49,
+          "minimum": 4.5
+        },
+        {
+          "label": "gap diagram fill against report background",
+          "foreground": "#65676a",
+          "background": "#090b0f",
+          "ratio": 3.47,
+          "minimum": 3
+        }
+      ],
+      "pass": true
+    },
+    {
+      "scenario": "compact modular brand, hover and keyboard focus treatment",
+      "pass": true
+    }
+  ],
+  "errors": []
+}

@@ -21,9 +21,9 @@ adapter contracts override contextual recipes, but never the core invariants.
 | 7 | [Icon Badge](#7-icon-badge-rules) | Size by context, 10% opacity bg |
 | 8 | [Card Structure](#8-card-internal-structure) | Header → Content → Footer |
 | 9 | [List Item](#9-list-item-rules) | Status dot + text same color |
-| 10 | [Selection UI](#10-selection-ui-rules-toggle--select) | Pill toggle only, no dropdowns |
+| 10 | [Selection UI](#10-selection-ui-rules-toggle--select) | Pill toggle inside consumer-service cards; native controls elsewhere |
 | 11 | [Briefing Cards](#11-briefingalert-card-rules) | Horizontal carousel |
-| 12 | [Shadow System](#12-shadow-system) | Opacity 4-8%, barely visible |
+| 12 | [Shadow System](#12-shadow-system) | Opacity 4-12%, barely visible |
 | 13 | [Page Layout](#13-page-layout-structure) | 430px, space-y-6, pb-24 |
 | 14 | [**Four Section Types**](#14-four-section-types) | **A(mx-6) B(px-6) C(carousel) D(hero)** |
 | 15 | [Card Division](#15-card-internal-division-rules) | border-t between chart and stats |
@@ -470,7 +470,8 @@ Inactive:      text-text-disabled (#9B9B9B)
 - Selected: key color + opacity 1.0 + glow
 - Unselected: gray + opacity 0.3
 - Legend rows also change opacity simultaneously (0.4)
-- `cursor-pointer` + `transition-all duration-300`
+- `cursor-pointer` + `duration-300` on named properties: `transition-opacity` on the fading rows,
+  `transition-[background-color,box-shadow]` on the selected dot
 
 ### Pill Toggle Placement Rules
 - In card header, **title on left, toggle on right** (flex justify-between)
@@ -870,11 +871,18 @@ Applies to every displayed amount: hero metrics, KPI metrics, list amounts, char
 | Color transition | `text-disabled` → `text-brand` | Nav, toggle |
 
 ### Transition Animations
-- `transition-all`: all interactive elements (combined color + shadow + opacity changes)
+- Name the properties that change: `transition-colors` for colour,
+  `transition-[color,background-color,box-shadow]` when a shadow or focus ring changes with it,
+  `transition-opacity` for fades, `transition-transform` for movement. `transition-all` is flagged
+  by detector SS003.
 - `duration-300`: donut/legend (slow transition for smooth feel)
 - `duration-[var(--duration-fast)]`: buttons/nav (quick feedback)
 
 ### Interaction Forbidden
+
+Scope: the `consumer-service` card recipe. Outside it, selectable rows (§18) and swipe-to-act on
+list rows (§73) are valid.
+
 ```
 ✗ Hover/click effects on cards themselves
 ✗ Hover highlight on list rows
@@ -1641,8 +1649,8 @@ NO  Running dark mode without card borders (shadows alone are invisible)
 | Variant | Background | Text | Pressed | Usage |
 |---------|-----------|------|---------|-------|
 | `default` (brandSolid) | `bg-brand` | white | `bg-brand/85` | **Primary CTA** (key color) |
-| `neutral` (neutralSolid) | `bg-[#2A2A2A]` | white | `bg-[#3C3C3C]` | Emphasis button (dark background) |
-| `secondary` (neutralWeak) | `bg-[#F3F4F5]` | text-primary | `bg-[#EAEBEC]` | Secondary button (light background) |
+| `neutral` (neutralSolid) | `bg-foreground` | `text-background` | `bg-foreground/90` | Emphasis button (inverse of the page; flips with the theme) |
+| `secondary` (neutralWeak) | `bg-secondary` | text-primary | `bg-accent` | Secondary button (quiet surface) |
 | `destructive` (criticalSolid) | `bg-destructive` | white | `bg-destructive/85` | Dangerous action (delete, etc.) |
 | `outline` | transparent + border | text-primary | `bg-surface-muted/50` | Bordered button |
 | `ghost` | transparent | text-primary | `bg-surface-muted/50` | Minimal button |
@@ -1652,13 +1660,14 @@ NO  Running dark mode without card borders (shadows alone are invisible)
 
 | Size | Height | Radius | Text | Padding X | Icon | Usage |
 |------|--------|--------|------|----------|------|-------|
-| `xs` | **32px** | **pill** (`rounded-full`) | 13px bold | 14px | 14px | Chips, tags, filters |
-| `sm` | **36px** | **10px** (`rounded-lg`) | 14px bold | 14px | 14px | Inline secondary |
-| `md` | **40px** | **10px** (`rounded-lg`) | 14px bold | 16px | 16px | **Default button** |
-| `lg` | **52px** | **14px** (`rounded-xl`) | 18px bold | 20px | 22px | **Large CTA** |
-| `icon` | **40px** | **pill** (`rounded-full`) | -- | -- | 18px | TopBar icons |
+| `xs` | **32px** | recipe control radius | 13px bold | 14px | 14px | Chips, tags, filters |
+| `sm` | **36px** | recipe control radius | 14px bold | 14px | 14px | Inline secondary |
+| `md` | **40px** | recipe control radius | 14px bold | 16px | 16px | **Default button** |
+| `lg` | **52px** | recipe control radius | 18px bold | 20px | 22px | **Large CTA** |
+| `icon` | **40px** | recipe control radius | -- | -- | 18px | TopBar icons |
 
-Key point: **Only xs is pill (fully rounded)**. sm/md are 10px (`rounded-lg`), lg is 14px (`rounded-xl`). Buttons are NOT all pill-shaped.
+Key point: every size takes the **recipe control radius** (`ss-pattern-control` → `--ss-control-radius`,
+set by the brand recipe), so buttons are pill-shaped only when the recipe's controls are.
 
 ### Button States
 
@@ -1699,7 +1708,7 @@ OK  active:bg-brand/85 (slightly darker on press)
 |----------|-------|
 | Height | `h-[52px]` (lg) |
 | Width | `w-full` |
-| Corners | `rounded-xl` (12px) |
+| Corners | recipe control radius |
 | Text | 18px bold white |
 | Background | `bg-brand` |
 | When fixed to bottom | `backdrop-blur-lg bg-card/80` + `pb-safe` |
@@ -2505,7 +2514,8 @@ Use the artifact's declared viewports and input modes; preserve the task at each
 4. **Preserve meaningful hierarchy.** Type, media, and controls can recompose at
    narrow widths; do not require a hero to remain the largest element if that
    hides the task. Inspect real text, image crops, and comparison context.
-5. **Touch affordances:** swipe-to-act on list rows, bottom sheets instead of
+5. **Touch affordances:** swipe-to-act on list rows (list pages in productivity and
+   operations products, not inside `consumer-service` cards, §24), bottom sheets instead of
    center modals, ≥44px everything.
 6. **Hover is a bonus, not a requirement** — anything reachable only on hover must
    also be reachable by tap/focus.

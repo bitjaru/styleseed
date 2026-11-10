@@ -50,7 +50,7 @@ function TopBarAction({
       data-slot="top-bar-action"
       className={cn(
         "relative size-10 ss-pattern-control border border-surface-muted bg-card flex items-center justify-center",
-        "transition-all",
+        "transition-[color,background-color,border-color,box-shadow]",
         "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
         className,
       )}

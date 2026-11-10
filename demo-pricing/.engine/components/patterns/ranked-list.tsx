@@ -40,7 +40,7 @@ function RankedList({
           <div
             key={item.rank}
             className={cn(
-              "flex items-center justify-between p-5 ss-pattern-inset transition-all",
+              "flex items-center justify-between p-5 ss-pattern-inset transition-[background-color,border-color,border-width]",
               item.isHighlighted
                 ? "bg-brand-tint border-2 border-brand"
                 : "bg-surface-subtle",

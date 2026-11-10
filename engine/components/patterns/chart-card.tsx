@@ -55,7 +55,7 @@ function ChartCard({
                 key={period}
                 onClick={() => onPeriodChange?.(period)}
                 className={cn(
-                  "px-4 py-1.5 text-[11px] font-semibold ss-pattern-control transition-all",
+                  "px-4 py-1.5 text-[11px] font-semibold ss-pattern-control transition-[color,background-color,box-shadow]",
                   activePeriod === period
                     ? "bg-brand text-white shadow-sm"
                     : "text-text-tertiary",

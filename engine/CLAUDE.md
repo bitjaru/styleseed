@@ -761,8 +761,8 @@ Uses motion tokens defined as CSS variables:
 - `--ease-spring`: Elastic micro-interactions
 
 ```tsx
-// Example: using tokens in transitions
-className="transition-all duration-[var(--duration-normal)] ease-[var(--ease-default)]"
+// Example: using tokens in transitions; name the properties (detector SS003 flags transition-all)
+className="transition-colors duration-[var(--duration-normal)] ease-[var(--ease-default)]"
 
 // For simple cases, Tailwind shorthand also works
 className="transition-colors"  // Uses Tailwind defaults

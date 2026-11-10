@@ -1,7 +1,7 @@
 "use client";
 
-import { Fragment, useRef, useState } from "react";
-import { Check, Copy } from "lucide-react";
+import { Fragment, useEffect, useRef, useState } from "react";
+import { Check, Copy, LoaderCircle } from "lucide-react";
 import install from "@/content/install.json";
 import styles from "./home.module.css";
 
@@ -10,7 +10,7 @@ export const INSTALL_COMMAND = install.default;
 export const STYLESEED_PROMPT =
   `Install StyleSeed: \`${INSTALL_COMMAND}\`. Use /styleseed in Claude Code or $styleseed in Codex. Help apply our design decisions, not replace our design system. Inspect approved tokens, components, and choices first; report unsupported choices instead of silently remapping them. Resolve the selected artifact's contract when a registry exists; use STYLESEED.md only for a legacy project. Choose only unresolved grammar, adapter, recipe, and palette inputs. If the direction is open, use ss-studio and require my selection; compile unmodeled references with ss-reference. Build from the resolved contract, score to ≥80, and inspect the rendered result and relevant interactions. Report evidence and unresolved decisions; a score is not my approval.`;
 
-type CopyState = "idle" | "copied" | "failed";
+type CopyState = "idle" | "copying" | "copied" | "failed";
 
 function selectForManualCopy(node: HTMLElement | null) {
   if (!node) return;
@@ -21,22 +21,29 @@ function selectForManualCopy(node: HTMLElement | null) {
   selection?.addRange(range);
 }
 
-async function copyText(
-  text: string,
-  node: HTMLElement | null,
-  setState: (state: CopyState) => void,
-  onCopied?: () => void,
-) {
-  try {
-    if (!navigator.clipboard) throw new Error("Clipboard API unavailable");
-    await navigator.clipboard.writeText(text);
+function useCopyFeedback() {
+  const [state, setState] = useState<CopyState>("idle");
+  const request = useRef(0);
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => () => { request.current++; if (timer.current) clearTimeout(timer.current); }, []);
+  async function copy(text: string, node: HTMLElement | null, onCopied?: () => void) {
+    const current = ++request.current;
+    if (timer.current) clearTimeout(timer.current);
+    setState("copying");
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      if (current !== request.current) return;
+      selectForManualCopy(node);
+      setState("failed");
+      return;
+    }
+    if (current !== request.current) return;
     setState("copied");
+    timer.current = setTimeout(() => setState("idle"), 1200);
     onCopied?.();
-    window.setTimeout(() => setState("idle"), 1800);
-  } catch {
-    selectForManualCopy(node);
-    setState("failed");
   }
+  return { state, copy };
 }
 
 export function InstallCommand({ tone = "light", agent = "default", onCopied, variant = "default", showOptions = true }: {
@@ -46,7 +53,7 @@ export function InstallCommand({ tone = "light", agent = "default", onCopied, va
   variant?: "default" | "terminal";
   showOptions?: boolean;
 }) {
-  const [state, setState] = useState<CopyState>("idle");
+  const { state, copy } = useCopyFeedback();
   const commandRef = useRef<HTMLElement>(null);
   const dark = tone === "dark";
   const command = install[agent];
@@ -59,11 +66,11 @@ export function InstallCommand({ tone = "light", agent = "default", onCopied, va
           <code ref={commandRef} className={styles.installCode} tabIndex={0} aria-label="Install command">
             {command.split(" ").map((argument, index) => <Fragment key={`${index}-${argument}`}>{index > 0 ? " " : ""}<span className={styles.commandArgument}>{argument}</span></Fragment>)}
           </code>
-          <button type="button" className={styles.copyButton}
-            onClick={() => copyText(command, commandRef.current, setState, onCopied)}
+          <button type="button" className={styles.copyButton} data-copy-state={state} aria-busy={state === "copying"} disabled={state === "copying"}
+            onClick={() => copy(command, commandRef.current, onCopied)}
             aria-label={`Copy install command: ${command}`}>
-            {state === "copied" ? <Check size={16} aria-hidden="true" /> : <Copy size={16} aria-hidden="true" />}
-            {state === "copied" ? "Copied" : "Copy"}
+            {state === "copying" ? <LoaderCircle className={styles.copySpinner} size={16} aria-hidden="true" /> : state === "copied" ? <Check size={16} aria-hidden="true" /> : <Copy size={16} aria-hidden="true" />}
+            <span className={styles.copyLabel}>Copy</span>
           </button>
         </div>
         <p aria-live="polite" className={styles.copyStatus}>
@@ -87,7 +94,7 @@ export function InstallCommand({ tone = "light", agent = "default", onCopied, va
     <div>
       <button
         type="button"
-        onClick={() => copyText(command, commandRef.current, setState, onCopied)}
+        onClick={() => copy(command, commandRef.current, onCopied)}
         className="group flex w-full items-center justify-between gap-3 rounded-xl bg-teal-700 px-4 py-4 text-left text-white shadow-[0_14px_30px_-18px_rgba(15,118,110,0.9)] transition-colors hover:bg-teal-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-teal-700 sm:gap-4 sm:px-5"
         aria-label={`Copy install command: ${command}`}
       >
@@ -147,7 +154,7 @@ export function PromptBox({
   tone?: "light" | "dark";
   variant?: "default" | "terminal";
 }) {
-  const [state, setState] = useState<CopyState>("idle");
+  const { state, copy } = useCopyFeedback();
   const promptRef = useRef<HTMLElement>(null);
   const dark = tone === "dark";
 
@@ -156,11 +163,11 @@ export function PromptBox({
       <div className={styles.prompt}>
         <div className={styles.promptBody}>
           <code ref={promptRef}>{prompt}</code>
-          <button type="button" className={styles.copyButton}
-            onClick={() => copyText(prompt, promptRef.current, setState, onCopied)}
+          <button type="button" className={styles.copyButton} data-copy-state={state} aria-busy={state === "copying"} disabled={state === "copying"}
+            onClick={() => copy(prompt, promptRef.current, onCopied)}
             aria-label={copyLabel ?? "Copy the advanced StyleSeed prompt"}>
-            {state === "copied" ? <Check size={16} aria-hidden="true" /> : <Copy size={16} aria-hidden="true" />}
-            {state === "copied" ? "Copied" : "Copy"}
+            {state === "copying" ? <LoaderCircle className={styles.copySpinner} size={16} aria-hidden="true" /> : state === "copied" ? <Check size={16} aria-hidden="true" /> : <Copy size={16} aria-hidden="true" />}
+            <span className={styles.copyLabel}>Copy</span>
           </button>
         </div>
         <p aria-live="polite" className={styles.copyStatus}>
@@ -188,7 +195,7 @@ export function PromptBox({
         </code>
         <button
           type="button"
-          onClick={() => copyText(prompt, promptRef.current, setState, onCopied)}
+          onClick={() => copy(prompt, promptRef.current, onCopied)}
           className="absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-lg bg-white/10 px-2.5 py-2 text-[13px] font-bold text-white hover:bg-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
           aria-label={copyLabel ?? (prompt === STYLESEED_PROMPT ? "Copy the advanced StyleSeed prompt" : "Copy this task prompt")}
         >

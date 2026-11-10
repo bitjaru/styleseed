@@ -1,6 +1,10 @@
 // Read-only browser probe for reference measurement: pass to page.evaluate in a browser the
-// caller controls. It reads computed styles of visible elements and returns counts only.
-// No navigation, requests, interaction, DOM writes, screenshots, text, URLs, or form values leave the page.
+// caller controls. It reads computed styles of visible elements and returns counts keyed by
+// numbers, enums, CSS values, and font family names. No navigation, requests, interaction, DOM
+// writes, screenshots, text, selectors, class names, element ids, asset URLs, or form values leave
+// the page. Geometry (region and section rectangles) is recorded by the separate structure probe
+// (observe-structure.mjs) as numbers, under the same boundary; caps per viewport there: 8 regions,
+// 40 sections, 12 tables, 12 lists, 8 tab sets.
 // Counts are measurements of one rendered viewport; they are not design judgments or role decisions.
 export function observeDesign({ maxElements = 5000 } = {}) {
   const tally = (map, key, weight = 1) => { if (key === undefined || key === null || key === '') return; map[key] = (map[key] || 0) + weight; };
@@ -34,6 +38,7 @@ export function observeDesign({ maxElements = 5000 } = {}) {
     actions: {}, actionText: {}, links: {}, text: {}, headings: {}, surfaces: {},
     spacing: {}, type: {}, radii: {}, controlHeights: {}, fonts: {}, shadows: {}, borders: {},
     body: { color: null, background: null, fontFamily: null, fontSize: null },
+    actionPairs: {}, motion: { transitions: {}, animations: {} }, targets: {}, tabular: 0,
   };
   const bodyStyle = document.body ? getComputedStyle(document.body) : null;
   if (bodyStyle) {
@@ -50,6 +55,19 @@ export function observeDesign({ maxElements = 5000 } = {}) {
     return false;
   };
   const hasOwnText = el => { for (const node of el.childNodes) if (node.nodeType === 3 && node.textContent.trim().length > 1) return true; return false; };
+  const interactive = el => ['A', 'BUTTON', 'INPUT', 'SELECT', 'TEXTAREA', 'SUMMARY'].includes(el.tagName) || ['button', 'link', 'tab', 'menuitem', 'checkbox', 'switch', 'radio', 'combobox', 'textbox', 'option'].includes(el.getAttribute('role'));
+  // Motion values: comma lists split outside parentheses; easings keep keywords and numeric functions only.
+  const list = value => String(value || '').split(/,(?![^()]*\))/).map(v => v.trim()).filter(Boolean);
+  const ms = value => { const n = parseFloat(value); return Number.isFinite(n) ? Math.round(/ms$/.test(value) ? n : n * 1000) : 0; };
+  const easing = value => (/^(ease|ease-in|ease-out|ease-in-out|linear|step-start|step-end)$/.test(value) || /^(cubic-bezier|steps|linear)\([-\d.,\s%a-z]*\)$/.test(value) ? value : 'other');
+  const propFamily = prop => {
+    if (prop === 'all' || prop === 'opacity' || prop === 'transform') return prop;
+    if (/^(translate|scale|rotate)$/.test(prop)) return 'transform';
+    if (/color$|^fill$|^stroke$|^background$/.test(prop)) return 'color';
+    if (/shadow/.test(prop)) return 'shadow';
+    if (/^(width|height|max-|min-|margin|padding|inset|top|right|bottom|left|flex|grid)/.test(prop)) return 'layout';
+    return 'other';
+  };
   const all = document.querySelectorAll('body *');
   for (const el of all) {
     if (out.elements >= maxElements) { out.truncated = true; break; }
@@ -67,11 +85,27 @@ export function observeDesign({ maxElements = 5000 } = {}) {
       const key = transparent(bg) ? `text:${fg}` : `bg:${bg}`;
       tally(out.actions, key); tally(out.actionText, fg);
       tally(out.controlHeights, Math.round(rect.height));
+      if (!transparent(bg)) tally(out.actionPairs, `${bg}|${fg}`);
     } else if (isLink) {
       tally(out.links, fg);
     }
+    if (isAction || interactive(el)) tally(out.targets, Math.round(Math.min(rect.width, rect.height)));
+    const durations = list(cs.transitionDuration);
+    if (durations.some(d => ms(d) > 0)) {
+      const props = list(cs.transitionProperty), easings = list(cs.transitionTimingFunction);
+      durations.forEach((d, i) => { if (ms(d) > 0) tally(out.motion.transitions, `${propFamily(props[i % props.length] || 'all')}|${ms(d)}|${easing(easings[i % easings.length] || 'ease')}`); });
+    }
+    if (cs.animationName && cs.animationName !== 'none') {
+      const durs = list(cs.animationDuration), easings = list(cs.animationTimingFunction), counts = list(cs.animationIterationCount);
+      list(cs.animationName).forEach((name, i) => {
+        const d = ms(durs[i % durs.length] || '0s');
+        const n = counts[i % counts.length] || '1';
+        if (name !== 'none' && d > 0) tally(out.motion.animations, `${d}|${easing(easings[i % easings.length] || 'ease')}|${n === 'infinite' ? 'infinite' : Number(n) || 1}`);
+      });
+    }
     if (hasOwnText(el)) {
       if (/^H[1-6]$/.test(el.tagName)) tally(out.headings, fg); else if (!isAction && !isLink) tally(out.text, fg);
+      if (/tabular-nums/.test(cs.fontVariantNumeric) || /["']tnum["']/.test(cs.fontFeatureSettings)) out.tabular++;
       const family = cs.fontFamily.split(',')[0].replace(/["']/g, '').trim();
       tally(out.fonts, family);
       tally(out.type, `${px(cs.fontSize)}|${cs.fontWeight}|${px(cs.lineHeight) ?? 'normal'}`);

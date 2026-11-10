@@ -1,5 +1,8 @@
 // Pure analysis of observe-design output. No I/O, no browser. Every derived value names the
 // counts it came from, so a human can disagree with the derivation and keep the observation.
+// When observations carry `.structure` (observe-structure, same page load), the summary also
+// carries the structure summary and the flat facts list (analyze-structure.mjs).
+import { structureSummary, buildFacts } from './analyze-structure.mjs';
 
 export function parseColor(value) {
   if (typeof value !== 'string') return null;
@@ -88,6 +91,91 @@ export function radiusFamilies(hist, { minShare = 0.03 } = {}) {
   return entries.filter(([, v]) => total && v / total >= minShare).map(([k]) => k).sort((a, b) => a - b);
 }
 
+// Shadow family of a computed box-shadow, read from its visible layers (transparent and all-zero
+// layers, such as the ring placeholders utility CSS stacks in front, are skipped): the largest
+// outer blur decides tight (up to 4px), soft (up to 16px), raised (up to 32px), or floating; a
+// shadow made only of spread is a ring, one made only of inset layers is inset.
+export function shadowFamily(value) {
+  const s = String(value || '').trim();
+  if (!s || s === 'none') return null;
+  const layers = s.split(/,(?![^()]*\))/).map(layer => {
+    const colour = layer.match(/[a-z-]+\([^)]*\)|#[0-9a-f]+/i)?.[0] ?? null;
+    const [x = 0, y = 0, blur = 0, spread = 0] = [...layer.replace(/[a-z-]+\([^)]*\)|#[0-9a-f]+/gi, ' ').matchAll(/(-?[\d.]+)px/g)].map(m => Number(m[1]));
+    return { inset: /\binset\b/.test(layer), transparent: colour !== null && parseColor(colour)?.[3] === 0, x, y, blur, spread };
+  }).filter(l => !l.transparent && (l.x || l.y || l.blur || l.spread));
+  if (!layers.length) return null;
+  const outer = layers.filter(l => !l.inset);
+  if (!outer.length) return 'inset';
+  const cast = outer.filter(l => l.x || l.y || l.blur);
+  if (!cast.length) return 'ring';
+  const blur = Math.max(...cast.map(l => l.blur));
+  return blur <= 4 ? 'tight' : blur <= 16 ? 'soft' : blur <= 32 ? 'raised' : 'floating';
+}
+
+// The most frequent numeric key of a histogram; ties go to the smaller value.
+function modeKey(hist) {
+  const entries = Object.entries(hist || {}).map(([k, v]) => [Number(k), Number(v)]).filter(([k]) => Number.isFinite(k));
+  entries.sort((a, b) => b[1] - a[1] || a[0] - b[0]);
+  return entries.length ? entries[0][0] : null;
+}
+const total = hist => Object.values(hist || {}).reduce((sum, n) => sum + Number(n), 0);
+const share = (n, of) => (of ? Math.round((n / of) * 100) / 100 : 0);
+
+// What observe-design collects beyond the roles: border, elevation, heading and muted ink, the
+// surface colour, the colour on accent-filled actions, motion, scroll depth, target sizes, and
+// tabular numerals. Additive to the summary; per-viewport values are keyed by viewport width.
+export function summarizeExtras(list, roles) {
+  const borders = sortedEntries(mergeCounts(list.map(o => o.borders)));
+  const border = borders.length ? { width: Number(borders[0][0].split('|')[0]), color: toHex(borders[0][0].split('|')[1]), count: borders[0][1], distinct: borders.length } : null;
+  const shadows = mergeCounts(list.map(o => o.shadows));
+  const families = {};
+  for (const [value, count] of Object.entries(shadows)) { const f = shadowFamily(value); if (f) families[f] = (families[f] || 0) + count; }
+  const shadowTotal = total(families);
+  const elevation = {
+    families: Object.fromEntries(sortedEntries(families)),
+    levels: Object.entries(families).filter(([f, n]) => !['ring', 'inset'].includes(f) && n / shadowTotal >= 0.03).length,
+    distinct: Object.keys(shadows).length,
+  };
+  const headingInk = toHex(sortedEntries(mergeCounts(list.map(o => o.headings)))[0]?.[0]) || null;
+  const texts = sortedEntries(mergeCounts(list.map(o => o.text))).map(([c, n]) => [toHex(c), n]).filter(([c]) => c);
+  const muted = texts.find(([c]) => c !== roles.ink && (!roles.canvas || roles.inkContrast === null || (contrastRatio(c, roles.canvas) ?? Infinity) < roles.inkContrast));
+  const mutedInk = muted ? muted[0] : null;
+  const surface = sortedEntries(mergeCounts(list.map(o => o.surfaces))).map(([c]) => toHex(c)).find(c => c && c !== roles.canvas) || null;
+  const pairs = sortedEntries(mergeCounts(list.map(o => o.actionPairs))).map(([k]) => k.split('|').map(toHex));
+  const onAccent = roles.accent ? (pairs.find(([bg]) => bg === roles.accent)?.[1] ?? null) : null;
+  const transitions = mergeCounts(list.map(o => o.motion?.transitions)), animations = mergeCounts(list.map(o => o.motion?.animations));
+  const durations = {}, easings = {}, properties = {};
+  for (const [key, n] of Object.entries(transitions)) {
+    const [family, ms, easing] = key.split('|');
+    durations[ms] = (durations[ms] || 0) + n; easings[easing] = (easings[easing] || 0) + n; properties[family] = (properties[family] || 0) + n;
+  }
+  const easingList = Object.entries(easings).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).map(([e]) => e);
+  const motion = {
+    transitions: total(transitions), durations: radiusFamilies(durations), duration: modeKey(durations),
+    easing: easingList[0] ?? null, easings: easingList.slice(0, 3), properties: Object.fromEntries(sortedEntries(properties)),
+    animations: total(animations), infinite: Object.entries(animations).filter(([k]) => k.endsWith('|infinite')).reduce((sum, [, n]) => sum + n, 0),
+  };
+  const scrollDepth = {}, targets = {}, tabular = {};
+  for (const o of list) {
+    const width = o.viewport?.width;
+    if (!width) continue;
+    if (o.documentHeight && o.viewport.height) scrollDepth[width] = Math.round((o.documentHeight / o.viewport.height) * 100) / 100;
+    const t = total(o.targets);
+    if (t) {
+      const sizes = Object.entries(o.targets).map(([k, n]) => [Number(k), Number(n)]);
+      targets[width] = { count: t, mode: modeKey(o.targets), under44Share: share(sizes.filter(([k]) => k < 44).reduce((s, [, n]) => s + n, 0), t), under24Share: share(sizes.filter(([k]) => k < 24).reduce((s, [, n]) => s + n, 0), t) };
+    }
+    if (typeof o.tabular === 'number') tabular[width] = { count: o.tabular, share: share(o.tabular, total(o.type)) };
+  }
+  return {
+    bodyFontSize: list[0]?.body?.fontSize ?? null,
+    border, elevation, headingInk, mutedInk, mutedInkContrast: mutedInk && roles.canvas ? contrastRatio(mutedInk, roles.canvas) : null,
+    surface, onAccent, onAccentContrast: onAccent && roles.accent ? contrastRatio(onAccent, roles.accent) : null,
+    motion, scrollDepth, targets, tabular,
+    distinct: { controlHeights: Object.keys(mergeCounts(list.map(o => o.controlHeights))).length, radii: Object.keys(mergeCounts(list.map(o => o.radii))).length },
+  };
+}
+
 // Roles: the accent is what primary actions are painted with, then what links are coloured with.
 // The tool never promotes a colour that only appears in large surfaces or pictures.
 export function deriveRoles(obs) {
@@ -136,12 +224,19 @@ export function summarize(observations) {
   const accentAgrees = perViewport.every(v => v.accent === roles.accent);
   const fonts = sortedEntries(mergeCounts(list.map(o => o.fonts))).slice(0, 4).map(([family, count]) => ({ family, count }));
   const colorCount = new Set([...Object.keys(merged.text), ...Object.keys(merged.surfaces), ...Object.keys(merged.links), ...Object.keys(merged.actions).map(k => k.replace(/^(bg|text):/, ''))].map(toHex).filter(Boolean)).size;
-  return {
+  const out = {
     spacingBase: spacing.base, spacingScale: spacing.scale, spacingCoverage: spacing.coverage, offScale: spacing.offScale,
     typeSteps: type.steps.length, typeStepDetail: type.steps, distinctFontSizes: type.distinctSizes,
     radii, controlHeights, fonts, colorCount,
     accentDerived: roles.accent, accentFrom: roles.accentFrom, accentAgreesAcrossViewports: accentAgrees, perViewport,
     ink: roles.ink, canvas: roles.canvas, inkContrast: roles.inkContrast, accentContrast: roles.accentContrast,
     roleEvidence: roles.evidence,
+    ...summarizeExtras(list, roles),
   };
+  const structures = list.map(o => o && o.structure).filter(Boolean);
+  if (structures.length) {
+    out.structure = structureSummary(structures);
+    out.facts = buildFacts(out, out.structure).facts;
+  }
+  return out;
 }

@@ -27,6 +27,7 @@
           "title": { "type": "string" },
           "accessedAt": { "type": "string", "format": "date" },
           "evidence": { "$ref": "#/$defs/evidence" },
+          "robots": { "enum": ["allowed", "disallowed", "not-checked"], "description": "robots.txt verdict for the measured path (measure-reference.mjs --robots); see README, Sources and conduct" },
           "note": { "type": "string" }
         }
       }

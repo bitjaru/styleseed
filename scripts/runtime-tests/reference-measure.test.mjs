@@ -78,15 +78,23 @@ test("CLI argument parsing and drafts", () => {
   const args = parseArgs(["https://example.com/settings", "--out", "/tmp/x", "--id", "example-settings-2026-11-05", "--designlang"]);
   assert.deepEqual(args.urls, ["https://example.com/settings"]);
   assert.equal(args.designlang, true);
+  assert.deepEqual([args.robots, args.ownSite], [false, false]);
+  assert.deepEqual((({ robots, ownSite }) => [robots, ownSite])(parseArgs(["https://example.com/", "--out", "/tmp/x", "--robots", "--own-site"])), [true, true]);
   assert.throws(() => parseArgs(["ftp://x", "--out", "/tmp/x"]), /http/);
   assert.throws(() => parseArgs(["https://example.com"]), /--out/);
   assert.throws(() => parseArgs(["https://example.com", "--out", "/tmp/x", "--smart"]), /unknown option/);
   const summary = summarize([observation()]);
   const draft = caseDraft({ id: "example-settings-2026-11-05", url: "https://example.com/settings", files: ["measurements/summary.json"], summary, observedAt: "2026-11-05" });
   assert.equal(draft.sources[0].evidence, "observed");
+  assert.equal(draft.sources[0].robots, "not-checked");
+  assert.equal(caseDraft({ id: "x-2026-11-05", url: "https://example.com/", files: [], summary, observedAt: "2026-11-05", robots: { status: "allowed" } }).sources[0].robots, "allowed");
   assert.equal(draft.measurements.summary.accentDerived, "#0f766e");
+  assert.deepEqual(Object.keys(draft.measurements.summary).sort(), ["accentDerived", "colorCount", "radii", "spacingBase", "spacingScale", "typeSteps"], "the draft summary keeps the schema's keys");
   assert.deepEqual(draft.decisions, []);
+  // Without structure observations the seven unmeasured axes stay unknown; the table gains the decision column.
   const md = twelveAxesDraft("https://example.com/settings", summary);
   assert.match(md, /\| color \| accent #0f766e \(from filled-actions\)/);
+  assert.match(md, /\| Axis \| Measured or derived value \| Level \| Decision \(person\) \|/);
   assert.equal((md.match(/\| unknown \|/g) || []).length, 7);
+  assert.match(md, /\| attention \| unknown — observe on the live surface and record the source \| unknown \| open: the intended focal point \|/);
 });

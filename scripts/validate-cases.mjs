@@ -1,14 +1,17 @@
 #!/usr/bin/env node
 // Validate research/cases/**/case.json without external dependencies.
 // Checks the schema's required fields, enums, id/folder match, source references,
-// measurement files on disk, and the promotion and approval rules the README states.
+// measurement files on disk, and the review, promotion and approval rules the README states.
+//
+//   node scripts/validate-cases.mjs [cases-dir]   (defaults to research/cases; the schema always
+//                                                  comes from research/cases/schema)
 import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
 import { join, dirname, basename, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const casesDir = join(root, "research", "cases");
-const schema = JSON.parse(readFileSync(join(casesDir, "schema", "case.schema.json"), "utf8"));
+const casesDir = process.argv[2] ? resolve(process.argv[2]) : join(root, "research", "cases");
+const schema = JSON.parse(readFileSync(join(root, "research", "cases", "schema", "case.schema.json"), "utf8"));
 
 const problems = [];
 const note = (file, msg) => problems.push(`${file}: ${msg}`);
@@ -40,6 +43,7 @@ function check(value, def, path, file, rootObj) {
   } else if (def.type === "string") {
     if (typeof value !== "string") return note(file, `${path} must be a string`);
     if (def.minLength && value.length < def.minLength) note(file, `${path} is too short`);
+    if (def.maxLength && value.length > def.maxLength) note(file, `${path} is too long (max ${def.maxLength})`);
     if (def.pattern && !new RegExp(def.pattern).test(value)) note(file, `${path} does not match ${def.pattern}`);
     if (def.format === "date" && !/^\d{4}-\d{2}-\d{2}$/.test(value)) note(file, `${path} must be YYYY-MM-DD`);
     if (def.format === "uri" && !/^https?:\/\//.test(value)) note(file, `${path} must be an http(s) URL`);
@@ -63,16 +67,25 @@ for (const file of walk(casesDir)) {
   for (const d of data.decisions ?? []) for (const s of d.sources ?? []) if (!sourceIds.has(s)) note(rel, `${d.id} cites unknown source ${s}`);
   for (const r of data.ruleCandidates ?? []) {
     for (const d of r.decisions ?? []) if (!decisionIds.has(d)) note(rel, `${r.id} cites unknown decision ${d}`);
-    if (r.evidence === "approved" && !r.review) note(rel, `${r.id} is approved without a review record`);
+    const reviews = Array.isArray(r.reviews) ? r.reviews : [];
+    const agrees = reviews.some((review) => review?.verdict === "agree");
+    if (r.status === "reviewed" && !reviews.length) note(rel, `${r.id} is reviewed without a review record in reviews[]`);
+    if (r.evidence === "approved" && !agrees) note(rel, `${r.id} is approved without an agreeing review in reviews[]`);
     if (r.status === "promoted") {
       if (!r.promotedTo) note(rel, `${r.id} is promoted without promotedTo`);
       else if (!existsSync(join(root, r.promotedTo.split("#")[0]))) note(rel, `${r.id} promotedTo path does not exist: ${r.promotedTo}`);
       if (!data.validation) note(rel, `${r.id} is promoted but the case has no validation screen`);
-      if (!r.review || r.review.verdict === "disagree") note(rel, `${r.id} is promoted without an agreeing review`);
+      if (!agrees) note(rel, `${r.id} is promoted without an agreeing review`);
+      // A disagree stands until the same reviewer records a later-dated review.
+      for (const review of reviews.filter((entry) => entry?.verdict === "disagree")) {
+        if (!reviews.some((later) => later?.reviewer === review.reviewer && String(later?.date) > String(review.date))) note(rel, `${r.id} is promoted over an unresolved disagree by ${review.reviewer} (${review.date})`);
+      }
     }
   }
   for (const m of data.measurements?.files ?? []) if (!existsSync(join(dirname(file), m))) note(rel, `measurement file missing: ${m}`);
-  for (const m of readdirSync(join(dirname(file), "measurements"), { withFileTypes: true }).filter((e) => e.isFile()).map((e) => e.name)) {
+  const measurementsDir = join(dirname(file), "measurements");
+  if (!existsSync(measurementsDir) || !statSync(measurementsDir).isDirectory()) { note(rel, "measurements/ folder is missing; keep the measurement tool output there"); continue; }
+  for (const m of readdirSync(measurementsDir, { withFileTypes: true }).filter((e) => e.isFile()).map((e) => e.name)) {
     if (/\.(png|jpe?g|webp|gif|svg|woff2?|ttf|otf|html)$/i.test(m)) note(rel, `measurements/${m}: images, fonts and page source are not stored; link them in sources`);
   }
 }

@@ -1,8 +1,9 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { spawnSync } from "node:child_process";
-import { resolve } from "node:path";
+import { tmpdir } from "node:os";
+import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { ruleApplies, selectRules, renderRulesSection } from "../../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/rules-in-scope.mjs";
 
@@ -61,4 +62,29 @@ test("the repository catalog validates and is embedded in the compiled context c
   assert.ok(canon.filter((r) => r.kind === "invariant").length >= 5);
   const detectors = new Set(canon.flatMap((r) => r.check.detectors ?? []));
   for (const id of ["SS001", "SS002", "SS003", "SS004", "SS005", "SS006"]) assert.ok(detectors.has(id), `${id} should map to a catalog rule`);
+});
+
+test("catalog reviews are plural: approved needs an agreeing review, one review per reviewer and date", () => {
+  const canon = JSON.parse(readFileSync(resolve(repoRoot, "engine/rules/catalog.json"), "utf8"));
+  const dir = mkdtempSync(join(tmpdir(), "ss-rule-reviews-"));
+  const validate = (mutate) => {
+    const catalog = JSON.parse(JSON.stringify(canon));
+    mutate(catalog.rules.find((entry) => entry.id === "CRAFT-control-heights"));
+    const file = join(dir, "catalog.json");
+    writeFileSync(file, JSON.stringify(catalog));
+    return spawnSync(process.execPath, [resolve(repoRoot, "scripts/validate-rules.mjs"), file], { encoding: "utf8" });
+  };
+  try {
+    assert.ok(canon.rules.every((entry) => !Object.hasOwn(entry, "review")), "no catalog entry uses the singular review");
+    const agree = { reviewer: "koh-yura", date: "2026-11-10", verdict: "agree", via: "designer+agent" };
+    assert.equal(validate((entry) => { entry.evidence.level = "approved"; entry.reviews = [{ ...agree, verdict: "conditional", date: "2026-11-09" }, agree]; }).status, 0);
+    const conditionalOnly = validate((entry) => { entry.evidence.level = "approved"; entry.reviews = [{ ...agree, verdict: "conditional" }]; });
+    assert.equal(conditionalOnly.status, 1);
+    assert.match(conditionalOnly.stderr, /CRAFT-control-heights: evidence\.level "approved" needs at least one review with verdict "agree"/u);
+    assert.match(validate((entry) => { entry.evidence.level = "approved"; }).stderr, /needs at least one review with verdict "agree"/u);
+    assert.match(validate((entry) => { entry.reviews = [agree, { ...agree, verdict: "disagree" }]; }).stderr, /two entries by koh-yura on 2026-11-10/u);
+    assert.match(validate((entry) => { entry.reviews = [{ ...agree, via: "x".repeat(41) }]; }).stderr, /reviews\[0\]\.via is too long \(max 40\)/u);
+    assert.match(validate((entry) => { entry.review = agree; }).stderr, /\.review is not a known field/u);
+    assert.equal(validate((entry) => { entry.reviews = [{ ...agree, verdict: "disagree" }]; }).status, 0, "an inferred entry may carry a disagree");
+  } finally { rmSync(dir, { recursive: true, force: true }); }
 });

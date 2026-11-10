@@ -7,6 +7,7 @@
   "properties": {
     "spacing": { "$ref": "#/$defs/spacing" },
     "tokens": { "$ref": "#/$defs/tokens" },
+    "decisions": { "type": "array", "maxItems": 200, "items": { "$ref": "#/$defs/decision" }, "description": "Decisions ledger: approved project decisions and approved exceptions to default rules. See decisions.md. Unique ids, at most one project-wide decision per axis; exceptions never apply to invariants." },
     "schemaVersion": { "const": 1 },
     "projectId": { "$ref": "#/$defs/id" },
     "defaults": {
@@ -53,5 +54,19 @@
    "format": { "enum": ["dtcg", "tokens-studio", "figma-variables"] },
    "modes": { "type": "object", "additionalProperties": false, "minProperties": 1, "properties": { "light": { "type": "string", "maxLength": 80 }, "dark": { "type": "string", "maxLength": 80 } }, "description": "Figma mode or Tokens Studio theme name per StyleSeed mode; not for dtcg" },
    "roles": { "type": "object", "additionalProperties": false, "minProperties": 1, "properties": {"background": {"$ref": "#/$defs/tokenPath"}, "surface": {"$ref": "#/$defs/tokenPath"}, "chrome": {"$ref": "#/$defs/tokenPath"}, "foreground": {"$ref": "#/$defs/tokenPath"}, "mutedForeground": {"$ref": "#/$defs/tokenPath"}, "chromeForeground": {"$ref": "#/$defs/tokenPath"}, "border": {"$ref": "#/$defs/tokenPath"}, "primary": {"$ref": "#/$defs/tokenPath"}, "primaryForeground": {"$ref": "#/$defs/tokenPath"}, "accent": {"$ref": "#/$defs/tokenPath"}, "accentForeground": {"$ref": "#/$defs/tokenPath"}, "focus": {"$ref": "#/$defs/tokenPath"}, "success": {"$ref": "#/$defs/tokenPath"}, "successForeground": {"$ref": "#/$defs/tokenPath"}, "warning": {"$ref": "#/$defs/tokenPath"}, "warningForeground": {"$ref": "#/$defs/tokenPath"}, "danger": {"$ref": "#/$defs/tokenPath"}, "dangerForeground": {"$ref": "#/$defs/tokenPath"}}, "description": "Role to token path overrides; the canon default map covers files that follow semantic.{fg|bg|bd}[.role].{emphasis}" } } },
+ "decision": { "type": "object", "additionalProperties": false, "required": ["id", "kind", "statement", "approvedBy", "date"], "description": "A decision fixes a value for the project or a scope; an exception adds allowed values to a decision (to) or a default rule (rule) and never to an invariant. values is required with axis and forbidden without it.", "properties": {
+   "id": { "type": "string", "pattern": "^D-[0-9]{3,}$" },
+   "kind": { "enum": ["decision", "exception"] },
+   "rule": { "type": "string", "pattern": "^[A-Z]+-[0-9A-Za-z-]+$", "description": "A rule id from engine/rules/catalog.json; on an exception it must be a default rule" },
+   "to": { "type": "string", "pattern": "^D-[0-9]{3,}$", "description": "Exception only: the decision in this ledger it is an exception to, on the same axis" },
+   "axis": { "enum": ["accent", "ink", "canvas", "spacingBase", "spacingScale", "typeSizes", "radii", "fonts", "controlHeights"] },
+   "values": { "type": "array", "minItems": 1, "maxItems": 24, "items": { "oneOf": [{ "type": "string", "minLength": 1, "maxLength": 80 }, { "type": "number", "minimum": 0 }] }, "description": "accent/ink/canvas: one #RRGGBB; spacingBase: one positive integer; fonts: family names; other axes: numbers >= 0" },
+   "scope": { "type": "object", "additionalProperties": false, "minProperties": 1, "description": "No scope means the whole project", "properties": {
+     "screens": { "type": "array", "minItems": 1, "items": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$" } },
+     "artifacts": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/id" } } } },
+   "statement": { "type": "string", "minLength": 1, "maxLength": 300 },
+   "approvedBy": { "type": "string", "minLength": 1, "maxLength": 80, "description": "A record of who approved it, not authentication" },
+   "date": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
+   "source": { "type": "string", "minLength": 1, "maxLength": 200 } } },
  "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,63}$" } }
 }

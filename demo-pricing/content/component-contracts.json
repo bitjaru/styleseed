@@ -1,0 +1,1118 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "scripts/build-component-contracts.mjs",
+  "coverage": {
+    "contracts": 7,
+    "components": 48,
+    "missing": [
+      "accordion",
+      "alert",
+      "avatar",
+      "bottom-nav",
+      "briefing-carousel",
+      "card",
+      "chart-card",
+      "checkbox",
+      "confirm-modal",
+      "data-display",
+      "dialog",
+      "donut-chart-card",
+      "drawer",
+      "dropdown-menu",
+      "empty-state",
+      "form",
+      "hero-card",
+      "insight-card",
+      "label",
+      "list-item",
+      "motion",
+      "news-card",
+      "page-shell",
+      "popover",
+      "progress",
+      "progress-bar",
+      "radio-group",
+      "ranked-list",
+      "scroll-area",
+      "section-card",
+      "segmented-control",
+      "separator",
+      "sheet",
+      "skeleton",
+      "stat-card",
+      "textarea",
+      "toggle",
+      "toggle-group",
+      "tooltip",
+      "top-bar",
+      "value-display"
+    ]
+  },
+  "components": [
+    {
+      "id": "button",
+      "contract": "engine/components/contracts/button.md",
+      "title": "Button",
+      "purpose": "Starts an action on the current screen: submit, save, open, delete. One primary button per region of\na screen; everything else is a quieter variant. Navigation to another page is a link, not a button.",
+      "anatomy": [
+        "Container — the `<button>` (or the child element with `asChild`), height and radius from the size and the brand recipe.",
+        "Leading or trailing icon — optional SVG, sized automatically per size.",
+        "Label — a verb and an object, one to three words."
+      ],
+      "variants": [
+        {
+          "code": "default",
+          "designer": "Primary (brand solid)",
+          "use": "The one main action in a region: Save, Place order."
+        },
+        {
+          "code": "neutral",
+          "designer": "Neutral solid",
+          "use": "Strong emphasis that should not use the key colour, for example on a brand-coloured surface."
+        },
+        {
+          "code": "secondary",
+          "designer": "Secondary (neutral weak)",
+          "use": "The alternative beside a primary: Close next to Confirm."
+        },
+        {
+          "code": "outline",
+          "designer": "Line",
+          "use": "A bordered secondary action in toolbars and dense forms."
+        },
+        {
+          "code": "ghost",
+          "designer": "Ghost",
+          "use": "Low-emphasis actions in dense UI, and icon-only buttons."
+        },
+        {
+          "code": "brandGhost",
+          "designer": "Text button",
+          "use": "A key-colour text action without a surface: Retry, Maybe later."
+        },
+        {
+          "code": "destructive",
+          "designer": "Critical",
+          "use": "An action that deletes or cannot be undone."
+        }
+      ],
+      "sizes": [
+        {
+          "code": "xs",
+          "use": "Chips, tags and filter buttons."
+        },
+        {
+          "code": "sm",
+          "use": "Inline secondary actions; matches the default input and select height."
+        },
+        {
+          "code": "md",
+          "use": "The default button."
+        },
+        {
+          "code": "lg",
+          "use": "Large or full-width CTA, including a CTA fixed to the bottom of a mobile screen."
+        },
+        {
+          "code": "icon",
+          "use": "Icon-only button, for example in a top bar. Needs an `aria-label`."
+        }
+      ],
+      "states": [
+        {
+          "state": "Default",
+          "looks": "Per variant.",
+          "note": "—"
+        },
+        {
+          "state": "Pressed",
+          "looks": "Background one step darker (`active:` …`/85`, `/90`, `/8`).",
+          "note": "Colour only; no scale change."
+        },
+        {
+          "state": "Disabled",
+          "looks": "`surface-muted` background, `text-disabled` text, pointer events off.",
+          "note": "Keep the label readable; explain why nearby if it is not obvious."
+        },
+        {
+          "state": "Focus",
+          "looks": "2px ring in the brand colour at 20%.",
+          "note": "Keyboard only (`focus-visible`)."
+        },
+        {
+          "state": "Loading",
+          "looks": "Not built in.",
+          "note": "Swap the label for a 16px spinner, keep the size, block clicks (DESIGN-LANGUAGE §46)."
+        }
+      ],
+      "do": [
+        "Label the outcome: \"Save changes\", \"Delete project\", never \"Submit\" or \"OK\" (UX-WRITING WB-1, WB-2).",
+        "In a pair, put the primary on the right and the secondary on the left, 12px apart (DESIGN-LANGUAGE §46).",
+        "Name both outcomes in a destructive dialog: \"Delete / Keep\" (UX-WRITING WB-3).",
+        "Give icon-only buttons an `aria-label`."
+      ],
+      "dont": [
+        "Don't put two primary buttons in one region.",
+        "Don't shrink on press (`active:scale`) or use a gradient background (DESIGN-LANGUAGE §46).",
+        "Don't recolour a variant through `className` (`bg-…`); pick a variant or add one to the contract.",
+        "Don't use `destructive` for emphasis that is not destructive."
+      ],
+      "knownGaps": [
+        "DESIGN-LANGUAGE §46 still lists hex values for `neutral` (#2A2A2A) and `secondary` (#F3F4F5) and a fixed radius per size (xs pill, sm/md 10px, lg 14px). The code uses theme roles (`foreground`, `secondary`) and one recipe control radius for every size. The code is the current contract; §46 is stale.",
+        "`md` (40px), `sm` (36px), `xs` (32px) and `icon` (40px) are under the 44px touch minimum (DESIGN-LANGUAGE §41).",
+        "The default `md` button (40px) is taller than the default input and select (36px), so the defaults break \"buttons, inputs and selects in one context share a height\" (CRAFT-BASELINE). Use `sm` beside default form controls.",
+        "There is no hover style; pointer users get feedback only on press.",
+        "There is no loading state; §46 describes one."
+      ],
+      "sources": [
+        "DESIGN-LANGUAGE §46 Button design rules; §41 Touch targets; §24 Interaction rules",
+        "UX-WRITING §W1 Buttons & actions (WB-1, WB-2, WB-3)",
+        "CRAFT-BASELINE: control heights (rule `CRAFT-control-heights`)"
+      ],
+      "code": {
+        "source": "engine/components/ui/button.tsx",
+        "sha256": "sha256:f2064403176b16046f30175c6a7b48a10e358028b1770fb84459117efbdca051",
+        "exports": [
+          "Button",
+          "buttonVariants"
+        ],
+        "parts": [
+          {
+            "name": "Button",
+            "slot": "button",
+            "propsBase": [
+              "native `<button>` props",
+              "variant props of `buttonVariants`"
+            ],
+            "extras": [
+              {
+                "name": "asChild",
+                "optional": true,
+                "type": "boolean",
+                "default": "false"
+              }
+            ]
+          }
+        ],
+        "variants": [
+          "default",
+          "neutral",
+          "secondary",
+          "destructive",
+          "outline",
+          "ghost",
+          "brandGhost"
+        ],
+        "sizes": [
+          {
+            "key": "xs",
+            "height": 32,
+            "paddingX": 14,
+            "text": 13,
+            "icon": 14
+          },
+          {
+            "key": "sm",
+            "height": 36,
+            "paddingX": 14,
+            "text": 14,
+            "icon": 14
+          },
+          {
+            "key": "md",
+            "height": 40,
+            "paddingX": 16,
+            "text": 14,
+            "icon": 16
+          },
+          {
+            "key": "lg",
+            "height": 52,
+            "paddingX": 20,
+            "text": 18,
+            "icon": 22
+          },
+          {
+            "key": "icon",
+            "height": 40,
+            "paddingX": null,
+            "text": null,
+            "icon": 18
+          }
+        ],
+        "defaults": {
+          "variant": "default",
+          "size": "md"
+        },
+        "tokens": [
+          "accent",
+          "background",
+          "border",
+          "brand",
+          "destructive",
+          "foreground",
+          "secondary",
+          "surface-muted",
+          "text-disabled",
+          "text-primary"
+        ],
+        "darkTokens": [],
+        "radius": "recipe control radius (`ss-pattern-control` → `--ss-control-radius`, 0–999px by brand recipe)",
+        "focus": [
+          "focus-visible:ring-2",
+          "focus-visible:ring-brand/20",
+          "focus-visible:ring-destructive/20"
+        ],
+        "motion": [
+          "duration-150",
+          "transition-colors"
+        ],
+        "flags": [
+          "Height under the 44px touch minimum (DESIGN-LANGUAGE §41): `xs` 32px, `sm` 36px, `md` 40px, `icon` 40px. On touch surfaces, extend the hit area or use a taller size."
+        ]
+      }
+    },
+    {
+      "id": "badge",
+      "contract": "engine/components/contracts/badge.md",
+      "title": "Badge",
+      "purpose": "A short, static label for a status, a category or a count. It informs; it does not act. For a\nselectable chip or filter use `Toggle` (or a `Button` at size `xs`); there is no separate chip component.",
+      "anatomy": [
+        "Container — a `<span>` (or the child element with `asChild`, for example a link).",
+        "Optional icon — 12px SVG before the text.",
+        "Text — one to three words."
+      ],
+      "variants": [
+        {
+          "code": "default",
+          "designer": "Solid (primary role)",
+          "use": "The one label that should stand out in a group."
+        },
+        {
+          "code": "secondary",
+          "designer": "Neutral",
+          "use": "Most labels: categories, counts, metadata."
+        },
+        {
+          "code": "outline",
+          "designer": "Line",
+          "use": "Quiet labels in dense tables and lists."
+        },
+        {
+          "code": "destructive",
+          "designer": "Critical",
+          "use": "An error or blocking status."
+        }
+      ],
+      "sizes": [],
+      "states": [
+        {
+          "state": "Static",
+          "looks": "Per variant.",
+          "note": "The normal case."
+        },
+        {
+          "state": "Link hover",
+          "looks": "Background at 90% when rendered as a link (`asChild` with `<a>`).",
+          "note": "Only when the badge navigates."
+        },
+        {
+          "state": "Focus",
+          "looks": "3px ring in the `ring` role at 50%, border in `ring`.",
+          "note": "Only when focusable (link)."
+        },
+        {
+          "state": "Invalid",
+          "looks": "Border and ring in `destructive` when `aria-invalid`.",
+          "note": "Rare; inherited from the form styles."
+        }
+      ],
+      "do": [
+        "Pair colour with text or an icon; never let colour alone carry the status (DESIGN-LANGUAGE §41).",
+        "Keep the text short and in one form across the product (\"Paid\", not \"Payment completed\" in one place and \"Paid\" in another).",
+        "Use `secondary` by default and save `default` for the one label that matters."
+      ],
+      "dont": [
+        "Don't attach a click handler to a badge; use `Toggle` or `Button`.",
+        "Don't use `destructive` for a status that is not an error.",
+        "Don't invent a colour per category through `className`; categories that need colour need tokens."
+      ],
+      "knownGaps": [
+        "Badge uses the `primary` and `secondary` roles while Button's primary uses `brand`. In a skin where `primary` and `brand` differ, a default badge and a primary button do not match.",
+        "The radius is a fixed `rounded-md`, not the recipe control radius that Button and Tabs use.",
+        "The theme has `success`, `warning` and `info` roles but Badge has no variants for them; DESIGN-LANGUAGE §11 gives urgent and info badge colours as hex (#C85A54, #7A7A7A) instead of roles.",
+        "Link hover darkens by opacity (`/90`), which DESIGN-LANGUAGE §46 rejects for buttons."
+      ],
+      "sources": [
+        "DESIGN-LANGUAGE §11 Badge color rules; §41 Accessibility (colour not alone); §46 Button design rules"
+      ],
+      "code": {
+        "source": "engine/components/ui/badge.tsx",
+        "sha256": "sha256:8329a0b50f818665f1aca05ab93c16b103178b463f2949234ee4416bbc7d3fe2",
+        "exports": [
+          "Badge",
+          "badgeVariants"
+        ],
+        "parts": [
+          {
+            "name": "Badge",
+            "slot": "badge",
+            "propsBase": [
+              "native `<span>` props",
+              "variant props of `badgeVariants`"
+            ],
+            "extras": [
+              {
+                "name": "asChild",
+                "optional": true,
+                "type": "boolean",
+                "default": "false"
+              }
+            ]
+          }
+        ],
+        "variants": [
+          "default",
+          "secondary",
+          "destructive",
+          "outline"
+        ],
+        "sizes": [],
+        "defaults": {
+          "variant": "default"
+        },
+        "tokens": [
+          "accent",
+          "accent-foreground",
+          "destructive",
+          "foreground",
+          "primary",
+          "primary-foreground",
+          "ring",
+          "secondary",
+          "secondary-foreground"
+        ],
+        "darkTokens": [],
+        "radius": "fixed `rounded-md` (not the recipe control radius)",
+        "focus": [
+          "dark:focus-visible:ring-destructive/40",
+          "focus-visible:border-ring",
+          "focus-visible:ring-[3px]",
+          "focus-visible:ring-destructive/20",
+          "focus-visible:ring-ring/50"
+        ],
+        "motion": [
+          "transition-[color,box-shadow]"
+        ],
+        "flags": []
+      }
+    },
+    {
+      "id": "tabs",
+      "contract": "engine/components/contracts/tabs.md",
+      "title": "Tabs",
+      "purpose": "Switches between views of the same content in place, without leaving the page: Overview / Activity,\nWeek / Month. Each tab shows a panel; only one panel is visible at a time.",
+      "anatomy": [
+        "`Tabs` — the root that holds the selected value.",
+        "`TabsList` — the track that holds the triggers.",
+        "`TabsTrigger` — one tab; the selected one sits on a card-coloured surface.",
+        "`TabsContent` — the panel for one tab."
+      ],
+      "variants": [],
+      "sizes": [],
+      "states": [
+        {
+          "state": "Selected",
+          "looks": "`card` surface on the `muted` track.",
+          "note": "Exactly one at a time."
+        },
+        {
+          "state": "Unselected",
+          "looks": "Foreground text on the track.",
+          "note": "—"
+        },
+        {
+          "state": "Focus",
+          "looks": "3px ring in the `ring` role at 50%.",
+          "note": "Arrow keys move between tabs (Radix)."
+        },
+        {
+          "state": "Disabled",
+          "looks": "50% opacity, not focusable.",
+          "note": "Say why elsewhere if the reason is not obvious."
+        }
+      ],
+      "do": [
+        "Use two to five tabs with short labels.",
+        "Switch instantly; no slide animation between panels (DESIGN-LANGUAGE §42).",
+        "Keep each panel about the same kind of content so switching compares like with like."
+      ],
+      "dont": [
+        "Don't use tabs for steps in a sequence (use a stepper) or to move between pages (use links).",
+        "Don't nest tabs inside tabs.",
+        "Don't hide information the user needs to compare at a glance behind separate tabs; show it side by side."
+      ],
+      "knownGaps": [
+        "The track is 36px tall, under the 44px touch minimum (DESIGN-LANGUAGE §41).",
+        "Only the segmented style exists. The token canon sample (`research/tokens`, `component.tab.bd.active`) assumes an underline tab with an active border; there is no underline variant yet.",
+        "For two to four options inside a card header, DESIGN-LANGUAGE §10 asks for a pill toggle; `SegmentedControl` or `ToggleGroup` fits that job better than Tabs."
+      ],
+      "sources": [
+        "DESIGN-LANGUAGE §42 Tab & navigation details; §10 Selection UI rules; §41 Touch targets",
+        "research/tokens/README.md (token canon sample, #96)"
+      ],
+      "code": {
+        "source": "engine/components/ui/tabs.tsx",
+        "sha256": "sha256:a71dd6e8a4b3ea52bd0723e1b0ce14c7867b11a398d3e40c0d4e6ac1633821bb",
+        "exports": [
+          "Tabs",
+          "TabsList",
+          "TabsTrigger",
+          "TabsContent"
+        ],
+        "parts": [
+          {
+            "name": "Tabs",
+            "slot": "tabs",
+            "propsBase": [
+              "`@radix-ui/react-tabs` Root props"
+            ],
+            "extras": []
+          },
+          {
+            "name": "TabsList",
+            "slot": "tabs-list",
+            "propsBase": [
+              "`@radix-ui/react-tabs` List props"
+            ],
+            "extras": []
+          },
+          {
+            "name": "TabsTrigger",
+            "slot": "tabs-trigger",
+            "propsBase": [
+              "`@radix-ui/react-tabs` Trigger props"
+            ],
+            "extras": []
+          },
+          {
+            "name": "TabsContent",
+            "slot": "tabs-content",
+            "propsBase": [
+              "`@radix-ui/react-tabs` Content props"
+            ],
+            "extras": []
+          }
+        ],
+        "variants": [],
+        "sizes": [],
+        "defaults": {},
+        "tokens": [
+          "card",
+          "foreground",
+          "muted",
+          "muted-foreground",
+          "ring"
+        ],
+        "darkTokens": [
+          "input"
+        ],
+        "radius": "recipe control radius (`ss-pattern-control` → `--ss-control-radius`, 0–999px by brand recipe)",
+        "focus": [
+          "focus-visible:border-ring",
+          "focus-visible:outline-1",
+          "focus-visible:outline-ring",
+          "focus-visible:ring-[3px]",
+          "focus-visible:ring-ring/50"
+        ],
+        "motion": [
+          "transition-[color,box-shadow]"
+        ],
+        "flags": [
+          "Height under the 44px touch minimum (DESIGN-LANGUAGE §41): `tabs-list` 36px. On touch surfaces, extend the hit area or use a taller size."
+        ]
+      }
+    },
+    {
+      "id": "input",
+      "contract": "engine/components/contracts/input.md",
+      "title": "Input",
+      "purpose": "Single-line text entry: a name, an email, an amount, a search term. Pair it with a visible label;\nmulti-line text uses `Textarea`.",
+      "anatomy": [
+        "Label — a separate `Label` above the field, linked with `htmlFor` / `id`.",
+        "Field — the `<input>`.",
+        "Help or error text — a separate element below, linked with `aria-describedby`."
+      ],
+      "variants": [],
+      "sizes": [],
+      "states": [
+        {
+          "state": "Default",
+          "looks": "`input-background` fill, `input` border.",
+          "note": "—"
+        },
+        {
+          "state": "Placeholder",
+          "looks": "`muted-foreground` text.",
+          "note": "An example, never the label."
+        },
+        {
+          "state": "Focus",
+          "looks": "Border in `ring`, 3px ring at 50%.",
+          "note": "`focus-visible`."
+        },
+        {
+          "state": "Invalid",
+          "looks": "Border in `destructive`, ring in `destructive` at 20%.",
+          "note": "Set `aria-invalid` and show the message below the field."
+        },
+        {
+          "state": "Disabled",
+          "looks": "50% opacity, not-allowed cursor.",
+          "note": "—"
+        }
+      ],
+      "do": [
+        "Put the label above the field (DESIGN-LANGUAGE §44).",
+        "Validate on blur, and for Korean, Japanese or Chinese input only after `compositionend` (DESIGN-LANGUAGE §44).",
+        "Say what happened and how to fix it next to the field (UX-WRITING WE-1, WE-2).",
+        "Keep 16px text on phones so iOS does not zoom on focus; the component does this below the `md` breakpoint."
+      ],
+      "dont": [
+        "Don't use the placeholder as the label.",
+        "Don't validate while the user is still typing.",
+        "Don't put inputs inside consumer-service cards; use a separate page or bottom sheet (DESIGN-LANGUAGE §44, consumer-service scope)."
+      ],
+      "knownGaps": [
+        "DESIGN-LANGUAGE §44 specifies a 48px field (`h-12`), `rounded-xl`, a transparent border and a brand-coloured focus ring. The code is 36px (`h-9`), `rounded-md`, an `input` border and a `ring`-coloured focus ring. The two disagree; the code is what ships until the designer decides (#96).",
+        "36px is under the 44px touch minimum (DESIGN-LANGUAGE §41).",
+        "The radius is a fixed `rounded-md`, not the recipe control radius, so an input and a button side by side can have different corners."
+      ],
+      "sources": [
+        "DESIGN-LANGUAGE §44 Input & form rules; §41 Touch targets",
+        "UX-WRITING §W2 Errors (WE-1, WE-2)",
+        "CRAFT-BASELINE: control heights (rule `CRAFT-control-heights`)"
+      ],
+      "code": {
+        "source": "engine/components/ui/input.tsx",
+        "sha256": "sha256:cb82ffcd1a9accdf9b07edc8e976f43ad1c9cf91968ffd7639df5df14b7ad407",
+        "exports": [
+          "Input"
+        ],
+        "parts": [
+          {
+            "name": "Input",
+            "slot": "input",
+            "propsBase": [
+              "native `<input>` props"
+            ],
+            "extras": []
+          }
+        ],
+        "variants": [],
+        "sizes": [],
+        "defaults": {},
+        "tokens": [
+          "destructive",
+          "foreground",
+          "input",
+          "input-background",
+          "muted-foreground",
+          "primary",
+          "primary-foreground",
+          "ring"
+        ],
+        "darkTokens": [],
+        "radius": "fixed `rounded-md` (not the recipe control radius)",
+        "focus": [
+          "focus-visible:border-ring",
+          "focus-visible:ring-[3px]",
+          "focus-visible:ring-ring/50"
+        ],
+        "motion": [
+          "transition-[color,box-shadow]"
+        ],
+        "flags": [
+          "Height under the 44px touch minimum (DESIGN-LANGUAGE §41): `input` 36px. On touch surfaces, extend the hit area or use a taller size.",
+          "Radius is fixed (rounded-md) instead of the recipe control radius used by Button and Tabs."
+        ]
+      }
+    },
+    {
+      "id": "select",
+      "contract": "engine/components/contracts/select.md",
+      "title": "Select",
+      "purpose": "Chooses one option from a list that is too long to show at once (five or more). For two to four\noptions, show them all with a segmented control or radio group.",
+      "anatomy": [
+        "`Select` — the root that holds the value.",
+        "`SelectTrigger` — the field that shows `SelectValue` and a chevron.",
+        "`SelectContent` — the popover list, with scroll buttons when it overflows.",
+        "`SelectItem` — one option; the chosen one shows a check.",
+        "`SelectGroup`, `SelectLabel`, `SelectSeparator` — optional grouping."
+      ],
+      "variants": [],
+      "sizes": [
+        {
+          "code": "default",
+          "use": "Forms and settings; matches the default input height."
+        },
+        {
+          "code": "sm",
+          "use": "Toolbars and dense tables."
+        }
+      ],
+      "states": [
+        {
+          "state": "Placeholder",
+          "looks": "Trigger text in `muted-foreground`.",
+          "note": "—"
+        },
+        {
+          "state": "Open",
+          "looks": "Popover fades and zooms in.",
+          "note": "Reduced motion removes the animation (`engine/css/base.css`)."
+        },
+        {
+          "state": "Item highlighted",
+          "looks": "`accent` background.",
+          "note": "Keyboard and pointer."
+        },
+        {
+          "state": "Item selected",
+          "looks": "Check icon on the right.",
+          "note": "—"
+        },
+        {
+          "state": "Focus",
+          "looks": "Border in `ring`, 3px ring at 50%.",
+          "note": "—"
+        },
+        {
+          "state": "Invalid",
+          "looks": "Border and ring in `destructive`.",
+          "note": "Set `aria-invalid`."
+        },
+        {
+          "state": "Disabled",
+          "looks": "50% opacity.",
+          "note": "Trigger and single items."
+        }
+      ],
+      "do": [
+        "Use it for five or more options; a native `<select>` is also fine in settings and forms (DESIGN-LANGUAGE §10).",
+        "Give it a visible label, like an input.",
+        "Order options meaningfully: by frequency, alphabetically, or in their natural order."
+      ],
+      "dont": [
+        "Don't use a select for two to four options inside a consumer-service card; use a pill toggle (DESIGN-LANGUAGE §10).",
+        "Don't use it for actions; a menu of actions is a `DropdownMenu`."
+      ],
+      "knownGaps": [
+        "The trigger is 36px (`default`) or 32px (`sm`), under the 44px touch minimum (DESIGN-LANGUAGE §41).",
+        "The trigger's radius is set by its own classes, not the recipe control radius used by Button and Tabs."
+      ],
+      "sources": [
+        "DESIGN-LANGUAGE §10 Selection UI rules; §41 Touch targets",
+        "CRAFT-BASELINE: control heights (rule `CRAFT-control-heights`)"
+      ],
+      "code": {
+        "source": "engine/components/ui/select.tsx",
+        "sha256": "sha256:6aaf2111952394fbb8c64a505af02d08da28cc25726d61a991daebe400772480",
+        "exports": [
+          "Select",
+          "SelectContent",
+          "SelectGroup",
+          "SelectItem",
+          "SelectLabel",
+          "SelectScrollDownButton",
+          "SelectScrollUpButton",
+          "SelectSeparator",
+          "SelectTrigger",
+          "SelectValue"
+        ],
+        "parts": [
+          {
+            "name": "Select",
+            "slot": "select",
+            "propsBase": [
+              "`@radix-ui/react-select` Root props"
+            ],
+            "extras": []
+          },
+          {
+            "name": "SelectGroup",
+            "slot": "select-group",
+            "propsBase": [
+              "`@radix-ui/react-select` Group props"
+            ],
+            "extras": []
+          },
+          {
+            "name": "SelectValue",
+            "slot": "select-value",
+            "propsBase": [
+              "`@radix-ui/react-select` Value props"
+            ],
+            "extras": []
+          },
+          {
+            "name": "SelectTrigger",
+            "slot": "select-trigger",
+            "propsBase": [
+              "`@radix-ui/react-select` Trigger props"
+            ],
+            "extras": [
+              {
+                "name": "size",
+                "optional": true,
+                "type": "\"sm\" | \"default\"",
+                "default": "default"
+              }
+            ]
+          },
+          {
+            "name": "SelectContent",
+            "slot": "select-content",
+            "propsBase": [
+              "`@radix-ui/react-select` Content props"
+            ],
+            "extras": []
+          },
+          {
+            "name": "SelectLabel",
+            "slot": "select-label",
+            "propsBase": [
+              "`@radix-ui/react-select` Label props"
+            ],
+            "extras": []
+          },
+          {
+            "name": "SelectItem",
+            "slot": "select-item",
+            "propsBase": [
+              "`@radix-ui/react-select` Item props"
+            ],
+            "extras": []
+          },
+          {
+            "name": "SelectSeparator",
+            "slot": "select-separator",
+            "propsBase": [
+              "`@radix-ui/react-select` Separator props"
+            ],
+            "extras": []
+          },
+          {
+            "name": "SelectScrollUpButton",
+            "slot": "select-scroll-up-button",
+            "propsBase": [
+              "`@radix-ui/react-select` ScrollUpButton props"
+            ],
+            "extras": []
+          },
+          {
+            "name": "SelectScrollDownButton",
+            "slot": "select-scroll-down-button",
+            "propsBase": [
+              "`@radix-ui/react-select` ScrollDownButton props"
+            ],
+            "extras": []
+          }
+        ],
+        "variants": [],
+        "sizes": [
+          {
+            "key": "default",
+            "height": 36,
+            "paddingX": 12,
+            "text": 14,
+            "icon": null
+          },
+          {
+            "key": "sm",
+            "height": 32,
+            "paddingX": 12,
+            "text": 14,
+            "icon": null
+          }
+        ],
+        "defaults": {},
+        "tokens": [
+          "accent",
+          "accent-foreground",
+          "border",
+          "destructive",
+          "input",
+          "input-background",
+          "muted-foreground",
+          "popover",
+          "popover-foreground",
+          "ring"
+        ],
+        "darkTokens": [],
+        "radius": "fixed `rounded-md`, `rounded-sm` (not the recipe control radius)",
+        "focus": [
+          "focus-visible:border-ring",
+          "focus-visible:ring-[3px]",
+          "focus-visible:ring-ring/50",
+          "focus:bg-accent",
+          "focus:text-accent-foreground"
+        ],
+        "motion": [
+          "data-[state=closed]:animate-out",
+          "data-[state=open]:animate-in",
+          "transition-[color,box-shadow]"
+        ],
+        "flags": [
+          "Height under the 44px touch minimum (DESIGN-LANGUAGE §41): `select-trigger` size `default` 36px, `select-trigger` size `sm` 32px. On touch surfaces, extend the hit area or use a taller size.",
+          "Radius is fixed (rounded-md, rounded-sm) instead of the recipe control radius used by Button and Tabs."
+        ]
+      }
+    },
+    {
+      "id": "switch",
+      "contract": "engine/components/contracts/switch.md",
+      "title": "Switch",
+      "purpose": "Turns one setting on or off, and the change applies immediately: notifications, dark mode,\nauto-renew. A choice that only applies after Save is a `Checkbox`.",
+      "anatomy": [
+        "Track — the `Switch` root; filled with `primary` when on.",
+        "Thumb — the circle that moves right when on.",
+        "Label — a separate `Label` next to it, linked with `htmlFor` / `id`."
+      ],
+      "variants": [],
+      "sizes": [],
+      "states": [
+        {
+          "state": "On",
+          "looks": "`primary` track, thumb on the right.",
+          "note": "—"
+        },
+        {
+          "state": "Off",
+          "looks": "`switch-background` track, thumb on the left.",
+          "note": "—"
+        },
+        {
+          "state": "Focus",
+          "looks": "Border in `ring`, 3px ring at 50%.",
+          "note": "Space toggles it."
+        },
+        {
+          "state": "Disabled",
+          "looks": "50% opacity, not-allowed cursor.",
+          "note": "—"
+        }
+      ],
+      "do": [
+        "Always pair it with a visible label that names the setting, not the action (\"Email notifications\", not \"Turn on\").",
+        "Apply the change immediately and show the result.",
+        "Make the label clickable too, so the whole row is a target."
+      ],
+      "dont": [
+        "Don't use a switch inside a form that needs a submit; use a checkbox.",
+        "Don't use a switch without a label, or with a label that changes between on and off."
+      ],
+      "knownGaps": [
+        "The track is about 18px × 32px, far under the 44px touch minimum (DESIGN-LANGUAGE §41). Make the label and row the target, or wrap the switch in a 44px area.",
+        "The track uses `transition-all`. DESIGN-LANGUAGE §24 recommends `transition-all` for interactive elements, while the rule catalog's detector SS003 asks for named properties. The two documents disagree.",
+        "On uses `primary`, not `brand`, so it may not match a primary button in skins where the two roles differ."
+      ],
+      "sources": [
+        "DESIGN-LANGUAGE §24 Interaction rules; §41 Touch targets",
+        "Rule catalog: detector SS003 (`transition-all`)"
+      ],
+      "code": {
+        "source": "engine/components/ui/switch.tsx",
+        "sha256": "sha256:d4c744131c6161300510909aafe2c2cb6d819f2c7a8c2aeb75d4317004c7eff7",
+        "exports": [
+          "Switch"
+        ],
+        "parts": [
+          {
+            "name": "Switch",
+            "slot": "switch",
+            "propsBase": [
+              "`@radix-ui/react-switch` Root props"
+            ],
+            "extras": []
+          }
+        ],
+        "variants": [],
+        "sizes": [],
+        "defaults": {},
+        "tokens": [
+          "card",
+          "primary",
+          "ring",
+          "switch-background"
+        ],
+        "darkTokens": [
+          "card-foreground",
+          "input",
+          "primary-foreground"
+        ],
+        "radius": "fixed `rounded-full` (not the recipe control radius)",
+        "focus": [
+          "focus-visible:border-ring",
+          "focus-visible:ring-[3px]",
+          "focus-visible:ring-ring/50"
+        ],
+        "motion": [
+          "transition-all",
+          "transition-transform"
+        ],
+        "flags": [
+          "Height under the 44px touch minimum (DESIGN-LANGUAGE §41): `switch` 18.4px × 32px. On touch surfaces, extend the hit area or use a taller size.",
+          "Uses `transition-all`; name the transitioned properties (detector SS003).",
+          "Radius is fixed (rounded-full) instead of the recipe control radius used by Button and Tabs."
+        ]
+      }
+    },
+    {
+      "id": "table",
+      "contract": "engine/components/contracts/table.md",
+      "title": "Table",
+      "purpose": "Compares records across the same columns: orders, invoices, team members. Use a table when people\nscan down a column or across a row to compare; use a list when each item is read on its own.",
+      "anatomy": [
+        "`Table` — a horizontally scrollable container and the `<table>`.",
+        "`TableHeader`, `TableBody`, `TableFooter` — row groups.",
+        "`TableRow` — one record.",
+        "`TableHead` — a column header cell.",
+        "`TableCell` — a data cell.",
+        "`TableCaption` — the table's title or summary, below the table."
+      ],
+      "variants": [],
+      "sizes": [],
+      "states": [
+        {
+          "state": "Row hover",
+          "looks": "`muted` at 50%.",
+          "note": "Pointer only."
+        },
+        {
+          "state": "Row selected",
+          "looks": "`muted` background with `data-state=\"selected\"`.",
+          "note": "Pair with a checkbox column."
+        },
+        {
+          "state": "Overflow",
+          "looks": "The container scrolls horizontally.",
+          "note": "Cells do not wrap (`whitespace-nowrap`)."
+        }
+      ],
+      "do": [
+        "Give every table a caption or an `aria-label`.",
+        "Right-align numbers and use tabular figures (`text-right tabular-nums`) so digits line up (DESIGN-LANGUAGE §22).",
+        "Keep one unit per column and say it in the header."
+      ],
+      "dont": [
+        "Don't use a table for layout.",
+        "Don't put interactive controls in every cell; give the row one clear action.",
+        "Don't highlight rows on hover in consumer-service screens, where DESIGN-LANGUAGE §24 forbids hover highlights on list rows."
+      ],
+      "knownGaps": [
+        "There is no numeric-column helper; every consumer adds `text-right tabular-nums` by hand.",
+        "Row hover is always on, which conflicts with DESIGN-LANGUAGE §24 in the consumer-service recipe.",
+        "All cells use `whitespace-nowrap`, so long text forces horizontal scrolling on phones."
+      ],
+      "sources": [
+        "DESIGN-LANGUAGE §22 Number formatting; §24 Interaction rules"
+      ],
+      "code": {
+        "source": "engine/components/ui/table.tsx",
+        "sha256": "sha256:e4ec7d3be042efd0fa363a57dd0e649a7831b86f975d4ec5192ebbfdd66e0f95",
+        "exports": [
+          "Table",
+          "TableHeader",
+          "TableBody",
+          "TableFooter",
+          "TableHead",
+          "TableRow",
+          "TableCell",
+          "TableCaption"
+        ],
+        "parts": [
+          {
+            "name": "Table",
+            "slot": "table-container",
+            "propsBase": [
+              "native `<table>` props"
+            ],
+            "extras": []
+          },
+          {
+            "name": "TableHeader",
+            "slot": "table-header",
+            "propsBase": [
+              "native `<thead>` props"
+            ],
+            "extras": []
+          },
+          {
+            "name": "TableBody",
+            "slot": "table-body",
+            "propsBase": [
+              "native `<tbody>` props"
+            ],
+            "extras": []
+          },
+          {
+            "name": "TableFooter",
+            "slot": "table-footer",
+            "propsBase": [
+              "native `<tfoot>` props"
+            ],
+            "extras": []
+          },
+          {
+            "name": "TableRow",
+            "slot": "table-row",
+            "propsBase": [
+              "native `<tr>` props"
+            ],
+            "extras": []
+          },
+          {
+            "name": "TableHead",
+            "slot": "table-head",
+            "propsBase": [
+              "native `<th>` props"
+            ],
+            "extras": []
+          },
+          {
+            "name": "TableCell",
+            "slot": "table-cell",
+            "propsBase": [
+              "native `<td>` props"
+            ],
+            "extras": []
+          },
+          {
+            "name": "TableCaption",
+            "slot": "table-caption",
+            "propsBase": [
+              "native `<caption>` props"
+            ],
+            "extras": []
+          }
+        ],
+        "variants": [],
+        "sizes": [],
+        "defaults": {},
+        "tokens": [
+          "foreground",
+          "muted",
+          "muted-foreground"
+        ],
+        "darkTokens": [],
+        "radius": "none set",
+        "focus": [],
+        "motion": [
+          "transition-colors"
+        ],
+        "flags": []
+      }
+    }
+  ]
+}

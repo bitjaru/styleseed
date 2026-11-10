@@ -412,6 +412,14 @@ function extractImports(source) {
   return out
 }
 
+// Component contracts (#102): engine/components/contracts/<id>.md, compiled by
+// scripts/build-component-contracts.mjs into content/component-contracts.json.
+const contractsPath = resolve(contentDir, 'component-contracts.json')
+const contractsById = existsSync(contractsPath)
+  ? Object.fromEntries(JSON.parse(readFileSync(contractsPath, 'utf8')).components.map((c) => [c.id, c]))
+  : {}
+const firstSentence = (text) => (text.replace(/\s+/g, ' ').match(/^.+?[.!?](?:\s|$)/)?.[0] ?? text).trim()
+
 function scanComponents(type, dirName) {
   const dir = resolve(componentsDir, dirName)
   return readdirSync(dir)
@@ -427,7 +435,8 @@ function scanComponents(type, dirName) {
         type,
         name: exports[0] || toPascalCase(slug),
         exports,
-        description: extractJsdocDescription(code),
+        description: extractJsdocDescription(code) || (contractsById[slug] ? firstSentence(contractsById[slug].purpose) : ''),
+        ...(contractsById[slug] ? { contract: contractsById[slug].contract } : {}),
         source: `engine/components/${dirName}/${file}`,
         sourceUrl: `${REPO_RAW}/engine/components/${dirName}/${file}`,
         imports: extractImports(code),

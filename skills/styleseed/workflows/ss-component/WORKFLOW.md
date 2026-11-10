@@ -41,6 +41,14 @@ node "<ss-resolve>/scripts/resolve-context.mjs" --project-root . --from-lock STY
 For missing or stale legacy output, run the same command without `--check`, then check again.
 Read `.styleseed/effective-rules.md` and `.styleseed/manifest.json` only after success.
 
+## Component contracts
+
+Before using or changing an engine component, read its contract when one exists: `components/contracts/<id>.md`
+in a project that copied `engine/components`, or `engine/components/contracts/<id>.md` in the StyleSeed repo.
+It names the variants with designers' names, the states, do / don't, and known gaps such as controls under
+the 44px touch minimum. Use the variants it lists instead of recolouring through `className`; a needed
+variant is a change to the component and its contract together.
+
 ## When NOT to use
 
 - For full-page scaffolding → use `/ss-page`

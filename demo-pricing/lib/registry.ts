@@ -7,6 +7,8 @@ export type Component = {
   name: string;
   exports: string[];
   description: string;
+  /** engine/components/contracts/<id>.md when the component has a designer contract (#102). */
+  contract?: string;
   source: string;
   sourceUrl: string;
   imports: string[];

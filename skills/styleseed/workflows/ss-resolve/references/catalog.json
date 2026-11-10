@@ -1,7 +1,7 @@
 {
   "schemaVersion": 5,
   "engineVersion": "5.0.0",
-  "engineRevision": "sha256:0c4bd5777dda0710f1103b168c706438f9e2de3a4988084cecad8f4ff8857a07",
+  "engineRevision": "sha256:37b8f0ececef29c0084f988b06b01a5ef0ed5504f098b8b4f380dd2f53b7fba7",
   "distributionSource": {
     "schemaVersion": 1,
     "channel": "edge",
@@ -10,7 +10,7 @@
   },
   "distributions": {
     "core": {
-      "revision": "sha256:0c4bd5777dda0710f1103b168c706438f9e2de3a4988084cecad8f4ff8857a07",
+      "revision": "sha256:37b8f0ececef29c0084f988b06b01a5ef0ed5504f098b8b4f380dd2f53b7fba7",
       "files": [
         {
           "path": "LICENSE",
@@ -44,8 +44,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-component/WORKFLOW.md",
-          "sha256": "b4626d31b4ecde7faaf0923d12c632afa525b5db229ea23b97dea16e5097a5c0",
-          "bytes": 5329
+          "sha256": "51cd756a58cf76a412838453f4e624ee2d3c3238f2a87f78264c682586098902",
+          "bytes": 5850
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-copy/WORKFLOW.md",
@@ -560,7 +560,7 @@
       ]
     },
     "skills": {
-      "revision": "sha256:33c58922e92f10a094e73c2c5023c5416ae2d0b9cbf14b15c6aafab01af40513",
+      "revision": "sha256:ee8b58b403db18e6727e4e2e394589574ed184501525ecf2075c6e3c2207bd09",
       "files": [
         {
           "path": "engine/.claude/skills/styleseed/SKILL.md",
@@ -584,8 +584,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-component/WORKFLOW.md",
-          "sha256": "b4626d31b4ecde7faaf0923d12c632afa525b5db229ea23b97dea16e5097a5c0",
-          "bytes": 5329
+          "sha256": "51cd756a58cf76a412838453f4e624ee2d3c3238f2a87f78264c682586098902",
+          "bytes": 5850
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-copy/WORKFLOW.md",
@@ -983,8 +983,8 @@
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-component/WORKFLOW.md",
-      "sha256": "b4626d31b4ecde7faaf0923d12c632afa525b5db229ea23b97dea16e5097a5c0",
-      "bytes": 5329
+      "sha256": "51cd756a58cf76a412838453f4e624ee2d3c3238f2a87f78264c682586098902",
+      "bytes": 5850
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-copy/WORKFLOW.md",

@@ -50,7 +50,18 @@ const denylist = [
   "No Designer Needed",
   "hire a designer",
   "디자이너 개입 0",
-  "디자이너를 고용하거나"
+  "디자이너를 고용하거나",
+  // A designer review records one named person's verdict per card (docs/designer-review-agent.md).
+  // It is never described as approval, endorsement, validation, or consensus.
+  "designer-approved",
+  "approved by designers",
+  "endorsed by designers",
+  "designer consensus",
+  "validated by designers",
+  "전문가 승인",
+  "디자이너 합의",
+  "디자이너가 승인한",
+  "전문가가 검증"
 ];
 const failures = [];
 const texts = files.map((path) => ({ path, text: readFileSync(resolve(root, path), "utf8") }));

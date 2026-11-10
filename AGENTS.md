@@ -58,3 +58,11 @@ copies as the source of truth.
   maintainer explicitly includes release work in the task.
 - `docs/RELEASE.md` is the release boundary. The preparation workflow creates verified candidate
   assets only; it never publishes a GitHub release or deploys production.
+
+## Designer reviews
+
+- When a designer asks you to help them review StyleSeed, read `docs/designer-review-agent.md` first and
+  follow it exactly. You ask the cards in `research/reviews/` one at a time, record the designer's own
+  words, and open the pull request from their account. You never answer a card yourself.
+- A designer review changes only its batch file under `research/reviews/`. The designer's guide is
+  `docs/DESIGNER-GUIDE.ko.md`.

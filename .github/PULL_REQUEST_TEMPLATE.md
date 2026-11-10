@@ -25,6 +25,7 @@ command -> result
 ## Type
 
 - [ ] Documentation, example, or translation
+- [ ] Designer review answers (`research/reviews/` only; see `docs/designer-review-agent.md`)
 - [ ] Regression fixture or bug fix
 - [ ] Design rule or palette
 - [ ] Skin, component, or pattern

@@ -143,6 +143,21 @@ No run here changes the preparer's `readyForAgentRuns=false`, populates expert a
 a model comparison or promotes benchmark claims. Actual UI output review/blinding, source-bound
 candidate verification, expert rubric approval and the frozen generation runtime remain separate.
 
+## Cross-session drift track
+
+[`drift/PROTOCOL.md`](drift/PROTOCOL.md) pre-registers a separate measurement on this kit: five
+screens of the same app (the three above plus two built from the same fixtures), one fresh Codex
+session each in one workspace, with the visual decisions of screen 1 counted on screens 2–5. The
+screens and arms are in `drift/screens.json` and `drift/arms.json`; the metric is
+`scripts/s1-drift-metric.mjs`. Print the operator plan without writing anything:
+
+```sh
+node scripts/run-s1-drift.mjs --plan
+```
+
+`--prepare`, `--run` and `--report` are operator steps described in the protocol. No run has been
+performed; the `drift/` files are read by the drift runner only, not by `prepare-design-pilot.mjs`.
+
 ## Before any real model run
 
 ### Shared-library integration check

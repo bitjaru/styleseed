@@ -31,6 +31,13 @@ compiles only imported values into the bundle, palette JSON and CSS. A role the 
 an error naming the mapping to add, never a generated colour. Preview read-only with
 `import-tokens.mjs`; see the [token canon guide](references/tokens.md).
 
+A project records approved decisions and approved exceptions in optional project `decisions` (id,
+`decision` or `exception`, optional `rule`/`to`, measured `axis` + `values`, `scope`, statement,
+`approvedBy`, date). The resolver compiles the entries that apply to an artifact into the bundle's
+**Rules in scope** section, where a decision outranks a default and never an invariant; an exception
+against an invariant fails the resolve. The drift report reads the same ledger. See the
+[decisions ledger guide](references/decisions.md).
+
 For spacing recommendations and scoped control, see the [spatial roles guide](references/spacing.md).
 Optional project/artifact `spacing` compiles into a role table and artifact-scoped CSS in the bundle.
 `recommend-spacing.mjs --project-root . --artifact <id>` emits a read-only starting proposal; it does

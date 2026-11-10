@@ -1,6 +1,8 @@
 // Select the catalog rules that apply to one artifact and render them as a bundle section.
 // Pure: no I/O. Invariants always apply; a default applies when every non-empty scope list
 // intersects the selection. Order is deterministic (priority, then id) so bundles stay stable.
+// Project decisions from the ledger render above the invariants; with no applicable decision the
+// section is byte-identical to a project without a ledger.
 const PRIORITY_RANK = { blocks: 0, strong: 1, advisory: 2 };
 
 export function ruleApplies(rule, selection = {}) {
@@ -27,31 +29,60 @@ function scopeLabel(rule) {
   return parts.length ? parts.join(" · ") : "any selection";
 }
 
-function renderRule(rule) {
+function renderRule(rule, exceptionIds = []) {
   const bits = [`- **${rule.id}** (${rule.priority} · ${rule.evidence?.level ?? "unknown"}`];
   if (rule.kind !== "invariant") bits.push(` · ${scopeLabel(rule)}`);
   bits.push(`): ${rule.statement}`);
   if (rule.exceptions?.length) bits.push(` Exceptions: ${rule.exceptions.join("; ")}.`);
   if (rule.check?.detectors?.length) bits.push(` Checks: ${rule.check.detectors.join(", ")}.`);
   bits.push(` Source: ${rule.source}`);
+  if (exceptionIds.length) bits.push(` Project ${exceptionIds.length === 1 ? "exception" : "exceptions"}: ${exceptionIds.join(", ")}.`);
   return bits.join("");
 }
 
-export function renderRulesSection(rules, selection = {}) {
+// Ledger entries from `.styleseed/project.json` `decisions` that apply to one artifact: entries
+// without `scope.artifacts` apply to every artifact. Input is the normalized ledger (sorted by id).
+export function decisionsFor(decisions = [], artifactId = null) {
+  return decisions.filter((entry) => !Array.isArray(entry.scope?.artifacts) || entry.scope.artifacts.includes(artifactId));
+}
+
+function renderDecision(entry) {
+  const kind = entry.kind === "exception"
+    ? `exception to ${[entry.to, entry.rule].filter(Boolean).join(", ")}`
+    : `decision${entry.rule ? ` for ${entry.rule}` : ""}`;
+  const parts = [kind];
+  if (entry.axis) parts.push(`${entry.axis} ${entry.kind === "exception" ? "+" : "="} ${entry.values.join(", ")}`);
+  if (entry.scope?.screens?.length) parts.push(`screens: ${entry.scope.screens.join(", ")}`);
+  parts.push(`approved by ${entry.approvedBy}, ${entry.date}`);
+  return `- **${entry.id}** (${parts.join(" · ")}): ${entry.statement}`;
+}
+
+export function renderRulesSection(rules, selection = {}, { decisions = [], artifactId = null } = {}) {
   const { invariants, defaults } = selectRules(rules, selection);
-  if (!invariants.length && !defaults.length) return "";
+  const applicable = decisionsFor(decisions, artifactId);
+  if (!invariants.length && !defaults.length && !applicable.length) return "";
+  const exceptionsByRule = new Map();
+  for (const entry of applicable) if (entry.kind === "exception" && entry.rule) exceptionsByRule.set(entry.rule, [...(exceptionsByRule.get(entry.rule) ?? []), entry.id]);
   const where = [selection.grammar && `grammar ${selection.grammar}`, selection.adapter && `adapter ${selection.adapter}`, selection.domain && `domain ${selection.domain}`, selection.page && `page ${selection.page}`].filter(Boolean).join(" · ");
   return [
     "# Rules in scope",
     "",
     `Compiled from \`engine/rules/catalog.json\` for ${where || "this selection"}. Invariants bind everywhere; defaults apply to this selection and yield to a recorded project decision. Each line carries its id for checks and reviews; \`blocks\` is a fail state independent of any score.`,
     "",
+    ...(applicable.length ? [
+      "## Project decisions",
+      "",
+      "Recorded in `.styleseed/project.json`. A decision outranks a default; it never outranks an invariant.",
+      "",
+      ...applicable.map(renderDecision),
+      "",
+    ] : []),
     "## Invariants",
     "",
-    ...(invariants.length ? invariants.map(renderRule) : ["- none"]),
+    ...(invariants.length ? invariants.map((rule) => renderRule(rule)) : ["- none"]),
     "",
     "## Defaults for this selection",
     "",
-    ...(defaults.length ? defaults.map(renderRule) : ["- none"]),
+    ...(defaults.length ? defaults.map((rule) => renderRule(rule, exceptionsByRule.get(rule.id))) : ["- none"]),
   ].join("\n");
 }

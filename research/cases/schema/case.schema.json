@@ -88,15 +88,20 @@
           "evidence": { "$ref": "#/$defs/evidence" },
           "decisions": { "type": "array", "minItems": 1, "items": { "type": "string", "pattern": "^D[0-9]+$" } },
           "status": { "enum": ["candidate", "reviewed", "promoted", "rejected"] },
-          "review": {
-            "type": "object",
-            "required": ["reviewer", "date", "verdict"],
-            "additionalProperties": false,
-            "properties": {
-              "reviewer": { "type": "string" },
-              "date": { "type": "string", "format": "date" },
-              "verdict": { "enum": ["agree", "conditional", "disagree"] },
-              "note": { "type": "string" }
+          "reviews": {
+            "type": "array",
+            "description": "Named reviews, oldest first; may be empty. reviewed needs one; approved needs an agree; promoted needs an agree and no unresolved disagree (resolved by a later-dated review from the same reviewer).",
+            "items": {
+              "type": "object",
+              "required": ["reviewer", "date", "verdict"],
+              "additionalProperties": false,
+              "properties": {
+                "reviewer": { "type": "string", "minLength": 1 },
+                "date": { "type": "string", "format": "date" },
+                "verdict": { "enum": ["agree", "conditional", "disagree"] },
+                "via": { "type": "string", "minLength": 1, "maxLength": 40, "description": "How the review was held, e.g. designer+agent" },
+                "note": { "type": "string" }
+              }
             }
           },
           "promotedTo": { "type": "string", "description": "repository path of the playbook or grammar line this candidate changed" }

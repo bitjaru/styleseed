@@ -22,7 +22,7 @@
         "statement": { "type": "string", "minLength": 20 },
         "kind": {
           "enum": ["invariant", "default", "project-decision"],
-          "description": "invariant: binds everywhere (constitution, DESIGN-LANGUAGE §18). default: a recipe's choice, scoped, yields to a recorded project decision. project-decision: set in a project lock; listed here only as a template."
+          "description": "invariant: binds everywhere (constitution, DESIGN-LANGUAGE §18); no exception can waive it. default: a recipe's choice, scoped, yields to a recorded project decision. project-decision: reserved; a project's decisions and exceptions live in its own .styleseed/project.json decisions ledger, not in this catalog."
         },
         "scope": {
           "type": "object",
@@ -61,17 +61,23 @@
         "source": { "type": "string", "pattern": "^engine/[A-Za-z0-9./-]+\\.md(#[0-9A-Za-z-]+)?$", "description": "Repository path of the prose that states this rule, with an optional section fragment." },
         "anchor": { "type": "string", "minLength": 6, "description": "An exact phrase that must appear in the source file. Keeps the prose and the catalog from drifting apart." },
         "supersedes": { "type": "array", "items": { "type": "string" } },
-        "review": {
-          "type": "object",
-          "required": ["reviewer", "date", "verdict"],
-          "additionalProperties": false,
-          "properties": {
-            "reviewer": { "type": "string" },
-            "date": { "type": "string", "format": "date" },
-            "verdict": { "enum": ["agree", "conditional", "disagree"] },
-            "note": { "type": "string" }
-          }
+        "reviews": {
+          "type": "array",
+          "description": "Named reviews of this entry, oldest first. evidence.level \"approved\" needs at least one agree; reviewer + date pairs are distinct.",
+          "items": { "$ref": "#/$defs/review" }
         }
+      }
+    },
+    "review": {
+      "type": "object",
+      "required": ["reviewer", "date", "verdict"],
+      "additionalProperties": false,
+      "properties": {
+        "reviewer": { "type": "string", "minLength": 1 },
+        "date": { "type": "string", "format": "date" },
+        "verdict": { "enum": ["agree", "conditional", "disagree"] },
+        "via": { "type": "string", "minLength": 1, "maxLength": 40, "description": "How the review was held, e.g. designer+agent" },
+        "note": { "type": "string" }
       }
     }
   }

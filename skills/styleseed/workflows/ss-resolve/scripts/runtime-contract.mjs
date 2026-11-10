@@ -177,8 +177,119 @@ function normalizeTokens(input, label) {
   return normalized;
 }
 
+// Optional decisions ledger: approved project decisions and approved exceptions to default rules.
+// The axes are the drift axes measured by ss-reference/scripts/compare-screens.mjs (COLOR_AXES,
+// spacingBase, SET_AXES). They are duplicated here because the resolver must not import from
+// ss-reference; scripts/runtime-tests/decisions-ledger.test.mjs keeps the two lists in parity.
+export const DECISION_AXES = Object.freeze(["accent", "ink", "canvas", "spacingBase", "spacingScale", "typeSizes", "radii", "fonts", "controlHeights"]);
+const DECISION_COLOR_AXES = new Set(["accent", "ink", "canvas"]);
+const DECISION_ID = /^D-[0-9]{3,}$/;
+const RULE_ID = /^[A-Z]+-[0-9A-Za-z-]+$/;
+const SCREEN_LABEL = /^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$/;
+const MAX_DECISIONS = 200;
+const MAX_DECISION_VALUES = 24;
+function isoDate(value, label) {
+  const valid = typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/u.test(value) && !Number.isNaN(Date.parse(`${value}T00:00:00Z`)) && new Date(`${value}T00:00:00Z`).toISOString().slice(0, 10) === value;
+  if (!valid) fail(`${label} must be a calendar date as YYYY-MM-DD`);
+  return value;
+}
+function decisionValues(values, axis, label) {
+  if (!Array.isArray(values) || values.length < 1 || values.length > MAX_DECISION_VALUES) fail(`${label} must be a non-empty array of at most ${MAX_DECISION_VALUES} values`);
+  if (DECISION_COLOR_AXES.has(axis)) {
+    if (values.length !== 1 || typeof values[0] !== "string" || !/^#[0-9A-Fa-f]{6}$/u.test(values[0])) fail(`${label} must hold exactly one #RRGGBB colour for ${axis}`);
+    return [values[0].toUpperCase()];
+  }
+  if (axis === "spacingBase") {
+    if (values.length !== 1 || !Number.isInteger(values[0]) || values[0] < 1) fail(`${label} must hold exactly one positive integer for spacingBase`);
+    return [values[0]];
+  }
+  if (axis === "fonts") {
+    for (const font of values) if (typeof font !== "string" || font.length < 1 || font.length > 80 || CONTROL.test(font)) fail(`${label} must hold font family names of 1-80 characters`);
+    return [...new Set(values)];
+  }
+  for (const value of values) if (typeof value !== "number" || !Number.isFinite(value) || value < 0) fail(`${label} must hold finite numbers >= 0 for ${axis}`);
+  return [...new Set(values)].sort((left, right) => left - right);
+}
+function decisionScope(scope, label) {
+  exactObject(scope, ["screens", "artifacts"], label);
+  if (scope.screens === undefined && scope.artifacts === undefined) fail(`${label} must name screens or artifacts; omit scope for the whole project`);
+  const out = {};
+  for (const [field, pattern, hint] of [["artifacts", SAFE_ID, "artifact IDs"], ["screens", SCREEN_LABEL, "drift-report screen labels such as settings or billing-history"]]) {
+    if (scope[field] === undefined) continue;
+    const list = scope[field];
+    if (!Array.isArray(list) || list.length < 1 || list.length > 64) fail(`${label}.${field} must be a non-empty array of ${hint}`);
+    for (const value of list) if (typeof value !== "string" || !pattern.test(value)) fail(`${label}.${field} must contain ${hint}`);
+    out[field] = [...new Set(list)].sort();
+  }
+  return out;
+}
+const overlaps = (left = [], right = []) => left.filter((value) => right.includes(value));
+
+export function normalizeDecisions(input, catalog, label = "project.decisions") {
+  if (!Array.isArray(input)) fail(`${label} must be an array of decision entries`);
+  if (input.length > MAX_DECISIONS) fail(`${label} holds ${input.length} entries; the ledger allows at most ${MAX_DECISIONS}`);
+  const rules = Array.isArray(catalog?.rules) ? new Map(catalog.rules.map((rule) => [rule.id, rule])) : null;
+  const seen = new Set();
+  const entries = input.map((entry, index) => {
+    const where = `${label}[${index}]`;
+    exactObject(entry, ["id", "kind", "rule", "to", "axis", "values", "scope", "statement", "approvedBy", "date", "source"], where);
+    if (typeof entry.id !== "string" || !DECISION_ID.test(entry.id)) fail(`${where}.id must look like D-001`);
+    const at = `${label} ${entry.id}`;
+    if (seen.has(entry.id)) fail(`${at}: duplicate decision ID; give each entry its own D-number`);
+    seen.add(entry.id);
+    const kind = oneOf(required(entry.kind, `${at}.kind`), ["decision", "exception"], `${at}.kind (decision or exception)`);
+    const out = { id: entry.id, kind };
+    if (entry.rule !== undefined) {
+      if (typeof entry.rule !== "string" || !RULE_ID.test(entry.rule)) fail(`${at}.rule must be a rule ID from engine/rules/catalog.json`);
+      if (rules) {
+        const rule = rules.get(entry.rule);
+        if (!rule) fail(`${at}.rule ${entry.rule} is not in the current rule catalog`);
+        if (kind === "exception" && rule.kind === "invariant") fail(`${entry.id}: exceptions cannot waive an invariant (${entry.rule}). Invariants bind everywhere; remove the exception or point it at a default rule.`);
+        if (kind === "exception" && rule.kind !== "default") fail(`${entry.id}: exceptions apply only to default rules (${entry.rule} is ${rule.kind})`);
+      }
+      out.rule = entry.rule;
+    }
+    if (entry.to !== undefined) {
+      if (kind !== "exception") fail(`${at}.to is only allowed on an exception; a decision is not an exception to another entry`);
+      if (typeof entry.to !== "string" || !DECISION_ID.test(entry.to)) fail(`${at}.to must name a decision ID such as D-001`);
+      out.to = entry.to;
+    }
+    if (kind === "exception" && out.rule === undefined && out.to === undefined) fail(`${at}: an exception must name the default rule (rule) or the decision (to) it is an exception to`);
+    if (entry.axis !== undefined) {
+      out.axis = oneOf(entry.axis, DECISION_AXES, `${at}.axis (one of ${DECISION_AXES.join(", ")})`);
+      out.values = decisionValues(required(entry.values, `${at}.values (required with axis)`), out.axis, `${at}.values`);
+    } else if (entry.values !== undefined) fail(`${at}.values needs an axis; add axis or remove values`);
+    if (entry.scope !== undefined) out.scope = decisionScope(entry.scope, `${at}.scope`);
+    out.statement = text(required(entry.statement, `${at}.statement`), `${at}.statement (max 300 characters)`, 300);
+    out.approvedBy = text(required(entry.approvedBy, `${at}.approvedBy`), `${at}.approvedBy (max 80 characters)`, 80);
+    out.date = isoDate(required(entry.date, `${at}.date`), `${at}.date`);
+    if (entry.source !== undefined) out.source = text(entry.source, `${at}.source (max 200 characters)`, 200);
+    return out;
+  });
+  const byId = new Map(entries.map((entry) => [entry.id, entry]));
+  for (const entry of entries) {
+    if (entry.to === undefined) continue;
+    const target = byId.get(entry.to);
+    if (!target || target.kind !== "decision") fail(`${label} ${entry.id}.to: ${entry.to} is not a decision in this ledger`);
+    if (target.axis !== entry.axis) fail(`${label} ${entry.id}.to: ${entry.to} decides ${target.axis ?? "no axis"}, not ${entry.axis ?? "no axis"}; an exception must share its decision's axis`);
+  }
+  const decided = entries.filter((entry) => entry.kind === "decision" && entry.axis);
+  for (let left = 0; left < decided.length; left += 1) {
+    for (let right = left + 1; right < decided.length; right += 1) {
+      const [a, b] = [decided[left], decided[right]];
+      if (a.axis !== b.axis) continue;
+      if (!a.scope && !b.scope) fail(`${label}: ${a.id} and ${b.id} both decide ${a.axis}; keep one project-wide decision and scope the other to screens or artifacts`);
+      const screens = overlaps(a.scope?.screens, b.scope?.screens);
+      if (screens.length) fail(`${label}: ${a.id} and ${b.id} both decide ${a.axis} on screen ${screens.join(", ")}; narrow one scope`);
+      const artifacts = overlaps(a.scope?.artifacts, b.scope?.artifacts);
+      if (artifacts.length) fail(`${label}: ${a.id} and ${b.id} both decide ${a.axis} for artifact ${artifacts.join(", ")}; narrow one scope`);
+    }
+  }
+  return entries.sort((left, right) => left.id.localeCompare(right.id, "en", { numeric: true }) || (left.id < right.id ? -1 : 1));
+}
+
 export function normalizeProject(input, catalog) {
-  exactObject(input, ["schemaVersion", "projectId", "defaults", "brand", "spacing", "tokens"], "project");
+  exactObject(input, ["schemaVersion", "projectId", "defaults", "brand", "spacing", "tokens", "decisions"], "project");
   if (required(input.schemaVersion, "project.schemaVersion") !== 1) fail("project.schemaVersion must be 1");
   const defaults = exactObject(required(input.defaults, "project.defaults"), ["agent", "domain", "adapter", "recipe", "palette", "profile", "fallback"], "project.defaults");
   const brand = exactObject(required(input.brand, "project.brand"), ["keyColor", "paletteCharacter", "paletteMode", "paletteHarmony", "surfaceTemperature", "fontFamilies", "radius", "elevation", "density", "motion", "imageryRole"], "project.brand");
@@ -193,6 +304,7 @@ export function normalizeProject(input, catalog) {
     schemaVersion: 1,
     ...(input.spacing === undefined ? {} : { spacing: normalizeSpacing(input.spacing, "project.spacing") }),
     ...(input.tokens === undefined ? {} : { tokens: normalizeTokens(input.tokens, "project.tokens") }),
+    ...(input.decisions === undefined ? {} : { decisions: normalizeDecisions(input.decisions, catalog, "project.decisions") }),
     projectId: id(required(input.projectId, "project.projectId"), "project.projectId"),
     defaults: {
       agent: oneOf(required(defaults.agent, "defaults.agent"), enums.agents, "defaults.agent"),

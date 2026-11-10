@@ -7,6 +7,7 @@ import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   CONTRACT_ENUMS,
+  DECISION_AXES,
   canonicalJson,
   normalizeArtifact,
   normalizeIndex,
@@ -135,6 +136,14 @@ test("runtime enums stay in parity with JSON Schema enums", () => {
   assert.deepEqual(projectSchema.properties.brand.properties.imageryRole.enum, CONTRACT_ENUMS.imageryRole);
   assert.deepEqual(artifactSchema.properties.target.properties.kind.enum, CONTRACT_ENUMS.targetKind);
   assert.deepEqual(artifactSchema.properties.validation.properties.requiredRenders.items.properties.state.enum, CONTRACT_ENUMS.renderState);
+  assert.deepEqual(projectSchema.$defs.decision.properties.axis.enum, [...DECISION_AXES]);
+  assert.deepEqual(projectSchema.$defs.decision.properties.kind.enum, ["decision", "exception"]);
+  const ledgerProject = { ...projectInput, decisions: [
+    { id: "D-001", kind: "decision", axis: "controlHeights", values: [36, 44], statement: "Form controls are 36px; primary page actions are 44px.", approvedBy: "design lead", date: "2026-11-10", source: "review:batch-01#2" },
+    { id: "D-002", kind: "exception", to: "D-001", rule: "CRAFT-control-heights", axis: "controlHeights", values: [32], scope: { screens: ["orders"], artifacts: ["app-orders"] }, statement: "The orders table toolbar uses 32px filter controls.", approvedBy: "bitjaru", date: "2026-11-10" },
+  ] };
+  assert.deepEqual(schemaErrors(projectSchema, ledgerProject), []);
+  assert.deepEqual(schemaErrors(projectSchema, normalizeProject(ledgerProject, catalog)), [], "the normalized ledger still satisfies the schema");
   assert.deepEqual(projectSchema.properties.defaults.properties.adapter.enum, Object.keys(catalog.adapters).sort());
   assert.deepEqual(projectSchema.properties.defaults.properties.recipe.enum, Object.keys(catalog.recipes).sort());
   assert.deepEqual(projectSchema.properties.defaults.properties.palette.enum, Object.keys(catalog.palettes).sort());

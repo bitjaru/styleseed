@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "contractVersion": 2,
   "scannerVersion": 2,
-  "revision": "sha256:9bdb15786c8f9faf18d7207d0f3d9e5fa7d2428cd10cc2ff11067952faefbd56",
+  "revision": "sha256:40e7703bf102529623e4f1d7a359d366f4d899033b6e6467b0a3ee3c0067fcb3",
   "files": [
     {
       "path": "extensions/learning/runtime/catalog.json",
-      "sha256": "sha256:018940cc7057e278ba19efe608ef17e640594c2cdb0ec57f5f807a7022cb3000"
+      "sha256": "sha256:279ff77cc6567ef34a4baff556a3b14c0076a072ff1612af7bf212b277ba7ca3"
     },
     {
       "path": "extensions/learning/skills/ss-learn/scripts/learning-contract.mjs",

@@ -71,6 +71,7 @@ diff, running the stated checks, and removing invented paths or claims.
 | Skin | Add an original `skin.json` + `theme.css`, without protected assets or a product clone | `skins/<id>/` | `npm run build --prefix demo-pricing` |
 | Component or pattern | Fix semantics, states, accessibility, or recipe consumption | `engine/components/` | engine checks + demo build |
 | Agent skill | Fix one workflow or cross-agent contract | `engine/.claude/skills/` | skill checks below |
+| Designer review | Answer one batch of review cards through your own AI agent; no code, no build | `research/reviews/batch-NN.md`, [`docs/DESIGNER-GUIDE.ko.md`](docs/DESIGNER-GUIDE.ko.md) | none (the batch file is the only change) |
 | Grammar or adapter | Propose a new product job or render target with evidence and conformance cases | proposal issue first | agreed in the issue |
 
 Do not edit `skills/` directly. `engine/.claude/skills/` is the canonical skill source; `skills/`

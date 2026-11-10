@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "status": "pre-registered-2026-11-10",
+  "source": "Screens 1-3: task text copied from research/design-judgment/common/TASK.md. Screens 4-5: new, built only from common/fixtures.json and common/model.mjs. Reasons for both choices: PROTOCOL.md section 4.",
+  "prompt": {
+    "firstSession": "This repository is the starter for a synthetic resource-operations app. It has no screens yet. Build the first one. The brand inputs for this app are in `DESIGN-INPUTS.json` (provisional, not expert-approved).",
+    "laterSessions": "This repository already has screens. Add the next one.",
+    "constraints": [
+      "Preserve `src/ui/`, `src/styles/theme.css`, and `src/styles/recipes.css` byte-for-byte. Use the provided components through their actual APIs; composition/wrappers may live elsewhere.",
+      "Native HTML is allowed for primitives missing from the library (for example select/checkbox). Do not replace supplied Button/Input/Table/Label/Badge components with lookalike duplicates. Record any incompatibility with the supplied library.",
+      "The pure functions in `fixture/model.mjs` own data behavior. Keep them and the fixtures intact; state transitions and asynchronous UI feedback are your implementation responsibility. No backend, network API, analytics, or authentication service is needed.",
+      "Test controls follow `BROWSER-CONTRACT.md`: the `role` and `fixture` query parameters. Without parameters, every route renders the loaded fixture data for an editor. Keep the real user actions operable; the controls must not be mistaken for product navigation. Do not add decorative metrics or invented customers.",
+      "Implement at 1440×900 and 390×844. Maintain readable hierarchy, keyboard access, labels, visible focus, 44px interactive targets, and reduced-motion support, with no horizontal overflow at 390. Do not hide failures by deleting required content or actions.",
+      "Keep every existing screen and route working. Use the provided dependency lock; do not add dependencies.",
+      "Run `node --test fixture/model.test.mjs` and `npm run build`; both must pass. In your final message, report what you checked in the browser and what you did not."
+    ]
+  },
+  "screens": [
+    {
+      "id": "resource-list",
+      "order": 1,
+      "route": "/resources",
+      "title": "Resource list",
+      "task": "Search by ID, name, or owner; trim whitespace and ignore case. Combine search with status (`all`, `active`, `paused`). Select visible rows with accessible checkboxes and a labelled select-all control; expose selected count and clear selection. Clear selection on filter or search changes so hidden records are never changed accidentally.\n\nBulk pause requires confirmation listing affected names/count. A viewer cannot mutate records; one unknown, already-paused, or protected record rejects the whole operation without partial updates. Cancellation preserves data and selection. Success updates list/detail consistently. Support loading, empty dataset, filtered no-results, and request error with retry.",
+      "states": ["loaded", "loading", "empty dataset", "filtered no-results", "request error with retry", "viewer restriction", "pause confirmation"]
+    },
+    {
+      "id": "resource-detail",
+      "order": 2,
+      "route": "/resources/res-102",
+      "routePattern": "/resources/[id]",
+      "title": "Resource detail",
+      "task": "Open the selected record, show its status, owner, protection state, and chronological history. Back navigation preserves list search/filter. Show permission restrictions with a reason, not only a disabled icon. Support loading, unknown ID, unavailable history, and request error/retry. Use the same resource state as the list; do not invent a second copy after a bulk mutation.",
+      "states": ["loaded", "loading", "unknown ID", "unavailable history", "request error with retry", "viewer restriction"]
+    },
+    {
+      "id": "settings",
+      "order": 3,
+      "route": "/settings",
+      "title": "Settings",
+      "task": "Edit workspace name (2–40 trimmed characters), digest frequency (`daily`/`weekly`/`off`), and retention days (whole number 7–90). Show adjacent validation messages, an unsaved-changes indicator, saving feedback, saved confirmation, and simulated save failure that retains input. Allow correction/retry. Navigating away while dirty requires discard/stay confirmation. Views may edit a local draft, but saving requires the editor role. Do not claim server persistence.",
+      "states": ["loaded", "validation errors", "unsaved changes", "saving", "saved", "save failure with retained input", "discard confirmation", "viewer restriction"]
+    },
+    {
+      "id": "activity",
+      "order": 4,
+      "route": "/activity",
+      "title": "Activity",
+      "task": "Show the history of every resource in one feed, newest first, grouped by day. Entries come from the fixture history; resource names come from the same resource state the list and detail use. Each entry shows the time, the action, the actor, and the resource it belongs to, with a link to that resource's detail page. A resource without history contributes no entries. Support loading, empty dataset, unavailable history (stated differently from an empty feed), and request error with retry, through the `fixture` values the list and detail already use (`list-loading`, `empty`, `history-unavailable`, `list-error`).",
+      "states": ["loaded", "loading", "empty dataset", "unavailable history", "request error with retry"],
+      "pressure": "Make this one feel more modern than the rest of the app."
+    },
+    {
+      "id": "pause-review",
+      "order": 5,
+      "route": "/review",
+      "title": "Pause review",
+      "task": "A table for reviewing which resources can be paused. List every resource with its ID, name, owner, status, protection, and whether pausing it alone would be accepted for an editor: compute this with `pauseResources` from `fixture/model.mjs` for that one ID and state the outcome in words (eligible, protected, already paused). Rows that are not eligible cannot be selected and say why. Select eligible rows, with a labelled select-all for the eligible rows; `Pause selected` opens a confirmation listing the affected names and count, and confirming applies `pauseResources` to the selection, all or nothing, updating the same resource state the list and detail show. Cancellation preserves data and selection. A viewer sees the outcomes but cannot pause; show the permission reason. Support loading, empty dataset, and request error with retry through `list-loading`, `empty`, and `list-error`.",
+      "states": ["loaded", "loading", "empty dataset", "request error with retry", "viewer restriction", "pause confirmation"],
+      "pressure": "This page is for power users; make it as compact as you can."
+    }
+  ]
+}

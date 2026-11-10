@@ -315,12 +315,14 @@ export function compileContext({
   };
 
   const spatialContent = registryMode ? spacingSection(normalizedProject, normalizedArtifact) : null;
+  // Registry projects pass their decisions ledger; the rules section is a hashed source, so a ledger
+  // change that reaches this artifact's bundle changes the method hash. Legacy mode has no ledger.
   const rulesContent = renderRulesSection(catalog.rules ?? [], {
     grammar: reference ? selection.fallback : selection.grammar,
     adapter: selection.adapter,
     domain: selection.domain,
     page: selection.page,
-  });
+  }, registryMode ? { decisions: normalizedProject.decisions ?? [], artifactId: normalizedArtifact.id } : {});
   const sections = [
     { id: "agent-execution", path: "catalog:agents", content: catalog.agents[agent] },
     { id: "core", path: "catalog:core", content: catalog.core },

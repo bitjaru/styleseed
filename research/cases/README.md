@@ -35,7 +35,7 @@ not absence.
 | `observed` | measured on the public surface, or stated by the product's own public documentation | spacing scale read from computed styles; the fare shown as a range before selection; a pattern page saying why the left column exists |
 | `derived` | computed from observations | accent used on 3 of 3 primary actions, so the accent role is the button fill |
 | `inferred` | a reason we supply, or read into third-party writing; the author did not state it | "the range hides price uncertainty before matching" (our reading) |
-| `approved` | a named reviewer with design expertise accepted the rule candidate | reviewer handle and date in `ruleCandidates[].review` |
+| `approved` | a named reviewer with design expertise accepted the rule candidate | a review with verdict `agree` (reviewer handle and date) in `ruleCandidates[].reviews` |
 
 ## Workflow
 
@@ -57,8 +57,14 @@ not absence.
 7. **Promote.** A promoted candidate points at the playbook or grammar line it changed and, once the rules-as-data step ships, at its entry in `engine/rules/catalog.json` (see `engine/rules/README.md`). Promotion
    is a maintainer merge after review; `approved` requires a reviewer.
 
+Reviews are a list, oldest first: `ruleCandidates[].reviews` holds `reviewer`, `date`, `verdict`
+(agree / conditional / disagree), optional `via` (how the review was held, e.g. `designer+agent`)
+and `note`. A `reviewed` candidate needs at least one review; `approved` evidence needs an `agree`;
+`promoted` needs an `agree` and no unresolved `disagree`. A disagree is resolved when the same
+reviewer records a later-dated review.
+
 `node scripts/validate-cases.mjs` checks every `case.json` against the schema, the evidence
-levels, referenced measurement files, and promotion fields.
+levels, referenced measurement files, the review rules, and promotion fields.
 
 ## What a case may not contain
 

@@ -187,10 +187,16 @@ palette roles when `--project-root` points at a StyleSeed project, otherwise the
 the screens. `DRIFT.md` holds the table and a one-line verdict; `drift.json` holds the same data.
 
 With `--gate`, at-rest drift on accent, ink, canvas, or spacing base exits 3 (INV-05: no unexplained
-role drift) so CI can block on it; record approved exceptions in the project lock instead of
-lowering the gate.
+role drift) so CI can block on it. Record approved decisions and exceptions in the project's
+`decisions` ledger instead of lowering the gate (see the
+[decisions ledger guide](../ss-resolve/references/decisions.md)): the report reads it from
+`.styleseed/project.json` with `--project-root`, or from `--decisions <file.json>`. A recorded decision
+becomes the baseline for the screens it covers, so a value outside it reads `violates D-…`; a value
+an approved exception covers reads `approved D-…` and is not drift. `--gate` also exits 3 on any
+decision violation.
 
-Read it as measurement, not judgment. A `different` accent may be an approved exception. A `none`
+Read it as measurement, not judgment. A `different` accent may be an approved exception nobody has
+recorded yet. A `none`
 accent usually means the primary action only appears in a state (a save bar, a dialog), so
 re-measure with `--states`. No page text, screenshots, or URLs beyond the ones you passed are
 written. The method is described in `engine/REFERENCE-COMPILER.md`, "Measurement and evidence

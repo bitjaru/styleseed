@@ -41,7 +41,8 @@
       "confidence": "low",
       "evidence": "inferred",
       "decisions": ["D1"],
-      "status": "candidate"
+      "status": "candidate",
+      "reviews": []
     }
   ],
   "contributors": ["github-handle"],

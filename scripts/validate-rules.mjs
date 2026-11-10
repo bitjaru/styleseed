@@ -1,14 +1,17 @@
 #!/usr/bin/env node
 // Validate engine/rules/catalog.json without external dependencies: the schema's required
 // fields and enums, unique ids, scope values that exist in the compiled context catalog,
-// sources that exist with their anchors present, detector ids the checker knows, and the
-// rule that invariants carry no scope.
+// sources that exist with their anchors present, detector ids the checker knows, the rule that
+// invariants carry no scope, and the review rules (approved needs an agreeing review; one review
+// per reviewer and date).
+//
+//   node scripts/validate-rules.mjs [catalog.json]   (defaults to engine/rules/catalog.json)
 import { readFileSync, existsSync } from "node:fs";
 import { join, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const catalogPath = join(root, "engine", "rules", "catalog.json");
+const catalogPath = process.argv[2] ? resolve(process.argv[2]) : join(root, "engine", "rules", "catalog.json");
 const schema = JSON.parse(readFileSync(join(root, "engine", "rules", "catalog.schema.json"), "utf8"));
 const contextCatalogPath = join(root, "engine/.claude/skills/styleseed/workflows/ss-resolve/references/catalog.json");
 const checker = readFileSync(join(root, "engine/.claude/skills/styleseed/workflows/ss-score/scripts/styleseed-check.mjs"), "utf8");
@@ -36,6 +39,7 @@ function check(value, def, path) {
   } else if (def.type === "string") {
     if (typeof value !== "string") return note(`${path} must be a string`);
     if (def.minLength && value.length < def.minLength) note(`${path} is too short (min ${def.minLength})`);
+    if (def.maxLength && value.length > def.maxLength) note(`${path} is too long (max ${def.maxLength})`);
     if (def.pattern && !new RegExp(def.pattern, "u").test(value)) note(`${path} does not match ${def.pattern}`);
     if (def.format === "date" && !/^\d{4}-\d{2}-\d{2}$/u.test(value)) note(`${path} must be YYYY-MM-DD`);
   }
@@ -87,6 +91,14 @@ for (const rule of rules) {
     const text = sourceText(path);
     if (text === null) note(`${label}: source ${path} does not exist`);
     else if (typeof rule.anchor === "string" && !text.includes(rule.anchor)) note(`${label}: anchor "${rule.anchor}" not found in ${path}`);
+  }
+  const reviews = Array.isArray(rule.reviews) ? rule.reviews : [];
+  if (rule.evidence?.level === "approved" && !reviews.some((review) => review?.verdict === "agree")) note(`${label}: evidence.level "approved" needs at least one review with verdict "agree" in reviews[]`);
+  const pairs = new Set();
+  for (const review of reviews) {
+    const pair = `${review?.reviewer}|${review?.date}`;
+    if (pairs.has(pair)) note(`${label}: reviews[] has two entries by ${review?.reviewer} on ${review?.date}; merge them or date the later one`);
+    pairs.add(pair);
   }
   for (const source of rule.evidence?.sources ?? []) {
     if (/^engine\//u.test(source) || /^research\//u.test(source)) {

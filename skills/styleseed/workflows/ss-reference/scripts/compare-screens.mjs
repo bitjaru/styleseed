@@ -1,7 +1,9 @@
 // Compare measurement summaries of several screens of one project. Pure: no I/O, no browser.
 // Every status is a measurement against a baseline, not a design judgment: a `different` accent
-// may be an approved exception, and a `none` accent usually means the primary action only shows
-// in a state. The report keeps the values so a reviewer can decide.
+// may be an approved exception nobody recorded, and a `none` accent usually means the primary
+// action only shows in a state. The report keeps the values so a reviewer can decide. When the
+// project's decisions ledger is passed in, a recorded decision becomes the baseline for the screens
+// it covers (`violates` instead of `different` / `extra`) and an approved exception reads `excepted`.
 import { parseColor, toHex } from './analyze-observations.mjs';
 
 export const COLOR_AXES = ['accent', 'ink', 'canvas'];
@@ -55,44 +57,111 @@ function majoritySet(lists) {
     .sort((a, b) => (typeof a === 'number' && typeof b === 'number' ? a - b : String(a).localeCompare(String(b))));
 }
 
-export function compareScreens(screens, { baseline = null, nearDistance = 24 } = {}) {
+// The decisions ledger as the drift report reads it. Entries come normalized from ss-resolve
+// (`normalizeDecisions`). Only entries with an axis are measurable, and only on screens: an entry
+// without scope covers every screen, an entry with `scope.screens` covers those labels (state
+// variants by their base label), and an entry scoped only to artifacts names no screen, so it
+// shapes bundles but is not applied here.
+const baseLabel = label => String(label).replace(/\?state=.*$/u, '');
+function readLedger(decisions) {
+  const measurable = decisions.filter(d => d && d.axis && Array.isArray(d.values) && (!d.scope || Array.isArray(d.scope.screens)));
+  const covers = (d, label) => !d.scope || d.scope.screens.includes(baseLabel(label));
+  const decisionFor = (axis, label) => {
+    const own = measurable.filter(d => d.kind === 'decision' && d.axis === axis && covers(d, label));
+    return own.find(d => d.scope) || own.find(d => !d.scope) || null;
+  };
+  const exceptionsFor = (axis, label) => measurable.filter(d => d.kind === 'exception' && d.axis === axis && covers(d, label));
+  const projectDecision = axis => measurable.find(d => d.kind === 'decision' && d.axis === axis && !d.scope) || null;
+  return { measurable, covers, decisionFor, exceptionsFor, projectDecision };
+}
+const byId = (a, b) => a.localeCompare(b, 'en', { numeric: true });
+
+export function compareScreens(screens, { baseline = null, nearDistance = 24, decisions = [] } = {}) {
   const rows = screens.map(s => ({ label: s.label, url: s.url ?? null, state: s.state ?? null, values: screenValues(s.summary) }));
   // State variants (`?state=error` …) exist to catch accents that only appear in a state. Their
   // text and spacing distributions are not representative, so baselines and drift counts for every
   // axis except the accent come from the at-rest screens whenever there are any.
   const atRest = rows.some(r => !r.state) ? rows.filter(r => !r.state) : rows;
+  const counted = (axis, i) => axis === 'accent' || !rows[i].state;
   const values = {};
   for (const axis of COLOR_AXES) values[axis] = (baseline && baseline[axis]) ? toHex(baseline[axis]) : majority((axis === 'accent' ? rows : atRest).map(r => r.values[axis]));
   values.spacingBase = (baseline && baseline.spacingBase) || majority(atRest.map(r => r.values.spacingBase));
   for (const axis of SET_AXES) values[axis] = majoritySet(atRest.map(r => r.values[axis]));
-  const base = { source: baseline ? 'registry roles for colours, majority across screens for the rest' : 'majority across screens', values };
+  // A project-wide decision replaces the registry or majority baseline for its axis; a decision
+  // scoped to screens replaces it on those screens only (resolved per row below).
+  const ledger = decisions.length ? readLedger(decisions) : null;
+  const decidedAxes = [];
+  if (ledger) for (const axis of [...COLOR_AXES, 'spacingBase', ...SET_AXES]) {
+    const d = ledger.projectDecision(axis);
+    if (!d) continue;
+    values[axis] = COLOR_AXES.includes(axis) ? toHex(d.values[0]) : axis === 'spacingBase' ? d.values[0] : [...d.values];
+    decidedAxes.push(axis);
+  }
+  const source = baseline ? 'registry roles for colours, majority across screens for the rest' : 'majority across screens';
+  const base = { source: decidedAxes.length ? `${source}; recorded project decisions for ${decidedAxes.map(a => AXIS_TITLES[a]).join(', ')}` : source, values };
+  const violations = [];
+  const excepted = [];
+  const decidedOn = axis => (ledger?.projectDecision(axis) ? { decision: ledger.projectDecision(axis).id } : {});
 
   const axes = {};
   for (const axis of COLOR_AXES) {
     const b = values[axis];
-    const per = rows.map(r => {
+    const per = rows.map((r, i) => {
       const v = r.values[axis];
-      const status = !b ? 'unknown' : !v ? 'none' : v === b ? 'same' : colorDistance(v, b) <= nearDistance ? 'near' : 'different';
-      return { label: r.label, value: v, status };
+      const d = ledger?.decisionFor(axis, r.label) ?? null;
+      const target = d ? toHex(d.values[0]) : b;
+      const status = !target ? 'unknown' : !v ? 'none' : v === target ? 'same' : colorDistance(v, target) <= nearDistance ? 'near' : d ? 'violates' : 'different';
+      const entry = { label: r.label, value: v, status };
+      if (d) entry.decision = d.id;
+      const e = ledger && (status === 'different' || status === 'violates') ? ledger.exceptionsFor(axis, r.label).find(x => colorDistance(v, x.values[0]) <= nearDistance) : null;
+      if (e) Object.assign(entry, { status: 'excepted', exception: e.id });
+      if (counted(axis, i) && entry.status === 'violates') violations.push({ id: d.id, screen: r.label, axis, values: [v] });
+      if (counted(axis, i) && e) excepted.push({ id: e.id, screen: r.label, axis, values: [v] });
+      return entry;
     });
     const counts = axis === 'accent' ? per : per.filter((p, i) => !rows[i].state);
-    axes[axis] = { baseline: b, screens: per, deviating: counts.filter(p => p.status === 'different').map(p => p.label), missing: per.filter(p => p.status === 'none').map(p => p.label) };
+    axes[axis] = { baseline: b, ...decidedOn(axis), screens: per, deviating: counts.filter(p => p.status === 'different').map(p => p.label), missing: per.filter(p => p.status === 'none').map(p => p.label) };
   }
   {
     const b = values.spacingBase;
-    const per = rows.map(r => {
+    const per = rows.map((r, i) => {
       const v = r.values.spacingBase;
-      const status = !b ? 'unknown' : !v ? 'none' : v === b ? 'same' : 'different';
-      return { label: r.label, value: v, status, offScale: r.values.offScale };
+      const d = ledger?.decisionFor('spacingBase', r.label) ?? null;
+      const target = d ? d.values[0] : b;
+      const status = !target ? 'unknown' : !v ? 'none' : v === target ? 'same' : d ? 'violates' : 'different';
+      const entry = { label: r.label, value: v, status, offScale: r.values.offScale };
+      if (d) entry.decision = d.id;
+      const e = ledger && (status === 'different' || status === 'violates') ? ledger.exceptionsFor('spacingBase', r.label).find(x => x.values[0] === v) : null;
+      if (e) Object.assign(entry, { status: 'excepted', exception: e.id });
+      if (counted('spacingBase', i) && entry.status === 'violates') violations.push({ id: d.id, screen: r.label, axis: 'spacingBase', values: [v] });
+      if (counted('spacingBase', i) && e) excepted.push({ id: e.id, screen: r.label, axis: 'spacingBase', values: [v] });
+      return entry;
     });
     const counts = per.filter((p, i) => !rows[i].state);
-    axes.spacingBase = { baseline: b, screens: per, deviating: counts.filter(p => p.status === 'different').map(p => p.label), missing: per.filter(p => p.status === 'none').map(p => p.label) };
+    axes.spacingBase = { baseline: b, ...decidedOn('spacingBase'), screens: per, deviating: counts.filter(p => p.status === 'different').map(p => p.label), missing: per.filter(p => p.status === 'none').map(p => p.label) };
   }
   for (const axis of SET_AXES) {
     const b = values[axis];
     const known = new Set(b);
-    const per = rows.map(r => { const extra = r.values[axis].filter(v => !known.has(v)); return { label: r.label, value: r.values[axis], extra, status: extra.length ? 'extra' : 'same' }; });
-    axes[axis] = { baseline: b, screens: per, deviating: per.filter((p, i) => p.extra.length && !rows[i].state).map(p => p.label) };
+    const per = rows.map((r, i) => {
+      const d = ledger?.decisionFor(axis, r.label) ?? null;
+      const allowed = d ? new Set(d.values) : known;
+      const exceptions = ledger ? ledger.exceptionsFor(axis, r.label) : [];
+      const extra = [];
+      const byException = new Map();
+      for (const v of r.values[axis].filter(x => !allowed.has(x))) {
+        const e = exceptions.find(x => x.values.includes(v));
+        if (e) byException.set(e.id, [...(byException.get(e.id) || []), v]); else extra.push(v);
+      }
+      const status = extra.length ? (d ? 'violates' : 'extra') : byException.size ? 'excepted' : 'same';
+      const entry = { label: r.label, value: r.values[axis], extra, status };
+      if (d) entry.decision = d.id;
+      if (byException.size) Object.assign(entry, { exception: [...byException.keys()].join(', '), excepted: [...byException.values()].flat() });
+      if (counted(axis, i) && status === 'violates') violations.push({ id: d.id, screen: r.label, axis, values: extra });
+      if (counted(axis, i)) for (const [id, list] of byException) excepted.push({ id, screen: r.label, axis, values: list });
+      return entry;
+    });
+    axes[axis] = { baseline: b, ...decidedOn(axis), screens: per, deviating: per.filter((p, i) => p.status === 'extra' && !rows[i].state).map(p => p.label) };
   }
 
   const drifted = new Set([...COLOR_AXES.map(a => axes[a].deviating), axes.spacingBase.deviating].flat());
@@ -100,18 +169,39 @@ export function compareScreens(screens, { baseline = null, nearDistance = 24 } =
   // An at-rest screen without an accent whose state variant has one: the primary action lives in a state.
   const accentOnlyInState = axes.accent.missing.filter(l => rows.some(r => r.state && r.label.startsWith(`${l}?state=`) && r.values.accent));
   const accentMissing = axes.accent.missing.filter(l => !accentOnlyInState.includes(l) && !rows.find(r => r.label === l)?.state);
-  const verdict = verdictFor(rows.length, screensWithDrift, axes, { accentOnlyInState, accentMissing });
-  return { screens: rows, baseline: base, axes, screensWithDrift, accentOnlyInState, verdict };
+  let ledgerReport = null;
+  if (ledger) {
+    const applied = ledger.measurable.filter(d => (d.kind === 'decision'
+      ? rows.some(r => ledger.decisionFor(d.axis, r.label) === d)
+      : rows.some(r => ledger.covers(d, r.label)))).map(d => d.id).sort(byId);
+    const entries = decisions.filter(d => applied.includes(d.id)).map(d => ({
+      id: d.id, kind: d.kind, ...(d.to ? { to: d.to } : {}), ...(d.rule ? { rule: d.rule } : {}), axis: d.axis, values: [...d.values], ...(d.scope ? { scope: d.scope } : {}),
+    })).sort((a, b) => byId(a.id, b.id));
+    ledgerReport = { applied, violations, excepted, entries };
+  }
+  const verdict = verdictFor(rows.length, screensWithDrift, axes, { accentOnlyInState, accentMissing, ledger: ledgerReport });
+  return { screens: rows, baseline: base, axes, screensWithDrift, accentOnlyInState, ...(ledgerReport ? { decisions: ledgerReport } : {}), verdict };
 }
 
-function verdictFor(total, drifted, axes, { accentOnlyInState = [], accentMissing = [] } = {}) {
+function verdictFor(total, drifted, axes, { accentOnlyInState = [], accentMissing = [], ledger = null } = {}) {
   const part = (axis, list) => (list.length ? `${AXIS_TITLES[axis]} (${list.join(', ')})` : null);
   const hard = ['accent', 'ink', 'canvas', 'spacingBase'].map(a => part(a, axes[a].deviating)).filter(Boolean);
   const soft = SET_AXES.filter(a => a !== 'spacingScale').map(a => part(a, axes[a].deviating)).filter(Boolean);
   const lines = [drifted.length
     ? `${drifted.length} of ${total} screens drift from the baseline on ${hard.join('; ')}.`
-    : `All ${total} screens agree with the baseline on accent, ink, canvas, and spacing base.`];
+    : ledger?.violations.length
+      ? `No unrecorded drift on accent, ink, canvas, or spacing base across ${total} screens.`
+      : `All ${total} screens agree with the baseline on accent, ink, canvas, and spacing base.`];
   if (soft.length) lines.push(`Values outside the shared set: ${soft.join('; ')}.`);
+  if (ledger?.violations.length) {
+    const count = ledger.violations.reduce((sum, v) => sum + v.values.length, 0);
+    lines.push(`${count} value(s) violate recorded decisions: ${ledger.violations.map(v => `${v.id} on ${v.screen} (${v.values.join(', ')})`).join('; ')}.`);
+  }
+  if (ledger?.excepted.length) {
+    const used = new Map();
+    for (const e of ledger.excepted) used.set(e.id, [...new Set([...(used.get(e.id) || []), e.screen])]);
+    lines.push(`Approved exceptions used: ${[...used].sort(([a], [b]) => byId(a, b)).map(([id, list]) => `${id} on ${list.join(', ')}`).join('; ')}.`);
+  }
   if (accentOnlyInState.length) lines.push(`On ${accentOnlyInState.join(', ')} the primary action appears only in a state; the accent was read from the state variant.`);
   if (accentMissing.length) lines.push(`No accent was derived on ${accentMissing.join(', ')}; if the primary action appears only in a state, re-measure with --states.`);
   return lines.join(' ');
@@ -120,10 +210,28 @@ function verdictFor(total, drifted, axes, { accentOnlyInState = [], accentMissin
 export function renderDriftMarkdown(report, meta = {}) {
   const labels = report.screens.map(s => s.label);
   const fmt = v => (v === null || v === undefined ? 'none' : Array.isArray(v) ? (v.length ? v.join(', ') : 'none') : String(v));
-  const cell = p => (p.status === 'same' || p.status === 'none' ? fmt(p.value) : p.status === 'extra' ? `${fmt(p.value)} (+${p.extra.join(', ')})` : `${fmt(p.value)} (${p.status})`);
-  const row = axis => `| ${AXIS_TITLES[axis]} | ${fmt(report.axes[axis].baseline)} | ${report.axes[axis].screens.map(cell).join(' | ')} |`;
+  // Scalar cells: `40 (violates D-001)`, `32 (approved D-002)`. Set cells name the values concerned.
+  const cell = p => {
+    const set = Array.isArray(p.value);
+    const notes = [];
+    if (p.status === 'extra') notes.push(`+${p.extra.join(', ')}`);
+    else if (p.status === 'violates') notes.push(`violates ${p.decision}${set ? `: ${p.extra.join(', ')}` : ''}`);
+    else if (!['same', 'none', 'excepted'].includes(p.status)) notes.push(p.status);
+    if (p.exception) notes.push(`approved ${p.exception}${set ? `: ${p.excepted.join(', ')}` : ''}`);
+    return notes.length ? `${fmt(p.value)} (${notes.join('; ')})` : fmt(p.value);
+  };
+  const row = axis => `| ${AXIS_TITLES[axis]} | ${fmt(report.axes[axis].baseline)}${report.axes[axis].decision ? ` (decided ${report.axes[axis].decision})` : ''} | ${report.axes[axis].screens.map(cell).join(' | ')} |`;
   const offScale = report.axes.spacingBase.screens.filter(p => p.offScale?.length).map(p => `- ${p.label}: ${p.offScale.join(', ')}`);
   const screenList = report.screens.map(s => `- ${s.label}${s.url ? ` — ${s.url}` : ''}`);
+  const ledger = report.decisions?.applied.length ? report.decisions : null;
+  const scopeText = d => (d.scope ? [d.scope.screens && `screens: ${d.scope.screens.join(', ')}`, d.scope.artifacts && `artifacts: ${d.scope.artifacts.join(', ')}`].filter(Boolean).join(' · ') : 'whole project');
+  const recorded = ledger ? `
+
+## Recorded decisions
+
+From the project's decisions ledger. A value outside a decision \`violates\` it; a value an approved exception covers is not drift.
+
+${ledger.entries.map(d => `- ${d.id} · ${d.kind === 'exception' ? `exception to ${[d.to, d.rule].filter(Boolean).join(', ')}` : 'decision'} · ${AXIS_TITLES[d.axis]} ${d.kind === 'exception' ? '+' : '='} ${d.values.join(', ')} · ${scopeText(d)}`).join('\n')}` : '';
   return `# Drift report — ${report.screens.length} screen(s)
 
 Measured ${meta.observedAt ?? ''} with ${meta.browser ?? 'a caller-supplied browser'} at 1440×900 and 390×844.
@@ -135,7 +243,7 @@ Baseline: ${meta.baselineSource ?? report.baseline.source}.${meta.states?.length
 |---|---|${labels.map(() => '---').join('|')}|
 ${['accent', 'ink', 'canvas', 'spacingBase', 'spacingScale', 'typeSizes', 'radii', 'fonts', 'controlHeights'].map(row).join('\n')}
 
-Statuses: \`same\`, \`near\` (within a shade of the baseline), \`different\`, \`none\` (not derived on that screen), \`+values\` (present here, absent from the shared set).
+Statuses: \`same\`, \`near\` (within a shade of the baseline), \`different\`, \`none\` (not derived on that screen), \`+values\` (present here, absent from the shared set)${ledger ? ', `violates D-…` (outside a recorded project decision), `approved D-…` (covered by an approved exception)' : ''}.${recorded}
 
 ## Off-scale spacing per screen
 
@@ -151,7 +259,8 @@ These are measurements of computed styles, not a score. The accent is what fille
 are painted with, then what links are coloured with; a screen whose primary action only appears in
 a state (a save bar, a dialog) reads \`none\` at rest, so re-measure it with \`--states\`. A
 \`different\` value is a question for the owner of the design system, who may already have approved
-it. State variants (\`?state=…\`) count toward the verdict on the accent only; their text and
+it; an approval recorded in the decisions ledger (\`decisions\` in \`.styleseed/project.json\`) reads
+\`approved\` on the next run. State variants (\`?state=…\`) count toward the verdict on the accent only; their text and
 spacing distributions describe the state, not the screen. No page text, screenshots, or URLs
 beyond the ones passed in are written.
 `;

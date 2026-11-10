@@ -76,13 +76,13 @@ test("catalog reviews are plural: approved needs an agreeing review, one review 
   };
   try {
     assert.ok(canon.rules.every((entry) => !Object.hasOwn(entry, "review")), "no catalog entry uses the singular review");
-    const agree = { reviewer: "koh-yura", date: "2026-11-10", verdict: "agree", via: "designer+agent" };
+    const agree = { reviewer: "reviewer-a", date: "2026-11-10", verdict: "agree", via: "designer+agent" };
     assert.equal(validate((entry) => { entry.evidence.level = "approved"; entry.reviews = [{ ...agree, verdict: "conditional", date: "2026-11-09" }, agree]; }).status, 0);
     const conditionalOnly = validate((entry) => { entry.evidence.level = "approved"; entry.reviews = [{ ...agree, verdict: "conditional" }]; });
     assert.equal(conditionalOnly.status, 1);
     assert.match(conditionalOnly.stderr, /CRAFT-control-heights: evidence\.level "approved" needs at least one review with verdict "agree"/u);
     assert.match(validate((entry) => { entry.evidence.level = "approved"; }).stderr, /needs at least one review with verdict "agree"/u);
-    assert.match(validate((entry) => { entry.reviews = [agree, { ...agree, verdict: "disagree" }]; }).stderr, /two entries by koh-yura on 2026-11-10/u);
+    assert.match(validate((entry) => { entry.reviews = [agree, { ...agree, verdict: "disagree" }]; }).stderr, /two entries by reviewer-a on 2026-11-10/u);
     assert.match(validate((entry) => { entry.reviews = [{ ...agree, via: "x".repeat(41) }]; }).stderr, /reviews\[0\]\.via is too long \(max 40\)/u);
     assert.match(validate((entry) => { entry.review = agree; }).stderr, /\.review is not a known field/u);
     assert.equal(validate((entry) => { entry.reviews = [{ ...agree, verdict: "disagree" }]; }).status, 0, "an inferred entry may carry a disagree");

@@ -8,7 +8,7 @@
 //   node scripts/validate-cases.mjs [cases-dir]   (defaults to research/cases; the schema always
 //                                                  comes from research/cases/schema)
 import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
-import { join, dirname, basename, resolve, relative } from "node:path";
+import { join, dirname, basename, resolve, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -109,7 +109,7 @@ for (const draft of drafts) {
   }
 }
 
-const skipped = drafts.length ? `; ${drafts.length} draft(s) skipped (${drafts.map((d) => relative(casesDir, d)).join(", ")}): fill in a case.draft.json and rename it to case.json to validate it` : "";
+const skipped = drafts.length ? `; ${drafts.length} draft(s) skipped (${drafts.map((d) => relative(casesDir, d).split(sep).join("/")).join(", ")}): fill in a case.draft.json and rename it to case.json to validate it` : "";
 if (problems.length) {
   console.error(problems.join("\n"));
   console.error(`\n${problems.length} problem(s) in ${count} case(s)${skipped}`);

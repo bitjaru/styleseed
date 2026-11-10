@@ -173,7 +173,8 @@
         "D2",
         "D4"
       ],
-      "status": "candidate"
+      "status": "candidate",
+      "reviews": []
     },
     {
       "id": "R2",
@@ -188,7 +189,8 @@
       "decisions": [
         "D3"
       ],
-      "status": "candidate"
+      "status": "candidate",
+      "reviews": []
     },
     {
       "id": "R3",
@@ -203,7 +205,8 @@
       "decisions": [
         "D5"
       ],
-      "status": "candidate"
+      "status": "candidate",
+      "reviews": []
     },
     {
       "id": "R4",
@@ -219,7 +222,8 @@
         "D6",
         "D7"
       ],
-      "status": "candidate"
+      "status": "candidate",
+      "reviews": []
     },
     {
       "id": "R5",
@@ -234,7 +238,8 @@
       "decisions": [
         "D7"
       ],
-      "status": "candidate"
+      "status": "candidate",
+      "reviews": []
     }
   ],
   "contributors": [

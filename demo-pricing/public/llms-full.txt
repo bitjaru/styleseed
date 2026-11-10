@@ -301,7 +301,7 @@ refuses symlinks, hardlinks, malformed markers, and multiple managed blocks.
 | Brand recipe | Apply reusable morphology and component selection | geometry, containment, controls, collections | grammar job, protected brand assets, or accessibility |
 | Palette engine | Bind semantic roles to the job; derive ramps, companions, surfaces, and media anchors from a key color | posture, bounded generation inputs, validated project output | contrast, status meaning, or independent hierarchy |
 | Aesthetic profile | Coordinated look adjustment | radius, density, tone, motion within bounds | task structure |
-| Design lock | Persist selected values | known enums and project tokens | invent exceptions or waive rules |
+| Design lock | Persist selected values and recorded project decisions | known enums, project tokens, decisions, and exceptions to defaults | waive an invariant or apply an unrecorded exception |
 | Context compiler | Emit the selected method with provenance | deterministic bundle + manifest | silently invent or merge unknown IDs |
 | Build skills | Apply the compiled method | implementation | self-certify without evidence |
 | Score + verify | Detect code and pixel drift | fixes needed to comply | redefine the chosen method |
@@ -405,6 +405,17 @@ roles and scoped CSS in the bundle and method hash; application code must consum
 Artifact overrides replace only named roles. Read-only starting proposals never overwrite config,
 and numeric compliance does not prove design quality. See
 [the spatial contract](.claude/skills/styleseed/workflows/ss-resolve/references/spacing.md) for limits and verification.
+
+## Project decisions
+
+Registry projects keep approved decisions and approved exceptions in `project.json` `decisions`:
+each entry has an id, a statement, who approved it and when, and optionally a measured axis with
+values, a scope of screens or artifacts, and the catalog rule or decision it refers to. A decision
+outranks a catalog default and never an invariant; an exception adds allowed values to a decision or
+a default rule, and an exception against an invariant fails the resolve. The compiler lists the
+entries that apply to an artifact in its rules section (so they are part of the method hash), and
+the drift report measures screens against them: `violates` for a value outside a decision, `approved`
+for one an exception covers. See [the decisions ledger](.claude/skills/styleseed/workflows/ss-resolve/references/decisions.md).
 
 ## Imported token canon
 

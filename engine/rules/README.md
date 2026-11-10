@@ -4,12 +4,15 @@
 fields an agent, a checker, and a reviewer need and prose cannot carry reliably.
 
 ```
-id · axis · statement · kind · scope · priority · exceptions · rationale · evidence · check · source · anchor
+id · axis · statement · kind · scope · priority · exceptions · rationale · evidence · check · source · anchor · reviews
 ```
 
-- `kind` — `invariant` binds everywhere (the constitution and `DESIGN-LANGUAGE.md` §18);
-  `default` is a recipe's choice and yields to a recorded project decision; `project-decision`
-  is set in a project lock and appears here only as a template.
+- `kind` — `invariant` binds everywhere (the constitution and `DESIGN-LANGUAGE.md` §18) and no
+  project exception can waive it; `default` is a recipe's choice and yields to a recorded project
+  decision; `project-decision` is reserved and has no entries. A project's decisions and its
+  approved exceptions to defaults live in the project, in the `decisions` ledger of
+  `.styleseed/project.json`, not in this catalog (see
+  [the decisions ledger](../.claude/skills/styleseed/workflows/ss-resolve/references/decisions.md)).
 - `scope` — grammars, adapters, domains, page types, components, states. Empty means any. The
   resolver includes an entry when every non-empty list intersects the artifact's selection.
 - `priority` — `blocks` is a fail state independent of any score; `strong` weighs heavily;
@@ -18,6 +21,9 @@ id · axis · statement · kind · scope · priority · exceptions · rationale 
   [`research/cases/README.md`](../../research/cases/README.md). Most first entries are
   `inferred`: reasons the maintainer supplies. Cases move entries toward `observed` and a named
   review toward `approved`.
+- `reviews` — named reviews, oldest first: `reviewer`, `date`, `verdict` (agree / conditional /
+  disagree), optional `via` (how it was held, e.g. `designer+agent`, max 40) and `note`. An entry
+  at `evidence.level: "approved"` needs at least one `agree`; one review per reviewer and date.
 - `check.mode` — `machine` names deterministic detectors (`SS001`–`SS006` in
   `styleseed-check.mjs`); `model` is scored; `human` is for the review board.
 - `source` + `anchor` — the prose that states the rule and an exact phrase that must appear in
@@ -28,14 +34,16 @@ id · axis · statement · kind · scope · priority · exceptions · rationale 
 
 - `scripts/build-context-catalog.mjs` embeds the entries in the compiled context catalog.
 - The resolver (`ss-resolve/scripts/compiler.mjs`) appends a **Rules in scope** section to every
-  bundle: all invariants, then the defaults whose scope matches the selection, ordered by
-  priority and id.
+  bundle: the project decisions that apply to the artifact (from the project's ledger), all
+  invariants, then the defaults whose scope matches the selection, ordered by priority and id. A
+  default with an approved project exception says so on its line.
 - `styleseed-check.mjs` (ss-score) stamps every deterministic finding with its catalog `rule`,
   `priority`, and `blocking`; the evidence gate refuses a run with a blocking finding, SARIF
   reports it at `error` level, and `scan --gate` exits 3. `drift-report.mjs --gate` does the same
-  for at-rest drift (INV-05).
+  for at-rest drift (INV-05) and for values that violate a recorded project decision.
 - `scripts/validate-rules.mjs` runs in `verify-repo --core`: schema, unique ids, known scope
-  values, existing sources, present anchors, detector ids, and that invariants carry no scope.
+  values, existing sources, present anchors, detector ids, that invariants carry no scope, and
+  the review rules above.
 
 ## Adding or changing an entry
 

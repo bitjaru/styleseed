@@ -4,8 +4,10 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import "./showcase/examples";
 import { listShowcase } from "@/lib/showcase";
-import palette from "@/content/site-docs-palette.json";
+import palette from "./_home/brand-palette.json";
+import { BrandMark } from "./_home/brand-mark";
 import { Hero } from "./_home/hero";
+import { DesignSpecimens } from "./_home/design-specimens";
 import { DriftReport } from "./_home/drift-report";
 import { RulesInScope } from "./_home/rules-in-scope";
 import { ShowcaseRibbon } from "./_home/showcase-ribbon";
@@ -25,8 +27,8 @@ const theme = {
   "--home-fieldDeep": palette.ramps.primary["950"],
   "--home-fieldInk": palette.ramps.primary["50"],
   "--home-fieldMuted": palette.ramps.primary["200"],
-  "--home-mint": palette.ramps.primary["100"],
-  "--home-lilac": palette.ramps.accent["100"],
+  "--home-primaryTint": palette.ramps.primary["100"],
+  "--home-accentTint": palette.ramps.accent["100"],
 } as CSSProperties;
 const FOOTER_GROUPS = [
   { title: "Explore", links: [
@@ -56,7 +58,7 @@ export default function HomePage() {
       <header className={styles.header}>
         <div className={`${styles.container} ${styles.headerInner}`}>
           <Link href="/" className={styles.brand} aria-label="StyleSeed home">
-            <span className={styles.mark} aria-hidden="true">S</span><span className={styles.brandName}>StyleSeed</span>
+            <BrandMark /><span className={styles.brandName}>StyleSeed</span>
           </Link>
           <nav className={styles.nav} aria-label="Main navigation">
             <a href="#get-started">Get started</a>
@@ -72,9 +74,13 @@ export default function HomePage() {
       <main id="main" className={styles.main}>
         <Hero />
 
+        <DesignSpecimens />
+
         <section id="drift-report" className={`${styles.wideContainer} ${styles.section}`} aria-labelledby="drift-title">
           <div className={styles.sectionHeading}>
-            <h2 id="drift-title">See what drifted between screens.</h2>
+            <span className={styles.eyebrow}>Measure the details</span>
+            <h2 id="drift-title">A shared system.<br />A visible difference.</h2>
+            <p>Compare the screens your agent built against the decisions you kept.</p>
           </div>
           <DriftReport />
         </section>
@@ -82,7 +88,9 @@ export default function HomePage() {
         <section id="rules" className={`${styles.section} ${styles.rulesSection}`} aria-labelledby="rules-title">
           <div className={`${styles.container} ${styles.rulesLayout}`}>
             <div className={styles.sectionHeading}>
-              <h2 id="rules-title">Every rule has an ID.<br /> Every invariant has a fail state.</h2>
+              <span className={styles.eyebrow}>From intent to implementation</span>
+              <h2 id="rules-title">Good decisions.<br />Ready for the next task.</h2>
+              <p>Every rule has an ID. Every invariant has a fail state. Your agent gets the rules that belong to the screen it is building.</p>
             </div>
             <RulesInScope />
           </div>
@@ -154,13 +162,11 @@ export default function HomePage() {
             <Link href="/showcase" className={styles.textLink}>Explore {entries.length} examples <ArrowRight size={16} aria-hidden="true" /></Link>
           </div>
           <ShowcaseRibbon count={entries.length}>
-            {[false, true].map((duplicate) => (
-              <ul key={String(duplicate)} className={styles.ribbonGroup} aria-hidden={duplicate || undefined}
-                style={{ "--fan-copy": duplicate ? 1 : 0 } as CSSProperties}>
+              <ul className={styles.ribbonGroup}>
                 {entries.map((entry, index) => (
                   <li key={entry.id} style={{ "--i": index } as CSSProperties}>
                     <Link href={`/showcase/${entry.id}`} className={styles.showcaseItem} data-kind="product"
-                      aria-label={`${entry.name} — ${entry.category}`} tabIndex={duplicate ? -1 : undefined}>
+                      aria-label={`${entry.name} — ${entry.category}`}>
                       <Image
                         src={`/showcase-hero/${entry.id}.png`}
                         alt=""
@@ -170,10 +176,10 @@ export default function HomePage() {
                         className={styles.showcaseImage}
                       />
                     </Link>
+                    <p className={styles.showcaseLabel}>{entry.name}<span>{entry.category}</span></p>
                   </li>
                 ))}
               </ul>
-            ))}
           </ShowcaseRibbon>
         </section>
       </main>

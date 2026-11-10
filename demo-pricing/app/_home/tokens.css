@@ -1,18 +1,47 @@
-/* Hallmark · theme: brand · scoped StyleSeed tokens from site-docs-palette.json · v2.0.0 */
+/* Hallmark · theme: brand · scoped StyleSeed tokens from brand-palette.json · v2.0.0 */
 [data-styleseed-home] {
   --font-display: var(--font-inter), Inter, sans-serif;
   --font-body: var(--font-display);
   --font-outlier: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   --home-font: var(--font-body);
   --home-mono: var(--font-outlier);
-  --home-section-space: 240px;
+  --home-section-space: 160px;
   --home-motion-duration: 190ms;
   --home-motion-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --home-motion-settle: 360ms;
+  --home-motion-spring: cubic-bezier(0.2, 1.25, 0.3, 1);
+  --home-space-4: 4px;
+  --home-space-8: 8px;
+  --home-space-12: 12px;
+  --home-space-16: 16px;
+  --home-space-20: 20px;
+  --home-space-24: 24px;
+  --home-space-28: 28px;
+  --home-space-32: 32px;
+  --home-space-40: 40px;
+  --home-space-48: 48px;
+  --home-space-56: 56px;
+  --home-space-64: 64px;
+  --home-space-80: 80px;
+  --home-space-96: 96px;
+  --home-radius-sm: 8px;
+  --home-radius-md: 16px;
+  --home-radius-lg: 24px;
+  --home-workbench: color-mix(in srgb, var(--home-foreground) 4%, var(--home-surface));
   --home-display: 64px;
   --home-heading: 48px;
   --home-object-shadow: 0 28px 52px -32px color-mix(in srgb, var(--home-foreground) 34%, transparent);
   --home-rule: color-mix(in srgb, var(--home-border) 50%, var(--home-surface));
   --home-darkRule: color-mix(in srgb, var(--home-fieldInk) 22%, var(--home-fieldDeep));
-  --home-signal: var(--home-mint);
+  --home-signal: var(--home-primaryTint);
+  --home-control-size: 44px;
+  --home-compact-control-size: 36px;
+  --home-space-72: 72px;
+  --home-copy-width: 88px;
+  --home-specimen-stage-height: 540px;
+  --home-install-width: 680px;
+  --home-diagram-width: 180px;
+  --home-diagram-width-mobile: 144px;
+  --home-pairing-height: 104px;
   --home-empty: transparent;
 }

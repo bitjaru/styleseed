@@ -1,7 +1,7 @@
 {
   "schemaVersion": 5,
   "engineVersion": "5.0.0",
-  "engineRevision": "sha256:5c15e87b663322191c4dd77d12a1c367935e6a3ed4a3a07c2fa284205538a684",
+  "engineRevision": "sha256:b894adb04ead19d4b90ae65dedce1d79868fa2b8c824dde3b83b8a45dd321b0d",
   "distributionSource": {
     "schemaVersion": 1,
     "channel": "edge",
@@ -10,7 +10,7 @@
   },
   "distributions": {
     "core": {
-      "revision": "sha256:5c15e87b663322191c4dd77d12a1c367935e6a3ed4a3a07c2fa284205538a684",
+      "revision": "sha256:b894adb04ead19d4b90ae65dedce1d79868fa2b8c824dde3b83b8a45dd321b0d",
       "files": [
         {
           "path": "LICENSE",
@@ -204,8 +204,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/rules-in-scope.mjs",
-          "sha256": "10e4138ea9d3bc1dc8bbf782fdeac641c3c720c43bb91ae059d2508e56e27988",
-          "bytes": 4909
+          "sha256": "f3f8049cc5404237156384885e4e668cf4c97e005096aae527b9217353d41d92",
+          "bytes": 4980
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/runtime-contract.mjs",
@@ -549,23 +549,23 @@
         },
         {
           "path": "engine/rules/README.md",
-          "sha256": "cc68043e09354de65cfc8ef26ed94915c98a8c412dd7f7cee70f3b4bfbb4688f",
-          "bytes": 3923
+          "sha256": "e13f6b004885c7b2bec25e519e93e75e7265e1b7910e0080cda28ba6d4866f9b",
+          "bytes": 4213
         },
         {
           "path": "engine/rules/catalog.json",
-          "sha256": "06d9c94740537497188773d2663bed5fb934a4c11dddf61975987e6d6f92ff4d",
-          "bytes": 18151
+          "sha256": "49cde73250d3956b022303dc1c84cf4588fee62538a68bd67bdb4992a354b7e6",
+          "bytes": 18843
         },
         {
           "path": "engine/rules/catalog.schema.json",
-          "sha256": "bc212d7253a3440a63d10a21436782fcb55da2a09b5c8e9b35ce9d2a0aa0ce7d",
-          "bytes": 4714
+          "sha256": "1ffc341127ee6b266aa28f865795786bc3ac89ebf8d753902440e09f3ff2436e",
+          "bytes": 5134
         }
       ]
     },
     "skills": {
-      "revision": "sha256:b1eac38e641b586a6c0f6471010e900afa29178c24bc488068ab7a4375ee9c50",
+      "revision": "sha256:cb04adbe2fcd2a33dcfe3526ff1d6b46b82e93cc4f828185674144df7ed4621b",
       "files": [
         {
           "path": "engine/.claude/skills/styleseed/SKILL.md",
@@ -749,8 +749,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/rules-in-scope.mjs",
-          "sha256": "10e4138ea9d3bc1dc8bbf782fdeac641c3c720c43bb91ae059d2508e56e27988",
-          "bytes": 4909
+          "sha256": "f3f8049cc5404237156384885e4e668cf4c97e005096aae527b9217353d41d92",
+          "bytes": 4980
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/runtime-contract.mjs",
@@ -1153,8 +1153,8 @@
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-resolve/scripts/rules-in-scope.mjs",
-      "sha256": "10e4138ea9d3bc1dc8bbf782fdeac641c3c720c43bb91ae059d2508e56e27988",
-      "bytes": 4909
+      "sha256": "f3f8049cc5404237156384885e4e668cf4c97e005096aae527b9217353d41d92",
+      "bytes": 4980
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-resolve/scripts/runtime-contract.mjs",
@@ -1498,18 +1498,18 @@
     },
     {
       "path": "rules/README.md",
-      "sha256": "cc68043e09354de65cfc8ef26ed94915c98a8c412dd7f7cee70f3b4bfbb4688f",
-      "bytes": 3923
+      "sha256": "e13f6b004885c7b2bec25e519e93e75e7265e1b7910e0080cda28ba6d4866f9b",
+      "bytes": 4213
     },
     {
       "path": "rules/catalog.json",
-      "sha256": "06d9c94740537497188773d2663bed5fb934a4c11dddf61975987e6d6f92ff4d",
-      "bytes": 18151
+      "sha256": "49cde73250d3956b022303dc1c84cf4588fee62538a68bd67bdb4992a354b7e6",
+      "bytes": 18843
     },
     {
       "path": "rules/catalog.schema.json",
-      "sha256": "bc212d7253a3440a63d10a21436782fcb55da2a09b5c8e9b35ce9d2a0aa0ce7d",
-      "bytes": 4714
+      "sha256": "1ffc341127ee6b266aa28f865795786bc3ac89ebf8d753902440e09f3ff2436e",
+      "bytes": 5134
     }
   ],
   "generatedFrom": [
@@ -1624,7 +1624,7 @@
       "kind": "invariant",
       "scope": {},
       "priority": "blocks",
-      "rationale": "Drift between screens is how a design system dissolves; the drift report measures it and the lock records the allowed exceptions.",
+      "rationale": "Drift between screens is how a design system dissolves. The decisions ledger (decisions[] in .styleseed/project.json; ss-resolve/references/decisions.md) records the decided values and approved exceptions. drift-report.mjs --gate measures rendered screens and exits 3 on at-rest drift in accent, ink, canvas, or spacing base, or on a value outside a recorded decision; the spacing scale, type sizes, radii, fonts, and control heights are listed and fail only against a decision.",
       "evidence": {
         "level": "inferred",
         "sources": [
@@ -1633,7 +1633,8 @@
         ]
       },
       "check": {
-        "mode": "model"
+        "mode": "machine",
+        "tool": "ss-verify/scripts/drift-report.mjs --gate"
       },
       "source": "engine/DESIGN-LANGUAGE.md#18",
       "anchor": "unexplained role drift"
@@ -1725,7 +1726,7 @@
       "exceptions": [
         "inline text controls inside dense tables when the row itself is the target"
       ],
-      "rationale": "Mixed control heights read as several products on one screen; the drift report lists control-height families per screen for this reason.",
+      "rationale": "Mixed control heights read as several products on one screen. drift-report.mjs --gate enforces heights only once the project has recorded a controlHeights decision in its decisions ledger: a rendered control height outside the decided set and its approved exceptions exits 3. Without a decision the report lists the control-height families per screen and does not fail.",
       "evidence": {
         "level": "inferred",
         "sources": [
@@ -1733,7 +1734,8 @@
         ]
       },
       "check": {
-        "mode": "model"
+        "mode": "machine",
+        "tool": "ss-verify/scripts/drift-report.mjs --gate"
       },
       "source": "engine/CRAFT-BASELINE.md",
       "anchor": "share a height"

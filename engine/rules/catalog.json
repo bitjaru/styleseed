@@ -60,9 +60,9 @@
       "kind": "invariant",
       "scope": {},
       "priority": "blocks",
-      "rationale": "Drift between screens is how a design system dissolves; the drift report measures it and the lock records the allowed exceptions.",
+      "rationale": "Drift between screens is how a design system dissolves. The decisions ledger (decisions[] in .styleseed/project.json; ss-resolve/references/decisions.md) records the decided values and approved exceptions. drift-report.mjs --gate measures rendered screens and exits 3 on at-rest drift in accent, ink, canvas, or spacing base, or on a value outside a recorded decision; the spacing scale, type sizes, radii, fonts, and control heights are listed and fail only against a decision.",
       "evidence": { "level": "inferred", "sources": ["engine/DESIGN-LANGUAGE.md#18", "engine/CRAFT-BASELINE.md"] },
-      "check": { "mode": "model" },
+      "check": { "mode": "machine", "tool": "ss-verify/scripts/drift-report.mjs --gate" },
       "source": "engine/DESIGN-LANGUAGE.md#18",
       "anchor": "unexplained role drift"
     },
@@ -115,9 +115,9 @@
       "scope": {},
       "priority": "strong",
       "exceptions": ["inline text controls inside dense tables when the row itself is the target"],
-      "rationale": "Mixed control heights read as several products on one screen; the drift report lists control-height families per screen for this reason.",
+      "rationale": "Mixed control heights read as several products on one screen. drift-report.mjs --gate enforces heights only once the project has recorded a controlHeights decision in its decisions ledger: a rendered control height outside the decided set and its approved exceptions exits 3. Without a decision the report lists the control-height families per screen and does not fail.",
       "evidence": { "level": "inferred", "sources": ["engine/CRAFT-BASELINE.md"] },
-      "check": { "mode": "model" },
+      "check": { "mode": "machine", "tool": "ss-verify/scripts/drift-report.mjs --gate" },
       "source": "engine/CRAFT-BASELINE.md",
       "anchor": "share a height"
     },

@@ -88,3 +88,49 @@ test("catalog reviews are plural: approved needs an agreeing review, one review 
     assert.equal(validate((entry) => { entry.reviews = [{ ...agree, verdict: "disagree" }]; }).status, 0, "an inferred entry may carry a disagree");
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });
+
+test("check.tool renders under Checks: next to detectors", () => {
+  const selection = { grammar: "operations-console", adapter: "product-ui" };
+  const toolOnly = rule({ id: "T-1", check: { mode: "machine", tool: "ss-verify/scripts/drift-report.mjs --gate" } });
+  const both = rule({ id: "T-2", check: { mode: "machine", detectors: ["SS003"], tool: "ss-verify/scripts/drift-report.mjs --gate" } });
+  const section = renderRulesSection([toolOnly, both], selection);
+  assert.ok(section.includes("- **T-1** (advisory · inferred · any selection): A statement long enough to pass. Checks: ss-verify/scripts/drift-report.mjs --gate. Source: engine/CRAFT-BASELINE.md"));
+  assert.ok(section.includes("Checks: SS003, ss-verify/scripts/drift-report.mjs --gate. Source:"));
+});
+
+test("check.tool: machine mode accepts a workflow script that exists with flags it parses", () => {
+  const canon = JSON.parse(readFileSync(resolve(repoRoot, "engine/rules/catalog.json"), "utf8"));
+  const dir = mkdtempSync(join(tmpdir(), "ss-rule-tool-"));
+  const validate = (check) => {
+    const catalog = JSON.parse(JSON.stringify(canon));
+    catalog.rules.find((entry) => entry.id === "DL-23-amounts-never-wrap").check = check;
+    const file = join(dir, "catalog.json");
+    writeFileSync(file, JSON.stringify(catalog));
+    return spawnSync(process.execPath, [resolve(repoRoot, "scripts/validate-rules.mjs"), file], { encoding: "utf8" });
+  };
+  try {
+    assert.equal(validate({ mode: "machine", tool: "ss-verify/scripts/drift-report.mjs --gate" }).status, 0);
+    assert.equal(validate({ mode: "machine", tool: "ss-verify/scripts/drift-report.mjs" }).status, 0, "flags are optional");
+    assert.match(validate({ mode: "machine" }).stderr, /DL-23-amounts-never-wrap: check\.mode "machine" needs at least one detector id or a check\.tool/u);
+    assert.match(validate({ mode: "machine", tool: "ss-verify/scripts/missing.mjs" }).stderr, /check\.tool script ss-verify\/scripts\/missing\.mjs does not exist/u);
+    assert.match(validate({ mode: "machine", tool: "ss-verify/scripts/drift-report.mjs --strict" }).stderr, /check\.tool flag --strict is not an option of ss-verify\/scripts\/drift-report\.mjs/u);
+    assert.match(validate({ mode: "machine", tool: "../../scripts/verify-repo.mjs" }).stderr, /check\.tool does not match/u);
+    assert.match(validate({ mode: "model", tool: "ss-verify/scripts/drift-report.mjs --gate" }).stderr, /detectors and check\.tool are only meaningful with check\.mode "machine"/u);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test("drift-checked rules name the drift gate and the README counts match the catalog", () => {
+  const canon = JSON.parse(readFileSync(resolve(repoRoot, "engine/rules/catalog.json"), "utf8")).rules;
+  for (const id of ["INV-05-no-unexplained-role-drift", "CRAFT-control-heights"]) {
+    const entry = canon.find((r) => r.id === id);
+    assert.deepEqual(entry.check, { mode: "machine", tool: "ss-verify/scripts/drift-report.mjs --gate" }, id);
+    assert.match(entry.rationale, /drift-report\.mjs --gate/u, `${id} says what the tool checks`);
+  }
+  assert.match(canon.find((r) => r.id === "INV-05-no-unexplained-role-drift").rationale, /decisions ledger/u);
+  assert.doesNotMatch(canon.find((r) => r.id === "INV-05-no-unexplained-role-drift").rationale, /the lock records/u);
+  const readme = readFileSync(resolve(repoRoot, "engine/rules/README.md"), "utf8").replace(/\s+/gu, " ");
+  const counts = readme.match(/Today: (\d+) machine \([^)]*\), (\d+) model, (\d+) human\./u);
+  assert.ok(counts, "engine/rules/README.md states the check-mode counts as 'Today: N machine (…), N model, N human.'");
+  const byMode = (mode) => canon.filter((r) => r.check.mode === mode).length;
+  assert.deepEqual(counts.slice(1).map(Number), [byMode("machine"), byMode("model"), byMode("human")], "update the counts in engine/rules/README.md");
+});

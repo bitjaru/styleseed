@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 // Validate engine/rules/catalog.json without external dependencies: the schema's required
 // fields and enums, unique ids, scope values that exist in the compiled context catalog,
-// sources that exist with their anchors present, detector ids the checker knows, the rule that
-// invariants carry no scope, and the review rules (approved needs an agreeing review; one review
-// per reviewer and date).
+// sources that exist with their anchors present, detector ids the checker knows, check.tool scripts
+// that exist with the flags they name, the rule that invariants carry no scope, and the review rules
+// (approved needs an agreeing review; one review per reviewer and date).
 //
 //   node scripts/validate-rules.mjs [catalog.json]   (defaults to engine/rules/catalog.json)
 import { readFileSync, existsSync } from "node:fs";
@@ -16,6 +16,8 @@ const schema = JSON.parse(readFileSync(join(root, "engine", "rules", "catalog.sc
 const contextCatalogPath = join(root, "engine/.claude/skills/styleseed/workflows/ss-resolve/references/catalog.json");
 const checker = readFileSync(join(root, "engine/.claude/skills/styleseed/workflows/ss-score/scripts/styleseed-check.mjs"), "utf8");
 const knownDetectors = new Set([...checker.matchAll(/\b(SS\d{3}): \{ name:/gu)].map((match) => match[1]));
+const workflowsRoot = join(root, "engine/.claude/skills/styleseed/workflows");
+const TOOL_PATTERN = new RegExp(schema.$defs.rule.properties.check.properties.tool.pattern, "u");
 
 const problems = [];
 const note = (msg) => problems.push(msg);
@@ -81,10 +83,19 @@ for (const rule of rules) {
     if (rule.priority === "advisory") note(`${label}: an invariant cannot be advisory`);
   }
   if (rule.check?.mode === "machine") {
-    if (!rule.check.detectors?.length) note(`${label}: check.mode "machine" needs at least one detector id`);
+    if (!rule.check.detectors?.length && !rule.check.tool) note(`${label}: check.mode "machine" needs at least one detector id or a check.tool`);
     for (const detector of rule.check.detectors ?? []) if (!knownDetectors.has(detector)) note(`${label}: detector ${detector} is not defined in styleseed-check.mjs (${[...knownDetectors].join(", ")})`);
-  } else if (rule.check?.detectors?.length) {
-    note(`${label}: detectors are only meaningful with check.mode "machine"`);
+    if (typeof rule.check.tool === "string" && TOOL_PATTERN.test(rule.check.tool)) {
+      const [script, ...flags] = rule.check.tool.split(" ");
+      const scriptPath = join(workflowsRoot, script);
+      if (!existsSync(scriptPath)) note(`${label}: check.tool script ${script} does not exist under engine/.claude/skills/styleseed/workflows/; name an existing workflow script`);
+      else {
+        const text = readFileSync(scriptPath, "utf8");
+        for (const flag of flags) if (!text.includes(`'${flag}'`) && !text.includes(`"${flag}"`)) note(`${label}: check.tool flag ${flag} is not an option of ${script}; remove it or use one the script parses`);
+      }
+    }
+  } else if (rule.check?.detectors?.length || rule.check?.tool) {
+    note(`${label}: detectors and check.tool are only meaningful with check.mode "machine"`);
   }
   if (typeof rule.source === "string") {
     const path = rule.source.split("#")[0];
@@ -113,4 +124,5 @@ if (problems.length) {
   for (const p of problems) console.error(`  - ${p}`);
   process.exit(1);
 }
-console.log(`rule catalog: ${rules.length} rule(s) valid (${rules.filter((r) => r.kind === "invariant").length} invariants, ${rules.filter((r) => r.check?.mode === "machine").length} with detectors)`);
+const byMode = (mode) => rules.filter((r) => r.check?.mode === mode).length;
+console.log(`rule catalog: ${rules.length} rule(s) valid (${rules.filter((r) => r.kind === "invariant").length} invariants; check modes: ${byMode("machine")} machine, ${byMode("model")} model, ${byMode("human")} human)`);

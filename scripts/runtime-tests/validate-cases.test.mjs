@@ -74,6 +74,10 @@ test("assets are refused anywhere in a case folder, and measure-reference drafts
     const withDraft = spawnSync(process.execPath, [validator, root], { encoding: "utf8" });
     assert.equal(withDraft.status, 0, withDraft.stderr);
     assert.match(withDraft.stdout, /1 case\(s\) valid; 1 draft\(s\) skipped \(.*example-reference-2026-11-10\/case\.draft\.json\): fill in a case\.draft\.json and rename it to case\.json/u);
+    writeFileSync(join(draftDir, "hero.webp"), "");
+    const draftAsset = spawnSync(process.execPath, [validator, root], { encoding: "utf8" });
+    assert.equal(draftAsset.status, 1, "a draft folder may not hold assets either");
+    assert.match(draftAsset.stderr, /case\.draft\.json: hero\.webp: images, fonts and page source are not stored/u);
   } finally { rmSync(root, { recursive: true, force: true }); }
 });
 

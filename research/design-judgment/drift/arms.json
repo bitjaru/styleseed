@@ -1,0 +1,132 @@
+{
+  "schemaVersion": 1,
+  "status": "pre-registered-2026-11-10",
+  "rounds": {
+    "baseline": "the arms marked round=baseline",
+    "re-measure": "every arm in this file; the baseline arms carry over unchanged unless PROTOCOL.md records a dated amendment"
+  },
+  "arms": [
+    {
+      "id": "bare",
+      "label": "No design skill",
+      "round": "baseline",
+      "kit": "A",
+      "skill": null,
+      "methodLine": "No design skill is installed in this repository. Use your own design judgment and process, and say so in your final message.",
+      "setup": [
+        "Workspace: prepare-design-pilot arm A (no StyleSeed files) without TASK.md and PROMPT.md, plus the neutral AGENTS.md and a .gitignore; git init and one starter commit.",
+        "No skill files are added."
+      ]
+    },
+    {
+      "id": "hallmark-lock",
+      "label": "Hallmark with its design.md lock",
+      "round": "baseline",
+      "kit": "A",
+      "skill": {
+        "source": "nutlope/hallmark",
+        "skillName": "hallmark",
+        "installDir": ".agents/skills/hallmark",
+        "invocation": "$hallmark",
+        "installer": "skills@1.7.6",
+        "pin": {
+          "recordedAt": "2026-11-10",
+          "installCommand": "npx -y skills add nutlope/hallmark -a codex -y",
+          "skillPath": "skills/hallmark/SKILL.md",
+          "skillVersion": "2.0.0",
+          "commit": null,
+          "commitNote": "skills@1.7.6 records a content hash (skills-lock.json computedHash), not a git commit. treeHash is the binding pin.",
+          "computedHash": "1465546d7971f57d428a0cbccfe0fa0426d1c309bec28ceefeb70e76f38c640e",
+          "treeHash": "sha256:9a1e87e35ec5ef787d799a1ecf830e62949e8b2347b34ecefd6f643eff34347e",
+          "files": 187,
+          "bytes": 7078549,
+          "skillMdSha256": "sha256:25a1ff92d925b2389e8409f42fb8ad7e033fceca8b5d1f07ed4ca4c28da53dc3"
+        },
+        "lock": [
+          { "file": "SKILL.md", "line": 56, "phrase": "pages share it" },
+          { "file": "SKILL.md", "line": 127, "phrase": "lock the system" },
+          { "file": "references/design-md.md", "line": 3, "phrase": "never writes `design.md` on its own" }
+        ]
+      },
+      "methodLine": "The design skill installed in this repository is Hallmark (`.agents/skills/hallmark`). Invoke it as `$hallmark` for this screen and follow its process end to end. If the repository root has no `design.md` yet, lock the system after the build (Hallmark's `lock the system`) so later screens share it. Report the skill steps you ran in your final message.",
+      "setup": [
+        "Workspace: prepare-design-pilot arm A without TASK.md and PROMPT.md, plus the neutral AGENTS.md and a .gitignore; git init and one starter commit.",
+        "Once per --prepare, in <out>/.skill-cache/hallmark-lock: npx -y skills@1.7.6 add nutlope/hallmark --skill hallmark -a codex -y --copy (or --skill-dir hallmark-lock=<a saved copy of the pinned tree>).",
+        "Refuse unless the installed tree hash equals pin.treeHash.",
+        "Copy the tree to .agents/skills/hallmark in every hallmark-lock workspace."
+      ]
+    },
+    {
+      "id": "styleseed",
+      "label": "StyleSeed skill payload and registry",
+      "round": "baseline",
+      "kit": "B",
+      "skill": {
+        "source": "bitjaru/styleseed engine/.claude/skills (this repository, through prepare-design-pilot arm B)",
+        "skillName": "styleseed",
+        "installDir": ".agents/skills/styleseed",
+        "invocation": "$styleseed",
+        "installer": null,
+        "pin": {
+          "recordedAt": "2026-11-10",
+          "engineVersion": "5.0.0",
+          "engineRevision": "sha256:37b8f0ececef29c0084f988b06b01a5ef0ed5504f098b8b4f380dd2f53b7fba7",
+          "repositoryCommit": "82e59e3db7ef66dd328636f9901030b100e1a03c",
+          "amendment": "2026-11-10, before any run: moved from sha256:0c4bd5777dda0710f1103b168c706438f9e2de3a4988084cecad8f4ff8857a07 (384eb77) after PR #118 changed one skill workflow.",
+          "note": "engineRevision (the catalog hash of the skill payload) is the binding pin; --prepare refuses a checkout whose catalog differs. The baseline round runs from a checkout at the pinned revision; the re-measure round re-pins and records it as an amendment in PROTOCOL.md."
+        }
+      },
+      "methodLine": "The design skill installed in this repository is StyleSeed (`.agents/skills/styleseed`). Invoke it as `$styleseed` for this screen and follow its process end to end. Use the installed StyleSeed skills and the artifact registry. Preserve the existing library/theme; provisional resolver settings do not approve replacing them. Report the skill steps you ran in your final message.",
+      "setup": [
+        "Workspace: prepare-design-pilot arm B (arm A plus the StyleSeed skill payload under .agents/skills/ and the provisional .styleseed/ registry) without TASK.md and PROMPT.md, plus the neutral AGENTS.md and a .gitignore; git init and one starter commit.",
+        "Refuse unless the copied catalog's engineRevision equals pin.engineRevision. The payload is a physical copy; there is no .agents symlink into this repository."
+      ]
+    },
+    {
+      "id": "frontend-design",
+      "label": "Anthropic frontend-design",
+      "round": "re-measure",
+      "kit": "A",
+      "skill": {
+        "source": "anthropics/skills",
+        "skillName": "frontend-design",
+        "installDir": ".agents/skills/frontend-design",
+        "invocation": null,
+        "installer": "skills@1.7.6",
+        "pin": null,
+        "verified": false,
+        "verificationNote": "Source, skill name and install command come from the 2026-11-06 bake-off notes; nothing was installed or checked for this protocol.",
+        "pinStatus": "Not pinned. Before the re-measure round: install with the setup command into a folder outside the repository, record treeHash, files, bytes and version, cite the SKILL.md lines that define its method, and add a dated amendment to PROTOCOL.md."
+      },
+      "methodLine": "The design skill installed in this repository is Anthropic's frontend-design (`.agents/skills/frontend-design`). Read its SKILL.md first and follow it as your method for this screen. Report how you applied it in your final message.",
+      "setup": [
+        "Workspace: prepare-design-pilot arm A without TASK.md and PROMPT.md, plus the neutral AGENTS.md and a .gitignore; git init and one starter commit.",
+        "Once per --prepare, in <out>/.skill-cache/frontend-design: npx -y skills@1.7.6 add anthropics/skills --skill frontend-design -a codex -y --copy; refuse unless the tree hash equals pin.treeHash.",
+        "Copy the tree to .agents/skills/frontend-design in every frontend-design workspace."
+      ]
+    },
+    {
+      "id": "taste",
+      "label": "Taste Skill",
+      "round": "re-measure",
+      "kit": "A",
+      "skill": {
+        "source": "Leonxlnx/taste-skill",
+        "skillName": "design-taste-frontend",
+        "installDir": ".agents/skills/design-taste-frontend",
+        "invocation": "$design-taste-frontend",
+        "installer": "skills@1.7.6",
+        "pin": null,
+        "verified": false,
+        "verificationNote": "Source, skill name and install command come from the 2026-11-06 bake-off notes; nothing was installed or checked for this protocol.",
+        "pinStatus": "Not pinned. Before the re-measure round: install with the setup command into a folder outside the repository, record treeHash, files, bytes and version, cite the SKILL.md lines that define its method, and add a dated amendment to PROTOCOL.md."
+      },
+      "methodLine": "The design skill installed in this repository is Taste Skill (`.agents/skills/design-taste-frontend`). Invoke it as `$design-taste-frontend` for this screen and follow its process end to end. Report the skill steps you ran in your final message.",
+      "setup": [
+        "Workspace: prepare-design-pilot arm A without TASK.md and PROMPT.md, plus the neutral AGENTS.md and a .gitignore; git init and one starter commit.",
+        "Once per --prepare, in <out>/.skill-cache/taste: npx -y skills@1.7.6 add Leonxlnx/taste-skill --skill design-taste-frontend -a codex -y --copy; refuse unless the tree hash equals pin.treeHash.",
+        "Copy the tree to .agents/skills/design-taste-frontend in every taste workspace."
+      ]
+    }
+  ]
+}

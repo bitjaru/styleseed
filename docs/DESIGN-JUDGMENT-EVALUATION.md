@@ -69,6 +69,15 @@ confirmatory result. No particular sample size or spend is authorized by this do
    set numeric thresholds before runs; do not select thresholds after seeing results. Publish
    bounded conclusions, failed runs, missing evidence, and the limits of a small pilot.
 
+## Cross-session drift track
+
+A separate, pre-registered measurement asks whether a fresh session keeps the visual decisions an
+earlier session made: five screens of the kit's app, one Codex session each in the same workspace,
+counted against screen 1 with the rendered drift probe. It reuses this kit's task, fixtures and brand
+inputs, compares `bare`, `hallmark-lock` and `styleseed` arms, and replaces neither the four-arm
+pilot above nor its expert review. Protocol, decision rule and kill rule:
+[research/design-judgment/drift/PROTOCOL.md](../research/design-judgment/drift/PROTOCOL.md).
+
 ## Prerequisites still open
 
 - Actual expert reviewers and approved reference/rubric for each track.

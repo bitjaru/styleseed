@@ -95,6 +95,7 @@ if (!flags.has("--core")) {
     run("Verify reference structure probe", node, ["scripts/test-reference-structure-browser.mjs"]);
     run("Verify reference probe fixes (scroll reveal, several mains, display text, unreadable stylesheet)", node, ["scripts/test-reference-fixes-browser.mjs"]);
     run("Verify drift report across screens", node, ["scripts/test-drift-browser.mjs"]);
+    run("Verify render faults (ten classes, gate by catalog priority, drift bytes unchanged)", node, ["scripts/test-render-faults-browser.mjs"]);
     run("Verify reference distance, brief, and project-mode frames", node, ["scripts/test-reference-distance-browser.mjs"]);
     run("Run browser smoke tests", npmCommand, ["run", "test:browser"], demoRoot);
     run("Check pilot React and CSS integration", node, ["scripts/test-design-pilot-library.mjs"]);

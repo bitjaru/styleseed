@@ -204,6 +204,15 @@ except that a decision on a structure axis is listed once as not measured. `--sc
 scrolls each page to the bottom and back inside its one load before measuring, for screens whose
 content reveals on scroll; it is off by default.
 
+With `--faults`, a third read-only probe runs on the same page loads and `FAULTS.md` and `faults.json`
+list render faults measured from boxes and computed style: amounts laid out on two lines, text over
+other text, text out of the button or card that holds it, clipped text, tight insets, near touches and
+near alignments, emoji used as icons, and mixed icon construction in one navigation or list. Each
+finding names its class, viewport, and box; nothing is scored. `--gate` fails only on classes whose
+catalog rule has priority `blocks`, and an approved ledger exception to a default rule waives it per
+screen; the other classes report. The drift files are byte for byte what the run writes without the
+flag. Definitions, thresholds, and limits: [render faults](references/render-faults.md).
+
 With `--reference <slug>` (and `--project-root`), the run also measures the distance from one screen
 (`--screen <label>`, default the first) to the project's approved generated contract
 `.styleseed/rulesets/<slug>/evidence.json`, and writes `DISTANCE.md` and `distance.json` beside the

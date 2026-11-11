@@ -27,8 +27,8 @@ id · axis · statement · kind · scope · priority · exceptions · rationale 
 - `check.mode` — `machine` names deterministic checks: `detectors` (`SS001`–`SS006` in
   `styleseed-check.mjs`), a `tool` (a workflow script under `engine/.claude/skills/styleseed/workflows/`
   plus flags, e.g. `ss-verify/scripts/drift-report.mjs --gate`), or both; `model` is scored; `human`
-  is for the review board. Today: 7 machine (5 by detector, 2 by `drift-report.mjs --gate`),
-  15 model, 1 human.
+  is for the review board. Today: 10 machine (5 by detector, 2 by `drift-report.mjs --gate`,
+  3 by `drift-report.mjs --faults`), 14 model, 1 human.
 - `source` + `anchor` — the prose that states the rule and an exact phrase that must appear in
   it. `scripts/validate-rules.mjs` fails when the anchor is missing, so the handbook and the
   catalog cannot drift apart silently.
@@ -44,6 +44,8 @@ id · axis · statement · kind · scope · priority · exceptions · rationale 
   `priority`, and `blocking`; the evidence gate refuses a run with a blocking finding, SARIF
   reports it at `error` level, and `scan --gate` exits 3. `drift-report.mjs --gate` does the same
   for at-rest drift (INV-05) and for values that violate a recorded project decision.
+- `drift-report.mjs --faults` reports the render faults in `faults.json`, and `--gate` fails on the
+  ones whose rule has `priority: blocks`; an approved exception to a default rule waives it per screen.
 - `scripts/validate-rules.mjs` runs in `verify-repo --core`: schema, unique ids, known scope
   values, existing sources, present anchors, detector ids, `check.tool` scripts and their flags,
   that invariants carry no scope, and the review rules above.

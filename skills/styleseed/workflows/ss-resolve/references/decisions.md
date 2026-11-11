@@ -126,6 +126,12 @@ apply it. Add `scope.screens` to make it measurable.
 - `--gate` exits 3 on at-rest drift on accent, ink, canvas, or spacing base **or** on any decision
   violation, and names both. A screen whose only deviations are approved exceptions passes.
 
+With `--faults`, an exception that names a default `rule` and no `axis` applies to the render faults of
+that rule on the screens it covers, by the same labels, and turns each such finding `approved` (the
+whole screen, since no selector is stored; see `ss-verify/references/render-faults.md`). An invariant
+cannot be waived this way: the ledger refuses an exception whose `rule` is an invariant, so a render
+fault under an invariant always counts.
+
 ## Proposed from a reference contract
 
 An approved generated reference contract (`.styleseed/rulesets/<slug>/evidence.json`, see

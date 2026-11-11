@@ -122,6 +122,34 @@
       "anchor": "share a height"
     },
     {
+      "id": "CRAFT-functional-icons",
+      "axis": "imagery-data",
+      "statement": "Navigation, status, and action symbols come from the project's icon family with accessible labels; emoji are content, not icons.",
+      "kind": "default",
+      "scope": {},
+      "priority": "strong",
+      "exceptions": ["user content and reactions", "approved brand illustrations"],
+      "rationale": "Emoji glyphs differ per platform and ignore the project's icon system. drift-report.mjs --faults reports an emoji-only element inside a control, leading a row, or alone in a small tile as emoji-icon. It cannot tell a reaction from an icon, so it reports and never fails the gate.",
+      "evidence": { "level": "inferred", "sources": ["engine/VISUAL-CRAFT.md"] },
+      "check": { "mode": "machine", "tool": "ss-verify/scripts/drift-report.mjs --faults" },
+      "source": "engine/VISUAL-CRAFT.md",
+      "anchor": "Use predictable functional icons"
+    },
+    {
+      "id": "CRAFT-icon-family",
+      "axis": "imagery-data",
+      "statement": "Icons in one navigation, list, or toolbar come from one family; outline and filled variants coexist only to mark state.",
+      "kind": "default",
+      "scope": {},
+      "priority": "strong",
+      "exceptions": ["coordinated outline and filled variants that mark the selected state", "brand marks shown as content"],
+      "rationale": "Two icon families on one bar read as two products. drift-report.mjs --faults lists the icon signatures per screen (viewBox grid and stroke or fill construction) and reports a group that mixes them as icon-mix. Brand marks look like a second family, so it reports and never fails the gate.",
+      "evidence": { "level": "inferred", "sources": ["engine/CRAFT-BASELINE.md"] },
+      "check": { "mode": "machine", "tool": "ss-verify/scripts/drift-report.mjs --faults" },
+      "source": "engine/CRAFT-BASELINE.md",
+      "anchor": "Do not mix unrelated families"
+    },
+    {
       "id": "DL-10-selection-pills",
       "axis": "navigation-action",
       "statement": "Inside consumer-service cards, 2–4 options use a pill toggle and 5 or more move to a dedicated page. Native selects, radio groups, and checkbox filters stay valid under other contracts.",
@@ -156,9 +184,9 @@
       "kind": "default",
       "scope": {},
       "priority": "strong",
-      "rationale": "A value split across lines reads as two values; the eye locks onto magnitude first and loses it at the break.",
+      "rationale": "A value split across lines reads as two values; the eye locks onto magnitude first and loses it at the break. drift-report.mjs --faults measures rendered screens: an element whose whole text is one amount and that is laid out on two or more lines is reported as amount-wrap.",
       "evidence": { "level": "inferred", "sources": ["engine/DESIGN-LANGUAGE.md#23"] },
-      "check": { "mode": "model" },
+      "check": { "mode": "machine", "tool": "ss-verify/scripts/drift-report.mjs --faults" },
       "source": "engine/DESIGN-LANGUAGE.md#23",
       "anchor": "Applies to every displayed amount"
     },

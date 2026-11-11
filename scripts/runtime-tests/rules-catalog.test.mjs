@@ -134,3 +134,33 @@ test("drift-checked rules name the drift gate and the README counts match the ca
   const byMode = (mode) => canon.filter((r) => r.check.mode === mode).length;
   assert.deepEqual(counts.slice(1).map(Number), [byMode("machine"), byMode("model"), byMode("human")], "update the counts in engine/rules/README.md");
 });
+
+test("render-fault rules: DL-23 and the two icon defaults name drift-report.mjs --faults; the README counts them", () => {
+  const canon = JSON.parse(readFileSync(resolve(repoRoot, "engine/rules/catalog.json"), "utf8")).rules;
+  const byId = new Map(canon.map((r) => [r.id, r]));
+  const dl23 = byId.get("DL-23-amounts-never-wrap");
+  const gates = dl23.priority === "blocks";
+  assert.deepEqual(dl23.check, { mode: "machine", tool: `ss-verify/scripts/drift-report.mjs --faults${gates ? " --gate" : ""}` });
+  assert.match(dl23.rationale, /drift-report\.mjs --faults measures rendered screens: an element whose whole text is one amount and that is laid out on two or more lines is reported as amount-wrap\./u);
+  assert.equal(/With --gate it exits 3 unless an approved exception to this rule covers the screen\./u.test(dl23.rationale), gates);
+  for (const id of ["CRAFT-functional-icons", "CRAFT-icon-family"]) {
+    const entry = byId.get(id);
+    assert.ok(entry, `${id} is in the catalog`);
+    assert.deepEqual([entry.kind, entry.priority, entry.axis, entry.scope, entry.evidence.level], ["default", "strong", "imagery-data", {}, "inferred"], id);
+    assert.deepEqual(entry.check, { mode: "machine", tool: "ss-verify/scripts/drift-report.mjs --faults" }, id);
+    assert.equal(entry.exceptions.length, 2, id);
+    assert.match(entry.rationale, /so it reports and never fails the gate\.$/u, id);
+  }
+  const inv06 = byId.get("INV-06-text-stays-whole");
+  const section18 = readFileSync(resolve(repoRoot, "engine/DESIGN-LANGUAGE.md"), "utf8").includes("Rendered text also stays whole: it does not run over other text or out of the box that holds it.");
+  assert.equal(section18, Boolean(inv06), "the DESIGN-LANGUAGE §18 sentence exists exactly when INV-06 does");
+  if (inv06) {
+    assert.deepEqual([inv06.kind, inv06.priority, inv06.check.tool], ["invariant", "blocks", "ss-verify/scripts/drift-report.mjs --faults --gate"]);
+    assert.equal(canon.indexOf(inv06), canon.findIndex((r) => r.id === "INV-05-no-unexplained-role-drift") + 1, "INV-06 follows INV-05");
+  }
+  const readme = readFileSync(resolve(repoRoot, "engine/rules/README.md"), "utf8").replace(/\s+/gu, " ");
+  const faults = readme.match(/(\d+) by `drift-report\.mjs --faults`/u);
+  assert.ok(faults, "engine/rules/README.md counts the rules checked by drift-report.mjs --faults");
+  assert.equal(Number(faults[1]), canon.filter((r) => /drift-report\.mjs --faults/u.test(r.check.tool ?? "")).length);
+  assert.match(readme, /`drift-report\.mjs --faults` reports the render faults in `faults\.json`, and `--gate` fails on the ones whose rule has `priority: blocks`; an approved exception to a default rule waives it per screen\./u);
+});

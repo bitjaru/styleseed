@@ -66,8 +66,10 @@ export function measurement(over1440 = {}, over390 = {}, { url = URL_, date = "2
 
 // A chromium stub for observeUrls: canned observe-design and observe-structure output per URL and
 // viewport width (`pages[url](width)` returns an observation with its `structure`), a page that does
-// not scroll, and `screenshot` returning fixed bytes. Every page call is logged; anything else throws.
-export function stubChromium(pages, { png = Buffer.from("stub-png") } = {}) {
+// not scroll, and `screenshot` returning fixed bytes. `probes` optionally maps an extra probe function
+// (observeUrls `extraProbes`) to `(url, width) => output`; each call is logged as `probe <name>`.
+// Every page call is logged; anything else throws.
+export function stubChromium(pages, { png = Buffer.from("stub-png"), probes = new Map() } = {}) {
   const calls = [];
   const chromium = {
     async launch() {
@@ -85,6 +87,7 @@ export function stubChromium(pages, { png = Buffer.from("stub-png") } = {}) {
               if (fn === observeStructure) { calls.push("observeStructure"); return structuredClone(canned.structure); }
               if (fn === readScroll) { calls.push("readScroll"); return { y: 0, height: viewport.height, viewport: viewport.height }; }
               if (fn === scrollWindowTo) { calls.push(`scrollWindowTo ${arg}`); return undefined; }
+              if (probes.has(fn)) { calls.push(`probe ${fn.name}`); return structuredClone(probes.get(fn)(url, viewport.width)); }
               return undefined;
             },
             async screenshot(options) { calls.push(`screenshot ${JSON.stringify(options)} @${viewport.width}`); return png; },

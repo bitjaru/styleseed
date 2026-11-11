@@ -21,8 +21,10 @@ node <installed-ss-verify>/scripts/drift-report.mjs \
 
 ## Terms
 
-- **Shown:** a box of at least 1×1, `display` not `none`, `visibility` not `hidden`, and the product
-  of `opacity` from the element up to `<body>` at least 0.05.
+- **Shown:** a box of at least 1×1, `display` not `none`, `visibility` not `hidden`, the product
+  of `opacity` from the element up to `<body>` at least 0.05, and rendered by the browser
+  (`checkVisibility` where available): the content of a closed `<details>` other than its summary,
+  and content under `content-visibility: hidden`, is not shown even though its boxes can be read.
 - **Text fragment:** one client rect of a non-space text node whose parent is shown (not inside
   `svg`, form fields, or `script`/`style`), cut to the boxes that clip it; a fragment with nothing
   left wider and taller than 0.5px is not measured. A **line** groups fragments whose tops lie above

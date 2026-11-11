@@ -19,6 +19,11 @@
 // are not classified (`img` icons of at most 32px are only counted as `unknown`); text inside form
 // fields is not a text node and is not measured.
 //
+// "Shown" includes a rendering check (see `rendered`): an element the browser does not render is not
+// shown even when its display, visibility, and opacity look normal and its boxes can be read, as with
+// the content of a closed <details> (its summary stays shown) or content-visibility: hidden. It uses
+// Element.checkVisibility where the browser has it, else a closed-<details> test.
+//
 // One reading of ours on top of the definitions: a text fragment is the part of its rect inside every
 // box that clips it (an ancestor with overflow other than visible on that axis, within its containing
 // block chain); a fragment with nothing left wider and taller than 0.5px is not measured. Collapsed
@@ -74,8 +79,24 @@ export function observeFaults({ maxElements = 5000 } = {}) {
   }
   const inSet = new Set(els);
 
-  // Shown: a box of at least 1×1, display not none, visibility not hidden, and the product of
-  // opacity from the element up to <body> at least 0.05.
+  // Shown: a box of at least 1×1, display not none, visibility not hidden, the product of opacity
+  // from the element up to <body> at least 0.05, and rendered by the browser: where it has
+  // checkVisibility, `checkVisibility({ contentVisibilityAuto: false, opacityProperty: false,
+  // visibilityProperty: true })` is true (the content of a closed <details> other than its summary,
+  // content-visibility: hidden, and a display: none ancestor are not rendered, though their boxes
+  // can still be read); without it, an element inside a closed <details> and outside that details'
+  // first <summary> is not shown. Text fragments, holders, surfaces, icons, and emoji all use this.
+  const rendered = el => {
+    if (typeof el.checkVisibility === 'function') {
+      try { return el.checkVisibility({ contentVisibilityAuto: false, opacityProperty: false, visibilityProperty: true }); } catch { /* fall through */ }
+    }
+    for (let p = el.parentElement; p; p = p.parentElement) {
+      if (p.tagName !== 'DETAILS' || p.open) continue;
+      const summary = [...p.children].find(c => c.tagName === 'SUMMARY');
+      if (!summary || !summary.contains(el)) return false;
+    }
+    return true;
+  };
   const opacityCache = new Map();
   const opacityOf = el => {
     if (!el || el === document.documentElement) return 1;
@@ -88,7 +109,7 @@ export function observeFaults({ maxElements = 5000 } = {}) {
   const shown = el => {
     if (shownCache.has(el)) return shownCache.get(el);
     const { rect, cs } = box(el);
-    const v = rect.width >= 1 && rect.height >= 1 && cs.display !== 'none' && cs.visibility !== 'hidden' && opacityOf(el) >= 0.05;
+    const v = rect.width >= 1 && rect.height >= 1 && cs.display !== 'none' && cs.visibility !== 'hidden' && opacityOf(el) >= 0.05 && rendered(el);
     shownCache.set(el, v);
     return v;
   };

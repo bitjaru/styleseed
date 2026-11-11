@@ -1,7 +1,7 @@
 {
   "schemaVersion": 5,
   "engineVersion": "5.0.0",
-  "engineRevision": "sha256:ef3a51a58c692b605cb2289403221d4997bc3b5acce0886d37d2e47024052ee9",
+  "engineRevision": "sha256:2dd1e7b105e5484d8e366908292d664501975b2c8f503badaf63dbb99a3a5fd2",
   "distributionSource": {
     "schemaVersion": 1,
     "channel": "edge",
@@ -10,7 +10,7 @@
   },
   "distributions": {
     "core": {
-      "revision": "sha256:ef3a51a58c692b605cb2289403221d4997bc3b5acce0886d37d2e47024052ee9",
+      "revision": "sha256:2dd1e7b105e5484d8e366908292d664501975b2c8f503badaf63dbb99a3a5fd2",
       "files": [
         {
           "path": "LICENSE",
@@ -429,8 +429,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-verify/references/render-faults.md",
-          "sha256": "4356d9705407217102d37a68ab147bbace1801b86ebe6bce259b51ad4a202c93",
-          "bytes": 12612
+          "sha256": "7d589df78c93651186c10ac76aa415c8240d40a7504e17a439a3b06549d25749",
+          "bytes": 12833
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-verify/scripts/analyze-faults.mjs",
@@ -454,8 +454,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-verify/scripts/observe-faults.mjs",
-          "sha256": "15cb138a285501bc36eae8722fd422504f28f6d2ad3c9631bdec8f2302d69523",
-          "bytes": 31910
+          "sha256": "e8e4a0e1d1a3a53ef84cbb2caac44402c45b80d373835a385bdab4d184c01306",
+          "bytes": 33369
         },
         {
           "path": "engine/.cursorrules",
@@ -610,7 +610,7 @@
       ]
     },
     "skills": {
-      "revision": "sha256:5ccd5bd7f7c24428f901402a52a152ccf26565c81eb82bbe51ec1af09bd8001a",
+      "revision": "sha256:28cd2353841e9a773d22ebbdf23ecbe332203ffe92ae544ccea31747a375dfff",
       "files": [
         {
           "path": "engine/.claude/skills/styleseed/SKILL.md",
@@ -1019,8 +1019,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-verify/references/render-faults.md",
-          "sha256": "4356d9705407217102d37a68ab147bbace1801b86ebe6bce259b51ad4a202c93",
-          "bytes": 12612
+          "sha256": "7d589df78c93651186c10ac76aa415c8240d40a7504e17a439a3b06549d25749",
+          "bytes": 12833
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-verify/scripts/analyze-faults.mjs",
@@ -1044,8 +1044,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-verify/scripts/observe-faults.mjs",
-          "sha256": "15cb138a285501bc36eae8722fd422504f28f6d2ad3c9631bdec8f2302d69523",
-          "bytes": 31910
+          "sha256": "e8e4a0e1d1a3a53ef84cbb2caac44402c45b80d373835a385bdab4d184c01306",
+          "bytes": 33369
         }
       ]
     }
@@ -1468,8 +1468,8 @@
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-verify/references/render-faults.md",
-      "sha256": "4356d9705407217102d37a68ab147bbace1801b86ebe6bce259b51ad4a202c93",
-      "bytes": 12612
+      "sha256": "7d589df78c93651186c10ac76aa415c8240d40a7504e17a439a3b06549d25749",
+      "bytes": 12833
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-verify/scripts/analyze-faults.mjs",
@@ -1493,8 +1493,8 @@
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-verify/scripts/observe-faults.mjs",
-      "sha256": "15cb138a285501bc36eae8722fd422504f28f6d2ad3c9631bdec8f2302d69523",
-      "bytes": 31910
+      "sha256": "e8e4a0e1d1a3a53ef84cbb2caac44402c45b80d373835a385bdab4d184c01306",
+      "bytes": 33369
     },
     {
       "path": ".cursorrules",

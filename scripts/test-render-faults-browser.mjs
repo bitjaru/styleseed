@@ -5,9 +5,12 @@
 // --gate must follow the real rule catalog (a class fails only when its rule's priority is `blocks`),
 // an approved ledger exception must waive a blocking default rule on its screen, and an exception to
 // an invariant must be refused. The three pages of test-drift-browser.mjs must give identical drift.json
-// and DRIFT.md with and without --faults. No fixture text may leave the page, every string must pass
-// the allow-list, and two runs must give the same fault-report bytes. This is a measurement regression fixture,
-// not a design judgment.
+// and DRIFT.md with and without --faults. Content of a closed <details> is not shown: inside a small
+// card it would overlap the summary, run out of the card, and wrap an amount if it were laid out (the
+// same page with the details open shows all three), and closed it yields none, with or without
+// Element.checkVisibility. No fixture text may leave the page, every string must pass the allow-list,
+// and two runs must give the same fault-report bytes. This is a measurement regression fixture, not a
+// design judgment.
 import assert from 'node:assert/strict';
 import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -44,8 +47,16 @@ table{width:100%;border-collapse:collapse}tbody tr{height:${rowHeight}px}td{padd
 <section class="card"><h2>최근 정산</h2><table><tbody><tr><td>11월 1일</td><td>1,240,000</td></tr><tr><td>11월 2일</td><td>980,500</td></tr><tr><td>11월 3일</td><td>1,102,000</td></tr></tbody></table></section>
 </main></html>`;
 
+// A 200px card holding a <details>: its hidden content is pulled 20px up over the summary, runs a
+// no-wrap line past the card, and puts an amount in a 20px box. Font-independent as the pairs are.
+const detailsPage = open => `<!doctype html><html lang="en"><meta charset="utf-8"><title>details</title><style>
+*{box-sizing:border-box}body{margin:0;padding:24px;background:#f3f4f2;color:#1b1d1c;font:16px/24px system-ui,sans-serif}
+p{margin:0}.box{width:200px;background:#ffffff;border-radius:8px;padding:16px}
+.pull{margin-top:-20px}.long{white-space:nowrap}.value{width:20px;font-size:32px;line-height:40px}
+</style><body><div class="box"><details${open ? ' open' : ''}><summary>History</summary><p class="pull">Waiting for approval</p><p class="long">Waiting for payment approval from the finance team</p><p class="value">10 kg</p></details></div></body></html>`;
+
 // The copy of every fixture: text between tags, five characters or longer, and the emoji.
-const fixtureText = [...new Set(FAULT_PAIRS.flatMap(p => [p.good, p.bad]).flatMap(html => [...html.replace(/<style>[\s\S]*?<\/style>|<title>[\s\S]*?<\/title>/gu, '').matchAll(/>([^<>]+)</gu)].map(m => m[1].trim())).filter(t => t.length >= 5 || /\p{Extended_Pictographic}/u.test(t)))];
+const fixtureText = [...new Set([...FAULT_PAIRS.flatMap(p => [p.good, p.bad]), detailsPage(true)].flatMap(html => [...html.replace(/<style>[\s\S]*?<\/style>|<title>[\s\S]*?<\/title>/gu, '').matchAll(/>([^<>]+)</gu)].map(m => m[1].trim())).filter(t => t.length >= 5 || /\p{Extended_Pictographic}/u.test(t)))];
 const noFixtureText = (text, what) => { for (const t of fixtureText) assert.ok(!text.includes(t), `${what} must not carry fixture text (found ${JSON.stringify(t)})`); };
 const reportData = screen => ({ findings: screen.findings.map(({ exception: _exception, ...f }) => f), counts: screen.counts, distribution: screen.distribution, icons: screen.icons, capped: screen.capped });
 
@@ -57,6 +68,11 @@ try {
   for (const pair of FAULT_PAIRS) for (const kind of ['good', 'bad']) {
     const name = `${pair.id}-${kind}`;
     writeFileSync(join(dir, `${name}.html`), pair[kind]);
+    url[name] = pathToFileURL(join(dir, `${name}.html`)).href;
+  }
+  for (const open of [true, false]) {
+    const name = `details-${open ? 'open' : 'closed'}`;
+    writeFileSync(join(dir, `${name}.html`), detailsPage(open));
     url[name] = pathToFileURL(join(dir, `${name}.html`)).href;
   }
 
@@ -75,6 +91,12 @@ try {
       assert.ok(counted(`${pair.id}-bad`, pair.id, width) >= 1, `${pair.id}-bad @${width} yields ${pair.id}: ${JSON.stringify(screen(`${pair.id}-bad`).findings)}`);
       for (const other of CANDIDATES.filter(c => c !== pair.id)) assert.equal(counted(`${pair.id}-bad`, other, width), 0, `${pair.id}-bad @${width} yields no ${other}: ${JSON.stringify(screen(`${pair.id}-bad`).findings)}`);
       assert.equal(counted(`${pair.id}-good`, pair.id, width), 0, `${pair.id}-good @${width} yields no ${pair.id}: ${JSON.stringify(screen(`${pair.id}-good`).findings)}`);
+    }
+  }
+  for (const width of VIEWPORTS) {
+    for (const cls of CANDIDATES) {
+      assert.ok(counted('details-open', cls, width) >= 1, `details-open @${width} yields ${cls} (the hidden content would fail if laid out): ${JSON.stringify(screen('details-open').findings)}`);
+      assert.equal(counted('details-closed', cls, width), 0, `details-closed @${width}: the content of a closed <details> is not shown (${cls}): ${JSON.stringify(screen('details-closed').findings)}`);
     }
   }
   const md = readFileSync(join(first, 'FAULTS.md'), 'utf8');
@@ -146,6 +168,16 @@ try {
       const output = await page.evaluate(observeFaults, { maxElements: 5000 });
       assert.deepEqual(disallowedStrings(output), [], `${pair.id}-${kind} @${width}: the probe output must pass the allow-list`);
       noFixtureText(JSON.stringify(output), `${pair.id}-${kind} probe output`);
+      await page.close();
+    }
+    // Without Element.checkVisibility the probe falls back to its closed-<details> test: only the
+    // summary is text, and no gate candidate is recorded.
+    for (const width of VIEWPORTS) {
+      const page = await instance.newPage({ viewport: { width, height: width >= 768 ? 900 : 844 } });
+      await page.setContent(detailsPage(false));
+      await page.evaluate(() => { Element.prototype.checkVisibility = undefined; });
+      const output = await page.evaluate(observeFaults, { maxElements: 5000 });
+      assert.deepEqual([output.textRuns, output.amounts.length, output.overlaps.length, output.spills.length], [1, 0, 0, 0], `details-closed @${width} without checkVisibility: ${JSON.stringify(output)}`);
       await page.close();
     }
   } finally { await instance.close(); }

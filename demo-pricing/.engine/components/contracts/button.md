@@ -59,7 +59,6 @@ a screen; everything else is a quieter variant. Navigation to another page is a 
 
 ## Known gaps
 
-- DESIGN-LANGUAGE §46 still lists hex values for `neutral` (#2A2A2A) and `secondary` (#F3F4F5) and a fixed radius per size (xs pill, sm/md 10px, lg 14px). The code uses theme roles (`foreground`, `secondary`) and one recipe control radius for every size. The code is the current contract; §46 is stale.
 - `md` (40px), `sm` (36px), `xs` (32px) and `icon` (40px) are under the 44px touch minimum (DESIGN-LANGUAGE §41).
 - The default `md` button (40px) is taller than the default input and select (36px), so the defaults break "buttons, inputs and selects in one context share a height" (CRAFT-BASELINE). Use `sm` beside default form controls.
 - There is no hover style; pointer users get feedback only on press.

@@ -42,7 +42,7 @@ test("the seven first-set contracts build, cover the designer's order and flag r
   assert.deepEqual(byId.button.code.sizes.map((s) => [s.key, s.height, s.icon]), [["xs", 32, 14], ["sm", 36, 14], ["md", 40, 16], ["lg", 52, 22], ["icon", 40, 18]]);
   assert.equal(byId.button.variants.find((v) => v.code === "outline").designer, "Line");
   assert.match(byId.switch.code.flags.join("\n"), /`switch` 18\.4px × 32px/u);
-  assert.match(byId.switch.code.flags.join("\n"), /transition-all/u);
+  assert.doesNotMatch(byId.switch.code.flags.join("\n"), /transition-all/u, "the switch names its transitioned properties (detector SS003)");
   assert.match(byId.input.code.flags.join("\n"), /`input` 36px/u);
   assert.deepEqual(byId.table.code.flags, []);
   assert.ok(byId.badge.code.tokens.includes("primary") && byId.button.code.tokens.includes("brand"), "the brand/primary split the badge contract describes is real");

@@ -34,7 +34,8 @@ function renderRule(rule, exceptionIds = []) {
   if (rule.kind !== "invariant") bits.push(` · ${scopeLabel(rule)}`);
   bits.push(`): ${rule.statement}`);
   if (rule.exceptions?.length) bits.push(` Exceptions: ${rule.exceptions.join("; ")}.`);
-  if (rule.check?.detectors?.length) bits.push(` Checks: ${rule.check.detectors.join(", ")}.`);
+  const checks = [...(rule.check?.detectors ?? []), ...(rule.check?.tool ? [rule.check.tool] : [])];
+  if (checks.length) bits.push(` Checks: ${checks.join(", ")}.`);
   bits.push(` Source: ${rule.source}`);
   if (exceptionIds.length) bits.push(` Project ${exceptionIds.length === 1 ? "exception" : "exceptions"}: ${exceptionIds.join(", ")}.`);
   return bits.join("");

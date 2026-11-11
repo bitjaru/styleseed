@@ -83,7 +83,7 @@ function DonutChartCard({
           {items.map((item, index) => (
             <div
               key={item.name}
-              className="flex items-center justify-between cursor-pointer transition-all duration-300"
+              className="flex items-center justify-between cursor-pointer transition-opacity duration-300"
               onClick={() => onItemSelect?.(selectedItem === item.name ? null : item.name)}
               style={{
                 opacity: selectedItem === null || selectedItem === undefined || selectedItem === item.name ? 1 : 0.3,
@@ -91,7 +91,7 @@ function DonutChartCard({
             >
               <div className="flex items-center gap-2.5">
                 <div
-                  className="size-3 rounded-full transition-all duration-300"
+                  className="size-3 rounded-full transition-[background-color,box-shadow] duration-300"
                   style={{
                     backgroundColor: selectedItem === item.name ? "var(--brand)" : grayColors[index % grayColors.length],
                     boxShadow: selectedItem === item.name ? "0 0 0 2px color-mix(in srgb, var(--brand) 25%, transparent)" : "none",

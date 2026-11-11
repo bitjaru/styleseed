@@ -55,7 +55,12 @@
           "additionalProperties": false,
           "properties": {
             "mode": { "enum": ["machine", "model", "human"] },
-            "detectors": { "type": "array", "items": { "type": "string", "pattern": "^SS[0-9]{3}$" } }
+            "detectors": { "type": "array", "items": { "type": "string", "pattern": "^SS[0-9]{3}$" } },
+            "tool": {
+              "type": "string",
+              "pattern": "^[a-z0-9-]+/scripts/[A-Za-z0-9_-]+\\.mjs( --[a-z0-9-]+)*$",
+              "description": "A deterministic workflow script that checks this rule, as a path under engine/.claude/skills/styleseed/workflows/ plus optional flags, e.g. \"ss-verify/scripts/drift-report.mjs --gate\". machine mode needs detectors, a tool, or both."
+            }
           }
         },
         "source": { "type": "string", "pattern": "^engine/[A-Za-z0-9./-]+\\.md(#[0-9A-Za-z-]+)?$", "description": "Repository path of the prose that states this rule, with an optional section fragment." },

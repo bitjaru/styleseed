@@ -54,7 +54,7 @@ $2,400," "Delete project," "Save changes" — never "Submit," "OK," "Confirm," o
 "Yes." The user should be able to read only the button and know the outcome. (NN/g)
 
 **WB-2 · Verb + object, front-loaded.** Start with the verb. "Add card," not "Card
-adding." Keep it 1–3 words. One primary action per screen (matches the visual rule).
+adding." Keep it 1–3 words. One primary action per decision region (matches the visual rule).
 
 **WB-3 · Make the two choices distinct.** In a dialog, never pair "OK / Cancel" for a
 destructive action. Use "Delete / Keep," "Discard / Keep editing" — each button names

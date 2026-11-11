@@ -158,7 +158,6 @@
         "Don't use `destructive` for emphasis that is not destructive."
       ],
       "knownGaps": [
-        "DESIGN-LANGUAGE §46 still lists hex values for `neutral` (#2A2A2A) and `secondary` (#F3F4F5) and a fixed radius per size (xs pill, sm/md 10px, lg 14px). The code uses theme roles (`foreground`, `secondary`) and one recipe control radius for every size. The code is the current contract; §46 is stale.",
         "`md` (40px), `sm` (36px), `xs` (32px) and `icon` (40px) are under the 44px touch minimum (DESIGN-LANGUAGE §41).",
         "The default `md` button (40px) is taller than the default input and select (36px), so the defaults break \"buttons, inputs and selects in one context share a height\" (CRAFT-BASELINE). Use `sm` beside default form controls.",
         "There is no hover style; pointer users get feedback only on press.",
@@ -914,7 +913,6 @@
       ],
       "knownGaps": [
         "The track is about 18px × 32px, far under the 44px touch minimum (DESIGN-LANGUAGE §41). Make the label and row the target, or wrap the switch in a 44px area.",
-        "The track uses `transition-all`. DESIGN-LANGUAGE §24 recommends `transition-all` for interactive elements, while the rule catalog's detector SS003 asks for named properties. The two documents disagree.",
         "On uses `primary`, not `brand`, so it may not match a primary button in skins where the two roles differ."
       ],
       "sources": [
@@ -923,7 +921,7 @@
       ],
       "code": {
         "source": "engine/components/ui/switch.tsx",
-        "sha256": "sha256:d4c744131c6161300510909aafe2c2cb6d819f2c7a8c2aeb75d4317004c7eff7",
+        "sha256": "sha256:e200920edfffd06460324d994b22ff4e37741000cd316ce9b10f2068afe14398",
         "exports": [
           "Switch"
         ],
@@ -958,12 +956,11 @@
           "focus-visible:ring-ring/50"
         ],
         "motion": [
-          "transition-all",
+          "transition-[background-color,border-color,box-shadow,opacity]",
           "transition-transform"
         ],
         "flags": [
           "Height under the 44px touch minimum (DESIGN-LANGUAGE §41): `switch` 18.4px × 32px. On touch surfaces, extend the hit area or use a taller size.",
-          "Uses `transition-all`; name the transitioned properties (detector SS003).",
           "Radius is fixed (rounded-full) instead of the recipe control radius used by Button and Tabs."
         ]
       }

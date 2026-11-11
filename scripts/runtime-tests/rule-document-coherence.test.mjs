@@ -44,3 +44,48 @@ test("the consumer-service card and selection recipes carry an explicit scope", 
   const methodology = readFileSync(resolve(engineRoot, "METHODOLOGY.md"), "utf8");
   assert.match(methodology, /## Application priority — example: a consumer-service dashboard\n\nOne worked schedule[\s\S]*not the default for every\nsurface/u);
 });
+
+const designLanguage = () => readFileSync(resolve(engineRoot, "DESIGN-LANGUAGE.md"), "utf8");
+const paragraphs = (text) => text.split(/\n\s*\n/u);
+
+test("no handbook recommends transition-all and no engine component uses it (detector SS003)", () => {
+  const hits = [];
+  for (const file of walk(engineRoot)) {
+    for (const block of paragraphs(readFileSync(file, "utf8"))) {
+      if (!block.includes("transition-all")) continue;
+      if (!block.includes("SS003")) hits.push(`${relative(repoRoot, file)}: mentions transition-all without naming detector SS003: ${JSON.stringify(block.slice(0, 120))}`);
+      for (const line of block.split("\n")) if (/className=.*\btransition-all\b/u.test(line)) hits.push(`${relative(repoRoot, file)}: example uses transition-all: ${line.trim()}`);
+    }
+  }
+  const components = (dir) => readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+    const path = join(dir, entry.name);
+    if (entry.isDirectory()) return components(path);
+    return /\.(tsx|ts|css)$/u.test(path) ? [path] : [];
+  });
+  for (const file of components(resolve(engineRoot, "components"))) {
+    readFileSync(file, "utf8").split("\n").forEach((line, index) => {
+      if (/\btransition-all\b/u.test(line)) hits.push(`${relative(repoRoot, file)}:${index + 1} uses transition-all; name the transitioned properties`);
+    });
+  }
+  assert.deepEqual(hits, [], hits.join("\n"));
+});
+
+test("the table of contents agrees with §10 and §12", () => {
+  const text = designLanguage();
+  const row = (number) => text.split("\n").find((line) => line.startsWith(`| ${number} | [`));
+  assert.match(row(10), /consumer-service/u, "the §10 contents line names the consumer-service scope its section states");
+  assert.doesNotMatch(row(10), /Pill toggle only|no dropdowns/u, "§10 scopes the pill toggle to consumer-service cards; the contents line may not make it universal");
+  const range = text.match(/\*\*Opacity is very low\*\* \((\d+-\d+)%\)/u)?.[1];
+  assert.ok(range, "§12 states its opacity range as **Opacity is very low** (N-M%)");
+  assert.match(row(12), new RegExp(`Opacity ${range}%`, "u"), `the §12 contents line states the section's range ${range}%`);
+});
+
+test("workflows do not describe the deterministic detectors as warning-only (SS005 and SS006 block)", () => {
+  const hits = [];
+  for (const file of walk(resolve(engineRoot, ".claude/skills"))) {
+    readFileSync(file, "utf8").split("\n").forEach((line, index) => {
+      if (/warning-only|remains? warnings/iu.test(line)) hits.push(`${relative(repoRoot, file)}:${index + 1} ${line.trim()}`);
+    });
+  }
+  assert.deepEqual(hits, [], `Detectors take their catalog rule's priority; SS005 and SS006 block:\n${hits.join("\n")}`);
+});

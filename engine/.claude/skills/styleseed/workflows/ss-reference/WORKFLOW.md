@@ -46,9 +46,19 @@ Do not merely imitate the supplied screen. Read `PRODUCT-PRINCIPLES.md`, `RULESE
    verification needed, and unresolved human choices. Preserve equivalent comparison patterns;
    do not convert gallery recurrence into a mandatory shape or component-count rule.
 5. Choose the nearest built-in fallback grammar and adapter, then compile the project artifacts required by
-   `REFERENCE-COMPILER.md` under `.styleseed/rulesets/<slug>/`.
+   `REFERENCE-COMPILER.md` under `.styleseed/rulesets/<slug>/`. For a measured URL, in this order:
+   - Compile: `scripts/compile-contract.mjs --project-root <dir> --slug <slug> --measurements <case>/measurements`
+     prints the counts per transfer; add `--write` (and `--fallback`/`--adapter` when no single artifact
+     selects the slug yet) to write the draft `evidence.json` and the five files rendered from it.
+   - Edit transfers: the user decides, fact by fact and per token axis, `keep` (checked), `adapt`
+     (relationship), `observe` (brief only), or `avoid` (do not copy) in `evidence.json`, and writes a one-sentence
+     `note` on every kept `derived` fact. Present the proposals; never decide them for the user. Run
+     `--write` again after editing; it keeps the edits and re-renders.
+   - Approve: `--approve --reviewer <name>` with the name the user gives. Never fill it in yourself.
 6. After explicit approval of the inferred grammar, select `reference:<slug>` in the chosen artifact's project-owned configuration for registry
-   projects; only when neither registry file exists, update the legacy `STYLESEED.md`.
+   projects; only when neither registry file exists, update the legacy `STYLESEED.md`. The resolver refuses
+   a draft or a contract edited after approval. `--propose-decisions` prints ledger entries for what the
+   user kept; they paste the ones they want into `.styleseed/project.json`.
    Preserve bounded brand choices. A partial or invalid registry is an error, not a fallback.
 7. Validate transfer: apply the grammar to one representative screen not present in the source
    set, including valid alternatives and a failure case in its checks. Run `/ss-score`, then

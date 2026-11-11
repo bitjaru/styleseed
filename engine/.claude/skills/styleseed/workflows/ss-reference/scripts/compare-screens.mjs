@@ -5,7 +5,9 @@
 // project's decisions ledger is passed in, a recorded decision becomes the baseline for the screens
 // it covers (`violates` instead of `different` / `extra`) and an approved exception reads `excepted`.
 // With `structure` (summaries measured with the structure probe), six structure rows are compared
-// the same way; the decisions ledger does not cover them, and they never fail the gate.
+// the same way. A structure value outside the shared set never fails the gate; a recorded decision
+// on a structure axis applies to these rows like the others (`violates`, `approved`), and without
+// `structure` such a decision is reported once as not measured.
 import { parseColor, toHex } from './analyze-observations.mjs';
 import { primaryStats } from './analyze-structure.mjs';
 
@@ -100,29 +102,54 @@ function readLedger(decisions) {
 }
 const byId = (a, b) => a.localeCompare(b, 'en', { numeric: true });
 
-// Structure rows: the majority across at-rest screens is the baseline, as for the other axes.
-function compareStructure(rows, screens) {
+// Structure rows: the majority across at-rest screens is the baseline, as for the other axes. A
+// recorded decision replaces it on the screens it covers: set axes compare against the decided set,
+// and `primariesPerSection` holds one number that means "at most". Violations and approved
+// exceptions on at-rest screens go into the same lists as the other axes, so the gate sees them.
+function compareStructure(rows, screens, { ledger = null, violations = [], excepted = [] } = {}) {
   const values = screens.map(s => structureValues(s.summary));
   const atRest = rows.some(r => !r.state) ? rows.map((r, i) => i).filter(i => !rows[i].state) : rows.map((r, i) => i);
   const axes = {};
   for (const axis of STRUCTURE_AXES) {
+    const decided = ledger?.projectDecision(axis) ?? null;
     let b, per;
     if (STRUCTURE_SCALAR_AXES.has(axis)) {
-      b = majority(atRest.map(i => values[i]?.[axis] ?? null));
+      b = decided ? decided.values[0] : majority(atRest.map(i => values[i]?.[axis] ?? null));
       per = rows.map((r, i) => {
         const v = values[i]?.[axis] ?? null;
-        return { label: r.label, value: v, status: v === null ? 'none' : b === null ? 'unknown' : v === b ? 'same' : 'different' };
+        const d = ledger?.decisionFor(axis, r.label) ?? null;
+        const status = d ? (v === null ? 'none' : v <= d.values[0] ? 'same' : 'violates') : v === null ? 'none' : b === null ? 'unknown' : v === b ? 'same' : 'different';
+        const entry = { label: r.label, value: v, status };
+        if (d) entry.decision = d.id;
+        const e = ledger && (status === 'different' || status === 'violates') ? ledger.exceptionsFor(axis, r.label).find(x => v <= x.values[0]) : null;
+        if (e) Object.assign(entry, { status: 'excepted', exception: e.id });
+        if (!r.state && entry.status === 'violates') violations.push({ id: d.id, screen: r.label, axis, values: [v] });
+        if (!r.state && e) excepted.push({ id: e.id, screen: r.label, axis, values: [v] });
+        return entry;
       });
-      axes[axis] = { baseline: b, screens: per, deviating: per.filter((p, i) => p.status === 'different' && !rows[i].state).map(p => p.label) };
+      axes[axis] = { baseline: b, ...(decided ? { decision: decided.id } : {}), screens: per, deviating: per.filter((p, i) => p.status === 'different' && !rows[i].state).map(p => p.label) };
     } else {
-      b = majoritySet(atRest.map(i => values[i]?.[axis] ?? []));
+      b = decided ? [...decided.values] : majoritySet(atRest.map(i => values[i]?.[axis] ?? []));
       const known = new Set(b);
       per = rows.map((r, i) => {
         if (!values[i]) return { label: r.label, value: null, extra: [], status: 'none' };
-        const extra = values[i][axis].filter(x => !known.has(x));
-        return { label: r.label, value: values[i][axis], extra, status: extra.length ? 'extra' : 'same' };
+        const d = ledger?.decisionFor(axis, r.label) ?? null;
+        const allowed = d ? new Set(d.values) : known;
+        const exceptions = ledger ? ledger.exceptionsFor(axis, r.label) : [];
+        const extra = [];
+        const byException = new Map();
+        for (const v of values[i][axis].filter(x => !allowed.has(x))) {
+          const e = exceptions.find(x => x.values.includes(v));
+          if (e) byException.set(e.id, [...(byException.get(e.id) || []), v]); else extra.push(v);
+        }
+        const entry = { label: r.label, value: values[i][axis], extra, status: extra.length ? (d ? 'violates' : 'extra') : byException.size ? 'excepted' : 'same' };
+        if (d) entry.decision = d.id;
+        if (byException.size) Object.assign(entry, { exception: [...byException.keys()].join(', '), excepted: [...byException.values()].flat() });
+        if (!r.state && entry.status === 'violates') violations.push({ id: d.id, screen: r.label, axis, values: extra });
+        if (!r.state) for (const [id, list] of byException) excepted.push({ id, screen: r.label, axis, values: list });
+        return entry;
       });
-      axes[axis] = { baseline: b, screens: per, deviating: per.filter((p, i) => p.status === 'extra' && !rows[i].state).map(p => p.label) };
+      axes[axis] = { baseline: b, ...(decided ? { decision: decided.id } : {}), screens: per, deviating: per.filter((p, i) => p.status === 'extra' && !rows[i].state).map(p => p.label) };
     }
   }
   const drifted = new Set(STRUCTURE_AXES.flatMap(a => axes[a].deviating));
@@ -144,10 +171,10 @@ export function compareScreens(screens, { baseline = null, nearDistance = 24, de
   // scoped to screens replaces it on those screens only (resolved per row below).
   const ledger = decisions.length ? readLedger(decisions) : null;
   const decidedAxes = [];
-  if (ledger) for (const axis of [...COLOR_AXES, 'spacingBase', ...SET_AXES]) {
+  if (ledger) for (const axis of [...COLOR_AXES, 'spacingBase', ...SET_AXES, ...(structure ? STRUCTURE_AXES : [])]) {
     const d = ledger.projectDecision(axis);
     if (!d) continue;
-    values[axis] = COLOR_AXES.includes(axis) ? toHex(d.values[0]) : axis === 'spacingBase' ? d.values[0] : [...d.values];
+    if (!STRUCTURE_AXES.includes(axis)) values[axis] = COLOR_AXES.includes(axis) ? toHex(d.values[0]) : axis === 'spacingBase' ? d.values[0] : [...d.values];
     decidedAxes.push(axis);
   }
   const source = baseline ? 'registry roles for colours, majority across screens for the rest' : 'majority across screens';
@@ -222,17 +249,22 @@ export function compareScreens(screens, { baseline = null, nearDistance = 24, de
   // An at-rest screen without an accent whose state variant has one: the primary action lives in a state.
   const accentOnlyInState = axes.accent.missing.filter(l => rows.some(r => r.state && r.label.startsWith(`${l}?state=`) && r.values.accent));
   const accentMissing = axes.accent.missing.filter(l => !accentOnlyInState.includes(l) && !rows.find(r => r.label === l)?.state);
+  const structureReport = structure ? compareStructure(rows, screens, { ledger, violations, excepted }) : null;
   let ledgerReport = null;
   if (ledger) {
-    const applied = ledger.measurable.filter(d => (d.kind === 'decision'
+    // Entries on a structure axis are measured only with `structure`; without it they are listed
+    // once as not measured and neither applied nor violated.
+    const unmeasured = d => !structure && STRUCTURE_AXES.includes(d.axis);
+    const reaches = d => (d.kind === 'decision'
       ? rows.some(r => ledger.decisionFor(d.axis, r.label) === d)
-      : rows.some(r => ledger.covers(d, r.label)))).map(d => d.id).sort(byId);
+      : rows.some(r => ledger.covers(d, r.label)));
+    const applied = ledger.measurable.filter(d => !unmeasured(d) && reaches(d)).map(d => d.id).sort(byId);
+    const notMeasured = ledger.measurable.filter(d => unmeasured(d) && reaches(d)).map(d => d.id).sort(byId);
     const entries = decisions.filter(d => applied.includes(d.id)).map(d => ({
       id: d.id, kind: d.kind, ...(d.to ? { to: d.to } : {}), ...(d.rule ? { rule: d.rule } : {}), axis: d.axis, values: [...d.values], ...(d.scope ? { scope: d.scope } : {}),
     })).sort((a, b) => byId(a.id, b.id));
-    ledgerReport = { applied, violations, excepted, entries };
+    ledgerReport = { applied, violations, excepted, entries, ...(notMeasured.length ? { notMeasured: notMeasured.map(id => ({ id, axis: decisions.find(d => d.id === id).axis })) } : {}) };
   }
-  const structureReport = structure ? compareStructure(rows, screens) : null;
   const verdict = verdictFor(rows.length, screensWithDrift, axes, { accentOnlyInState, accentMissing, ledger: ledgerReport, structure: structureReport });
   return { screens: rows, baseline: base, axes, screensWithDrift, accentOnlyInState, ...(ledgerReport ? { decisions: ledgerReport } : {}), ...(structureReport ? { structure: structureReport } : {}), verdict };
 }
@@ -258,6 +290,7 @@ function verdictFor(total, drifted, axes, { accentOnlyInState = [], accentMissin
     for (const e of ledger.excepted) used.set(e.id, [...new Set([...(used.get(e.id) || []), e.screen])]);
     lines.push(`Approved exceptions used: ${[...used].sort(([a], [b]) => byId(a, b)).map(([id, list]) => `${id} on ${list.join(', ')}`).join('; ')}.`);
   }
+  if (ledger?.notMeasured?.length) lines.push(`Not measured (pass --structure): ${ledger.notMeasured.map(d => `${d.id} (${AXIS_TITLES[d.axis]})`).join(', ')}.`);
   if (accentOnlyInState.length) lines.push(`On ${accentOnlyInState.join(', ')} the primary action appears only in a state; the accent was read from the state variant.`);
   if (accentMissing.length) lines.push(`No accent was derived on ${accentMissing.join(', ')}; if the primary action appears only in a state, re-measure with --states.`);
   return lines.join(' ');
@@ -277,7 +310,7 @@ export function renderDriftMarkdown(report, meta = {}) {
     return notes.length ? `${fmt(p.value)} (${notes.join('; ')})` : fmt(p.value);
   };
   const row = axis => `| ${AXIS_TITLES[axis]} | ${fmt(report.axes[axis].baseline)}${report.axes[axis].decision ? ` (decided ${report.axes[axis].decision})` : ''} | ${report.axes[axis].screens.map(cell).join(' | ')} |`;
-  const structureRows = report.structure ? `\n${STRUCTURE_AXES.map(axis => `| ${AXIS_TITLES[axis]} | ${fmt(report.structure.axes[axis].baseline)} | ${report.structure.axes[axis].screens.map(cell).join(' | ')} |`).join('\n')}` : '';
+  const structureRows = report.structure ? `\n${STRUCTURE_AXES.map(axis => `| ${AXIS_TITLES[axis]} | ${fmt(report.structure.axes[axis].baseline)}${report.structure.axes[axis].decision ? ` (decided ${report.structure.axes[axis].decision})` : ''} | ${report.structure.axes[axis].screens.map(cell).join(' | ')} |`).join('\n')}` : '';
   const offScale = report.axes.spacingBase.screens.filter(p => p.offScale?.length).map(p => `- ${p.label}: ${p.offScale.join(', ')}`);
   const screenList = report.screens.map(s => `- ${s.label}${s.url ? ` — ${s.url}` : ''}`);
   const ledger = report.decisions?.applied.length ? report.decisions : null;
@@ -300,7 +333,7 @@ Baseline: ${meta.baselineSource ?? report.baseline.source}.${meta.states?.length
 |---|---|${labels.map(() => '---').join('|')}|
 ${['accent', 'ink', 'canvas', 'spacingBase', 'spacingScale', 'typeSizes', 'radii', 'fonts', 'controlHeights'].map(row).join('\n')}${structureRows}
 
-Statuses: \`same\`, \`near\` (within a shade of the baseline), \`different\`, \`none\` (not derived on that screen), \`+values\` (present here, absent from the shared set)${ledger ? ', `violates D-…` (outside a recorded project decision), `approved D-…` (covered by an approved exception)' : ''}.${report.structure ? ' Structure rows (table row height through transition durations) come from `--structure`; recorded decisions do not cover them and they do not fail `--gate`.' : ''}${recorded}
+Statuses: \`same\`, \`near\` (within a shade of the baseline), \`different\`, \`none\` (not derived on that screen), \`+values\` (present here, absent from the shared set)${ledger ? ', `violates D-…` (outside a recorded project decision), `approved D-…` (covered by an approved exception)' : ''}.${report.structure ? ' Structure rows (table row height through transition durations) come from `--structure`; a structure value outside the shared set does not fail `--gate`, one outside a recorded decision does.' : ''}${recorded}
 
 ## Off-scale spacing per screen
 

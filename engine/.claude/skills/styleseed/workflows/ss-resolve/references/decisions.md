@@ -44,13 +44,13 @@ catalog: `engine/rules/catalog.json` never holds a project's decisions.
 | `kind` | Required. `decision` or `exception`. |
 | `rule` | Optional. A rule id from the catalog. On an exception it must be a `default` rule. |
 | `to` | Exception only, optional. The id of a `decision` in this ledger on the same `axis`. An exception names `rule`, `to`, or both: it has to say what it is an exception to. |
-| `axis` | Optional. One of the measured drift axes: `accent`, `ink`, `canvas`, `spacingBase`, `spacingScale`, `typeSizes`, `radii`, `fonts`, `controlHeights`. Without an axis the entry is prose: it reaches the bundle but the drift report cannot measure it. |
-| `values` | Required with `axis`, forbidden without it. 1–24 values. Colour axes take exactly one `#RRGGBB` (stored upper case); `spacingBase` exactly one positive integer; `fonts` family names of 1–80 characters; the other axes numbers ≥ 0 (sorted, de-duplicated). |
+| `axis` | Optional. One of the measured drift axes: `accent`, `ink`, `canvas`, `spacingBase`, `spacingScale`, `typeSizes`, `radii`, `fonts`, `controlHeights`, or one of the six structure axes the drift report measures with `--structure`: `tableRowHeights`, `listItemHeights`, `headingSizes`, `sectionGaps`, `primariesPerSection`, `transitionDurations`. Without an axis the entry is prose: it reaches the bundle but the drift report cannot measure it. |
+| `values` | Required with `axis`, forbidden without it. 1–24 values. Colour axes take exactly one `#RRGGBB` (stored upper case); `spacingBase` exactly one positive integer; `primariesPerSection` exactly one integer ≥ 0, meaning "at most this many primary actions per section"; `fonts` family names of 1–80 characters; the other axes numbers ≥ 0 (sorted, de-duplicated): px for the heights, sizes, and gaps, ms for `transitionDurations`. |
 | `scope` | Optional. `screens` (drift-report labels such as `settings` or `billing-history`) and/or `artifacts` (artifact ids). No scope means the whole project. |
 | `statement` | Required. One line, at most 300 characters. This is what an agent reads. |
 | `approvedBy` | Required. Who approved it, at most 80 characters. |
 | `date` | Required. `YYYY-MM-DD`. |
-| `source` | Optional. Where it was decided, at most 200 characters: a review batch, a reference fact id, a meeting. |
+| `source` | Optional. Where it was decided, at most 200 characters: a review batch, a reference fact, a meeting. A decision proposed from an approved reference contract reads `reference:<slug>#<fact-id>` (for example `reference:ops-console#density.table.rowHeight`), or `reference:<slug>#tokens.<axis>` for a token axis. |
 
 The resolver validates the ledger with the rest of `project.json`. It refuses, with the entry id and
 what to change: duplicate ids, unknown rule ids, an exception without `rule` or `to`, a `to` that is
@@ -113,12 +113,38 @@ apply it. Add `scope.screens` to make it measurable.
   colours); set axes compare against the decided set. A value outside it reads `violates D-001`
   instead of `different` or `+extra`.
 - A value an **exception** covers reads `approved D-002` and counts as neither drift nor violation.
+- The six structure axes are measured only with `--structure`. With it, a decision on
+  `tableRowHeights`, `listItemHeights`, `headingSizes`, `sectionGaps`, or `transitionDurations` is the
+  allowed set for its row (a value outside it reads `violates D-…`), and a `primariesPerSection` decision
+  is a maximum (a screen with more primaries in one section reads `violates D-…`). Without
+  `--structure` such an entry is listed once in the verdict as `Not measured (pass --structure)` and
+  in `drift.json` as `decisions.notMeasured`; it neither applies nor fails.
 - Axes no entry touches behave exactly as without a ledger.
 - Violations count on at-rest screens, and on state variants for the accent, as drift does.
   `drift.json` carries `decisions: { applied, violations, excepted, entries }`; `DRIFT.md` adds the
   statuses to its legend and lists the recorded entries it applied.
 - `--gate` exits 3 on at-rest drift on accent, ink, canvas, or spacing base **or** on any decision
   violation, and names both. A screen whose only deviations are approved exceptions passes.
+
+## Proposed from a reference contract
+
+An approved generated reference contract (`.styleseed/rulesets/<slug>/evidence.json`, see
+`engine/REFERENCE-COMPILER.md`) can propose entries for its kept facts and kept token axes:
+
+```bash
+node <installed-ss-reference>/scripts/compile-contract.mjs --project-root . --slug ops-console --propose-decisions
+```
+
+It prints entries without an `id` to stdout and writes nothing. Paste the ones the team wants into
+`decisions` and give each a `D-` number. `approvedBy` is the contract's reviewer and `date` its approval
+date; edit either if the person deciding for the project is someone else. Mappings: the token axes
+`spacingBase`, `spacingScale`, `typeSizes`, `radii`, `fonts`, `controlHeights` keep their names;
+`density.table.rowHeight` → `tableRowHeights`, `density.list.itemHeight` → `listItemHeights`,
+`typography.heading.sizes` → `headingSizes`, `composition.rhythm.section` → `sectionGaps`,
+`navigation.primary.perSectionMax` → `primariesPerSection` (the largest value across viewports), and
+`states.motion.durations` → `transitionDurations`. Values measured at several viewports are merged into
+one entry per axis. Accent, ink, and canvas are never proposed from a reference, and nothing is proposed
+for a fact or axis whose transfer is adapt, observe, or avoid.
 
 ## Worked examples
 
@@ -152,8 +178,8 @@ report could not say which one was approved.
 
 ## Limits (v0)
 
-- The ledger covers the measured token-level axes above. Structure facts (layout, grouping, component
-  choice) arrive with the reference loop; until then, record them as prose decisions without an axis.
+- The ledger covers the measured token-level axes and the six structure axes above. Other structure
+  (layout, grouping, component choice) has no axis; record it as a prose decision without one.
 - The drift report applies entries by screen label, not by artifact.
 - A decision is a project record, not evidence that the decision is good design. The drift report
   measures whether screens follow it; it does not judge it.

@@ -87,7 +87,8 @@
         "url": { "type": "string", "pattern": "^https?://", "maxLength": 2048 },
         "observedAt": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
         "viewports": { "type": "array", "minItems": 1, "maxItems": 8, "items": { "type": "integer", "minimum": 1 } },
-        "robots": { "enum": ["allowed", "disallowed", "not-checked"] }
+        "robots": { "enum": ["allowed", "disallowed", "not-checked"] },
+        "scroll": { "type": "boolean", "description": "Whether measure-reference ran its scroll pass (summary.json has a scroll record). Written by --write; optional so contracts written before it stay valid. drift-report.mjs --reference turns --scroll on when a source has true" }
       }
     },
     "fact": {

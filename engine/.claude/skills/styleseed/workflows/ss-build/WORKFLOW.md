@@ -31,6 +31,10 @@ run `/ss-setup` before UI code; otherwise preserve it. Invoke `/ss-resolve` (Cla
 `$ss-resolve` (Codex) with `--from-lock STYLESEED.md --agent <agent>`, read
 `.styleseed/effective-rules.md`, and preserve `.styleseed/manifest.json`.
 
+When the artifact selects a `reference:` grammar and `.styleseed/briefs/<artifact-id>.md` exists,
+read the brief after the bundle. If its verdict section is empty, ask the user that one question
+(what is wrong with the current screen?) before building. The bundle wins any conflict with the brief.
+
 If a supplied visual reference is not represented by the selected grammar, use `/ss-reference`
 within the selected project boundary. Never reduce an unfamiliar reference to a palette swap or
 replace approved project choices without human approval. Do not load `llms-full.txt` after

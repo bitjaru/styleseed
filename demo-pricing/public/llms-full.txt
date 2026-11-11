@@ -1429,7 +1429,11 @@ consistently to new screens.
    verify it. A grammar that only recreates the source screen has failed abstraction. Selecting
    `reference:<slug>` in an artifact and running `ss-resolve/scripts/resolve-context.mjs` compiles
    only an approved, unchanged generated contract; `compile-contract.mjs --propose-decisions` prints
-   ledger entries for what the person kept.
+   ledger entries for what the person kept. `ss-reference/scripts/compile-brief.mjs` writes the
+   builder's brief, and `ss-verify/scripts/drift-report.mjs <url> --out <dir> --project-root .
+   --reference <slug>` measures where the built screen stands (`DISTANCE.md`, `distance.json`). With
+   `--gate` it exits 3 when a kept fact is `different` or an avoided value is `copied`; adapted rows
+   and `absent` rows never gate.
 
 ## Measurement and evidence levels
 
@@ -1487,6 +1491,14 @@ transition durations. `--scroll` adds the same scroll pass to each page load (of
 a drift run without it measures exactly as before). It does not score; a `different` value is a question for the owner of the
 design system.
 
+**Distance is not drift.** Drift compares N screens with each other and with the project baseline.
+Distance compares one built screen with one approved reference contract (`drift-report.mjs
+--reference <slug>`, `compareToContract` in `compare-screens.mjs`): separate files (`DISTANCE.md`,
+`distance.json`), a separate table, no aggregate, no score. Adding `--reference` changes nothing in
+`DRIFT.md` or `drift.json`; they are what the same run writes with the flags `--reference` turns on
+(`--structure` always, `--scroll` when the contract's source was measured with its scroll pass, so
+both sides are measured the same way).
+
 Record every value, decision, and rule candidate with one evidence level from
 [`research/cases/README.md`](../research/cases/README.md): `observed` (measured, or stated in
 the product's own public documentation), `derived` (computed from observations), `inferred`
@@ -1510,6 +1522,12 @@ intent, loading, empty, and error states, and brand tells. The twelve-axis draft
   canvases (measure the canvas `iframe.html?id=…`, not the docs chrome), self-hosted open-source
   apps with seed data, public no-login demos. Not: logged-in third-party products, paid template
   kits.
+- The probes save no picture of a page. The one exception is project mode's `--frames`
+  (`measure-reference.mjs --project-root <dir> --slug <slug> --frames`): one viewport screenshot per
+  measured viewport, taken inside the same load, saved in the user's project under
+  `.styleseed/evidence/_reference/<slug>/frames/` and ignored by git by default. It needs `--robots`
+  to allow the path, or `--own-site`, and is refused in the StyleSeed repository. Case folders never
+  hold images.
 - Cases in this repository stay public-surface only. This is not legal advice.
 
 ## Twelve-axis output
@@ -1611,6 +1629,44 @@ node <ss-reference>/scripts/compile-contract.mjs --project-root . --slug ops-con
   (`ss-resolve/references/decisions.md`). Colours are never proposed.
 - A hand-written contract (any `evidence.json` without `schemaVersion: 1` and a `generator` object)
   compiles exactly as before.
+- In a project, measure the reference into the project itself:
+  `measure-reference.mjs <url> --project-root . --slug <slug> --robots` writes
+  `.styleseed/evidence/_reference/<slug>/measurements/` (the same files as a case, plus `source.json`
+  with the URL, date, robots.txt verdict, viewports, and whether the scroll pass ran) and no case
+  draft. `compile-contract.mjs --measurements .styleseed/evidence/_reference/<slug>/measurements` reads
+  the robots verdict from `source.json` (else from a case folder's `case.draft.json`) and records in
+  `sources[].scroll` whether the measurement ran its scroll pass. The field is optional, so contracts
+  written before it stay valid; because it is part of the contract, a new `--write` of an older
+  contract resets its approval as any change does.
+
+### Brief and distance
+
+Two files close the loop after approval. Neither is a resolver output or a manifest input.
+
+- **The brief** (`ss-reference/scripts/compile-brief.mjs --project-root . --artifact <id>
+  [--verdict "<the user's sentence>"] [--distance <distance.json>] --write`) writes
+  `.styleseed/briefs/<artifact-id>.md`, read after the bundle; the bundle wins any conflict. Its
+  sections, in order: the user's verdict on the current screen (the tool never writes one; without
+  `--verdict` the section asks the one question), the bar (the local frames, else the source URLs:
+  the level to reach, not the screen to rebuild), what was observed (the `observe` facts, as
+  observations, never as targets), where the current screen stands (a distance table), the kept facts
+  with their comparators, hard constraints read from the manifest and bundle (adapter, project
+  decisions in scope, blocking invariant ids), what not to copy (the avoided token values and facts;
+  no logos, illustrations, or copy), and one line: layout, objects, and motion are the builder's
+  decisions. The same inputs give the same bytes; the only date in it is the contract's.
+- **The distance** (`drift-report.mjs <url> --out <dir> --project-root . --reference <slug>
+  [--screen <label>]`) loads the approved contract (a draft or a contract edited after approval is
+  refused before anything is measured), measures the screen with the structure probe, and writes one
+  table grouped by transfer and one verdict line, "N keep facts differ, M avoid values copied" or "no
+  keep fact differs and nothing was copied". `keep` rows read `same`, `different`, or `absent` (the
+  screen has no such fact, or its value is a lower bound that cannot decide; `absent` never gates).
+  `adapt` rows read `same`, `near` (within the comparator), `different`, or `absent`, and never gate.
+  Avoided token axes read `copied` when the screen's value matches the reference's (a colour within a
+  shade, the same font family, the same spacing base or the same set) and the project does not already
+  own it (its palette roles, the brand key colour and font families in `project.json`, or a recorded
+  decision or exception on that axis), else `clear`. Observed facts are not compared, and a fact
+  marked `avoid` gets no row: only token axes are compared for copying. Kept token axes are checked
+  through the decisions ledger in `DRIFT.md`, not here.
 
 After explicit approval, select the grammar in the registry artifact configuration; only in
 a legacy project without a registry, update `STYLESEED.md`:

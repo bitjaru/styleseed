@@ -5,6 +5,7 @@
 //   node drift-report.mjs <url>… --out <dir> [--browser <playwright module>] [--project-root <dir>]
 //                         [--palette <id>] [--decisions <file.json>] [--states error,empty]
 //                         [--labels home,settings] [--gate] [--structure] [--scroll] [--max-elements 5000] [--timeout 45000]
+//                         [--reference <slug> [--screen <label>]]
 //
 // URLs may be http(s) or file:. The probe is the read-only observe-design probe from ss-reference;
 // nothing is installed, and no page text, screenshots, or form values are written. The result is a
@@ -15,19 +16,30 @@
 // load before the probes run (ss-reference measure-reference.mjs, revealByScroll), so content that
 // reveals on scroll is measured revealed; drift.json records `scroll: true` and DRIFT.md says so.
 // Without it no scroll call is made.
+//
+// --reference <slug> also measures the distance from one screen (--screen <label>, default the
+// first) to the project's approved generated contract `.styleseed/rulesets/<slug>/evidence.json`
+// and writes DISTANCE.md and distance.json beside the drift files. It needs --project-root, turns
+// --structure on (and --scroll when the reference was measured with its scroll pass, so both sides
+// are measured the same way), and refuses a draft or a contract changed after approval. Distance is
+// not drift: the drift files are exactly what the same run without --reference writes (with the
+// flags it turns on). With --gate, a kept fact that differs or an avoided value that was copied also
+// exits 3.
 import { mkdirSync, writeFileSync, readFileSync, readdirSync, existsSync } from 'node:fs';
 import { resolve, join, basename, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadBrowser, observeUrls } from '../../ss-reference/scripts/measure-reference.mjs';
-import { compareScreens, baselineFromRoles, renderDriftMarkdown } from '../../ss-reference/scripts/compare-screens.mjs';
+import { compareScreens, baselineFromRoles, renderDriftMarkdown, compareToContract, distanceGateFailure, distanceVerdict, ownedValues, renderDistanceMarkdown } from '../../ss-reference/scripts/compare-screens.mjs';
+import { buildFacts } from '../../ss-reference/scripts/analyze-structure.mjs';
 import { loadProjectRegistry } from '../../ss-resolve/scripts/project-registry.mjs';
-import { normalizeDecisions, parseStrictJson } from '../../ss-resolve/scripts/runtime-contract.mjs';
+import { CONTRACT_FILES, checkGeneratedContract } from '../../ss-resolve/scripts/reference-contract.mjs';
+import { SAFE_ID, normalizeDecisions, parseStrictJson, safeProjectPath } from '../../ss-resolve/scripts/runtime-contract.mjs';
 
-const USAGE = 'usage: drift-report.mjs <url>… --out <dir> [--browser <module>] [--project-root <dir>] [--palette <id>] [--decisions <file.json>] [--states a,b] [--labels a,b] [--gate] [--structure] [--scroll]';
+const USAGE = 'usage: drift-report.mjs <url>… --out <dir> [--browser <module>] [--project-root <dir>] [--palette <id>] [--decisions <file.json>] [--states a,b] [--labels a,b] [--gate] [--structure] [--scroll] [--reference <slug> [--screen <label>]]';
 const contextCatalog = () => JSON.parse(readFileSync(resolve(dirname(fileURLToPath(import.meta.url)), '../../ss-resolve/references/catalog.json'), 'utf8'));
 
 export function parseArgs(argv) {
-  const args = { urls: [], out: null, browser: process.env.STYLESEED_BROWSER_MODULE || null, projectRoot: null, palette: null, decisions: null, states: [], labels: [], maxElements: 5000, timeout: 45000, gate: false, structure: false, scroll: false };
+  const args = { urls: [], out: null, browser: process.env.STYLESEED_BROWSER_MODULE || null, projectRoot: null, palette: null, decisions: null, states: [], labels: [], maxElements: 5000, timeout: 45000, gate: false, structure: false, scroll: false, reference: null, screen: null };
   const list = value => String(value ?? '').split(',').map(s => s.trim()).filter(Boolean);
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
@@ -41,6 +53,8 @@ export function parseArgs(argv) {
     else if (a === '--gate') args.gate = true;
     else if (a === '--structure') args.structure = true;
     else if (a === '--scroll') args.scroll = true;
+    else if (a === '--reference') args.reference = argv[++i] ?? '';
+    else if (a === '--screen') args.screen = argv[++i] ?? '';
     else if (a === '--max-elements') args.maxElements = Number(argv[++i]);
     else if (a === '--timeout') args.timeout = Number(argv[++i]);
     else if (a.startsWith('--')) throw new Error(`unknown option ${a}\n${USAGE}`);
@@ -51,7 +65,45 @@ export function parseArgs(argv) {
   if (args.decisions !== null && (typeof args.decisions !== 'string' || !args.decisions || args.decisions.startsWith('--'))) throw new Error('--decisions needs a JSON file path (an array of decision entries)');
   for (const u of args.urls) if (!/^(?:https?|file):\/\//.test(u)) throw new Error(`URLs must be http(s) or file: — got ${u}`);
   if (args.labels.length && args.labels.length !== args.urls.length) throw new Error(`--labels needs one label per URL (${args.labels.length} labels for ${args.urls.length} URLs)`);
+  if (args.reference !== null && !SAFE_ID.test(args.reference)) throw new Error('--reference needs the slug of a generated contract under .styleseed/rulesets/ (for example ops-console)');
+  if (args.reference !== null && !args.projectRoot) throw new Error('--reference needs --project-root <dir>: the approved contract is read from <dir>/.styleseed/rulesets/<slug>/evidence.json');
+  if (args.screen !== null && args.reference === null) throw new Error('--screen picks the screen measured against --reference <slug>; pass --reference too');
+  if (args.screen !== null && !args.screen) throw new Error('--screen needs a screen label (as in --labels, or derived from the URL)');
   return args;
+}
+
+// The approved generated contract `reference:<slug>` of the project, validated as the resolver
+// validates it (approval record, contract hash, rendered files). A draft, a contract edited after
+// approval, or a hand-written contract is refused with the command to run.
+export function loadReferenceContract(projectRoot, slug, catalog = contextCatalog()) {
+  const root = resolve(projectRoot);
+  const dir = `.styleseed/rulesets/${slug}`;
+  const evidencePath = safeProjectPath(root, `${dir}/evidence.json`);
+  if (!existsSync(evidencePath)) throw new Error(`--reference ${slug}: ${dir}/evidence.json does not exist. Compile it first: ss-reference/scripts/compile-contract.mjs --project-root <dir> --slug ${slug} --measurements <dir> --write, then --approve --reviewer <name>`);
+  const files = {};
+  for (const name of CONTRACT_FILES) {
+    const path = safeProjectPath(root, `${dir}/${name}`);
+    if (existsSync(path)) files[name] = readFileSync(path);
+  }
+  const evidence = checkGeneratedContract({ slug, files, fallback: null, catalog });
+  if (!evidence) throw new Error(`--reference ${slug}: ${dir}/evidence.json is a hand-written contract; distance is measured against generated contracts only (compile-contract.mjs)`);
+  return evidence;
+}
+
+// The plan row --screen names (default: the first screen).
+export function pickScreen(plan, label = null) {
+  if (label === null) return plan[0];
+  const found = plan.find(p => p.label === label);
+  if (!found) throw new Error(`--screen ${label} is not one of the measured screens (${plan.map(p => p.label).join(', ')})`);
+  return found;
+}
+
+// --reference turns on what the comparison needs: the structure probe always, and the scroll pass
+// when the contract's source was measured with one. Returns the effective flags and what was turned on.
+export function referenceFlags(args, evidence) {
+  const scrolled = evidence.sources.some(source => source.scroll === true);
+  const turnedOn = [...(args.structure ? [] : ['--structure']), ...(!args.scroll && scrolled ? ['--scroll'] : [])];
+  return { structure: true, scroll: args.scroll || scrolled, turnedOn };
 }
 
 export function labelFor(url) {
@@ -119,32 +171,65 @@ export function loadDecisions({ projectRoot = null, decisions = null } = {}, cat
 
 // --gate: at-rest drift on accent, ink, canvas, or spacing base is INV-05 territory, and a value
 // outside a recorded decision breaks an approval; either exits 3 so CI can block on it. An approved
-// exception is neither. Returns null when the gate passes.
+// exception is neither. With --reference, a kept fact that differs or an avoided value that was
+// copied also fails (each named). Returns null when the gate passes.
 export function gateFailure(result) {
   const parts = [];
   if (result.screensWithDrift.length) parts.push(`drift on ${result.screensWithDrift.join(', ')}`);
   const violations = result.decisions?.violations ?? [];
   if (violations.length) parts.push(`decision violations: ${violations.map(v => `${v.id} on ${v.screen} (${v.axis} ${v.values.join(', ')})`).join('; ')}`);
-  return parts.length ? `drift gate: FAIL — ${parts.join('; ')}` : null;
+  const lines = [parts.length ? `drift gate: FAIL — ${parts.join('; ')}` : null, result.distance ? distanceGateFailure(result.distance.rows) : null].filter(Boolean);
+  return lines.length ? lines.join('\n') : null;
 }
 
-export async function report(args, log = console.log) {
-  const decisions = loadDecisions(args);
-  const { chromium, from } = await loadBrowser(args.browser);
+export async function report(args, log = console.log, { loadBrowserImpl = loadBrowser } = {}) {
+  const catalog = contextCatalog();
+  const decisions = loadDecisions(args, catalog);
   const plan = planScreens(args);
-  const measured = await observeUrls(plan.map(p => p.url), { chromium, timeout: args.timeout, maxElements: args.maxElements, structure: args.structure, scroll: args.scroll });
+  // --reference: refuse a draft before any browser starts, then turn on what the comparison needs.
+  let reference = null;
+  if (args.reference) {
+    const evidence = loadReferenceContract(args.projectRoot, args.reference, catalog);
+    const screen = pickScreen(plan, args.screen);
+    const flags = referenceFlags(args, evidence);
+    for (const flag of flags.turnedOn) log(flag === '--structure'
+      ? `--reference ${args.reference}: --structure is on (the structure probe supplies the facts the contract is compared with)`
+      : `--reference ${args.reference}: --scroll is on (the reference was measured with its scroll pass, so this screen is measured the same way)`);
+    reference = { evidence, screen, flags };
+  }
+  const structure = reference ? reference.flags.structure : args.structure;
+  const scroll = reference ? reference.flags.scroll : args.scroll;
+  const { chromium, from } = await loadBrowserImpl(args.browser);
+  const measured = await observeUrls(plan.map(p => p.url), { chromium, timeout: args.timeout, maxElements: args.maxElements, structure, scroll });
   const screens = plan.map((p, i) => ({ ...p, summary: measured[i].summary }));
   const registry = args.projectRoot ? registryBaseline(resolve(args.projectRoot), args.palette) : null;
-  const result = compareScreens(screens, { baseline: registry ? baselineFromRoles(registry.roles) : null, decisions, structure: args.structure });
+  const result = compareScreens(screens, { baseline: registry ? baselineFromRoles(registry.roles) : null, decisions, structure });
   const decided = result.baseline.source.match(/; recorded project decisions for .*$/u)?.[0] ?? '';
   const meta = {
-    observedAt: new Date().toISOString().slice(0, 10), browser: String(from).replace(/^.*node_modules\//u, ''), states: args.states, ...(args.scroll ? { scroll: true } : {}),
+    observedAt: new Date().toISOString().slice(0, 10), browser: String(from).replace(/^.*node_modules\//u, ''), states: args.states, ...(scroll ? { scroll: true } : {}),
     baselineSource: `${registry ? `registry roles from ${registry.file} for colours, majority across screens for the rest` : 'majority across screens'}${decided}`,
   };
   mkdirSync(args.out, { recursive: true });
   writeFileSync(join(args.out, 'drift.json'), `${JSON.stringify({ tool: 'styleseed drift-report', version: '1', ...meta, ...result }, null, 2)}\n`);
   writeFileSync(join(args.out, 'DRIFT.md'), renderDriftMarkdown(result, meta));
   log(`${result.verdict}\n  → ${join(args.out, 'DRIFT.md')}`);
+  if (!reference) return result;
+
+  // Distance: its own files; the drift files above are not touched again.
+  const { evidence, screen } = reference;
+  const { summary } = measured[plan.indexOf(screen)];
+  const facts = buildFacts(summary, summary.structure ?? null, screen.url, meta.observedAt);
+  const project = loadProjectRegistry(resolve(args.projectRoot), { catalog });
+  const rows = compareToContract({ facts: facts.facts, summary }, evidence, { ownValues: ownedValues({ roles: registry?.roles ?? null, brand: project?.project.brand ?? null, decisions }) });
+  const verdict = distanceVerdict(rows);
+  const distanceMeta = {
+    slug: args.reference, screen: screen.label, url: screen.url, observedAt: meta.observedAt, browser: meta.browser, ...(scroll ? { scroll: true } : {}),
+    contractHash: evidence.approval.contractHash, approvedBy: evidence.approval.reviewer, approvedOn: evidence.approval.date,
+  };
+  writeFileSync(join(args.out, 'distance.json'), `${JSON.stringify({ tool: 'styleseed distance', version: '1', reference: args.reference, contractHash: distanceMeta.contractHash, approvedBy: distanceMeta.approvedBy, approvedOn: distanceMeta.approvedOn, screen: { label: screen.label, url: screen.url }, observedAt: meta.observedAt, browser: meta.browser, ...(scroll ? { scroll: true } : {}), verdict, rows }, null, 2)}\n`);
+  writeFileSync(join(args.out, 'DISTANCE.md'), renderDistanceMarkdown(rows, distanceMeta));
+  log(`distance to reference:${args.reference} (${screen.label}): ${verdict}\n  → ${join(args.out, 'DISTANCE.md')}`);
+  result.distance = { reference: args.reference, screen: screen.label, rows, verdict };
   return result;
 }
 

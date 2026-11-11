@@ -12,7 +12,7 @@ import { STAYS_OPEN } from "../../engine/.claude/skills/styleseed/workflows/ss-r
 import { buildEvidence, parseArgs, run } from "../../engine/.claude/skills/styleseed/workflows/ss-reference/scripts/compile-contract.mjs";
 import {
   COMPARE_OPS, CONTRACT_AXES, CONTRACT_FILES, DEFAULT_TOKEN_TRANSFERS, DEFAULT_TRANSFERS, FACT_AXES, RENDERED_FILES, TOKEN_AXES, TRANSFERS,
-  contractHash, defaultTransfer, isApproved, normalizeReferenceEvidence, proposeDecisions, renderContractFiles,
+  contractHash, defaultTokenTransfers, defaultTransfer, isApproved, normalizeReferenceEvidence, proposeDecisions, renderContractFiles,
   renderedHashes, renderRuleset, tokenProblems,
 } from "../../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/reference-contract.mjs";
 import { normalizeDecisions } from "../../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/runtime-contract.mjs";
@@ -150,6 +150,15 @@ test("every fact-id template WO-04 can emit has exactly one default transfer, as
   assert.deepEqual(defaultTransfer({ id: "density.table.rowHeight", bound: "lower", value: 40, unit: "px" }), observe, "within is not valid on a lower bound, so the row does not apply");
   assert.equal(DEFAULT_TRANSFERS.at(-1).match.join(), "*", "the last row is the everything-else row");
   assert.deepEqual(DEFAULT_TOKEN_TRANSFERS, { accent: "avoid", ink: "observe", canvas: "observe", spacingBase: "adapt", spacingScale: "adapt", typeSizes: "adapt", radii: "adapt", fonts: "avoid", controlHeights: "adapt" });
+});
+
+test("a reference measured only in system or generic fonts proposes observe for fonts, not avoid", () => {
+  assert.equal(defaultTokenTransfers({ fonts: ["-apple-system"] }).fonts, "observe", "a platform stack is nobody's brand");
+  assert.equal(defaultTokenTransfers({ fonts: ["system-ui", "Segoe UI", "sans-serif"] }).fonts, "observe");
+  assert.equal(defaultTokenTransfers({ fonts: ["Inter"] }).fonts, "avoid", "a named family stays avoid");
+  assert.equal(defaultTokenTransfers({ fonts: ["Inter", "system-ui"] }).fonts, "avoid", "one named family is enough to keep avoid");
+  assert.equal(defaultTokenTransfers({ fonts: [] }).fonts, "avoid");
+  assert.deepEqual({ ...defaultTokenTransfers({ fonts: ["-apple-system"] }), fonts: "avoid" }, { ...DEFAULT_TOKEN_TRANSFERS }, "no other axis changes");
 });
 
 test("resolver-side copies stay in parity with ss-reference: fact families, token axes, open questions", () => {

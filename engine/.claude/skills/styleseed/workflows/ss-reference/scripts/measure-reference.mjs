@@ -1,14 +1,28 @@
 #!/usr/bin/env node
 // Measure a public reference URL at desktop and narrow viewports and write the measurement
-// files a design-decision case starts from (research/cases/README.md).
+// files a design-decision case starts from (research/cases/README.md), or, in project mode, the
+// measurements a project compiles its reference contract from.
 //
 //   node measure-reference.mjs <url> --out <dir> [--browser <playwright module>] [--id <case-id>]
 //                              [--robots] [--own-site] [--no-scroll] [--designlang] [--max-elements 5000] [--timeout 45000]
+//   node measure-reference.mjs <url> --project-root <dir> --slug <slug> [--frames] [--robots] [--own-site] [...]
+//
+// Case mode (--out) writes measurements/, TWELVE-AXES.draft.md, and case.draft.json. Project mode
+// (--project-root and --slug, one URL) writes the same measurements/ layout under
+// <project-root>/.styleseed/evidence/_reference/<slug>/, plus measurements/source.json (the URL, the
+// date, the robots.txt verdict, the viewports, and whether the scroll pass ran) for
+// compile-contract.mjs; no case draft is written into a project. --frames (project mode only, and
+// only with --robots allowing the path or --own-site) also saves one viewport screenshot per
+// measured viewport to …/<slug>/frames/<width>.png, taken inside the same load: no full-page
+// capture, no element crops, no asset downloads. Frames are the only picture of a page this engine
+// saves; they stay in the user's project, ignored by git by default (…/_reference/.gitignore), and
+// are refused in the StyleSeed repository. Case mode never writes frames.
 //
 // The browser comes from --browser, STYLESEED_BROWSER_MODULE, or a `playwright` package the
 // current project already has. Nothing is installed. One page load per viewport runs the design
-// probe (computed-style counts) and the structure probe (geometry as numbers); no screenshots,
-// text, selectors, asset URLs, or form values are written. Derived values name the counts behind
+// probe (computed-style counts) and the structure probe (geometry as numbers); no screenshots
+// (other than project mode's --frames above), text, selectors, asset URLs, or form values are
+// written. Derived values name the counts behind
 // them. --robots checks robots.txt for the path first (built-in fetch); a disallowed path stops
 // the run unless --own-site says the site is yours. The user remains responsible for the site's terms.
 //
@@ -34,15 +48,24 @@ import { observeDesign } from './observe-design.mjs';
 import { observeStructure } from './observe-structure.mjs';
 import { summarize } from './analyze-observations.mjs';
 import { buildFacts, factsByAxis } from './analyze-structure.mjs';
+import { SAFE_ID, safeProjectPath } from '../../ss-resolve/scripts/runtime-contract.mjs';
 
 const DESIGNLANG_VERSION = '13.4.0';
 const VIEWPORTS = [{ width: 1440, height: 900 }, { width: 390, height: 844 }];
+const USAGE = 'usage: measure-reference.mjs <url> --out <dir> [--browser <module>] [--id <case-id>] [--robots] [--own-site] [--no-scroll] [--designlang]\n       measure-reference.mjs <url> --project-root <dir> --slug <slug> [--frames] [--browser <module>] [--robots] [--own-site] [--no-scroll]';
+// Project mode writes under this folder of the project root, one subfolder per slug.
+export const PROJECT_REFERENCE_DIR = '.styleseed/evidence/_reference';
+export const FRAMES_IGNORE = '*/frames/\n';
+const FRAMES_IN_REPOSITORY = 'frames are project-local; the StyleSeed repository stores no third-party screenshots';
 
 export function parseArgs(argv) {
-  const args = { urls: [], out: null, browser: process.env.STYLESEED_BROWSER_MODULE || null, id: null, designlang: false, robots: false, ownSite: false, scroll: true, maxElements: 5000, timeout: 45000 };
+  const args = { urls: [], out: null, projectRoot: null, slug: null, frames: false, browser: process.env.STYLESEED_BROWSER_MODULE || null, id: null, designlang: false, robots: false, ownSite: false, scroll: true, maxElements: 5000, timeout: 45000 };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === '--out') args.out = argv[++i];
+    else if (a === '--project-root') args.projectRoot = argv[++i];
+    else if (a === '--slug') args.slug = argv[++i];
+    else if (a === '--frames') args.frames = true;
     else if (a === '--browser') args.browser = argv[++i];
     else if (a === '--id') args.id = argv[++i];
     else if (a === '--designlang') args.designlang = true;
@@ -54,10 +77,62 @@ export function parseArgs(argv) {
     else if (a.startsWith('--')) throw new Error(`unknown option ${a}`);
     else args.urls.push(a);
   }
-  if (!args.urls.length) throw new Error('usage: measure-reference.mjs <url> --out <dir> [--browser <module>] [--id <case-id>] [--robots] [--own-site] [--no-scroll] [--designlang]');
-  if (!args.out) throw new Error('--out <dir> is required');
+  if (!args.urls.length) throw new Error(USAGE);
+  const project = args.projectRoot !== null || args.slug !== null;
+  if (project && (!args.projectRoot || !args.slug)) throw new Error('--project-root <dir> and --slug <slug> go together: project mode writes .styleseed/evidence/_reference/<slug>/ under the project root');
+  if (project && args.out) throw new Error('--out and --project-root/--slug cannot run together: --out writes a case folder, --project-root with --slug writes into the project; pick one');
+  if (!project && !args.out) throw new Error(`--out <dir> is required (or --project-root <dir> --slug <slug> for project mode)\n${USAGE}`);
+  if (project && !SAFE_ID.test(args.slug)) throw new Error('--slug must be a safe id such as ops-console (lowercase letters, digits, and hyphens)');
+  if (project && args.urls.length > 1) throw new Error(`project mode measures one URL per slug (got ${args.urls.length}); run once per reference with its own --slug`);
+  if (project && args.id) throw new Error('--id names a case folder; project mode names the measurement by --slug');
+  if (args.frames && !project) throw new Error('--frames needs project mode (--project-root <dir> --slug <slug>): frames are project-local, and case mode (--out) never writes frames');
+  if (args.frames && !args.robots && !args.ownSite) throw new Error('--frames needs --robots (robots.txt must allow the path) or --own-site (a site you operate)');
   for (const u of args.urls) if (!/^https?:\/\//.test(u)) throw new Error(`not an http(s) URL: ${u}`);
   return args;
+}
+
+// The StyleSeed repository itself: engine/VERSION next to a research/cases folder.
+export function isStyleSeedRepository(root) {
+  return existsSync(join(root, 'engine', 'VERSION')) && existsSync(join(root, 'research', 'cases'));
+}
+
+// Project mode: the resolved project root and the folder this slug's measurement lives in. Frames
+// are refused in the StyleSeed repository before anything is measured.
+export function projectTarget(args) {
+  const root = resolve(args.projectRoot);
+  if (!existsSync(root)) throw new Error(`--project-root ${args.projectRoot} does not exist`);
+  if (args.frames && isStyleSeedRepository(root)) throw new Error(FRAMES_IN_REPOSITORY);
+  return { root, rel: `${PROJECT_REFERENCE_DIR}/${args.slug}` };
+}
+
+// The one viewport screenshot --frames saves, taken on the page the probes just read: the first
+// viewport only (fullPage false), no element crops, no asset downloads.
+export function captureFrame(page) {
+  return page.screenshot({ type: 'png', fullPage: false });
+}
+
+// Write frames/<width>.png for one slug and make sure git ignores frames by default: the first
+// write creates .styleseed/evidence/_reference/.gitignore with `*/frames/` when it does not exist.
+export function writeFrames(root, slug, frames, log = console.log) {
+  const ignoreRel = `${PROJECT_REFERENCE_DIR}/.gitignore`;
+  mkdirSync(safeProjectPath(root, `${PROJECT_REFERENCE_DIR}/${slug}/frames`), { recursive: true });
+  const ignore = safeProjectPath(root, ignoreRel);
+  const created = !existsSync(ignore);
+  if (created) writeFileSync(ignore, FRAMES_IGNORE);
+  const written = [];
+  for (const [width, png] of Object.entries(frames).sort((a, b) => Number(b[0]) - Number(a[0]))) {
+    const rel = `${PROJECT_REFERENCE_DIR}/${slug}/frames/${width}.png`;
+    writeFileSync(safeProjectPath(root, rel), png);
+    written.push(rel);
+  }
+  log(`frames: ${written.join(', ')} (one viewport screenshot per viewport). Frames are ignored by git by default (${ignoreRel}${created ? ', created now,' : ''} lists */frames/) and are yours to keep private.`);
+  return { written, ignoreCreated: created };
+}
+
+// Project mode's record of the run, read by compile-contract.mjs: numbers and enums plus the
+// measured page's own URL.
+export function sourceRecord({ url, observedAt, robots, viewports, scrolled }) {
+  return { url, observedAt, robots: robots.status, viewports: [...viewports], scroll: Boolean(scrolled) };
 }
 
 export async function loadBrowser(explicit) {
@@ -256,14 +331,18 @@ export async function revealByScroll(page, options = {}, now = Date.now) {
 // With `structure`, the structure probe runs on the same page load and its output rides on each
 // observation as `.structure`. With `scroll` (true, or overrides for SCROLL_DEFAULTS) the window is
 // scrolled to the bottom and back before the probes run, and the record rides on each observation
-// as `.scroll`; without it no scroll call is made. One navigation per viewport: a page that never
-// goes network-idle is measured once it has loaded, not loaded again.
-export async function observeUrls(urls, { chromium, timeout = 45000, maxElements = 5000, viewports = VIEWPORTS, structure = false, scroll = false } = {}) {
+// as `.scroll`; without it no scroll call is made. With `frames` (measure-reference project mode
+// only) one viewport screenshot per viewport is taken after the probes, on the same load, and
+// returned as `frames` ({ width: png bytes }) beside the observations, never inside them. One
+// navigation per viewport: a page that never goes network-idle is measured once it has loaded, not
+// loaded again.
+export async function observeUrls(urls, { chromium, timeout = 45000, maxElements = 5000, viewports = VIEWPORTS, structure = false, scroll = false, frames = false } = {}) {
   const results = [];
   const browser = await chromium.launch({ headless: true });
   try {
     for (const url of urls) {
       const observations = [];
+      const shots = {};
       for (const viewport of viewports) {
         const context = await browser.newContext({ viewport, deviceScaleFactor: 1 });
         const page = await context.newPage();
@@ -275,16 +354,18 @@ export async function observeUrls(urls, { chromium, timeout = 45000, maxElements
         const observation = await page.evaluate(observeDesign, { maxElements });
         if (structure) observation.structure = await page.evaluate(observeStructure, { maxElements });
         if (scrolled) observation.scroll = scrolled;
+        if (frames) shots[viewport.width] = await captureFrame(page);
         observations.push(observation);
         await context.close();
       }
-      results.push({ url, observations, summary: summarize(observations) });
+      results.push({ url, observations, summary: summarize(observations), ...(frames ? { frames: shots } : {}) });
     }
   } finally { await browser.close(); }
   return results;
 }
 
-export async function measure(args, log = console.log, { fetchImpl = globalThis.fetch } = {}) {
+export async function measure(args, log = console.log, { fetchImpl = globalThis.fetch, loadBrowserImpl = loadBrowser } = {}) {
+  const project = args.projectRoot ? projectTarget(args) : null;
   const robots = {};
   for (const url of args.urls) {
     robots[url] = args.robots ? await checkRobots(url, { fetchImpl }) : { status: 'not-checked', reason: 'robots.txt was not checked (pass --robots)' };
@@ -292,16 +373,18 @@ export async function measure(args, log = console.log, { fetchImpl = globalThis.
       throw new Error(`${url}: ${robots[url].reason}. Nothing was measured. Measure the vendor's public documentation or a self-hosted instance instead, or pass --own-site if you operate this site.`);
     }
     if (args.robots) log(`robots.txt ${robots[url].status}: ${robots[url].reason}${robots[url].status === 'disallowed' ? ' (continuing: --own-site)' : ''}`);
+    if (args.frames && !args.ownSite && robots[url].status !== 'allowed') throw new Error(`--frames needs robots.txt to allow ${url} (it is ${robots[url].status}). Nothing was measured. Drop --frames, or pass --own-site if you operate this site.`);
   }
-  const { chromium, from } = await loadBrowser(args.browser);
-  const results = await observeUrls(args.urls, { chromium, timeout: args.timeout, maxElements: args.maxElements, structure: true, scroll: args.scroll });
+  const { chromium, from } = await loadBrowserImpl(args.browser);
+  const results = await observeUrls(args.urls, { chromium, timeout: args.timeout, maxElements: args.maxElements, structure: true, scroll: args.scroll, frames: Boolean(project && args.frames) });
 
   const observedAt = new Date().toISOString().slice(0, 10);
   const written = [];
-  for (const { url, observations, summary } of results) {
+  for (const { url, observations, summary, frames } of results) {
     const host = url.replace(/^https?:\/\//, '').replace(/[^A-Za-z0-9.-].*$/, '');
     const id = args.id || `${host.replace(/\./g, '-')}-reference-${observedAt}`;
-    const dir = results.length > 1 || !args.id ? join(args.out, id) : args.out;
+    if (project) mkdirSync(safeProjectPath(project.root, `${project.rel}/measurements`), { recursive: true });
+    const dir = project ? safeProjectPath(project.root, project.rel) : results.length > 1 || !args.id ? join(args.out, id) : args.out;
     const measurements = join(dir, 'measurements');
     mkdirSync(measurements, { recursive: true });
     const files = ['measurements/observations.json', 'measurements/summary.json', 'measurements/facts.json'];
@@ -315,7 +398,10 @@ export async function measure(args, log = console.log, { fetchImpl = globalThis.
     }
     writeFileSync(join(dir, 'TWELVE-AXES.draft.md'), twelveAxesDraft(url, summary));
     const scrolled = observations.some(o => o.scroll);
-    writeFileSync(join(dir, 'case.draft.json'), JSON.stringify(caseDraft({ id, url, files, summary, observedAt, robots: robots[url], ownSite: args.ownSite, scrolled }), null, 2) + '\n');
+    if (project) {
+      writeFileSync(join(measurements, 'source.json'), `${JSON.stringify(sourceRecord({ url, observedAt, robots: robots[url], viewports: facts.viewports, scrolled }), null, 2)}\n`);
+      if (frames) writeFrames(project.root, args.slug, frames, log);
+    } else writeFileSync(join(dir, 'case.draft.json'), JSON.stringify(caseDraft({ id, url, files, summary, observedAt, robots: robots[url], ownSite: args.ownSite, scrolled }), null, 2) + '\n');
     written.push(dir);
     const perAxis = Object.entries(factsByAxis(facts.facts)).map(([axis, list]) => `${axis} ${list.length}`).join(', ');
     const scrollLog = scrolled ? observations.filter(o => o.scroll).map(o => `\n  scroll @${o.viewport?.width}: ${scrollText(o.scroll)}`).join('') : '\n  scroll pass not run (--no-scroll)';

@@ -55,8 +55,8 @@ counterpart there.
 | Class | What it is | Fault when | Never a fault | Threshold | Origin | Rule | Gate |
 |---|---|---|---|---|---|---|---|
 | `amount-wrap` | An element (not inline) whose whole text is one amount (`10 kg`, `$48.2K`, `₩1,240,000`, `1억 2,000만 원`) and that holds only inline content. | Its fragments sit on 2 or more lines and it holds no `<br>`. | A value and its unit in separate block boxes; an amount inside running text; an amount whose text is transformed (rotated, translated, or scaled), since its line boxes are not its painted lines. | — | `(S)` unit wrapped; its 28px font floor and 4-character unit limit are not used | `DL-23-amounts-never-wrap` | reports |
-| `text-overlap` | Fragments of two different blocks that intersect. | The intersection is at least 2px wide and at least 0.5 of the smaller font size tall. | A side under a layer that paints its own background (a badge on an avatar, a popover); a side inside a fixed or sticky element, under `aria-hidden="true"`, or below 0.5 opacity (a watermark). | 2px; 0.5 | *ours* (Stageshow reports text over a neighbouring box) | `INV-06-text-stays-whole` | reports |
-| `text-spill` | A fragment that runs past the border box of its holder, which does not clip or scroll on that axis. | By 2px or more. | Text without a holder (placed on purpose). | 2px | *ours* (Stageshow: spills its slot) | `INV-06-text-stays-whole` | reports |
+| `text-overlap` | Fragments of two different blocks that intersect. | The intersection is at least 2px wide and at least 0.5 of the smaller font size tall. | A side under a layer that paints its own background (a badge on an avatar, a popover); a side inside a fixed or sticky element, under `aria-hidden="true"`, or below 0.5 opacity (a watermark). | 2px; 0.5 | *ours* (Stageshow reports text over a neighbouring box) | none | reports |
+| `text-spill` | A fragment that runs past the border box of its holder, which does not clip or scroll on that axis. | By 2px or more. | Text without a holder (placed on purpose). | 2px | *ours* (Stageshow: spills its slot) | none | reports |
 | `text-clip` | An element with its own text, at least 4×4, whose overflow is hidden or clipped. | Cut on x without `text-overflow: ellipsis`, or on y by more than half its font size without a line clamp. | A mask image on it or an ancestor; a running animation. | — | *ours* (Stageshow: clipped) | none | reports |
 | `tight-inset` | The smallest distance from an element's fragments (their unclipped rects) to its holder's inner edge (border box minus borders), per side. A holder of at least 160×48 is a panel, else a chip. | A panel side under 8px (top and bottom are not judged when the panel scrolls on y); a chip's left or right under 4px. | A round compact holder (a count badge, an avatar, a dot); a side whose text lies outside the inner edge, including text that an ellipsis or a scroll cuts (that is a spill or a clip). | 8px `(S)`; 4px *ours* | `(S)` tight inset is under 8px with 12px as its target; it exempts chips and pills, so the chip floor is ours | none | reports |
 | `text-touch` | The nearest in-flow surface beside a fragment on its line (overlapping at least half its height), not its own ancestor or descendant. | A gap under 4px that no authored spacing explains. | An inline surface in the text's own block (a badge or `code` chip inside a sentence); out-of-flow surfaces, and surfaces inside an out-of-flow wrapper. | 4px | `(S)` touching is 5px; 4px here because 4px is this engine's sanctioned half-step (`engine/CLAUDE.md`, Spacing) | none | reports |
@@ -65,9 +65,9 @@ counterpart there.
 | `emoji-icon` | An element whose own text is one to eight emoji, inside a control, leading a flex row whose later siblings hold text, or alone in a square surface of at most 64px. | Every record. | Emoji anywhere else: in a sentence, a message, a heading. | — | `(S)` emoji icon | `CRAFT-functional-icons` | reports |
 | `icon-mix` | Top-level `svg` icons of 8–32px, signed `<viewBox grid>\|<stroke, fill, or both>`, grouped by their nearest `nav`, list, table, toolbar, tab list, or menu. | A group with at least two icons outside a selected item and at least two signatures. | Icons in a selected item (`aria-selected`, `aria-current`, `aria-pressed`, `aria-checked`, or `data-state` active, on, checked, open): an outline default with a filled selected state is allowed (VISUAL-CRAFT CC-9). | — | `(S)` mixed icons, redefined: it flags filled beside outline, which our canon allows for state | `CRAFT-icon-family` | reports |
 
-A class with a rule id maps to that catalog rule only while the id is in the catalog; until then its
-findings carry `rule: null`. The good and bad page of every class are in `scripts/lib/fault-pairs.mjs`
-of the StyleSeed repository (fixtures for `scripts/test-render-faults-browser.mjs`).
+A finding carries the rule of its class only while that rule id is in the catalog; otherwise `rule` is
+`null`. The good and bad page of every class are in `scripts/lib/fault-pairs.mjs` of the StyleSeed
+repository (fixtures for `scripts/test-render-faults-browser.mjs`).
 
 ## Output
 
@@ -98,7 +98,10 @@ the gate. State variants (`--states`) count like at-rest screens.
 A class may only become a gate when it is a gate candidate (`amount-wrap`, `text-overlap`,
 `text-spill`: breaks rather than taste) and a calibration run on our own screens
 (`scripts/calibrate-render-faults.mjs`: the gallery, the site registry's five pages, and ten product
-showcases, at both viewports) finds none of it. The other seven classes report.
+showcases, at both viewports) finds none of it. The other seven classes report. The calibration of
+2026-11-11 (rerun after the review fixes to the probe) found each of the three candidates on our own
+screens, so today every class reports: `DL-23-amounts-never-wrap` stays `strong`, and text-overlap and
+text-spill map to no rule.
 
 The project's decisions ledger can waive a **default** rule per screen: an entry with
 `kind: "exception"`, the finding's `rule`, no `axis`, and either no scope or `scope.screens` naming

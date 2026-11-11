@@ -1,5 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { FAULT_CLASSES, THRESHOLDS, analyzeFaults, faultsGateFailure, faultsReport, renderFaultsMarkdown } from "../../engine/.claude/skills/styleseed/workflows/ss-verify/scripts/analyze-faults.mjs";
 import { gateFailure, parseArgs } from "../../engine/.claude/skills/styleseed/workflows/ss-verify/scripts/drift-report.mjs";
 import { observeUrls } from "../../engine/.claude/skills/styleseed/workflows/ss-reference/scripts/measure-reference.mjs";
@@ -100,13 +103,13 @@ test("a custom thresholds argument moves the result; distribution counts match t
   assert.deepEqual(FAULT_CLASSES.map((c) => Object.keys(c)), FAULT_CLASSES.map(() => ["id", "rule", "summary"]));
 });
 
-// Two screens of synthetic observations; `billing` also has an error-state variant.
-const rules = (over = {}) => [
+// Two screens of synthetic observations; `billing` also has an error-state variant. `home` holds a
+// text overlap, which maps to no rule in these synthetic catalogs. `kinds` turns a rule into an invariant.
+const rules = (over = {}, kinds = {}) => [
   { id: "DL-23-amounts-never-wrap", kind: "default", priority: "strong" },
-  { id: "INV-06-text-stays-whole", kind: "invariant", priority: "blocks" },
   { id: "CRAFT-functional-icons", kind: "default", priority: "strong" },
-  ...Object.entries(over).map(([id, priority]) => ({ id, kind: "default", priority })),
-].map((r) => ({ ...r, priority: over[r.id] ?? r.priority }));
+  ...Object.keys(over).filter((id) => !["DL-23-amounts-never-wrap", "CRAFT-functional-icons"].includes(id)).map((id) => ({ id, kind: "default", priority: over[id] })),
+].map((r) => ({ ...r, priority: over[r.id] ?? r.priority, kind: kinds[r.id] ?? r.kind }));
 const wrapped = (width) => probe(width, { amounts: [{ box: [8, 8, 20, 80], lines: 2, size: 32, forced: false }] });
 const screens = () => [
   { label: "home", url: "https://a.test/", state: null, observations: [{ faults: probe(1440, { overlaps: [{ box: B, against: A, w: 30, h: 10, size: 16 }] }) }, { faults: probe(390) }] },
@@ -119,25 +122,26 @@ test("faultsReport: gates follows the priority of the mapped rule, and a missing
   const strong = faultsReport(screens(), { rules: rules() });
   const billing = strong.screens.find((s) => s.label === "billing");
   assert.deepEqual(billing.findings.map((f) => [f.class, f.viewport, f.rule, f.gates, f.status]), [["amount-wrap", 1440, "DL-23-amounts-never-wrap", false, "fault"], ["amount-wrap", 390, "DL-23-amounts-never-wrap", false, "fault"]]);
-  assert.deepEqual(strong.screens[0].findings.map((f) => [f.class, f.rule, f.gates]), [["text-overlap", "INV-06-text-stays-whole", true]]);
+  assert.deepEqual(strong.screens[0].findings.map((f) => [f.class, f.rule, f.gates]), [["text-overlap", null, false]], "a class whose rule is not in the catalog reports");
   const blocking = faultsReport(screens(), { rules: rules({ "DL-23-amounts-never-wrap": "blocks" }) });
   assert.equal(blocking.screens.find((s) => s.label === "billing").findings.every((f) => f.gates), true);
+  assert.deepEqual(blocking.screens[2].findings.map((f) => [f.class, f.gates]), [["amount-wrap", true], ["emoji-icon", false]]);
   const missing = faultsReport(screens(), { rules: [] });
   assert.equal(missing.screens.flatMap((s) => s.findings).every((f) => f.rule === null && f.gates === false), true);
   assert.deepEqual(missing.classes.map((c) => c.rule), FAULT_CLASSES.map(() => null));
-  assert.deepEqual(blocking.classes.find((c) => c.id === "text-spill"), { id: "text-spill", rule: "INV-06-text-stays-whole", gates: true, summary: FAULT_CLASSES[2].summary });
+  assert.deepEqual(blocking.classes.find((c) => c.id === "amount-wrap"), { id: "amount-wrap", rule: "DL-23-amounts-never-wrap", gates: true, summary: FAULT_CLASSES[0].summary });
 });
 
 test("faultsReport: an exception to the rule without an axis approves findings on the screens it covers", () => {
-  const ruleSet = rules({ "DL-23-amounts-never-wrap": "blocks" });
+  const ruleSet = rules({ "DL-23-amounts-never-wrap": "blocks", "CRAFT-functional-icons": "blocks" });
   const scoped = faultsReport(screens(), { rules: ruleSet, decisions: [entry("D-001", { scope: { screens: ["billing"] } })] });
   const status = (report, label) => report.screens.find((s) => s.label === label).findings.filter((f) => f.class === "amount-wrap").map((f) => [f.status, f.exception ?? null]);
   assert.deepEqual(status(scoped, "billing"), [["approved", "D-001"], ["approved", "D-001"]]);
   assert.deepEqual(status(scoped, "billing?state=error"), [["approved", "D-001"]], "a state variant is covered by its base label");
-  assert.equal(faultsGateFailure(scoped), "render faults gate: FAIL — INV-06-text-stays-whole: text-overlap on home @1440 (1)", "the invariant still gates");
+  assert.equal(faultsGateFailure(scoped), "render faults gate: FAIL — CRAFT-functional-icons: emoji-icon on billing?state=error @390 (1)", "a finding of another rule still gates");
   assert.match(scoped.verdict, /Approved exceptions used: D-001 on billing; D-001 on billing\?state=error\.$/u);
 
-  const projectWide = faultsReport([screens()[1]], { rules: ruleSet, decisions: [entry("D-002")] });
+  const projectWide = faultsReport(screens().slice(0, 2), { rules: ruleSet, decisions: [entry("D-002")] });
   assert.equal(faultsGateFailure(projectWide), null, "every gating finding approved: the gate passes");
   const otherScreen = faultsReport(screens(), { rules: ruleSet, decisions: [entry("D-003", { scope: { screens: ["settings"] } })] });
   assert.deepEqual(status(otherScreen, "billing"), [["fault", null], ["fault", null]]);
@@ -145,16 +149,16 @@ test("faultsReport: an exception to the rule without an axis approves findings o
   assert.deepEqual(status(withAxis, "billing"), [["fault", null], ["fault", null]], "an exception with an axis is a drift exception");
   const artifactsOnly = faultsReport(screens(), { rules: ruleSet, decisions: [entry("D-005", { scope: { artifacts: ["app-billing"] } })] });
   assert.deepEqual(status(artifactsOnly, "billing"), [["fault", null], ["fault", null]], "an entry scoped only to artifacts names no screen");
-  const invariant = faultsReport(screens(), { rules: ruleSet, decisions: [entry("D-006", { rule: "INV-06-text-stays-whole" })] });
-  assert.equal(invariant.screens[0].findings[0].status, "fault", "an invariant is never waived");
+  const invariant = faultsReport(screens(), { rules: rules({ "CRAFT-functional-icons": "blocks" }, { "CRAFT-functional-icons": "invariant" }), decisions: [entry("D-006", { rule: "CRAFT-functional-icons" })] });
+  assert.deepEqual(invariant.screens[2].findings.filter((f) => f.class === "emoji-icon").map((f) => [f.status, f.gates]), [["fault", true]], "an invariant is never waived");
 });
 
 test("faultsReport: state variants are reported under their own label; the gate names rule, class, screen, viewport, and count", () => {
-  const report = faultsReport(screens(), { rules: rules({ "DL-23-amounts-never-wrap": "blocks", "CRAFT-functional-icons": "strong" }) });
+  const report = faultsReport(screens(), { rules: rules({ "DL-23-amounts-never-wrap": "blocks" }) });
   assert.deepEqual(report.screens.map((s) => s.label), ["home", "billing", "billing?state=error"]);
   assert.deepEqual(report.screens[2].findings.map((f) => [f.class, f.viewport]), [["amount-wrap", 1440], ["emoji-icon", 390]]);
-  assert.equal(faultsGateFailure(report), "render faults gate: FAIL — INV-06-text-stays-whole: text-overlap on home @1440 (1); DL-23-amounts-never-wrap: amount-wrap on billing @1440 (1); DL-23-amounts-never-wrap: amount-wrap on billing @390 (1); DL-23-amounts-never-wrap: amount-wrap on billing?state=error @1440 (1)");
-  assert.equal(report.verdict, "4 gating fault(s) on 3 of 3 screens: amount-wrap (billing, billing?state=error), text-overlap (home); 1 reported finding(s).");
+  assert.equal(faultsGateFailure(report), "render faults gate: FAIL — DL-23-amounts-never-wrap: amount-wrap on billing @1440 (1); DL-23-amounts-never-wrap: amount-wrap on billing @390 (1); DL-23-amounts-never-wrap: amount-wrap on billing?state=error @1440 (1)");
+  assert.equal(report.verdict, "3 gating fault(s) on 2 of 3 screens: amount-wrap (billing, billing?state=error); 2 reported finding(s).");
   assert.deepEqual(report.screens[1].counts, Object.fromEntries(FAULT_CLASSES.map((c) => [c.id, c.id === "amount-wrap" ? 2 : 0])));
   assert.deepEqual(report.totals.classes["amount-wrap"], { findings: 3, gating: 3, approved: 0, screens: 2 });
   assert.deepEqual(report.screens[1].distribution.map((d) => d.viewport), [1440, 390]);
@@ -172,7 +176,10 @@ test("renderFaultsMarkdown: no score, no percentage; same input gives the same b
   const md = renderFaultsMarkdown(report, { observedAt: "2026-11-11", browser: "playwright/index.mjs" });
   assert.equal(/score/iu.test(md) || md.includes("%"), false, md);
   assert.ok(md.includes("| amount-wrap | DL-23-amounts-never-wrap | reports | 0 | 2 | 1 |"), md);
-  assert.ok(md.includes("| text-overlap | INV-06-text-stays-whole | fails | 1 | 0 | 0 |"), md);
+  assert.ok(md.includes("| text-overlap | none | reports | 1 | 0 | 0 |"), md);
+  assert.ok(md.includes("| emoji-icon | CRAFT-functional-icons | reports | 0 | 0 | 1 |"), md);
+  const failing = renderFaultsMarkdown(faultsReport(screens(), { rules: rules({ "DL-23-amounts-never-wrap": "blocks" }) }), {});
+  assert.ok(failing.includes("| amount-wrap | DL-23-amounts-never-wrap | fails | 0 | 2 | 1 |") && failing.includes("2 lines, font 32px (fault, gates)"), failing);
   assert.ok(md.includes("- amount-wrap @1440 [8, 8, 20, 80]: 2 lines, font 32px (fault, reported)"), md);
   assert.ok(md.includes(`**Verdict:** ${report.verdict}`));
   assert.equal(renderFaultsMarkdown(faultsReport(screens(), { rules: rules() }), { observedAt: "2026-11-11", browser: "playwright/index.mjs" }), md, "same input, same bytes");
@@ -210,9 +217,10 @@ test("parseArgs takes --faults (default false); gateFailure without faults is to
   const drift = { screensWithDrift: ["billing"], decisions: { violations: [] } };
   assert.equal(gateFailure(drift), "drift gate: FAIL — drift on billing");
   assert.equal(gateFailure({ screensWithDrift: [] }), null);
-  const faults = faultsReport(screens(), { rules: rules() });
-  assert.equal(gateFailure({ screensWithDrift: [], faults }), "render faults gate: FAIL — INV-06-text-stays-whole: text-overlap on home @1440 (1)");
-  assert.equal(gateFailure({ screensWithDrift: ["billing"], faults }), "drift gate: FAIL — drift on billing\nrender faults gate: FAIL — INV-06-text-stays-whole: text-overlap on home @1440 (1)");
+  const faults = faultsReport(screens().slice(1, 2), { rules: rules({ "DL-23-amounts-never-wrap": "blocks" }) });
+  const line = "render faults gate: FAIL — DL-23-amounts-never-wrap: amount-wrap on billing @1440 (1); DL-23-amounts-never-wrap: amount-wrap on billing @390 (1)";
+  assert.equal(gateFailure({ screensWithDrift: [], faults }), line);
+  assert.equal(gateFailure({ screensWithDrift: ["billing"], faults }), `drift gate: FAIL — drift on billing\n${line}`);
   assert.equal(gateFailure({ screensWithDrift: [], faults: faultsReport([screens()[1]], { rules: rules() }) }), null, "reported faults do not fail the gate");
 });
 
@@ -237,4 +245,22 @@ test("observeUrls: extra probes run after the structure probe on the same load; 
 
   await assert.rejects(observeUrls([url], { chromium: stubChromium(pages, { probes }).chromium, structure: true, extraProbes: [{ key: "structure", probe: observeFaults }] }), /extra probe key "structure" is already a key of the observation/u);
   await assert.rejects(observeUrls([url], { chromium: stubChromium(pages, { probes }).chromium, extraProbes: [{ key: "accent", probe: observeFaults }, { key: "accent", probe: observeFaults }] }), /extra probe key "accent" is already a key/u);
+});
+
+test("catalog coherence: every mapped rule exists and names drift-report.mjs --faults, with --gate exactly when it blocks", () => {
+  const repoRoot = resolve(fileURLToPath(new URL("../../", import.meta.url)));
+  const canon = JSON.parse(readFileSync(resolve(repoRoot, "engine/rules/catalog.json"), "utf8")).rules;
+  const byId = new Map(canon.map((r) => [r.id, r]));
+  for (const c of FAULT_CLASSES.filter((x) => x.rule)) {
+    const rule = byId.get(c.rule);
+    assert.ok(rule, `${c.id} maps to ${c.rule}; add it to engine/rules/catalog.json or set the class's rule to null`);
+    assert.equal(rule.check.mode, "machine", c.rule);
+    assert.match(rule.check.tool ?? "", /^ss-verify\/scripts\/drift-report\.mjs --faults(?: |$)/u, `${c.rule}: check.tool names the fault report`);
+    assert.equal(/ --gate(?: |$)/u.test(rule.check.tool), rule.priority === "blocks", `${c.rule}: --gate in check.tool exactly when priority is blocks`);
+    if (rule.priority === "blocks") assert.ok(rule.kind === "invariant" || rule.id === "DL-23-amounts-never-wrap", `${c.rule}: only an invariant or DL-23 may gate on a render fault`);
+  }
+  const inv06 = byId.has("INV-06-text-stays-whole");
+  for (const id of ["text-overlap", "text-spill"]) assert.equal(FAULT_CLASSES.find((c) => c.id === id).rule, inv06 ? "INV-06-text-stays-whole" : null, `${id} maps to INV-06 exactly when the catalog has it`);
+  const fromCatalog = canon.filter((r) => /^ss-verify\/scripts\/drift-report\.mjs --faults/u.test(r.check.tool ?? "")).map((r) => r.id).sort();
+  assert.deepEqual(fromCatalog, [...new Set(FAULT_CLASSES.map((c) => c.rule).filter(Boolean))].sort(), "every rule checked by --faults is mapped by a fault class");
 });

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 5,
   "engineVersion": "5.0.0",
-  "engineRevision": "sha256:544b40900d752e50eff68fb95c2405176aed3d6123f48af644ede8f0a4434309",
+  "engineRevision": "sha256:ccb923a10f9b805800929a90bc0b7b173203f3e746e41a33036d996e4131473a",
   "distributionSource": {
     "schemaVersion": 1,
     "channel": "edge",
@@ -10,7 +10,7 @@
   },
   "distributions": {
     "core": {
-      "revision": "sha256:544b40900d752e50eff68fb95c2405176aed3d6123f48af644ede8f0a4434309",
+      "revision": "sha256:ccb923a10f9b805800929a90bc0b7b173203f3e746e41a33036d996e4131473a",
       "files": [
         {
           "path": "LICENSE",
@@ -429,13 +429,13 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-verify/references/render-faults.md",
-          "sha256": "5e72af426f5d8667746d3969dbadd423c8507e76791f594e5d3a53938b389be1",
-          "bytes": 13505
+          "sha256": "4562463280e2dea7c260d09cea2b107b2929af820d95755d9c7004e40f1785b3",
+          "bytes": 13694
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-verify/scripts/analyze-faults.mjs",
-          "sha256": "45d5babb0208a5badf44014eb470b099cb1ddb7d87f072e0e3ddd2dd214de472",
-          "bytes": 17048
+          "sha256": "2f041b9aa670c67266ca1545accca688d69db96bb17f10943290cf2879877165",
+          "bytes": 17186
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-verify/scripts/drift-report.mjs",
@@ -594,13 +594,13 @@
         },
         {
           "path": "engine/rules/README.md",
-          "sha256": "e13f6b004885c7b2bec25e519e93e75e7265e1b7910e0080cda28ba6d4866f9b",
-          "bytes": 4213
+          "sha256": "bf27339707037ec5a0849a83daf98bb6b55e97b66cf4372c31d861da31760801",
+          "bytes": 4452
         },
         {
           "path": "engine/rules/catalog.json",
-          "sha256": "49cde73250d3956b022303dc1c84cf4588fee62538a68bd67bdb4992a354b7e6",
-          "bytes": 18843
+          "sha256": "cf8c13cc5483b54121cbda25873446cf35766f080da1ad51d4c02d3250747090",
+          "bytes": 21019
         },
         {
           "path": "engine/rules/catalog.schema.json",
@@ -610,7 +610,7 @@
       ]
     },
     "skills": {
-      "revision": "sha256:e86c65d4aecb83ac6a1c3a5763403a47427f6403b26e78de9212013db757bfa4",
+      "revision": "sha256:3457ce6e971a36f74e5e7a53d91171bd589b1ef008d6869162197a48740e7ee3",
       "files": [
         {
           "path": "engine/.claude/skills/styleseed/SKILL.md",
@@ -1019,13 +1019,13 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-verify/references/render-faults.md",
-          "sha256": "5e72af426f5d8667746d3969dbadd423c8507e76791f594e5d3a53938b389be1",
-          "bytes": 13505
+          "sha256": "4562463280e2dea7c260d09cea2b107b2929af820d95755d9c7004e40f1785b3",
+          "bytes": 13694
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-verify/scripts/analyze-faults.mjs",
-          "sha256": "45d5babb0208a5badf44014eb470b099cb1ddb7d87f072e0e3ddd2dd214de472",
-          "bytes": 17048
+          "sha256": "2f041b9aa670c67266ca1545accca688d69db96bb17f10943290cf2879877165",
+          "bytes": 17186
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-verify/scripts/drift-report.mjs",
@@ -1468,13 +1468,13 @@
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-verify/references/render-faults.md",
-      "sha256": "5e72af426f5d8667746d3969dbadd423c8507e76791f594e5d3a53938b389be1",
-      "bytes": 13505
+      "sha256": "4562463280e2dea7c260d09cea2b107b2929af820d95755d9c7004e40f1785b3",
+      "bytes": 13694
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-verify/scripts/analyze-faults.mjs",
-      "sha256": "45d5babb0208a5badf44014eb470b099cb1ddb7d87f072e0e3ddd2dd214de472",
-      "bytes": 17048
+      "sha256": "2f041b9aa670c67266ca1545accca688d69db96bb17f10943290cf2879877165",
+      "bytes": 17186
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-verify/scripts/drift-report.mjs",
@@ -1633,13 +1633,13 @@
     },
     {
       "path": "rules/README.md",
-      "sha256": "e13f6b004885c7b2bec25e519e93e75e7265e1b7910e0080cda28ba6d4866f9b",
-      "bytes": 4213
+      "sha256": "bf27339707037ec5a0849a83daf98bb6b55e97b66cf4372c31d861da31760801",
+      "bytes": 4452
     },
     {
       "path": "rules/catalog.json",
-      "sha256": "49cde73250d3956b022303dc1c84cf4588fee62538a68bd67bdb4992a354b7e6",
-      "bytes": 18843
+      "sha256": "cf8c13cc5483b54121cbda25873446cf35766f080da1ad51d4c02d3250747090",
+      "bytes": 21019
     },
     {
       "path": "rules/catalog.schema.json",
@@ -1876,6 +1876,56 @@
       "anchor": "share a height"
     },
     {
+      "id": "CRAFT-functional-icons",
+      "axis": "imagery-data",
+      "statement": "Navigation, status, and action symbols come from the project's icon family with accessible labels; emoji are content, not icons.",
+      "kind": "default",
+      "scope": {},
+      "priority": "strong",
+      "exceptions": [
+        "user content and reactions",
+        "approved brand illustrations"
+      ],
+      "rationale": "Emoji glyphs differ per platform and ignore the project's icon system. drift-report.mjs --faults reports an emoji-only element inside a control, leading a row, or alone in a small tile as emoji-icon. It cannot tell a reaction from an icon, so it reports and never fails the gate.",
+      "evidence": {
+        "level": "inferred",
+        "sources": [
+          "engine/VISUAL-CRAFT.md"
+        ]
+      },
+      "check": {
+        "mode": "machine",
+        "tool": "ss-verify/scripts/drift-report.mjs --faults"
+      },
+      "source": "engine/VISUAL-CRAFT.md",
+      "anchor": "Use predictable functional icons"
+    },
+    {
+      "id": "CRAFT-icon-family",
+      "axis": "imagery-data",
+      "statement": "Icons in one navigation, list, or toolbar come from one family; outline and filled variants coexist only to mark state.",
+      "kind": "default",
+      "scope": {},
+      "priority": "strong",
+      "exceptions": [
+        "coordinated outline and filled variants that mark the selected state",
+        "brand marks shown as content"
+      ],
+      "rationale": "Two icon families on one bar read as two products. drift-report.mjs --faults lists the icon signatures per screen (viewBox grid and stroke or fill construction) and reports a group that mixes them as icon-mix. Brand marks look like a second family, so it reports and never fails the gate.",
+      "evidence": {
+        "level": "inferred",
+        "sources": [
+          "engine/CRAFT-BASELINE.md"
+        ]
+      },
+      "check": {
+        "mode": "machine",
+        "tool": "ss-verify/scripts/drift-report.mjs --faults"
+      },
+      "source": "engine/CRAFT-BASELINE.md",
+      "anchor": "Do not mix unrelated families"
+    },
+    {
       "id": "DL-10-selection-pills",
       "axis": "navigation-action",
       "statement": "Inside consumer-service cards, 2–4 options use a pill toggle and 5 or more move to a dedicated page. Native selects, radio groups, and checkbox filters stay valid under other contracts.",
@@ -1942,7 +1992,7 @@
       "kind": "default",
       "scope": {},
       "priority": "strong",
-      "rationale": "A value split across lines reads as two values; the eye locks onto magnitude first and loses it at the break.",
+      "rationale": "A value split across lines reads as two values; the eye locks onto magnitude first and loses it at the break. drift-report.mjs --faults measures rendered screens: an element whose whole text is one amount and that is laid out on two or more lines is reported as amount-wrap.",
       "evidence": {
         "level": "inferred",
         "sources": [
@@ -1950,7 +2000,8 @@
         ]
       },
       "check": {
-        "mode": "model"
+        "mode": "machine",
+        "tool": "ss-verify/scripts/drift-report.mjs --faults"
       },
       "source": "engine/DESIGN-LANGUAGE.md#23",
       "anchor": "Applies to every displayed amount"

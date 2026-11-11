@@ -4,13 +4,20 @@
 // action only shows in a state. The report keeps the values so a reviewer can decide. When the
 // project's decisions ledger is passed in, a recorded decision becomes the baseline for the screens
 // it covers (`violates` instead of `different` / `extra`) and an approved exception reads `excepted`.
+// With `structure` (summaries measured with the structure probe), six structure rows are compared
+// the same way; the decisions ledger does not cover them, and they never fail the gate.
 import { parseColor, toHex } from './analyze-observations.mjs';
+import { primaryStats } from './analyze-structure.mjs';
 
 export const COLOR_AXES = ['accent', 'ink', 'canvas'];
 export const SET_AXES = ['spacingScale', 'typeSizes', 'radii', 'fonts', 'controlHeights'];
+export const STRUCTURE_AXES = ['tableRowHeights', 'listItemHeights', 'headingSizes', 'sectionGaps', 'primariesPerSection', 'transitionDurations'];
+const STRUCTURE_SCALAR_AXES = new Set(['primariesPerSection']);
 const AXIS_TITLES = {
   accent: 'accent', ink: 'ink', canvas: 'canvas', spacingBase: 'spacing base', spacingScale: 'spacing scale',
   typeSizes: 'type sizes', radii: 'radii', fonts: 'fonts', controlHeights: 'control heights',
+  tableRowHeights: 'table row height', listItemHeights: 'list item height', headingSizes: 'heading sizes (main)',
+  sectionGaps: 'section gap', primariesPerSection: 'primaries per section (max)', transitionDurations: 'transition durations (ms)',
 };
 
 export function colorDistance(a, b) {
@@ -31,6 +38,23 @@ export function screenValues(summary = {}) {
     radii: [...(summary.radii || [])],
     fonts: (summary.fonts || []).map(f => f.family),
     controlHeights: [...(summary.controlHeights || [])],
+  };
+}
+
+// The per-screen structure values (summaries measured with the structure probe), merged over the
+// measured viewports: every screen is measured at the same widths, so the unions compare.
+export function structureValues(summary = {}) {
+  const viewports = summary.structure?.viewports;
+  if (!viewports) return null;
+  const union = pick => [...new Set(viewports.flatMap(pick))].filter(v => v !== null && v !== undefined).sort((a, b) => a - b);
+  const primaries = viewports.map(v => primaryStats(v, summary.accentDerived ?? null).perSectionMax).filter(n => n !== null);
+  return {
+    tableRowHeights: union(v => v.tables.rowHeights),
+    listItemHeights: union(v => v.lists.itemHeights),
+    headingSizes: union(v => v.headings.sizes),
+    sectionGaps: union(v => v.sectionGaps),
+    primariesPerSection: primaries.length ? Math.max(...primaries) : null,
+    transitionDurations: [...(summary.motion?.durations || [])],
   };
 }
 
@@ -76,7 +100,36 @@ function readLedger(decisions) {
 }
 const byId = (a, b) => a.localeCompare(b, 'en', { numeric: true });
 
-export function compareScreens(screens, { baseline = null, nearDistance = 24, decisions = [] } = {}) {
+// Structure rows: the majority across at-rest screens is the baseline, as for the other axes.
+function compareStructure(rows, screens) {
+  const values = screens.map(s => structureValues(s.summary));
+  const atRest = rows.some(r => !r.state) ? rows.map((r, i) => i).filter(i => !rows[i].state) : rows.map((r, i) => i);
+  const axes = {};
+  for (const axis of STRUCTURE_AXES) {
+    let b, per;
+    if (STRUCTURE_SCALAR_AXES.has(axis)) {
+      b = majority(atRest.map(i => values[i]?.[axis] ?? null));
+      per = rows.map((r, i) => {
+        const v = values[i]?.[axis] ?? null;
+        return { label: r.label, value: v, status: v === null ? 'none' : b === null ? 'unknown' : v === b ? 'same' : 'different' };
+      });
+      axes[axis] = { baseline: b, screens: per, deviating: per.filter((p, i) => p.status === 'different' && !rows[i].state).map(p => p.label) };
+    } else {
+      b = majoritySet(atRest.map(i => values[i]?.[axis] ?? []));
+      const known = new Set(b);
+      per = rows.map((r, i) => {
+        if (!values[i]) return { label: r.label, value: null, extra: [], status: 'none' };
+        const extra = values[i][axis].filter(x => !known.has(x));
+        return { label: r.label, value: values[i][axis], extra, status: extra.length ? 'extra' : 'same' };
+      });
+      axes[axis] = { baseline: b, screens: per, deviating: per.filter((p, i) => p.status === 'extra' && !rows[i].state).map(p => p.label) };
+    }
+  }
+  const drifted = new Set(STRUCTURE_AXES.flatMap(a => axes[a].deviating));
+  return { axes, screensWithDrift: rows.map(r => r.label).filter(l => drifted.has(l)) };
+}
+
+export function compareScreens(screens, { baseline = null, nearDistance = 24, decisions = [], structure = false } = {}) {
   const rows = screens.map(s => ({ label: s.label, url: s.url ?? null, state: s.state ?? null, values: screenValues(s.summary) }));
   // State variants (`?state=error` …) exist to catch accents that only appear in a state. Their
   // text and spacing distributions are not representative, so baselines and drift counts for every
@@ -179,11 +232,12 @@ export function compareScreens(screens, { baseline = null, nearDistance = 24, de
     })).sort((a, b) => byId(a.id, b.id));
     ledgerReport = { applied, violations, excepted, entries };
   }
-  const verdict = verdictFor(rows.length, screensWithDrift, axes, { accentOnlyInState, accentMissing, ledger: ledgerReport });
-  return { screens: rows, baseline: base, axes, screensWithDrift, accentOnlyInState, ...(ledgerReport ? { decisions: ledgerReport } : {}), verdict };
+  const structureReport = structure ? compareStructure(rows, screens) : null;
+  const verdict = verdictFor(rows.length, screensWithDrift, axes, { accentOnlyInState, accentMissing, ledger: ledgerReport, structure: structureReport });
+  return { screens: rows, baseline: base, axes, screensWithDrift, accentOnlyInState, ...(ledgerReport ? { decisions: ledgerReport } : {}), ...(structureReport ? { structure: structureReport } : {}), verdict };
 }
 
-function verdictFor(total, drifted, axes, { accentOnlyInState = [], accentMissing = [], ledger = null } = {}) {
+function verdictFor(total, drifted, axes, { accentOnlyInState = [], accentMissing = [], ledger = null, structure = null } = {}) {
   const part = (axis, list) => (list.length ? `${AXIS_TITLES[axis]} (${list.join(', ')})` : null);
   const hard = ['accent', 'ink', 'canvas', 'spacingBase'].map(a => part(a, axes[a].deviating)).filter(Boolean);
   const soft = SET_AXES.filter(a => a !== 'spacingScale').map(a => part(a, axes[a].deviating)).filter(Boolean);
@@ -193,6 +247,8 @@ function verdictFor(total, drifted, axes, { accentOnlyInState = [], accentMissin
       ? `No unrecorded drift on accent, ink, canvas, or spacing base across ${total} screens.`
       : `All ${total} screens agree with the baseline on accent, ink, canvas, and spacing base.`];
   if (soft.length) lines.push(`Values outside the shared set: ${soft.join('; ')}.`);
+  const structural = structure ? STRUCTURE_AXES.map(a => part(a, structure.axes[a].deviating)).filter(Boolean) : [];
+  if (structural.length) lines.push(`Structure outside the shared set: ${structural.join('; ')}.`);
   if (ledger?.violations.length) {
     const count = ledger.violations.reduce((sum, v) => sum + v.values.length, 0);
     lines.push(`${count} value(s) violate recorded decisions: ${ledger.violations.map(v => `${v.id} on ${v.screen} (${v.values.join(', ')})`).join('; ')}.`);
@@ -221,6 +277,7 @@ export function renderDriftMarkdown(report, meta = {}) {
     return notes.length ? `${fmt(p.value)} (${notes.join('; ')})` : fmt(p.value);
   };
   const row = axis => `| ${AXIS_TITLES[axis]} | ${fmt(report.axes[axis].baseline)}${report.axes[axis].decision ? ` (decided ${report.axes[axis].decision})` : ''} | ${report.axes[axis].screens.map(cell).join(' | ')} |`;
+  const structureRows = report.structure ? `\n${STRUCTURE_AXES.map(axis => `| ${AXIS_TITLES[axis]} | ${fmt(report.structure.axes[axis].baseline)} | ${report.structure.axes[axis].screens.map(cell).join(' | ')} |`).join('\n')}` : '';
   const offScale = report.axes.spacingBase.screens.filter(p => p.offScale?.length).map(p => `- ${p.label}: ${p.offScale.join(', ')}`);
   const screenList = report.screens.map(s => `- ${s.label}${s.url ? ` — ${s.url}` : ''}`);
   const ledger = report.decisions?.applied.length ? report.decisions : null;
@@ -241,9 +298,9 @@ Baseline: ${meta.baselineSource ?? report.baseline.source}.${meta.states?.length
 
 | Axis | Baseline | ${labels.join(' | ')} |
 |---|---|${labels.map(() => '---').join('|')}|
-${['accent', 'ink', 'canvas', 'spacingBase', 'spacingScale', 'typeSizes', 'radii', 'fonts', 'controlHeights'].map(row).join('\n')}
+${['accent', 'ink', 'canvas', 'spacingBase', 'spacingScale', 'typeSizes', 'radii', 'fonts', 'controlHeights'].map(row).join('\n')}${structureRows}
 
-Statuses: \`same\`, \`near\` (within a shade of the baseline), \`different\`, \`none\` (not derived on that screen), \`+values\` (present here, absent from the shared set)${ledger ? ', `violates D-…` (outside a recorded project decision), `approved D-…` (covered by an approved exception)' : ''}.${recorded}
+Statuses: \`same\`, \`near\` (within a shade of the baseline), \`different\`, \`none\` (not derived on that screen), \`+values\` (present here, absent from the shared set)${ledger ? ', `violates D-…` (outside a recorded project decision), `approved D-…` (covered by an approved exception)' : ''}.${report.structure ? ' Structure rows (table row height through transition durations) come from `--structure`; recorded decisions do not cover them and they do not fail `--gate`.' : ''}${recorded}
 
 ## Off-scale spacing per screen
 

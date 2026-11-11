@@ -102,4 +102,6 @@ test("drift CLI: argument parsing, default labels, and state variants", () => {
   assert.throws(() => parseArgs(["https://a.test/"]), /--out/u);
   assert.equal(parseArgs(["https://a.test/", "--out", "o", "--gate"]).gate, true);
   assert.equal(parseArgs(["https://a.test/", "--out", "o"]).gate, false);
+  assert.equal(parseArgs(["https://a.test/", "--out", "o", "--structure"]).structure, true);
+  assert.equal(parseArgs(["https://a.test/", "--out", "o"]).structure, false);
 });

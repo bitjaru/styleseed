@@ -21,10 +21,13 @@ Do not merely imitate the supplied screen. Read `PRODUCT-PRINCIPLES.md`, `RULESE
 1. Ingest every supplied reference and assign evidence IDs (`R1`, `R2`, ...). If a URL can be
    rendered, measure it first with `scripts/measure-reference.mjs <url> --out <dir>` (a browser
    module from `--browser`, `STYLESEED_BROWSER_MODULE`, or the project's own `playwright`; nothing
-   is installed). It writes `measurements/observations.json`, `measurements/summary.json`, a
-   twelve-axis draft, and `case.draft.json` in the format of `research/cases/README.md`. The
+   is installed). It writes `measurements/observations.json`, `measurements/summary.json`,
+   `measurements/facts.json` (structure facts with stable ids: regions, sections, columns, gaps,
+   controls, tables, motion, breakpoints), a twelve-axis draft with a "Decision (person)" column,
+   and `case.draft.json` in the format of `research/cases/README.md`. Pass `--robots` to check
+   robots.txt first; follow "Sources and conduct" in `REFERENCE-COMPILER.md`. The
    derived accent is the colour of filled primary actions, then of coloured links; read the
-   `roleEvidence` counts before trusting it. `--designlang` adds a pinned third-party token
+   `roleEvidence` counts before trusting it. A fact is an observation, not a decision to copy. `--designlang` adds a pinned third-party token
    extraction when `npx` is available; its `brand.primary` is not a role decision. If an image
    cannot be seen, stop claiming visual analysis for it.
    Distinguish discovery, inspected previews, and live states; deduplicate repeated projects

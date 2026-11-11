@@ -4,11 +4,14 @@
 //
 //   node drift-report.mjs <url>… --out <dir> [--browser <playwright module>] [--project-root <dir>]
 //                         [--palette <id>] [--decisions <file.json>] [--states error,empty]
-//                         [--labels home,settings] [--gate] [--max-elements 5000] [--timeout 45000]
+//                         [--labels home,settings] [--gate] [--structure] [--max-elements 5000] [--timeout 45000]
 //
 // URLs may be http(s) or file:. The probe is the read-only observe-design probe from ss-reference;
 // nothing is installed, and no page text, screenshots, or form values are written. The result is a
-// measurement table and a one-line verdict, not a score.
+// measurement table and a one-line verdict, not a score. --structure also runs the structure probe
+// on the same page load and adds rows for table row height, list item height, heading sizes in the
+// main region, section gap, primaries per section, and transition durations; without it the
+// output is unchanged.
 import { mkdirSync, writeFileSync, readFileSync, readdirSync, existsSync } from 'node:fs';
 import { resolve, join, basename, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -17,11 +20,11 @@ import { compareScreens, baselineFromRoles, renderDriftMarkdown } from '../../ss
 import { loadProjectRegistry } from '../../ss-resolve/scripts/project-registry.mjs';
 import { normalizeDecisions, parseStrictJson } from '../../ss-resolve/scripts/runtime-contract.mjs';
 
-const USAGE = 'usage: drift-report.mjs <url>… --out <dir> [--browser <module>] [--project-root <dir>] [--palette <id>] [--decisions <file.json>] [--states a,b] [--labels a,b] [--gate]';
+const USAGE = 'usage: drift-report.mjs <url>… --out <dir> [--browser <module>] [--project-root <dir>] [--palette <id>] [--decisions <file.json>] [--states a,b] [--labels a,b] [--gate] [--structure]';
 const contextCatalog = () => JSON.parse(readFileSync(resolve(dirname(fileURLToPath(import.meta.url)), '../../ss-resolve/references/catalog.json'), 'utf8'));
 
 export function parseArgs(argv) {
-  const args = { urls: [], out: null, browser: process.env.STYLESEED_BROWSER_MODULE || null, projectRoot: null, palette: null, decisions: null, states: [], labels: [], maxElements: 5000, timeout: 45000, gate: false };
+  const args = { urls: [], out: null, browser: process.env.STYLESEED_BROWSER_MODULE || null, projectRoot: null, palette: null, decisions: null, states: [], labels: [], maxElements: 5000, timeout: 45000, gate: false, structure: false };
   const list = value => String(value ?? '').split(',').map(s => s.trim()).filter(Boolean);
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
@@ -33,6 +36,7 @@ export function parseArgs(argv) {
     else if (a === '--states') args.states = list(argv[++i]);
     else if (a === '--labels') args.labels = list(argv[++i]);
     else if (a === '--gate') args.gate = true;
+    else if (a === '--structure') args.structure = true;
     else if (a === '--max-elements') args.maxElements = Number(argv[++i]);
     else if (a === '--timeout') args.timeout = Number(argv[++i]);
     else if (a.startsWith('--')) throw new Error(`unknown option ${a}\n${USAGE}`);
@@ -124,10 +128,10 @@ export async function report(args, log = console.log) {
   const decisions = loadDecisions(args);
   const { chromium, from } = await loadBrowser(args.browser);
   const plan = planScreens(args);
-  const measured = await observeUrls(plan.map(p => p.url), { chromium, timeout: args.timeout, maxElements: args.maxElements });
+  const measured = await observeUrls(plan.map(p => p.url), { chromium, timeout: args.timeout, maxElements: args.maxElements, structure: args.structure });
   const screens = plan.map((p, i) => ({ ...p, summary: measured[i].summary }));
   const registry = args.projectRoot ? registryBaseline(resolve(args.projectRoot), args.palette) : null;
-  const result = compareScreens(screens, { baseline: registry ? baselineFromRoles(registry.roles) : null, decisions });
+  const result = compareScreens(screens, { baseline: registry ? baselineFromRoles(registry.roles) : null, decisions, structure: args.structure });
   const decided = result.baseline.source.match(/; recorded project decisions for .*$/u)?.[0] ?? '';
   const meta = {
     observedAt: new Date().toISOString().slice(0, 10), browser: String(from).replace(/^.*node_modules\//u, ''), states: args.states,

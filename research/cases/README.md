@@ -73,6 +73,22 @@ levels, referenced measurement files, the review rules, and promotion fields.
 - Claims about a company's internal process, metrics, or intent beyond cited public writing.
 - Measurements the tool did not take. Unknown stays unknown.
 
+## Sources and conduct
+
+- One page load per viewport. No crawling, link following, form submission, or bypassing bot
+  protection.
+- Check `robots.txt` for the measured path and record `allowed`, `disallowed`, or `not-checked`
+  in the source entry's `robots` field (`measure-reference.mjs --robots` does this with the
+  built-in `fetch`). A disallowed path stops the measurement unless the user passes `--own-site`
+  for a site they operate.
+- The user is responsible for the site's terms. Where they prohibit automated access, use the
+  vendor's public documentation or a self-hosted instance.
+- Product UI sources, in order of preference: public design-system example pages and Storybook
+  canvases (measure the canvas `iframe.html?id=…`, not the docs chrome), self-hosted open-source
+  apps with seed data, public no-login demos. Not: logged-in third-party products, paid template
+  kits.
+- Cases in this repository stay public-surface only. This is not legal advice.
+
 ## Proposing a case
 
 Copy `_template/`, fill it, run the validator, and open a pull request. Designers who do not use

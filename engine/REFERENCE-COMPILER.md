@@ -43,28 +43,59 @@ consistently to new screens.
 ## Measurement and evidence levels
 
 `ss-reference/scripts/measure-reference.mjs` opens a public URL at 1440×900 and 390×844 in a
-browser the caller supplies and runs the read-only `observe-design.mjs` probe: computed-style
-counts for actions, links, text, surfaces, spacing, type, radii, controls, and fonts. No text,
-URLs, screenshots, or form values leave the page. `analyze-observations.mjs` turns the counts
+browser the caller supplies and, on one page load per viewport, runs two read-only probes.
+`observe-design.mjs` records computed-style counts for actions, links, text, surfaces, spacing,
+type, radii, controls, fonts, borders, shadows, motion (transition and animation durations and
+easings), target sizes, and tabular numerals. `observe-structure.mjs` records structure for
+product UI: regions (top bar, side nav, main, aside, bottom bar; by landmark, else by geometry),
+the sections of the main region classified by content, column ratios, gaps, headings, buttons by
+emphasis, inputs and label positions, tables, lists, tab sets, sticky elements, media, and
+readable stylesheet counts (hover, focus-visible, disabled, reduced-motion, breakpoints). The
+probes may record geometry (region and section rectangles) as numbers. They record no text,
+selectors, class names, element ids, URLs of assets, or screenshots. Caps per viewport: 8
+regions, 40 sections, 12 tables, 12 lists, 8 tab sets. `analyze-observations.mjs` turns the counts
 into a spacing base and scale, type steps, radius families, and derived roles. The accent is
 the colour of filled primary actions, then of coloured links; a colour that only appears in
 large surfaces or pictures is never promoted. Each derived role carries the counts behind it so
-a reviewer can keep the observation and reject the derivation.
+a reviewer can keep the observation and reject the derivation. `analyze-structure.mjs` writes
+`measurements/facts.json`: one flat list of facts with stable ids (`composition.*`, `density.*`,
+`typography.heading.*`, `navigation.*`, `states.*`, `imagery.*`, `responsive.*`, `attention.*`,
+`tells.*`), each with its axis, level, value, viewport, and source. A fact is an observation, not
+a decision about what to copy.
 
 The same probe compares screens of one project. `ss-verify/scripts/drift-report.mjs` measures
 several URLs (and `?state=` variants on request), derives the same values per screen, and
 compares them with a baseline: the registry palette roles when a project root is given, otherwise
 the majority across the screens (`compare-screens.mjs`, pure). It writes `drift.json` and
 `DRIFT.md` with per-axis statuses `same`, `near`, `different`, `none`, and the values present on
-one screen but absent from the shared set. It does not score; a `different` value is a question
-for the owner of the design system.
+one screen but absent from the shared set. With `--structure` it adds rows for table row height,
+list item height, heading sizes in the main region, section gap, primaries per section, and
+transition durations. It does not score; a `different` value is a question for the owner of the
+design system.
 
 Record every value, decision, and rule candidate with one evidence level from
 [`research/cases/README.md`](../research/cases/README.md): `observed` (measured, or stated in
 the product's own public documentation), `derived` (computed from observations), `inferred`
 (a reason we supply), `approved` (a named design reviewer accepted it). The measurement step
-produces `observed` and `derived` rows and leaves the other axes `unknown`; it does not fill
-them in.
+produces `observed` and `derived` rows and leaves the rest to a person: the job itself, the
+intended focal point, the reason for a composition, the role of each medium, the hierarchy
+intent, loading, empty, and error states, and brand tells. The twelve-axis draft keeps a
+"Decision (person)" column for them; the probes do not fill it in.
+
+## Sources and conduct
+
+- One page load per viewport. No crawling, link following, form submission, or bypassing bot
+  protection.
+- Check `robots.txt` for the measured path and record `allowed`, `disallowed`, or `not-checked`
+  in the source entry (`measure-reference.mjs --robots`, built-in `fetch`). A disallowed path
+  stops the measurement unless the user passes `--own-site` for a site they operate.
+- The user is responsible for the site's terms. Where they prohibit automated access, use the
+  vendor's public documentation or a self-hosted instance.
+- Product UI sources, in order of preference: public design-system example pages and Storybook
+  canvases (measure the canvas `iframe.html?id=…`, not the docs chrome), self-hosted open-source
+  apps with seed data, public no-login demos. Not: logged-in third-party products, paid template
+  kits.
+- Cases in this repository stay public-surface only. This is not legal advice.
 
 ## Twelve-axis output
 

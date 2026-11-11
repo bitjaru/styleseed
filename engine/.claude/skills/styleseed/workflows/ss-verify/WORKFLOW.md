@@ -195,6 +195,11 @@ becomes the baseline for the screens it covers, so a value outside it reads `vio
 an approved exception covers reads `approved D-…` and is not drift. `--gate` also exits 3 on any
 decision violation.
 
+With `--structure`, the structure probe runs on the same page loads and the table gains rows for
+table row height, list item height, heading sizes in the main region, section gap, primaries per
+section, and transition durations, compared the same way. The decisions ledger does not cover
+these rows, and they do not fail `--gate`. Without the flag the report is unchanged.
+
 Read it as measurement, not judgment. A `different` accent may be an approved exception nobody has
 recorded yet. A `none`
 accent usually means the primary action only appears in a state (a save bar, a dialog), so

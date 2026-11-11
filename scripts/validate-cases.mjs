@@ -2,11 +2,13 @@
 // Validate research/cases/**/case.json without external dependencies.
 // Checks the schema's required fields, enums, id/folder match, source references,
 // measurement files on disk, and the review, promotion and approval rules the README states.
+// No image, font, or page-source file may sit anywhere in a case folder. A case.draft.json (what
+// measure-reference.mjs writes) is skipped and counted: fill it in and rename it to case.json.
 //
 //   node scripts/validate-cases.mjs [cases-dir]   (defaults to research/cases; the schema always
 //                                                  comes from research/cases/schema)
 import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
-import { join, dirname, basename, resolve } from "node:path";
+import { join, dirname, basename, resolve, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -15,6 +17,8 @@ const schema = JSON.parse(readFileSync(join(root, "research", "cases", "schema",
 
 const problems = [];
 const note = (file, msg) => problems.push(`${file}: ${msg}`);
+const drafts = [];
+const ASSET = /\.(png|jpe?g|webp|gif|svg|woff2?|ttf|otf|html)$/i;
 
 function* walk(dir) {
   for (const name of readdirSync(dir)) {
@@ -22,7 +26,13 @@ function* walk(dir) {
     const p = join(dir, name);
     if (statSync(p).isDirectory()) yield* walk(p);
     else if (name === "case.json") yield p;
+    else if (name === "case.draft.json") drafts.push(p);
   }
+}
+
+// Every file under a case folder, as paths relative to it.
+function filesIn(dir, prefix = "") {
+  return readdirSync(dir, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? filesIn(join(dir, e.name), `${prefix}${e.name}/`) : e.isFile() ? [`${prefix}${e.name}`] : []));
 }
 
 function check(value, def, path, file, rootObj) {
@@ -83,16 +93,26 @@ for (const file of walk(casesDir)) {
     }
   }
   for (const m of data.measurements?.files ?? []) if (!existsSync(join(dirname(file), m))) note(rel, `measurement file missing: ${m}`);
+  for (const f of filesIn(dirname(file))) {
+    if (ASSET.test(f)) note(rel, `${f}: images, fonts and page source are not stored; link them in sources`);
+  }
   const measurementsDir = join(dirname(file), "measurements");
-  if (!existsSync(measurementsDir) || !statSync(measurementsDir).isDirectory()) { note(rel, "measurements/ folder is missing; keep the measurement tool output there"); continue; }
-  for (const m of readdirSync(measurementsDir, { withFileTypes: true }).filter((e) => e.isFile()).map((e) => e.name)) {
-    if (/\.(png|jpe?g|webp|gif|svg|woff2?|ttf|otf|html)$/i.test(m)) note(rel, `measurements/${m}: images, fonts and page source are not stored; link them in sources`);
+  if (!existsSync(measurementsDir) || !statSync(measurementsDir).isDirectory()) note(rel, "measurements/ folder is missing; keep the measurement tool output there");
+}
+
+// A draft is not validated as a case, but its folder is still a case folder: no assets in it either.
+for (const draft of drafts) {
+  if (existsSync(join(dirname(draft), "case.json"))) continue;
+  const rel = draft.slice(root.length + 1);
+  for (const f of filesIn(dirname(draft))) {
+    if (ASSET.test(f)) note(rel, `${f}: images, fonts and page source are not stored; link them in sources`);
   }
 }
 
+const skipped = drafts.length ? `; ${drafts.length} draft(s) skipped (${drafts.map((d) => relative(casesDir, d).split(sep).join("/")).join(", ")}): fill in a case.draft.json and rename it to case.json to validate it` : "";
 if (problems.length) {
   console.error(problems.join("\n"));
-  console.error(`\n${problems.length} problem(s) in ${count} case(s)`);
+  console.error(`\n${problems.length} problem(s) in ${count} case(s)${skipped}`);
   process.exit(1);
 }
-console.log(`${count} case(s) valid`);
+console.log(`${count} case(s) valid${skipped}`);

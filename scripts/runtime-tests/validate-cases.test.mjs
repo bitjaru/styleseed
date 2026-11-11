@@ -54,6 +54,33 @@ test("case reviews: reviewed needs one, approved needs an agree, promoted needs 
   assert.match(validate((candidate) => { candidate.reviews = [{ ...agree, via: "x".repeat(41) }]; }).stderr, /reviews\[0\]\.via is too long \(max 40\)/u);
 });
 
+test("assets are refused anywhere in a case folder, and measure-reference drafts are skipped by name", () => {
+  const root = mkdtempSync(join(tmpdir(), "ss-cases-assets-"));
+  try {
+    const target = join(root, "saas-dashboard", caseId);
+    mkdirSync(join(target, "notes"), { recursive: true });
+    cpSync(join(caseDir, "measurements"), join(target, "measurements"), { recursive: true });
+    cpSync(join(caseDir, "case.json"), join(target, "case.json"));
+    writeFileSync(join(target, "screenshot.png"), "");
+    writeFileSync(join(target, "notes", "page.html"), "");
+    const assets = spawnSync(process.execPath, [validator, root], { encoding: "utf8" });
+    assert.equal(assets.status, 1);
+    assert.match(assets.stderr, /screenshot\.png: images, fonts and page source are not stored/u);
+    assert.match(assets.stderr, /notes\/page\.html: images, fonts and page source are not stored/u);
+    rmSync(join(target, "screenshot.png")); rmSync(join(target, "notes"), { recursive: true });
+    const draftDir = join(root, "saas-dashboard", "example-reference-2026-11-10");
+    mkdirSync(draftDir, { recursive: true });
+    writeFileSync(join(draftDir, "case.draft.json"), JSON.stringify({ id: "example-reference-2026-11-10", decisions: [], contributors: [] }));
+    const withDraft = spawnSync(process.execPath, [validator, root], { encoding: "utf8" });
+    assert.equal(withDraft.status, 0, withDraft.stderr);
+    assert.match(withDraft.stdout, /1 case\(s\) valid; 1 draft\(s\) skipped \(.*example-reference-2026-11-10\/case\.draft\.json\): fill in a case\.draft\.json and rename it to case\.json/u);
+    writeFileSync(join(draftDir, "hero.webp"), "");
+    const draftAsset = spawnSync(process.execPath, [validator, root], { encoding: "utf8" });
+    assert.equal(draftAsset.status, 1, "a draft folder may not hold assets either");
+    assert.match(draftAsset.stderr, /case\.draft\.json: hero\.webp: images, fonts and page source are not stored/u);
+  } finally { rmSync(root, { recursive: true, force: true }); }
+});
+
 test("a case folder without measurements/ is reported, not a crash", () => {
   const run = validate(() => {}, { measurements: false });
   assert.equal(run.status, 1);

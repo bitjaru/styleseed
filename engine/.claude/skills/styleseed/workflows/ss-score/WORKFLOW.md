@@ -191,6 +191,8 @@ families or unexplained optical/state drift (−3; coordinated outline/filled st
 (−2; concentric rounded rectangles normally use `max(0, outer − padding)`); unexplained control-height drift
 (−2). Use evidence of system-wide consistency; this score is not a validated predictor
 of professional quality or whether an AI made the interface.
+On a rendered screen, `ss-verify/scripts/drift-report.mjs --faults` reports emoji used as icons and
+mixed icon construction by measurement; the code-review deductions above stay.
 
 Clamp each category at 0. Sum to a total.
 

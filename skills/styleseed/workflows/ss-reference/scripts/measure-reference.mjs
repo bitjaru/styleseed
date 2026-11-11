@@ -335,8 +335,10 @@ export async function revealByScroll(page, options = {}, now = Date.now) {
 // only) one viewport screenshot per viewport is taken after the probes, on the same load, and
 // returned as `frames` ({ width: png bytes }) beside the observations, never inside them. One
 // navigation per viewport: a page that never goes network-idle is measured once it has loaded, not
-// loaded again.
-export async function observeUrls(urls, { chromium, timeout = 45000, maxElements = 5000, viewports = VIEWPORTS, structure = false, scroll = false, frames = false } = {}) {
+// loaded again. Each `extraProbes` entry `{ key, probe }` runs after the structure probe on the same
+// load and rides on the observation as `[key]` (ss-verify drift-report.mjs --faults); the default
+// makes no extra call and adds no key.
+export async function observeUrls(urls, { chromium, timeout = 45000, maxElements = 5000, viewports = VIEWPORTS, structure = false, scroll = false, frames = false, extraProbes = [] } = {}) {
   const results = [];
   const browser = await chromium.launch({ headless: true });
   try {
@@ -353,6 +355,10 @@ export async function observeUrls(urls, { chromium, timeout = 45000, maxElements
         const scrolled = scroll ? await revealByScroll(page, scroll === true ? {} : scroll) : null;
         const observation = await page.evaluate(observeDesign, { maxElements });
         if (structure) observation.structure = await page.evaluate(observeStructure, { maxElements });
+        for (const { key, probe } of extraProbes) {
+          if (Object.hasOwn(observation, key) || (scrolled && key === 'scroll')) throw new Error(`observeUrls: extra probe key "${key}" is already a key of the observation; give the probe another key`);
+          observation[key] = await page.evaluate(probe, { maxElements });
+        }
         if (scrolled) observation.scroll = scrolled;
         if (frames) shots[viewport.width] = await captureFrame(page);
         observations.push(observation);

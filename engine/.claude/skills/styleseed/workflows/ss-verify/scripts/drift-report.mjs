@@ -4,7 +4,7 @@
 //
 //   node drift-report.mjs <url>… --out <dir> [--browser <playwright module>] [--project-root <dir>]
 //                         [--palette <id>] [--decisions <file.json>] [--states error,empty]
-//                         [--labels home,settings] [--gate] [--structure] [--scroll] [--max-elements 5000] [--timeout 45000]
+//                         [--labels home,settings] [--gate] [--structure] [--scroll] [--faults] [--max-elements 5000] [--timeout 45000]
 //                         [--reference <slug> [--screen <label>]]
 //
 // URLs may be http(s) or file:. The probe is the read-only observe-design probe from ss-reference;
@@ -25,6 +25,15 @@
 // not drift: the drift files are exactly what the same run without --reference writes (with the
 // flags it turns on). With --gate, a kept fact that differs or an avoided value that was copied also
 // exits 3.
+//
+// --faults also runs the render-fault probe (observe-faults.mjs) on the same page loads and writes
+// FAULTS.md and faults.json beside the drift files: text over text, text out of its holder, amounts
+// on two lines, clipped text, tight insets, near touches and alignments, emoji used as icons, and
+// mixed icon construction, each decided from boxes and computed style (analyze-faults.mjs). Faults
+// are not drift: drift.json and DRIFT.md are byte for byte what the same run writes without the
+// flag. With --gate, a finding whose catalog rule has priority `blocks` exits 3 unless an approved
+// exception to that (default) rule covers the screen; the other classes report. Without --faults no
+// extra probe runs and no file or key is added.
 import { mkdirSync, writeFileSync, readFileSync, readdirSync, existsSync } from 'node:fs';
 import { resolve, join, basename, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -34,12 +43,14 @@ import { buildFacts } from '../../ss-reference/scripts/analyze-structure.mjs';
 import { loadProjectRegistry } from '../../ss-resolve/scripts/project-registry.mjs';
 import { CONTRACT_FILES, checkGeneratedContract } from '../../ss-resolve/scripts/reference-contract.mjs';
 import { SAFE_ID, normalizeDecisions, parseStrictJson, safeProjectPath } from '../../ss-resolve/scripts/runtime-contract.mjs';
+import { observeFaults } from './observe-faults.mjs';
+import { THRESHOLDS, faultsReport, faultsGateFailure, renderFaultsMarkdown } from './analyze-faults.mjs';
 
-const USAGE = 'usage: drift-report.mjs <url>… --out <dir> [--browser <module>] [--project-root <dir>] [--palette <id>] [--decisions <file.json>] [--states a,b] [--labels a,b] [--gate] [--structure] [--scroll] [--reference <slug> [--screen <label>]]';
+const USAGE = 'usage: drift-report.mjs <url>… --out <dir> [--browser <module>] [--project-root <dir>] [--palette <id>] [--decisions <file.json>] [--states a,b] [--labels a,b] [--gate] [--structure] [--scroll] [--faults] [--reference <slug> [--screen <label>]]';
 const contextCatalog = () => JSON.parse(readFileSync(resolve(dirname(fileURLToPath(import.meta.url)), '../../ss-resolve/references/catalog.json'), 'utf8'));
 
 export function parseArgs(argv) {
-  const args = { urls: [], out: null, browser: process.env.STYLESEED_BROWSER_MODULE || null, projectRoot: null, palette: null, decisions: null, states: [], labels: [], maxElements: 5000, timeout: 45000, gate: false, structure: false, scroll: false, reference: null, screen: null };
+  const args = { urls: [], out: null, browser: process.env.STYLESEED_BROWSER_MODULE || null, projectRoot: null, palette: null, decisions: null, states: [], labels: [], maxElements: 5000, timeout: 45000, gate: false, structure: false, scroll: false, faults: false, reference: null, screen: null };
   const list = value => String(value ?? '').split(',').map(s => s.trim()).filter(Boolean);
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
@@ -53,6 +64,7 @@ export function parseArgs(argv) {
     else if (a === '--gate') args.gate = true;
     else if (a === '--structure') args.structure = true;
     else if (a === '--scroll') args.scroll = true;
+    else if (a === '--faults') args.faults = true;
     else if (a === '--reference') args.reference = argv[++i] ?? '';
     else if (a === '--screen') args.screen = argv[++i] ?? '';
     else if (a === '--max-elements') args.maxElements = Number(argv[++i]);
@@ -172,18 +184,18 @@ export function loadDecisions({ projectRoot = null, decisions = null } = {}, cat
 // --gate: at-rest drift on accent, ink, canvas, or spacing base is INV-05 territory, and a value
 // outside a recorded decision breaks an approval; either exits 3 so CI can block on it. An approved
 // exception is neither. With --reference, a kept fact that differs or an avoided value that was
-// copied also fails (each named). Returns null when the gate passes.
+// copied also fails (each named). With --faults, a render fault whose catalog rule blocks fails
+// too (one line, analyze-faults.mjs faultsGateFailure). Returns null when the gate passes.
 export function gateFailure(result) {
   const parts = [];
   if (result.screensWithDrift.length) parts.push(`drift on ${result.screensWithDrift.join(', ')}`);
   const violations = result.decisions?.violations ?? [];
   if (violations.length) parts.push(`decision violations: ${violations.map(v => `${v.id} on ${v.screen} (${v.axis} ${v.values.join(', ')})`).join('; ')}`);
-  const lines = [parts.length ? `drift gate: FAIL — ${parts.join('; ')}` : null, result.distance ? distanceGateFailure(result.distance.rows) : null].filter(Boolean);
+  const lines = [parts.length ? `drift gate: FAIL — ${parts.join('; ')}` : null, result.distance ? distanceGateFailure(result.distance.rows) : null, result.faults ? faultsGateFailure(result.faults) : null].filter(Boolean);
   return lines.length ? lines.join('\n') : null;
 }
 
-export async function report(args, log = console.log, { loadBrowserImpl = loadBrowser } = {}) {
-  const catalog = contextCatalog();
+export async function report(args, log = console.log, { loadBrowserImpl = loadBrowser, catalog = contextCatalog() } = {}) {
   const decisions = loadDecisions(args, catalog);
   const plan = planScreens(args);
   // --reference: refuse a draft before any browser starts, then turn on what the comparison needs.
@@ -200,7 +212,7 @@ export async function report(args, log = console.log, { loadBrowserImpl = loadBr
   const structure = reference ? reference.flags.structure : args.structure;
   const scroll = reference ? reference.flags.scroll : args.scroll;
   const { chromium, from } = await loadBrowserImpl(args.browser);
-  const measured = await observeUrls(plan.map(p => p.url), { chromium, timeout: args.timeout, maxElements: args.maxElements, structure, scroll });
+  const measured = await observeUrls(plan.map(p => p.url), { chromium, timeout: args.timeout, maxElements: args.maxElements, structure, scroll, ...(args.faults ? { extraProbes: [{ key: 'faults', probe: observeFaults }] } : {}) });
   const screens = plan.map((p, i) => ({ ...p, summary: measured[i].summary }));
   const registry = args.projectRoot ? registryBaseline(resolve(args.projectRoot), args.palette) : null;
   const result = compareScreens(screens, { baseline: registry ? baselineFromRoles(registry.roles) : null, decisions, structure });
@@ -213,6 +225,16 @@ export async function report(args, log = console.log, { loadBrowserImpl = loadBr
   writeFileSync(join(args.out, 'drift.json'), `${JSON.stringify({ tool: 'styleseed drift-report', version: '1', ...meta, ...result }, null, 2)}\n`);
   writeFileSync(join(args.out, 'DRIFT.md'), renderDriftMarkdown(result, meta));
   log(`${result.verdict}\n  → ${join(args.out, 'DRIFT.md')}`);
+
+  // Render faults: their own files; the drift files above are not touched again.
+  if (args.faults) {
+    const faults = faultsReport(plan.map((p, i) => ({ label: p.label, url: p.url, state: p.state, observations: measured[i].observations })), { decisions, rules: catalog.rules ?? [] });
+    const faultsMeta = { observedAt: meta.observedAt, browser: meta.browser };
+    writeFileSync(join(args.out, 'faults.json'), `${JSON.stringify({ tool: 'styleseed render-faults', version: '1', ...faultsMeta, thresholds: THRESHOLDS, ...faults }, null, 2)}\n`);
+    writeFileSync(join(args.out, 'FAULTS.md'), renderFaultsMarkdown(faults, faultsMeta));
+    log(`render faults: ${faults.verdict}\n  → ${join(args.out, 'FAULTS.md')}`);
+    result.faults = faults;
+  }
   if (!reference) return result;
 
   // Distance: its own files; the drift files above are not touched again.

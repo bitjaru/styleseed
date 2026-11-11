@@ -27,7 +27,7 @@ import { fileURLToPath } from 'node:url';
 import { screenValues } from './compare-screens.mjs';
 import { STAYS_OPEN } from './measure-reference.mjs';
 import {
-  CONTRACT_AXES, CONTRACT_FILES, DEFAULT_TOKEN_TRANSFERS, GENERATOR_TOOL, RENDERED_FILES, TOKEN_AXES, TRANSFERS,
+  CONTRACT_AXES, CONTRACT_FILES, GENERATOR_TOOL, RENDERED_FILES, TOKEN_AXES, TRANSFERS, defaultTokenTransfers,
   contractHash, defaultTransfer, isApproved, isGeneratedEvidence, normalizeReferenceEvidence, proposeDecisions,
   renderContractFiles, renderedHashes, serializeEvidence,
 } from '../../ss-resolve/scripts/reference-contract.mjs';
@@ -110,7 +110,7 @@ export function buildEvidence({ facts: doc, summary, robots = 'not-checked', scr
     schemaVersion: 1, generator: { tool: GENERATOR_TOOL, factsVersion: doc.factsVersion }, slug, fallback, adapter,
     sources: [{ id: 'S1', url: doc.url, observedAt: doc.observedAt, viewports: [...doc.viewports], robots, scroll }],
     facts,
-    tokens: { measured: Object.fromEntries(TOKEN_AXES.map(axis => [axis, measured[axis]])), transfer: { ...DEFAULT_TOKEN_TRANSFERS } },
+    tokens: { measured: Object.fromEntries(TOKEN_AXES.map(axis => [axis, measured[axis]])), transfer: defaultTokenTransfers(measured) },
     open: CONTRACT_AXES.map(([axis]) => axis).filter(axis => STAYS_OPEN[axis]).map(axis => ({ axis, question: STAYS_OPEN[axis] })),
     approval: { status: 'draft' },
   };

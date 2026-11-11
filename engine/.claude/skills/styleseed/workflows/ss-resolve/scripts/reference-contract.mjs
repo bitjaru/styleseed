@@ -24,6 +24,14 @@ export const CONTRACT_FILES = Object.freeze(["evidence.json", ...RENDERED_FILES]
 // The nine drift axes measured by ss-reference/scripts/compare-screens.mjs (screenValues).
 export const TOKEN_AXES = Object.freeze(["accent", "ink", "canvas", "spacingBase", "spacingScale", "typeSizes", "radii", "fonts", "controlHeights"]);
 export const DEFAULT_TOKEN_TRANSFERS = Object.freeze({ accent: "avoid", ink: "observe", canvas: "observe", spacingBase: "adapt", spacingScale: "adapt", typeSizes: "adapt", radii: "adapt", fonts: "avoid", controlHeights: "adapt" });
+// Platform and generic font families are nobody's brand: a reference whose measured fonts are all of
+// these proposes `observe` for the fonts axis instead of `avoid`. Compared case-insensitively.
+export const SYSTEM_FONT_FAMILIES = Object.freeze(["-apple-system", "blinkmacsystemfont", "system-ui", "ui-sans-serif", "ui-serif", "ui-monospace", "ui-rounded", "segoe ui", "sans-serif", "serif", "monospace", "cursive", "fantasy"]);
+export function defaultTokenTransfers(measured = {}) {
+  const fonts = Array.isArray(measured.fonts) ? measured.fonts : [];
+  const systemOnly = fonts.length > 0 && fonts.every((font) => SYSTEM_FONT_FAMILIES.includes(String(font).trim().replace(/^["']|["']$/gu, "").toLowerCase()));
+  return { ...DEFAULT_TOKEN_TRANSFERS, ...(systemOnly ? { fonts: "observe" } : {}) };
+}
 // The twelve axes, in the RULESETS.md order.
 export const CONTRACT_AXES = Object.freeze([
   ["user-job", "User job and primary decision"],

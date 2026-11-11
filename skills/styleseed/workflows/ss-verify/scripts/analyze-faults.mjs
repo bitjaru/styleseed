@@ -106,8 +106,9 @@ export function classRules(rules = []) {
 // screens: [{ label, url, state, observations }], each observation carrying `.faults` (the probe
 // output for that viewport). decisions: the normalized ledger. An exception whose `rule` is the
 // finding's rule, that has no `axis`, and that covers the screen turns the finding `approved`; an
-// entry scoped only to artifacts names no screen and is not applied, as in the drift report. An
-// invariant is never waived here (the ledger refuses such an exception before this runs).
+// entry scoped only to artifacts names no screen and is not applied, as in the drift report. Only a
+// rule of kind `default` is waived; an invariant never is (the ledger refuses such an exception
+// before this runs).
 export function faultsReport(screens, { decisions = [], rules = [] } = {}) {
   const classes = classRules(rules);
   const byClass = new Map(classes.map(c => [c.id, c]));
@@ -123,7 +124,7 @@ export function faultsReport(screens, { decisions = [], rules = [] } = {}) {
       const viewport = probe.viewport?.width ?? null;
       for (const f of result.findings) {
         const c = byClass.get(f.class);
-        const exception = c.rule && c.kind !== 'invariant' ? covering(c.rule, screen.label) : null;
+        const exception = c.rule && c.kind === 'default' ? covering(c.rule, screen.label) : null;
         findings.push({ ...f, rule: c.rule, gates: c.gates, status: exception ? 'approved' : 'fault', ...(exception ? { exception: exception.id } : {}) });
       }
       distribution.push({ viewport, ...result.distribution });

@@ -8,7 +8,11 @@
 // and DRIFT.md with and without --faults. Content of a closed <details> is not shown: inside a small
 // card it would overlap the summary, run out of the card, and wrap an amount if it were laid out (the
 // same page with the details open shows all three), and closed it yields none, with or without
-// Element.checkVisibility. No fixture text may leave the page, every string must pass the allow-list,
+// Element.checkVisibility. Closed off-canvas drawers (one translated out to the left, one parked past
+// the right edge of a root that clips overflow on x) yield nothing either. Wrapped amounts count two
+// lines under tight leading (48px/1, 36px/40px) and a number with its small unit one; a rotated
+// amount, an ellipsized chip, and a badge in an absolutely positioned wrapper give no finding of
+// their class. No fixture text may leave the page, every string must pass the allow-list,
 // and two runs must give the same fault-report bytes. This is a measurement regression fixture, not a
 // design judgment.
 import assert from 'node:assert/strict';
@@ -19,7 +23,7 @@ import { pathToFileURL, fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
 import { FAULT_PAIRS } from './lib/fault-pairs.mjs';
 import { disallowedStrings } from './lib/reference-allow-list.mjs';
-import { FAULT_CLASSES } from '../engine/.claude/skills/styleseed/workflows/ss-verify/scripts/analyze-faults.mjs';
+import { FAULT_CLASSES, analyzeFaults } from '../engine/.claude/skills/styleseed/workflows/ss-verify/scripts/analyze-faults.mjs';
 import { observeFaults } from '../engine/.claude/skills/styleseed/workflows/ss-verify/scripts/observe-faults.mjs';
 import { gateFailure, parseArgs, report } from '../engine/.claude/skills/styleseed/workflows/ss-verify/scripts/drift-report.mjs';
 import { loadBrowser } from '../engine/.claude/skills/styleseed/workflows/ss-reference/scripts/measure-reference.mjs';
@@ -55,8 +59,35 @@ p{margin:0}.box{width:200px;background:#ffffff;border-radius:8px;padding:16px}
 .pull{margin-top:-20px}.long{white-space:nowrap}.value{width:20px;font-size:32px;line-height:40px}
 </style><body><div class="box"><details${open ? ' open' : ''}><summary>History</summary><p class="pull">Waiting for approval</p><p class="long">Waiting for payment approval from the finance team</p><p class="value">10 kg</p></details></div></body></html>`;
 
+// Two closed drawers, each holding a wrapped amount, a chip whose label runs out of it, and 2px of
+// padding: one fixed and translated out to the left, one fixed past the right edge of a body that
+// hides overflow on x. Only the dashboard card is reachable.
+const drawerPage = () => `<!doctype html><html lang="en"><meta charset="utf-8"><title>drawer</title><style>
+*{box-sizing:border-box}body{margin:0;padding:24px;overflow-x:hidden;background:#f3f4f2;color:#1b1d1c;font:16px/24px system-ui,sans-serif}
+p{margin:0}.card{width:312px;background:#ffffff;border-radius:8px;padding:24px}
+.drawer{position:fixed;top:0;width:280px;height:100%;background:#ffffff;padding:2px}.left{left:0;transform:translateX(-100%)}.right{left:100%}
+.value{width:20px;font-size:32px;line-height:40px}.chip{display:inline-block;width:48px;white-space:nowrap;background:#e4eaf5}
+</style><body><aside class="drawer left"><p class="value">10 kg</p><span class="chip">Waiting for review</span></aside><aside class="drawer right"><p class="value">20 kg</p><span class="chip">Waiting for approval</span></aside><div class="card"><p>Dashboard</p></div></body></html>`;
+
+// Small pages read by the probe directly: a 20px box wraps "10 kg" at 48px/1 and 36px/40px (two
+// lines), a number and its half-size unit stay one line at both sizes, a rotated amount, a
+// truncated chip with 12px of padding, and a badge in an absolutely positioned wrapper beside text.
+const smallPage = (css, body) => `<!doctype html><html lang="en"><meta charset="utf-8"><title>case</title><style>
+*{box-sizing:border-box}body{margin:0;padding:24px;background:#f3f4f2;color:#1b1d1c;font:16px/24px system-ui,sans-serif}
+p{margin:0}.card{width:312px;background:#ffffff;border-radius:8px;padding:24px}${css}
+</style><body><div class="card">${body}</div></body></html>`;
+const PROBE_CASES = [
+  { id: 'wrap-48-1', html: smallPage('.v{width:20px;font-size:48px;line-height:1}', '<p class="v">10 kg</p>'), check: o => assert.deepEqual(o.amounts.map(a => a.lines), [2]) },
+  { id: 'wrap-36-40', html: smallPage('.v{width:20px;font-size:36px;line-height:40px}', '<p class="v">10 kg</p>'), check: o => assert.deepEqual(o.amounts.map(a => a.lines), [2]) },
+  { id: 'one-line-48-1', html: smallPage('.v{font-size:48px;line-height:1;white-space:nowrap}.u{font-size:24px}', '<p class="v">3.8<span class="u">M</span></p>'), check: o => assert.deepEqual(o.amounts.map(a => a.lines), [1]) },
+  { id: 'one-line-36-40', html: smallPage('.v{font-size:36px;line-height:40px;white-space:nowrap}.u{font-size:18px}', '<p class="v">48.2<span class="u">K</span></p>'), check: o => assert.deepEqual(o.amounts.map(a => a.lines), [1]) },
+  { id: 'rotated-amount', html: smallPage('.v{display:inline-block;transform:rotate(-90deg);margin:60px;font-size:20px;white-space:nowrap}', '<div class="v"><span>120</span> <span>km/h</span></div>'), check: o => assert.deepEqual(o.amounts, []) },
+  { id: 'ellipsized-chip', html: smallPage('.chip{display:inline-block;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 12px;background:#e4eaf5;border-radius:4px;font-size:14px;line-height:24px}', '<span class="chip">Waiting for review by the finance team</span>'), check: o => assert.deepEqual(analyzeFaults(o).findings.filter(f => f.class === 'tight-inset'), []) },
+  { id: 'badge-in-absolute-wrapper', html: smallPage('.w{position:relative;display:inline-block}.a{position:absolute;top:0;left:100%}.bd{display:block;min-width:18px;height:18px;padding:0 5px;background:#c0392b;color:#ffffff;border-radius:9px;font-size:11px;line-height:18px}', '<div class="w"><span>Inbox</span><div class="a"><span class="bd">12</span></div></div>'), check: o => assert.deepEqual(o.touches, []) },
+];
+
 // The copy of every fixture: text between tags, five characters or longer, and the emoji.
-const fixtureText = [...new Set([...FAULT_PAIRS.flatMap(p => [p.good, p.bad]), detailsPage(true)].flatMap(html => [...html.replace(/<style>[\s\S]*?<\/style>|<title>[\s\S]*?<\/title>/gu, '').matchAll(/>([^<>]+)</gu)].map(m => m[1].trim())).filter(t => t.length >= 5 || /\p{Extended_Pictographic}/u.test(t)))];
+const fixtureText = [...new Set([...FAULT_PAIRS.flatMap(p => [p.good, p.bad]), detailsPage(true), drawerPage(), ...PROBE_CASES.map(c => c.html)].flatMap(html => [...html.replace(/<style>[\s\S]*?<\/style>|<title>[\s\S]*?<\/title>/gu, '').matchAll(/>([^<>]+)</gu)].map(m => m[1].trim())).filter(t => t.length >= 5 || /\p{Extended_Pictographic}/u.test(t)))];
 const noFixtureText = (text, what) => { for (const t of fixtureText) assert.ok(!text.includes(t), `${what} must not carry fixture text (found ${JSON.stringify(t)})`); };
 const reportData = screen => ({ findings: screen.findings.map(({ exception: _exception, ...f }) => f), counts: screen.counts, distribution: screen.distribution, icons: screen.icons, capped: screen.capped });
 
@@ -75,6 +106,8 @@ try {
     writeFileSync(join(dir, `${name}.html`), detailsPage(open));
     url[name] = pathToFileURL(join(dir, `${name}.html`)).href;
   }
+  writeFileSync(join(dir, 'drawer-closed.html'), drawerPage());
+  url['drawer-closed'] = pathToFileURL(join(dir, 'drawer-closed.html')).href;
 
   // 1. Every pair through the CLI, one run.
   const all = Object.values(url);
@@ -99,6 +132,7 @@ try {
       assert.equal(counted('details-closed', cls, width), 0, `details-closed @${width}: the content of a closed <details> is not shown (${cls}): ${JSON.stringify(screen('details-closed').findings)}`);
     }
   }
+  assert.deepEqual(screen('drawer-closed').findings, [], 'closed off-canvas drawers lie outside the reachable document: no finding of any class');
   const md = readFileSync(join(first, 'FAULTS.md'), 'utf8');
   noFixtureText(faultsText, 'faults.json');
   noFixtureText(md, 'FAULTS.md');
@@ -168,6 +202,14 @@ try {
       const output = await page.evaluate(observeFaults, { maxElements: 5000 });
       assert.deepEqual(disallowedStrings(output), [], `${pair.id}-${kind} @${width}: the probe output must pass the allow-list`);
       noFixtureText(JSON.stringify(output), `${pair.id}-${kind} probe output`);
+      await page.close();
+    }
+    // The direct probe cases, at both viewports.
+    for (const c of PROBE_CASES) for (const width of VIEWPORTS) {
+      const page = await instance.newPage({ viewport: { width, height: width >= 768 ? 900 : 844 } });
+      await page.setContent(c.html);
+      const output = await page.evaluate(observeFaults, { maxElements: 5000 });
+      try { c.check(output); } catch (e) { throw new Error(`${c.id} @${width}: ${e.message}\n${JSON.stringify(output)}`); }
       await page.close();
     }
     // Without Element.checkVisibility the probe falls back to its closed-<details> test: only the

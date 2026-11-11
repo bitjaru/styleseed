@@ -24,6 +24,10 @@
 // the content of a closed <details> (its summary stays shown) or content-visibility: hidden. It uses
 // Element.checkVisibility where the browser has it, else a closed-<details> test.
 //
+// Only the reachable document is measured: a fragment, surface, icon, or emoji whose box lies entirely
+// left of x = 0 or above y = 0 in document pixels, or entirely right of the root's client width when
+// the root (html or body) hides or clips overflow-x, is skipped (a closed off-canvas drawer).
+//
 // One reading of ours on top of the definitions: a text fragment is the part of its rect inside every
 // box that clips it (an ancestor with overflow other than visible on that axis, within its containing
 // block chain); a fragment with nothing left wider and taller than 0.5px is not measured. Collapsed
@@ -113,7 +117,6 @@ export function observeFaults({ maxElements = 5000 } = {}) {
     shownCache.set(el, v);
     return v;
   };
-  const shownEls = els.filter(shown);
   const index = new Map(els.map((el, i) => [el, i]));
 
   const INTERACTIVE = 'a[href],button,input:not([type=hidden]),select,textarea,summary,[role=button],[role=link],[role=tab],[role=menuitem],[role=checkbox],[role=switch],[role=radio],[role=combobox],[role=textbox]';
@@ -139,7 +142,13 @@ export function observeFaults({ maxElements = 5000 } = {}) {
   // Geometry in document pixels.
   const docRect = el => { const r = box(el).rect; return { l: r.left + sx, t: r.top + sy, r: r.right + sx, b: r.bottom + sy }; };
   const bx = r => [round(r.l), round(r.t), round(r.r - r.l), round(r.b - r.t)];
-  const union = (a, b) => (a ? { l: Math.min(a.l, b.l), t: Math.min(a.t, b.t), r: Math.max(a.r, b.r), b: Math.max(a.b, b.b) } : { ...b });
+  const union = (a, b) => (a ? { l: Math.min(a.l, b.l), t: Math.min(a.t, b.t), r: Math.max(a.r, b.r), b: Math.max(a.b, b.b) } : { l: b.l, t: b.t, r: b.r, b: b.b });
+  // Reachable: not entirely left of x = 0 or above y = 0, and not entirely right of the root's client
+  // width when the root clips overflow on x.
+  const rootClipsX = [document.documentElement, document.body].some(el => el && ['hidden', 'clip'].includes(getComputedStyle(el).overflowX));
+  const rootWidth = document.documentElement.clientWidth;
+  const reachable = r => r.r > 0 && r.b > 0 && !(rootClipsX && r.l >= rootWidth);
+  const shownEls = els.filter(el => shown(el) && reachable(docRect(el)));
   const display = el => box(el).cs.display;
   const inFlow = el => { const cs = box(el).cs; return cs.position !== 'absolute' && cs.position !== 'fixed' && (!cs.float || cs.float === 'none'); };
   const tablePart = el => display(el).startsWith('table');
@@ -169,7 +178,8 @@ export function observeFaults({ maxElements = 5000 } = {}) {
   });
 
   // Text fragments: every client rect of every non-space text node whose parent is shown and not
-  // inside svg, select, option, textarea, script, style, noscript, or template.
+  // inside svg, select, option, textarea, script, style, noscript, or template. A fragment keeps its
+  // unclipped rect as `raw` (tight-inset reads it) and its clipped rect for every other class.
   const frags = [];
   let fragsDropped = 0;
   const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
@@ -182,8 +192,9 @@ export function observeFaults({ maxElements = 5000 } = {}) {
     const clip = clipOf(el), size = num(box(el).cs.fontSize);
     for (const r of range.getClientRects()) {
       if (!(r.width > 0.5 && r.height > 0.5)) continue;
-      const f = { el, size, l: Math.max(r.left + sx, clip.l), t: Math.max(r.top + sy, clip.t), r: Math.min(r.right + sx, clip.r), b: Math.min(r.bottom + sy, clip.b) };
-      if (!(f.r - f.l > 0.5 && f.b - f.t > 0.5)) continue;
+      const raw = { l: r.left + sx, t: r.top + sy, r: r.right + sx, b: r.bottom + sy };
+      const f = { el, size, raw, l: Math.max(raw.l, clip.l), t: Math.max(raw.t, clip.t), r: Math.min(raw.r, clip.r), b: Math.min(raw.b, clip.b) };
+      if (!(f.r - f.l > 0.5 && f.b - f.t > 0.5) || !reachable(f)) continue;
       if (frags.length >= CAP.fragments) { fragsDropped++; continue; }
       frags.push(f);
     }
@@ -202,12 +213,16 @@ export function observeFaults({ maxElements = 5000 } = {}) {
   }
   const fragsWithin = el => [el, ...el.querySelectorAll('*')].flatMap(x => fragsOf.get(x) || []);
 
-  // Lines: fragments sorted by top, then left; a fragment starts a new line when its top is at or
-  // below the current line's bottom minus 2px.
+  // Lines (ours): fragments sorted by top, then left; a fragment starts a new line when its vertical
+  // overlap with the current line is less than half the smaller of the two heights. Fragment rects
+  // are content-area boxes, taller than the line box under tight leading, so wrapped lines may
+  // overlap; a small unit beside a large number overlaps it by more than half its own height.
   const lineCount = list => {
-    let n = 0, bottom = -Infinity;
+    let n = 0, line = null;
     for (const f of [...list].sort((a, b) => a.t - b.t || a.l - b.l)) {
-      if (f.t >= bottom - 2) { n++; bottom = f.b; } else bottom = Math.max(bottom, f.b);
+      if (line && Math.min(f.b, line.b) - Math.max(f.t, line.t) >= 0.5 * Math.min(f.b - f.t, line.b - line.t)) { line = { t: Math.min(line.t, f.t), b: Math.max(line.b, f.b) }; continue; }
+      n++;
+      line = { t: f.t, b: f.b };
     }
     return n;
   };
@@ -263,7 +278,9 @@ export function observeFaults({ maxElements = 5000 } = {}) {
 
   // amount-wrap: an element (not inline) whose whole text is one amount, with only inline-level
   // descendants and horizontal writing, outermost first. An inline match uses its block only when the
-  // block's whole text is the same amount.
+  // block's whole text is the same amount. A target whose text is transformed (transform, translate,
+  // rotate, or scale on the target, an ancestor, or an element inside it) is skipped: its line boxes
+  // are not its painted lines.
   const NUM = '\\d[\\d.,]*';
   const CJK = '[\\u3130-\\u318F\\uAC00-\\uD7A3\\u3040-\\u30FF\\u4E00-\\u9FFF]';
   const UNIT = `(?:%|‰|°[A-Za-z]?|[A-Za-zµ]{1,4}(?:/[A-Za-z]{1,4})?|${CJK}{1,3}(?:\\s?[원円元])?)`;
@@ -272,6 +289,8 @@ export function observeFaults({ maxElements = 5000 } = {}) {
   const AMOUNT = new RegExp(`^[+\\-−–~≈]?\\s?${CUR}?\\s?${PART}(?:\\s${PART}){0,3}$`, 'u');
   const textOf = el => (el.textContent || '').replace(/\s+/gu, ' ').trim();
   const inlineLevel = el => el.tagName === 'BR' || el.tagName === 'WBR' || display(el).startsWith('inline');
+  const ownTransform = el => { const cs = box(el).cs; return [cs.transform, cs.translate, cs.rotate, cs.scale].some(v => v && v !== 'none'); };
+  const transformed = memo(el => (!el || el === document.documentElement ? false : ownTransform(el) || transformed(el.parentElement)));
   const recordedAmount = new Set();
   const amounts = [];
   for (const el of shownEls) {
@@ -281,7 +300,7 @@ export function observeFaults({ maxElements = 5000 } = {}) {
     if (![...el.querySelectorAll('*')].every(inlineLevel) || !String(box(el).cs.writingMode || 'horizontal-tb').startsWith('horizontal')) continue;
     let target = el;
     if (display(el) === 'inline') { const block = blockOf(el); target = block !== el && textOf(block) === text ? block : null; }
-    if (!target) continue;
+    if (!target || transformed(target) || [...target.querySelectorAll('*')].some(ownTransform)) continue;
     let covered = false;
     for (let p = target; p && !covered; p = p.parentElement) covered = recordedAmount.has(p);
     if (covered) continue;
@@ -335,7 +354,7 @@ export function observeFaults({ maxElements = 5000 } = {}) {
     }
     const key = `${index.get(f.el)},${index.get(holder)}`;
     const entry = insetMap.get(key) || { el: f.el, holder, ext: null };
-    entry.ext = union(entry.ext, f);
+    entry.ext = union(entry.ext, f.raw);
     insetMap.set(key, entry);
   }
   const spills = [...spillMap.values()].map(s => ({ box: bx(s.f), against: bx(docRect(s.holder)), side: s.side, by: r1(s.by) }));
@@ -377,7 +396,8 @@ export function observeFaults({ maxElements = 5000 } = {}) {
 
   // text-touch: for each fragment, the nearest in-flow surface on its line on each side (at least
   // 4×4, not an ancestor or descendant of the text's element, not an inline surface in the text's
-  // own block), with a horizontal gap from 0 to under 6. One record per element and surface (the
+  // own block, and no out-of-flow element between it and their common ancestor), with a horizontal
+  // gap from 0 to under 6. One record per element and surface (the
   // smallest gap).
   const surfaces = shownEls.filter(el => isSurface(el) && inFlow(el)).map(el => ({ el, r: docRect(el) })).filter(s => s.r.r - s.r.l >= 4 && s.r.b - s.r.t >= 4);
   const BAND = 64;
@@ -396,6 +416,7 @@ export function observeFaults({ maxElements = 5000 } = {}) {
         if (s.el.contains(f.el) || f.el.contains(s.el)) continue;
         if (display(s.el).startsWith('inline') && blockOf(s.el) === blockOf(f.el)) continue;
         const left = f.l - s.r.r, right = s.r.l - f.r;
+        if (!((left >= 0 && left < 6) || (right >= 0 && right < 6)) || !chain(s.el, lca(s.el, f.el), false).every(inFlow)) continue;
         if (left >= 0 && (!near.left || left < near.left.gap)) near.left = { s, gap: left };
         if (right >= 0 && (!near.right || right < near.right.gap)) near.right = { s, gap: right };
       }
@@ -464,7 +485,7 @@ export function observeFaults({ maxElements = 5000 } = {}) {
     for (let i = 0; i < cps.length; i++) {
       const c = cps[i], code = c.codePointAt(0);
       if (/\s/u.test(c) || code === 0xfe0e || code === 0xfe0f || code === 0x200d || (code >= 0x1f3fb && code <= 0x1f3ff)) continue;
-      if (!(EP.test(c) || (code >= 0x1f1e6 && code <= 0x1f1ff) || (XP.test(c) && cps[i + 1] === '️'))) return 0;
+      if (!(EP.test(c) || (code >= 0x1f1e6 && code <= 0x1f1ff) || (XP.test(c) && cps[i + 1] === '\ufe0f'))) return 0;
       count++;
     }
     return count;

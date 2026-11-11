@@ -1,7 +1,7 @@
 {
   "schemaVersion": 5,
   "engineVersion": "5.0.0",
-  "engineRevision": "sha256:2dd1e7b105e5484d8e366908292d664501975b2c8f503badaf63dbb99a3a5fd2",
+  "engineRevision": "sha256:544b40900d752e50eff68fb95c2405176aed3d6123f48af644ede8f0a4434309",
   "distributionSource": {
     "schemaVersion": 1,
     "channel": "edge",
@@ -10,7 +10,7 @@
   },
   "distributions": {
     "core": {
-      "revision": "sha256:2dd1e7b105e5484d8e366908292d664501975b2c8f503badaf63dbb99a3a5fd2",
+      "revision": "sha256:544b40900d752e50eff68fb95c2405176aed3d6123f48af644ede8f0a4434309",
       "files": [
         {
           "path": "LICENSE",
@@ -429,13 +429,13 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-verify/references/render-faults.md",
-          "sha256": "7d589df78c93651186c10ac76aa415c8240d40a7504e17a439a3b06549d25749",
-          "bytes": 12833
+          "sha256": "5e72af426f5d8667746d3969dbadd423c8507e76791f594e5d3a53938b389be1",
+          "bytes": 13505
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-verify/scripts/analyze-faults.mjs",
-          "sha256": "e26456a237942dc944c8e718c0d5b5b115eea26c0b417cb26f87f89b5846873c",
-          "bytes": 17018
+          "sha256": "45d5babb0208a5badf44014eb470b099cb1ddb7d87f072e0e3ddd2dd214de472",
+          "bytes": 17048
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-verify/scripts/drift-report.mjs",
@@ -454,8 +454,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-verify/scripts/observe-faults.mjs",
-          "sha256": "e8e4a0e1d1a3a53ef84cbb2caac44402c45b80d373835a385bdab4d184c01306",
-          "bytes": 33369
+          "sha256": "8e0ff4fc071f1c9b521ad85ac3710f302557c738db6841f3392de3b622f7350d",
+          "bytes": 35510
         },
         {
           "path": "engine/.cursorrules",
@@ -610,7 +610,7 @@
       ]
     },
     "skills": {
-      "revision": "sha256:28cd2353841e9a773d22ebbdf23ecbe332203ffe92ae544ccea31747a375dfff",
+      "revision": "sha256:e86c65d4aecb83ac6a1c3a5763403a47427f6403b26e78de9212013db757bfa4",
       "files": [
         {
           "path": "engine/.claude/skills/styleseed/SKILL.md",
@@ -1019,13 +1019,13 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-verify/references/render-faults.md",
-          "sha256": "7d589df78c93651186c10ac76aa415c8240d40a7504e17a439a3b06549d25749",
-          "bytes": 12833
+          "sha256": "5e72af426f5d8667746d3969dbadd423c8507e76791f594e5d3a53938b389be1",
+          "bytes": 13505
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-verify/scripts/analyze-faults.mjs",
-          "sha256": "e26456a237942dc944c8e718c0d5b5b115eea26c0b417cb26f87f89b5846873c",
-          "bytes": 17018
+          "sha256": "45d5babb0208a5badf44014eb470b099cb1ddb7d87f072e0e3ddd2dd214de472",
+          "bytes": 17048
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-verify/scripts/drift-report.mjs",
@@ -1044,8 +1044,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-verify/scripts/observe-faults.mjs",
-          "sha256": "e8e4a0e1d1a3a53ef84cbb2caac44402c45b80d373835a385bdab4d184c01306",
-          "bytes": 33369
+          "sha256": "8e0ff4fc071f1c9b521ad85ac3710f302557c738db6841f3392de3b622f7350d",
+          "bytes": 35510
         }
       ]
     }
@@ -1468,13 +1468,13 @@
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-verify/references/render-faults.md",
-      "sha256": "7d589df78c93651186c10ac76aa415c8240d40a7504e17a439a3b06549d25749",
-      "bytes": 12833
+      "sha256": "5e72af426f5d8667746d3969dbadd423c8507e76791f594e5d3a53938b389be1",
+      "bytes": 13505
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-verify/scripts/analyze-faults.mjs",
-      "sha256": "e26456a237942dc944c8e718c0d5b5b115eea26c0b417cb26f87f89b5846873c",
-      "bytes": 17018
+      "sha256": "45d5babb0208a5badf44014eb470b099cb1ddb7d87f072e0e3ddd2dd214de472",
+      "bytes": 17048
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-verify/scripts/drift-report.mjs",
@@ -1493,8 +1493,8 @@
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-verify/scripts/observe-faults.mjs",
-      "sha256": "e8e4a0e1d1a3a53ef84cbb2caac44402c45b80d373835a385bdab4d184c01306",
-      "bytes": 33369
+      "sha256": "8e0ff4fc071f1c9b521ad85ac3710f302557c738db6841f3392de3b622f7350d",
+      "bytes": 35510
     },
     {
       "path": ".cursorrules",

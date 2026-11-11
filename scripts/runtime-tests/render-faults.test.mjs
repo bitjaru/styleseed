@@ -73,6 +73,14 @@ test("findings carry the measure that decided them, in class order, widest viewp
   assert.equal(Object.hasOwn(result.findings[0], "against"), false, "amount-wrap has no against box");
 });
 
+test("an exception waives a finding only when the rule's kind is default", () => {
+  const wrappedScreen = [{ label: "orders", url: "https://a.test/orders", state: null, observations: [{ faults: probe(1440, { amounts: [{ box: B, lines: 2, size: 20, forced: false }] }) }] }];
+  const ledger = [{ id: "D-001", kind: "exception", rule: "DL-23-amounts-never-wrap", statement: "Fixture exception.", approvedBy: "reviewer-a", date: "2026-11-11" }];
+  const statusFor = (kind) => faultsReport(wrappedScreen, { rules: [{ id: "DL-23-amounts-never-wrap", kind, priority: "blocks" }], decisions: ledger }).screens[0].findings.map((f) => f.status);
+  assert.deepEqual(statusFor("default"), ["approved"]);
+  for (const kind of ["invariant", "project-decision", undefined]) assert.deepEqual(statusFor(kind), ["fault"], `kind ${kind} is not waived`);
+});
+
 test("a custom thresholds argument moves the result; distribution counts match the records", () => {
   const o = probe(1440, {
     insets: [{ box: B, against: A, kind: "panel", left: 1, right: 30, top: 30, bottom: 30 }, { box: B, against: A, kind: "panel", left: 9, right: 30, top: 30, bottom: 30 }, { box: B, against: A, kind: "chip", left: 5, right: 7, top: null, bottom: null }],

@@ -6,7 +6,9 @@
 //   node compile-contract.mjs --project-root <dir> --slug <slug> --approve --reviewer <name>
 //   node compile-contract.mjs --project-root <dir> --slug <slug> --propose-decisions
 //
-// <measurements> is the measurements/ folder measure-reference.mjs wrote (facts.json, summary.json).
+// <measurements> is the measurements/ folder measure-reference.mjs wrote (facts.json, summary.json):
+// in a case folder (--out), or in the project (--project-root --slug writes
+// .styleseed/evidence/_reference/<slug>/measurements, with source.json holding the robots verdict).
 // Without an action flag the run is dry: it prints the counts per transfer and the files it would
 // write. --write writes `.styleseed/rulesets/<slug>/evidence.json` (a draft) and renders the other
 // five contract files from it (ss-resolve/scripts/reference-contract.mjs). Each fact and token axis
@@ -71,8 +73,9 @@ export function parseArgs(argv) {
   return args;
 }
 
-// facts.json and summary.json from one measure-reference run, and the robots.txt verdict its
-// case.draft.json recorded (one level up), when there is one.
+// facts.json and summary.json from one measure-reference run, and the robots.txt verdict it
+// recorded: measurements/source.json (project mode) first, else case.draft.json one level up (case
+// mode), else not-checked. Whether the run made its scroll pass is read from summary.json.
 export function readMeasurements(dir) {
   const read = name => {
     const path = join(dir, name);
@@ -84,18 +87,19 @@ export function readMeasurements(dir) {
   const summary = read('summary.json');
   if (facts.factsVersion !== 1 || !Array.isArray(facts.facts)) throw new Error(`${join(dir, 'facts.json')}: expected factsVersion 1 and a facts array; re-measure with measure-reference.mjs`);
   if (typeof facts.url !== 'string' || typeof facts.observedAt !== 'string' || !Array.isArray(facts.viewports)) throw new Error(`${join(dir, 'facts.json')}: url, observedAt, and viewports are required; re-measure with measure-reference.mjs`);
-  let robots = 'not-checked';
-  const draft = join(dir, '..', 'case.draft.json');
-  if (existsSync(draft)) {
-    try { const verdict = JSON.parse(readFileSync(draft, 'utf8'))?.sources?.[0]?.robots; if (['allowed', 'disallowed', 'not-checked'].includes(verdict)) robots = verdict; } catch {}
-  }
-  return { facts, summary, robots };
+  const verdictIn = (path, pick) => {
+    if (!existsSync(path)) return null;
+    try { const verdict = pick(JSON.parse(readFileSync(path, 'utf8'))); return ['allowed', 'disallowed', 'not-checked'].includes(verdict) ? verdict : null; } catch { return null; }
+  };
+  const robots = verdictIn(join(dir, 'source.json'), doc => doc?.robots) ?? verdictIn(join(dir, '..', 'case.draft.json'), doc => doc?.sources?.[0]?.robots) ?? 'not-checked';
+  return { facts, summary, robots, scroll: Boolean(summary && typeof summary === 'object' && summary.scroll) };
 }
 
 // A fresh draft from one measurement: every fact with its default transfer (DEFAULT_TRANSFERS), the
 // nine token axes with theirs, and the seven open questions of the twelve-axis draft. A kept derived
-// fact gets an empty note: approval needs one sentence from the person there.
-export function buildEvidence({ facts: doc, summary, robots = 'not-checked', slug, fallback, adapter }) {
+// fact gets an empty note: approval needs one sentence from the person there. The source records
+// whether the measurement made its scroll pass, so a distance run measures the build the same way.
+export function buildEvidence({ facts: doc, summary, robots = 'not-checked', scroll = Boolean(summary?.scroll), slug, fallback, adapter }) {
   const measured = screenValues(summary);
   const facts = doc.facts.map(f => {
     const base = { id: f.id, axis: f.axis, level: f.level, ...(f.bound ? { bound: f.bound } : {}), viewport: f.viewport, value: f.value, ...(f.unit ? { unit: f.unit } : {}), source: 'S1' };
@@ -104,7 +108,7 @@ export function buildEvidence({ facts: doc, summary, robots = 'not-checked', slu
   });
   return {
     schemaVersion: 1, generator: { tool: GENERATOR_TOOL, factsVersion: doc.factsVersion }, slug, fallback, adapter,
-    sources: [{ id: 'S1', url: doc.url, observedAt: doc.observedAt, viewports: [...doc.viewports], robots }],
+    sources: [{ id: 'S1', url: doc.url, observedAt: doc.observedAt, viewports: [...doc.viewports], robots, scroll }],
     facts,
     tokens: { measured: Object.fromEntries(TOKEN_AXES.map(axis => [axis, measured[axis]])), transfer: { ...DEFAULT_TOKEN_TRANSFERS } },
     open: CONTRACT_AXES.map(([axis]) => axis).filter(axis => STAYS_OPEN[axis]).map(axis => ({ axis, question: STAYS_OPEN[axis] })),

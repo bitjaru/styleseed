@@ -24,7 +24,9 @@ Do not merely imitate the supplied screen. Read `PRODUCT-PRINCIPLES.md`, `RULESE
    is installed). It writes `measurements/observations.json`, `measurements/summary.json`,
    `measurements/facts.json` (structure facts with stable ids: regions, sections, columns, gaps,
    controls, tables, motion, breakpoints), a twelve-axis draft with a "Decision (person)" column,
-   and `case.draft.json` in the format of `research/cases/README.md`. Pass `--robots` to check
+   and `case.draft.json` in the format of `research/cases/README.md`. Within each page load the
+   window is scrolled to the bottom and back before measuring, so scroll-revealed content counts;
+   `--no-scroll` measures the page as loaded. Pass `--robots` to check
    robots.txt first; follow "Sources and conduct" in `REFERENCE-COMPILER.md`. The
    derived accent is the colour of filled primary actions, then of coloured links; read the
    `roleEvidence` counts before trusting it. A fact is an observation, not a decision to copy. `--designlang` adds a pinned third-party token

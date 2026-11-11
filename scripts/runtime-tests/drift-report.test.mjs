@@ -105,3 +105,30 @@ test("drift CLI: argument parsing, default labels, and state variants", () => {
   assert.equal(parseArgs(["https://a.test/", "--out", "o", "--structure"]).structure, true);
   assert.equal(parseArgs(["https://a.test/", "--out", "o"]).structure, false);
 });
+
+test("drift --scroll: parses, default off; the markdown says so only when meta.scroll is set", () => {
+  assert.equal(parseArgs(["https://a.test/", "--out", "o"]).scroll, false);
+  assert.equal(parseArgs(["https://a.test/", "--out", "o", "--scroll"]).scroll, true);
+  const report = compareScreens([screen("home"), screen("settings")]);
+  const meta = { observedAt: "2026-11-11", browser: "test-browser", baselineSource: "majority across screens", states: [] };
+  const sentence = "Each page was scrolled to the bottom and back inside its one load before it was measured.";
+  const plain = renderDriftMarkdown(report, meta);
+  assert.ok(!plain.includes(sentence), plain);
+  assert.match(plain, /at 1440×900 and 390×844\.\nBaseline:/u);
+  const scrolled = renderDriftMarkdown(report, { ...meta, scroll: true });
+  assert.ok(scrolled.includes(`at 1440×900 and 390×844. ${sentence}\nBaseline:`), scrolled);
+  assert.equal(scrolled.replace(` ${sentence}`, ""), plain, "the sentence is the only difference");
+});
+
+test("drift: a backdrop led by the body colour leaves the comparison unchanged", () => {
+  const led = { "rgb(239, 245, 244)": 0.9, "rgb(250, 253, 253)": 0.1 };
+  const screens = (backdrop) => [
+    screen("home", backdrop ? { backdrop } : {}),
+    screen("settings", backdrop ? { backdrop } : {}),
+    screen("billing", { actions: { "bg:rgb(37, 99, 235)": 6 }, ...(backdrop ? { backdrop } : {}) }),
+  ];
+  const withKey = compareScreens(screens(led));
+  const without = compareScreens(screens(null));
+  assert.equal(JSON.stringify(withKey), JSON.stringify(without));
+  assert.equal(withKey.axes.canvas.baseline, "#eff5f4");
+});

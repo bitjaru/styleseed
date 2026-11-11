@@ -98,3 +98,58 @@ test("CLI argument parsing and drafts", () => {
   assert.equal((md.match(/\| unknown \|/g) || []).length, 7);
   assert.match(md, /\| attention \| unknown — observe on the live surface and record the source \| unknown \| open: the intended focal point \|/);
 });
+
+test("canvas: backdrop share first, then the body colour (black included), then the most frequent surface", () => {
+  // Pin: the existing observation (body rgb(239, 245, 244), no backdrop) is unchanged.
+  const pinned = deriveRoles(observation());
+  assert.deepEqual([pinned.canvas, pinned.evidence.find(e => e.role === "canvas").from], ["#eff5f4", "body-or-largest-surface"]);
+  // The same observation with a backdrop led by the body colour: same canvas, decided by the backdrop.
+  const led = deriveRoles(observation({ backdrop: { "rgb(239, 245, 244)": 0.82, "rgb(9, 12, 11)": 0.18 } }));
+  assert.equal(led.canvas, "#eff5f4");
+  assert.deepEqual(led.evidence.find(e => e.role === "canvas"), { role: "canvas", from: "backdrop", color: "#eff5f4", share: 0.82, alternatives: [{ color: "#090c0b", share: 0.18 }] });
+  assert.equal(led.inkContrast, pinned.inkContrast);
+
+  // An opaque black body with brand-coloured surfaces most frequent: the body is the canvas.
+  const brand = { "rgb(232, 67, 46)": 5, "rgb(0, 0, 0)": 2 };
+  const black = deriveRoles(observation({ body: { color: "rgb(255, 255, 255)", background: "rgb(0, 0, 0)", fontFamily: "Inter", fontSize: 16 }, surfaces: brand, text: { "rgb(255, 255, 255)": 40 }, actions: { "bg:rgb(232, 67, 46)": 2 } }));
+  assert.deepEqual([black.canvas, black.evidence.find(e => e.role === "canvas").from], ["#000000", "body-or-largest-surface"]);
+  assert.ok(black.accentContrast > 3, `accent contrast against the black canvas, got ${black.accentContrast}`);
+
+  // A transparent body without a backdrop: the most frequent surface, as before.
+  const transparent = deriveRoles(observation({ body: { color: "rgb(9, 12, 11)", background: "rgba(0, 0, 0, 0)", fontFamily: "Inter", fontSize: 16 } }));
+  assert.deepEqual([transparent.canvas, transparent.evidence.find(e => e.role === "canvas").from], ["#fafdfd", "body-or-largest-surface"]);
+  // A transparent body with an empty backdrop: the same.
+  assert.equal(deriveRoles(observation({ body: { ...observation().body, background: "rgba(0, 0, 0, 0)" }, backdrop: {} })).canvas, "#fafdfd");
+  // A transparent body whose document <html> or full-bleed bands paint: the colour with the largest share.
+  assert.equal(deriveRoles(observation({ body: { ...observation().body, background: "rgba(0, 0, 0, 0)" }, backdrop: { "rgb(17, 24, 39)": 0.7, "rgb(255, 255, 255)": 0.3 } })).canvas, "#111827");
+
+  // Full-bleed sections out-cover the body colour: they are the canvas, and accent contrast follows.
+  const dark = { "rgb(17, 24, 39)": 0.74, "rgb(239, 245, 244)": 0.26 };
+  const covered = deriveRoles(observation({ backdrop: dark }));
+  assert.equal(covered.canvas, "#111827");
+  assert.equal(covered.accentContrast, contrastRatio("#0f766e", "#111827"));
+  assert.notEqual(covered.accentContrast, pinned.accentContrast);
+  // Equal shares: the body colour wins.
+  assert.equal(deriveRoles(observation({ backdrop: { "rgb(17, 24, 39)": 0.5, "rgb(239, 245, 244)": 0.5 } })).canvas, "#eff5f4");
+  // Equal shares, neither is the body colour: the smaller colour string.
+  assert.equal(deriveRoles(observation({ body: { ...observation().body, background: "rgba(0, 0, 0, 0)" }, backdrop: { "rgb(255, 255, 255)": 0.5, "rgb(17, 24, 39)": 0.5 } })).canvas, "#111827");
+});
+
+test("canvas over two viewports: backdrop shares are summed before ranking", () => {
+  // The body colour leads at 1440 and loses at 390; summed, the dark band covers more.
+  const wide = observation({ backdrop: { "rgb(239, 245, 244)": 0.6, "rgb(17, 24, 39)": 0.4 } });
+  const narrow = observation({ viewport: { width: 390, height: 844 }, backdrop: { "rgb(17, 24, 39)": 0.8, "rgb(239, 245, 244)": 0.2 } });
+  assert.equal(deriveRoles(wide).canvas, "#eff5f4");
+  const s = summarize([wide, narrow]);
+  assert.equal(s.canvas, "#111827");
+  assert.deepEqual(s.roleEvidence.find(e => e.role === "canvas"), { role: "canvas", from: "backdrop", color: "#111827", share: 0.6, alternatives: [{ color: "#eff5f4", share: 0.4 }] });
+  assert.equal(s.inkContrast, contrastRatio("#090c0b", "#111827"));
+});
+
+test("--no-scroll turns the scroll pass off; it is on by default", () => {
+  assert.equal(parseArgs(["https://example.com/", "--out", "/tmp/x"]).scroll, true);
+  assert.equal(parseArgs(["https://example.com/", "--out", "/tmp/x", "--no-scroll"]).scroll, false);
+  const summary = summarize([observation()]);
+  assert.match(caseDraft({ id: "x-2026-11-11", url: "https://example.com/", files: [], summary, observedAt: "2026-11-11", scrolled: true }).sources[0].note, /scroll pass ran/u);
+  assert.match(caseDraft({ id: "x-2026-11-11", url: "https://example.com/", files: [], summary, observedAt: "2026-11-11" }).sources[0].note, /no scroll pass/u);
+});

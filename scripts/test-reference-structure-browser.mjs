@@ -4,7 +4,7 @@
 // 768px breakpoint below which the side nav and the columns drop. The probe must find the regions
 // (by landmark, and by geometry when the landmarks are removed), the column ratio, the row height,
 // one primary per section, and the breakpoint; measure-reference must write facts.json over a local
-// http server and honour robots.txt. No page text may leave the page. This is a measurement
+// http server (with its default scroll pass recorded) and honour robots.txt. No page text may leave the page. This is a measurement
 // regression fixture, not a design judgment.
 import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
@@ -150,6 +150,9 @@ try {
   const facts = JSON.parse(readFileSync(join(dir, 'measurements/facts.json'), 'utf8'));
   assert.equal(facts.url, `${origin}/settings`);
   assert.deepEqual(facts.viewports, [1440, 390]);
+  // The scroll pass is on by default in measure-reference: both viewports reached the bottom and came back.
+  assert.deepEqual(Object.keys(facts.scroll ?? {}).sort(), ['1440', '390'], JSON.stringify(facts.scroll));
+  for (const [width, record] of Object.entries(facts.scroll)) assert.deepEqual([record.cap, record.atTop], ['none', true], `scroll @${width}: ${JSON.stringify(record)}`);
   for (const axis of ['attention', 'composition', 'imagery-data', 'navigation-action', 'states-motion', 'tells']) assert.ok(facts.facts.some(f => f.axis === axis), `facts.json has a ${axis} fact`);
   noLeaks(facts, 'facts.json', facts.url);
   const recorded = JSON.parse(readFileSync(join(dir, 'measurements/observations.json'), 'utf8'));

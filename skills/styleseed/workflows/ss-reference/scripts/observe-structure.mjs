@@ -122,9 +122,13 @@ export function observeStructure({ maxElements = 5000 } = {}) {
   const rightColumn = r => r.right >= vw - 16 && r.width >= 40 && r.width <= vw * 0.4 && tall(r);
   const topBand = r => r.top + sy <= 16 && r.width >= vw * 0.6 && r.height >= 24 && r.height <= Math.max(160, vh * 0.2);
   const bottomBand = (r, pos) => pos !== 'static' && r.bottom >= vh - 2 && r.width >= vw * 0.9 && r.height >= 32 && r.height <= 120;
+  // A region is one element, except main: a page may carry several `main` landmarks (one per
+  // route, template, or island), and the main region is all of them. `parts` lists them in
+  // document order; every containment test below means "any part contains".
   const picked = [];
+  const partsOf = p => p.parts || [p.el];
   const has = kind => picked.some(p => p.kind === kind);
-  const holder = el => picked.find(p => p.el.contains(el));
+  const holder = el => picked.find(p => partsOf(p).some(x => x.contains(el)));
   for (const el of visible) {
     const lm = landmark(el);
     if (!lm) continue;
@@ -137,9 +141,10 @@ export function observeStructure({ maxElements = 5000 } = {}) {
     else if (lm === 'nav') kind = leftColumn(r) ? 'sideNav' : topBand(r) ? 'topBar' : bottomBand(r, pos) ? 'bottomBar' : rightColumn(r) ? 'aside' : null;
     else if (lm === 'aside') kind = leftColumn(r) && interactiveIn(el).length >= 3 ? 'sideNav' : r.width <= vw * 0.5 ? 'aside' : null;
     else if (lm === 'contentinfo') kind = bottomBand(r, pos) ? 'bottomBar' : null;
-    if (kind && !has(kind) && picked.length < CAP.regions) picked.push({ kind, el, by: 'landmark' });
+    if (kind === 'main' && has('main')) picked.find(p => p.kind === 'main').parts.push(el);
+    else if (kind && !has(kind) && picked.length < CAP.regions) picked.push(kind === 'main' ? { kind, el, parts: [el], by: 'landmark' } : { kind, el, by: 'landmark' });
   }
-  const apart = el => !picked.some(p => p.el.contains(el) || el.contains(p.el));
+  const apart = el => !picked.some(p => partsOf(p).some(x => x.contains(el) || el.contains(x)));
   const outermost = list => list.filter(el => !list.some(o => o !== el && o.contains(el)));
   const byGeometry = (kind, test) => {
     if (has(kind)) return;
@@ -156,13 +161,14 @@ export function observeStructure({ maxElements = 5000 } = {}) {
       if (r.width < vw * 0.4 || !apart(el)) continue;
       if (r.width * r.height > area) { best = el; area = r.width * r.height; }
     }
-    picked.push({ kind: 'main', el: best || document.body, by: 'geometry' });
+    picked.push({ kind: 'main', el: best || document.body, parts: [best || document.body], by: 'geometry' });
   }
   const KINDS = ['topBar', 'sideNav', 'main', 'aside', 'bottomBar'];
   picked.sort((a, b) => KINDS.indexOf(a.kind) - KINDS.indexOf(b.kind));
   const innerFirst = [...picked].sort((a, b) => (a.kind === 'main') - (b.kind === 'main'));
-  const regionOf = el => (innerFirst.find(p => p.el.contains(el)) || { kind: 'none' }).kind;
-  const mainEl = picked.find(p => p.kind === 'main').el;
+  const regionOf = el => (innerFirst.find(p => partsOf(p).some(x => x.contains(el))) || { kind: 'none' }).kind;
+  const mainParts = picked.find(p => p.kind === 'main').parts;
+  const inMain = el => mainParts.some(m => m.contains(el));
 
   // The content box of a region: descend through single-child wrappers.
   const contentOf = el => {
@@ -180,12 +186,28 @@ export function observeStructure({ maxElements = 5000 } = {}) {
       width: rect.width - num(cs.paddingLeft) - num(cs.paddingRight) - num(cs.borderLeftWidth) - num(cs.borderRightWidth),
     };
   };
-  const regions = picked.map(({ kind, el, by }) => {
-    const { rect } = box(el), items = interactiveIn(el), content = contentOf(el);
+  // A main region of several parts: the union box of the parts, the first part's position, items
+  // over all parts, and the content box of the tallest part (inset from that part's left edge).
+  const regions = picked.map(p => {
+    const { kind, el, by } = p, parts = partsOf(p);
+    if (parts.length === 1) {
+      const { rect } = box(el), items = interactiveIn(el), content = contentOf(el);
+      return {
+        kind, by, x: round(rect.left + sx), y: round(rect.top + sy), w: round(rect.width), h: round(rect.height),
+        position: positionOf(el), items: items.length, itemHeight: items.length ? mode(items.map(i => round(box(i).rect.height))) : null,
+        contentWidth: round(content.width), insetLeft: round(content.left - rect.left),
+      };
+    }
+    const rects = parts.map(x => box(x).rect);
+    const left = Math.min(...rects.map(r => r.left)), top = Math.min(...rects.map(r => r.top));
+    const right = Math.max(...rects.map(r => r.right)), bottom = Math.max(...rects.map(r => r.bottom));
+    const items = parts.flatMap(interactiveIn);
+    const tallest = parts.reduce((best, x) => (box(x).rect.height > box(best).rect.height ? x : best), parts[0]);
+    const content = contentOf(tallest);
     return {
-      kind, by, x: round(rect.left + sx), y: round(rect.top + sy), w: round(rect.width), h: round(rect.height),
-      position: positionOf(el), items: items.length, itemHeight: items.length ? mode(items.map(i => round(box(i).rect.height))) : null,
-      contentWidth: round(content.width), insetLeft: round(content.left - rect.left),
+      kind, by, x: round(left + sx), y: round(top + sy), w: round(right - left), h: round(bottom - top),
+      position: positionOf(parts[0]), items: items.length, itemHeight: items.length ? mode(items.map(i => round(box(i).rect.height))) : null,
+      contentWidth: round(content.width), insetLeft: round(content.left - box(tallest).rect.left), parts: parts.length,
     };
   });
 
@@ -219,10 +241,12 @@ export function observeStructure({ maxElements = 5000 } = {}) {
     if (tag === 'canvas') return true;
     return tag === 'svg' && !(el.parentElement && el.parentElement.closest('svg')) && el.querySelectorAll(SHAPES).length >= 3;
   });
-  const content = contentOf(mainEl);
+  // The content box of each main part, in document order; sections start from all of them.
+  const contents = mainParts.map(contentOf);
+  const contentEls = new Set(contents.map(c => c.el));
   const repeated = el => {
     const k = kids(el);
-    if (k.length < 3 || el === content.el) return null;
+    if (k.length < 3 || contentEls.has(el)) return null;
     const sig = c => `${c.tagName}|${typeof c.className === 'string' ? c.className : ''}`;
     const same = k.filter(c => sig(c) === sig(k[0]));
     if (same.length < 3 || same.length < k.length * 0.8) return null;
@@ -252,7 +276,7 @@ export function observeStructure({ maxElements = 5000 } = {}) {
     for (let i = 1; i < k.length; i++) if (box(k[i]).rect.top < box(k[i - 1]).rect.bottom - 1) return false;
     return true;
   };
-  let candidates = flow(content.el);
+  let candidates = contents.flatMap(c => flow(c.el));
   for (let pass = 0; pass < 3; pass++) {
     candidates = candidates.flatMap(c => (regionEls.includes(c) ? [] : regionEls.some(r => c.contains(r)) || plainWrapper(c) ? flow(c) : [c]));
   }
@@ -307,7 +331,7 @@ export function observeStructure({ maxElements = 5000 } = {}) {
     const r = box(el).rect, kind = classify(el);
     const row = kind === 'table' ? null : rowOf(el);
     if (row) rowsBySection.set(el, row);
-    const prevBottom = i ? box(sectionEls[i - 1]).rect.bottom : content.top;
+    const prevBottom = i ? box(sectionEls[i - 1]).rect.bottom : contents[0].top;
     const cols = row ? row.ratios : [1];
     tally(columns, cols.length === 1 ? '1' : `${cols.length}|${cols.join('/')}|${row.gap}`);
     const h = within(el, HEADING)[0];
@@ -324,7 +348,7 @@ export function observeStructure({ maxElements = 5000 } = {}) {
   const groupParents = new Set(sectionEls);
   for (const row of rowsBySection.values()) for (const k of row.kids) groupParents.add(k);
   for (const [parent, list] of kidsOf) {
-    if (!parent || parent === content.el || !mainEl.contains(parent) || !sectionEls.some(s => s.contains(parent))) continue;
+    if (!parent || contentEls.has(parent) || !inMain(parent) || !sectionEls.some(s => s.contains(parent))) continue;
     const level = groupParents.has(parent) ? 'group' : 'stack';
     const items = list.filter(c => !['absolute', 'fixed'].includes(box(c).cs.position));
     for (let i = 1; i < items.length; i++) {
@@ -336,7 +360,7 @@ export function observeStructure({ maxElements = 5000 } = {}) {
     }
   }
   for (const el of visible) {
-    if (!mainEl.contains(el) || buttonLike(el) || el.matches(INPUT)) continue;
+    if (!inMain(el) || buttonLike(el) || el.matches(INPUT)) continue;
     const { rect, cs } = box(el);
     if (rect.width * rect.height < 2000 || !hasSurface(el)) continue;
     const p = round(num(cs.paddingLeft)); if (p > 0) tally(gaps.inset, p);
@@ -345,7 +369,7 @@ export function observeStructure({ maxElements = 5000 } = {}) {
   // Headings in main, in document order.
   const headings = { main: {}, skips: 0 };
   let prevLevel = null;
-  for (const h of visible.filter(el => el.matches(HEADING) && mainEl.contains(el))) {
+  for (const h of visible.filter(el => el.matches(HEADING) && inMain(el))) {
     const { level, size, weight, lineHeight } = headingOf(h);
     tally(headings.main, `${level}|${size}|${weight}|${lineHeight}`);
     if (prevLevel !== null && level > prevLevel + 1) headings.skips++;
@@ -400,7 +424,7 @@ export function observeStructure({ maxElements = 5000 } = {}) {
     if (!TEXTLIKE.has(type)) continue;
     const label = labelEl(el), lr = label && labelRect(label, el);
     tally(controls.labels, !lr ? 'none' : lr.bottom <= r.top + 4 ? 'above' : lr.right <= r.left + 4 ? 'left' : lr.left >= r.right - 4 ? 'right' : 'inside');
-    if (mainEl.contains(el)) lefts.push(round(r.left));
+    if (inMain(el)) lefts.push(round(r.left));
   }
   lefts.sort((a, b) => a - b);
   controls.leftEdges = lefts.filter((x, i) => i === 0 || x - lefts[i - 1] > 2).length;
@@ -501,7 +525,9 @@ export function observeStructure({ maxElements = 5000 } = {}) {
   media.areaShare = Math.min(1, r2(mediaArea / Math.max(1, docW * docH)));
 
   // Readable stylesheets: state selectors, reduced-motion rules, and media-query breakpoints.
-  const css = { hover: 0, focusVisible: 0, disabled: 0, reducedMotion: 0, breakpoints: {}, unreadableSheets: 0 };
+  // `truncated` says the rule budget ran out; with it, or with an unreadable sheet, every count is a
+  // lower bound.
+  const css = { hover: 0, focusVisible: 0, disabled: 0, reducedMotion: 0, breakpoints: {}, unreadableSheets: 0, truncated: false };
   const toPx = (n, unit) => round(unit === 'px' ? Number(n) : Number(n) * 16);
   const breakpointsOf = text => {
     const out = [];
@@ -513,7 +539,7 @@ export function observeStructure({ maxElements = 5000 } = {}) {
   let budget = CAP.rules;
   const walkRules = (rules, scope) => {
     for (const rule of rules) {
-      if (budget-- <= 0) return;
+      if (budget-- <= 0) { css.truncated = true; return; }
       if (typeof rule.selectorText === 'string') {
         const s = rule.selectorText;
         if (s.includes(':hover')) css.hover++;

@@ -25,7 +25,7 @@ const topKey = map => Object.entries(map || {}).sort((a, b) => b[1] - a[1] || a[
 export function summarizeStructure(s = {}) {
   const viewport = s.viewport?.width ?? null, height = s.viewport?.height ?? null;
   const regions = {};
-  for (const r of s.regions || []) if (!regions[r.kind]) regions[r.kind] = { by: r.by, x: r.x, y: r.y, w: r.w, h: r.h, position: r.position, items: r.items, itemHeight: r.itemHeight ?? null, contentWidth: r.contentWidth ?? null, insetLeft: r.insetLeft ?? null };
+  for (const r of s.regions || []) if (!regions[r.kind]) regions[r.kind] = { by: r.by, x: r.x, y: r.y, w: r.w, h: r.h, position: r.position, items: r.items, itemHeight: r.itemHeight ?? null, contentWidth: r.contentWidth ?? null, insetLeft: r.insetLeft ?? null, ...(r.kind === 'main' && r.parts > 1 ? { parts: r.parts } : {}) };
   const sections = s.sections || [];
   const gaps = s.gaps || {};
   const patterns = Object.entries(s.columns || {}).filter(([k]) => k.includes('|')).map(([key, count]) => {
@@ -147,12 +147,15 @@ export function structureSummary(structures) {
 }
 
 // summary: analyze-observations.summarize output; structure: structureSummary output.
+// A fact with `bound: "lower"` is a minimum: the true count is at least the value, and a list is a
+// subset. Stylesheet counts carry it when a sheet could not be read or the rule budget ran out; a
+// zero count or an empty list is still written then, so "looked, could not tell" is not silence.
 export function buildFacts(summary = {}, structure = null, url = null, date = null) {
   const facts = [];
   const empty = value => value === null || value === undefined || value === '' || (typeof value === 'number' && !Number.isFinite(value)) || (Array.isArray(value) && !value.length);
-  const add = (id, level, value, viewport, from, unit = null) => {
-    if (empty(value)) return;
-    facts.push({ id, axis: FACT_FAMILIES[id.split('.')[0]], level, value, ...(unit ? { unit } : {}), viewport, from });
+  const add = (id, level, value, viewport, from, unit = null, bound = null) => {
+    if (empty(value) && !(bound && Array.isArray(value))) return;
+    facts.push({ id, axis: FACT_FAMILIES[id.split('.')[0]], level, ...(bound ? { bound } : {}), value, ...(unit ? { unit } : {}), viewport, from });
   };
   const vps = structure?.viewports || [];
   for (const v of vps) {
@@ -168,6 +171,7 @@ export function buildFacts(summary = {}, structure = null, url = null, date = nu
       add(`composition.region.${kind}.width`, level, r.w, vp, from, 'px');
       add(`composition.region.${kind}.height`, level, r.h, vp, from, 'px');
       add(`composition.region.${kind}.position`, level, r.position, vp, from);
+      if (kind === 'main' && r.parts > 1) add('composition.region.main.parts', 'observed', r.parts, vp, from);
     }
     const main = v.regions.main, mainLevel = main?.by === 'landmark' ? 'observed' : 'derived';
     add('composition.main.contentWidth', mainLevel, main?.contentWidth, vp, 'structure.regions[main].contentWidth', 'px');
@@ -244,7 +248,13 @@ export function buildFacts(summary = {}, structure = null, url = null, date = nu
       add('attention.primary.placement', 'derived', p.placement, vp, `structure.controls.buttons x ${p.basis}`);
       add('attention.emphasis.ratio', 'observed', `${v.buttons.filled}:${v.buttons.outline}:${v.buttons.text}`, vp, 'structure.controls.buttons');
     }
-    if (summary.bodyFontSize && v.headings.max) add('attention.text.largestOverBody', 'derived', r2(v.headings.max / summary.bodyFontSize), vp, 'structure.headings.main / observations.body.fontSize');
+    // The largest text at this viewport: any counted text element (observations.type), or the
+    // largest heading in main when that is at least as large.
+    const typeMax = summary.largestText?.[vp]?.size ?? null, headingMax = v.headings.max ?? null;
+    const fromType = typeMax !== null && (headingMax === null || typeMax > headingMax);
+    const largest = fromType ? typeMax : headingMax;
+    add('attention.text.largest', 'observed', largest, vp, fromType ? 'observations.type (largest)' : 'structure.headings.main', 'px');
+    if (summary.bodyFontSize && largest) add('attention.text.largestOverBody', 'derived', r2(largest / summary.bodyFontSize), vp, fromType ? 'observations.type (largest) / observations.body.fontSize' : 'structure.headings.main / observations.body.fontSize');
     // imagery-data
     if (v.media) {
       for (const kind of ['img', 'video', 'canvas']) add(`imagery.media.${kind}`, 'observed', v.media[kind], vp, 'structure.media');
@@ -259,10 +269,14 @@ export function buildFacts(summary = {}, structure = null, url = null, date = nu
     if (v.headings.sizes.length) add('tells.headings.skips', 'derived', v.headings.skips, vp, 'structure.headings (document order)');
     if (v.tables.count) add('tells.table.rowHeightSpread', 'derived', v.tables.rowHeightSpread, vp, 'structure.tables[].rowH', 'px');
   }
-  // states-motion: stylesheets and computed motion are the same page at every width.
+  // states-motion: stylesheets and computed motion are the same page at every width. With an
+  // unreadable sheet or a spent rule budget the counts are lower bounds; unreadableSheets is exact.
+  const partial = c => !!c && (Number(c.unreadableSheets) > 0 || c.truncated === true);
   const css = vps[0]?.css;
   if (css) {
-    for (const key of ['hover', 'focusVisible', 'disabled', 'reducedMotion', 'unreadableSheets']) add(`states.css.${key}`, 'observed', css[key], 'both', 'structure.css (readable stylesheets)');
+    const lower = partial(css);
+    for (const key of ['hover', 'focusVisible', 'disabled', 'reducedMotion']) add(`states.css.${key}`, 'observed', css[key], 'both', `structure.css (readable stylesheets${lower ? ', lower bound' : ''})`, null, lower ? 'lower' : null);
+    add('states.css.unreadableSheets', 'observed', css.unreadableSheets, 'both', 'structure.css (readable stylesheets)');
   }
   const motion = summary.motion;
   if (motion) {
@@ -297,8 +311,9 @@ export function buildFacts(summary = {}, structure = null, url = null, date = nu
   }
   const breakpoints = Object.entries(mergeCounts(vps.map(v => v.css?.breakpoints))).map(([k, n]) => [Number(k), n]).filter(([k]) => Number.isFinite(k))
     .sort((a, b) => b[1] - a[1] || a[0] - b[0]).slice(0, 12).map(([k]) => k).sort((a, b) => a - b);
-  add('responsive.breakpoints', 'observed', breakpoints, 'both', 'structure.css.breakpoints (readable stylesheets)', 'px');
-  return { factsVersion: FACTS_VERSION, url, observedAt: date, viewports: vps.map(v => v.viewport), facts };
+  const lowerBreakpoints = vps.some(v => partial(v.css));
+  add('responsive.breakpoints', 'observed', breakpoints, 'both', `structure.css.breakpoints (readable stylesheets${lowerBreakpoints ? ', lower bound' : ''})`, 'px', lowerBreakpoints ? 'lower' : null);
+  return { factsVersion: FACTS_VERSION, url, observedAt: date, viewports: vps.map(v => v.viewport), ...(summary.scroll ? { scroll: summary.scroll } : {}), facts };
 }
 
 // Facts grouped by axis, for the twelve-axis draft and the log line.

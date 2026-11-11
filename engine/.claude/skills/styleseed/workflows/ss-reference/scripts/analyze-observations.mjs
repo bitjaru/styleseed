@@ -121,9 +121,29 @@ function modeKey(hist) {
 const total = hist => Object.values(hist || {}).reduce((sum, n) => sum + Number(n), 0);
 const share = (n, of) => (of ? Math.round((n / of) * 100) / 100 : 0);
 
+// The largest text of one observation's `type` histogram (`size|weight|lineHeight` keys): the
+// largest numeric size, how many text elements carry it, and the most frequent weight and line
+// height at that size (ties go to the smaller value; a numeric line height sorts before `normal`).
+// Null when no key has a numeric size.
+export function largestText(type) {
+  const rows = Object.entries(type || {}).map(([key, n]) => { const [size, weight, lineHeight] = key.split('|'); return { size: Number(size), weight, lineHeight, n: Number(n) }; })
+    .filter(r => Number.isFinite(r.size) && Number.isFinite(r.n));
+  if (!rows.length) return null;
+  const size = Math.max(...rows.map(r => r.size)), at = rows.filter(r => r.size === size);
+  const asValue = v => (v === undefined || v === '' ? null : Number.isFinite(Number(v)) ? Number(v) : v);
+  const smaller = (a, b) => (typeof a === 'number' && typeof b === 'number' ? a - b : typeof a === 'number' ? -1 : typeof b === 'number' ? 1 : String(a).localeCompare(String(b)));
+  const most = field => {
+    const counts = new Map();
+    for (const r of at) { const v = asValue(r[field]); counts.set(v, (counts.get(v) || 0) + r.n); }
+    return [...counts].sort((a, b) => b[1] - a[1] || smaller(a[0], b[0]))[0][0];
+  };
+  return { size, weight: most('weight'), lineHeight: most('lineHeight'), count: at.reduce((sum, r) => sum + r.n, 0) };
+}
+
 // What observe-design collects beyond the roles: border, elevation, heading and muted ink, the
-// surface colour, the colour on accent-filled actions, motion, scroll depth, target sizes, and
-// tabular numerals. Additive to the summary; per-viewport values are keyed by viewport width.
+// surface colour, the colour on accent-filled actions, motion, scroll depth, target sizes, tabular
+// numerals, the largest text, and the scroll pass record (only when a pass ran). Additive to the
+// summary; per-viewport values are keyed by viewport width.
 export function summarizeExtras(list, roles) {
   const borders = sortedEntries(mergeCounts(list.map(o => o.borders)));
   const border = borders.length ? { width: Number(borders[0][0].split('|')[0]), color: toHex(borders[0][0].split('|')[1]), count: borders[0][1], distinct: borders.length } : null;
@@ -155,11 +175,14 @@ export function summarizeExtras(list, roles) {
     easing: easingList[0] ?? null, easings: easingList.slice(0, 3), properties: Object.fromEntries(sortedEntries(properties)),
     animations: total(animations), infinite: Object.entries(animations).filter(([k]) => k.endsWith('|infinite')).reduce((sum, [, n]) => sum + n, 0),
   };
-  const scrollDepth = {}, targets = {}, tabular = {};
+  const scrollDepth = {}, targets = {}, tabular = {}, largest = {}, scroll = {};
   for (const o of list) {
     const width = o.viewport?.width;
     if (!width) continue;
     if (o.documentHeight && o.viewport.height) scrollDepth[width] = Math.round((o.documentHeight / o.viewport.height) * 100) / 100;
+    const big = largestText(o.type);
+    if (big) largest[width] = big;
+    if (o.scroll) scroll[width] = { ...o.scroll };
     const t = total(o.targets);
     if (t) {
       const sizes = Object.entries(o.targets).map(([k, n]) => [Number(k), Number(n)]);
@@ -173,11 +196,16 @@ export function summarizeExtras(list, roles) {
     surface, onAccent, onAccentContrast: onAccent && roles.accent ? contrastRatio(onAccent, roles.accent) : null,
     motion, scrollDepth, targets, tabular,
     distinct: { controlHeights: Object.keys(mergeCounts(list.map(o => o.controlHeights))).length, radii: Object.keys(mergeCounts(list.map(o => o.radii))).length },
+    largestText: largest,
+    ...(Object.keys(scroll).length ? { scroll } : {}),
   };
 }
 
 // Roles: the accent is what primary actions are painted with, then what links are coloured with.
-// The tool never promotes a colour that only appears in large surfaces or pictures.
+// The tool never promotes a colour that only appears in large surfaces or pictures. The canvas is
+// the colour that paints the largest share of the document height behind content (`backdrop`;
+// a tie goes to the body colour, then to the smaller colour), else the body background when it is
+// painted at all (black included), else the most frequent surface colour.
 export function deriveRoles(obs) {
   const evidence = [];
   const actions = sortedEntries(obs.actions);
@@ -201,8 +229,20 @@ export function deriveRoles(obs) {
   const ink = text.length ? toHex(text[0][0]) : toHex(bodyColor);
   if (ink) evidence.push({ role: 'ink', from: text.length ? 'text-elements' : 'body', color: ink, count: text[0]?.[1] ?? null, pureBlack: ink === '#000000' });
   const surfaces = sortedEntries(obs.surfaces);
-  const canvas = toHex(obs.body?.background) && toHex(obs.body?.background) !== '#000000' && !/rgba\(0, 0, 0, 0\)/.test(obs.body.background) ? toHex(obs.body.background) : (surfaces.length ? toHex(surfaces[0][0]) : null);
-  if (canvas) evidence.push({ role: 'canvas', from: 'body-or-largest-surface', color: canvas });
+  const bodyBg = parseColor(obs.body?.background);
+  const bodyCanvas = bodyBg && bodyBg[3] > 0 ? toHex(obs.body.background) : null;
+  const shares = {};
+  for (const [c, n] of Object.entries(obs.backdrop || {})) { const hex = toHex(c); if (hex && Number(n) > 0) shares[hex] = Math.round(((shares[hex] || 0) + Number(n)) * 100) / 100; }
+  const painted = Object.entries(shares).sort((a, b) => b[1] - a[1] || Number(b[0] === bodyCanvas) - Number(a[0] === bodyCanvas) || (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0));
+  let canvas;
+  if (painted.length) {
+    canvas = painted[0][0];
+    const of = painted.reduce((sum, [, n]) => sum + n, 0);
+    evidence.push({ role: 'canvas', from: 'backdrop', color: canvas, share: share(painted[0][1], of), alternatives: painted.slice(1, 4).map(([color, n]) => ({ color, share: share(n, of) })) });
+  } else {
+    canvas = bodyCanvas || (surfaces.length ? toHex(surfaces[0][0]) : null);
+    if (canvas) evidence.push({ role: 'canvas', from: 'body-or-largest-surface', color: canvas });
+  }
   const inkContrast = ink && canvas ? contrastRatio(ink, canvas) : null;
   const accentContrast = accent && canvas ? contrastRatio(accent, canvas) : null;
   return { accent, accentFrom, ink, canvas, inkContrast, accentContrast, evidence };
@@ -217,7 +257,7 @@ export function summarize(observations) {
   const controlHeights = radiusFamilies(mergeCounts(list.map(o => o.controlHeights || {})));
   const merged = {
     actions: mergeCounts(list.map(o => o.actions)), links: mergeCounts(list.map(o => o.links)), text: mergeCounts(list.map(o => o.text)),
-    surfaces: mergeCounts(list.map(o => o.surfaces)), body: list[0]?.body || {},
+    surfaces: mergeCounts(list.map(o => o.surfaces)), backdrop: mergeCounts(list.map(o => o.backdrop)), body: list[0]?.body || {},
   };
   const roles = deriveRoles(merged);
   const perViewport = list.map(o => ({ viewport: o.viewport, accent: deriveRoles(o).accent }));

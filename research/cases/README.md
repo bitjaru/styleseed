@@ -75,8 +75,9 @@ levels, referenced measurement files, the review rules, and promotion fields.
 
 ## Sources and conduct
 
-- One page load per viewport. No crawling, link following, form submission, or bypassing bot
-  protection.
+- One page load per viewport. Within that load the window may be scrolled to the bottom and back;
+  nothing is clicked, hovered, typed, or followed. No crawling, link following, form submission,
+  or bypassing bot protection.
 - Check `robots.txt` for the measured path and record `allowed`, `disallowed`, or `not-checked`
   in the source entry's `robots` field (`measure-reference.mjs --robots` does this with the
   built-in `fetch`). A disallowed path stops the measurement unless the user passes `--own-site`

@@ -1438,15 +1438,37 @@ emphasis, inputs and label positions, tables, lists, tab sets, sticky elements, 
 readable stylesheet counts (hover, focus-visible, disabled, reduced-motion, breakpoints). The
 probes may record geometry (region and section rectangles) as numbers. They record no text,
 selectors, class names, element ids, URLs of assets, or screenshots. Caps per viewport: 8
-regions, 40 sections, 12 tables, 12 lists, 8 tab sets. `analyze-observations.mjs` turns the counts
-into a spacing base and scale, type steps, radius families, and derived roles. The accent is
-the colour of filled primary actions, then of coloured links; a colour that only appears in
-large surfaces or pictures is never promoted. Each derived role carries the counts behind it so
-a reviewer can keep the observation and reject the derivation. `analyze-structure.mjs` writes
-`measurements/facts.json`: one flat list of facts with stable ids (`composition.*`, `density.*`,
-`typography.heading.*`, `navigation.*`, `states.*`, `imagery.*`, `responsive.*`, `attention.*`,
-`tells.*`), each with its axis, level, value, viewport, and source. A fact is an observation, not
-a decision about what to copy.
+regions, 40 sections, 12 tables, 12 lists, 8 tab sets. A page with several `main` landmarks has
+one main region made of all of them (`parts`); its sections come from every part.
+
+Before the probes run, inside the same load, the window is scrolled to the bottom in steps of 80%
+of the viewport and back to the top, so content that reveals on scroll is measured revealed
+(`--no-scroll` turns this off). The pass is bounded by steps, time, and document height
+(`SCROLL_DEFAULTS` in `measure-reference.mjs`); its record (steps, document height at load and
+after, which bound stopped it, whether the page was back at the top) is written per viewport in
+`observations.json`, `summary.json`, `facts.json`, and the twelve-axis draft. Only the window is
+scrolled: inner scroll containers are counted, not scrolled; content that hides again when
+scrolled away is measured hidden; a reveal slower than about 900ms on the last screenful may be
+measured mid-flight.
+
+`analyze-observations.mjs` turns the counts into a spacing base and scale, type steps, radius
+families, and derived roles. The accent is the colour of filled primary actions, then of coloured
+links; a colour that only appears in large surfaces or pictures is never promoted. The canvas is
+the colour that paints the largest share of the document height behind content (`backdrop`: the
+root background and full-bleed opaque backgrounds, measured by the design probe; a tie goes to the
+body colour), else the body background when it is painted at all (black included), else the most
+frequent surface colour. Each derived role carries the counts behind it so a reviewer can keep the
+observation and reject the derivation. `analyze-structure.mjs` writes `measurements/facts.json`:
+one flat list of facts with stable ids (`composition.*`, `density.*`, `typography.heading.*`,
+`navigation.*`, `states.*`, `imagery.*`, `responsive.*`, `attention.*`, `tells.*`), each with its
+axis, level, value, viewport, and source. A fact is an observation, not a decision about what to
+copy. The largest text (`attention.text.largest`, and its ratio to the body size) is read from
+every counted text element, not only from headings, so a display line or a KPI value outside a
+heading tag counts. Stylesheet counts (hover, focus-visible, disabled, reduced-motion,
+breakpoints) come from the stylesheets the page lets the probe read; when one could not be read
+(a cross-origin sheet without CORS) or the rule budget ran out, those facts carry
+`bound: "lower"`: the true count is at least the value, and a zero means "could not tell", not
+"none".
 
 The same probe compares screens of one project. `ss-verify/scripts/drift-report.mjs` measures
 several URLs (and `?state=` variants on request), derives the same values per screen, and
@@ -1455,7 +1477,8 @@ the majority across the screens (`compare-screens.mjs`, pure). It writes `drift.
 `DRIFT.md` with per-axis statuses `same`, `near`, `different`, `none`, and the values present on
 one screen but absent from the shared set. With `--structure` it adds rows for table row height,
 list item height, heading sizes in the main region, section gap, primaries per section, and
-transition durations. It does not score; a `different` value is a question for the owner of the
+transition durations. `--scroll` adds the same scroll pass to each page load (off by default, so
+a drift run without it measures exactly as before). It does not score; a `different` value is a question for the owner of the
 design system.
 
 Record every value, decision, and rule candidate with one evidence level from
@@ -1469,8 +1492,9 @@ intent, loading, empty, and error states, and brand tells. The twelve-axis draft
 
 ## Sources and conduct
 
-- One page load per viewport. No crawling, link following, form submission, or bypassing bot
-  protection.
+- One page load per viewport. Within that load the window may be scrolled to the bottom and back;
+  nothing is clicked, hovered, typed, or followed. No crawling, link following, form submission,
+  or bypassing bot protection.
 - Check `robots.txt` for the measured path and record `allowed`, `disallowed`, or `not-checked`
   in the source entry (`measure-reference.mjs --robots`, built-in `fetch`). A disallowed path
   stops the measurement unless the user passes `--own-site` for a site they operate.

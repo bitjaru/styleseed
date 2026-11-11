@@ -99,8 +99,8 @@ try {
   const rowHeight = distance.rows.find(r => r.id === 'density.table.rowHeight' && r.viewport === 1440);
   assert.deepEqual([rowHeight.transfer, rowHeight.reference, rowHeight.built, rowHeight.status], ['adapt', 40, 52, 'different']);
   assert.equal(distance.rows.find(r => r.id === 'navigation.primary.perSectionMax' && r.viewport === 390).status, 'same', 'the second primary is hidden below 768px');
-  assert.deepEqual(distance.rows.filter(r => r.transfer === 'avoid').map(r => [r.id, r.status]), [['tokens.accent', 'clear'], ['tokens.fonts', 'clear']]);
-  assert.equal(distance.rows.find(r => r.id === 'tokens.fonts').owned, true, 'system-ui is the project\'s brand font');
+  assert.deepEqual(distance.rows.filter(r => r.transfer === 'avoid').map(r => [r.id, r.status]), [['tokens.accent', 'clear']], 'the reference was measured in system-ui only, so the fonts axis is proposed as observe and gets no avoid row');
+  assert.equal(distance.rows.find(r => r.id === 'tokens.fonts'), undefined);
   assert.equal(distance.verdict, '1 keep fact differs, 0 avoid values copied');
   const md = readFileSync(join(out, 'DISTANCE.md'), 'utf8');
   assert.ok(md.includes('**Verdict:** 1 keep fact differs, 0 avoid values copied.'));

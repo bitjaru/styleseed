@@ -3,7 +3,7 @@
 // files a design-decision case starts from (research/cases/README.md).
 //
 //   node measure-reference.mjs <url> --out <dir> [--browser <playwright module>] [--id <case-id>]
-//                              [--robots] [--own-site] [--designlang] [--max-elements 5000] [--timeout 45000]
+//                              [--robots] [--own-site] [--no-scroll] [--designlang] [--max-elements 5000] [--timeout 45000]
 //
 // The browser comes from --browser, STYLESEED_BROWSER_MODULE, or a `playwright` package the
 // current project already has. Nothing is installed. One page load per viewport runs the design
@@ -11,6 +11,17 @@
 // text, selectors, asset URLs, or form values are written. Derived values name the counts behind
 // them. --robots checks robots.txt for the path first (built-in fetch); a disallowed path stops
 // the run unless --own-site says the site is yours. The user remains responsible for the site's terms.
+//
+// Scroll pass (on by default; --no-scroll turns it off): inside the one load, before the probes,
+// the window is scrolled to the bottom in steps of 80% of the viewport and back to the top, so
+// content that reveals on scroll is measured as a reader who scrolls would see it. Nothing is
+// clicked, hovered, typed, or followed. Bounds: SCROLL_DEFAULTS (steps, time, document height);
+// the record (steps, start and final height, which bound stopped it) rides on each observation.
+// Limits, stated rather than solved: only the window is scrolled (inner scroll containers are
+// counted in shell.scrollContainers, not scrolled); content that hides again when scrolled away is
+// measured as hidden; a reveal transition longer than about 900ms on the last screenful may be
+// measured mid-flight. The page may fetch its own lazy resources as it would for a reader who
+// scrolls; the probe requests nothing.
 //
 // Not yet: --states (forced :hover / :focus-visible / :disabled pseudo-states) and
 // --storage-state (measuring your own authenticated app from a saved session).
@@ -28,7 +39,7 @@ const DESIGNLANG_VERSION = '13.4.0';
 const VIEWPORTS = [{ width: 1440, height: 900 }, { width: 390, height: 844 }];
 
 export function parseArgs(argv) {
-  const args = { urls: [], out: null, browser: process.env.STYLESEED_BROWSER_MODULE || null, id: null, designlang: false, robots: false, ownSite: false, maxElements: 5000, timeout: 45000 };
+  const args = { urls: [], out: null, browser: process.env.STYLESEED_BROWSER_MODULE || null, id: null, designlang: false, robots: false, ownSite: false, scroll: true, maxElements: 5000, timeout: 45000 };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === '--out') args.out = argv[++i];
@@ -37,12 +48,13 @@ export function parseArgs(argv) {
     else if (a === '--designlang') args.designlang = true;
     else if (a === '--robots') args.robots = true;
     else if (a === '--own-site') args.ownSite = true;
+    else if (a === '--no-scroll') args.scroll = false;
     else if (a === '--max-elements') args.maxElements = Number(argv[++i]);
     else if (a === '--timeout') args.timeout = Number(argv[++i]);
     else if (a.startsWith('--')) throw new Error(`unknown option ${a}`);
     else args.urls.push(a);
   }
-  if (!args.urls.length) throw new Error('usage: measure-reference.mjs <url> --out <dir> [--browser <module>] [--id <case-id>] [--robots] [--own-site] [--designlang]');
+  if (!args.urls.length) throw new Error('usage: measure-reference.mjs <url> --out <dir> [--browser <module>] [--id <case-id>] [--robots] [--own-site] [--no-scroll] [--designlang]');
   if (!args.out) throw new Error('--out <dir> is required');
   for (const u of args.urls) if (!/^https?:\/\//.test(u)) throw new Error(`not an http(s) URL: ${u}`);
   return args;
@@ -68,8 +80,9 @@ const STAYS_OPEN = {
 };
 
 // Facts of one axis as one table cell, grouped by viewport: `@1440: region.sideNav.width 240px, …`.
+// A lower-bound fact (`bound: "lower"`) reads `≥value`: the true value is at least this.
 function factCell(facts) {
-  const value = f => `${Array.isArray(f.value) ? JSON.stringify(f.value) : f.value}${f.unit && typeof f.value === 'number' ? f.unit : f.unit && Array.isArray(f.value) ? ` ${f.unit}` : ''}`;
+  const value = f => `${f.bound === 'lower' ? '≥' : ''}${Array.isArray(f.value) ? JSON.stringify(f.value) : f.value}${f.unit && typeof f.value === 'number' ? f.unit : f.unit && Array.isArray(f.value) ? ` ${f.unit}` : ''}`;
   const groups = new Map();
   for (const f of facts) { const key = f.viewport === 'both' ? 'both' : `@${f.viewport}`; if (!groups.has(key)) groups.set(key, []); groups.get(key).push(`${f.id.split('.').slice(1).join('.')} ${value(f)}`); }
   return [...groups].map(([key, list]) => `${key}: ${list.join(', ')}`).join('; ').replace(/\|/g, '\\|');
@@ -90,6 +103,7 @@ export function twelveAxesDraft(url, summary) {
   const border = s.border ? `; border ${s.border.width}px ${s.border.color} (${s.border.distinct} border style(s))` : '';
   const elevation = s.elevation ? `; elevation ${Object.entries(s.elevation.families).map(([f, n]) => `${f} ${n}`).join(', ') || 'none'} (${s.elevation.levels} level(s), ${s.elevation.distinct} distinct shadow(s))` : '';
   const inks = [s.headingInk && `heading ink ${s.headingInk}`, s.mutedInk && `muted ink ${s.mutedInk} (contrast ${s.mutedInkContrast})`, s.surface && `surface ${s.surface}`, s.onAccent && `on accent ${s.onAccent} (contrast ${s.onAccentContrast})`].filter(Boolean);
+  const scrolled = s.scroll ? `\n${Object.entries(s.scroll).sort((a, b) => Number(b[0]) - Number(a[0])).map(([width, r]) => `Scroll pass @${width}: ${scrollText(r)}.`).join('\n')}\n` : '';
   return `# Twelve-axis draft — ${url}
 
 Generated from measurements only. Every row marked \`unknown\` needs a human observation with a
@@ -111,9 +125,14 @@ ${measured('navigation-action')}
 ${measured('states-motion')}
 ${grown('responsive', `accent agrees across viewports: ${s.accentAgreesAcrossViewports}`, 'derived')}
 ${measured('tells')}
-
+${scrolled}
 Role evidence: ${JSON.stringify(s.roleEvidence)}
 `;
+}
+
+// One scroll record as words: `7 step(s), document 5200px at load and 5200px after, cap none`.
+function scrollText(r) {
+  return `${r.steps} step(s), document ${r.startHeight}px at load and ${r.finalHeight}px after, cap ${r.cap}${r.atTop ? '' : ', not back at the top'}`;
 }
 
 // robots.txt (RFC 9309) for one path and the `*` group: the longest matching rule wins and an
@@ -161,10 +180,10 @@ export async function checkRobots(url, { fetchImpl = globalThis.fetch, timeout =
   }
 }
 
-export function caseDraft({ id, url, files, summary, observedAt, robots = { status: 'not-checked' }, ownSite = false }) {
+export function caseDraft({ id, url, files, summary, observedAt, robots = { status: 'not-checked' }, ownSite = false, scrolled = false }) {
   return {
     id, product: '', task: '', surface: 'web', domain: '', pageType: '', grammarNearest: '', observedAt,
-    sources: [{ id: 'S1', kind: 'measurement', url, title: 'measure-reference.mjs run (observe-design and observe-structure probes)', accessedAt: observedAt, evidence: 'observed', robots: robots.status, note: `computed-style counts and structure geometry at 1440 and 390, one page load per viewport; derived roles in measurements/summary.json, facts in measurements/facts.json; robots.txt ${robots.status}${ownSite ? ' (measured with --own-site)' : ''}` }],
+    sources: [{ id: 'S1', kind: 'measurement', url, title: 'measure-reference.mjs run (observe-design and observe-structure probes)', accessedAt: observedAt, evidence: 'observed', robots: robots.status, note: `computed-style counts and structure geometry at 1440 and 390, one page load per viewport; ${scrolled ? 'scroll pass ran (the window was scrolled to the bottom and back within each load)' : 'no scroll pass (content that reveals on scroll was measured as it was at load)'}; derived roles in measurements/summary.json, facts in measurements/facts.json; robots.txt ${robots.status}${ownSite ? ' (measured with --own-site)' : ''}` }],
     measurements: { tool: 'styleseed measure-reference', version: '1', files, summary: { spacingBase: summary.spacingBase, spacingScale: summary.spacingScale, typeSteps: summary.typeSteps, colorCount: summary.colorCount, radii: summary.radii, accentDerived: summary.accentDerived } },
     decisions: [], ruleCandidates: [], contributors: [],
     license: 'measurements and prose CC BY 4.0; no third-party assets stored',
@@ -186,12 +205,59 @@ function runDesignlang(url, outDir) {
   return { ok: true, kept };
 }
 
+// Bounds of the scroll pass, per page load: steps, wall time (ms), the deepest scroll position
+// (px), the wait after each step, and the wait after returning to the top.
+export const SCROLL_DEFAULTS = Object.freeze({ maxSteps: 60, maxMs: 15000, maxHeight: 30000, settleMs: 150, restMs: 800 });
+
+// In-page (self-contained, passed to page.evaluate): the scroll position, the document height as
+// observe-structure computes it, and the viewport height.
+export function readScroll() {
+  const scroller = document.scrollingElement || document.documentElement;
+  return { y: Math.round(window.scrollY), height: Math.max(scroller.scrollHeight, document.body ? document.body.scrollHeight : 0), viewport: window.innerHeight };
+}
+
+// In-page (self-contained): move the window, nothing else.
+export function scrollWindowTo(top) {
+  window.scrollTo({ top, left: 0, behavior: 'instant' });
+}
+
+// Scroll the window to the bottom in strides of 80% of the viewport, then back to the top, so
+// content revealed on scroll is in its revealed state when the probes run. Talks to the page only
+// through page.evaluate(readScroll), page.evaluate(scrollWindowTo, top), and page.waitForTimeout.
+// Returns { steps, startHeight, finalHeight, cap, atTop }; cap is none | steps | time | height.
+export async function revealByScroll(page, options = {}, now = Date.now) {
+  const o = { ...SCROLL_DEFAULTS, ...options };
+  const started = now();
+  let at = await page.evaluate(readScroll);
+  const startHeight = at.height;
+  if (at.height <= at.viewport + 1) return { steps: 0, startHeight, finalHeight: startHeight, cap: 'none', atTop: at.y === 0 };
+  const stride = Math.round(at.viewport * 0.8);
+  let steps = 0, cap = 'none', top = at.y;
+  for (;;) {
+    if (steps >= o.maxSteps) { cap = 'steps'; break; }
+    if (now() - started >= o.maxMs) { cap = 'time'; break; }
+    if (top + stride > o.maxHeight) { cap = 'height'; break; }
+    top += stride;
+    await page.evaluate(scrollWindowTo, top);
+    steps++;
+    await page.waitForTimeout(o.settleMs);
+    at = await page.evaluate(readScroll);
+    if (at.y + at.viewport >= at.height - 1) break;
+  }
+  await page.evaluate(scrollWindowTo, 0);
+  await page.waitForTimeout(o.restMs);
+  const end = await page.evaluate(readScroll);
+  return { steps, startHeight, finalHeight: end.height, cap, atTop: end.y === 0 };
+}
+
 // Observe each URL at every viewport with a caller-supplied chromium; returns the raw counts and
 // the summary per URL, in input order. Shared by measure-reference and ss-verify's drift report.
 // With `structure`, the structure probe runs on the same page load and its output rides on each
-// observation as `.structure`. One navigation per viewport: a page that never goes network-idle
-// is measured once it has loaded, not loaded again.
-export async function observeUrls(urls, { chromium, timeout = 45000, maxElements = 5000, viewports = VIEWPORTS, structure = false } = {}) {
+// observation as `.structure`. With `scroll` (true, or overrides for SCROLL_DEFAULTS) the window is
+// scrolled to the bottom and back before the probes run, and the record rides on each observation
+// as `.scroll`; without it no scroll call is made. One navigation per viewport: a page that never
+// goes network-idle is measured once it has loaded, not loaded again.
+export async function observeUrls(urls, { chromium, timeout = 45000, maxElements = 5000, viewports = VIEWPORTS, structure = false, scroll = false } = {}) {
   const results = [];
   const browser = await chromium.launch({ headless: true });
   try {
@@ -204,8 +270,10 @@ export async function observeUrls(urls, { chromium, timeout = 45000, maxElements
         await page.waitForLoadState('networkidle', { timeout }).catch(() => {});
         await page.evaluate(() => document.fonts.ready).catch(() => {});
         await page.waitForTimeout(500);
+        const scrolled = scroll ? await revealByScroll(page, scroll === true ? {} : scroll) : null;
         const observation = await page.evaluate(observeDesign, { maxElements });
         if (structure) observation.structure = await page.evaluate(observeStructure, { maxElements });
+        if (scrolled) observation.scroll = scrolled;
         observations.push(observation);
         await context.close();
       }
@@ -225,7 +293,7 @@ export async function measure(args, log = console.log, { fetchImpl = globalThis.
     if (args.robots) log(`robots.txt ${robots[url].status}: ${robots[url].reason}${robots[url].status === 'disallowed' ? ' (continuing: --own-site)' : ''}`);
   }
   const { chromium, from } = await loadBrowser(args.browser);
-  const results = await observeUrls(args.urls, { chromium, timeout: args.timeout, maxElements: args.maxElements, structure: true });
+  const results = await observeUrls(args.urls, { chromium, timeout: args.timeout, maxElements: args.maxElements, structure: true, scroll: args.scroll });
 
   const observedAt = new Date().toISOString().slice(0, 10);
   const written = [];
@@ -245,13 +313,15 @@ export async function measure(args, log = console.log, { fetchImpl = globalThis.
       if (dl.ok) files.push(...dl.kept); else log(`designlang skipped: ${dl.error}`);
     }
     writeFileSync(join(dir, 'TWELVE-AXES.draft.md'), twelveAxesDraft(url, summary));
-    writeFileSync(join(dir, 'case.draft.json'), JSON.stringify(caseDraft({ id, url, files, summary, observedAt, robots: robots[url], ownSite: args.ownSite }), null, 2) + '\n');
+    const scrolled = observations.some(o => o.scroll);
+    writeFileSync(join(dir, 'case.draft.json'), JSON.stringify(caseDraft({ id, url, files, summary, observedAt, robots: robots[url], ownSite: args.ownSite, scrolled }), null, 2) + '\n');
     written.push(dir);
     const perAxis = Object.entries(factsByAxis(facts.facts)).map(([axis, list]) => `${axis} ${list.length}`).join(', ');
+    const scrollLog = scrolled ? observations.filter(o => o.scroll).map(o => `\n  scroll @${o.viewport?.width}: ${scrollText(o.scroll)}`).join('') : '\n  scroll pass not run (--no-scroll)';
     log(`${url}\n  accent ${summary.accentDerived ?? 'none'} (${summary.accentFrom}; agrees across viewports: ${summary.accentAgreesAcrossViewports})`
       + `\n  ink ${summary.ink} on ${summary.canvas} (contrast ${summary.inkContrast}) · spacing base ${summary.spacingBase} ${JSON.stringify(summary.spacingScale)}`
       + `\n  type steps ${summary.typeSteps} · radii ${JSON.stringify(summary.radii)} · fonts ${summary.fonts.map(f => f.family).join(', ')}`
-      + `\n  facts ${facts.facts.length} (${perAxis || 'none'})\n  → ${dir}`);
+      + `${scrollLog}\n  facts ${facts.facts.length} (${perAxis || 'none'})\n  → ${dir}`);
   }
   return written;
 }

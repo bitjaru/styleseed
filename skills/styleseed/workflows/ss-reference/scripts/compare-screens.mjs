@@ -291,7 +291,7 @@ From the project's decisions ledger. A value outside a decision \`violates\` it;
 ${ledger.entries.map(d => `- ${d.id} · ${d.kind === 'exception' ? `exception to ${[d.to, d.rule].filter(Boolean).join(', ')}` : 'decision'} · ${AXIS_TITLES[d.axis]} ${d.kind === 'exception' ? '+' : '='} ${d.values.join(', ')} · ${scopeText(d)}`).join('\n')}` : '';
   return `# Drift report — ${report.screens.length} screen(s)
 
-Measured ${meta.observedAt ?? ''} with ${meta.browser ?? 'a caller-supplied browser'} at 1440×900 and 390×844.
+Measured ${meta.observedAt ?? ''} with ${meta.browser ?? 'a caller-supplied browser'} at 1440×900 and 390×844.${meta.scroll ? ' Each page was scrolled to the bottom and back inside its one load before it was measured.' : ''}
 Baseline: ${meta.baselineSource ?? report.baseline.source}.${meta.states?.length ? ` States re-measured: ${meta.states.join(', ')}.` : ''}
 
 **${report.verdict}**

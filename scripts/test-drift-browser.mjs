@@ -5,7 +5,10 @@
 // decisions ledger (--decisions): recorded decisions turn the third page's values into violations,
 // approved exceptions into approvals, and --gate follows. With --structure the third page's 52px
 // table rows (the others use 40px) are named in a structure row, and the gate still follows the
-// role axes only. This is a measurement regression fixture, not a design judgment.
+// role axes only. A fourth page reveals its later sections on scroll; one of them carries the only
+// 28px heading. Measured alone with --structure that size is missing; with --structure --scroll it
+// is there and the report says the pages were scrolled. Without --scroll nothing changes. This is a
+// measurement regression fixture, not a design judgment.
 import assert from 'node:assert/strict';
 import { mkdtempSync, writeFileSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -50,6 +53,8 @@ try {
   const dump = readFileSync(join(out, 'drift.json'), 'utf8') + readFileSync(join(out, 'DRIFT.md'), 'utf8');
   assert.ok(!dump.includes('결제') && !dump.includes('청구'), 'the report must not export page text');
   assert.equal(Object.hasOwn(report, 'structure'), false, 'without --structure there are no structure rows');
+  assert.equal(Object.hasOwn(report, 'scroll'), false, 'without --scroll drift.json has no scroll key');
+  assert.ok(!dump.includes('scrolled to the bottom'), 'without --scroll DRIFT.md has no scroll sentence');
   assert.ok(!dump.includes('table row height'), 'without --structure the table is unchanged');
   console.log(`drift fixture passed: ${report.verdict}`);
 
@@ -115,4 +120,36 @@ try {
   assert.deepEqual(approved.report.screensWithDrift, []);
   assert.match(approved.report.verdict, /Approved exceptions used: D-002 on billing; D-004 on billing\./u);
   console.log(`drift ledger fixture passed: ${mixed.report.verdict}`);
+
+  // Scroll reveal: sections after the first screenful start hidden (opacity, visibility, a 24px
+  // offset) and are revealed once by an IntersectionObserver; the 28px heading lives in the sixth.
+  const reveal = `<!doctype html><html lang="ko"><meta charset="utf-8"><title>공개</title><style>
+*{box-sizing:border-box}body{margin:0;background:#eff5f4;color:#090c0b;font:16px/1.5 system-ui}
+main{max-width:960px;margin:0 auto;padding:32px;display:flex;flex-direction:column;gap:32px}h2{font-size:20px;line-height:28px;margin:0 0 8px}h2.big{font-size:28px;line-height:36px}
+section{height:600px;background:#fafdfd;border:1px solid #b4bdbb;border-radius:4px;padding:24px}
+.later{opacity:0;visibility:hidden;transform:translateY(24px);transition:opacity 300ms ease-out,transform 300ms ease-out,visibility 300ms}.later.shown{opacity:1;visibility:visible;transform:none}
+</style><main>${Array.from({ length: 8 }, (_, i) => `<section${i ? ' class="later"' : ''}><h2${i === 5 ? ' class="big"' : ''}>구역 ${i + 1}</h2><p>설명 문장 ${i + 1}</p></section>`).join('')}</main>
+<script>const io = new IntersectionObserver(es => { for (const e of es) if (e.isIntersecting) { e.target.classList.add('shown'); io.unobserve(e.target); } }); document.querySelectorAll('.later').forEach(el => io.observe(el));</script></html>`;
+  writeFileSync(join(dir, 'reveal.html'), reveal);
+  const revealUrl = pathToFileURL(join(dir, 'reveal.html')).href;
+  const runReveal = (name, extra) => {
+    const target = join(dir, name);
+    const result = spawnSync(process.execPath, [cli, revealUrl, '--out', target, '--browser', browser, '--structure', ...extra], { encoding: 'utf8' });
+    assert.equal(result.status, 0, result.stderr || result.stdout);
+    return { report: JSON.parse(readFileSync(join(target, 'drift.json'), 'utf8')), md: readFileSync(join(target, 'DRIFT.md'), 'utf8') };
+  };
+  const atLoad = runReveal('reveal-load', []);
+  const atLoadSizes = atLoad.report.structure.axes.headingSizes.screens[0].value;
+  assert.ok(!atLoadSizes.includes(28), `without --scroll the revealed 28px heading is not measured: ${JSON.stringify(atLoadSizes)}`);
+  assert.equal(Object.hasOwn(atLoad.report, 'scroll'), false);
+  assert.ok(!atLoad.md.includes('scrolled to the bottom'), atLoad.md);
+  const scrolled = runReveal('reveal-scroll', ['--scroll']);
+  const scrolledSizes = scrolled.report.structure.axes.headingSizes.screens[0].value;
+  assert.ok(scrolledSizes.includes(28), `with --scroll the revealed 28px heading is measured: ${JSON.stringify(scrolledSizes)}`);
+  assert.equal(scrolled.report.scroll, true);
+  assert.ok(scrolled.md.includes('at 1440×900 and 390×844. Each page was scrolled to the bottom and back inside its one load before it was measured.'), scrolled.md);
+  assert.match(scrolled.md, /\| heading sizes \(main\) \| [\d, ]*28/u, scrolled.md);
+  const revealDump = JSON.stringify(scrolled.report) + scrolled.md;
+  assert.ok(!revealDump.includes('구역') && !revealDump.includes('설명'), 'the reveal report must not export page text');
+  console.log(`drift scroll fixture passed: heading sizes at load ${JSON.stringify(atLoadSizes)}, after the scroll pass ${JSON.stringify(scrolledSizes)}`);
 } finally { rmSync(dir, { recursive: true, force: true }); }

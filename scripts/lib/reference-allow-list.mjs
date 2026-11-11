@@ -29,6 +29,7 @@ states motion transitions duration durations easing animations infinite controlH
 spacing offScaleShare structure observations accent at and readable stylesheets document order body fontSize type
 sectionCount sectionKinds sectionGaps sectionGap sectionFilled filledByRegion dominant n ratios scale byLevel rowHeights itemHeights tableRowHeight headingMax pageTypeHint form settings dashboard
 ease ease-in ease-out ease-in-out linear step-start step-end cubic-bezier steps start end jump-start jump-end jump-none jump-both
+parts bound lower largest scroll startHeight finalHeight cap atTop time
 `.split(/\s+/u).filter(Boolean));
 
 const COLOUR = /(?:rgba?|hsla?|lab|lch|oklab|oklch|color)\([\d\s.,%/-]*\)|#[0-9a-f]{3,8}\b/giu;

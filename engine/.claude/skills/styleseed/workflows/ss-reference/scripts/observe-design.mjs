@@ -4,7 +4,8 @@
 // writes, screenshots, text, selectors, class names, element ids, asset URLs, or form values leave
 // the page. Geometry (region and section rectangles) is recorded by the separate structure probe
 // (observe-structure.mjs) as numbers, under the same boundary; caps per viewport there: 8 regions,
-// 40 sections, 12 tables, 12 lists, 8 tab sets.
+// 40 sections, 12 tables, 12 lists, 8 tab sets. `backdrop` maps CSS colour strings to the share
+// of the document height that the root and full-bleed opaque backgrounds paint behind content.
 // Counts are measurements of one rendered viewport; they are not design judgments or role decisions.
 export function observeDesign({ maxElements = 5000 } = {}) {
   const tally = (map, key, weight = 1) => { if (key === undefined || key === null || key === '') return; map[key] = (map[key] || 0) + weight; };
@@ -38,13 +39,43 @@ export function observeDesign({ maxElements = 5000 } = {}) {
     actions: {}, actionText: {}, links: {}, text: {}, headings: {}, surfaces: {},
     spacing: {}, type: {}, radii: {}, controlHeights: {}, fonts: {}, shadows: {}, borders: {},
     body: { color: null, background: null, fontFamily: null, fontSize: null },
-    actionPairs: {}, motion: { transitions: {}, animations: {} }, targets: {}, tabular: 0,
+    actionPairs: {}, motion: { transitions: {}, animations: {} }, targets: {}, tabular: 0, backdrop: {},
   };
   const bodyStyle = document.body ? getComputedStyle(document.body) : null;
   if (bodyStyle) {
     out.body.color = norm(bodyStyle.color); out.body.background = norm(bodyStyle.backgroundColor);
     out.body.fontFamily = bodyStyle.fontFamily.split(',')[0].replace(/["']/g, '').trim(); out.body.fontSize = px(bodyStyle.fontSize);
   }
+  // Backdrop: a one-dimensional painter over the document's vertical axis. The root colour (<html>
+  // when opaque, else <body> when opaque) paints the whole height; when both are opaque, <body>
+  // paints its own vertical extent over it. Then each visible full-bleed element (left edge at 0,
+  // right edge at the viewport's client width) with an opaque background colour paints its own
+  // extent, later elements over earlier ones. Fixed and sticky elements (or inside one) do not
+  // paint: they cover the viewport, not the document. Images, gradients, and translucent
+  // backgrounds do not paint (the colour beneath keeps the span), and z-index is ignored. A card
+  // with side margins is a surface, not the canvas.
+  const scrollY = window.scrollY, clientW = document.documentElement.clientWidth;
+  let spans = [];
+  const opaque = value => (typeof value === 'string' && /^rgb\(/.test(value) ? value : null);
+  const paint = (top, bottom, colour) => {
+    const a = Math.max(0, top), b = Math.min(docHeight, bottom);
+    if (!(b > a)) return;
+    const next = [];
+    for (const s of spans) {
+      if (s.b <= a || s.a >= b) { next.push(s); continue; }
+      if (s.a < a) next.push({ a: s.a, b: a, c: s.c });
+      if (s.b > b) next.push({ a: b, b: s.b, c: s.c });
+    }
+    next.push({ a, b, c: colour });
+    spans = next.sort((x, y) => x.a - y.a);
+  };
+  const pinned = el => { for (let p = el; p && p !== document.body && p !== document.documentElement; p = p.parentElement) { const pos = getComputedStyle(p).position; if (pos === 'fixed' || pos === 'sticky') return true; } return false; };
+  const rootBg = opaque(norm(getComputedStyle(document.documentElement).backgroundColor));
+  const bodyBg = bodyStyle ? opaque(out.body.background) : null;
+  if (rootBg) {
+    paint(0, docHeight, rootBg);
+    if (bodyBg) { const r = document.body.getBoundingClientRect(); paint(r.top + scrollY, r.bottom + scrollY, bodyBg); }
+  } else if (bodyBg) paint(0, docHeight, bodyBg);
   const skip = new Set(['SCRIPT', 'STYLE', 'NOSCRIPT', 'TEMPLATE', 'HEAD', 'META', 'LINK', 'TITLE', 'SVG', 'PATH', 'BR', 'WBR']);
   const buttonLike = el => {
     const tag = el.tagName;
@@ -79,6 +110,7 @@ export function observeDesign({ maxElements = 5000 } = {}) {
     out.elements++;
     const area = Math.round(rect.width * rect.height);
     const bg = norm(cs.backgroundColor), fg = norm(cs.color);
+    if (opaque(bg) && rect.left <= 1 && rect.right >= clientW - 1 && !pinned(el)) paint(rect.top + scrollY, rect.bottom + scrollY, bg);
     const isAction = buttonLike(el), isLink = !isAction && el.tagName === 'A' && hasOwnText(el);
     // Actions and links carry the accent role; plain text and surfaces carry ink and canvas.
     if (isAction) {
@@ -120,5 +152,12 @@ export function observeDesign({ maxElements = 5000 } = {}) {
     if (cs.boxShadow && cs.boxShadow !== 'none') tally(out.shadows, cs.boxShadow);
     const bw = px(cs.borderTopWidth); if (bw && bw > 0 && cs.borderTopStyle !== 'none') tally(out.borders, `${bw}|${norm(cs.borderTopColor)}`);
   }
+  // Share of the document height per colour, two decimals, under 0.01 dropped, largest first (ties
+  // by colour string). An unpainted remainder is not listed, so `backdrop` may be empty.
+  const painted = {};
+  for (const s of spans) painted[s.c] = (painted[s.c] || 0) + (s.b - s.a);
+  Object.entries(painted).map(([c, len]) => [c, docHeight > 0 ? len / docHeight : 0]).filter(([, share]) => share >= 0.01)
+    .map(([c, share]) => [c, Math.round(share * 100) / 100]).sort((a, b) => b[1] - a[1] || (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0))
+    .forEach(([c, share]) => { out.backdrop[c] = share; });
   return out;
 }

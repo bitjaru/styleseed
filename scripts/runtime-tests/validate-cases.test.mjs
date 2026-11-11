@@ -24,7 +24,7 @@ function validate(mutate, { measurements = true } = {}) {
     return spawnSync(process.execPath, [validator, dir], { encoding: "utf8" });
   } finally { rmSync(dir, { recursive: true, force: true }); }
 }
-const agree = { reviewer: "koh-yura", date: "2026-11-10", verdict: "agree", via: "designer+agent" };
+const agree = { reviewer: "reviewer-a", date: "2026-11-10", verdict: "agree", via: "designer+agent" };
 const disagree = { reviewer: "other-designer", date: "2026-11-10", verdict: "disagree", note: "the left column hides the save action on tablets" };
 const promote = (candidate, data, reviews) => {
   Object.assign(candidate, { status: "promoted", evidence: "approved", promotedTo: "engine/APP-PLAYBOOKS.md", reviews });

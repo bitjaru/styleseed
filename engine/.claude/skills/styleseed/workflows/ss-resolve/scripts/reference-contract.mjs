@@ -157,14 +157,16 @@ export function normalizeReferenceEvidence(input, { file = "evidence.json", cata
   const sourceIds = new Set();
   const sources = input.sources.map((source, index) => {
     const at = `sources[${index}]`;
-    exactKeys(source, ["id", "url", "observedAt", "viewports", "robots"], at, fail);
+    exactKeys(source, ["id", "url", "observedAt", "viewports", "robots", "scroll"], at, fail);
     if (typeof source.id !== "string" || !SOURCE_ID.test(source.id)) fail(`${at}.id`, "must look like S1");
     if (sourceIds.has(source.id)) fail(`${at}.id`, `duplicate source id ${source.id}`);
     sourceIds.add(source.id);
     if (typeof source.url !== "string" || source.url.length > 2048 || CONTROL.test(source.url) || !/^https?:\/\/[^\s]+$/u.test(source.url)) fail(`${at}.url`, "must be the measured http(s) URL");
     if (!Array.isArray(source.viewports) || source.viewports.length < 1 || source.viewports.length > 8 || !source.viewports.every((width) => Number.isInteger(width) && width > 0 && width <= 10000)) fail(`${at}.viewports`, "must list the measured viewport widths");
     if (!["allowed", "disallowed", "not-checked"].includes(source.robots)) fail(`${at}.robots`, "must be allowed, disallowed, or not-checked");
-    return { id: source.id, url: source.url, observedAt: calendarDate(source.observedAt, `${at}.observedAt`, fail), viewports: [...source.viewports], robots: source.robots };
+    // Optional (contracts written before it stay valid): whether the measurement ran the scroll pass.
+    if (source.scroll !== undefined && typeof source.scroll !== "boolean") fail(`${at}.scroll`, "must be true or false (whether measure-reference ran its scroll pass); run compile-contract.mjs --write to fill it from the measurement");
+    return { id: source.id, url: source.url, observedAt: calendarDate(source.observedAt, `${at}.observedAt`, fail), viewports: [...source.viewports], robots: source.robots, ...(source.scroll === undefined ? {} : { scroll: source.scroll }) };
   });
 
   if (!Array.isArray(input.facts) || input.facts.length > MAX_FACTS) fail("facts", `must be an array of at most ${MAX_FACTS} facts`);
@@ -348,11 +350,23 @@ export function renderRuleset(evidence) {
   return `${lines.join("\n")}\n`;
 }
 
-export function renderChecks(evidence) {
-  const keep = [
+// The kept facts with their comparator in words, then the kept token axes: the "Keep" lines of
+// checks.md, shared with the brief (ss-reference/scripts/compile-brief.mjs).
+export function keptLines(evidence) {
+  return [
     ...evidence.facts.filter((fact) => fact.transfer === "keep").map(keepLine),
     ...tokenEntries(evidence, ["keep"]).map((name) => `- ${TOKEN_LABELS[name]}: ${tokenValueText(name, evidence.tokens.measured[name])} (token axis \`${name}\`, kept).`),
   ];
+}
+
+// A token axis as the brief names it: its label and the measured value in words, or null when the
+// axis was not measured.
+export function tokenAxisText(evidence, axis) {
+  return { label: TOKEN_LABELS[axis], value: tokenValueText(axis, evidence.tokens.measured[axis]) };
+}
+
+export function renderChecks(evidence) {
+  const keep = keptLines(evidence);
   const avoid = tokenEntries(evidence, ["avoid"]).map((name) => {
     const value = tokenValueText(name, evidence.tokens.measured[name]);
     const pronoun = Array.isArray(evidence.tokens.measured[name]) && evidence.tokens.measured[name].length > 1 ? "them" : "it";

@@ -204,6 +204,21 @@ except that a decision on a structure axis is listed once as not measured. `--sc
 scrolls each page to the bottom and back inside its one load before measuring, for screens whose
 content reveals on scroll; it is off by default.
 
+With `--reference <slug>` (and `--project-root`), the run also measures the distance from one screen
+(`--screen <label>`, default the first) to the project's approved generated contract
+`.styleseed/rulesets/<slug>/evidence.json`, and writes `DISTANCE.md` and `distance.json` beside the
+drift files. It turns `--structure` on, and `--scroll` when the reference was measured with its scroll
+pass, and says so; a draft contract, or one edited after approval, is refused before anything is
+measured. Kept facts read `same`, `different`, or `absent` (the screen has no such fact, or its value
+is a lower bound that cannot decide); adapted facts `same`, `near`, `different`, or `absent`; avoided
+token values `copied` (taken from the reference and not already owned by the project) or `clear`.
+Observed facts and facts marked `avoid` get no row. One verdict line counts the kept facts that differ
+and the avoided values that were copied; nothing is summed or scored. `--gate` also exits 3 on a
+`different` kept fact or a `copied` value, naming each. **Distance is not drift:** drift compares the
+screens with each other and the project baseline, distance compares one screen with one contract, and
+`DRIFT.md` and `drift.json` are byte for byte what the same run writes without `--reference` (with the
+flags it turns on).
+
 Read it as measurement, not judgment. A `different` accent may be an approved exception nobody has
 recorded yet. A `none`
 accent usually means the primary action only appears in a state (a save bar, a dialog), so

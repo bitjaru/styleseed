@@ -8,6 +8,10 @@
 // the same way. A structure value outside the shared set never fails the gate; a recorded decision
 // on a structure axis applies to these rows like the others (`violates`, `approved`), and without
 // `structure` such a decision is reported once as not measured.
+//
+// Distance (compareToContract, renderDistanceMarkdown) is a different measurement: one built screen
+// against one approved reference contract, fact by fact, in its own table. It never enters the
+// drift report, has no aggregate, and is not a score.
 import { parseColor, toHex } from './analyze-observations.mjs';
 import { primaryStats } from './analyze-structure.mjs';
 
@@ -294,6 +298,179 @@ function verdictFor(total, drifted, axes, { accentOnlyInState = [], accentMissin
   if (accentOnlyInState.length) lines.push(`On ${accentOnlyInState.join(', ')} the primary action appears only in a state; the accent was read from the state variant.`);
   if (accentMissing.length) lines.push(`No accent was derived on ${accentMissing.join(', ')}; if the primary action appears only in a state, re-measure with --states.`);
   return lines.join(' ');
+}
+
+// --- distance: one built screen against one approved reference contract ----------------------------
+
+// The nine token axes, in the order of a contract's tokens (screenValues without offScale).
+const TOKEN_AXES = [...COLOR_AXES, 'spacingBase', ...SET_AXES];
+const isNum = v => typeof v === 'number' && Number.isFinite(v);
+const sortedSet = list => [...new Set(list)].sort((a, b) => (isNum(a) && isNum(b) ? a - b : String(a).localeCompare(String(b))));
+const comparable = v => (Array.isArray(v) ? sortedSet(v) : v);
+const equalValues = (a, b) => JSON.stringify(comparable(a)) === JSON.stringify(comparable(b));
+const familyKey = f => String(f).trim().toLowerCase();
+
+// Whether a built value satisfies a contract comparator (reference-contract.mjs COMPARE_OPS):
+// eq equal (a list as a set) · max build <= value · min build >= value · present build > 0 when the
+// value is > 0 · within |build - value| <= tolerance, and for a list every build value within
+// tolerance of some reference value.
+export function comparatorHolds(compare, reference, built) {
+  const { op, tolerance } = compare;
+  if (op === 'eq') return equalValues(reference, built);
+  if (op === 'present') return !(isNum(reference) && reference > 0) || (isNum(built) && built > 0);
+  if (op === 'max') return isNum(built) && built <= reference;
+  if (op === 'min') return isNum(built) && built >= reference;
+  if (op !== 'within') return false;
+  const refs = Array.isArray(reference) ? reference : [reference];
+  const builds = Array.isArray(built) ? built : [built];
+  return builds.length > 0 && builds.every(isNum) && builds.every(b => refs.some(r => isNum(r) && Math.abs(b - r) <= tolerance + 1e-9));
+}
+
+// The values a project already owns per token axis: its palette roles (`.styleseed/palettes/*.json`
+// roles), its brand key colour and font families (project.json), and the values of its recorded
+// decisions and approved exceptions on that axis. A built value the project owns is not a copy.
+export function ownedValues({ roles = null, brand = null, decisions = [] } = {}) {
+  const owned = Object.fromEntries(TOKEN_AXES.map(axis => [axis, []]));
+  if (roles) for (const [axis, hex] of Object.entries(baselineFromRoles(roles))) if (hex) owned[axis].push(hex);
+  if (brand?.keyColor) owned.accent.push(toHex(brand.keyColor));
+  if (Array.isArray(brand?.fontFamilies)) owned.fonts.push(...brand.fontFamilies);
+  for (const d of decisions) {
+    if (!d || !TOKEN_AXES.includes(d.axis) || !Array.isArray(d.values)) continue;
+    owned[d.axis].push(...(COLOR_AXES.includes(d.axis) ? d.values.map(v => toHex(v)).filter(Boolean) : d.values));
+  }
+  return Object.fromEntries(Object.entries(owned).map(([axis, list]) => [axis, sortedSet(list)]));
+}
+
+// An avoided token axis: does the built value match the reference, and does the project own it?
+// Colours match within nearDistance (colorDistance below it); fonts by family name; the spacing base
+// by value; a set axis when the built set is the reference set.
+function avoidStatus(axis, reference, built, owned, nearDistance) {
+  if (COLOR_AXES.includes(axis)) {
+    const matched = Boolean(built) && colorDistance(built, reference) < nearDistance;
+    return { matched, owned: matched && owned.some(c => colorDistance(built, c) < nearDistance) };
+  }
+  if (axis === 'fonts') {
+    const shared = (built || []).filter(f => reference.some(r => familyKey(r) === familyKey(f)));
+    return { matched: shared.length > 0, owned: shared.length > 0 && shared.every(f => owned.some(o => familyKey(o) === familyKey(f))) };
+  }
+  if (axis === 'spacingBase') {
+    const matched = built !== null && built === reference;
+    return { matched, owned: matched && owned.includes(built) };
+  }
+  const matched = Array.isArray(built) && built.length > 0 && equalValues(reference, built);
+  return { matched, owned: matched && built.every(v => owned.includes(v)) };
+}
+
+/**
+ * One built screen against one approved reference contract. Rows for kept and adapted facts and for
+ * avoided token axes; observed facts are not compared, and a fact marked avoid gets no row (only token
+ * axes are compared for copying). A kept or adapted token axis is not a distance row either: a kept
+ * one becomes a ledger decision (compile-contract.mjs --propose-decisions) that the drift report checks.
+ *   keep  · same | different | absent   (absent: the screen has no such fact, or the build's value is a
+ *           lower bound that cannot decide; it never gates)
+ *   adapt · same (equal) | near (the comparator holds) | different | absent; never gates
+ *   avoid · copied (matches the reference and the project does not own it) | clear
+ * @param {{facts: object[]|{facts: object[]}, summary: object}} build the built screen's facts (buildFacts) and summary
+ * @param {object} evidence normalized, approved evidence.json
+ * @param {{ownValues?: object, nearDistance?: number}} [options] ownValues: ownedValues(...) by token axis
+ */
+export function compareToContract({ facts, summary }, evidence, { ownValues = {}, nearDistance = 24 } = {}) {
+  const list = Array.isArray(facts) ? facts : facts?.facts || [];
+  const built = new Map(list.map(f => [`${f.id}@${f.viewport}`, f]));
+  const rows = [];
+  for (const fact of evidence.facts) {
+    if (fact.transfer !== 'keep' && fact.transfer !== 'adapt') continue;
+    const b = built.get(`${fact.id}@${fact.viewport}`) ?? null;
+    const holds = b ? comparatorHolds(fact.compare, fact.value, b.value) : false;
+    // A lower-bound build value decides only present and min, and only when they hold: the true
+    // value is at least the built one. Everything else against it cannot be told.
+    const decidable = b && (b.bound !== 'lower' || (['present', 'min'].includes(fact.compare.op) && holds));
+    const status = !decidable ? 'absent'
+      : fact.transfer === 'keep' ? (holds ? 'same' : 'different')
+        : b.bound !== 'lower' && equalValues(fact.value, b.value) ? 'same' : holds ? 'near' : 'different';
+    rows.push({
+      id: fact.id, viewport: fact.viewport, transfer: fact.transfer, compare: { ...fact.compare }, ...(fact.unit ? { unit: fact.unit } : {}),
+      reference: fact.value, ...(fact.bound ? { referenceBound: 'lower' } : {}), built: b ? b.value : null, ...(b?.bound ? { builtBound: 'lower' } : {}), status,
+    });
+  }
+  const values = screenValues(summary);
+  for (const axis of TOKEN_AXES) {
+    if (evidence.tokens.transfer[axis] !== 'avoid') continue;
+    const reference = evidence.tokens.measured[axis];
+    if (reference === null || (Array.isArray(reference) && !reference.length)) continue;
+    const { matched, owned } = avoidStatus(axis, reference, values[axis], ownValues[axis] || [], nearDistance);
+    rows.push({ id: `tokens.${axis}`, viewport: 'both', transfer: 'avoid', reference, built: values[axis], status: matched && !owned ? 'copied' : 'clear', ...(owned ? { owned: true } : {}) });
+  }
+  return rows;
+}
+
+// One line, two counts that are never added together.
+export function distanceVerdict(rows) {
+  const differ = rows.filter(r => r.transfer === 'keep' && r.status === 'different').length;
+  const copied = rows.filter(r => r.transfer === 'avoid' && r.status === 'copied').length;
+  if (!differ && !copied) return 'no keep fact differs and nothing was copied';
+  return `${differ} keep ${differ === 1 ? 'fact differs' : 'facts differ'}, ${copied} avoid ${copied === 1 ? 'value' : 'values'} copied`;
+}
+
+// --gate: a kept fact that differs or an avoided value that was copied. Null when neither.
+export function distanceGateFailure(rows) {
+  const differ = rows.filter(r => r.transfer === 'keep' && r.status === 'different').map(r => `${r.id} @${r.viewport}`);
+  const copied = rows.filter(r => r.transfer === 'avoid' && r.status === 'copied').map(r => r.id);
+  const parts = [differ.length && `keep facts that differ: ${differ.join(', ')}`, copied.length && `avoid values copied: ${copied.join(', ')}`].filter(Boolean);
+  return parts.length ? `distance gate: FAIL — ${parts.join('; ')}` : null;
+}
+
+const TRANSFER_ORDER = ['keep', 'adapt', 'avoid'];
+const COMPARATOR_WORDS = { eq: 'equal', max: 'at most', min: 'at least', present: 'present', within: 'within' };
+function distanceCell(value, unit, bound) {
+  if (value === null || value === undefined) return 'none';
+  const withUnit = v => (isNum(v) && unit ? `${v}${unit}` : String(v));
+  const text = Array.isArray(value) ? (value.length ? value.map(withUnit).join(', ') : 'none') : withUnit(value);
+  return `${bound ? '≥' : ''}${text}`.replace(/\|/g, '\\|');
+}
+
+// The distance rows as one Markdown table, grouped by transfer (keep, adapt, avoid).
+export function renderDistanceTable(rows) {
+  const sorted = TRANSFER_ORDER.flatMap(t => rows.filter(r => r.transfer === t));
+  const comparator = r => (r.compare ? `${COMPARATOR_WORDS[r.compare.op]}${r.compare.op === 'within' ? ` ${r.compare.tolerance}${r.unit ?? ''}` : ''}` : 'not copied');
+  return [
+    '| Transfer | Fact | Viewport | Comparator | Reference | Built | Status |',
+    '|---|---|---|---|---|---|---|',
+    ...(sorted.length ? sorted.map(r => `| ${r.transfer} | \`${r.id}\` | ${r.viewport} | ${comparator(r)} | ${distanceCell(r.reference, r.unit, r.referenceBound)} | ${distanceCell(r.built, r.unit, r.builtBound)} | ${r.status}${r.owned ? ' (the project owns it)' : ''} |`) : ['| — | no kept, adapted, or avoided entry | — | — | — | — | — |']),
+  ].join('\n');
+}
+
+export function renderDistanceMarkdown(rows, meta = {}) {
+  const approval = meta.approvedBy ? ` approved by ${meta.approvedBy} on ${meta.approvedOn}` : '';
+  return `# Distance to reference:${meta.slug ?? ''} — ${meta.screen ?? ''}
+
+Measured ${meta.observedAt ?? ''} with ${meta.browser ?? 'a caller-supplied browser'} at 1440×900 and 390×844 with the structure probe.${meta.scroll ? ' Each page was scrolled to the bottom and back inside its one load before it was measured, as the reference was.' : ''}
+Contract: \`reference:${meta.slug ?? ''}\`${approval}${meta.contractHash ? ` (${meta.contractHash})` : ''}. Screen: ${meta.screen ?? ''}${meta.url ? ` — ${meta.url}` : ''}.
+
+**Verdict:** ${distanceVerdict(rows)}.
+
+${renderDistanceTable(rows)}
+
+## How to read this
+
+Distance is not drift. \`DRIFT.md\` compares screens with each other and with the project baseline;
+this table compares one built screen with one approved reference contract, fact by fact. There is no
+total and no score: the two counts in the verdict are never added.
+
+- \`keep\` rows read \`same\`, \`different\`, or \`absent\`. \`absent\` means the screen has no such fact
+  (no table, so no row height) or its value is a lower bound (\`≥\`, a stylesheet the probe could not
+  read) that cannot decide the comparison; it never gates.
+- \`adapt\` rows read \`same\` (equal), \`near\` (within the comparator), \`different\`, or \`absent\`.
+  The relationship is what was adapted, so these rows never gate.
+- \`avoid\` rows read \`copied\` when the screen's value matches the reference's (a colour within a shade,
+  the same font family, the same spacing base or set) and the project does not already own it, else
+  \`clear\`.
+- Observed facts are not compared. A fact marked \`avoid\` gets no row: only token axes are compared for
+  copying. A kept token axis is checked through the decisions ledger in \`DRIFT.md\`.
+
+With \`--gate\`, a \`different\` keep row or a \`copied\` avoid row exits 3. No page text or screenshots
+are written.
+`;
 }
 
 export function renderDriftMarkdown(report, meta = {}) {

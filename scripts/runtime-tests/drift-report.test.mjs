@@ -1,8 +1,10 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { summarize } from "../../engine/.claude/skills/styleseed/workflows/ss-reference/scripts/analyze-observations.mjs";
 import { compareScreens, baselineFromRoles, renderDriftMarkdown, colorDistance, screenValues } from "../../engine/.claude/skills/styleseed/workflows/ss-reference/scripts/compare-screens.mjs";
-import { parseArgs, labelFor, withState, planScreens } from "../../engine/.claude/skills/styleseed/workflows/ss-verify/scripts/drift-report.mjs";
+import { parseArgs, labelFor, withState, planScreens, gateFailure } from "../../engine/.claude/skills/styleseed/workflows/ss-verify/scripts/drift-report.mjs";
+import { normalizeDecisions } from "../../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/runtime-contract.mjs";
 
 const observation = (over = {}) => ({
   viewport: { width: 1440, height: 900 }, elements: 400, truncated: false,
@@ -131,4 +133,68 @@ test("drift: a backdrop led by the body colour leaves the comparison unchanged",
   const without = compareScreens(screens(null));
   assert.equal(JSON.stringify(withKey), JSON.stringify(without));
   assert.equal(withKey.axes.canvas.baseline, "#eff5f4");
+});
+
+// Structure-axis decisions (the ledger's six structure axes). A minimal structure probe output per
+// screen: one table with the given row height and one section with the given number of primaries.
+const TEAL = "rgb(15, 118, 110)";
+const structured = (label, rowHeight, primaries = 1) => ({
+  label, url: `https://example.test/${label}`,
+  summary: summarize(observation({ structure: {
+    viewport: { width: 1440, height: 900 }, regions: [], gaps: { section: { "32": 2 } }, headings: { main: { "1|24|600|32": 1 }, skips: 0 },
+    sections: [{ kind: "form-group", y: 100, h: 200, gapBefore: 0, cols: [1], filled: { [TEAL]: primaries } }],
+    controls: { buttons: { [`filled|${TEAL}|36|main`]: primaries }, inputs: {}, labels: {}, leftEdges: 0 },
+    tables: [{ rows: 6, cols: 3, headerH: 36, rowH: { [rowHeight]: 6 }, padX: 16 }], lists: [], tabs: [], css: {},
+  } })),
+});
+const D020 = { id: "D-020", kind: "decision", axis: "tableRowHeights", values: [40], statement: "Table rows are 40px.", approvedBy: "reviewer-a", date: "2026-11-11", source: "reference:ops-console#density.table.rowHeight" };
+const D021 = { id: "D-021", kind: "exception", to: "D-020", axis: "tableRowHeights", values: [52], scope: { screens: ["orders"] }, statement: "The orders table keeps 52px rows for two-line cells.", approvedBy: "reviewer-a", date: "2026-11-11" };
+const D022 = { id: "D-022", kind: "decision", axis: "primariesPerSection", values: [1], statement: "At most one primary action per section.", approvedBy: "reviewer-a", date: "2026-11-11" };
+const catalogForLedger = JSON.parse(readFileSync(new URL("../../engine/.claude/skills/styleseed/workflows/ss-resolve/references/catalog.json", import.meta.url), "utf8"));
+const ledgerOf = (...entries) => normalizeDecisions(entries.map((entry) => JSON.parse(JSON.stringify(entry))), catalogForLedger);
+const structureScreens = () => [structured("home", 40), structured("settings", 40, 2), structured("orders", 52)];
+
+test("drift: a structure-axis decision violates, an exception approves, and both reach the gate", () => {
+  const violated = compareScreens(structureScreens(), { structure: true, decisions: ledgerOf(D020, D022) });
+  const rows = violated.structure.axes.tableRowHeights;
+  assert.deepEqual([rows.baseline, rows.decision], [[40], "D-020"]);
+  assert.deepEqual(rows.screens[2], { label: "orders", value: [52], extra: [52], status: "violates", decision: "D-020" });
+  assert.deepEqual(rows.deviating, [], "a violation is not ordinary drift");
+  const primaries = violated.structure.axes.primariesPerSection;
+  assert.deepEqual(primaries.screens.map((p) => [p.label, p.value, p.status]), [["home", 1, "same"], ["settings", 2, "violates"], ["orders", 1, "same"]], "primariesPerSection means at most");
+  assert.deepEqual(violated.decisions.violations, [
+    { id: "D-020", screen: "orders", axis: "tableRowHeights", values: [52] },
+    { id: "D-022", screen: "settings", axis: "primariesPerSection", values: [2] },
+  ]);
+  assert.deepEqual(violated.decisions.applied, ["D-020", "D-022"]);
+  assert.equal(gateFailure(violated), "drift gate: FAIL — decision violations: D-020 on orders (tableRowHeights 52); D-022 on settings (primariesPerSection 2)");
+  const md = renderDriftMarkdown(violated);
+  assert.ok(md.includes("| table row height | 40 (decided D-020) | 40 | 40 | 52 (violates D-020: 52) |"), md);
+  assert.ok(md.includes("| primaries per section (max) | 1 (decided D-022) | 1 | 2 (violates D-022) | 1 |"), md);
+  assert.ok(md.includes("a structure value outside the shared set does not fail `--gate`, one outside a recorded decision does."), md);
+  assert.equal(violated.baseline.source, "majority across screens; recorded project decisions for table row height, primaries per section (max)");
+
+  const approved = compareScreens(structureScreens(), { structure: true, decisions: ledgerOf(D020, D021) });
+  assert.deepEqual(approved.structure.axes.tableRowHeights.screens[2], { label: "orders", value: [52], extra: [], status: "excepted", decision: "D-020", exception: "D-021", excepted: [52] });
+  assert.deepEqual(approved.decisions.violations, []);
+  assert.deepEqual(approved.decisions.excepted, [{ id: "D-021", screen: "orders", axis: "tableRowHeights", values: [52] }]);
+  assert.equal(gateFailure(approved), null);
+  assert.ok(renderDriftMarkdown(approved).includes("| 52 (approved D-021: 52) |"));
+});
+
+test("drift: without --structure a structure-axis decision is reported once as not measured and does not fail", () => {
+  const report = compareScreens(structureScreens(), { decisions: ledgerOf(D020, D021) });
+  assert.equal(Object.hasOwn(report, "structure"), false);
+  assert.deepEqual(report.decisions.applied, []);
+  assert.deepEqual(report.decisions.notMeasured, [{ id: "D-020", axis: "tableRowHeights" }, { id: "D-021", axis: "tableRowHeights" }]);
+  assert.deepEqual(report.decisions.violations, []);
+  assert.equal(gateFailure(report), null);
+  assert.match(report.verdict, /Not measured \(pass --structure\): D-020 \(table row height\), D-021 \(table row height\)\./u);
+  assert.equal(renderDriftMarkdown(report).split("Not measured (pass --structure)").length - 1, 1, "reported once");
+  assert.equal(report.baseline.source, "majority across screens", "a structure decision does not reach the role baseline without --structure");
+  // Token-axis decisions and reports without structure decisions are unchanged: no notMeasured key.
+  const plain = compareScreens(structureScreens(), { decisions: ledgerOf(D022) });
+  assert.deepEqual(Object.keys(plain.decisions), ["applied", "violations", "excepted", "entries", "notMeasured"]);
+  const none = compareScreens([screen("home"), screen("settings")], { decisions: ledgerOf({ ...D020, axis: "radii", values: [4, 12, 999] }) });
+  assert.equal(Object.hasOwn(none.decisions, "notMeasured"), false);
 });

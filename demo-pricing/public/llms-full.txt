@@ -1422,8 +1422,14 @@ consistently to new screens.
 8. **Compile a draft** — write the artifacts below and select the nearest built-in fallback grammar.
    Present inferred decisions, confidence, scope, and exceptions for explicit human approval
    before activating the grammar. A supplied reference is not blanket approval of its inferred rules.
+   For a measured reference, `ss-reference/scripts/compile-contract.mjs --write` writes the draft
+   contract from `measurements/`; the person edits each transfer, and
+   `compile-contract.mjs --approve --reviewer <name>` records the approval.
 9. **Validate** — build at least one screen not shown in the references; score and visually
-   verify it. A grammar that only recreates the source screen has failed abstraction.
+   verify it. A grammar that only recreates the source screen has failed abstraction. Selecting
+   `reference:<slug>` in an artifact and running `ss-resolve/scripts/resolve-context.mjs` compiles
+   only an approved, unchanged generated contract; `compile-contract.mjs --propose-decisions` prints
+   ledger entries for what the person kept.
 
 ## Measurement and evidence levels
 
@@ -1538,7 +1544,7 @@ An old case-study article and a changed live URL are not evidence of the same im
 
 ## Generated project artifacts
 
-Write these under `.styleseed/rulesets/<slug>/`:
+A reference grammar is six files under `.styleseed/rulesets/<slug>/`:
 
 - `RULESET.md` — human-readable twelve-axis contract and source provenance;
 - `tokens.json` — semantic values/ranges, never component-specific copied hex alone;
@@ -1546,6 +1552,65 @@ Write these under `.styleseed/rulesets/<slug>/`:
 - `checks.md` — required tells, forbidden tells, and visual regression scenarios;
 - `reference-board.html` — visual evidence beside each extracted claim when images are usable.
 - `adapter.json` — selected `ADAPTERS.md` contract plus artifact-specific overrides.
+
+The bundle carries the fallback grammar, `RULESET.md`, and `checks.md`; all six files are hashed
+manifest inputs, so any edit changes the method hash.
+
+### Generated contracts
+
+For a reference measured with `measure-reference.mjs`, `evidence.json` is the single source and the
+other five files are rendered from it, byte for byte the same for the same evidence
+(`ss-reference/scripts/compile-contract.mjs`; the rendering and validation live in
+`ss-resolve/scripts/reference-contract.mjs`, schema `ss-resolve/references/reference-evidence.schema.json`).
+Every fact of `facts.json` and each of the nine token axes of `summary.json` (accent, ink, canvas,
+spacing base and scale, type sizes, radii, fonts, control heights) carries a transfer:
+
+| Transfer | Meaning | Rendered into |
+|---|---|---|
+| `keep` | checked, with a comparator: `eq`, `max` (at most), `min` (at least), `present`, or `within` a tolerance | `RULESET.md` as a rule, and `checks.md` |
+| `adapt` | the relationship holds; the value may differ | `RULESET.md` as a relationship |
+| `observe` | shown, not compared | the board only |
+| `avoid` | do not copy | `checks.md` "Do not copy" (token axes); never `RULESET.md` |
+
+The tool proposes a transfer for each fact and the person decides. The proposals: a few counts are kept
+as maxima (primary actions per section, skipped heading levels, distinct control heights, radii, and
+type sizes), focus-visible and reduced-motion rules are kept as present, spacing, density, heading,
+rhythm, tab and navigation item heights, and transition durations are adapted, and everything else
+(regions, sections, columns, media, responsive changes) is observed. A stylesheet count that is a lower
+bound of zero is observed: it says "could not tell", not "none". The reference accent and fonts are
+avoided, ink and canvas observed. Observed and avoided facts never reach `RULESET.md`, which is
+compiled into the bundle: the reference's structure is the bar, not a target. `tokens.json` holds the
+kept and adapted token axes only, in primitive → semantic layering, and passes the token canon parser
+and layer check; it never replaces the project palette, and adopting it is the project owner's change
+to `project.tokens.source`.
+
+```bash
+node <ss-reference>/scripts/compile-contract.mjs --project-root . --slug ops-console --measurements <case>/measurements   # dry run: counts per transfer
+node <ss-reference>/scripts/compile-contract.mjs --project-root . --slug ops-console --measurements <case>/measurements --write
+#   edit the transfers (and notes) in .styleseed/rulesets/ops-console/evidence.json, then --write again
+node <ss-reference>/scripts/compile-contract.mjs --project-root . --slug ops-console --approve --reviewer "<name>"
+node <ss-reference>/scripts/compile-contract.mjs --project-root . --slug ops-console --propose-decisions
+```
+
+- `--write` keeps the person's transfer, compare, and note for every fact that is still measured, gives
+  new facts their proposals, lists the facts that disappeared, re-renders the five files, and resets
+  approval to draft when the contract changed. It never overwrites an approved contract without
+  `--force`, and never overwrites a hand-written contract.
+- **Approval is a record.** `--approve --reviewer <name>` writes the name the person typed (never read
+  from git config or the environment), the date, and `contractHash`, the hash of the evidence without its
+  approval and rendered hashes. It refuses while a kept fact of level `derived` has no note: a derived
+  fact needs one sentence from the person saying why it holds. As in the decisions ledger, the name is
+  who the team holds responsible, not authentication or an expert approval.
+- The resolver compiles a generated contract (contract `reference-contract-v3`) only when it is
+  approved, its hash still matches, every rendered file matches its recorded hash and what the engine
+  renders from the evidence, `tokens.json` passes the canon checks, and its fallback and adapter agree
+  with the artifact. Each refusal names the file and the command to run. Changing a fact or a transfer
+  after approval therefore needs `--write` and a new approval.
+- `--propose-decisions` prints `decisions[]` entries for kept facts and kept token axes that map to a
+  ledger axis, without ids, for an approved contract only; it writes nothing
+  (`ss-resolve/references/decisions.md`). Colours are never proposed.
+- A hand-written contract (any `evidence.json` without `schemaVersion: 1` and a `generator` object)
+  compiles exactly as before.
 
 After explicit approval, select the grammar in the registry artifact configuration; only in
 a legacy project without a registry, update `STYLESEED.md`:

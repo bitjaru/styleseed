@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "artifactId": "site-try",
   "engineVersion": "5.0.0",
-  "engineRevision": "sha256:42304fc9e573b5863b024c9798166e17ab0d3636a730a0edef12953904c8d9e7",
+  "engineRevision": "sha256:5b57ede2041c70ec06b9d813a33643273d61a3ae0c7437f92b26a47814aa9367",
   "distributionIntegrity": "verified",
   "selection": {
     "agent": "codex",
@@ -116,14 +116,14 @@
   "bundle": {
     "kind": "bundle",
     "path": ".styleseed/bundles/site-try.md",
-    "sha256": "sha256:39131db3da13e73f9c025883caa422f238fa24ae52de8ff79a62f59be5f9f82e",
+    "sha256": "sha256:9cbd898736cd58475cff4c2b786bac2f26a0a9fc3295843d1e79092806adf452",
     "bytes": 27141
   },
   "outputs": [
     {
       "kind": "bundle",
       "path": ".styleseed/bundles/site-try.md",
-      "sha256": "sha256:39131db3da13e73f9c025883caa422f238fa24ae52de8ff79a62f59be5f9f82e",
+      "sha256": "sha256:9cbd898736cd58475cff4c2b786bac2f26a0a9fc3295843d1e79092806adf452",
       "bytes": 27141
     },
     {

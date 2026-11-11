@@ -73,11 +73,12 @@ export async function loadBrowser(explicit) {
   throw new Error('no browser module: pass --browser <path to playwright/index.mjs> or set STYLESEED_BROWSER_MODULE');
 }
 
-// What stays a person's call on each axis the probes can only describe.
-const STAYS_OPEN = {
+// What stays a person's call on each axis the probes can only describe. compile-contract.mjs writes
+// the same lines into a generated contract's open[].
+export const STAYS_OPEN = Object.freeze({
   'user-job': 'the job itself', attention: 'the intended focal point', composition: 'the reason', 'imagery-data': 'the role of each medium',
   'navigation-action': 'the hierarchy intent', 'states-motion': 'loading, empty, and error states', tells: 'brand tells',
-};
+});
 
 // Facts of one axis as one table cell, grouped by viewport: `@1440: region.sideNav.width 240px, …`.
 // A lower-bound fact (`bound: "lower"`) reads `≥value`: the true value is at least this.

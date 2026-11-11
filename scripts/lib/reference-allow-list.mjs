@@ -4,7 +4,10 @@
 // strings, CSS easing functions, punctuation, and the vocabulary below: field names, enums, and
 // fact-id segments. Page text, selectors, class names, element ids, and asset URLs cannot pass,
 // and any character outside ASCII letters, digits, and a few separators fails outright. The
-// measured page's own URL is allowed only as the top-level `url` of the facts file.
+// measured page's own URL is allowed only as the top-level `url` of the facts file. A generated
+// contract (`.styleseed/rulesets/<slug>/evidence.json`) is walked with the same list; its last
+// vocabulary line holds the contract's field names and enums (reference-contract.test.mjs says
+// which person-written and non-page fields that walk leaves out).
 export const VOCABULARY = new Set(`
 version viewport width height elements truncated shell documentHeight bodyScrolls overflowX scrollContainers
 regions kind by x y w h position items itemHeight contentWidth insetLeft
@@ -30,6 +33,7 @@ spacing offScaleShare structure observations accent at and readable stylesheets 
 sectionCount sectionKinds sectionGaps sectionGap sectionFilled filledByRegion dominant n ratios scale byLevel rowHeights itemHeights tableRowHeight headingMax pageTypeHint form settings dashboard
 ease ease-in ease-out ease-in-out linear step-start step-end cubic-bezier steps start end jump-start jump-end jump-none jump-both
 parts bound lower largest scroll startHeight finalHeight cap atTop time
+schemaVersion generator tool slug fallback adapter sources source robots allowed disallowed not-checked S1 transfer keep adapt observe avoid compare op eq min present within tolerance note tokens measured ink fonts spacingBase spacingScale open question user-job color surfaces rendered approval status draft approved reviewer date contractHash
 `.split(/\s+/u).filter(Boolean));
 
 const COLOUR = /(?:rgba?|hsla?|lab|lch|oklab|oklch|color)\([\d\s.,%/-]*\)|#[0-9a-f]{3,8}\b/giu;

@@ -179,9 +179,10 @@ function normalizeTokens(input, label) {
 
 // Optional decisions ledger: approved project decisions and approved exceptions to default rules.
 // The axes are the drift axes measured by ss-reference/scripts/compare-screens.mjs (COLOR_AXES,
-// spacingBase, SET_AXES). They are duplicated here because the resolver must not import from
-// ss-reference; scripts/runtime-tests/decisions-ledger.test.mjs keeps the two lists in parity.
-export const DECISION_AXES = Object.freeze(["accent", "ink", "canvas", "spacingBase", "spacingScale", "typeSizes", "radii", "fonts", "controlHeights"]);
+// spacingBase, SET_AXES, then STRUCTURE_AXES, which the drift report measures with --structure).
+// They are duplicated here because the resolver must not import from ss-reference;
+// scripts/runtime-tests/decisions-ledger.test.mjs keeps the two lists in parity.
+export const DECISION_AXES = Object.freeze(["accent", "ink", "canvas", "spacingBase", "spacingScale", "typeSizes", "radii", "fonts", "controlHeights", "tableRowHeights", "listItemHeights", "headingSizes", "sectionGaps", "primariesPerSection", "transitionDurations"]);
 const DECISION_COLOR_AXES = new Set(["accent", "ink", "canvas"]);
 const DECISION_ID = /^D-[0-9]{3,}$/;
 const RULE_ID = /^[A-Z]+-[0-9A-Za-z-]+$/;
@@ -201,6 +202,10 @@ function decisionValues(values, axis, label) {
   }
   if (axis === "spacingBase") {
     if (values.length !== 1 || !Number.isInteger(values[0]) || values[0] < 1) fail(`${label} must hold exactly one positive integer for spacingBase`);
+    return [values[0]];
+  }
+  if (axis === "primariesPerSection") {
+    if (values.length !== 1 || !Number.isInteger(values[0]) || values[0] < 0) fail(`${label} must hold exactly one integer >= 0 for primariesPerSection (at most this many primary actions per section)`);
     return [values[0]];
   }
   if (axis === "fonts") {

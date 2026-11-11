@@ -117,6 +117,30 @@ test("two artifacts compile independently and only one drifts after config edit"
   }
 });
 
+test("the hand-written custom-ops contract keeps the hand-written path and a byte-identical bundle", () => {
+  const root = makeRoot("styleseed-artifacts-handwritten-");
+  try {
+    writeRegistryProject(root);
+    const compile = () => {
+      const result = run(root, ["--artifact", "site-home", "--agent", "codex"]);
+      assert.equal(result.status, 0, result.stderr);
+      const manifest = JSON.parse(readFileSync(resolve(root, ".styleseed/manifests/site-home.json"), "utf8"));
+      assert.equal(manifest.selection.referenceContract, "reference-contract-v2");
+      return readFileSync(resolve(root, ".styleseed/bundles/site-home.md"), "utf8");
+    };
+    const bundle = compile();
+    assert.ok(bundle.includes("## Project-local reference grammar override\n\n# Custom ops\n\n- Signature: asymmetric evidence rail.\n\n## Reference grammar checks\n\n# Checks\n\n- The evidence rail survives transfer."), "fallback + RULESET.md + checks.md");
+    // Only evidence.json with schemaVersion 1 and a generator object is a generated contract; any
+    // other evidence.json, parseable or not, compiles exactly as before.
+    for (const evidence of ["{\n  \"schemaVersion\": 1,\n  \"evidence\": []\n}\n", "{\"schemaVersion\": 1, \"generator\": \"by hand\"}\n", "{\"schemaVersion\": 2, \"generator\": {}}\n", "not json\n"]) {
+      writeFileSync(resolve(root, ".styleseed/rulesets/custom-ops/evidence.json"), evidence);
+      assert.equal(compile(), bundle, `evidence.json ${JSON.stringify(evidence)}`);
+    }
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
 test("tampered bundle or palette exits 2 in registry mode", () => {
   const root = makeRoot("styleseed-artifacts-tamper-");
   try {

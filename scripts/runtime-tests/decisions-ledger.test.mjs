@@ -8,7 +8,7 @@ import { fileURLToPath } from "node:url";
 import { DECISION_AXES, normalizeDecisions, normalizeProject } from "../../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/runtime-contract.mjs";
 import { decisionsFor, renderRulesSection } from "../../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/rules-in-scope.mjs";
 import { summarize } from "../../engine/.claude/skills/styleseed/workflows/ss-reference/scripts/analyze-observations.mjs";
-import { COLOR_AXES, SET_AXES, compareScreens, renderDriftMarkdown } from "../../engine/.claude/skills/styleseed/workflows/ss-reference/scripts/compare-screens.mjs";
+import { COLOR_AXES, SET_AXES, STRUCTURE_AXES, compareScreens, renderDriftMarkdown } from "../../engine/.claude/skills/styleseed/workflows/ss-reference/scripts/compare-screens.mjs";
 import { gateFailure, loadDecisions, parseArgs } from "../../engine/.claude/skills/styleseed/workflows/ss-verify/scripts/drift-report.mjs";
 
 const repoRoot = resolve(fileURLToPath(new URL("../../", import.meta.url)));
@@ -72,7 +72,7 @@ test("normalizeDecisions rejects ledgers that cannot be applied unambiguously", 
 });
 
 test("the ledger axes match the drift report axes and the project schema", () => {
-  assert.deepEqual([...DECISION_AXES].sort(), [...COLOR_AXES, "spacingBase", ...SET_AXES].sort());
+  assert.deepEqual([...DECISION_AXES], [...COLOR_AXES, "spacingBase", ...SET_AXES, ...STRUCTURE_AXES], "same axes, same order: colours, spacing base, set axes, then the structure axes");
   assert.deepEqual(projectSchema.$defs.decision.properties.axis.enum, [...DECISION_AXES]);
   assert.deepEqual(Object.keys(projectSchema.$defs.decision.properties).sort(), ["approvedBy", "axis", "date", "id", "kind", "rule", "scope", "source", "statement", "to", "values"]);
   assert.equal(projectSchema.properties.decisions.maxItems, 200);
@@ -80,6 +80,23 @@ test("the ledger axes match the drift report axes and the project schema", () =>
   assert.equal(Object.hasOwn(normalizeProject(clone(project), catalog), "decisions"), false, "no ledger, no key");
   assert.deepEqual(normalizeProject({ ...clone(project), decisions: clone(FIVE) }, catalog).decisions.map((entry) => entry.id), ["D-001", "D-002", "D-003", "D-004", "D-005"]);
   assert.throws(() => normalizeProject({ ...clone(project), decisions: [{ ...D002, to: undefined, rule: "INV-04-controls-operable" }] }, catalog), /exceptions cannot waive an invariant/u);
+});
+
+test("the six structure axes: numeric value sets, primariesPerSection holds one integer meaning at most", () => {
+  const entry = (axis, values, id = "D-030") => ({ id, kind: "decision", axis, values, statement: `Structure decision on ${axis}.`, approvedBy: "reviewer-a", date: "2026-11-11", source: `reference:ops-console#${axis}` });
+  const ledger = normalizeDecisions([
+    entry("tableRowHeights", [44, 40, 40], "D-030"), entry("listItemHeights", [48], "D-031"), entry("headingSizes", [24, 16, 32], "D-032"),
+    entry("sectionGaps", [32, 24], "D-033"), entry("primariesPerSection", [1], "D-034"), entry("transitionDurations", [150, 200], "D-035"),
+  ], catalog);
+  assert.deepEqual(ledger.map((item) => [item.axis, item.values]), [
+    ["tableRowHeights", [40, 44]], ["listItemHeights", [48]], ["headingSizes", [16, 24, 32]], ["sectionGaps", [24, 32]], ["primariesPerSection", [1]], ["transitionDurations", [150, 200]],
+  ], "sorted and de-duplicated like the other numeric axes");
+  for (const values of [[1, 2], [1.5], [-1], ["1"]]) assert.throws(() => normalizeDecisions([entry("primariesPerSection", values)], catalog), /exactly one integer >= 0 for primariesPerSection \(at most this many primary actions per section\)/u, JSON.stringify(values));
+  assert.throws(() => normalizeDecisions([entry("tableRowHeights", [-4])], catalog), /finite numbers >= 0 for tableRowHeights/u);
+  assert.throws(() => normalizeDecisions([entry("tableRowHeights", [40], "D-030"), entry("tableRowHeights", [44], "D-031")], catalog), /D-030 and D-031 both decide tableRowHeights/u);
+  const project = { schemaVersion: 1, projectId: "ledger", defaults: { agent: "codex", domain: "saas", adapter: "product-ui", recipe: "enterprise-workbench", palette: "cobalt-instrument", profile: "none", fallback: null }, brand: { keyColor: "#175CD3", paletteCharacter: "balanced", paletteMode: "light", paletteHarmony: "auto", surfaceTemperature: "cool", fontFamilies: ["Inter"], radius: "soft", elevation: "restrained-shadow", density: "comfortable", motion: { seed: "snap", intensity: "restrained" }, imageryRole: "data-first" } };
+  assert.equal(normalizeProject({ ...clone(project), decisions: [entry("sectionGaps", [32])] }, catalog).decisions[0].axis, "sectionGaps");
+  assert.ok(renderRulesSection(catalog.rules, { grammar: "operations-console", adapter: "product-ui", domain: "saas", page: "list" }, { decisions: ledger, artifactId: "app-orders" }).includes("- **D-034** (decision · primariesPerSection = 1 · approved by reviewer-a, 2026-11-11): Structure decision on primariesPerSection."));
 });
 
 test("renderRulesSection lists the decisions that apply to the artifact and annotates excepted defaults", () => {

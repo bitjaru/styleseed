@@ -6,6 +6,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { sha256, safeProjectPath } from "./runtime-contract.mjs";
 import { renderRulesSection } from "./rules-in-scope.mjs";
+import { CONTRACT_FILES, checkGeneratedContract } from "./reference-contract.mjs";
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const skillDir = resolve(scriptDir, "..");
@@ -152,7 +153,11 @@ function resolveRecipeAndPalette(selection, projectBrand, catalog, { skipGenerat
   return { recipe, palette, paletteGeneration };
 }
 
-function resolveReferenceGrammar({ projectRoot, grammar, fallback, registryMode }) {
+// A registry artifact may select a generated contract (evidence.json with schemaVersion 1 and a
+// generator object, written by ss-reference/scripts/compile-contract.mjs) only when a person approved
+// it and its rendered files are intact; checkGeneratedContract names the file and the command
+// otherwise. Any other evidence.json is a hand-written contract and takes the path below unchanged.
+function resolveReferenceGrammar({ projectRoot, grammar, fallback, registryMode, artifactAdapter = null }) {
   if (!grammar.startsWith("reference:")) return null;
   const slug = grammar.slice("reference:".length);
   if (!/^[a-z0-9][a-z0-9-]*$/u.test(slug)) throw new Error(`Invalid reference grammar slug: ${slug}`);
@@ -176,6 +181,9 @@ function resolveReferenceGrammar({ projectRoot, grammar, fallback, registryMode 
       content: readFileSync(filePath, "utf8").trim(),
     });
   }
+  const generated = registryMode
+    ? checkGeneratedContract({ slug, files: Object.fromEntries(CONTRACT_FILES.map((name) => [name, readFileSync(resolve(baseDir, name))])), fallback, artifactAdapter, catalog: defaultCatalog })
+    : null;
   const fallbackContent = requireCatalogContent(defaultCatalog, "grammars", fallback, "fallback grammar");
   const ruleSet = files.find((file) => file.name === "RULESET.md");
   const checks = files.find((file) => file.name === "checks.md");
@@ -192,8 +200,17 @@ function resolveReferenceGrammar({ projectRoot, grammar, fallback, registryMode 
     grammarSource: `project:.styleseed/rulesets/${slug}/RULESET.md`,
     grammarContent: composite,
     sourceFiles: files,
-    contract: registryMode ? "reference-contract-v2" : "reference-contract-legacy",
+    contract: generated ? "reference-contract-v3" : registryMode ? "reference-contract-v2" : "reference-contract-legacy",
   };
+}
+
+// The adapter the artifact config itself names (not the project default), from its exact bytes.
+function namedAdapter(content) {
+  if (typeof content !== "string") return null;
+  try {
+    const adapter = JSON.parse(content)?.selection?.adapter;
+    return typeof adapter === "string" ? adapter : null;
+  } catch { return null; }
 }
 
 function buildBundle({ catalog, selected, sections }) {
@@ -253,6 +270,7 @@ export function compileContext({
     grammar: selection.grammar,
     fallback: selection.fallback,
     registryMode,
+    artifactAdapter: registryMode ? namedAdapter(inputFiles?.artifact?.content) : null,
   });
 
   const grammarContent = reference

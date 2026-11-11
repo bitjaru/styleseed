@@ -197,8 +197,10 @@ decision violation.
 
 With `--structure`, the structure probe runs on the same page loads and the table gains rows for
 table row height, list item height, heading sizes in the main region, section gap, primaries per
-section, and transition durations, compared the same way. The decisions ledger does not cover
-these rows, and they do not fail `--gate`. Without the flag the report is unchanged. `--scroll`
+section, and transition durations, compared the same way. A structure value outside the shared set
+does not fail `--gate`; a recorded decision on one of these six axes applies like the others
+(`violates D-…` fails `--gate`, `approved D-…` does not). Without the flag the report is unchanged,
+except that a decision on a structure axis is listed once as not measured. `--scroll`
 scrolls each page to the bottom and back inside its one load before measuring, for screens whose
 content reveals on scroll; it is off by default.
 

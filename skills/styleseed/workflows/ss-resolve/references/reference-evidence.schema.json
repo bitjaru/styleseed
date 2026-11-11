@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://styleseed.dev/schemas/reference-evidence.schema.json",
+  "title": "Generated reference contract: .styleseed/rulesets/<slug>/evidence.json",
+  "description": "Written by ss-reference/scripts/compile-contract.mjs from one measure-reference run and edited by a person. The single source of a generated contract: RULESET.md, tokens.json, checks.md, adapter.json, and reference-board.html are rendered from it. Rules the schema cannot express are enforced by normalizeReferenceEvidence in ss-resolve/scripts/reference-contract.mjs: compare is required for keep and adapt and forbidden for observe and avoid; a string, boolean, or list of strings may only use eq; max, min, and present need a single number; within needs a number or a list of numbers and a tolerance; a fact with bound lower may only use present or min, and only when its value is above 0; (id, viewport) pairs are unique; approval.contractHash is sha256 of the canonical JSON of the evidence without approval and rendered.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "generator", "slug", "fallback", "adapter", "sources", "facts", "tokens", "open", "approval"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "generator": {
+      "type": "object", "additionalProperties": false, "required": ["tool", "factsVersion"],
+      "properties": { "tool": { "const": "compile-contract.mjs" }, "factsVersion": { "const": 1 } }
+    },
+    "slug": { "$ref": "#/$defs/id" },
+    "fallback": { "$ref": "#/$defs/id", "description": "A built-in grammar id; must equal the fallback of the artifact that selects reference:<slug>" },
+    "adapter": { "$ref": "#/$defs/id", "description": "An adapter id; must equal the artifact's adapter when the artifact names one" },
+    "sources": { "type": "array", "minItems": 1, "maxItems": 16, "items": { "$ref": "#/$defs/source" } },
+    "facts": { "type": "array", "maxItems": 4000, "items": { "$ref": "#/$defs/fact" } },
+    "tokens": {
+      "type": "object", "additionalProperties": false, "required": ["measured", "transfer"],
+      "properties": {
+        "measured": {
+          "type": "object", "additionalProperties": false,
+          "required": ["accent", "ink", "canvas", "spacingBase", "spacingScale", "typeSizes", "radii", "fonts", "controlHeights"],
+          "description": "The nine drift axes of summary.json (compare-screens.mjs screenValues); null or an empty list when not measured",
+          "properties": {
+            "accent": { "$ref": "#/$defs/colorOrNull" }, "ink": { "$ref": "#/$defs/colorOrNull" }, "canvas": { "$ref": "#/$defs/colorOrNull" },
+            "spacingBase": { "oneOf": [{ "type": "integer", "minimum": 1 }, { "type": "null" }] },
+            "spacingScale": { "$ref": "#/$defs/numbers" }, "typeSizes": { "$ref": "#/$defs/numbers" }, "radii": { "$ref": "#/$defs/numbers" }, "controlHeights": { "$ref": "#/$defs/numbers" },
+            "fonts": { "type": "array", "maxItems": 16, "items": { "type": "string", "minLength": 1, "maxLength": 80 } }
+          }
+        },
+        "transfer": {
+          "type": "object", "additionalProperties": false,
+          "required": ["accent", "ink", "canvas", "spacingBase", "spacingScale", "typeSizes", "radii", "fonts", "controlHeights"],
+          "description": "One transfer per token axis. Defaults: accent and fonts avoid; ink and canvas observe; the other five adapt",
+          "properties": {
+            "accent": { "$ref": "#/$defs/transfer" }, "ink": { "$ref": "#/$defs/transfer" }, "canvas": { "$ref": "#/$defs/transfer" },
+            "spacingBase": { "$ref": "#/$defs/transfer" }, "spacingScale": { "$ref": "#/$defs/transfer" }, "typeSizes": { "$ref": "#/$defs/transfer" },
+            "radii": { "$ref": "#/$defs/transfer" }, "fonts": { "$ref": "#/$defs/transfer" }, "controlHeights": { "$ref": "#/$defs/transfer" }
+          }
+        }
+      }
+    },
+    "open": {
+      "type": "array", "maxItems": 24, "description": "Choices that stay a person's call; rendered into RULESET.md as unresolved and never compared",
+      "items": {
+        "type": "object", "additionalProperties": false, "required": ["axis", "question"],
+        "properties": { "axis": { "$ref": "#/$defs/contractAxis" }, "question": { "type": "string", "minLength": 1, "maxLength": 200 } }
+      }
+    },
+    "rendered": {
+      "type": "object", "additionalProperties": false, "description": "sha256 of each rendered file, written by --write; the resolver requires it and refuses a file whose bytes differ",
+      "required": ["RULESET.md", "tokens.json", "checks.md", "adapter.json", "reference-board.html"],
+      "properties": {
+        "RULESET.md": { "$ref": "#/$defs/hash" }, "tokens.json": { "$ref": "#/$defs/hash" }, "checks.md": { "$ref": "#/$defs/hash" },
+        "adapter.json": { "$ref": "#/$defs/hash" }, "reference-board.html": { "$ref": "#/$defs/hash" }
+      }
+    },
+    "approval": {
+      "oneOf": [
+        { "type": "object", "additionalProperties": false, "required": ["status"], "properties": { "status": { "const": "draft" } } },
+        {
+          "type": "object", "additionalProperties": false, "required": ["status", "reviewer", "date", "contractHash"],
+          "properties": {
+            "status": { "const": "approved" },
+            "reviewer": { "type": "string", "minLength": 1, "maxLength": 80, "description": "The name the person typed in --reviewer; a record, not authentication" },
+            "date": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
+            "contractHash": { "$ref": "#/$defs/hash" }
+          }
+        }
+      ]
+    }
+  },
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,63}$" },
+    "hash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "transfer": { "enum": ["keep", "adapt", "observe", "avoid"] },
+    "colorOrNull": { "oneOf": [{ "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" }, { "type": "null" }] },
+    "numbers": { "type": "array", "maxItems": 64, "items": { "type": "number", "minimum": 0 } },
+    "contractAxis": { "enum": ["user-job", "attention", "composition", "density", "typography", "color", "surfaces", "imagery-data", "navigation-action", "states-motion", "responsive", "tells"] },
+    "source": {
+      "type": "object", "additionalProperties": false, "required": ["id", "url", "observedAt", "viewports", "robots"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^S[0-9]{1,3}$" },
+        "url": { "type": "string", "pattern": "^https?://", "maxLength": 2048 },
+        "observedAt": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
+        "viewports": { "type": "array", "minItems": 1, "maxItems": 8, "items": { "type": "integer", "minimum": 1 } },
+        "robots": { "enum": ["allowed", "disallowed", "not-checked"] }
+      }
+    },
+    "fact": {
+      "type": "object", "additionalProperties": false, "required": ["id", "axis", "level", "viewport", "value", "source", "transfer"],
+      "description": "A measure-reference fact (facts.json, without its from string) with the person's transfer decision",
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z]+(\\.[A-Za-z0-9]+)+$", "maxLength": 120 },
+        "axis": { "enum": ["composition", "density", "typography", "navigation-action", "states-motion", "imagery-data", "responsive", "attention", "tells"] },
+        "level": { "enum": ["observed", "derived"] },
+        "bound": { "const": "lower", "description": "The value is a minimum (a count) or a subset (a list): some stylesheets could not be read" },
+        "viewport": { "oneOf": [{ "type": "integer", "minimum": 1 }, { "const": "both" }] },
+        "value": {
+          "anyOf": [
+            { "type": "number" }, { "type": "boolean" }, { "type": "string", "minLength": 1, "maxLength": 2000 },
+            { "type": "array", "maxItems": 64, "items": { "type": "number" } },
+            { "type": "array", "maxItems": 64, "items": { "type": "string", "minLength": 1, "maxLength": 80 } }
+          ]
+        },
+        "unit": { "enum": ["px", "ms"] },
+        "source": { "type": "string", "pattern": "^S[0-9]{1,3}$" },
+        "transfer": { "$ref": "#/$defs/transfer" },
+        "compare": {
+          "type": "object", "additionalProperties": false, "required": ["op"],
+          "properties": { "op": { "enum": ["eq", "max", "min", "present", "within"] }, "tolerance": { "type": "number", "minimum": 0, "description": "within only, in the fact's unit" } }
+        },
+        "note": { "type": "string", "maxLength": 200, "description": "Written by the person; a kept derived fact needs one sentence before approval" }
+      }
+    }
+  }
+}

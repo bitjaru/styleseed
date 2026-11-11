@@ -163,6 +163,10 @@ That command refreshes the public registry, context catalog, skin bundle, engine
 skill mirror, and LLM indexes. Commit the resulting generated changes with their source change. CI
 fails when generated output drifts.
 
+An engine change also moves the engine revision recorded in the repository's own site manifests
+(`.styleseed/manifests/site-*.json`). `node scripts/verify-repo.mjs --core` recompiles them with
+everything else and then scans them; commit the recompiled bundles and manifests too.
+
 ## Pull request boundaries
 
 - Keep one concern per PR. A rule change, tooling refactor, and compatibility fix should not arrive

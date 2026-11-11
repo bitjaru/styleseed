@@ -34,7 +34,6 @@ auto-renew. A choice that only applies after Save is a `Checkbox`.
 ## Known gaps
 
 - The track is about 18px × 32px, far under the 44px touch minimum (DESIGN-LANGUAGE §41). Make the label and row the target, or wrap the switch in a 44px area.
-- The track uses `transition-all`. DESIGN-LANGUAGE §24 recommends `transition-all` for interactive elements, while the rule catalog's detector SS003 asks for named properties. The two documents disagree.
 - On uses `primary`, not `brand`, so it may not match a primary button in skins where the two roles differ.
 
 ## Sources
@@ -46,7 +45,7 @@ auto-renew. A choice that only applies after Save is a `Checkbox`.
 
 ## From the code
 
-Source `engine/components/ui/switch.tsx` · `sha256:d4c744131c61…`
+Source `engine/components/ui/switch.tsx` · `sha256:e200920edfff…`
 
 Import, after copying `engine/components` into `src/components`:
 
@@ -61,12 +60,11 @@ import { Switch } from "@/components/ui/switch";
 - **Tokens consumed:** `card` · `primary` · `ring` · `switch-background`; dark mode only: `card-foreground` · `input` · `primary-foreground`
 - **Radius:** fixed `rounded-full` (not the recipe control radius)
 - **Focus:** `focus-visible:border-ring` · `focus-visible:ring-[3px]` · `focus-visible:ring-ring/50`
-- **Motion:** `transition-all` · `transition-transform`
+- **Motion:** `transition-[background-color,border-color,box-shadow,opacity]` · `transition-transform`
 
 ### Machine checks
 
 - Height under the 44px touch minimum (DESIGN-LANGUAGE §41): `switch` 18.4px × 32px. On touch surfaces, extend the hit area or use a taller size.
-- Uses `transition-all`; name the transitioned properties (detector SS003).
 - Radius is fixed (rounded-full) instead of the recipe control radius used by Button and Tabs.
 
 <!-- generated:end -->

@@ -33,8 +33,8 @@ node <installed-ss-score>/scripts/styleseed-check.mjs scan \
 
 The checker revalidates the artifact manifest, bundle/output hashes, declared source roots, and
 project containment before scanning. Contract/path/hash/coverage failures are hard errors. Source
-detectors are warning-only until their fixture precision is measured and a maintainer promotes them.
-Stable detector IDs are `SS001` hardcoded colors, `SS002` arbitrary pixel values, `SS003`
+detectors take the priority of their catalog rule: `SS001`–`SS004` are warnings; `SS005` and `SS006`
+block. Stable detector IDs are `SS001` hardcoded colors, `SS002` arbitrary pixel values, `SS003`
 `transition-all`, `SS004` motion without reduced-motion handling, `SS005` focus suppression, and
 `SS006` high-confidence unlabeled icon controls. Each detector belongs to a rule in
 `engine/rules/catalog.json`, so every finding carries `rule`, `priority` (`blocks` · `strong` ·
@@ -126,9 +126,8 @@ neutral grey when the selected contract requires neutral normal states (−4);
 monitoring grid are valid when their meaning and anomaly emphasis remain clear);
 **unassigned decorative hues** rather than stable roles (−3; rating stars and categorical
 data colors are valid when they encode actual meaning in the selected contract);
-hardcoded hex where a semantic token exists (−2 each, cap −6); status conveyed by color
-alone (−4); **the unlocked default indigo (`#5E6AD2`/`#4F46E5`) used as the accent** instead of
-an approved project choice (−4; that same hue is valid when deliberately selected).
+hardcoded hex where a semantic token exists (−2 each, cap −6); **the unlocked default indigo
+(`#5E6AD2`/`#4F46E5`) used as the accent** instead of an approved project choice (−4; that same hue is valid when deliberately selected).
 
 **Distinctiveness (10)** — a coherent screen can still read "AI-generated." Deduct for: the
 **icon-chip cliché** — a generic Lucide line-icon in an identical pale-tinted rounded-square,
@@ -168,8 +167,9 @@ Do not score by shadow-layer count, equal padding, or a blanket soft-shadow pref
 surface (−5 each, cap −10 — a static mockup or marketing landing with NO data surface is
 **N/A**: skip these deductions, don't fail the category); contrast below 4.5:1 body / 3:1
 large (−6); touch target < 44px on a touch surface (pointer-first desktop controls at
-36–40px are fine) (−4); no visible focus / `outline:none` (−5); icon-only control
-without `aria-label` (−3).
+36–40px are fine) (−4). Status conveyed by colour alone (INV-02), an icon-only control
+without a name (INV-03, `SS006`), and no visible focus (INV-04, `SS005`) block: list them in
+the fail state, not as deductions.
 
 **Motion & interaction (6)** — deduct for: motion without a task purpose or with timing/easing
 that drifts from the approved project roles (−3); motion that delays content or blocks an action (−4); no

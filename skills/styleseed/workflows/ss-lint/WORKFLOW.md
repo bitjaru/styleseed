@@ -25,9 +25,11 @@ node <installed-ss-score>/scripts/styleseed-check.mjs scan \
 ```
 
 The checker treats only contract, containment, manifest/hash, malformed-report, and required
-coverage failures as hard errors. Detector findings (`SS001`–`SS006`) remain warnings and include a
-stable file, line, evidence snippet, severity, and fix. Use `styleseed-check ... verify` to recompute
-the bound evidence run; do not turn a string or stale report into a pass.
+coverage failures as hard errors. Detector findings (`SS001`–`SS006`) include a stable file, line,
+evidence snippet, severity, priority, and fix. `SS001`–`SS004` are warnings; `SS005` and `SS006` back
+blocking invariants, so they carry `blocking: true` and `--gate` exits 3 on them. Use
+`styleseed-check ... verify` to recompute the bound evidence run; do not turn a string or stale
+report into a pass.
 
 If either registry file exists, require a complete, valid registry and check only the selected
 artifact's bundle and manifest. Only when neither registry file exists, read

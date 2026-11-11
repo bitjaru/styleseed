@@ -33,7 +33,7 @@ function SegmentedControl({
             key={index}
             onClick={() => onChange?.(index)}
             className={cn(
-              "ss-pattern-control flex-1 flex items-center justify-center font-medium transition-all duration-150",
+              "ss-pattern-control flex-1 flex items-center justify-center font-medium transition-[color,background-color,box-shadow] duration-150",
               size === "sm"
                 ? "h-7 text-[12px]"
                 : "h-9 text-[14px]",

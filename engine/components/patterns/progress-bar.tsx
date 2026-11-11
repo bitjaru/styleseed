@@ -23,7 +23,7 @@ function ProgressBar({
     <div data-slot="progress-bar" className={cn("", className)} {...props}>
       <div className={cn("bg-surface-muted rounded-full overflow-hidden", height)}>
         <div
-          className={cn("bg-brand h-full rounded-full transition-all duration-300")}
+          className={cn("bg-brand h-full rounded-full transition-[width] duration-300")}
           style={{ width: `${percent}%` }}
         />
       </div>
@@ -93,7 +93,7 @@ function ProgressBarWithLabel({
     >
       <div className="flex-1 bg-surface-muted rounded-full h-4">
         <div
-          className="bg-brand h-full rounded-full transition-all duration-300"
+          className="bg-brand h-full rounded-full transition-[width] duration-300"
           style={{ width: `${percent}%` }}
         />
       </div>

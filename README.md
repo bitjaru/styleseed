@@ -289,7 +289,7 @@ screens, sessions and teammates.
 | What is stored | decisions (domain, page type, grammar, palette posture) and the per-screen rules built from them | token values and prose | token values | ❌ |
 | Palette | computed from one key colour in OKLCH, contrast-corrected, deterministic | chosen by the agent or from a theme catalogue | listed | the model's choice |
 | Checks | 6 deterministic source checks, rendered measurement at 1440 and 390, an 8-category rubric score | Impeccable: 62 deterministic rules and an edit hook; Hallmark and Taste: browser lint | ❌ | ❌ |
-| Where the rules come from | [`research/cases`](research/cases/README.md): public sources, evidence levels, counterexamples | the author's experience; Taste: a 247-site study | scraped brands | ❌ |
+| Where the rules come from | the maintainer's stated reasons: every catalog rule is at evidence level `inferred`. [`research/cases`](research/cases/README.md) collects public sources, evidence levels and counterexamples; no rule cites a case yet | the author's experience; Taste: a 247-site study | scraped brands | ❌ |
 | Best at | many screens of one product | one striking new page (Hallmark, Taste); refining an existing screen (Impeccable) | the brand look | a first draft |
 
 They combine. A `DESIGN.md` or a generator's first draft can feed StyleSeed's rules, and where

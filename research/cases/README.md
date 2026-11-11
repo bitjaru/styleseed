@@ -92,5 +92,6 @@ levels, referenced measurement files, the review rules, and promotion fields.
 ## Proposing a case
 
 Copy `_template/`, fill it, run the validator, and open a pull request. Designers who do not use
-git can send the same fields through the proposal form on the demo site; it opens the pull
-request on their behalf and credits them in `contributors`.
+git will be able to send the same fields through a proposal form on the demo site that opens the
+pull request on their behalf and credits them in `contributors`; the form is planned (#91) and
+does not exist yet.

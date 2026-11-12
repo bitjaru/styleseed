@@ -145,7 +145,7 @@ export function WalletPage({ skin, seed: seedId }: { skin: string; seed: SeedId 
               {balanceShown ? <Eye size={14} /> : <EyeOff size={14} />}
             </motion.button>
           </div>
-          <div className="mt-1 flex items-baseline gap-1.5">
+          <div className="mt-1 flex items-baseline gap-1.5 whitespace-nowrap">
             <span
               className="text-[34px] font-bold leading-none tracking-tight"
               style={{ color: text, letterSpacing: "-0.02em" }}
@@ -158,7 +158,7 @@ export function WalletPage({ skin, seed: seedId }: { skin: string; seed: SeedId 
           </div>
           <div className="mt-2 flex items-center gap-1.5 text-[12px] font-semibold">
             <TrendingUp size={11} style={{ color: success }} />
-            <span style={{ color: success }}>+ 184,200원</span>
+            <span className="whitespace-nowrap" style={{ color: success }}>+ 184,200원</span>
             <span style={{ color: textTertiary }}>지난 30일</span>
           </div>
 
@@ -232,12 +232,12 @@ export function WalletPage({ skin, seed: seedId }: { skin: string; seed: SeedId 
               <div className="text-[12px] font-semibold" style={{ color: textSecondary }}>
                 이번 주 지출
               </div>
-              <div className="mt-1 text-[20px] font-bold" style={{ letterSpacing: "-0.01em" }}>
+              <div className="mt-1 whitespace-nowrap text-[20px] font-bold" style={{ letterSpacing: "-0.01em" }}>
                 182,400 <span style={{ color: textSecondary, fontSize: 13 }}>원</span>
               </div>
             </div>
             <span
-              className="rounded-full px-2.5 py-1 text-[11px] font-bold"
+              className="whitespace-nowrap rounded-full px-2.5 py-1 text-[11px] font-bold"
               style={{ background: brandTint, color: brand }}
             >
               평균보다 12% ↓
@@ -290,10 +290,10 @@ export function WalletPage({ skin, seed: seedId }: { skin: string; seed: SeedId 
                 key={tx.id}
                 {...delayed(m.entrance, 0.28 + i * 0.04)}
                 {...m.hover}
-                className="flex items-center justify-between px-4 py-2.5"
+                className="flex items-center justify-between gap-2 px-4 py-2.5"
                 style={{ cursor: "pointer" }}
               >
-                <div className="flex items-center gap-3">
+                <div className="flex min-w-0 items-center gap-3">
                   <div
                     className="flex h-9 w-9 items-center justify-center text-[14px] font-bold"
                     style={{
@@ -304,7 +304,7 @@ export function WalletPage({ skin, seed: seedId }: { skin: string; seed: SeedId 
                   >
                     {emojiFor(tx.kind)}
                   </div>
-                  <div className="leading-tight">
+                  <div className="min-w-0 flex-1 leading-tight">
                     <div className="text-[13px] font-bold">{tx.label}</div>
                     <div className="mt-0.5 text-[11px]" style={{ color: textTertiary }}>
                       {tx.time}
@@ -312,7 +312,7 @@ export function WalletPage({ skin, seed: seedId }: { skin: string; seed: SeedId 
                   </div>
                 </div>
                 <div
-                  className="text-[13px] font-bold"
+                  className="shrink-0 whitespace-nowrap text-[13px] font-bold"
                   style={{
                     color: tx.amount > 0 ? success : text,
                   }}

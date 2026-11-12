@@ -46,6 +46,8 @@ id · axis · statement · kind · scope · priority · exceptions · rationale 
   for at-rest drift (INV-05) and for values that violate a recorded project decision.
 - `drift-report.mjs --faults` reports the render faults in `faults.json`, and `--gate` fails on the
   ones whose rule has `priority: blocks`; an approved exception to a default rule waives it per screen.
+- `transition-jumps.mjs` names `CRAFT-motion-family` beside its detectors and reports one-frame jumps
+  in declared state changes in `transitions.json`; it has no `--gate`.
 - `scripts/validate-rules.mjs` runs in `verify-repo --core`: schema, unique ids, known scope
   values, existing sources, present anchors, detector ids, `check.tool` scripts and their flags,
   that invariants carry no scope, and the review rules above.

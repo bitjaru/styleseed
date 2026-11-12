@@ -101,9 +101,9 @@
       "kind": "default",
       "scope": {},
       "priority": "strong",
-      "rationale": "transition-all and missing reduced-motion paths are the two ways motion stops being a decision and becomes noise.",
+      "rationale": "transition-all and missing reduced-motion paths are the two ways motion stops being a decision and becomes noise. transition-jumps.mjs samples a declared state change frame by frame on a held clock and reports a box that moves in one frame while the rest of the change is animated; it reports and does not gate.",
       "evidence": { "level": "inferred", "sources": ["engine/CRAFT-BASELINE.md"] },
-      "check": { "mode": "machine", "detectors": ["SS003", "SS004"] },
+      "check": { "mode": "machine", "detectors": ["SS003", "SS004"], "tool": "ss-verify/scripts/transition-jumps.mjs" },
       "source": "engine/CRAFT-BASELINE.md",
       "anchor": "Provide a complete reduced-motion result"
     },

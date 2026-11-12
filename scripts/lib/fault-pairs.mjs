@@ -10,6 +10,12 @@
 // touch is a flex item placed against its neighbour). A good case clears its threshold by at least
 // 4px, or sits exactly on an edge. CI runs on other platforms with other fonts. The icons are
 // single-shape SVGs written for this file. The browser fixture is scripts/test-render-faults-browser.mjs.
+//
+// TRANSITION_PAIRS holds the pair for ss-verify/scripts/transition-jumps.mjs: interactive pages, each a
+// declared case (data-styleseed-transition, data-styleseed-trigger) wired by a few lines of inline
+// script that toggle one class. The thumb moves 20px by transform; the good page transitions transform,
+// the bad page only background-color, so the thumb jumps in one frame while its colour glides. The
+// browser fixture is scripts/test-transition-jumps-browser.mjs.
 const doc = (title, css, body) => `<!doctype html><html lang="en"><meta charset="utf-8"><title>${title}</title><style>
 *{box-sizing:border-box}body{margin:0;padding:24px;background:#f3f4f2;color:#1b1d1c;font:16px/24px system-ui,sans-serif}
 p{margin:0}.card{display:block;width:312px;background:#ffffff;border-radius:8px;padding:24px}
@@ -82,5 +88,23 @@ export const FAULT_PAIRS = Object.freeze([
     id: 'icon-mix',
     good: doc('icon-mix good', '.item{display:flex;align-items:center;gap:12px;padding:8px 0;color:inherit;text-decoration:none}', `<nav class="card" aria-label="Main"><a class="item" href="#home">${STROKE_HOME}<span>Home</span></a><a class="item" href="#orders">${STROKE_BOX}<span>Orders</span></a></nav>`),
     bad: doc('icon-mix bad', '.item{display:flex;align-items:center;gap:12px;padding:8px 0;color:inherit;text-decoration:none}', `<nav class="card" aria-label="Main"><a class="item" href="#home">${STROKE_HOME}<span>Home</span></a><a class="item" href="#orders">${FILL_BOX}<span>Orders</span></a></nav>`),
+  },
+].map(pair => Object.freeze(pair)));
+
+// A switch: the track is the trigger, the thumb travels 20px. Only the thumb's transition differs.
+const toggleDoc = (title, thumbTransition) => doc(title, `.row{display:flex;align-items:center;justify-content:space-between}
+.track{position:relative;width:48px;height:28px;padding:0;border:0;border-radius:14px;background:#c9d0cd;cursor:pointer;transition:background-color 200ms ease}
+.thumb{position:absolute;top:4px;left:4px;width:20px;height:20px;border-radius:10px;background:#ffffff;transition:${thumbTransition}}
+.on .track{background:#1f7a5c}.on .thumb{transform:translateX(20px);background:#f4faf7}`,
+`<div class="card row" data-styleseed-transition="frame-jump"><span>Weekly digest</span><button class="track" type="button" role="switch" aria-checked="false" aria-label="Weekly digest" data-styleseed-trigger><span class="thumb"></span></button></div>
+<script>const card=document.querySelector('[data-styleseed-transition]'),track=card.querySelector('.track');track.addEventListener('click',()=>{track.setAttribute('aria-checked',String(card.classList.toggle('on')));});</script>`);
+
+export const TRANSITION_PAIRS = Object.freeze([
+  {
+    // The thumb's transform is not in its transition list: it jumps 20px at time 0 while the colours glide.
+    id: 'frame-jump',
+    interactive: true,
+    good: toggleDoc('frame-jump good', 'transform 200ms ease,background-color 200ms ease'),
+    bad: toggleDoc('frame-jump bad', 'background-color 200ms ease'),
   },
 ].map(pair => Object.freeze(pair)));

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 5,
   "engineVersion": "5.0.0",
-  "engineRevision": "sha256:ccb923a10f9b805800929a90bc0b7b173203f3e746e41a33036d996e4131473a",
+  "engineRevision": "sha256:eaa9e8857fe068bba5e46230bc74c357c6c223bd76e67b05002681f5130662fe",
   "distributionSource": {
     "schemaVersion": 1,
     "channel": "edge",
@@ -10,7 +10,7 @@
   },
   "distributions": {
     "core": {
-      "revision": "sha256:ccb923a10f9b805800929a90bc0b7b173203f3e746e41a33036d996e4131473a",
+      "revision": "sha256:eaa9e8857fe068bba5e46230bc74c357c6c223bd76e67b05002681f5130662fe",
       "files": [
         {
           "path": "LICENSE",
@@ -419,8 +419,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-verify/WORKFLOW.md",
-          "sha256": "45bf89d0aacf681eb4f50cadd04115092ec65535f03ebae5781c6cbe4c48a0b8",
-          "bytes": 17000
+          "sha256": "6dca55663222bd775364bd8e6a71f817f1a806e68bf0842c78cf30b697568a38",
+          "bytes": 18325
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-verify/references/applied-checks.md",
@@ -429,8 +429,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-verify/references/render-faults.md",
-          "sha256": "4562463280e2dea7c260d09cea2b107b2929af820d95755d9c7004e40f1785b3",
-          "bytes": 13694
+          "sha256": "8c8e7a97de845a45893a9f977c86834169dc2dd08bf7c6beafc05095477544ab",
+          "bytes": 21639
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-verify/scripts/analyze-faults.mjs",
@@ -456,6 +456,16 @@
           "path": "engine/.claude/skills/styleseed/workflows/ss-verify/scripts/observe-faults.mjs",
           "sha256": "8e0ff4fc071f1c9b521ad85ac3710f302557c738db6841f3392de3b622f7350d",
           "bytes": 35510
+        },
+        {
+          "path": "engine/.claude/skills/styleseed/workflows/ss-verify/scripts/observe-transition.mjs",
+          "sha256": "7c2261f5bbce3cd4e126fa84ec0a85fa51145f4d89de3684b391b880157c8e79",
+          "bytes": 16354
+        },
+        {
+          "path": "engine/.claude/skills/styleseed/workflows/ss-verify/scripts/transition-jumps.mjs",
+          "sha256": "6cb2c6d5525f3bbc86b1a704f28011bee09aafabb880be248a6b5f1bf8460498",
+          "bytes": 21644
         },
         {
           "path": "engine/.cursorrules",
@@ -594,13 +604,13 @@
         },
         {
           "path": "engine/rules/README.md",
-          "sha256": "bf27339707037ec5a0849a83daf98bb6b55e97b66cf4372c31d861da31760801",
-          "bytes": 4452
+          "sha256": "ae33bc19a7a193d139b3eceacf5630aac0ea84902975ce87b0d5ad7bea9f4431",
+          "bytes": 4625
         },
         {
           "path": "engine/rules/catalog.json",
-          "sha256": "cf8c13cc5483b54121cbda25873446cf35766f080da1ad51d4c02d3250747090",
-          "bytes": 21019
+          "sha256": "68f0b4e572a13c2136ac7ff3a2010b4fb1592ace5698bdda07f4fceac61a99b9",
+          "bytes": 21267
         },
         {
           "path": "engine/rules/catalog.schema.json",
@@ -610,7 +620,7 @@
       ]
     },
     "skills": {
-      "revision": "sha256:3457ce6e971a36f74e5e7a53d91171bd589b1ef008d6869162197a48740e7ee3",
+      "revision": "sha256:ddfbe96ffaed47145d33b5a13c8745f7cfbb74eb56494ea9b2067e8d801c67ec",
       "files": [
         {
           "path": "engine/.claude/skills/styleseed/SKILL.md",
@@ -1009,8 +1019,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-verify/WORKFLOW.md",
-          "sha256": "45bf89d0aacf681eb4f50cadd04115092ec65535f03ebae5781c6cbe4c48a0b8",
-          "bytes": 17000
+          "sha256": "6dca55663222bd775364bd8e6a71f817f1a806e68bf0842c78cf30b697568a38",
+          "bytes": 18325
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-verify/references/applied-checks.md",
@@ -1019,8 +1029,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-verify/references/render-faults.md",
-          "sha256": "4562463280e2dea7c260d09cea2b107b2929af820d95755d9c7004e40f1785b3",
-          "bytes": 13694
+          "sha256": "8c8e7a97de845a45893a9f977c86834169dc2dd08bf7c6beafc05095477544ab",
+          "bytes": 21639
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-verify/scripts/analyze-faults.mjs",
@@ -1046,6 +1056,16 @@
           "path": "engine/.claude/skills/styleseed/workflows/ss-verify/scripts/observe-faults.mjs",
           "sha256": "8e0ff4fc071f1c9b521ad85ac3710f302557c738db6841f3392de3b622f7350d",
           "bytes": 35510
+        },
+        {
+          "path": "engine/.claude/skills/styleseed/workflows/ss-verify/scripts/observe-transition.mjs",
+          "sha256": "7c2261f5bbce3cd4e126fa84ec0a85fa51145f4d89de3684b391b880157c8e79",
+          "bytes": 16354
+        },
+        {
+          "path": "engine/.claude/skills/styleseed/workflows/ss-verify/scripts/transition-jumps.mjs",
+          "sha256": "6cb2c6d5525f3bbc86b1a704f28011bee09aafabb880be248a6b5f1bf8460498",
+          "bytes": 21644
         }
       ]
     }
@@ -1458,8 +1478,8 @@
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-verify/WORKFLOW.md",
-      "sha256": "45bf89d0aacf681eb4f50cadd04115092ec65535f03ebae5781c6cbe4c48a0b8",
-      "bytes": 17000
+      "sha256": "6dca55663222bd775364bd8e6a71f817f1a806e68bf0842c78cf30b697568a38",
+      "bytes": 18325
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-verify/references/applied-checks.md",
@@ -1468,8 +1488,8 @@
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-verify/references/render-faults.md",
-      "sha256": "4562463280e2dea7c260d09cea2b107b2929af820d95755d9c7004e40f1785b3",
-      "bytes": 13694
+      "sha256": "8c8e7a97de845a45893a9f977c86834169dc2dd08bf7c6beafc05095477544ab",
+      "bytes": 21639
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-verify/scripts/analyze-faults.mjs",
@@ -1495,6 +1515,16 @@
       "path": ".claude/skills/styleseed/workflows/ss-verify/scripts/observe-faults.mjs",
       "sha256": "8e0ff4fc071f1c9b521ad85ac3710f302557c738db6841f3392de3b622f7350d",
       "bytes": 35510
+    },
+    {
+      "path": ".claude/skills/styleseed/workflows/ss-verify/scripts/observe-transition.mjs",
+      "sha256": "7c2261f5bbce3cd4e126fa84ec0a85fa51145f4d89de3684b391b880157c8e79",
+      "bytes": 16354
+    },
+    {
+      "path": ".claude/skills/styleseed/workflows/ss-verify/scripts/transition-jumps.mjs",
+      "sha256": "6cb2c6d5525f3bbc86b1a704f28011bee09aafabb880be248a6b5f1bf8460498",
+      "bytes": 21644
     },
     {
       "path": ".cursorrules",
@@ -1633,13 +1663,13 @@
     },
     {
       "path": "rules/README.md",
-      "sha256": "bf27339707037ec5a0849a83daf98bb6b55e97b66cf4372c31d861da31760801",
-      "bytes": 4452
+      "sha256": "ae33bc19a7a193d139b3eceacf5630aac0ea84902975ce87b0d5ad7bea9f4431",
+      "bytes": 4625
     },
     {
       "path": "rules/catalog.json",
-      "sha256": "cf8c13cc5483b54121cbda25873446cf35766f080da1ad51d4c02d3250747090",
-      "bytes": 21019
+      "sha256": "68f0b4e572a13c2136ac7ff3a2010b4fb1592ace5698bdda07f4fceac61a99b9",
+      "bytes": 21267
     },
     {
       "path": "rules/catalog.schema.json",
@@ -1834,7 +1864,7 @@
       "kind": "default",
       "scope": {},
       "priority": "strong",
-      "rationale": "transition-all and missing reduced-motion paths are the two ways motion stops being a decision and becomes noise.",
+      "rationale": "transition-all and missing reduced-motion paths are the two ways motion stops being a decision and becomes noise. transition-jumps.mjs samples a declared state change frame by frame on a held clock and reports a box that moves in one frame while the rest of the change is animated; it reports and does not gate.",
       "evidence": {
         "level": "inferred",
         "sources": [
@@ -1846,7 +1876,8 @@
         "detectors": [
           "SS003",
           "SS004"
-        ]
+        ],
+        "tool": "ss-verify/scripts/transition-jumps.mjs"
       },
       "source": "engine/CRAFT-BASELINE.md",
       "anchor": "Provide a complete reduced-motion result"

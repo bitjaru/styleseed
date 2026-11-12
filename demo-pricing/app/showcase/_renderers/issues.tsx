@@ -107,7 +107,7 @@ export function IssuesPage({ skin, seed: seedId }: { skin: string; seed: SeedId 
     >
       {/* Top bar */}
       <header
-        className="flex items-center justify-between px-6 py-3"
+        className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 px-6 py-3"
         style={{ borderBottom: `1px solid ${border}` }}
       >
         <div className="flex items-center gap-3">
@@ -131,7 +131,7 @@ export function IssuesPage({ skin, seed: seedId }: { skin: string; seed: SeedId 
             </span>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex grow flex-wrap items-center gap-2 lg:grow-0 lg:flex-nowrap">
           <SearchPill textSecondary={textSecondary} border={border} card={card} />
           <IconChip motion={m} icon={Filter} text={textSecondary} card={card} border={border} />
           <PrimaryChip motion={m} brand={brand}>
@@ -144,7 +144,7 @@ export function IssuesPage({ skin, seed: seedId }: { skin: string; seed: SeedId 
       {/* Filter chips */}
       <motion.div
         {...m.entrance}
-        className="flex items-center gap-2 px-6 py-3"
+        className="flex flex-wrap items-center gap-2 px-6 py-3"
         style={{ borderBottom: `1px solid ${border}` }}
       >
         <span
@@ -167,13 +167,13 @@ export function IssuesPage({ skin, seed: seedId }: { skin: string; seed: SeedId 
             {f}
           </FilterChip>
         ))}
-        <span className="ms-auto text-[11px]" style={{ color: textTertiary }}>
+        <span className="ms-auto whitespace-nowrap text-[11px]" style={{ color: textTertiary }}>
           Updated 09:42 KST
         </span>
       </motion.div>
 
       {/* Board */}
-      <div className="grid grid-cols-4 gap-3 px-6 py-4">
+      <div className="grid grid-cols-1 gap-x-3 gap-y-6 px-6 py-4 sm:grid-cols-2 lg:grid-cols-4">
         {COLUMNS.map((col, ci) => {
           const items = visible.filter((iss) => iss.status === col.id);
           return (
@@ -182,7 +182,7 @@ export function IssuesPage({ skin, seed: seedId }: { skin: string; seed: SeedId 
                 <div className="flex items-center gap-1.5">
                   <col.icon size={13} style={{ color: textSecondary }} />
                   <span
-                    className="text-[11px] font-bold uppercase tracking-widest"
+                    className="whitespace-nowrap text-[11px] font-bold uppercase tracking-widest"
                     style={{ color: textSecondary }}
                   >
                     {col.label}
@@ -283,17 +283,16 @@ function SearchPill({
 }) {
   return (
     <div
-      className="flex items-center gap-1.5 px-2.5 py-1.5 text-[11px]"
+      className="flex basis-full items-center gap-1.5 px-2.5 py-1.5 text-[11px] sm:basis-auto sm:grow lg:min-w-[200px] lg:grow-0"
       style={{
         background: card,
         border: `1px solid ${border}`,
         borderRadius: 8,
         color: textSecondary,
-        minWidth: 200,
       }}
     >
       <Search size={11} />
-      <span className="flex-1">Search issues…</span>
+      <span className="flex-1 whitespace-nowrap">Search issues…</span>
       <kbd
         className="rounded px-1 py-0.5 text-[9px] font-bold"
         style={{ background: "rgba(0,0,0,0.05)" }}

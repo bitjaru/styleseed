@@ -100,7 +100,7 @@ export function FinancePage({ skin, seed: seedId }: { skin: string; seed: SeedId
     >
       {/* Top bar */}
       <header
-        className="flex items-center justify-between px-8 py-5"
+        className="flex flex-wrap items-center justify-between gap-4 px-4 py-5 sm:px-6 lg:px-8"
         style={{ borderBottom: `1px solid ${border}` }}
       >
         <div className="flex items-center gap-3">
@@ -127,17 +127,16 @@ export function FinancePage({ skin, seed: seedId }: { skin: string; seed: SeedId
         </div>
       </header>
 
-      <div className="space-y-6 p-8">
+      <div className="space-y-6 p-4 sm:p-6 lg:p-8">
         {/* Hero metric */}
         <motion.section
           {...m.entrance}
           {...m.hover}
-          className="relative overflow-hidden"
+          className="relative overflow-hidden p-6 lg:p-7"
           style={{
             background: card,
             borderRadius: radius,
             boxShadow: shadow,
-            padding: 28,
           }}
         >
           <div className="flex items-center gap-2">
@@ -154,42 +153,46 @@ export function FinancePage({ skin, seed: seedId }: { skin: string; seed: SeedId
               Total Revenue This Month
             </span>
           </div>
-          <div className="mt-3 flex items-baseline gap-2">
-            <span className="text-[48px] font-bold leading-none tracking-tight">3.8</span>
-            <span className="text-[24px] font-bold" style={{ color: textPrimary }}>
-              M
+          <div className="mt-3 flex flex-wrap items-baseline gap-x-4 gap-y-2 lg:gap-2">
+            <span className="flex items-baseline gap-2 whitespace-nowrap">
+              <span className="text-[48px] font-bold leading-none tracking-tight">3.8</span>
+              <span className="text-[24px] font-bold" style={{ color: textPrimary }}>
+                M
+              </span>
             </span>
-            <span
-              className="ms-3 inline-flex items-center gap-1 text-[13px] font-bold"
-              style={{ color: "var(--success, #6B9B7A)" }}
-            >
-              <TrendingUp size={12} /> +12.4%
-            </span>
-            <span className="text-[12px]" style={{ color: textTertiary }}>
-              vs last month
+            <span className="flex items-baseline gap-2 whitespace-nowrap lg:ms-3">
+              <span
+                className="inline-flex items-center gap-1 text-[13px] font-bold"
+                style={{ color: "var(--success, #6B9B7A)" }}
+              >
+                <TrendingUp size={12} /> +12.4%
+              </span>
+              <span className="text-[12px]" style={{ color: textTertiary }}>
+                vs last month
+              </span>
             </span>
           </div>
           <Sparkline
             data={trendData}
             color={brand}
-            className="absolute bottom-0 right-0 opacity-60"
+            className="ms-auto mt-4 block w-full max-w-[420px] opacity-60 lg:absolute lg:bottom-0 lg:right-0 lg:ms-0 lg:mt-0 lg:w-[420px]"
             width={420}
             height={120}
           />
         </motion.section>
 
         {/* KPI strip */}
-        <section className="grid grid-cols-4 gap-4">
+        <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {kpis.map((kpi, i) => (
             <motion.div
               key={kpi.label}
               {...delayed(m.entrance, 0.05 + i * 0.05)}
               {...m.hover}
+              className="p-6 lg:p-5"
               style={{
                 background: card,
                 borderRadius: radius,
                 boxShadow: shadow,
-                padding: 20,
               }}
             >
               <div className="flex items-center gap-2">
@@ -200,13 +203,13 @@ export function FinancePage({ skin, seed: seedId }: { skin: string; seed: SeedId
                   <kpi.icon size={14} style={{ color: brand }} />
                 </div>
                 <span
-                  className="text-[11px] font-semibold uppercase tracking-widest"
+                  className="whitespace-nowrap text-[11px] font-semibold uppercase tracking-widest"
                   style={{ color: textSecondary }}
                 >
                   {kpi.label}
                 </span>
               </div>
-              <div className="mt-3 flex items-baseline gap-1">
+              <div className="mt-3 flex items-baseline gap-1 whitespace-nowrap">
                 <span className="text-[28px] font-bold leading-none tracking-tight">
                   {kpi.value}
                 </span>
@@ -217,7 +220,7 @@ export function FinancePage({ skin, seed: seedId }: { skin: string; seed: SeedId
                 )}
               </div>
               <div
-                className="mt-2 flex items-center gap-1 text-[12px] font-semibold"
+                className="mt-2 flex items-center gap-1 whitespace-nowrap text-[12px] font-semibold"
                 style={{
                   color: kpi.trend.up ? "var(--success, #6B9B7A)" : "var(--destructive, #C85A54)",
                 }}
@@ -233,10 +236,10 @@ export function FinancePage({ skin, seed: seedId }: { skin: string; seed: SeedId
         </section>
 
         {/* Chart + activity */}
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
           <motion.section
             {...delayed(m.entrance, 0.25)}
-            className="col-span-2"
+            className="lg:col-span-2"
             style={{
               background: card,
               borderRadius: radius,
@@ -244,14 +247,14 @@ export function FinancePage({ skin, seed: seedId }: { skin: string; seed: SeedId
               padding: 24,
             }}
           >
-            <div className="mb-1 flex items-baseline justify-between">
+            <div className="mb-1 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2">
               <div>
                 <div className="text-[15px] font-bold tracking-tight">Revenue Trend</div>
                 <div className="mt-0.5 text-[12px]" style={{ color: textTertiary }}>
                   Hourly net revenue · 00:00–09:42
                 </div>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex shrink-0 items-center gap-2">
                 {(["1D", "1W", "1M"] as const).map((p, i) => (
                   <Pill
                     key={p}
@@ -289,7 +292,7 @@ export function FinancePage({ skin, seed: seedId }: { skin: string; seed: SeedId
           >
             <div className="mb-3 flex items-baseline justify-between">
               <div className="text-[15px] font-bold tracking-tight">Recent Activity</div>
-              <span className="text-[11px]" style={{ color: textTertiary }}>
+              <span className="whitespace-nowrap text-[11px]" style={{ color: textTertiary }}>
                 5 of 1,284
               </span>
             </div>
@@ -299,17 +302,17 @@ export function FinancePage({ skin, seed: seedId }: { skin: string; seed: SeedId
                   key={a.name}
                   {...m.layout}
                   {...m.hover}
-                  className="flex items-center justify-between rounded-lg p-2 cursor-pointer"
+                  className="flex items-center justify-between gap-4 rounded-lg p-2 cursor-pointer lg:gap-0"
                   style={{ background: "transparent" }}
                 >
-                  <div>
+                  <div className="min-w-0">
                     <div className="text-[13px] font-bold leading-tight">{a.name}</div>
                     <div className="text-[11px]" style={{ color: textTertiary }}>
                       {a.desc} · {a.time}
                     </div>
                   </div>
                   <div
-                    className="text-[13px] font-bold"
+                    className="shrink-0 whitespace-nowrap text-[13px] font-bold"
                     style={{
                       color: a.amount.startsWith("−")
                         ? "var(--destructive, #C85A54)"
@@ -434,7 +437,7 @@ function ChartStat({
       >
         {label}
       </div>
-      <div className="mt-1 text-[15px] font-bold" style={{ color: accent ?? "inherit" }}>
+      <div className="mt-1 whitespace-nowrap text-[15px] font-bold" style={{ color: accent ?? "inherit" }}>
         {value}
       </div>
     </div>
@@ -503,7 +506,7 @@ function Sparkline({
     })
     .join(" ");
   return (
-    <svg viewBox={`0 0 ${width} ${height}`} className={className} style={{ width }}>
+    <svg viewBox={`0 0 ${width} ${height}`} className={className}>
       <defs>
         <linearGradient id="spark-fade" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor={color} stopOpacity="0.18" />

@@ -68,6 +68,7 @@ counterpart there.
 A finding carries the rule of its class only while that rule id is in the catalog; otherwise `rule` is
 `null`. The good and bad page of every class are in `scripts/lib/fault-pairs.mjs` of the StyleSeed
 repository (fixtures for `scripts/test-render-faults-browser.mjs`).
+The StyleSeed demo shows every pair, and the `frame-jump` pair below, side by side at `/gallery/faults`.
 
 ## Output
 

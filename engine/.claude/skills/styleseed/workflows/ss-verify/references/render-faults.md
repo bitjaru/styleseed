@@ -124,6 +124,96 @@ cannot be waived; the ledger refuses such an exception before anything is measur
 - Text boxes come from the fonts of the machine that renders; counts on real pages may differ by a few
   findings between platforms. The fixture pairs are font-independent by construction.
 
+## Transition frame jumps
+
+A component that names the properties it transitions (`CRAFT-motion-family`, detector SS003) can leave
+one out: that property then changes in one frame while the rest of the change glides.
+`scripts/transition-jumps.mjs` samples a declared state change frame by frame and says where that
+happens. It is for your own pages and fixtures, never a reference site: clicking a declared trigger is
+the one thing it does to a page. It reports and has no `--gate`.
+
+```bash
+node <installed-ss-verify>/scripts/transition-jumps.mjs http://localhost:3000/settings \
+  --out .styleseed/evidence/transitions/<date> [--compare-all] [--viewport 1440x900]
+```
+
+**Declaring a case.** A root `data-styleseed-transition="<id>"` (lowercase letters, digits, and
+hyphens; unique on the page) holds exactly one `data-styleseed-trigger`, which may be the root itself;
+a trigger belongs to its nearest case root. The script clicks the trigger with `element.click()` to go
+forward and clicks it again to come back. Hover and focus changes are sampled by giving the page a
+control that applies the same state. A page with no case, an unsafe or repeated id, or a case without
+exactly one trigger stops the run (exit 1) with the page, the case, and the attribute to add.
+
+**Method.** Real-time frames depend on the machine, so the script holds the clock instead: it waits until
+no animation under the root is running, records every box under the root, clicks, and pauses every CSS
+transition, CSS animation, and Web Animation the change starts (on `transitionrun` and `animationstart`,
+right after the click, and on each of the next six frames, since a framework may apply the change a frame
+or two late). It then sets every held animation's time to 0, 1000/60 ms, 2 × 1000/60 ms, … up to the
+largest end time, records every box at each step, finishes the animations, and records the settled boxes
+twice, one frame apart. The same page gives the same frames on every machine. A change that starts no
+animation is `instant`, which is valid and has no findings.
+
+**Shown in a frame.** A box is compared only in frames where its element is shown: connected, at least
+1×1, not `display: none` or `visibility: hidden`, an opacity product of at least 0.05, rendered
+(`checkVisibility`; the content of a closed `<details>` is not), in the reachable document (the
+definition under **Terms**), and with some part inside every box that clips it (a collapsed
+`overflow: hidden` panel hides its content). An element not shown in one of two compared frames is skipped
+for that comparison: appearing and disappearing are not jumps `(S)`. Elements created by the change are
+not tracked.
+
+**Findings**, per element and per axis `x, y, w, h`, from boxes `[x, y, w, h]` in document pixels:
+
+| Phase | Compared | Finding when | Size |
+|---|---|---|---|
+| `start` | rest → time 0 | a displacement over `shiftPx` | `jump` over `jumpPx`, else `shift` |
+| `mid` | consecutive steps | a step `d` with \|d\| over `jumpPx` and over `calmFactor` × the larger of the steps before and after it (at least `calmFloor`) | `jump` |
+| `end` | last step → settled | a displacement over `shiftPx` | `jump` over `jumpPx`, else `shift` |
+
+| Threshold | Value | Origin |
+|---|---|---|
+| `jumpPx` | 2px | `(S)` the one-frame jump test |
+| `calmFactor` | 3 | `(S)` |
+| `calmFloor` | 0.4px | `(S)` |
+| `shiftPx` | 0.5px | *ours*: at time 0 and after the end nothing glides, so any displacement there was not animated. Stageshow's 2px tells a snap from a fast glide in real-time frames; an untransitioned 2px border moves content exactly 2px, which a "more than 2px" test would miss. |
+
+An `x` or `y` finding is dropped when an ancestor inside the root has one in the same phase, axis, and
+frame with a delta within 0.6px: the outermost is reported `(S)`. An element whose own text changed
+between rest and settled is skipped (a label that changes its words changes its width at once); what it
+pushes is still reported. A transitioned border width moves in whole pixels and does not trip the 2px
+test, which is correct.
+
+**`--compare-all`.** After both directions are sampled as built, both are sampled again with
+`transition-property: all !important` set inline on every element under the root whose
+`transition-duration` has a non-zero entry, and each value is restored afterwards. That is what the
+element did before its properties were named. A finding as built gets `withAll: true` when the same
+element, phase, and axis also has one in that second run (naming the properties did not cause it: an
+animation missing its keyframes, a `steps()` timing), `withAll: false` when it does not (**the named list
+caused it**), and `withAll: null` when the second run was not sampled or tracked other elements.
+
+**Inconclusive** (exit 2; such a run has no findings): `not-at-rest` (an animation under the root was
+still running 2s after the run began, or the change started one that never ends), `capped` (more than 400
+elements under the root; nothing is clicked), `chained` (once the held animations finished, another one
+was running), and `script-driven` (the settled boxes moved between two frames: motion driven by script
+rather than an `Animation` cannot be stepped). When the forward run stops before clicking, the back run
+is not sampled and reads the same.
+
+**Output.** `transitions.json` (`tool: "styleseed transition-jumps"`, `version: "1"`, `observedAt`,
+`browser`, `viewport`, `stepMs`, `thresholds`, per page and case the runs with `direction`, `mode`
+(`built` or `all`), `status`, `reason`, the counts of transitions and animations, `duration`, the number of
+frames and elements, and the findings with `phase`, `axis`, `delta`, `at` (ms), `size`, `box` (where the
+element was before the step), and `withAll`; then `totals` and the `verdict`) and `TRANSITIONS.md` (one
+row per case and direction, then the findings). No page text, selectors, property or animation names, or
+screenshots. The pair for this check is `frame-jump` in `scripts/lib/fault-pairs.mjs` of the StyleSeed
+repository; the ten state changes of the components whose transitions name their properties are
+declared on the demo's `/gallery/transitions`.
+
+**Limits.** Clicks only: no hover, focus, keys, or scripted multi-step interaction. Only motion driven by
+an `Animation` (CSS transitions and animations, Web Animations) is stepped. At most 400 elements per case.
+One viewport per run (`--viewport`). A state applied more than six frames after the click is not seen.
+A rotating box reports its bounding box, which grows and shrinks as it turns. Whether another layer covers
+a box is not checked. Open shadow roots and iframes are not traversed, elements inside an `svg` are not
+tracked (the `svg` is), and SVG path geometry is not read.
+
 ## Stageshow faults that do not transfer
 
 Stageshow films marketing demos of mock product UI; these screens are real product UI, so ten of its

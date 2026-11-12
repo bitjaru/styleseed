@@ -95,7 +95,7 @@ export function NotesPage({ skin, seed: seedId }: { skin: string; seed: SeedId }
   return (
     <div
       key={seedId}
-      className="flex"
+      className="flex flex-col md:flex-row"
       style={{
         background: surfacePage,
         color: text,
@@ -105,10 +105,10 @@ export function NotesPage({ skin, seed: seedId }: { skin: string; seed: SeedId }
     >
       {/* Sidebar */}
       <aside
-        className="w-[280px] shrink-0 overflow-y-auto p-3"
+        className="shrink-0 overflow-y-auto border-b p-3 md:w-[280px] md:border-r md:border-b-0"
         style={{
           background: card,
-          borderRight: `1px solid ${border}`,
+          borderColor: border,
         }}
       >
         <div className="mb-3 flex items-center gap-2 px-2">
@@ -205,19 +205,19 @@ export function NotesPage({ skin, seed: seedId }: { skin: string; seed: SeedId }
       </aside>
 
       {/* Editor */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="min-w-0 grow overflow-y-auto md:flex-1">
         {/* Sticky header */}
         <div
-          className="flex items-center justify-between px-8 py-3"
+          className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-3 sm:px-6 md:flex-nowrap md:gap-x-0 md:px-8"
           style={{ borderBottom: `1px solid ${border}`, background: surfacePage }}
         >
           <div className="flex items-center gap-2 text-[12px]" style={{ color: textTertiary }}>
             <FileText size={12} />
             <span>{current.title}</span>
             <span>·</span>
-            <span>Updated {current.updated} ago</span>
+            <span className="whitespace-nowrap md:whitespace-normal">Updated {current.updated} ago</span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="ms-auto flex shrink-0 items-center gap-2 md:shrink">
             <motion.button
               type="button"
               {...m.hover}
@@ -243,7 +243,7 @@ export function NotesPage({ skin, seed: seedId }: { skin: string; seed: SeedId }
           </div>
         </div>
 
-        <article className="px-12 py-10">
+        <article className="px-4 py-8 sm:px-6 md:px-12 md:py-10">
           {/* Title */}
           <motion.div {...m.entrance} className="flex items-baseline gap-3">
             <span className="text-[42px] leading-none">{current.emoji}</span>
@@ -255,16 +255,16 @@ export function NotesPage({ skin, seed: seedId }: { skin: string; seed: SeedId }
           {/* Meta row */}
           <motion.div
             {...delayed(m.entrance, 0.06)}
-            className="mt-4 flex items-center gap-5 text-[12px]"
+            className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-[12px]"
             style={{ color: textTertiary }}
           >
-            <span className="flex items-center gap-1.5">
+            <span className="flex items-center gap-1.5 whitespace-nowrap">
               <Calendar size={11} /> Updated {current.updated} ago
             </span>
-            <span className="flex items-center gap-1.5">
+            <span className="flex items-center gap-1.5 whitespace-nowrap">
               <Hash size={11} /> {TAGS.length} tags
             </span>
-            <span className="flex items-center gap-1.5">
+            <span className="flex items-center gap-1.5 whitespace-nowrap">
               <Pencil size={11} /> 3 collaborators
             </span>
           </motion.div>

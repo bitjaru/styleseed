@@ -297,8 +297,8 @@ test("validateManifest: the real screens.json, and broken copies", () => {
   fails((c) => { c.screens[0].expect.elements = "500"; }, /expect\.elements must be a whole number/u);
   fails((c) => { c.screens[0].expect = { rows: 3 }; }, /expect\.rows is not a floor/u);
   fails((c) => { c.lineages[1].kind = "vendor"; }, /\.kind must be one of/u);
-  fails((c) => { c.lineages[1].terms.automatedAccess = "conditional"; c.lineages[1].terms.checkedAt = "2026-11-12"; }, /terms\.note must say which condition/u);
-  fails((c) => { c.lineages[1].terms.automatedAccess = "not-mentioned"; }, /terms\.checkedAt must be the date of the check/u);
+  fails((c) => { Object.assign(c.lineages[1].terms, { automatedAccess: "conditional", checkedAt: "2026-11-12", note: "" }); }, /terms\.note must say which condition/u);
+  fails((c) => { Object.assign(c.lineages[1].terms, { automatedAccess: "not-mentioned", checkedAt: null }); }, /terms\.checkedAt must be the date of the check/u);
   fails((c) => { delete c.lineages[0].basePath; }, /basePath must be the path prefix/u);
   fails((c) => { c.viewports = [[1280, 800]]; }, /viewports must be/u);
 });

@@ -1,0 +1,2029 @@
+{
+ "recordVersion": 1,
+ "screen": "cloudscape-dashboard",
+ "url": "https://cloudscape.design/examples/react/dashboard.html",
+ "access": "self-hosted",
+ "observedAt": "2026-11-12",
+ "robots": "not-checked",
+ "scroll": false,
+ "viewports": [
+  {
+   "viewport": 1440,
+   "height": 900,
+   "status": "measured",
+   "httpStatus": 200,
+   "elements": 1105,
+   "truncated": false,
+   "documentHeight": 2167,
+   "overlayShare": 0,
+   "design": {
+    "controlHeights": {
+     "17": 2,
+     "18": 3,
+     "20": 16,
+     "30": 3,
+     "32": 5,
+     "36": 8
+    },
+    "radii": {
+     "0": 67,
+     "8": 1,
+     "12": 1,
+     "16": 9,
+     "20": 6
+    },
+    "targets": {
+     "16": 1,
+     "17": 2,
+     "18": 3,
+     "19": 16,
+     "20": 19,
+     "22": 1,
+     "24": 8,
+     "28": 15,
+     "30": 3,
+     "32": 3,
+     "39": 1,
+     "46": 2,
+     "57": 2
+    },
+    "type": {
+     "14|700|16": 1,
+     "14|400|20": 89,
+     "14|700|20": 19,
+     "18|700|22": 1,
+     "12|700|16": 5,
+     "24|700|30": 1,
+     "20|700|24": 11,
+     "42|700|48": 4,
+     "12|400|20": 30,
+     "20|400|24": 2,
+     "14|700|18": 8
+    },
+    "spacing": {
+     "1": 240,
+     "2": 94,
+     "4": 164,
+     "6": 18,
+     "7": 12,
+     "8": 121,
+     "9": 66,
+     "10": 96,
+     "12": 39,
+     "16": 6,
+     "17": 15,
+     "19": 72,
+     "20": 80,
+     "24": 3,
+     "28": 1,
+     "32": 6,
+     "40": 4,
+     "56": 1
+    },
+    "bodyFontSize": 16
+   },
+   "structure": {
+    "regions": [
+     {
+      "kind": "topBar",
+      "by": "landmark",
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 40,
+      "position": "sticky",
+      "items": 1,
+      "itemHeight": 16,
+      "contentWidth": 1360,
+      "insetLeft": 40
+     },
+     {
+      "kind": "sideNav",
+      "by": "landmark",
+      "x": 0,
+      "y": 82,
+      "w": 280,
+      "h": 818,
+      "position": "sticky",
+      "items": 24,
+      "itemHeight": 28,
+      "contentWidth": 280,
+      "insetLeft": 0
+     },
+     {
+      "kind": "main",
+      "by": "geometry",
+      "x": 295,
+      "y": 208,
+      "w": 1131,
+      "h": 1929,
+      "position": "static",
+      "items": 42,
+      "itemHeight": 19,
+      "contentWidth": 1131,
+      "insetLeft": 0
+     },
+     {
+      "kind": "aside",
+      "by": "landmark",
+      "x": 1092,
+      "y": 40,
+      "w": 349,
+      "h": 41,
+      "position": "sticky",
+      "items": 2,
+      "itemHeight": 30,
+      "contentWidth": 317,
+      "insetLeft": 20
+     }
+    ],
+    "controls": {
+     "buttons": {
+      "filled|rgb(0, 108, 224)|30|none": 1,
+      "text|rgb(66, 70, 80)|30|aside": 2,
+      "text|rgb(66, 70, 80)|32|sideNav": 1,
+      "text|rgb(0, 108, 224)|18|sideNav": 3,
+      "text|rgb(15, 20, 26)|20|sideNav": 6,
+      "text|rgb(222, 222, 227)|32|none": 1,
+      "text|rgb(0, 108, 224)|17|none": 1,
+      "filled|rgb(0, 108, 224)|32|none": 1,
+      "text|rgb(0, 108, 224)|17|main": 1,
+      "text|rgb(15, 20, 26)|20|main": 10,
+      "outline|rgb(0, 108, 224)|32|main": 1,
+      "text|rgb(15, 20, 26)|36|main": 8,
+      "outline|rgb(180, 180, 187)|32|main": 1
+     },
+     "inputs": {},
+     "labels": {
+      "above": 0,
+      "left": 0,
+      "none": 0
+     },
+     "leftEdges": 0
+    },
+    "tables": [
+     {
+      "rows": 4,
+      "cols": 2,
+      "headerH": 37,
+      "rowH": {
+       "39": 2,
+       "40": 2
+      },
+      "padX": 1,
+      "rowBorder": true,
+      "stickyHeader": false,
+      "endAligned": 0
+     },
+     {
+      "rows": 4,
+      "cols": 3,
+      "headerH": 37,
+      "rowH": {
+       "39": 2,
+       "40": 2
+      },
+      "padX": 1,
+      "rowBorder": true,
+      "stickyHeader": false,
+      "endAligned": 0
+     },
+     {
+      "rows": 7,
+      "cols": 4,
+      "headerH": 37,
+      "rowH": {
+       "39": 5,
+       "40": 2
+      },
+      "padX": 1,
+      "rowBorder": true,
+      "stickyHeader": false,
+      "endAligned": 0
+     }
+    ],
+    "lists": [],
+    "tabs": [],
+    "css": {
+     "hover": 269,
+     "focusVisible": 14,
+     "disabled": 8,
+     "reducedMotion": 102,
+     "breakpoints": {
+      "482": 1,
+      "493": 5,
+      "576": 4,
+      "688": 18,
+      "689": 40,
+      "960": 1,
+      "1401": 1,
+      "1921": 1,
+      "2541": 1
+     },
+     "unreadableSheets": 0,
+     "truncated": false
+    },
+    "skipped": {
+     "shadowHosts": 0,
+     "iframes": 0
+    }
+   },
+   "controls": {
+    "fields": {},
+    "buttons": {
+     "text|17|0|12": 2,
+     "filled|32|999|14": 1,
+     "text|20|0|14": 10,
+     "outline|32|999|14": 1
+    },
+    "pairs": [],
+    "textSizes": {
+     "14": 1981,
+     "20": 144,
+     "24": 17,
+     "42": 10
+    },
+    "capped": {},
+    "truncated": false
+   },
+   "faults": {
+    "counts": {
+     "amount-wrap": 0,
+     "text-overlap": 0,
+     "text-spill": 0,
+     "text-clip": 0,
+     "tight-inset": 1,
+     "text-touch": 0,
+     "near-touch": 0,
+     "near-align": 2,
+     "emoji-icon": 0,
+     "icon-mix": 1
+    },
+    "candidates": {
+     "amounts": 4,
+     "overlaps": 4,
+     "spills": 0,
+     "clips": 0,
+     "insets": 19,
+     "touches": 0,
+     "gaps": 0,
+     "aligns": 2,
+     "emoji": 0
+    },
+    "findings": [
+     {
+      "class": "tight-inset",
+      "viewport": 1440,
+      "box": [
+       1272,
+       1057,
+       137,
+       19
+      ],
+      "against": [
+       871,
+       992,
+       546,
+       328
+      ],
+      "measure": {
+       "inset": 6.7,
+       "side": "right",
+       "kind": "panel"
+      }
+     },
+     {
+      "class": "near-align",
+      "viewport": 1440,
+      "box": [
+       326,
+       1007,
+       462,
+       27
+      ],
+      "against": [
+       328,
+       1057,
+       484,
+       175
+      ],
+      "measure": {
+       "delta": 2
+      }
+     },
+     {
+      "class": "near-align",
+      "viewport": 1440,
+      "box": [
+       326,
+       1355,
+       92,
+       27
+      ],
+      "against": [
+       328,
+       1401,
+       502,
+       292
+      ],
+      "measure": {
+       "delta": 2
+      }
+     },
+     {
+      "class": "icon-mix",
+      "viewport": 1440,
+      "box": [
+       892,
+       1049,
+       504,
+       195
+      ],
+      "measure": {
+       "sets": {
+        "100|both": 4,
+        "16|stroke": 4
+       },
+       "n": 8
+      }
+     }
+    ],
+    "distribution": {
+     "tight-inset": {
+      "panel": {
+       "2": 0,
+       "4": 0,
+       "6": 0,
+       "8": 1,
+       "10": 1,
+       "12": 1
+      },
+      "chip": {
+       "2": 0,
+       "4": 0,
+       "6": 0,
+       "8": 0,
+       "10": 0,
+       "12": 0
+      }
+     },
+     "text-touch": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "near-touch": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "near-align": {
+      "1": 0,
+      "2": 0,
+      "3": 2,
+      "4": 2,
+      "5": 2,
+      "6": 2
+     }
+    },
+    "icons": {
+     "sets": {
+      "16|stroke": 25,
+      "16|fill": 10,
+      "16|both": 6,
+      "100|both": 4
+     },
+     "unknown": 0
+    },
+    "capped": {}
+   }
+  },
+  {
+   "viewport": 390,
+   "height": 844,
+   "status": "measured",
+   "httpStatus": 200,
+   "elements": 944,
+   "truncated": false,
+   "documentHeight": 4256,
+   "overlayShare": 0.2,
+   "design": {
+    "controlHeights": {
+     "17": 2,
+     "20": 10,
+     "30": 3,
+     "32": 5,
+     "36": 8
+    },
+    "radii": {
+     "0": 57,
+     "8": 2,
+     "12": 1,
+     "16": 9,
+     "20": 5
+    },
+    "targets": {
+     "16": 1,
+     "17": 2,
+     "19": 17,
+     "20": 13,
+     "24": 8,
+     "28": 2,
+     "30": 3,
+     "32": 3,
+     "39": 1,
+     "46": 2,
+     "57": 2
+    },
+    "type": {
+     "14|700|16": 1,
+     "14|400|20": 79,
+     "14|700|20": 18,
+     "24|700|30": 1,
+     "12|700|16": 2,
+     "20|700|24": 11,
+     "42|700|48": 4,
+     "12|400|20": 21,
+     "20|400|24": 2,
+     "14|700|18": 9
+    },
+    "spacing": {
+     "1": 240,
+     "2": 82,
+     "4": 124,
+     "6": 16,
+     "8": 53,
+     "9": 66,
+     "10": 96,
+     "12": 40,
+     "16": 5,
+     "17": 15,
+     "19": 66,
+     "20": 74,
+     "24": 3,
+     "32": 6,
+     "40": 1,
+     "11.6": 2
+    },
+    "bodyFontSize": 16
+   },
+   "structure": {
+    "regions": [
+     {
+      "kind": "topBar",
+      "by": "landmark",
+      "x": 0,
+      "y": 0,
+      "w": 390,
+      "h": 33,
+      "position": "sticky",
+      "items": 1,
+      "itemHeight": 16,
+      "contentWidth": 131,
+      "insetLeft": 20
+     },
+     {
+      "kind": "main",
+      "by": "geometry",
+      "x": 14,
+      "y": 296,
+      "w": 362,
+      "h": 3930,
+      "position": "static",
+      "items": 42,
+      "itemHeight": 19,
+      "contentWidth": 362,
+      "insetLeft": 0
+     },
+     {
+      "kind": "aside",
+      "by": "landmark",
+      "x": 290,
+      "y": 33,
+      "w": 100,
+      "h": 41,
+      "position": "sticky",
+      "items": 2,
+      "itemHeight": 30,
+      "contentWidth": 68,
+      "insetLeft": 20
+     }
+    ],
+    "controls": {
+     "buttons": {
+      "text|rgb(66, 70, 80)|30|none": 1,
+      "text|rgb(66, 70, 80)|30|aside": 2,
+      "text|rgb(222, 222, 227)|32|none": 1,
+      "text|rgb(0, 108, 224)|17|none": 1,
+      "filled|rgb(0, 108, 224)|32|none": 1,
+      "text|rgb(0, 108, 224)|17|main": 1,
+      "text|rgb(15, 20, 26)|20|main": 10,
+      "outline|rgb(0, 108, 224)|32|main": 1,
+      "text|rgb(15, 20, 26)|36|main": 8,
+      "outline|rgb(180, 180, 187)|32|main": 1,
+      "text|rgb(66, 70, 80)|32|none": 1
+     },
+     "inputs": {},
+     "labels": {
+      "above": 0,
+      "left": 0,
+      "none": 0
+     },
+     "leftEdges": 0
+    },
+    "tables": [
+     {
+      "rows": 4,
+      "cols": 2,
+      "headerH": 37,
+      "rowH": {
+       "39": 2,
+       "40": 2
+      },
+      "padX": 1,
+      "rowBorder": true,
+      "stickyHeader": false,
+      "endAligned": 0
+     },
+     {
+      "rows": 4,
+      "cols": 3,
+      "headerH": 37,
+      "rowH": {
+       "39": 2,
+       "40": 2
+      },
+      "padX": 1,
+      "rowBorder": true,
+      "stickyHeader": false,
+      "endAligned": 0
+     },
+     {
+      "rows": 7,
+      "cols": 4,
+      "headerH": 37,
+      "rowH": {
+       "39": 5,
+       "40": 2
+      },
+      "padX": 1,
+      "rowBorder": true,
+      "stickyHeader": false,
+      "endAligned": 0
+     }
+    ],
+    "lists": [],
+    "tabs": [],
+    "css": {
+     "hover": 269,
+     "focusVisible": 14,
+     "disabled": 8,
+     "reducedMotion": 102,
+     "breakpoints": {
+      "482": 1,
+      "493": 5,
+      "576": 4,
+      "688": 18,
+      "689": 40,
+      "960": 1,
+      "1401": 1,
+      "1921": 1,
+      "2541": 1
+     },
+     "unreadableSheets": 0,
+     "truncated": false
+    },
+    "skipped": {
+     "shadowHosts": 0,
+     "iframes": 0
+    }
+   },
+   "controls": {
+    "fields": {},
+    "buttons": {
+     "text|17|0|12": 2,
+     "filled|32|999|14": 1,
+     "text|20|0|14": 10,
+     "outline|32|999|14": 1
+    },
+    "pairs": [],
+    "textSizes": {
+     "14": 1981,
+     "20": 144,
+     "24": 17,
+     "42": 10
+    },
+    "capped": {},
+    "truncated": false
+   },
+   "faults": {
+    "counts": {
+     "amount-wrap": 0,
+     "text-overlap": 0,
+     "text-spill": 0,
+     "text-clip": 0,
+     "tight-inset": 0,
+     "text-touch": 0,
+     "near-touch": 0,
+     "near-align": 2,
+     "emoji-icon": 0,
+     "icon-mix": 1
+    },
+    "candidates": {
+     "amounts": 4,
+     "overlaps": 4,
+     "spills": 0,
+     "clips": 0,
+     "insets": 19,
+     "touches": 0,
+     "gaps": 0,
+     "aligns": 2,
+     "emoji": 0
+    },
+    "findings": [
+     {
+      "class": "near-align",
+      "viewport": 390,
+      "box": [
+       45,
+       2007,
+       160,
+       55
+      ],
+      "against": [
+       47,
+       2089,
+       298,
+       175
+      ],
+      "measure": {
+       "delta": 2
+      }
+     },
+     {
+      "class": "near-align",
+      "viewport": 390,
+      "box": [
+       45,
+       2767,
+       92,
+       27
+      ],
+      "against": [
+       47,
+       2813,
+       298,
+       292
+      ],
+      "measure": {
+       "delta": 2
+      }
+     },
+     {
+      "class": "icon-mix",
+      "viewport": 390,
+      "box": [
+       45,
+       2461,
+       480,
+       195
+      ],
+      "measure": {
+       "sets": {
+        "100|both": 4,
+        "16|stroke": 4
+       },
+       "n": 8
+      }
+     }
+    ],
+    "distribution": {
+     "tight-inset": {
+      "panel": {
+       "2": 0,
+       "4": 0,
+       "6": 0,
+       "8": 0,
+       "10": 0,
+       "12": 1
+      },
+      "chip": {
+       "2": 0,
+       "4": 0,
+       "6": 0,
+       "8": 0,
+       "10": 0,
+       "12": 0
+      }
+     },
+     "text-touch": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "near-touch": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "near-align": {
+      "1": 0,
+      "2": 0,
+      "3": 2,
+      "4": 2,
+      "5": 2,
+      "6": 2
+     }
+    },
+    "icons": {
+     "sets": {
+      "16|stroke": 25,
+      "16|fill": 10,
+      "100|both": 4
+     },
+     "unknown": 0
+    },
+    "capped": {}
+   }
+  }
+ ],
+ "values": {
+  "accent": "#006ce0",
+  "ink": "#0f141a",
+  "canvas": "#fcfcfd",
+  "spacingBase": null,
+  "spacingCoverage": 0,
+  "spacingScale": [
+   1,
+   2,
+   4,
+   8,
+   9,
+   10,
+   12,
+   19,
+   20
+  ],
+  "radii": [
+   0,
+   16,
+   20
+  ],
+  "controlHeights": [
+   17,
+   18,
+   20,
+   30,
+   32,
+   36
+  ],
+  "typeSizes": [
+   12,
+   14,
+   20,
+   42
+  ],
+  "fontCount": 1,
+  "motion": {
+   "transitions": 86,
+   "durations": [
+    90,
+    135,
+    165,
+    250
+   ],
+   "properties": {
+    "color": 56,
+    "opacity": 20,
+    "transform": 8,
+    "layout": 2
+   }
+  }
+ },
+ "facts": [
+  {
+   "id": "composition.shell.documentHeight",
+   "axis": "composition",
+   "level": "observed",
+   "value": 2167,
+   "unit": "px",
+   "viewport": 1440,
+   "from": "structure.shell"
+  },
+  {
+   "id": "composition.shell.bodyScrolls",
+   "axis": "composition",
+   "level": "observed",
+   "value": true,
+   "viewport": 1440,
+   "from": "structure.shell"
+  },
+  {
+   "id": "composition.shell.scrollContainers",
+   "axis": "composition",
+   "level": "observed",
+   "value": 0,
+   "viewport": 1440,
+   "from": "structure.shell"
+  },
+  {
+   "id": "composition.region.topBar.width",
+   "axis": "composition",
+   "level": "observed",
+   "value": 1440,
+   "unit": "px",
+   "viewport": 1440,
+   "from": "structure.regions[topBar] (landmark)"
+  },
+  {
+   "id": "composition.region.topBar.height",
+   "axis": "composition",
+   "level": "observed",
+   "value": 40,
+   "unit": "px",
+   "viewport": 1440,
+   "from": "structure.regions[topBar] (landmark)"
+  },
+  {
+   "id": "composition.region.topBar.position",
+   "axis": "composition",
+   "level": "observed",
+   "value": "sticky",
+   "viewport": 1440,
+   "from": "structure.regions[topBar] (landmark)"
+  },
+  {
+   "id": "composition.region.sideNav.width",
+   "axis": "composition",
+   "level": "observed",
+   "value": 280,
+   "unit": "px",
+   "viewport": 1440,
+   "from": "structure.regions[sideNav] (landmark)"
+  },
+  {
+   "id": "composition.region.sideNav.height",
+   "axis": "composition",
+   "level": "observed",
+   "value": 818,
+   "unit": "px",
+   "viewport": 1440,
+   "from": "structure.regions[sideNav] (landmark)"
+  },
+  {
+   "id": "composition.region.sideNav.position",
+   "axis": "composition",
+   "level": "observed",
+   "value": "sticky",
+   "viewport": 1440,
+   "from": "structure.regions[sideNav] (landmark)"
+  },
+  {
+   "id": "composition.region.main.width",
+   "axis": "composition",
+   "level": "derived",
+   "value": 1131,
+   "unit": "px",
+   "viewport": 1440,
+   "from": "structure.regions[main] (geometry)"
+  },
+  {
+   "id": "composition.region.main.height",
+   "axis": "composition",
+   "level": "derived",
+   "value": 1929,
+   "unit": "px",
+   "viewport": 1440,
+   "from": "structure.regions[main] (geometry)"
+  },
+  {
+   "id": "composition.region.main.position",
+   "axis": "composition",
+   "level": "derived",
+   "value": "static",
+   "viewport": 1440,
+   "from": "structure.regions[main] (geometry)"
+  },
+  {
+   "id": "composition.region.aside.width",
+   "axis": "composition",
+   "level": "observed",
+   "value": 349,
+   "unit": "px",
+   "viewport": 1440,
+   "from": "structure.regions[aside] (landmark)"
+  },
+  {
+   "id": "composition.region.aside.height",
+   "axis": "composition",
+   "level": "observed",
+   "value": 41,
+   "unit": "px",
+   "viewport": 1440,
+   "from": "structure.regions[aside] (landmark)"
+  },
+  {
+   "id": "composition.region.aside.position",
+   "axis": "composition",
+   "level": "observed",
+   "value": "sticky",
+   "viewport": 1440,
+   "from": "structure.regions[aside] (landmark)"
+  },
+  {
+   "id": "composition.main.contentWidth",
+   "axis": "composition",
+   "level": "derived",
+   "value": 1131,
+   "unit": "px",
+   "viewport": 1440,
+   "from": "structure.regions[main].contentWidth"
+  },
+  {
+   "id": "composition.main.insetLeft",
+   "axis": "composition",
+   "level": "derived",
+   "value": 0,
+   "unit": "px",
+   "viewport": 1440,
+   "from": "structure.regions[main].insetLeft"
+  },
+  {
+   "id": "composition.sections.count",
+   "axis": "composition",
+   "level": "derived",
+   "value": 9,
+   "viewport": 1440,
+   "from": "structure.sections"
+  },
+  {
+   "id": "composition.sections.sequence",
+   "axis": "composition",
+   "level": "derived",
+   "value": "other > other > chart > chart > table > table > table > chart > other",
+   "viewport": 1440,
+   "from": "structure.sections[].kind"
+  },
+  {
+   "id": "composition.columns.max",
+   "axis": "composition",
+   "level": "observed",
+   "value": 1,
+   "viewport": 1440,
+   "from": "structure.sections[].cols"
+  },
+  {
+   "id": "density.gap.stack",
+   "axis": "density",
+   "level": "observed",
+   "value": 2,
+   "unit": "px",
+   "viewport": 1440,
+   "from": "structure.gaps.stack"
+  },
+  {
+   "id": "density.gap.inline",
+   "axis": "density",
+   "level": "observed",
+   "value": 24,
+   "unit": "px",
+   "viewport": 1440,
+   "from": "structure.gaps.inline"
+  },
+  {
+   "id": "density.table.rowHeight",
+   "axis": "density",
+   "level": "observed",
+   "value": 39,
+   "unit": "px",
+   "viewport": 1440,
+   "from": "structure.tables[].rowH"
+  },
+  {
+   "id": "density.table.headerHeight",
+   "axis": "density",
+   "level": "observed",
+   "value": 37,
+   "unit": "px",
+   "viewport": 1440,
+   "from": "structure.tables[].headerH"
+  },
+  {
+   "id": "density.table.padX",
+   "axis": "density",
+   "level": "observed",
+   "value": 1,
+   "unit": "px",
+   "viewport": 1440,
+   "from": "structure.tables[].padX"
+  },
+  {
+   "id": "density.table.rowBorder",
+   "axis": "density",
+   "level": "observed",
+   "value": 3,
+   "viewport": 1440,
+   "from": "structure.tables[].rowBorder"
+  },
+  {
+   "id": "density.targets.mode",
+   "axis": "density",
+   "level": "observed",
+   "value": 20,
+   "unit": "px",
+   "viewport": 1440,
+   "from": "observations.targets"
+  },
+  {
+   "id": "density.targets.under44Share",
+   "axis": "density",
+   "level": "observed",
+   "value": 0.95,
+   "viewport": 1440,
+   "from": "observations.targets"
+  },
+  {
+   "id": "density.targets.under24Share",
+   "axis": "density",
+   "level": "observed",
+   "value": 0.55,
+   "viewport": 1440,
+   "from": "observations.targets"
+  },
+  {
+   "id": "typography.heading.h2.size",
+   "axis": "typography",
+   "level": "observed",
+   "value": 20,
+   "unit": "px",
+   "viewport": 1440,
+   "from": "structure.headings.main"
+  },
+  {
+   "id": "typography.heading.h2.weight",
+   "axis": "typography",
+   "level": "observed",
+   "value": 700,
+   "viewport": 1440,
+   "from": "structure.headings.main"
+  },
+  {
+   "id": "typography.heading.h2.lineHeight",
+   "axis": "typography",
+   "level": "observed",
+   "value": 24,
+   "unit": "px",
+   "viewport": 1440,
+   "from": "structure.headings.main"
+  },
+  {
+   "id": "typography.heading.sizes",
+   "axis": "typography",
+   "level": "observed",
+   "value": [
+    20
+   ],
+   "unit": "px",
+   "viewport": 1440,
+   "from": "structure.headings.main"
+  },
+  {
+   "id": "navigation.region.topBar.items",
+   "axis": "navigation-action",
+   "level": "observed",
+   "value": 1,
+   "viewport": 1440,
+   "from": "structure.regions[topBar].items"
+  },
+  {
+   "id": "navigation.region.topBar.itemHeight",
+   "axis": "navigation-action",
+   "level": "observed",
+   "value": 16,
+   "unit": "px",
+   "viewport": 1440,
+   "from": "structure.regions[topBar].itemHeight"
+  },
+  {
+   "id": "navigation.region.sideNav.items",
+   "axis": "navigation-action",
+   "level": "observed",
+   "value": 24,
+   "viewport": 1440,
+   "from": "structure.regions[sideNav].items"
+  },
+  {
+   "id": "navigation.region.sideNav.itemHeight",
+   "axis": "navigation-action",
+   "level": "observed",
+   "value": 28,
+   "unit": "px",
+   "viewport": 1440,
+   "from": "structure.regions[sideNav].itemHeight"
+  },
+  {
+   "id": "navigation.buttons.filled",
+   "axis": "navigation-action",
+   "level": "derived",
+   "value": 2,
+   "viewport": 1440,
+   "from": "structure.controls.buttons"
+  },
+  {
+   "id": "navigation.buttons.outline",
+   "axis": "navigation-action",
+   "level": "derived",
+   "value": 2,
+   "viewport": 1440,
+   "from": "structure.controls.buttons"
+  },
+  {
+   "id": "navigation.buttons.text",
+   "axis": "navigation-action",
+   "level": "derived",
+   "value": 33,
+   "viewport": 1440,
+   "from": "structure.controls.buttons"
+  },
+  {
+   "id": "navigation.primary.perSectionMax",
+   "axis": "navigation-action",
+   "level": "derived",
+   "value": 0,
+   "viewport": 1440,
+   "from": "structure.sections[].filled x accent"
+  },
+  {
+   "id": "navigation.primary.sectionsOverOne",
+   "axis": "navigation-action",
+   "level": "derived",
+   "value": 0,
+   "viewport": 1440,
+   "from": "structure.sections[].filled x accent"
+  },
+  {
+   "id": "navigation.primary.region.none",
+   "axis": "navigation-action",
+   "level": "derived",
+   "value": 2,
+   "viewport": 1440,
+   "from": "structure.controls.buttons x accent"
+  },
+  {
+   "id": "attention.firstViewport.sections",
+   "axis": "attention",
+   "level": "derived",
+   "value": "other > other > chart > chart",
+   "viewport": 1440,
+   "from": "structure.sections[].kind, y < viewport height"
+  },
+  {
+   "id": "attention.primary.count",
+   "axis": "attention",
+   "level": "derived",
+   "value": 2,
+   "viewport": 1440,
+   "from": "structure.controls.buttons x accent"
+  },
+  {
+   "id": "attention.primary.firstViewport",
+   "axis": "attention",
+   "level": "derived",
+   "value": 0,
+   "viewport": 1440,
+   "from": "structure.sections[].filled x accent, y < viewport height"
+  },
+  {
+   "id": "attention.primary.placement",
+   "axis": "attention",
+   "level": "derived",
+   "value": "none",
+   "viewport": 1440,
+   "from": "structure.controls.buttons x accent"
+  },
+  {
+   "id": "attention.emphasis.ratio",
+   "axis": "attention",
+   "level": "observed",
+   "value": "2:2:33",
+   "viewport": 1440,
+   "from": "structure.controls.buttons"
+  },
+  {
+   "id": "attention.text.largest",
+   "axis": "attention",
+   "level": "observed",
+   "value": 42,
+   "unit": "px",
+   "viewport": 1440,
+   "from": "observations.type (largest)"
+  },
+  {
+   "id": "attention.text.largestOverBody",
+   "axis": "attention",
+   "level": "derived",
+   "value": 2.63,
+   "viewport": 1440,
+   "from": "observations.type (largest) / observations.body.fontSize"
+  },
+  {
+   "id": "imagery.media.img",
+   "axis": "imagery-data",
+   "level": "observed",
+   "value": 0,
+   "viewport": 1440,
+   "from": "structure.media"
+  },
+  {
+   "id": "imagery.media.video",
+   "axis": "imagery-data",
+   "level": "observed",
+   "value": 0,
+   "viewport": 1440,
+   "from": "structure.media"
+  },
+  {
+   "id": "imagery.media.canvas",
+   "axis": "imagery-data",
+   "level": "observed",
+   "value": 0,
+   "viewport": 1440,
+   "from": "structure.media"
+  },
+  {
+   "id": "imagery.media.areaShare",
+   "axis": "imagery-data",
+   "level": "observed",
+   "value": 0.19,
+   "viewport": 1440,
+   "from": "structure.media"
+  },
+  {
+   "id": "imagery.media.chartLike",
+   "axis": "imagery-data",
+   "level": "derived",
+   "value": 3,
+   "viewport": 1440,
+   "from": "structure.media"
+  },
+  {
+   "id": "imagery.icon.sizes",
+   "axis": "imagery-data",
+   "level": "observed",
+   "value": [
+    16,
+    25
+   ],
+   "unit": "px",
+   "viewport": 1440,
+   "from": "structure.media.iconSizes"
+  },
+  {
+   "id": "imagery.table.endAligned",
+   "axis": "imagery-data",
+   "level": "observed",
+   "value": 0,
+   "viewport": 1440,
+   "from": "structure.tables[].endAligned"
+  },
+  {
+   "id": "imagery.tabular.share",
+   "axis": "imagery-data",
+   "level": "observed",
+   "value": 0,
+   "viewport": 1440,
+   "from": "observations.tabular / text elements"
+  },
+  {
+   "id": "tells.headings.skips",
+   "axis": "tells",
+   "level": "derived",
+   "value": 0,
+   "viewport": 1440,
+   "from": "structure.headings (document order)"
+  },
+  {
+   "id": "tells.table.rowHeightSpread",
+   "axis": "tells",
+   "level": "derived",
+   "value": 1,
+   "unit": "px",
+   "viewport": 1440,
+   "from": "structure.tables[].rowH"
+  },
+  {
+   "id": "composition.shell.documentHeight",
+   "axis": "composition",
+   "level": "observed",
+   "value": 4256,
+   "unit": "px",
+   "viewport": 390,
+   "from": "structure.shell"
+  },
+  {
+   "id": "composition.shell.bodyScrolls",
+   "axis": "composition",
+   "level": "observed",
+   "value": true,
+   "viewport": 390,
+   "from": "structure.shell"
+  },
+  {
+   "id": "composition.shell.scrollContainers",
+   "axis": "composition",
+   "level": "observed",
+   "value": 0,
+   "viewport": 390,
+   "from": "structure.shell"
+  },
+  {
+   "id": "composition.region.topBar.width",
+   "axis": "composition",
+   "level": "observed",
+   "value": 390,
+   "unit": "px",
+   "viewport": 390,
+   "from": "structure.regions[topBar] (landmark)"
+  },
+  {
+   "id": "composition.region.topBar.height",
+   "axis": "composition",
+   "level": "observed",
+   "value": 33,
+   "unit": "px",
+   "viewport": 390,
+   "from": "structure.regions[topBar] (landmark)"
+  },
+  {
+   "id": "composition.region.topBar.position",
+   "axis": "composition",
+   "level": "observed",
+   "value": "sticky",
+   "viewport": 390,
+   "from": "structure.regions[topBar] (landmark)"
+  },
+  {
+   "id": "composition.region.main.width",
+   "axis": "composition",
+   "level": "derived",
+   "value": 362,
+   "unit": "px",
+   "viewport": 390,
+   "from": "structure.regions[main] (geometry)"
+  },
+  {
+   "id": "composition.region.main.height",
+   "axis": "composition",
+   "level": "derived",
+   "value": 3930,
+   "unit": "px",
+   "viewport": 390,
+   "from": "structure.regions[main] (geometry)"
+  },
+  {
+   "id": "composition.region.main.position",
+   "axis": "composition",
+   "level": "derived",
+   "value": "static",
+   "viewport": 390,
+   "from": "structure.regions[main] (geometry)"
+  },
+  {
+   "id": "composition.region.aside.width",
+   "axis": "composition",
+   "level": "observed",
+   "value": 100,
+   "unit": "px",
+   "viewport": 390,
+   "from": "structure.regions[aside] (landmark)"
+  },
+  {
+   "id": "composition.region.aside.height",
+   "axis": "composition",
+   "level": "observed",
+   "value": 41,
+   "unit": "px",
+   "viewport": 390,
+   "from": "structure.regions[aside] (landmark)"
+  },
+  {
+   "id": "composition.region.aside.position",
+   "axis": "composition",
+   "level": "observed",
+   "value": "sticky",
+   "viewport": 390,
+   "from": "structure.regions[aside] (landmark)"
+  },
+  {
+   "id": "composition.main.contentWidth",
+   "axis": "composition",
+   "level": "derived",
+   "value": 362,
+   "unit": "px",
+   "viewport": 390,
+   "from": "structure.regions[main].contentWidth"
+  },
+  {
+   "id": "composition.main.insetLeft",
+   "axis": "composition",
+   "level": "derived",
+   "value": 0,
+   "unit": "px",
+   "viewport": 390,
+   "from": "structure.regions[main].insetLeft"
+  },
+  {
+   "id": "composition.sections.count",
+   "axis": "composition",
+   "level": "derived",
+   "value": 9,
+   "viewport": 390,
+   "from": "structure.sections"
+  },
+  {
+   "id": "composition.sections.sequence",
+   "axis": "composition",
+   "level": "derived",
+   "value": "other > other > chart > chart > table > table > table > chart > other",
+   "viewport": 390,
+   "from": "structure.sections[].kind"
+  },
+  {
+   "id": "composition.columns.max",
+   "axis": "composition",
+   "level": "observed",
+   "value": 1,
+   "viewport": 390,
+   "from": "structure.sections[].cols"
+  },
+  {
+   "id": "density.gap.stack",
+   "axis": "density",
+   "level": "observed",
+   "value": 4,
+   "unit": "px",
+   "viewport": 390,
+   "from": "structure.gaps.stack"
+  },
+  {
+   "id": "density.gap.inline",
+   "axis": "density",
+   "level": "observed",
+   "value": 24,
+   "unit": "px",
+   "viewport": 390,
+   "from": "structure.gaps.inline"
+  },
+  {
+   "id": "density.table.rowHeight",
+   "axis": "density",
+   "level": "observed",
+   "value": 39,
+   "unit": "px",
+   "viewport": 390,
+   "from": "structure.tables[].rowH"
+  },
+  {
+   "id": "density.table.headerHeight",
+   "axis": "density",
+   "level": "observed",
+   "value": 37,
+   "unit": "px",
+   "viewport": 390,
+   "from": "structure.tables[].headerH"
+  },
+  {
+   "id": "density.table.padX",
+   "axis": "density",
+   "level": "observed",
+   "value": 1,
+   "unit": "px",
+   "viewport": 390,
+   "from": "structure.tables[].padX"
+  },
+  {
+   "id": "density.table.rowBorder",
+   "axis": "density",
+   "level": "observed",
+   "value": 3,
+   "viewport": 390,
+   "from": "structure.tables[].rowBorder"
+  },
+  {
+   "id": "density.targets.mode",
+   "axis": "density",
+   "level": "observed",
+   "value": 19,
+   "unit": "px",
+   "viewport": 390,
+   "from": "observations.targets"
+  },
+  {
+   "id": "density.targets.under44Share",
+   "axis": "density",
+   "level": "observed",
+   "value": 0.93,
+   "viewport": 390,
+   "from": "observations.targets"
+  },
+  {
+   "id": "density.targets.under24Share",
+   "axis": "density",
+   "level": "observed",
+   "value": 0.61,
+   "viewport": 390,
+   "from": "observations.targets"
+  },
+  {
+   "id": "typography.heading.h2.size",
+   "axis": "typography",
+   "level": "observed",
+   "value": 20,
+   "unit": "px",
+   "viewport": 390,
+   "from": "structure.headings.main"
+  },
+  {
+   "id": "typography.heading.h2.weight",
+   "axis": "typography",
+   "level": "observed",
+   "value": 700,
+   "viewport": 390,
+   "from": "structure.headings.main"
+  },
+  {
+   "id": "typography.heading.h2.lineHeight",
+   "axis": "typography",
+   "level": "observed",
+   "value": 24,
+   "unit": "px",
+   "viewport": 390,
+   "from": "structure.headings.main"
+  },
+  {
+   "id": "typography.heading.sizes",
+   "axis": "typography",
+   "level": "observed",
+   "value": [
+    20
+   ],
+   "unit": "px",
+   "viewport": 390,
+   "from": "structure.headings.main"
+  },
+  {
+   "id": "navigation.region.topBar.items",
+   "axis": "navigation-action",
+   "level": "observed",
+   "value": 1,
+   "viewport": 390,
+   "from": "structure.regions[topBar].items"
+  },
+  {
+   "id": "navigation.region.topBar.itemHeight",
+   "axis": "navigation-action",
+   "level": "observed",
+   "value": 16,
+   "unit": "px",
+   "viewport": 390,
+   "from": "structure.regions[topBar].itemHeight"
+  },
+  {
+   "id": "navigation.buttons.filled",
+   "axis": "navigation-action",
+   "level": "derived",
+   "value": 1,
+   "viewport": 390,
+   "from": "structure.controls.buttons"
+  },
+  {
+   "id": "navigation.buttons.outline",
+   "axis": "navigation-action",
+   "level": "derived",
+   "value": 2,
+   "viewport": 390,
+   "from": "structure.controls.buttons"
+  },
+  {
+   "id": "navigation.buttons.text",
+   "axis": "navigation-action",
+   "level": "derived",
+   "value": 25,
+   "viewport": 390,
+   "from": "structure.controls.buttons"
+  },
+  {
+   "id": "navigation.primary.perSectionMax",
+   "axis": "navigation-action",
+   "level": "derived",
+   "value": 0,
+   "viewport": 390,
+   "from": "structure.sections[].filled x accent"
+  },
+  {
+   "id": "navigation.primary.sectionsOverOne",
+   "axis": "navigation-action",
+   "level": "derived",
+   "value": 0,
+   "viewport": 390,
+   "from": "structure.sections[].filled x accent"
+  },
+  {
+   "id": "navigation.primary.region.none",
+   "axis": "navigation-action",
+   "level": "derived",
+   "value": 1,
+   "viewport": 390,
+   "from": "structure.controls.buttons x accent"
+  },
+  {
+   "id": "attention.firstViewport.sections",
+   "axis": "attention",
+   "level": "derived",
+   "value": "other > other > chart",
+   "viewport": 390,
+   "from": "structure.sections[].kind, y < viewport height"
+  },
+  {
+   "id": "attention.primary.count",
+   "axis": "attention",
+   "level": "derived",
+   "value": 1,
+   "viewport": 390,
+   "from": "structure.controls.buttons x accent"
+  },
+  {
+   "id": "attention.primary.firstViewport",
+   "axis": "attention",
+   "level": "derived",
+   "value": 0,
+   "viewport": 390,
+   "from": "structure.sections[].filled x accent, y < viewport height"
+  },
+  {
+   "id": "attention.primary.placement",
+   "axis": "attention",
+   "level": "derived",
+   "value": "none",
+   "viewport": 390,
+   "from": "structure.controls.buttons x accent"
+  },
+  {
+   "id": "attention.emphasis.ratio",
+   "axis": "attention",
+   "level": "observed",
+   "value": "1:2:25",
+   "viewport": 390,
+   "from": "structure.controls.buttons"
+  },
+  {
+   "id": "attention.text.largest",
+   "axis": "attention",
+   "level": "observed",
+   "value": 42,
+   "unit": "px",
+   "viewport": 390,
+   "from": "observations.type (largest)"
+  },
+  {
+   "id": "attention.text.largestOverBody",
+   "axis": "attention",
+   "level": "derived",
+   "value": 2.63,
+   "viewport": 390,
+   "from": "observations.type (largest) / observations.body.fontSize"
+  },
+  {
+   "id": "imagery.media.img",
+   "axis": "imagery-data",
+   "level": "observed",
+   "value": 0,
+   "viewport": 390,
+   "from": "structure.media"
+  },
+  {
+   "id": "imagery.media.video",
+   "axis": "imagery-data",
+   "level": "observed",
+   "value": 0,
+   "viewport": 390,
+   "from": "structure.media"
+  },
+  {
+   "id": "imagery.media.canvas",
+   "axis": "imagery-data",
+   "level": "observed",
+   "value": 0,
+   "viewport": 390,
+   "from": "structure.media"
+  },
+  {
+   "id": "imagery.media.areaShare",
+   "axis": "imagery-data",
+   "level": "observed",
+   "value": 0.2,
+   "viewport": 390,
+   "from": "structure.media"
+  },
+  {
+   "id": "imagery.media.chartLike",
+   "axis": "imagery-data",
+   "level": "derived",
+   "value": 3,
+   "viewport": 390,
+   "from": "structure.media"
+  },
+  {
+   "id": "imagery.icon.sizes",
+   "axis": "imagery-data",
+   "level": "observed",
+   "value": [
+    16,
+    25
+   ],
+   "unit": "px",
+   "viewport": 390,
+   "from": "structure.media.iconSizes"
+  },
+  {
+   "id": "imagery.table.endAligned",
+   "axis": "imagery-data",
+   "level": "observed",
+   "value": 0,
+   "viewport": 390,
+   "from": "structure.tables[].endAligned"
+  },
+  {
+   "id": "imagery.tabular.share",
+   "axis": "imagery-data",
+   "level": "observed",
+   "value": 0,
+   "viewport": 390,
+   "from": "observations.tabular / text elements"
+  },
+  {
+   "id": "tells.headings.skips",
+   "axis": "tells",
+   "level": "derived",
+   "value": 0,
+   "viewport": 390,
+   "from": "structure.headings (document order)"
+  },
+  {
+   "id": "tells.table.rowHeightSpread",
+   "axis": "tells",
+   "level": "derived",
+   "value": 1,
+   "unit": "px",
+   "viewport": 390,
+   "from": "structure.tables[].rowH"
+  },
+  {
+   "id": "states.css.hover",
+   "axis": "states-motion",
+   "level": "observed",
+   "value": 269,
+   "viewport": "both",
+   "from": "structure.css (readable stylesheets)"
+  },
+  {
+   "id": "states.css.focusVisible",
+   "axis": "states-motion",
+   "level": "observed",
+   "value": 14,
+   "viewport": "both",
+   "from": "structure.css (readable stylesheets)"
+  },
+  {
+   "id": "states.css.disabled",
+   "axis": "states-motion",
+   "level": "observed",
+   "value": 8,
+   "viewport": "both",
+   "from": "structure.css (readable stylesheets)"
+  },
+  {
+   "id": "states.css.reducedMotion",
+   "axis": "states-motion",
+   "level": "observed",
+   "value": 102,
+   "viewport": "both",
+   "from": "structure.css (readable stylesheets)"
+  },
+  {
+   "id": "states.css.unreadableSheets",
+   "axis": "states-motion",
+   "level": "observed",
+   "value": 0,
+   "viewport": "both",
+   "from": "structure.css (readable stylesheets)"
+  },
+  {
+   "id": "states.motion.transitions",
+   "axis": "states-motion",
+   "level": "observed",
+   "value": 86,
+   "viewport": "both",
+   "from": "observations.motion.transitions"
+  },
+  {
+   "id": "states.motion.duration",
+   "axis": "states-motion",
+   "level": "observed",
+   "value": 165,
+   "unit": "ms",
+   "viewport": "both",
+   "from": "observations.motion.transitions"
+  },
+  {
+   "id": "states.motion.durations",
+   "axis": "states-motion",
+   "level": "observed",
+   "value": [
+    90,
+    135,
+    165,
+    250
+   ],
+   "unit": "ms",
+   "viewport": "both",
+   "from": "observations.motion.transitions"
+  },
+  {
+   "id": "states.motion.easing",
+   "axis": "states-motion",
+   "level": "observed",
+   "value": "ease",
+   "viewport": "both",
+   "from": "observations.motion.transitions"
+  },
+  {
+   "id": "states.motion.animations",
+   "axis": "states-motion",
+   "level": "observed",
+   "value": 1,
+   "viewport": "both",
+   "from": "observations.motion.animations"
+  },
+  {
+   "id": "states.motion.infinite",
+   "axis": "states-motion",
+   "level": "observed",
+   "value": 0,
+   "viewport": "both",
+   "from": "observations.motion.animations"
+  },
+  {
+   "id": "tells.controlHeights.distinct",
+   "axis": "tells",
+   "level": "derived",
+   "value": 6,
+   "viewport": "both",
+   "from": "observations.controlHeights"
+  },
+  {
+   "id": "tells.radii.distinct",
+   "axis": "tells",
+   "level": "derived",
+   "value": 5,
+   "viewport": "both",
+   "from": "observations.radii"
+  },
+  {
+   "id": "tells.typeSizes.distinct",
+   "axis": "tells",
+   "level": "derived",
+   "value": 6,
+   "viewport": "both",
+   "from": "observations.type"
+  },
+  {
+   "id": "responsive.columns",
+   "axis": "responsive",
+   "level": "derived",
+   "value": "1 -> 1",
+   "viewport": "both",
+   "from": "structure.sections[].cols at 1440 and 390"
+  },
+  {
+   "id": "responsive.region.topBar",
+   "axis": "responsive",
+   "level": "derived",
+   "value": "40 -> 33",
+   "unit": "px",
+   "viewport": "both",
+   "from": "structure.regions[topBar] at 1440 and 390"
+  },
+  {
+   "id": "responsive.region.sideNav",
+   "axis": "responsive",
+   "level": "derived",
+   "value": "280 -> none",
+   "unit": "px",
+   "viewport": "both",
+   "from": "structure.regions[sideNav] at 1440 and 390"
+  },
+  {
+   "id": "responsive.region.main",
+   "axis": "responsive",
+   "level": "derived",
+   "value": "1131 -> 362",
+   "unit": "px",
+   "viewport": "both",
+   "from": "structure.regions[main] at 1440 and 390"
+  },
+  {
+   "id": "responsive.region.aside",
+   "axis": "responsive",
+   "level": "derived",
+   "value": "349 -> 100",
+   "unit": "px",
+   "viewport": "both",
+   "from": "structure.regions[aside] at 1440 and 390"
+  },
+  {
+   "id": "responsive.main.contentWidth",
+   "axis": "responsive",
+   "level": "derived",
+   "value": "1131 -> 362",
+   "unit": "px",
+   "viewport": "both",
+   "from": "structure.regions[main].contentWidth at 1440 and 390"
+  },
+  {
+   "id": "responsive.main.insetLeft",
+   "axis": "responsive",
+   "level": "derived",
+   "value": "0 -> 0",
+   "unit": "px",
+   "viewport": "both",
+   "from": "structure.regions[main].insetLeft at 1440 and 390"
+  },
+  {
+   "id": "responsive.heading.max",
+   "axis": "responsive",
+   "level": "derived",
+   "value": "20 -> 20",
+   "unit": "px",
+   "viewport": "both",
+   "from": "structure.headings.main at 1440 and 390"
+  },
+  {
+   "id": "responsive.table.rowHeight",
+   "axis": "responsive",
+   "level": "derived",
+   "value": "39 -> 39",
+   "unit": "px",
+   "viewport": "both",
+   "from": "structure.tables[].rowH at 1440 and 390"
+  },
+  {
+   "id": "responsive.sections.count",
+   "axis": "responsive",
+   "level": "derived",
+   "value": "9 -> 9",
+   "viewport": "both",
+   "from": "structure.sections at 1440 and 390"
+  },
+  {
+   "id": "responsive.overflowX",
+   "axis": "responsive",
+   "level": "observed",
+   "value": 0,
+   "unit": "px",
+   "viewport": 390,
+   "from": "structure.shell.overflowX"
+  },
+  {
+   "id": "responsive.breakpoints",
+   "axis": "responsive",
+   "level": "observed",
+   "value": [
+    482,
+    493,
+    576,
+    688,
+    689,
+    960,
+    1401,
+    1921,
+    2541
+   ],
+   "unit": "px",
+   "viewport": "both",
+   "from": "structure.css.breakpoints (readable stylesheets)"
+  }
+ ]
+}

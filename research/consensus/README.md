@@ -15,12 +15,15 @@ row adds a rule or changes a rule's `priority`, `check`, `kind`, or `scope`, and
 
 | Lineage | Name | Kind | Host | Access | Licence of the demos | Terms (automated access) | Checked |
 |---|---|---|---|---|---|---|---|
-| `cloudscape` | AWS Cloudscape | product system | `cloudscape.design` | self-hosted build of `cloudscape-design/demos` | MIT-0 | the AWS Site Terms exclude robots and data-gathering tools, so the hosted pages are never loaded | not yet checked by a run |
-| `patternfly` | Red Hat PatternFly | product system | `www.patternfly.org` | hosted | MIT (`patternfly/patternfly-org`) | not yet checked by a run | — |
-| `antpro` | Ant Design Pro | kit | `preview.pro.ant.design` | hosted | MIT (`ant-design/ant-design-pro`) | not yet checked by a run | — |
-| `shadcn` | shadcn/ui | kit | `ui.shadcn.com` | hosted | MIT (`shadcn-ui/ui`) | not yet checked by a run | — |
-| `primer` | GitHub Primer | product system | `primer.style` | hosted | MIT (`primer/react`) | not yet checked by a run | — |
-| `carbon` | IBM Carbon | product system | `react.carbondesignsystem.com` | hosted (one form story, a fragment) | Apache-2.0 (`carbon-design-system/carbon`) | not yet checked by a run | — |
+| `cloudscape` | AWS Cloudscape | product system | `cloudscape.design` | self-hosted: `cloudscape-design/demos` at `dda7bab`, built and served on `127.0.0.1` | MIT-0 | `restricted`: the AWS Site Terms exclude robots and data-gathering tools, so the hosted pages are never loaded | 2026-11-12 |
+| `patternfly` | Red Hat PatternFly | product system | `www.patternfly.org` | hosted, not loaded while its terms read `restricted` | MIT (`patternfly/patternfly-org`) | `restricted`: the Red Hat terms the site's footer links rule out using the site in a way that deploys a robot or a retrieval application | 2026-11-12 |
+| `antpro` | Ant Design Pro | kit | `preview.pro.ant.design` | hosted | MIT (`ant-design/ant-design-pro`) | `not-mentioned`: the preview app links no terms page | 2026-11-12 |
+| `shadcn` | shadcn/ui | kit | `ui.shadcn.com` | hosted | MIT (`shadcn-ui/ui`) | `not-mentioned`: the site links no terms page | 2026-11-12 |
+| `primer` | GitHub Primer | product system | `primer.style` | hosted | MIT (`primer/react`) | `conditional`: the GitHub Acceptable Use Policies allow research use of public, non-personal information when the publication is open access, as this repository is; whether they cover `primer.style` is not stated | 2026-11-12 |
+| `carbon` | IBM Carbon | product system | `react.carbondesignsystem.com` | hosted (one form story, a fragment) | Apache-2.0 (`carbon-design-system/carbon`) | `robots-txt`: the IBM terms allow a crawler as far as the site's `robots.txt` permits | 2026-11-12 |
+
+PatternFly's demos are open source (`patternfly/patternfly-org`, MIT), so a later run could measure a
+self-hosted build the way Cloudscape is measured; that is the maintainer's decision.
 
 `screens.json` lists the 32 screens (30 full screens and 2 fragments), each with its lineage, the page
 type the study assigns (`dashboard`, `list`, `form`, `detail`), its tier (`screen` or `fragment`), its
@@ -147,11 +150,17 @@ generated files from the records; never edit them by hand. `--check` prints one 
 when a stored file does not pass the allow-list walk, a listed screen has no status row, or a
 generated file differs from what its records give.
 
-For Cloudscape, build `cloudscape-design/demos` outside this repository as its README says, serve the
-build on `127.0.0.1` with a static file server, record `selfHosted` (repository, commit, licence,
-build date) on the lineage in `screens.json`, and pass `--base`. The hosted Cloudscape pages are never
-loaded.
+For Cloudscape, clone `cloudscape-design/demos` outside this repository and build it as its README
+says (`npm install`, then `npm run build`; `npm ci` does not work there because the project removes its
+own `@cloudscape-design/*` entries from the lock file). The build writes the pages to `lib/`. Serve that
+folder on `127.0.0.1` with a static file server (`python3 -m http.server <port> --bind 127.0.0.1
+--directory lib`), record `selfHosted` (repository, commit, licence, build date) on the lineage in
+`screens.json`, and pass `--base cloudscape=http://127.0.0.1:<port>/`. The hosted Cloudscape pages are
+never loaded.
 
 ## Runs
 
-None yet.
+- [`runs/2026-11-12/`](runs/2026-11-12/CONSENSUS.md): 24 of 32 screens measured, 0 failed, 8 skipped (PatternFly,
+  on its terms). Cloudscape was measured from a local build of `cloudscape-design/demos` at `dda7bab`.
+  Chromium 156.0.8078.4. Tables: [`CONSENSUS.md`](runs/2026-11-12/CONSENSUS.md) and
+  [`NEGATIVE-CONTROL.md`](runs/2026-11-12/NEGATIVE-CONTROL.md).

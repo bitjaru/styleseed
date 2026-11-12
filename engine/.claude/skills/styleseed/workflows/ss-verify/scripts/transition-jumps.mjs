@@ -13,8 +13,10 @@
 // The CSS transitions, CSS animations, and Web Animations the change starts are paused and stepped every
 // 1000/60 ms (observe-transition.mjs), so the frames are the same on every machine. --compare-all
 // samples both directions again with `transition-property: all !important` set inline on every element
-// under the root whose transition duration is not zero, and restores it afterwards: a finding of the
-// change as built that is absent there was caused by the named property list (`withAll: false`).
+// under the root (a duration may exist only in the changed state; an element whose duration is 0 still
+// changes at once), and restores it afterwards: a finding of the change as built that is absent there
+// was caused by the named property list (`withAll: false`). A run that cannot return the case to its
+// starting state leaves the case's remaining runs inconclusive (`skipped`).
 //
 // One browser context per URL with reducedMotion 'no-preference', and the waits of observeUrls after
 // the page loads. Writes transitions.json and TRANSITIONS.md: counts, boxes, deltas, and enums, no page
@@ -161,8 +163,33 @@ export function runRecord(direction, mode, sample, findings) {
   };
 }
 
-// The four samples of one case (built forward and back; with --compare-all, all forward and back) →
-// its runs. `samples` maps `${mode}:${direction}` to a sampleTransition result.
+// The samples of one case, in order: built forward and back, then with --compare-all all forward and
+// back. `sample({ direction, forceAll })` runs sampleTransition once. Each run must start where the
+// previous one left the case:
+//   - a forward run that stopped before clicking (not at rest, capped) left the state as it was:
+//     clicking now would go forward, so that mode's back run is not sampled and reads the same;
+//   - a back run that stopped before clicking after a forward run that clicked left the case changed:
+//     every run after it would start from the wrong state, so they are inconclusive (`skipped`).
+export const SKIPPED = Object.freeze({ status: 'inconclusive', reason: 'skipped', clicked: false, transitions: 0, animations: 0, duration: null, times: [], rest: [], frames: [], settled: [], parents: [], textChanged: [] });
+export async function sampleCase(sample, { compareAll = false } = {}) {
+  const samples = {};
+  let changed = false, stuck = false;
+  for (const mode of compareAll ? ['built', 'all'] : ['built']) {
+    for (const direction of DIRECTIONS) {
+      const key = `${mode}:${direction}`;
+      if (stuck) { samples[key] = SKIPPED; continue; }
+      if (direction === 'back' && !changed) { samples[key] = samples[`${mode}:forward`]; continue; }
+      const result = await sample({ direction, forceAll: mode === 'all' });
+      samples[key] = result;
+      if (result.clicked) changed = !changed;
+      else if (changed) stuck = true;
+    }
+  }
+  return samples;
+}
+
+// The samples of one case (built forward and back; with --compare-all, all forward and back) → its
+// runs. `samples` maps `${mode}:${direction}` to a sampleTransition result.
 export function caseRuns(samples, { compareAll = false, thresholds = THRESHOLDS } = {}) {
   const runs = [];
   const analyzed = new Map();
@@ -193,6 +220,7 @@ export function transitionsTotals(pages, { compareAll = false } = {}) {
     jumps: built.filter(f => f.size === 'jump').length,
     shifts: built.filter(f => f.size === 'shift').length,
     namedList: compareAll ? built.filter(f => f.withAll === false).length : null,
+    notCompared: compareAll ? built.filter(f => f.withAll === null).length : null,
   };
 }
 
@@ -204,7 +232,7 @@ export function transitionsVerdict(pages, totals) {
   const open = pages.flatMap(p => p.cases.flatMap(c => c.runs.filter(r => r.status === 'inconclusive').map(r => `${c.id} ${r.direction}${r.mode === 'all' ? ' (all)' : ''}: ${r.reason}`)));
   const openText = open.length ? ` Inconclusive: ${open.join('; ')}.` : '';
   const found = totals.jumps + totals.shifts;
-  const named = totals.namedList === null ? 'not compared with every property transitioned (--compare-all)' : `${totals.namedList} caused by the named property list`;
+  const named = totals.namedList === null ? 'not compared with every property transitioned (--compare-all)' : `${totals.namedList} caused by the named property list${totals.notCompared ? `, ${totals.notCompared} not compared` : ''}`;
   if (!found) return `No frame jump in ${where}: ${statuses}.${openText}`;
   return `${plural(found, 'finding')} in ${where} as built (${plural(totals.jumps, 'jump')}, ${plural(totals.shifts, 'shift')}), ${named}; ${statuses}.${openText}`;
 }
@@ -229,7 +257,8 @@ export function renderTransitionsMarkdown(report, meta = {}) {
     const jumps = r.findings.filter(f => f.size === 'jump').length, shifts = r.findings.filter(f => f.size === 'shift').length;
     const found = r.findings.length ? [jumps ? plural(jumps, 'jump') : null, shifts ? plural(shifts, 'shift') : null].filter(Boolean).join(', ') : 'none';
     const all = c.runs.find(x => x.mode === 'all' && x.direction === r.direction);
-    const namedCell = all ? `${r.findings.filter(f => f.withAll === false).length}${all.status === 'sampled' ? '' : ` (all: ${all.status}${all.reason ? ` ${all.reason}` : ''})`}` : '';
+    const unmatched = r.findings.filter(f => f.withAll === null).length;
+    const namedCell = all ? `${r.findings.filter(f => f.withAll === false).length}${unmatched ? `, ${unmatched} not compared` : ''}${all.status === 'sampled' ? '' : ` (all: ${all.status}${all.reason ? ` ${all.reason}` : ''})`}` : '';
     lines.push(`| ${cell(p.label)} | ${c.id} | ${r.direction} | ${r.status}${r.reason ? ` (${r.reason})` : ''} | ${r.transitions} | ${r.animations} | ${r.duration ?? '—'} | ${r.frames} | ${r.elements} | ${found} |${compareAll ? ` ${namedCell} |` : ''}`);
   }
   lines.push('', '## Findings', '');
@@ -267,17 +296,7 @@ export async function report(args, log = console.log, { loadBrowserImpl = loadBr
         if (problems.length) throw new Error(problems.join('\n'));
         const cases = [];
         for (const { id } of declared) {
-          const samples = {};
-          for (const mode of args.compareAll ? ['built', 'all'] : ['built']) {
-            for (const direction of DIRECTIONS) {
-              const prior = direction === 'back' ? samples[`${mode}:forward`] : null;
-              // A forward run that stopped before clicking (not at rest, capped) left the state as it
-              // was: clicking now would go forward, so the back run is not sampled and reads the same.
-              samples[`${mode}:${direction}`] = prior && prior.status === 'inconclusive' && !prior.clicked
-                ? prior
-                : await page.evaluate(sampleTransition, { id, direction, stepMs: STEP_MS, forceAll: mode === 'all', maxElements: MAX_ELEMENTS });
-            }
-          }
+          const samples = await sampleCase(({ direction, forceAll }) => page.evaluate(sampleTransition, { id, direction, stepMs: STEP_MS, forceAll, maxElements: MAX_ELEMENTS }), { compareAll: args.compareAll });
           cases.push({ id, runs: caseRuns(samples, { compareAll: args.compareAll }) });
         }
         pages.push({ url, label, cases });

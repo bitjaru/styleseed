@@ -4,13 +4,17 @@
 // page jumps 20px on x at time 0 in both directions, and with --compare-all that jump is absent when every
 // property is transitioned: withAll false); a keyframe animation that grows a panel (no finding, and the
 // text below it moves over several frames); a steps(2) transition (a mid jump); a change with no
-// transition (instant); a state applied two frames after the click (still sampled); five elements that
-// jump but are not painted (inside a closed <details>, inside a collapsed overflow:hidden box, on a
-// drawer translated off the left edge, past the right edge of a body that hides overflow-x, under
-// opacity 0) give no finding, while the same page with all five painted gives five; an endless
-// animation, more than 400 elements, a chained transition, and script-driven motion are inconclusive
-// (exit 2); a page with no case, a duplicate id, or two triggers is a page error (exit 1). Two runs give
-// equal transitions.json bytes and no fixture text leaves the page.
+// transition (instant); a state applied two frames after the click (still sampled); a transition
+// declared only in the changed state that leaves transform out (withAll false: --compare-all forces every
+// element); a reversed Web Animation (a glide); eight elements that jump but are not painted (inside a
+// closed <details>, inside a collapsed overflow:hidden box, on a drawer translated off the left edge,
+// past the right edge of a body that hides overflow-x, under opacity 0, a visually hidden 1×1 label,
+// clip-path: inset(50%), clip: rect(0 0 0 0)) give no finding, while the same page with all eight painted
+// gives eight; an endless animation (the case's remaining runs skipped), more than 400 elements, a paused
+// CSS animation the click sets running, a reused Web Animation, a chained transition, and script-driven
+// motion are inconclusive (exit 2); a page with no case, a duplicate id, or two triggers is a page error
+// (exit 1). Two runs give equal transitions.json bytes (observedAt aside) and no fixture text leaves the
+// page.
 //
 // Part 2, the nine components of #123 (ten cases): the built demo (scripts/lib/demo-server.mjs), the CLI
 // on /gallery/transitions with --compare-all. Every run must be sampled and the findings caused by the
@@ -44,18 +48,23 @@ ${css}
 </style><body>${body}${script ? `<script>const root=document.querySelector('[data-styleseed-transition]'),trigger=root.querySelector('[data-styleseed-trigger]');${script}</script>` : ''}</body></html>`;
 const TOGGLE = "trigger.addEventListener('click',()=>root.classList.toggle('on'));";
 
-// Five movers that shift 40px with no transition, beside a dot that glides so the run is sampled.
-// Unpainted: each sits where nothing is drawn. Painted: the same layout with all five on screen.
+// Eight movers that shift 40px with no transition, beside a dot that glides so the run is sampled.
+// Unpainted: each sits where nothing is drawn (a closed <details>, a collapsed overflow:hidden box,
+// opacity 0, a drawer off the left edge, past the right edge of a body that hides overflow-x, a visually
+// hidden 1×1 label, clip-path: inset(50%), clip: rect(0 0 0 0)). Painted: the same layout, all on screen.
 const guardPage = painted => page(`guard ${painted ? 'painted' : 'hidden'}`, `body{overflow-x:hidden}
 .dot{transition:transform 200ms ease}.on .dot{transform:translateX(40px)}
 .mover{width:100px;height:24px;background:#c9d0cd}.on .mover{margin-left:40px}
 .fold{height:${painted ? 'auto' : '0'};overflow:hidden}.ghost{opacity:${painted ? '1' : '0'}}
 .drawer{position:fixed;top:0;left:${painted ? '50%' : '0'};width:280px;height:100%;padding:8px;background:#ffffff;transform:${painted ? 'none' : 'translateX(-100%)'}}
-.parked{position:absolute;top:240px;left:${painted ? '20%' : '100%'};width:200px}`,
+.parked{position:absolute;top:240px;left:${painted ? '20%' : '100%'};width:200px}
+.lab{position:relative;height:24px}.cut{position:absolute;top:0;left:0;width:100px;height:24px;background:#c9d0cd}.on .cut{left:40px}
+${painted ? '' : '.sr{width:1px;height:1px;margin:-1px;overflow:hidden;white-space:nowrap;clip-path:inset(50%)}.inset{clip-path:inset(50%)}.rect{clip:rect(0 0 0 0)}'}`,
 `<div data-styleseed-transition="guard"><div class="dot"></div><button type="button" data-styleseed-trigger>Shift the markers</button>
 <details${painted ? ' open' : ''}><summary>Earlier markers</summary><div class="mover"></div></details>
 <div class="fold"><div class="mover"></div></div><div class="ghost"><div class="mover"></div></div>
-<aside class="drawer"><div class="mover"></div></aside><div class="parked"><div class="mover"></div></div></div>`, TOGGLE);
+<aside class="drawer"><div class="mover"></div></aside><div class="parked"><div class="mover"></div></div>
+<div class="lab"><span class="cut sr">Hidden label</span></div><div class="lab"><div class="cut inset"></div></div><div class="lab"><div class="cut rect"></div></div></div>`, TOGGLE);
 
 const PAGES = {
   'grow': page('grow', '.panel{height:0;overflow:hidden;background:#e6ecea}.open .panel{height:120px;animation:grow 300ms ease-out}.shut .panel{animation:shrink 300ms ease-in}@keyframes grow{from{height:0}to{height:120px}}@keyframes shrink{from{height:120px}to{height:0}}',
@@ -67,11 +76,24 @@ const PAGES = {
     "trigger.addEventListener('click',()=>requestAnimationFrame(()=>requestAnimationFrame(()=>root.classList.toggle('on'))));"),
   'guard-hidden': guardPage(false),
   'guard-painted': guardPage(true),
+  // The transition is declared only in the changed state and leaves transform out: forward jumps 20px,
+  // and --compare-all must still force the element (its duration at rest is 0). Back has no duration.
+  'state-duration': page('state duration', '.on .dot{transition:background-color 200ms ease;transform:translateX(20px);background:#c0392b}', '<div data-styleseed-transition="state-duration"><div class="dot"></div><button type="button" data-styleseed-trigger>Move the marker</button></div>', TOGGLE),
+  // A new Web Animation played in reverse on each click: a glide in both directions.
+  'reverse': page('reverse', '', '<div data-styleseed-transition="reverse"><div class="dot"></div><button type="button" data-styleseed-trigger>Move the marker</button></div>',
+    "const dot=root.querySelector('.dot');let on=false;trigger.addEventListener('click',()=>{on=!on;const a=dot.animate(on?[{transform:'translateX(40px)'},{transform:'none'}]:[{transform:'none'},{transform:'translateX(40px)'}],{duration:300,fill:'both'});a.reverse();});"),
 };
 const INCONCLUSIVE = {
   'endless': page('endless', '.on .dot{animation:turn 1s linear infinite}@keyframes turn{to{transform:rotate(360deg)}}', '<div data-styleseed-transition="endless"><div class="dot"></div><button type="button" data-styleseed-trigger>Start syncing</button></div>', TOGGLE),
   'crowded': page('crowded', '.dot{transition:transform 200ms ease}.on .dot{transform:translateX(40px)}.cell{width:4px;height:4px}', `<div data-styleseed-transition="crowded"><div class="dot"></div><button type="button" data-styleseed-trigger>Move the marker</button>${'<div class="cell"></div>'.repeat(400)}</div>`, TOGGLE),
-  'chained': page('chained', '.dot{transition:transform 100ms linear}.on .first{transform:translateX(40px)}.second.moved{transform:translateX(40px)}', '<div data-styleseed-transition="chained"><div class="dot first"></div><div class="dot second"></div><button type="button" data-styleseed-trigger>Move both markers</button></div>',
+  // A paused CSS animation that the click sets running, and one Web Animation reused by every click:
+  // both existed before the click, so they run on the page's clock.
+  'play-state': page('play state', '.dot{animation:slide 300ms linear both paused}.on .dot{animation-play-state:running}@keyframes slide{to{transform:translateX(40px)}}', '<div data-styleseed-transition="play-state"><div class="dot"></div><button type="button" data-styleseed-trigger>Move the marker</button></div>', TOGGLE),
+  'reuse': page('reuse', '', '<div data-styleseed-transition="reuse"><div class="dot"></div><button type="button" data-styleseed-trigger>Move the marker</button></div>',
+    "const dot=root.querySelector('.dot');const anim=dot.animate([{transform:'none'},{transform:'translateX(40px)'}],{duration:300,fill:'both'});anim.pause();let on=false;trigger.addEventListener('click',()=>{on=!on;anim.playbackRate=on?1:-1;anim.play();});"),
+  // The second transition starts on the first one's transitionend and lasts 600ms, so it is still
+  // running when the settle check looks, however slow the frames are.
+  'chained': page('chained', '.dot{transition:transform 100ms linear}.second{transition-duration:600ms}.on .first{transform:translateX(40px)}.second.moved{transform:translateX(40px)}', '<div data-styleseed-transition="chained"><div class="dot first"></div><div class="dot second"></div><button type="button" data-styleseed-trigger>Move both markers</button></div>',
     "const first=root.querySelector('.first'),second=root.querySelector('.second');trigger.addEventListener('click',()=>root.classList.toggle('on'));first.addEventListener('transitionend',()=>second.classList.toggle('moved'));"),
   'scripted': page('scripted', '.flag{width:24px;height:24px;background:#c9d0cd;transition:background-color 200ms ease}.on .flag{background:#1f7a5c}', '<div data-styleseed-transition="scripted"><div class="flag"></div><div class="dot runner"></div><button type="button" data-styleseed-trigger>Start the runner</button></div>',
     "const runner=root.querySelector('.runner');let raf=0;trigger.addEventListener('click',()=>{root.classList.toggle('on');cancelAnimationFrame(raf);let n=0;const tick=()=>{n++;runner.style.marginLeft=n+'px';if(n<600)raf=requestAnimationFrame(tick);};raf=requestAnimationFrame(tick);});"),
@@ -100,7 +122,9 @@ try {
   const run = cliRun(Object.values(urls), first, ['--compare-all']);
   assert.equal(run.status, 0, run.stderr || run.stdout);
   assert.equal(cliRun(Object.values(urls), again, ['--compare-all']).status, 0);
-  for (const name of ['transitions.json', 'TRANSITIONS.md']) assert.ok(readFileSync(join(first, name)).equals(readFileSync(join(again, name))), `two runs give equal ${name} bytes`);
+  // Equal bytes apart from the date, which a run across UTC midnight would change.
+  const undated = file => readFileSync(file, 'utf8').replace(/"observedAt": "[^"]*"/u, '"observedAt": ""').replace(/^(# Transition frame jumps — [^\n]*?), \d{4}-\d{2}-\d{2}$/mu, '$1');
+  for (const name of ['transitions.json', 'TRANSITIONS.md']) assert.equal(undated(join(first, name)), undated(join(again, name)), `two runs give equal ${name} bytes (observedAt aside)`);
   const text = readFileSync(join(first, 'transitions.json'), 'utf8');
   const result = JSON.parse(text);
   assert.deepEqual([result.tool, result.version, result.viewport, result.thresholds], ['styleseed transition-jumps', '1', { width: 1440, height: 900 }, { jumpPx: 2, calmFactor: 3, calmFloor: 0.4, shiftPx: 0.5 }]);
@@ -120,8 +144,11 @@ try {
   assert.deepEqual(built('instant').map(r => [r.status, r.transitions, r.animations, r.findings.length]), [['instant', 0, 0, 0], ['instant', 0, 0, 0]], 'no transition: instant');
   assert.deepEqual(built('late').map(r => [r.status, r.transitions, r.findings.length]), [['sampled', 1, 0], ['sampled', 1, 0]], `a state applied two frames late is still sampled: ${JSON.stringify(built('late'))}`);
   assert.deepEqual(built('guard-hidden').map(r => [r.status, r.findings.length]), [['sampled', 0], ['sampled', 0]], `unpainted movers are not measured: ${JSON.stringify(findings('guard-hidden'))}`);
-  assert.deepEqual(built('guard-painted').map(r => [r.status, r.findings.map(f => `${f.phase} ${f.size} ${f.axis} ${f.delta}`)]), [['sampled', Array(5).fill('start jump x 40')], ['sampled', Array(5).fill('start jump x -40')]], `painted movers jump: ${JSON.stringify(findings('guard-painted'))}`);
-  assert.equal(result.totals.namedList, 2, 'the bad pair is the only finding the named list caused');
+  assert.deepEqual(built('guard-painted').map(r => [r.status, r.findings.map(f => `${f.phase} ${f.size} ${f.axis} ${f.delta}`)]), [['sampled', Array(8).fill('start jump x 40')], ['sampled', Array(8).fill('start jump x -40')]], `painted movers jump: ${JSON.stringify(findings('guard-painted'))}`);
+  assert.deepEqual(built('state-duration').map(r => [r.status, r.findings.map(f => `${f.phase} ${f.size} ${f.axis} ${f.delta} ${f.withAll}`)]), [['sampled', ['start jump x 20 false']], ['instant', []]], `a duration declared only in the changed state is still forced by --compare-all: ${JSON.stringify(built('state-duration'))}`);
+  assert.deepEqual(built('reverse').map(r => [r.status, r.animations, r.findings.length]), [['sampled', 1, 0], ['sampled', 1, 0]], `a reversed Web Animation is stepped from its end back to 0: ${JSON.stringify(findings('reverse'))}`);
+  assert.equal(result.totals.namedList, 3, 'the bad pair and the state-duration page are the findings the named list caused');
+  assert.equal(result.totals.notCompared, 0);
   console.log(`transition jumps pages: ${result.verdict}`);
 
   // The frames themselves, read with the sampler: the text under the growing panel moves over several
@@ -139,9 +166,9 @@ try {
     assert.ok(ys.size >= 5, `the text below the panel moves over several frames: ${JSON.stringify(grow.frames.map(f => f[below]))}`);
     await tab.goto(urls['guard-hidden']);
     const hidden = await tab.evaluate(sampleTransition, { id: 'guard', direction: 'forward' });
-    const movers = await tab.evaluate(() => [...document.querySelectorAll('[data-styleseed-transition] *')].map(el => el.classList.contains('mover')));
+    const movers = await tab.evaluate(() => [...document.querySelectorAll('[data-styleseed-transition] *')].map(el => el.classList.contains('mover') || el.classList.contains('cut')));
     const moverIndex = movers.flatMap((m, i) => (m ? [i + 1] : []));
-    assert.equal(moverIndex.length, 5);
+    assert.equal(moverIndex.length, 8);
     for (const i of moverIndex) assert.deepEqual([hidden.rest[i], ...hidden.frames.map(f => f[i]), hidden.settled[i]].filter(b => b !== null), [], `mover ${i} is not painted, so it has no box in any frame`);
     // Without Element.checkVisibility the sampler falls back to its closed-<details> test.
     await tab.goto(urls['guard-hidden']);
@@ -151,19 +178,23 @@ try {
     await context.close();
   } finally { await instance.close(); }
 
-  // Inconclusive runs: exit 2, with their reasons.
+  // Inconclusive runs: exit 2, with their reasons, with --compare-all so a back run that cannot click
+  // leaves the case's remaining runs skipped.
   const open = {};
   for (const [name, html] of Object.entries(INCONCLUSIVE)) open[name] = write(name, html);
   const stuck = join(dir, 'inconclusive');
-  const inconclusive = cliRun(Object.values(open), stuck);
+  const inconclusive = cliRun(Object.values(open), stuck, ['--compare-all']);
   assert.equal(inconclusive.status, 2, inconclusive.stderr || inconclusive.stdout);
   const stuckResult = JSON.parse(readFileSync(join(stuck, 'transitions.json'), 'utf8'));
-  const reasons = Object.fromEntries(stuckResult.pages.map(p => [p.label, p.cases[0].runs.map(r => `${r.direction} ${r.status} ${r.reason ?? ''}`.trim())]));
+  const reasons = Object.fromEntries(stuckResult.pages.map(p => [p.label, p.cases[0].runs.map(r => `${r.mode}:${r.direction} ${r.status} ${r.reason ?? ''}`.trim())]));
+  const four = text => ['built:forward', 'built:back', 'all:forward', 'all:back'].map(run => `${run} ${text}`);
   assert.deepEqual(reasons, {
-    endless: ['forward inconclusive not-at-rest', 'back inconclusive not-at-rest'],
-    crowded: ['forward inconclusive capped', 'back inconclusive capped'],
-    chained: ['forward inconclusive chained', 'back inconclusive chained'],
-    scripted: ['forward inconclusive script-driven', 'back inconclusive script-driven'],
+    'endless': ['built:forward inconclusive not-at-rest', 'built:back inconclusive not-at-rest', 'all:forward inconclusive skipped', 'all:back inconclusive skipped'],
+    'crowded': four('inconclusive capped'),
+    'play-state': ['built:forward inconclusive chained', 'built:back instant', 'all:forward instant', 'all:back instant'],
+    'reuse': four('inconclusive chained'),
+    'chained': four('inconclusive chained'),
+    'scripted': four('inconclusive script-driven'),
   });
   assert.ok(stuckResult.pages.every(p => p.cases[0].runs.every(r => !r.findings.length)), 'inconclusive runs carry no findings');
   console.log(`transition jumps inconclusive: ${stuckResult.verdict}`);

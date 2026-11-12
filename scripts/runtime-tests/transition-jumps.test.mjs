@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { THRESHOLDS, analyzeFrames, caseProblems, caseRuns, compareWithAll, parseArgs, renderTransitionsMarkdown, transitionsTotals, transitionsVerdict } from "../../engine/.claude/skills/styleseed/workflows/ss-verify/scripts/transition-jumps.mjs";
+import { SKIPPED, THRESHOLDS, analyzeFrames, caseProblems, caseRuns, compareWithAll, parseArgs, renderTransitionsMarkdown, sampleCase, transitionsTotals, transitionsVerdict } from "../../engine/.claude/skills/styleseed/workflows/ss-verify/scripts/transition-jumps.mjs";
 
 // Synthetic samples in the shape sampleTransition returns. Boxes are [x, y, w, h]; null = not shown.
 const STEP = 1000 / 60;
@@ -119,13 +119,13 @@ test("caseRuns, totals, and verdict: runs as built and with every property; the 
   assert.deepEqual([runs[0].frames, runs[0].elements], [3, 1]);
   const pages = [{ url: "file:///a.html", label: "a", cases: [{ id: "toggle", runs }] }];
   const totals = transitionsTotals(pages, { compareAll: true });
-  assert.deepEqual(totals, { cases: 1, sampled: 4, instant: 0, inconclusive: 0, jumps: 2, shifts: 0, namedList: 1 });
+  assert.deepEqual(totals, { cases: 1, sampled: 4, instant: 0, inconclusive: 0, jumps: 2, shifts: 0, namedList: 1, notCompared: 0 });
   assert.match(transitionsVerdict(pages, totals), /^2 findings in 1 case on 1 page as built \(2 jumps, 0 shifts\), 1 caused by the named property list; 4 of 4 runs sampled/u);
   const plain = caseRuns({ "built:forward": jump, "built:back": { status: "inconclusive", reason: "not-at-rest", clicked: false } });
   assert.deepEqual(plain.map((r) => [r.mode, r.status, r.reason, "withAll" in (r.findings[0] ?? {})]), [["built", "sampled", undefined, false], ["built", "inconclusive", "not-at-rest", false]]);
   const plainPages = [{ url: "file:///b.html", label: "b", cases: [{ id: "toggle", runs: plain }] }];
   const plainTotals = transitionsTotals(plainPages);
-  assert.equal(plainTotals.namedList, null, "without --compare-all nothing is attributed to the named list");
+  assert.deepEqual([plainTotals.namedList, plainTotals.notCompared], [null, null], "without --compare-all nothing is attributed to the named list");
   assert.match(transitionsVerdict(plainPages, plainTotals), /not compared with every property transitioned \(--compare-all\); 1 of 2 runs sampled, 0 instant, 1 inconclusive\. Inconclusive: toggle back: not-at-rest\.$/u);
   const none = [{ url: "file:///c.html", label: "c", cases: [{ id: "toggle", runs: caseRuns({ "built:forward": glide, "built:back": glide }) }] }];
   assert.equal(transitionsVerdict(none, transitionsTotals(none)), "No frame jump in 1 case on 1 page: 2 of 2 runs sampled, 0 instant, 0 inconclusive.");
@@ -144,9 +144,38 @@ test("renderTransitionsMarkdown: one row per case and direction, then the findin
   assert.equal(JSON.stringify(build()), JSON.stringify(build()));
   assert.doesNotMatch(md, /score|%/iu);
   assert.match(md, /\| a \| toggle \| forward \| sampled \| 1 \| 0 \| 33\.3 \| 3 \| 1 \| 1 jump \| 1 \|/u);
-  assert.match(md, /\| a \| toggle \| back \| sampled \| 1 \| 0 \| 33\.3 \| 3 \| 1 \| 1 jump \| 0 \(all: inconclusive chained\) \|/u);
+  assert.match(md, /\| a \| toggle \| back \| sampled \| 1 \| 0 \| 33\.3 \| 3 \| 1 \| 1 jump \| 0, 1 not compared \(all: inconclusive chained\) \|/u);
+  assert.match(md, /\*\*Verdict:\*\* 2 findings in 1 case on 1 page as built \(2 jumps, 0 shifts\), 1 caused by the named property list, 1 not compared; /u, "findings that could not be compared are counted in the verdict");
+  assert.equal(build().totals.notCompared, 1);
   assert.match(md, /- start jump on x: \+20px at 0ms, box \[0, 0, 40, 20\] \(absent with every property transitioned: the named list caused it\)/u);
   assert.match(md, /- start jump on x: -20px at 0ms, box \[20, 0, 40, 20\] \(not compared\)/u);
+});
+
+test("sampleCase: each run starts where the previous one left the case", async () => {
+  const stub = (results) => {
+    const calls = [];
+    return { calls, sample: async ({ direction, forceAll }) => { calls.push(`${forceAll ? "all" : "built"}:${direction}`); return results.shift(); } };
+  };
+  const ok = { status: "sampled", clicked: true };
+  const normal = stub([ok, ok, ok, ok]);
+  const all = await sampleCase(normal.sample, { compareAll: true });
+  assert.deepEqual(normal.calls, ["built:forward", "built:back", "all:forward", "all:back"]);
+  assert.deepEqual(Object.keys(all), ["built:forward", "built:back", "all:forward", "all:back"]);
+
+  const restless = { status: "inconclusive", reason: "not-at-rest", clicked: false };
+  const neverClicked = stub([restless, ok, ok]);
+  const copied = await sampleCase(neverClicked.sample, { compareAll: true });
+  assert.deepEqual(neverClicked.calls, ["built:forward", "all:forward", "all:back"], "a forward run that did not click: its back run is not sampled");
+  assert.equal(copied["built:back"], restless, "and reads the same");
+
+  const endless = { status: "inconclusive", reason: "not-at-rest", clicked: true };
+  const stuck = stub([endless, restless]);
+  const skipped = await sampleCase(stuck.sample, { compareAll: true });
+  assert.deepEqual(stuck.calls, ["built:forward", "built:back"], "a back run that could not click leaves the case changed: nothing after it is sampled");
+  assert.deepEqual([skipped["all:forward"], skipped["all:back"]].map((s) => [s.status, s.reason]), [["inconclusive", "skipped"], ["inconclusive", "skipped"]]);
+  assert.equal(SKIPPED.clicked, false);
+  const runs = caseRuns(skipped, { compareAll: true });
+  assert.deepEqual(runs.map((r) => `${r.mode}:${r.direction} ${r.status} ${r.reason}`), ["built:forward inconclusive not-at-rest", "built:back inconclusive not-at-rest", "all:forward inconclusive skipped", "all:back inconclusive skipped"]);
 });
 
 test("caseProblems names the page, the case, and the attribute to add", () => {

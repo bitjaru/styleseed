@@ -248,9 +248,11 @@ node <installed-ss-verify>/scripts/transition-jumps.mjs http://localhost:3000/se
 
 It clicks each trigger forward and back, holds the transitions and animations the change starts, steps
 their clocks every 1000/60 ms, and writes `TRANSITIONS.md` and `transitions.json`: boxes that move in one
-frame at the start, in the middle, or after the end of the change. With `--compare-all`, a finding that
-disappears when every property is transitioned was caused by the named list. It reports and does not
-gate; exit 2 means a run was inconclusive (not at rest, too many elements, chained, or script-driven).
+frame at the start, in the middle, or after the end of the change. With `--compare-all`, both directions
+run again with `transition-property: all` set inline on every element under the root (restored
+afterwards), and a finding that disappears there was caused by the named list. Only box geometry is
+compared. It reports and does not gate; exit 2 means a run was inconclusive (not at rest, too many
+elements, chained, script-driven, or skipped after a run that could not return the case).
 Never point it at a reference site. Definitions and limits: [transition frame
 jumps](references/render-faults.md#transition-frame-jumps).
 

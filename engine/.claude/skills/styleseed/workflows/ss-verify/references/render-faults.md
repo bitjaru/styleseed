@@ -149,15 +149,16 @@ no animation under the root is running, records every box under the root, clicks
 transition, CSS animation, and Web Animation the change starts (on `transitionrun` and `animationstart`,
 right after the click, and on each of the next six frames, since a framework may apply the change a frame
 or two late). It then sets every held animation's time to 0, 1000/60 ms, 2 × 1000/60 ms, … up to the
-largest end time, records every box at each step, finishes the animations, and records the settled boxes
-twice, one frame apart. The same page gives the same frames on every machine. A change that starts no
+largest end time (an animation with a negative playback rate runs from its end time back to 0), records
+every box at each step, finishes the animations, and records the settled boxes twice, one frame apart. The same page gives the same frames on every machine. A change that starts no
 animation is `instant`, which is valid and has no findings.
 
 **Shown in a frame.** A box is compared only in frames where its element is shown: connected, at least
-1×1, not `display: none` or `visibility: hidden`, an opacity product of at least 0.05, rendered
-(`checkVisibility`; the content of a closed `<details>` is not), in the reachable document (the
-definition under **Terms**), and with some part inside every box that clips it (a collapsed
-`overflow: hidden` panel hides its content). An element not shown in one of two compared frames is skipped
+1×1 and not within 2×2 (a visually hidden label is 1×1), not `display: none` or `visibility: hidden`, an
+opacity product of at least 0.05, not cut to nothing by a `clip-path: inset()` or `clip: rect()` on it or
+an ancestor (`inset(50%)`, `rect(0 0 0 0)`), rendered (`checkVisibility`; the content of a closed
+`<details>` is not), in the reachable document (the definition under **Terms**), and with some part
+inside every box that clips it (a collapsed `overflow: hidden` panel hides its content). An element not shown in one of two compared frames is skipped
 for that comparison: appearing and disappearing are not jumps `(S)`. Elements created by the change are
 not tracked.
 
@@ -183,19 +184,24 @@ pushes is still reported. A transitioned border width moves in whole pixels and 
 test, which is correct.
 
 **`--compare-all`.** After both directions are sampled as built, both are sampled again with
-`transition-property: all !important` set inline on every element under the root whose
-`transition-duration` has a non-zero entry, and each value is restored afterwards. That is what the
-element did before its properties were named. A finding as built gets `withAll: true` when the same
+`transition-property: all !important` set inline on every element under the root, and each value is
+restored afterwards. That is what the element did before its properties were named. Every element is
+set, not only those with a duration at rest, because a duration may be declared only in the changed
+state (`.on .thumb { transition: background-color 200ms }`); an element whose duration is 0 still changes
+at once. A finding as built gets `withAll: true` when the same
 element, phase, and axis also has one in that second run (naming the properties did not cause it: an
 animation missing its keyframes, a `steps()` timing), `withAll: false` when it does not (**the named list
-caused it**), and `withAll: null` when the second run was not sampled or tracked other elements.
+caused it**), and `withAll: null` when the second run was not sampled or tracked other elements; the
+verdict counts those as "not compared".
 
 **Inconclusive** (exit 2; such a run has no findings): `not-at-rest` (an animation under the root was
 still running 2s after the run began, or the change started one that never ends), `capped` (more than 400
-elements under the root; nothing is clicked), `chained` (once the held animations finished, another one
-was running), and `script-driven` (the settled boxes moved between two frames: motion driven by script
-rather than an `Animation` cannot be stepped). When the forward run stops before clicking, the back run
-is not sampled and reads the same.
+elements under the root; nothing is clicked), `chained` (the click set running an animation that existed
+before it, such as a paused CSS animation or a reused Web Animation, or once the held animations finished
+another one was running), `script-driven` (the settled boxes moved between two frames: motion driven by
+script rather than an `Animation` cannot be stepped), and `skipped` (an earlier run of the case clicked
+forward and the back run could not click, so the case was not in its starting state). When the forward
+run stops before clicking, the back run is not sampled and reads the same.
 
 **Output.** `transitions.json` (`tool: "styleseed transition-jumps"`, `version: "1"`, `observedAt`,
 `browser`, `viewport`, `stepMs`, `thresholds`, per page and case the runs with `direction`, `mode`
@@ -208,7 +214,12 @@ repository; the ten state changes of the components whose transitions name their
 declared on the demo's `/gallery/transitions`.
 
 **Limits.** Clicks only: no hover, focus, keys, or scripted multi-step interaction. Only motion driven by
-an `Animation` (CSS transitions and animations, Web Animations) is stepped. At most 400 elements per case.
+an `Animation` (CSS transitions and animations, Web Animations) is stepped. The state change must happen
+inside the case root: a change outside it (a glide that pushes the root) is not held, and a short
+script-driven move that ends within the six hold frames is not seen as script-driven; either can show up
+as a start jump. Only boxes are compared: a property missing from the list that does not move a box
+(a colour, a shadow, opacity) is not seen, so "0 caused by the named property list" is about geometry
+only. At most 400 elements per case.
 One viewport per run (`--viewport`). A state applied more than six frames after the click is not seen.
 A rotating box reports its bounding box, which grows and shrinks as it turns. Whether another layer covers
 a box is not checked. Open shadow roots and iframes are not traversed, elements inside an `svg` are not

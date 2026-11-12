@@ -8,11 +8,13 @@
 // the page), and holds (pauses) every CSS transition, CSS animation, and Web Animation the change starts
 // under the root: on `transitionrun` and `animationstart` (capture), right after the click, and on each
 // of the next six animation frames, since a framework may apply the change a frame or two late. It then
-// steps the held clocks every `stepMs` from 0 to the largest end time, recording every box at each step,
-// finishes the animations, and records the settled boxes twice, one frame apart. Stepping a held clock
-// gives the same frames on every machine. With `forceAll` it first sets `transition-property: all
-// !important` inline on every element under the root whose computed transition-duration has a non-zero
-// entry, and restores each value afterwards; nothing else is written.
+// steps the held clocks every `stepMs` from 0 to the largest end time (an animation with a negative
+// playback rate from its end time back to 0), recording every box at each step, finishes the animations,
+// and records the settled boxes twice, one frame apart. Stepping a held clock gives the same frames on
+// every machine. With `forceAll` it first sets `transition-property: all !important` inline on every
+// element under the root, and restores each value afterwards; nothing else is written. Every element is
+// forced, not only those with a duration at rest, because a duration may exist only in the changed state;
+// an element whose duration is 0 still changes at once.
 //
 // It returns numbers, enums, and boxes `[x, y, w, h]` in document pixels to one decimal: no property
 // names, animation names (an author's string), text, selectors, or screenshots. Each element's own text
@@ -20,21 +22,23 @@
 // indices). Open shadow roots and iframes are not traversed; elements inside an svg are not tracked (the
 // top-level svg is), and SVG path geometry is not read.
 //
-// A box is recorded only when the element is shown in that frame, else null: connected, at least 1×1,
-// display not none, visibility not hidden, the product of opacity from it up to <body> at least 0.05,
-// rendered by the browser (Element.checkVisibility where available, else a closed-<details> test), in the
-// reachable document (not entirely left of x = 0 or above y = 0, not entirely right of the root's client
-// width when html or body hides or clips overflow on x), and with some part (over 0.5px each way) inside
-// every box that clips it. An element that is not shown in one of two compared frames is skipped for that
-// comparison by the analysis. These are the "shown" and "reachable" readings of observe-faults.mjs,
-// evaluated per frame.
+// A box is recorded only when the element is shown in that frame, else null: connected, at least 1×1 and
+// not within 2×2 (a visually hidden label is 1×1), display not none, visibility not hidden, the product of
+// opacity from it up to <body> at least 0.05, not cut to nothing by a `clip-path: inset()` or a `clip:
+// rect()` on it or an ancestor, rendered by the browser (Element.checkVisibility where available, else a
+// closed-<details> test), in the reachable document (not entirely left of x = 0 or above y = 0, not
+// entirely right of the root's client width when html or body hides or clips overflow on x), and with some
+// part (over 0.5px each way) inside every box that clips it. An element that is not shown in one of two
+// compared frames is skipped for that comparison by the analysis. These are the "shown" and "reachable"
+// readings of observe-faults.mjs, evaluated per frame, with the clip and 2×2 tests added.
 //
 // Statuses: `sampled`; `instant` (the change started no animation: valid, no findings); `inconclusive`
 // with a reason: `not-at-rest` (an animation under the root was still running 2s after the call, or the
 // change started one that never ends), `capped` (more than maxElements elements under the root; nothing
-// is clicked), `chained` (after the held animations finished, another one was running), or
-// `script-driven` (the settled boxes moved between two frames: motion not driven by an Animation cannot
-// be stepped). `clicked` says whether the trigger was clicked.
+// is clicked), `chained` (an animation that existed before the click was set running by it, such as a
+// paused CSS animation or a reused Web Animation, or after the held animations finished another one was
+// running), or `script-driven` (the settled boxes moved between two frames: motion not driven by an
+// Animation cannot be stepped). `clicked` says whether the trigger was clicked.
 export function declaredCases() {
   const ATTR = 'data-styleseed-transition', TRIGGER = 'data-styleseed-trigger';
   return [...document.querySelectorAll(`[${ATTR}]`)].map(root => ({
@@ -119,12 +123,38 @@ export async function sampleTransition({ id, direction = 'forward', stepMs = 100
       if (position === 'absolute') return contentClip((el instanceof HTMLElement ? el.offsetParent : null) || document.body);
       return contentClip(el.parentElement);
     };
+    // Cut to nothing by its own `clip-path: inset()` or `clip: rect()` (absolute or fixed boxes only), or
+    // an ancestor's: what is left is under 1px on either axis (`inset(50%)`, `rect(0 0 0 0)`, the
+    // visually hidden pattern). Other clip-path shapes are not read.
+    const cutAway = new Map();
+    const length = (value, of) => (String(value).trim().endsWith('%') ? (num(value) / 100) * of : num(value));
+    const clippedAway = el => {
+      if (!el || el === document.body || el === document.documentElement) return false;
+      if (cutAway.has(el)) return cutAway.get(el);
+      const s = style(el), r = rectOf(el);
+      let v = false;
+      const inset = /^inset\((.*)\)$/u.exec(String(s.clipPath || '').trim());
+      if (inset) {
+        const parts = inset[1].split(/\s+round\s+/u)[0].trim().split(/\s+/u);
+        const [t, rt = t, b = t, l = rt] = parts;
+        v = r.width - length(l, r.width) - length(rt, r.width) < 1 || r.height - length(t, r.height) - length(b, r.height) < 1;
+      }
+      const rect = /^rect\((.*)\)$/u.exec(String(s.clip || '').trim());
+      if (!v && rect && (s.position === 'absolute' || s.position === 'fixed')) {
+        const [t, rt, b, l] = rect[1].split(/[\s,]+/u).map(x => (x === 'auto' ? null : num(x)));
+        v = (rt ?? r.width) - (l ?? 0) < 1 || (b ?? r.height) - (t ?? 0) < 1;
+      }
+      v = v || clippedAway(el.parentElement);
+      cutAway.set(el, v);
+      return v;
+    };
     const rootClipsX = [document.documentElement, document.body].some(el => el && ['hidden', 'clip'].includes(style(el).overflowX));
     const rootWidth = document.documentElement.clientWidth;
     return els.map(el => {
       if (!el.isConnected) return null;
       const r = rectOf(el), s = style(el);
-      if (!(r.width >= 1 && r.height >= 1) || s.display === 'none' || s.visibility === 'hidden' || opacityOf(el) < 0.05 || !rendered(el)) return null;
+      if (!(r.width >= 1 && r.height >= 1) || (r.width < 2 && r.height < 2)) return null;
+      if (s.display === 'none' || s.visibility === 'hidden' || opacityOf(el) < 0.05 || clippedAway(el) || !rendered(el)) return null;
       const b = { l: r.left + sx, t: r.top + sy, r: r.right + sx, b: r.bottom + sy };
       if (!(b.r > 0 && b.b > 0) || (rootClipsX && b.l >= rootWidth)) return null;
       const c = boxClip(el);
@@ -133,7 +163,7 @@ export async function sampleTransition({ id, direction = 'forward', stepMs = 100
     });
   };
 
-  // --compare-all: one inline property on the elements that transition, restored before returning.
+  // --compare-all: one inline property on every element under the root, restored before returning.
   const forced = [];
   const restore = () => {
     for (const f of forced.splice(0)) {
@@ -151,10 +181,14 @@ export async function sampleTransition({ id, direction = 'forward', stepMs = 100
       try { a.pause(); } catch { /* an animation that cannot pause is stepped as it is */ }
     }
   };
+  // Lets the held animations run on the page's own clock when a run stops before stepping them.
+  const release = list => { for (const a of list) { try { a.play(); } catch { /* left paused */ } } };
   try {
     if (forceAll) {
+      // Every element, not only those with a duration at rest: the duration may exist only in the
+      // changed state. An element whose duration is 0 still changes at once.
       for (const el of els) {
-        if (!el.style || !getComputedStyle(el).transitionDuration.split(',').some(d => num(d) > 0)) continue;
+        if (!el.style) continue;
         forced.push({ el, value: el.style.getPropertyValue('transition-property'), priority: el.style.getPropertyPriority('transition-property') });
         el.style.setProperty('transition-property', 'all', 'important');
       }
@@ -180,20 +214,22 @@ export async function sampleTransition({ id, direction = 'forward', stepMs = 100
     const anims = [...held].filter(a => a.playState !== 'idle');
     const transitions = anims.filter(a => typeof CSSTransition !== 'undefined' && a instanceof CSSTransition).length;
     const counts = { clicked: true, transitions, animations: anims.length - transitions };
+    const unstepped = reason => ({ status: 'inconclusive', reason, ...counts, duration: null, times: [], rest: [], frames: [], settled: [], parents: [], textChanged: [] });
+    // An animation that existed before the click and that the click set running (a paused CSS animation
+    // whose play state changed, a reused Web Animation played again) runs on the page's clock, not ours.
+    if ([...before].some(a => a.playState === 'running')) { release(anims); return unstepped('chained'); }
     // 5. No held animation: the change is instant.
     if (!anims.length) return { status: 'instant', ...counts, duration: 0, times: [], rest, frames: [], settled: [], parents, textChanged: [] };
 
-    // 3. Step every held clock from 0 to the largest end time.
+    // 3. Step every held clock from 0 to the largest end time; one with a negative playback rate runs
+    // from its end time back to 0.
     const ends = anims.map(a => { try { return a.effect ? a.effect.getComputedTiming().endTime : 0; } catch { return 0; } });
     const end = Math.max(0, ...ends);
-    if (!Number.isFinite(end)) {
-      for (const a of anims) { try { a.play(); } catch { /* left paused */ } }
-      return { status: 'inconclusive', reason: 'not-at-rest', ...counts, duration: null, times: [], rest: [], frames: [], settled: [], parents: [], textChanged: [] };
-    }
+    if (!Number.isFinite(end)) { release(anims); return unstepped('not-at-rest'); }
     const times = [], frames = [];
     for (let k = 0; ; k++) {
       const t = k * stepMs;
-      anims.forEach((a, i) => { a.currentTime = Math.min(t, ends[i]); });
+      anims.forEach((a, i) => { a.currentTime = a.playbackRate < 0 ? Math.max(ends[i] - t, 0) : Math.min(t, ends[i]); });
       times.push(r1(t));
       frames.push(record());
       if (t >= end) break;

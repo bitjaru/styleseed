@@ -62,6 +62,7 @@ const coreChecks = [
   ["Build context catalog", node, ["scripts/build-context-catalog.mjs"]],
   ["Build learning catalog", node, ["extensions/learning/runtime/scripts/build-learning-catalog.mjs"]],
   ["Build component contracts", node, ["scripts/build-component-contracts.mjs"]],
+  ["Build fault pairs", node, ["scripts/build-fault-pairs.mjs"]],
   ["Compile site registry", node, ["engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/resolve-context.mjs", "--project-root", ".", "--all", "--agent", "codex"]],
   ["Build public catalogs", node, ["demo-pricing/scripts/build-llms.mjs"]],
   ["Build spacing proof", node, ["demo-pricing/scripts/build-spacing-proof.mjs"]],

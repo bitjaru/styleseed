@@ -28,6 +28,12 @@ export default function GalleryPage() {
             {reg.counts.byType.pattern} composed patterns) × {reg.counts.skins} brand skins. Each
             entry links to source code and registry metadata.
           </p>
+          <p className="mt-2 text-sm text-gray-600">
+            Measured faults: a good and a bad page for each on{" "}
+            <Link href="/gallery/faults" className="underline hover:text-gray-900">/gallery/faults</Link>, and ten live
+            component state changes sampled frame by frame on{" "}
+            <Link href="/gallery/transitions" className="underline hover:text-gray-900">/gallery/transitions</Link>.
+          </p>
           <div className="mt-4 flex gap-3 text-sm">
             <a
               href="/.well-known/styleseed/registry.json"

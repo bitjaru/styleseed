@@ -235,6 +235,27 @@ re-measure with `--states`. No page text, screenshots, or URLs beyond the ones y
 written. The method is described in `engine/REFERENCE-COMPILER.md`, "Measurement and evidence
 levels".
 
+## Step 6 — Transition frame jumps (measured, optional)
+
+A transition that names its properties can leave one out, and that property then snaps in one frame
+while the rest glides. On your own pages, mark each state change to check: a root
+`data-styleseed-transition="<id>"` holding one `data-styleseed-trigger`. Then run:
+
+```bash
+node <installed-ss-verify>/scripts/transition-jumps.mjs http://localhost:3000/settings \
+  --out .styleseed/evidence/transitions/<date> --compare-all
+```
+
+It clicks each trigger forward and back, holds the transitions and animations the change starts, steps
+their clocks every 1000/60 ms, and writes `TRANSITIONS.md` and `transitions.json`: boxes that move in one
+frame at the start, in the middle, or after the end of the change. With `--compare-all`, both directions
+run again with `transition-property: all` set inline on every element under the root (restored
+afterwards), and a finding that disappears there was caused by the named list. Only box geometry is
+compared. It reports and does not gate; exit 2 means a run was inconclusive (not at rest, too many
+elements, chained, script-driven, or skipped after a run that could not return the case).
+Never point it at a reference site. Definitions and limits: [transition frame
+jumps](references/render-faults.md#transition-frame-jumps).
+
 ## Rules
 
 - **You must actually see the rendered artifact.** No render, no visual verdict — fall back to `/ss-score`

@@ -60,7 +60,7 @@ export function FoodPage({ skin, seed: seedId }: { skin: string; seed: SeedId })
       }}
       className="flex items-start justify-center"
     >
-      <div className="flex w-[400px] flex-col gap-4">
+      <div className="flex w-full min-w-0 max-w-[400px] flex-col gap-4">
         {/* Location + cart */}
         <motion.header {...m.entrance} className="flex items-center justify-between px-1">
           <div>
@@ -185,16 +185,19 @@ export function FoodPage({ skin, seed: seedId }: { skin: string; seed: SeedId })
                 <div className="mt-0.5 truncate text-[12px]" style={{ color: textTertiary }}>
                   {r.tag}
                 </div>
-                <div className="mt-1.5 flex items-center gap-3 text-[11px]" style={{ color: textSecondary }}>
-                  <span className="flex items-center gap-1 font-bold" style={{ color: text }}>
+                <div className="mt-1.5 flex flex-wrap items-center gap-x-3 text-[11px]" style={{ color: textSecondary }}>
+                  <span className="flex items-center gap-1 whitespace-nowrap font-bold" style={{ color: text }}>
                     <Star size={11} className="fill-amber-400 text-amber-400" />
                     {r.rating}
                   </span>
-                  <span className="flex items-center gap-1">
+                  <span className="flex items-center gap-1 whitespace-nowrap">
                     <Clock size={11} />
                     {r.time} min
                   </span>
-                  <span style={{ color: r.fee === "Free" ? "var(--success, #6B9B7A)" : textSecondary }}>
+                  <span
+                    className="whitespace-nowrap"
+                    style={{ color: r.fee === "Free" ? "var(--success, #6B9B7A)" : textSecondary }}
+                  >
                     {r.fee === "Free" ? "Free delivery" : r.fee}
                   </span>
                 </div>
@@ -206,10 +209,10 @@ export function FoodPage({ skin, seed: seedId }: { skin: string; seed: SeedId })
         {/* Sticky cart bar */}
         <motion.div
           {...delayed(m.entrance, 0.4)}
-          className="flex items-center justify-between p-2 pl-4"
+          className="flex flex-wrap items-center justify-between gap-2 p-2 sm:pl-4"
           style={{ background: gradient, color: brandFg, borderRadius: radius, boxShadow: shadow }}
         >
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 ps-2 sm:ps-0">
             <div className="flex items-center gap-2 rounded-full bg-white/20 px-1">
               <button
                 type="button"
@@ -227,12 +230,12 @@ export function FoodPage({ skin, seed: seedId }: { skin: string; seed: SeedId })
                 <Plus size={14} />
               </button>
             </div>
-            <span className="text-[13px] font-bold">items in cart</span>
+            <span className="whitespace-nowrap text-[13px] font-bold">items in cart</span>
           </div>
           <motion.button
             type="button"
             {...m.press}
-            className="rounded-full bg-white px-4 py-2.5 text-[13px] font-bold"
+            className="grow whitespace-nowrap rounded-full bg-white px-4 py-2.5 text-[13px] font-bold sm:grow-0"
             style={{ color: brand }}
           >
             Checkout · $24.80

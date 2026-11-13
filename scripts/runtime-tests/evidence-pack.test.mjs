@@ -7,6 +7,7 @@ import { CLAIM_USES, COMPONENT_SOURCES, NOT_PACKED, buildEngineDefaults, buildEv
 import { themeColors } from "../build-component-contracts.mjs";
 import { disallowedStrings } from "../lib/reference-allow-list.mjs";
 import { schemaErrors } from "../lib/schema-lite.mjs";
+import { TOUCH_FLOOR, normalizeEngineDefaults, normalizeEvidencePack, proposeSystem } from "../../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/system-proposal.mjs";
 
 const repoRoot = resolve(fileURLToPath(new URL("../../", import.meta.url)));
 const references = resolve(repoRoot, "engine/.claude/skills/styleseed/workflows/ss-resolve/references");
@@ -144,6 +145,14 @@ test("buildEvidencePack is additive: a new keep claim, lineage, page type, and a
   const built = buildEvidencePack(setOnly);
   assert.deepEqual(built.problems, []);
   assert.ok(!built.pack.claims.some((claim) => claim.id === "table.rowHeight"));
+
+  // The proposer reads claims[] generically: a claim whose use (or axis) it does not know changes nothing.
+  const base = normalizeEvidencePack(buildEvidencePack(synthetic()).pack);
+  const future = normalizeEvidencePack({ ...clone(base), claims: [...clone(base.claims), { id: "button.height2", axis: "controlHeights", use: "range", label: "a future use", futureField: [1, 2] }, { id: "panel.inset", axis: "panelInsets", use: "value", label: "a future axis" }], rows: [...clone(base.rows), { ...clone(base.rows[0]), claim: "button.height2" }, { ...clone(base.rows[0]), claim: "panel.inset" }] });
+  assert.equal(future.claims.at(-2).futureField.length, 2, "unknown keys in a claim are kept");
+  const defaults = normalizeEngineDefaults(JSON.parse(readFileSync(resolve(references, "engine-defaults.json"), "utf8")));
+  const proposal = (pack) => proposeSystem({ pack, defaults, project: { mode: "legacy", decisions: [], density: null, recipe: "enterprise-workbench", ledger: { path: ".styleseed/decisions.json", entries: 0, nextId: "D-001" } }, context: { page: "form", surface: "pointer" } });
+  assert.deepEqual(proposal(future), proposal(base));
 });
 
 test("buildEvidencePack is deterministic: same input, same bytes", () => {
@@ -178,6 +187,13 @@ test("the committed pack and engine defaults are what the builder makes from the
   assert.ok(schemaErrors(schema, { ...committedPack, extra: 1 }).length, "no unknown top-level key");
   assert.ok(schemaErrors(schema, { ...committedPack, rows: [{ ...committedPack.rows[0], lineages: [] }] }).length, "a row cannot carry per-lineage values");
   assert.deepEqual(schemaErrors(schema, { ...committedPack, claims: [{ ...committedPack.claims[0], futureField: true }] }), [], "claims keep unknown keys");
+  assert.deepEqual(normalizeEvidencePack(committedPack), committedPack, "the pack passes its normalizer unchanged");
+  assert.deepEqual(normalizeEngineDefaults(committedDefaults), committedDefaults, "the engine defaults pass theirs");
+  assert.throws(() => normalizeEvidencePack({ ...committedPack, schemaVersion: 2 }, { file: "ss-resolve/references/evidence-pack.json" }), /^Error: ss-resolve\/references\/evidence-pack\.json: schemaVersion: is 2, newer than this proposer reads \(1\); rebuild with `node scripts\/build-evidence-pack\.mjs`, or reinstall the skill$/u);
+  assert.throws(() => normalizeEvidencePack({ ...committedPack, rows: [{ ...committedPack.rows[0], lineages: [] }] }), /rows\[0\]: unknown key\(s\) lineages/u);
+  assert.throws(() => normalizeEvidencePack({ ...committedPack, rows: [{ ...committedPack.rows[0], buckets: [{ value: "32px", lineages: 1, productSystems: 1, kits: 0 }] }] }), /rows\[0\]\.buckets\[0\]\.value: must be a number, a boolean, or "mixed"/u);
+  assert.throws(() => normalizeEngineDefaults({ ...committedDefaults, measured: true }), /measured: must be false/u);
+  assert.throws(() => normalizeEngineDefaults({ ...committedDefaults, components: { ...committedDefaults.components, input: { ...committedDefaults.components.input, height: null } } }), /components\.input\.height: must be a positive number/u);
 });
 
 test("the committed pack holds no text and no URL: only counts, enums, and the lineage names", () => {
@@ -221,6 +237,7 @@ test("engine defaults: sizes equal the component contracts, the spacing set is t
   const statement = catalogRules.find((rule) => rule.id === "CRAFT-spacing-scale").statement;
   assert.equal(committedDefaults.spacingScale.rule, "CRAFT-spacing-scale");
   assert.ok(statement.includes(`{${committedDefaults.spacingScale.values.join(", ")}}`), statement);
+  assert.ok(catalogRules.find((rule) => rule.id === TOUCH_FLOOR.rule).statement.includes(TOUCH_FLOOR.clause), "the touch floor quotes CRAFT-control-heights");
 
   const sources = componentSources();
   const without = buildEngineDefaults({ sources: { ...sources, input: sources.input.replace(" h-9 ", " ") }, colours: themeColors(), recipesCss: readFileSync(resolve(repoRoot, "engine/css/recipes.css"), "utf8"), rules: catalogRules });

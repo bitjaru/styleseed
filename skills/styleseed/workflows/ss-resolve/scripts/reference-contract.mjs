@@ -515,7 +515,9 @@ export function checkGeneratedContract({ slug, files, fallback, artifactAdapter 
 
 // --- decision proposals -----------------------------------------------------------------------------
 
-const FACT_LEDGER = Object.freeze([
+// Structure fact id → ledger axis (→ statement label). Shared with system-proposal.mjs, which reads the
+// same facts from a measured reference that has no approved contract.
+export const FACT_LEDGER = Object.freeze([
   ["density.table.rowHeight", "tableRowHeights", "Table row heights"],
   ["density.list.itemHeight", "listItemHeights", "List item heights"],
   ["typography.heading.sizes", "headingSizes", "Heading sizes in the main region"],

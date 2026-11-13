@@ -1,0 +1,1495 @@
+{
+ "schemaVersion": 1,
+ "generatedBy": "scripts/build-evidence-pack.mjs",
+ "run": {
+  "id": "2026-11-12",
+  "path": "research/consensus/runs/2026-11-12",
+  "consensusVersion": 1,
+  "viewports": [
+   [
+    1440,
+    900
+   ],
+   [
+    390,
+    844
+   ]
+  ],
+  "scroll": false,
+  "touch": false,
+  "screens": {
+   "listed": 32,
+   "measured": 24,
+   "failed": 0,
+   "skipped": 8
+  }
+ },
+ "lineages": [
+  {
+   "id": "cloudscape",
+   "name": "AWS Cloudscape",
+   "kind": "product-system",
+   "screens": 8,
+   "fragments": 0
+  },
+  {
+   "id": "antpro",
+   "name": "Ant Design Pro",
+   "kind": "kit",
+   "screens": 10,
+   "fragments": 0
+  },
+  {
+   "id": "shadcn",
+   "name": "shadcn/ui",
+   "kind": "kit",
+   "screens": 2,
+   "fragments": 0
+  },
+  {
+   "id": "primer",
+   "name": "GitHub Primer",
+   "kind": "product-system",
+   "screens": 3,
+   "fragments": 0
+  },
+  {
+   "id": "carbon",
+   "name": "IBM Carbon",
+   "kind": "product-system",
+   "screens": 0,
+   "fragments": 1
+  }
+ ],
+ "claims": [
+  {
+   "id": "controls.shareHeight",
+   "axis": "controlHeights",
+   "use": "note",
+   "label": "fields and buttons share one height"
+  },
+  {
+   "id": "controls.shareRadius",
+   "axis": "radii",
+   "use": "note",
+   "label": "fields and buttons share a corner radius"
+  },
+  {
+   "id": "controls.pointerUnder44",
+   "axis": "controlHeights",
+   "use": "note",
+   "label": "default buttons under 44px"
+  },
+  {
+   "id": "controls.narrowAtLeast44",
+   "axis": "controlHeights",
+   "use": "note",
+   "viewport": 390,
+   "caveat": "A width, not touch input.",
+   "label": "default buttons at least 44px"
+  },
+  {
+   "id": "button.height",
+   "axis": "controlHeights",
+   "use": "value",
+   "unit": "px",
+   "label": "default button height"
+  },
+  {
+   "id": "field.height",
+   "axis": "controlHeights",
+   "use": "value",
+   "unit": "px",
+   "label": "default text field height"
+  },
+  {
+   "id": "field.textSize",
+   "axis": "typeSizes",
+   "use": "value",
+   "unit": "px",
+   "complete": false,
+   "label": "text field text size"
+  },
+  {
+   "id": "text.bodySize",
+   "axis": "typeSizes",
+   "use": "value",
+   "unit": "px",
+   "complete": false,
+   "label": "body text size"
+  },
+  {
+   "id": "table.rowHeight",
+   "axis": "tableRowHeights",
+   "use": "value",
+   "unit": "px",
+   "label": "table row height"
+  },
+  {
+   "id": "primary.onePerSection",
+   "axis": "primariesPerSection",
+   "use": "flag",
+   "values": [
+    1
+   ],
+   "label": "at most one primary action per section"
+  },
+  {
+   "id": "lineage.spacingBase",
+   "axis": "spacingBase",
+   "use": "note",
+   "viewport": "both",
+   "label": "one spacing base across a system's measured screens"
+  },
+  {
+   "id": "lineage.buttonHeight",
+   "axis": "controlHeights",
+   "use": "note",
+   "label": "one button height across a system's measured screens"
+  }
+ ],
+ "rows": [
+  {
+   "claim": "controls.shareHeight",
+   "pageType": "dashboard",
+   "viewport": 1440,
+   "measured": 1,
+   "buckets": [
+    {
+     "value": true,
+     "lineages": 1,
+     "productSystems": 0,
+     "kits": 1
+    }
+   ],
+   "withFragments": {
+    "measured": 1,
+    "buckets": [
+     {
+      "value": true,
+      "lineages": 1,
+      "productSystems": 0,
+      "kits": 1
+     }
+    ]
+   }
+  },
+  {
+   "claim": "controls.shareHeight",
+   "pageType": "list",
+   "viewport": 1440,
+   "measured": 2,
+   "buckets": [
+    {
+     "value": true,
+     "lineages": 2,
+     "productSystems": 1,
+     "kits": 1
+    }
+   ],
+   "withFragments": {
+    "measured": 2,
+    "buckets": [
+     {
+      "value": true,
+      "lineages": 2,
+      "productSystems": 1,
+      "kits": 1
+     }
+    ]
+   }
+  },
+  {
+   "claim": "controls.shareHeight",
+   "pageType": "form",
+   "viewport": 1440,
+   "measured": 3,
+   "buckets": [
+    {
+     "value": true,
+     "lineages": 3,
+     "productSystems": 1,
+     "kits": 2
+    }
+   ],
+   "withFragments": {
+    "measured": 4,
+    "buckets": [
+     {
+      "value": true,
+      "lineages": 4,
+      "productSystems": 2,
+      "kits": 2
+     }
+    ]
+   }
+  },
+  {
+   "claim": "controls.shareHeight",
+   "pageType": "detail",
+   "viewport": 1440,
+   "measured": 1,
+   "buckets": [
+    {
+     "value": true,
+     "lineages": 1,
+     "productSystems": 1,
+     "kits": 0
+    }
+   ],
+   "withFragments": {
+    "measured": 1,
+    "buckets": [
+     {
+      "value": true,
+      "lineages": 1,
+      "productSystems": 1,
+      "kits": 0
+     }
+    ]
+   }
+  },
+  {
+   "claim": "controls.shareHeight",
+   "pageType": "all",
+   "viewport": 1440,
+   "measured": 3,
+   "buckets": [
+    {
+     "value": true,
+     "lineages": 3,
+     "productSystems": 1,
+     "kits": 2
+    }
+   ],
+   "withFragments": {
+    "measured": 4,
+    "buckets": [
+     {
+      "value": true,
+      "lineages": 4,
+      "productSystems": 2,
+      "kits": 2
+     }
+    ]
+   }
+  },
+  {
+   "claim": "controls.shareRadius",
+   "pageType": "dashboard",
+   "viewport": 1440,
+   "measured": 1,
+   "buckets": [
+    {
+     "value": true,
+     "lineages": 1,
+     "productSystems": 0,
+     "kits": 1
+    }
+   ],
+   "withFragments": {
+    "measured": 1,
+    "buckets": [
+     {
+      "value": true,
+      "lineages": 1,
+      "productSystems": 0,
+      "kits": 1
+     }
+    ]
+   }
+  },
+  {
+   "claim": "controls.shareRadius",
+   "pageType": "list",
+   "viewport": 1440,
+   "measured": 2,
+   "buckets": [
+    {
+     "value": false,
+     "lineages": 1,
+     "productSystems": 1,
+     "kits": 0
+    },
+    {
+     "value": true,
+     "lineages": 1,
+     "productSystems": 0,
+     "kits": 1
+    }
+   ],
+   "withFragments": {
+    "measured": 2,
+    "buckets": [
+     {
+      "value": false,
+      "lineages": 1,
+      "productSystems": 1,
+      "kits": 0
+     },
+     {
+      "value": true,
+      "lineages": 1,
+      "productSystems": 0,
+      "kits": 1
+     }
+    ]
+   }
+  },
+  {
+   "claim": "controls.shareRadius",
+   "pageType": "form",
+   "viewport": 1440,
+   "measured": 3,
+   "buckets": [
+    {
+     "value": true,
+     "lineages": 2,
+     "productSystems": 0,
+     "kits": 2
+    },
+    {
+     "value": false,
+     "lineages": 1,
+     "productSystems": 1,
+     "kits": 0
+    }
+   ],
+   "withFragments": {
+    "measured": 4,
+    "buckets": [
+     {
+      "value": true,
+      "lineages": 3,
+      "productSystems": 1,
+      "kits": 2
+     },
+     {
+      "value": false,
+      "lineages": 1,
+      "productSystems": 1,
+      "kits": 0
+     }
+    ]
+   }
+  },
+  {
+   "claim": "controls.shareRadius",
+   "pageType": "detail",
+   "viewport": 1440,
+   "measured": 1,
+   "buckets": [
+    {
+     "value": false,
+     "lineages": 1,
+     "productSystems": 1,
+     "kits": 0
+    }
+   ],
+   "withFragments": {
+    "measured": 1,
+    "buckets": [
+     {
+      "value": false,
+      "lineages": 1,
+      "productSystems": 1,
+      "kits": 0
+     }
+    ]
+   }
+  },
+  {
+   "claim": "controls.shareRadius",
+   "pageType": "all",
+   "viewport": 1440,
+   "measured": 3,
+   "buckets": [
+    {
+     "value": true,
+     "lineages": 2,
+     "productSystems": 0,
+     "kits": 2
+    },
+    {
+     "value": false,
+     "lineages": 1,
+     "productSystems": 1,
+     "kits": 0
+    }
+   ],
+   "withFragments": {
+    "measured": 4,
+    "buckets": [
+     {
+      "value": true,
+      "lineages": 3,
+      "productSystems": 1,
+      "kits": 2
+     },
+     {
+      "value": false,
+      "lineages": 1,
+      "productSystems": 1,
+      "kits": 0
+     }
+    ]
+   }
+  },
+  {
+   "claim": "controls.pointerUnder44",
+   "pageType": "dashboard",
+   "viewport": 1440,
+   "measured": 3,
+   "buckets": [
+    {
+     "value": true,
+     "lineages": 3,
+     "productSystems": 1,
+     "kits": 2
+    }
+   ],
+   "withFragments": {
+    "measured": 3,
+    "buckets": [
+     {
+      "value": true,
+      "lineages": 3,
+      "productSystems": 1,
+      "kits": 2
+     }
+    ]
+   }
+  },
+  {
+   "claim": "controls.pointerUnder44",
+   "pageType": "list",
+   "viewport": 1440,
+   "measured": 2,
+   "buckets": [
+    {
+     "value": true,
+     "lineages": 2,
+     "productSystems": 1,
+     "kits": 1
+    }
+   ],
+   "withFragments": {
+    "measured": 2,
+    "buckets": [
+     {
+      "value": true,
+      "lineages": 2,
+      "productSystems": 1,
+      "kits": 1
+     }
+    ]
+   }
+  },
+  {
+   "claim": "controls.pointerUnder44",
+   "pageType": "form",
+   "viewport": 1440,
+   "measured": 4,
+   "buckets": [
+    {
+     "value": true,
+     "lineages": 4,
+     "productSystems": 2,
+     "kits": 2
+    }
+   ],
+   "withFragments": {
+    "measured": 5,
+    "buckets": [
+     {
+      "value": true,
+      "lineages": 5,
+      "productSystems": 3,
+      "kits": 2
+     }
+    ]
+   }
+  },
+  {
+   "claim": "controls.pointerUnder44",
+   "pageType": "detail",
+   "viewport": 1440,
+   "measured": 3,
+   "buckets": [
+    {
+     "value": true,
+     "lineages": 3,
+     "productSystems": 2,
+     "kits": 1
+    }
+   ],
+   "withFragments": {
+    "measured": 3,
+    "buckets": [
+     {
+      "value": true,
+      "lineages": 3,
+      "productSystems": 2,
+      "kits": 1
+     }
+    ]
+   }
+  },
+  {
+   "claim": "controls.pointerUnder44",
+   "pageType": "all",
+   "viewport": 1440,
+   "measured": 4,
+   "buckets": [
+    {
+     "value": true,
+     "lineages": 4,
+     "productSystems": 2,
+     "kits": 2
+    }
+   ],
+   "withFragments": {
+    "measured": 5,
+    "buckets": [
+     {
+      "value": true,
+      "lineages": 5,
+      "productSystems": 3,
+      "kits": 2
+     }
+    ]
+   }
+  },
+  {
+   "claim": "controls.narrowAtLeast44",
+   "pageType": "dashboard",
+   "viewport": 390,
+   "measured": 3,
+   "buckets": [
+    {
+     "value": false,
+     "lineages": 3,
+     "productSystems": 1,
+     "kits": 2
+    }
+   ],
+   "withFragments": {
+    "measured": 3,
+    "buckets": [
+     {
+      "value": false,
+      "lineages": 3,
+      "productSystems": 1,
+      "kits": 2
+     }
+    ]
+   }
+  },
+  {
+   "claim": "controls.narrowAtLeast44",
+   "pageType": "list",
+   "viewport": 390,
+   "measured": 2,
+   "buckets": [
+    {
+     "value": false,
+     "lineages": 2,
+     "productSystems": 1,
+     "kits": 1
+    }
+   ],
+   "withFragments": {
+    "measured": 2,
+    "buckets": [
+     {
+      "value": false,
+      "lineages": 2,
+      "productSystems": 1,
+      "kits": 1
+     }
+    ]
+   }
+  },
+  {
+   "claim": "controls.narrowAtLeast44",
+   "pageType": "form",
+   "viewport": 390,
+   "measured": 4,
+   "buckets": [
+    {
+     "value": false,
+     "lineages": 4,
+     "productSystems": 2,
+     "kits": 2
+    }
+   ],
+   "withFragments": {
+    "measured": 5,
+    "buckets": [
+     {
+      "value": false,
+      "lineages": 5,
+      "productSystems": 3,
+      "kits": 2
+     }
+    ]
+   }
+  },
+  {
+   "claim": "controls.narrowAtLeast44",
+   "pageType": "detail",
+   "viewport": 390,
+   "measured": 3,
+   "buckets": [
+    {
+     "value": false,
+     "lineages": 3,
+     "productSystems": 2,
+     "kits": 1
+    }
+   ],
+   "withFragments": {
+    "measured": 3,
+    "buckets": [
+     {
+      "value": false,
+      "lineages": 3,
+      "productSystems": 2,
+      "kits": 1
+     }
+    ]
+   }
+  },
+  {
+   "claim": "controls.narrowAtLeast44",
+   "pageType": "all",
+   "viewport": 390,
+   "measured": 4,
+   "buckets": [
+    {
+     "value": false,
+     "lineages": 4,
+     "productSystems": 2,
+     "kits": 2
+    }
+   ],
+   "withFragments": {
+    "measured": 5,
+    "buckets": [
+     {
+      "value": false,
+      "lineages": 5,
+      "productSystems": 3,
+      "kits": 2
+     }
+    ]
+   }
+  },
+  {
+   "claim": "button.height",
+   "pageType": "dashboard",
+   "viewport": 1440,
+   "measured": 3,
+   "buckets": [
+    {
+     "value": 32,
+     "lineages": 2,
+     "productSystems": 1,
+     "kits": 1
+    },
+    {
+     "value": 24,
+     "lineages": 1,
+     "productSystems": 0,
+     "kits": 1
+    }
+   ],
+   "withFragments": {
+    "measured": 3,
+    "buckets": [
+     {
+      "value": 32,
+      "lineages": 2,
+      "productSystems": 1,
+      "kits": 1
+     },
+     {
+      "value": 24,
+      "lineages": 1,
+      "productSystems": 0,
+      "kits": 1
+     }
+    ]
+   }
+  },
+  {
+   "claim": "button.height",
+   "pageType": "list",
+   "viewport": 1440,
+   "measured": 2,
+   "buckets": [
+    {
+     "value": 32,
+     "lineages": 2,
+     "productSystems": 1,
+     "kits": 1
+    }
+   ],
+   "withFragments": {
+    "measured": 2,
+    "buckets": [
+     {
+      "value": 32,
+      "lineages": 2,
+      "productSystems": 1,
+      "kits": 1
+     }
+    ]
+   }
+  },
+  {
+   "claim": "button.height",
+   "pageType": "form",
+   "viewport": 1440,
+   "measured": 4,
+   "buckets": [
+    {
+     "value": 32,
+     "lineages": 3,
+     "productSystems": 2,
+     "kits": 1
+    },
+    {
+     "value": 36,
+     "lineages": 1,
+     "productSystems": 0,
+     "kits": 1
+    }
+   ],
+   "withFragments": {
+    "measured": 5,
+    "buckets": [
+     {
+      "value": 32,
+      "lineages": 3,
+      "productSystems": 2,
+      "kits": 1
+     },
+     {
+      "value": 36,
+      "lineages": 1,
+      "productSystems": 0,
+      "kits": 1
+     },
+     {
+      "value": 40,
+      "lineages": 1,
+      "productSystems": 1,
+      "kits": 0
+     }
+    ]
+   }
+  },
+  {
+   "claim": "button.height",
+   "pageType": "detail",
+   "viewport": 1440,
+   "measured": 3,
+   "buckets": [
+    {
+     "value": 32,
+     "lineages": 2,
+     "productSystems": 1,
+     "kits": 1
+    },
+    {
+     "value": 20,
+     "lineages": 1,
+     "productSystems": 1,
+     "kits": 0
+    }
+   ],
+   "withFragments": {
+    "measured": 3,
+    "buckets": [
+     {
+      "value": 32,
+      "lineages": 2,
+      "productSystems": 1,
+      "kits": 1
+     },
+     {
+      "value": 20,
+      "lineages": 1,
+      "productSystems": 1,
+      "kits": 0
+     }
+    ]
+   }
+  },
+  {
+   "claim": "button.height",
+   "pageType": "all",
+   "viewport": 1440,
+   "measured": 4,
+   "buckets": [
+    {
+     "value": 32,
+     "lineages": 2,
+     "productSystems": 1,
+     "kits": 1
+    },
+    {
+     "value": "mixed",
+     "lineages": 2,
+     "productSystems": 1,
+     "kits": 1
+    }
+   ],
+   "withFragments": {
+    "measured": 5,
+    "buckets": [
+     {
+      "value": 32,
+      "lineages": 2,
+      "productSystems": 1,
+      "kits": 1
+     },
+     {
+      "value": "mixed",
+      "lineages": 2,
+      "productSystems": 1,
+      "kits": 1
+     },
+     {
+      "value": 40,
+      "lineages": 1,
+      "productSystems": 1,
+      "kits": 0
+     }
+    ]
+   }
+  },
+  {
+   "claim": "field.height",
+   "pageType": "dashboard",
+   "viewport": 1440,
+   "measured": 2,
+   "buckets": [
+    {
+     "value": 24,
+     "lineages": 1,
+     "productSystems": 0,
+     "kits": 1
+    },
+    {
+     "value": 32,
+     "lineages": 1,
+     "productSystems": 0,
+     "kits": 1
+    }
+   ],
+   "withFragments": {
+    "measured": 2,
+    "buckets": [
+     {
+      "value": 24,
+      "lineages": 1,
+      "productSystems": 0,
+      "kits": 1
+     },
+     {
+      "value": 32,
+      "lineages": 1,
+      "productSystems": 0,
+      "kits": 1
+     }
+    ]
+   }
+  },
+  {
+   "claim": "field.height",
+   "pageType": "list",
+   "viewport": 1440,
+   "measured": 2,
+   "buckets": [
+    {
+     "value": 32,
+     "lineages": 2,
+     "productSystems": 1,
+     "kits": 1
+    }
+   ],
+   "withFragments": {
+    "measured": 2,
+    "buckets": [
+     {
+      "value": 32,
+      "lineages": 2,
+      "productSystems": 1,
+      "kits": 1
+     }
+    ]
+   }
+  },
+  {
+   "claim": "field.height",
+   "pageType": "form",
+   "viewport": 1440,
+   "measured": 3,
+   "buckets": [
+    {
+     "value": 32,
+     "lineages": 2,
+     "productSystems": 1,
+     "kits": 1
+    },
+    {
+     "value": 36,
+     "lineages": 1,
+     "productSystems": 0,
+     "kits": 1
+    }
+   ],
+   "withFragments": {
+    "measured": 4,
+    "buckets": [
+     {
+      "value": 32,
+      "lineages": 2,
+      "productSystems": 1,
+      "kits": 1
+     },
+     {
+      "value": 36,
+      "lineages": 1,
+      "productSystems": 0,
+      "kits": 1
+     },
+     {
+      "value": 40,
+      "lineages": 1,
+      "productSystems": 1,
+      "kits": 0
+     }
+    ]
+   }
+  },
+  {
+   "claim": "field.height",
+   "pageType": "detail",
+   "viewport": 1440,
+   "measured": 1,
+   "buckets": [
+    {
+     "value": 32,
+     "lineages": 1,
+     "productSystems": 1,
+     "kits": 0
+    }
+   ],
+   "withFragments": {
+    "measured": 1,
+    "buckets": [
+     {
+      "value": 32,
+      "lineages": 1,
+      "productSystems": 1,
+      "kits": 0
+     }
+    ]
+   }
+  },
+  {
+   "claim": "field.height",
+   "pageType": "all",
+   "viewport": 1440,
+   "measured": 3,
+   "buckets": [
+    {
+     "value": 32,
+     "lineages": 2,
+     "productSystems": 1,
+     "kits": 1
+    },
+    {
+     "value": "mixed",
+     "lineages": 1,
+     "productSystems": 0,
+     "kits": 1
+    }
+   ],
+   "withFragments": {
+    "measured": 4,
+    "buckets": [
+     {
+      "value": 32,
+      "lineages": 2,
+      "productSystems": 1,
+      "kits": 1
+     },
+     {
+      "value": 40,
+      "lineages": 1,
+      "productSystems": 1,
+      "kits": 0
+     },
+     {
+      "value": "mixed",
+      "lineages": 1,
+      "productSystems": 0,
+      "kits": 1
+     }
+    ]
+   }
+  },
+  {
+   "claim": "field.textSize",
+   "pageType": "dashboard",
+   "viewport": 1440,
+   "measured": 2,
+   "buckets": [
+    {
+     "value": 14,
+     "lineages": 2,
+     "productSystems": 0,
+     "kits": 2
+    }
+   ],
+   "withFragments": {
+    "measured": 2,
+    "buckets": [
+     {
+      "value": 14,
+      "lineages": 2,
+      "productSystems": 0,
+      "kits": 2
+     }
+    ]
+   }
+  },
+  {
+   "claim": "field.textSize",
+   "pageType": "list",
+   "viewport": 1440,
+   "measured": 2,
+   "buckets": [
+    {
+     "value": 14,
+     "lineages": 2,
+     "productSystems": 1,
+     "kits": 1
+    }
+   ],
+   "withFragments": {
+    "measured": 2,
+    "buckets": [
+     {
+      "value": 14,
+      "lineages": 2,
+      "productSystems": 1,
+      "kits": 1
+     }
+    ]
+   }
+  },
+  {
+   "claim": "field.textSize",
+   "pageType": "form",
+   "viewport": 1440,
+   "measured": 3,
+   "buckets": [
+    {
+     "value": 14,
+     "lineages": 3,
+     "productSystems": 1,
+     "kits": 2
+    }
+   ],
+   "withFragments": {
+    "measured": 4,
+    "buckets": [
+     {
+      "value": 14,
+      "lineages": 4,
+      "productSystems": 2,
+      "kits": 2
+     }
+    ]
+   }
+  },
+  {
+   "claim": "field.textSize",
+   "pageType": "detail",
+   "viewport": 1440,
+   "measured": 1,
+   "buckets": [
+    {
+     "value": 14,
+     "lineages": 1,
+     "productSystems": 1,
+     "kits": 0
+    }
+   ],
+   "withFragments": {
+    "measured": 1,
+    "buckets": [
+     {
+      "value": 14,
+      "lineages": 1,
+      "productSystems": 1,
+      "kits": 0
+     }
+    ]
+   }
+  },
+  {
+   "claim": "field.textSize",
+   "pageType": "all",
+   "viewport": 1440,
+   "measured": 3,
+   "buckets": [
+    {
+     "value": 14,
+     "lineages": 3,
+     "productSystems": 1,
+     "kits": 2
+    }
+   ],
+   "withFragments": {
+    "measured": 4,
+    "buckets": [
+     {
+      "value": 14,
+      "lineages": 4,
+      "productSystems": 2,
+      "kits": 2
+     }
+    ]
+   }
+  },
+  {
+   "claim": "text.bodySize",
+   "pageType": "dashboard",
+   "viewport": 1440,
+   "measured": 3,
+   "buckets": [
+    {
+     "value": 14,
+     "lineages": 3,
+     "productSystems": 1,
+     "kits": 2
+    }
+   ],
+   "withFragments": {
+    "measured": 3,
+    "buckets": [
+     {
+      "value": 14,
+      "lineages": 3,
+      "productSystems": 1,
+      "kits": 2
+     }
+    ]
+   }
+  },
+  {
+   "claim": "text.bodySize",
+   "pageType": "list",
+   "viewport": 1440,
+   "measured": 2,
+   "buckets": [
+    {
+     "value": 14,
+     "lineages": 2,
+     "productSystems": 1,
+     "kits": 1
+    }
+   ],
+   "withFragments": {
+    "measured": 2,
+    "buckets": [
+     {
+      "value": 14,
+      "lineages": 2,
+      "productSystems": 1,
+      "kits": 1
+     }
+    ]
+   }
+  },
+  {
+   "claim": "text.bodySize",
+   "pageType": "form",
+   "viewport": 1440,
+   "measured": 3,
+   "buckets": [
+    {
+     "value": 14,
+     "lineages": 2,
+     "productSystems": 0,
+     "kits": 2
+    },
+    {
+     "value": "mixed",
+     "lineages": 1,
+     "productSystems": 1,
+     "kits": 0
+    }
+   ],
+   "withFragments": {
+    "measured": 4,
+    "buckets": [
+     {
+      "value": 14,
+      "lineages": 2,
+      "productSystems": 0,
+      "kits": 2
+     },
+     {
+      "value": 12,
+      "lineages": 1,
+      "productSystems": 1,
+      "kits": 0
+     },
+     {
+      "value": "mixed",
+      "lineages": 1,
+      "productSystems": 1,
+      "kits": 0
+     }
+    ]
+   }
+  },
+  {
+   "claim": "text.bodySize",
+   "pageType": "detail",
+   "viewport": 1440,
+   "measured": 3,
+   "buckets": [
+    {
+     "value": 14,
+     "lineages": 2,
+     "productSystems": 1,
+     "kits": 1
+    },
+    {
+     "value": 16,
+     "lineages": 1,
+     "productSystems": 1,
+     "kits": 0
+    }
+   ],
+   "withFragments": {
+    "measured": 3,
+    "buckets": [
+     {
+      "value": 14,
+      "lineages": 2,
+      "productSystems": 1,
+      "kits": 1
+     },
+     {
+      "value": 16,
+      "lineages": 1,
+      "productSystems": 1,
+      "kits": 0
+     }
+    ]
+   }
+  },
+  {
+   "claim": "text.bodySize",
+   "pageType": "all",
+   "viewport": 1440,
+   "measured": 4,
+   "buckets": [
+    {
+     "value": 14,
+     "lineages": 3,
+     "productSystems": 1,
+     "kits": 2
+    },
+    {
+     "value": 16,
+     "lineages": 1,
+     "productSystems": 1,
+     "kits": 0
+    }
+   ],
+   "withFragments": {
+    "measured": 5,
+    "buckets": [
+     {
+      "value": 14,
+      "lineages": 3,
+      "productSystems": 1,
+      "kits": 2
+     },
+     {
+      "value": 12,
+      "lineages": 1,
+      "productSystems": 1,
+      "kits": 0
+     },
+     {
+      "value": 16,
+      "lineages": 1,
+      "productSystems": 1,
+      "kits": 0
+     }
+    ]
+   }
+  },
+  {
+   "claim": "table.rowHeight",
+   "pageType": "list",
+   "viewport": 1440,
+   "measured": 2,
+   "buckets": [
+    {
+     "value": 40,
+     "lineages": 1,
+     "productSystems": 1,
+     "kits": 0
+    },
+    {
+     "value": 48,
+     "lineages": 1,
+     "productSystems": 0,
+     "kits": 1
+    }
+   ],
+   "withFragments": null
+  },
+  {
+   "claim": "primary.onePerSection",
+   "pageType": "dashboard",
+   "viewport": 1440,
+   "measured": 3,
+   "buckets": [
+    {
+     "value": true,
+     "lineages": 2,
+     "productSystems": 1,
+     "kits": 1
+    },
+    {
+     "value": false,
+     "lineages": 1,
+     "productSystems": 0,
+     "kits": 1
+    }
+   ],
+   "withFragments": null
+  },
+  {
+   "claim": "primary.onePerSection",
+   "pageType": "list",
+   "viewport": 1440,
+   "measured": 2,
+   "buckets": [
+    {
+     "value": true,
+     "lineages": 2,
+     "productSystems": 1,
+     "kits": 1
+    }
+   ],
+   "withFragments": null
+  },
+  {
+   "claim": "primary.onePerSection",
+   "pageType": "form",
+   "viewport": 1440,
+   "measured": 4,
+   "buckets": [
+    {
+     "value": true,
+     "lineages": 4,
+     "productSystems": 2,
+     "kits": 2
+    }
+   ],
+   "withFragments": null
+  },
+  {
+   "claim": "primary.onePerSection",
+   "pageType": "detail",
+   "viewport": 1440,
+   "measured": 3,
+   "buckets": [
+    {
+     "value": true,
+     "lineages": 2,
+     "productSystems": 1,
+     "kits": 1
+    },
+    {
+     "value": "mixed",
+     "lineages": 1,
+     "productSystems": 1,
+     "kits": 0
+    }
+   ],
+   "withFragments": null
+  },
+  {
+   "claim": "primary.onePerSection",
+   "pageType": "all",
+   "viewport": 1440,
+   "measured": 4,
+   "buckets": [
+    {
+     "value": true,
+     "lineages": 3,
+     "productSystems": 2,
+     "kits": 1
+    },
+    {
+     "value": "mixed",
+     "lineages": 1,
+     "productSystems": 0,
+     "kits": 1
+    }
+   ],
+   "withFragments": null
+  },
+  {
+   "claim": "lineage.spacingBase",
+   "pageType": "all",
+   "viewport": "both",
+   "measured": 3,
+   "buckets": [
+    {
+     "value": false,
+     "lineages": 3,
+     "productSystems": 2,
+     "kits": 1
+    }
+   ],
+   "withFragments": null
+  },
+  {
+   "claim": "lineage.buttonHeight",
+   "pageType": "all",
+   "viewport": 1440,
+   "measured": 2,
+   "buckets": [
+    {
+     "value": false,
+     "lineages": 1,
+     "productSystems": 0,
+     "kits": 1
+    },
+    {
+     "value": true,
+     "lineages": 1,
+     "productSystems": 1,
+     "kits": 0
+    }
+   ],
+   "withFragments": null
+  }
+ ]
+}

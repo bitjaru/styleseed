@@ -1,7 +1,7 @@
 {
   "schemaVersion": 5,
   "engineVersion": "5.0.0",
-  "engineRevision": "sha256:9bddb23ed24bad0c8feb95c8d9855de7d71468941cff8daa475b6fe066b2cd75",
+  "engineRevision": "sha256:180c36cf5e4dff1d8bc14cc866a61982424e771bb8d563756b5e4e491b50051c",
   "distributionSource": {
     "schemaVersion": 1,
     "channel": "edge",
@@ -10,7 +10,7 @@
   },
   "distributions": {
     "core": {
-      "revision": "sha256:9bddb23ed24bad0c8feb95c8d9855de7d71468941cff8daa475b6fe066b2cd75",
+      "revision": "sha256:180c36cf5e4dff1d8bc14cc866a61982424e771bb8d563756b5e4e491b50051c",
       "files": [
         {
           "path": "LICENSE",
@@ -151,6 +151,21 @@
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/references/decisions.md",
           "sha256": "f4f14cb9d4ebbc3be134f959fe114cefafa950f87808e157fb61939d1d3ec1f7",
           "bytes": 12281
+        },
+        {
+          "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/references/engine-defaults.json",
+          "sha256": "80aa08d26ebcba8e40b12aceb2654fb53e08b61aade93af24f72897a635e2c67",
+          "bytes": 3015
+        },
+        {
+          "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/references/evidence-pack.json",
+          "sha256": "b9945b7fec102c4a2d9feb12f665d0458fdc10bfddf5fe09ba6594f7746bbaca",
+          "bytes": 23863
+        },
+        {
+          "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/references/evidence-pack.schema.json",
+          "sha256": "75b6df27520de01d5ce0b83170bff27532d3052f8dfd76efbaac471605511aaf",
+          "bytes": 6399
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/references/manifest.schema.json",
@@ -620,7 +635,7 @@
       ]
     },
     "skills": {
-      "revision": "sha256:1286361ec418fc285ae1a28ab462716e4cf01ba58e50794dfa1b0b7b398c423f",
+      "revision": "sha256:bb279f40543e0fe96257f8103134025098131440422f0aba436f6c55ab872b41",
       "files": [
         {
           "path": "engine/.claude/skills/styleseed/SKILL.md",
@@ -751,6 +766,21 @@
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/references/decisions.md",
           "sha256": "f4f14cb9d4ebbc3be134f959fe114cefafa950f87808e157fb61939d1d3ec1f7",
           "bytes": 12281
+        },
+        {
+          "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/references/engine-defaults.json",
+          "sha256": "80aa08d26ebcba8e40b12aceb2654fb53e08b61aade93af24f72897a635e2c67",
+          "bytes": 3015
+        },
+        {
+          "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/references/evidence-pack.json",
+          "sha256": "b9945b7fec102c4a2d9feb12f665d0458fdc10bfddf5fe09ba6594f7746bbaca",
+          "bytes": 23863
+        },
+        {
+          "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/references/evidence-pack.schema.json",
+          "sha256": "75b6df27520de01d5ce0b83170bff27532d3052f8dfd76efbaac471605511aaf",
+          "bytes": 6399
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/references/manifest.schema.json",
@@ -1210,6 +1240,21 @@
       "path": ".claude/skills/styleseed/workflows/ss-resolve/references/decisions.md",
       "sha256": "f4f14cb9d4ebbc3be134f959fe114cefafa950f87808e157fb61939d1d3ec1f7",
       "bytes": 12281
+    },
+    {
+      "path": ".claude/skills/styleseed/workflows/ss-resolve/references/engine-defaults.json",
+      "sha256": "80aa08d26ebcba8e40b12aceb2654fb53e08b61aade93af24f72897a635e2c67",
+      "bytes": 3015
+    },
+    {
+      "path": ".claude/skills/styleseed/workflows/ss-resolve/references/evidence-pack.json",
+      "sha256": "b9945b7fec102c4a2d9feb12f665d0458fdc10bfddf5fe09ba6594f7746bbaca",
+      "bytes": 23863
+    },
+    {
+      "path": ".claude/skills/styleseed/workflows/ss-resolve/references/evidence-pack.schema.json",
+      "sha256": "75b6df27520de01d5ce0b83170bff27532d3052f8dfd76efbaac471605511aaf",
+      "bytes": 6399
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-resolve/references/manifest.schema.json",

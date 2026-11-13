@@ -193,6 +193,27 @@ test("compile-contract reads the robots verdict from measurements/source.json an
   } finally { rmSync(tmp, { recursive: true, force: true }); }
 });
 
+test("compile-contract reads controlBoxVersion from summary.json and says once when the measurements predate it", () => {
+  const tmp = mkdtempSync(join(tmpdir(), "ss-distance-box-"));
+  try {
+    const root = join(tmp, "project");
+    writeProject(root);
+    const marked = { controlBoxVersion: 1, controlHeightsByKind: { field: { 36: 6 }, button: { 36: 6 } }, controlHeights: { 36: 12 } };
+    const before = writeMeasurements(join(tmp, "before"));
+    const after = writeMeasurements(join(tmp, "after"), measurement(marked, marked));
+    assert.deepEqual([readMeasurements(after).controlBoxVersion, readMeasurements(before).controlBoxVersion], [1, null]);
+    const line = /^ {2}control heights: these measurements predate the visible-control-box reading \(summary\.json has no controlBoxVersion\); controlHeights and tells\.controlHeights\.distinct were read from the input element\. Measure the reference again before keeping either$/u;
+    const dry = (measurements) => {
+      const logs = [];
+      compileContract(contractArgs(["--project-root", root, "--slug", "ops-console", "--measurements", measurements]), { log: (l) => logs.push(l), warn: () => {}, out: () => {} });
+      return logs;
+    };
+    assert.equal(dry(before).filter((l) => line.test(l)).length, 1, "measurements without the marker: the line, once");
+    assert.equal(dry(after).filter((l) => /control heights:/u.test(l)).length, 0, "measurements with the marker: no line");
+    assert.equal(existsSync(join(root, ".styleseed/rulesets")), false, "a dry run writes nothing");
+  } finally { rmSync(tmp, { recursive: true, force: true }); }
+});
+
 test("drift-report --reference: arguments, screen choice, and the flags it turns on", () => {
   const base = ["file:///tmp/a.html", "file:///tmp/b.html", "--out", "/tmp/out"];
   assert.throws(() => parseArgs([...base, "--reference", "ops-console"]), /--reference needs --project-root/u);

@@ -255,6 +255,12 @@ export function summarize(observations) {
   const radii = radiusFamilies(mergeCounts(list.map(o => o.radii)));
   // Control heights cluster the same way radii do: families with at least a 3% share.
   const controlHeights = radiusFamilies(mergeCounts(list.map(o => o.controlHeights || {})));
+  // Measured with the visible-control-box block: the families per kind (fields, boxed action
+  // buttons) and the block's version, the smallest across observations. Only when every observation
+  // carries them; a summary of observations measured before has neither key.
+  const byKind = list.length && list.every(o => o && o.controlHeightsByKind)
+    ? { controlHeightsByKind: Object.fromEntries(['field', 'button'].map(kind => [kind, radiusFamilies(mergeCounts(list.map(o => o.controlHeightsByKind[kind])))])) } : {};
+  const boxVersion = list.length && list.every(o => o && Number.isInteger(o.controlBoxVersion)) ? { controlBoxVersion: Math.min(...list.map(o => o.controlBoxVersion)) } : {};
   const merged = {
     actions: mergeCounts(list.map(o => o.actions)), links: mergeCounts(list.map(o => o.links)), text: mergeCounts(list.map(o => o.text)),
     surfaces: mergeCounts(list.map(o => o.surfaces)), backdrop: mergeCounts(list.map(o => o.backdrop)), body: list[0]?.body || {},
@@ -267,7 +273,7 @@ export function summarize(observations) {
   const out = {
     spacingBase: spacing.base, spacingScale: spacing.scale, spacingCoverage: spacing.coverage, offScale: spacing.offScale,
     typeSteps: type.steps.length, typeStepDetail: type.steps, distinctFontSizes: type.distinctSizes,
-    radii, controlHeights, fonts, colorCount,
+    radii, controlHeights, ...byKind, ...boxVersion, fonts, colorCount,
     accentDerived: roles.accent, accentFrom: roles.accentFrom, accentAgreesAcrossViewports: accentAgrees, perViewport,
     ink: roles.ink, canvas: roles.canvas, inkContrast: roles.inkContrast, accentContrast: roles.accentContrast,
     roleEvidence: roles.evidence,

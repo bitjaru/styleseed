@@ -285,9 +285,9 @@ test("the allow-list: a record built from probe output passes; a label string an
 test("validateManifest: the real screens.json, and broken copies", () => {
   const real = JSON.parse(readFileSync(resolve(studyRoot, "screens.json"), "utf8"));
   assert.deepEqual(validateManifest(real), []);
-  assert.equal(real.screens.length, 32);
+  assert.equal(real.screens.length, 46);
   assert.equal(real.screens.filter((s) => s.tier === "fragment").length, 2);
-  assert.deepEqual(real.lineages.map((l) => [l.id, l.kind]), [["cloudscape", "product-system"], ["patternfly", "product-system"], ["antpro", "kit"], ["shadcn", "kit"], ["primer", "product-system"], ["carbon", "product-system"]]);
+  assert.deepEqual(real.lineages.map((l) => [l.id, l.kind]), [["cloudscape", "product-system"], ["patternfly", "product-system"], ["antpro", "kit"], ["shadcn", "kit"], ["primer", "product-system"], ["carbon", "product-system"], ["mui", "kit"], ["govuk", "product-system"]]);
   const broken = (edit) => { const copy = structuredClone(real); edit(copy); return validateManifest(copy); };
   const fails = (edit, pattern) => { const errors = broken(edit); assert.ok(errors.some((e) => pattern.test(e)), `${pattern}: ${JSON.stringify(errors)}`); };
   fails((c) => { c.screens[1].id = c.screens[0].id; }, /screens\[1\].*\.id is used twice/u);
@@ -748,6 +748,26 @@ test("validateManifest: the context of a lineage, a .invalid host, the real scre
   m.lineages.push({ id: "paste", name: "Twilio Paste", kind: "product-system", context: "console", host: "paste.invalid", access: "self-hosted", basePath: "/", repository: "twilio-labs/paste", licence: "MIT", robots: { checkedAt: null, verdict: "not-checked" }, terms: { url: null, checkedAt: null, automatedAccess: "unchecked", note: "No hosted pages exist; the Storybook is built from the repository." } });
   m.screens.push({ id: "paste-settings", lineage: "paste", pageType: "form", tier: "screen", url: "https://paste.invalid/iframe.html?viewMode=story&id=website-pagetemplateexamples--settings-example", expect: { elements: 1 } });
   assert.deepEqual(validateManifest(m), []);
+  // The lineages WO-12 adds, as they stand before the terms check and the builds of the run.
+  const byId = new Map(real.lineages.map((l) => [l.id, l]));
+  assert.deepEqual(real.lineages.map((l) => l.context ?? "console"), ["console", "console", "console", "console", "console", "console", "console", "service"]);
+  assert.deepEqual([byId.get("patternfly").access, byId.get("patternfly").basePath, byId.get("patternfly").terms.automatedAccess], ["self-hosted", "/", "restricted"]);
+  for (const id of ["mui", "govuk"]) assert.deepEqual([byId.get(id).access, byId.get(id).terms.automatedAccess, byId.get(id).terms.checkedAt], ["hosted", "unchecked", null], `${id}: not loaded before its terms check`);
+  assert.deepEqual(Object.fromEntries(["mui", "govuk"].map((id) => [id, real.screens.filter((s) => s.lineage === id).map((s) => s.pageType)])), {
+    mui: ["dashboard", "list", "form", "form", "form"], govuk: ["list", "list", "list", "form", "form", "form", "form", "detail", "detail"],
+  });
+});
+
+test("the real screens.json loads nothing while terms are unchecked and self-hosted builds are not passed", async () => {
+  const real = JSON.parse(readFileSync(resolve(studyRoot, "screens.json"), "utf8"));
+  const fetched = [];
+  const fetchImpl = async (url) => { fetched.push(new URL(url).host); return { status: 200, ok: true, url, text: async () => "User-agent: *\nDisallow: /" }; };
+  const chromium = { async launch() { throw new Error("nothing may be loaded"); } };
+  const result = await measureScreens(real, { chromium, today: "2026-11-13", delay: 0, fetchImpl });
+  const reasons = {};
+  for (const r of result.rows) { const lineage = real.screens.find((s) => s.id === r.screen).lineage; reasons[lineage] = [...new Set([...(reasons[lineage] ?? []), `${r.status} ${r.reason}`])]; }
+  assert.deepEqual(reasons, { cloudscape: ["skipped no-base"], patternfly: ["skipped no-base"], antpro: ["skipped robots"], shadcn: ["skipped robots"], primer: ["skipped robots"], carbon: ["skipped robots"], mui: ["skipped terms"], govuk: ["skipped terms"] });
+  assert.deepEqual([...new Set(fetched)].sort(), ["preview.pro.ant.design", "primer.style", "react.carbondesignsystem.com", "ui.shadcn.com"], "no robots.txt of an unchecked lineage is requested (the fetch here is a fake)");
 });
 
 test("stored runs: the 2026-11-12 run passes the walk and is not regenerated (an older consensusVersion)", () => {

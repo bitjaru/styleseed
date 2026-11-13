@@ -19,16 +19,20 @@ row adds a rule or changes a rule's `priority`, `check`, `kind`, or `scope`, and
 | Lineage | Name | Kind | Context | Host | Access | Licence of the demos | Terms (automated access) | Checked |
 |---|---|---|---|---|---|---|---|---|
 | `cloudscape` | AWS Cloudscape | product system | console | `cloudscape.design` | self-hosted: `cloudscape-design/demos` at `dda7bab`, built and served on `127.0.0.1` | MIT-0 | `restricted`: the AWS Site Terms exclude robots and data-gathering tools, so the hosted pages are never loaded | 2026-11-12 |
-| `patternfly` | Red Hat PatternFly | product system | console | `www.patternfly.org` | hosted, not loaded while its terms read `restricted` | MIT (`patternfly/patternfly-org`) | `restricted`: the Red Hat terms the site's footer links rule out using the site in a way that deploys a robot or a retrieval application | 2026-11-12 |
+| `patternfly` | Red Hat PatternFly | product system | console | `www.patternfly.org` | self-hosted from the next run (switch set 2026-11-13): a local build of `patternfly/patternfly-org`, served on `127.0.0.1`; the hosted pages are never loaded | MIT (`patternfly/patternfly-org`) | `restricted`: the Red Hat terms the site's footer links rule out using the site in a way that deploys a robot or a retrieval application | 2026-11-12 |
 | `antpro` | Ant Design Pro | kit | console | `preview.pro.ant.design` | hosted | MIT (`ant-design/ant-design-pro`) | `not-mentioned`: the preview app links no terms page | 2026-11-12 |
 | `shadcn` | shadcn/ui | kit | console | `ui.shadcn.com` | hosted | MIT (`shadcn-ui/ui`) | `not-mentioned`: the site links no terms page | 2026-11-12 |
 | `primer` | GitHub Primer | product system | console | `primer.style` | hosted | MIT (`primer/react`) | `conditional`: the GitHub Acceptable Use Policies allow research use of public, non-personal information when the publication is open access, as this repository is; whether they cover `primer.style` is not stated | 2026-11-12 |
 | `carbon` | IBM Carbon | product system | console | `react.carbondesignsystem.com` | hosted (one form story, a fragment) | Apache-2.0 (`carbon-design-system/carbon`) | `robots-txt`: the IBM terms allow a crawler as far as the site's `robots.txt` permits | 2026-11-12 |
+| `mui` | MUI templates | kit | console | `mui.com` | hosted, not loaded before its terms are checked | MIT (`mui/material-ui`) | `unchecked`: the terms check is made before the first load | — |
+| `govuk` | GOV.UK Frontend | product system | service | `govuk-frontend-review.herokuapp.com` | hosted, not loaded before its terms are checked | MIT (`alphagov/govuk-frontend`) | `unchecked`: the terms check is made before the first load | — |
 
-PatternFly's demos are open source (`patternfly/patternfly-org`, MIT), so a later run could measure a
-self-hosted build the way Cloudscape is measured; that is the maintainer's decision.
+PatternFly's demos are open source (`patternfly/patternfly-org`, MIT). The maintainer set it to
+self-hosted on 2026-11-13: a run measures a local build the way Cloudscape is measured, and its
+`selfHosted` entry (repository, commit, licence, build date) is recorded when it is built. The hosted
+site stays `restricted` and is never loaded.
 
-`screens.json` lists the 32 screens (30 full screens and 2 fragments), each with its lineage, the page
+`screens.json` lists the 46 screens (44 full screens and 2 fragments), each with its lineage, the page
 type the study assigns (`dashboard`, `list`, `form`, `detail`), its tier (`screen` or `fragment`), its
 URL, and `expect`: floors checked at 1440 (elements, tables, fields, buttons, about half of what the
 page had when the list was made). A page under a floor has changed or is not showing the product
@@ -192,10 +196,11 @@ distribution. A candidate whose value is the opposite of the rule's clause is li
 compositions without an app shell) are measured and shown beside each row; they never change a
 row's counts or status.
 
-**Kits.** Cloudscape, PatternFly, Primer, and Carbon are systems a company builds its own products
-with (`product-system`). Ant Design Pro and shadcn/ui are open-source kits whose demo is the product
-(`kit`). Kits count in every row, but a row needs two agreeing product systems, so kits alone cannot
-carry one: a kit's demo shows what the kit ships, not what a product team settled on.
+**Kits.** Cloudscape, PatternFly, Primer, Carbon, and GOV.UK Frontend are systems an organisation
+builds its own products or services with (`product-system`). Ant Design Pro, shadcn/ui, and the MUI
+templates are open-source kits whose demo is the product (`kit`). Kits count in every row, but a row
+needs two agreeing product systems, so kits alone cannot carry one: a kit's demo shows what the kit
+ships, not what a product team settled on.
 
 **Set-valued rows.** A few claims give each lineage a list of values instead of one: the spacing
 steps, type sizes, heading sizes, corner radii, and transition-duration bands a system uses

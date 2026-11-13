@@ -1,0 +1,172 @@
+{
+ "run": "2026-11-12",
+ "version": 1,
+ "probes": {
+  "structure": 1,
+  "faults": 1,
+  "controls": 1
+ },
+ "chromium": "156.0.8078.4",
+ "viewports": [
+  [
+   1440,
+   900
+  ],
+  [
+   390,
+   844
+  ]
+ ],
+ "scroll": false,
+ "delay": 4000,
+ "faultClasses": [
+  "amount-wrap",
+  "text-overlap",
+  "text-spill",
+  "text-clip",
+  "tight-inset",
+  "text-touch",
+  "near-touch",
+  "near-align",
+  "emoji-icon",
+  "icon-mix"
+ ],
+ "screens": [
+  {
+   "screen": "cloudscape-dashboard",
+   "status": "measured"
+  },
+  {
+   "screen": "cloudscape-table",
+   "status": "measured"
+  },
+  {
+   "screen": "cloudscape-cards",
+   "status": "measured"
+  },
+  {
+   "screen": "cloudscape-form",
+   "status": "measured"
+  },
+  {
+   "screen": "cloudscape-edit",
+   "status": "measured"
+  },
+  {
+   "screen": "cloudscape-details",
+   "status": "measured"
+  },
+  {
+   "screen": "cloudscape-details-hub",
+   "status": "measured"
+  },
+  {
+   "screen": "cloudscape-details-tabs",
+   "status": "measured"
+  },
+  {
+   "screen": "patternfly-dashboard",
+   "status": "skipped",
+   "reason": "terms"
+  },
+  {
+   "screen": "patternfly-table",
+   "status": "skipped",
+   "reason": "terms"
+  },
+  {
+   "screen": "patternfly-data-list",
+   "status": "skipped",
+   "reason": "terms"
+  },
+  {
+   "screen": "patternfly-card-view",
+   "status": "skipped",
+   "reason": "terms"
+  },
+  {
+   "screen": "patternfly-primary-detail",
+   "status": "skipped",
+   "reason": "terms"
+  },
+  {
+   "screen": "patternfly-description-list",
+   "status": "skipped",
+   "reason": "terms"
+  },
+  {
+   "screen": "patternfly-tabs-table",
+   "status": "skipped",
+   "reason": "terms"
+  },
+  {
+   "screen": "patternfly-form",
+   "status": "skipped",
+   "reason": "terms"
+  },
+  {
+   "screen": "antpro-analysis",
+   "status": "measured"
+  },
+  {
+   "screen": "antpro-workplace",
+   "status": "measured"
+  },
+  {
+   "screen": "antpro-table-list",
+   "status": "measured"
+  },
+  {
+   "screen": "antpro-basic-list",
+   "status": "measured"
+  },
+  {
+   "screen": "antpro-card-list",
+   "status": "measured"
+  },
+  {
+   "screen": "antpro-basic-form",
+   "status": "measured"
+  },
+  {
+   "screen": "antpro-advanced-form",
+   "status": "measured"
+  },
+  {
+   "screen": "antpro-settings",
+   "status": "measured"
+  },
+  {
+   "screen": "antpro-profile-basic",
+   "status": "measured"
+  },
+  {
+   "screen": "antpro-profile-advanced",
+   "status": "measured"
+  },
+  {
+   "screen": "shadcn-dashboard",
+   "status": "measured"
+  },
+  {
+   "screen": "shadcn-login",
+   "status": "measured"
+  },
+  {
+   "screen": "primer-issue",
+   "status": "measured"
+  },
+  {
+   "screen": "primer-pull-request",
+   "status": "measured"
+  },
+  {
+   "screen": "primer-settings",
+   "status": "measured"
+  },
+  {
+   "screen": "carbon-form",
+   "status": "measured"
+  }
+ ]
+}

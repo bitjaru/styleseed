@@ -1,0 +1,7127 @@
+{
+ "consensusVersion": 1,
+ "run": "2026-11-12",
+ "screens": {
+  "listed": 32,
+  "measured": 24,
+  "failed": 0,
+  "skipped": 8
+ },
+ "rows": [
+  {
+   "claim": "controls.shareHeight",
+   "pageType": "dashboard",
+   "viewport": 1440,
+   "transfer": "keep",
+   "rule": "CRAFT-control-heights",
+   "card": [
+    1
+   ],
+   "measured": 1,
+   "agree": 1,
+   "agreeProductSystems": 0,
+   "agreeKits": 1,
+   "top": true,
+   "supportsRule": true,
+   "status": "thin",
+   "distribution": [
+    {
+     "bucket": true,
+     "lineages": 1,
+     "productSystems": 0,
+     "kits": 1
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": null,
+     "eligible": 0,
+     "raw": []
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": null,
+     "eligible": 0,
+     "raw": []
+    },
+    {
+     "lineage": "shadcn",
+     "kind": "kit",
+     "value": true,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "shadcn-dashboard",
+       "value": true
+      }
+     ]
+    }
+   ],
+   "withFragments": {
+    "measured": 1,
+    "agree": 1,
+    "agreeProductSystems": 0,
+    "agreeKits": 1,
+    "top": true,
+    "distribution": [
+     {
+      "bucket": true,
+      "lineages": 1,
+      "productSystems": 0,
+      "kits": 1
+     }
+    ]
+   }
+  },
+  {
+   "claim": "controls.shareHeight",
+   "pageType": "list",
+   "viewport": 1440,
+   "transfer": "keep",
+   "rule": "CRAFT-control-heights",
+   "card": [
+    1
+   ],
+   "measured": 2,
+   "agree": 2,
+   "agreeProductSystems": 1,
+   "agreeKits": 1,
+   "top": true,
+   "supportsRule": true,
+   "status": "thin",
+   "distribution": [
+    {
+     "bucket": true,
+     "lineages": 2,
+     "productSystems": 1,
+     "kits": 1
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": true,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "cloudscape-table",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-cards",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": true,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "antpro-table-list",
+       "value": true
+      },
+      {
+       "screen": "antpro-basic-list",
+       "value": true
+      }
+     ]
+    }
+   ],
+   "withFragments": {
+    "measured": 2,
+    "agree": 2,
+    "agreeProductSystems": 1,
+    "agreeKits": 1,
+    "top": true,
+    "distribution": [
+     {
+      "bucket": true,
+      "lineages": 2,
+      "productSystems": 1,
+      "kits": 1
+     }
+    ]
+   }
+  },
+  {
+   "claim": "controls.shareHeight",
+   "pageType": "form",
+   "viewport": 1440,
+   "transfer": "keep",
+   "rule": "CRAFT-control-heights",
+   "card": [
+    1
+   ],
+   "measured": 3,
+   "agree": 3,
+   "agreeProductSystems": 1,
+   "agreeKits": 2,
+   "top": true,
+   "supportsRule": true,
+   "status": "split",
+   "distribution": [
+    {
+     "bucket": true,
+     "lineages": 3,
+     "productSystems": 1,
+     "kits": 2
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": true,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "cloudscape-form",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": true,
+     "eligible": 3,
+     "raw": [
+      {
+       "screen": "antpro-basic-form",
+       "value": true
+      },
+      {
+       "screen": "antpro-advanced-form",
+       "value": true
+      },
+      {
+       "screen": "antpro-settings",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "shadcn",
+     "kind": "kit",
+     "value": true,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "shadcn-login",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "primer",
+     "kind": "product-system",
+     "value": null,
+     "eligible": 0,
+     "raw": []
+    }
+   ],
+   "withFragments": {
+    "measured": 4,
+    "agree": 4,
+    "agreeProductSystems": 2,
+    "agreeKits": 2,
+    "top": true,
+    "distribution": [
+     {
+      "bucket": true,
+      "lineages": 4,
+      "productSystems": 2,
+      "kits": 2
+     }
+    ]
+   }
+  },
+  {
+   "claim": "controls.shareHeight",
+   "pageType": "detail",
+   "viewport": 1440,
+   "transfer": "keep",
+   "rule": "CRAFT-control-heights",
+   "card": [
+    1
+   ],
+   "measured": 1,
+   "agree": 1,
+   "agreeProductSystems": 1,
+   "agreeKits": 0,
+   "top": true,
+   "supportsRule": true,
+   "status": "thin",
+   "distribution": [
+    {
+     "bucket": true,
+     "lineages": 1,
+     "productSystems": 1,
+     "kits": 0
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": true,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "cloudscape-details",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": null,
+     "eligible": 0,
+     "raw": []
+    },
+    {
+     "lineage": "primer",
+     "kind": "product-system",
+     "value": null,
+     "eligible": 0,
+     "raw": []
+    }
+   ],
+   "withFragments": {
+    "measured": 1,
+    "agree": 1,
+    "agreeProductSystems": 1,
+    "agreeKits": 0,
+    "top": true,
+    "distribution": [
+     {
+      "bucket": true,
+      "lineages": 1,
+      "productSystems": 1,
+      "kits": 0
+     }
+    ]
+   }
+  },
+  {
+   "claim": "controls.shareHeight",
+   "pageType": "all",
+   "viewport": 1440,
+   "transfer": "keep",
+   "rule": "CRAFT-control-heights",
+   "card": [
+    1
+   ],
+   "measured": 3,
+   "agree": 3,
+   "agreeProductSystems": 1,
+   "agreeKits": 2,
+   "top": true,
+   "supportsRule": true,
+   "status": "split",
+   "distribution": [
+    {
+     "bucket": true,
+     "lineages": 3,
+     "productSystems": 1,
+     "kits": 2
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": true,
+     "eligible": 4,
+     "raw": [
+      {
+       "screen": "cloudscape-table",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-cards",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-form",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-details",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": true,
+     "eligible": 5,
+     "raw": [
+      {
+       "screen": "antpro-table-list",
+       "value": true
+      },
+      {
+       "screen": "antpro-basic-list",
+       "value": true
+      },
+      {
+       "screen": "antpro-basic-form",
+       "value": true
+      },
+      {
+       "screen": "antpro-advanced-form",
+       "value": true
+      },
+      {
+       "screen": "antpro-settings",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "shadcn",
+     "kind": "kit",
+     "value": true,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "shadcn-dashboard",
+       "value": true
+      },
+      {
+       "screen": "shadcn-login",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "primer",
+     "kind": "product-system",
+     "value": null,
+     "eligible": 0,
+     "raw": []
+    }
+   ],
+   "withFragments": {
+    "measured": 4,
+    "agree": 4,
+    "agreeProductSystems": 2,
+    "agreeKits": 2,
+    "top": true,
+    "distribution": [
+     {
+      "bucket": true,
+      "lineages": 4,
+      "productSystems": 2,
+      "kits": 2
+     }
+    ]
+   }
+  },
+  {
+   "claim": "controls.rowShareHeight",
+   "pageType": "dashboard",
+   "viewport": 1440,
+   "transfer": "keep",
+   "rule": "CRAFT-control-heights",
+   "card": [
+    1
+   ],
+   "measured": 1,
+   "agree": 1,
+   "agreeProductSystems": 0,
+   "agreeKits": 1,
+   "top": true,
+   "supportsRule": true,
+   "status": "thin",
+   "distribution": [
+    {
+     "bucket": true,
+     "lineages": 1,
+     "productSystems": 0,
+     "kits": 1
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": null,
+     "eligible": 0,
+     "raw": []
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": null,
+     "eligible": 0,
+     "raw": []
+    },
+    {
+     "lineage": "shadcn",
+     "kind": "kit",
+     "value": true,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "shadcn-dashboard",
+       "value": true
+      }
+     ]
+    }
+   ],
+   "withFragments": {
+    "measured": 1,
+    "agree": 1,
+    "agreeProductSystems": 0,
+    "agreeKits": 1,
+    "top": true,
+    "distribution": [
+     {
+      "bucket": true,
+      "lineages": 1,
+      "productSystems": 0,
+      "kits": 1
+     }
+    ]
+   }
+  },
+  {
+   "claim": "controls.rowShareHeight",
+   "pageType": "list",
+   "viewport": 1440,
+   "transfer": "keep",
+   "rule": "CRAFT-control-heights",
+   "card": [
+    1
+   ],
+   "measured": 1,
+   "agree": 1,
+   "agreeProductSystems": 0,
+   "agreeKits": 1,
+   "top": true,
+   "supportsRule": true,
+   "status": "thin",
+   "distribution": [
+    {
+     "bucket": true,
+     "lineages": 1,
+     "productSystems": 0,
+     "kits": 1
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": null,
+     "eligible": 0,
+     "raw": []
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": true,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "antpro-table-list",
+       "value": true
+      }
+     ]
+    }
+   ],
+   "withFragments": {
+    "measured": 1,
+    "agree": 1,
+    "agreeProductSystems": 0,
+    "agreeKits": 1,
+    "top": true,
+    "distribution": [
+     {
+      "bucket": true,
+      "lineages": 1,
+      "productSystems": 0,
+      "kits": 1
+     }
+    ]
+   }
+  },
+  {
+   "claim": "controls.rowShareHeight",
+   "pageType": "form",
+   "viewport": 1440,
+   "transfer": "keep",
+   "rule": "CRAFT-control-heights",
+   "card": [
+    1
+   ],
+   "measured": 1,
+   "agree": 1,
+   "agreeProductSystems": 1,
+   "agreeKits": 0,
+   "top": true,
+   "supportsRule": true,
+   "status": "thin",
+   "distribution": [
+    {
+     "bucket": true,
+     "lineages": 1,
+     "productSystems": 1,
+     "kits": 0
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": true,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "cloudscape-form",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": null,
+     "eligible": 0,
+     "raw": []
+    },
+    {
+     "lineage": "shadcn",
+     "kind": "kit",
+     "value": null,
+     "eligible": 0,
+     "raw": []
+    },
+    {
+     "lineage": "primer",
+     "kind": "product-system",
+     "value": null,
+     "eligible": 0,
+     "raw": []
+    }
+   ],
+   "withFragments": {
+    "measured": 1,
+    "agree": 1,
+    "agreeProductSystems": 1,
+    "agreeKits": 0,
+    "top": true,
+    "distribution": [
+     {
+      "bucket": true,
+      "lineages": 1,
+      "productSystems": 1,
+      "kits": 0
+     }
+    ]
+   }
+  },
+  {
+   "claim": "controls.rowShareHeight",
+   "pageType": "detail",
+   "viewport": 1440,
+   "transfer": "keep",
+   "rule": "CRAFT-control-heights",
+   "card": [
+    1
+   ],
+   "measured": 0,
+   "agree": 0,
+   "agreeProductSystems": 0,
+   "agreeKits": 0,
+   "top": null,
+   "supportsRule": null,
+   "status": "thin",
+   "distribution": [],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": null,
+     "eligible": 0,
+     "raw": []
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": null,
+     "eligible": 0,
+     "raw": []
+    },
+    {
+     "lineage": "primer",
+     "kind": "product-system",
+     "value": null,
+     "eligible": 0,
+     "raw": []
+    }
+   ],
+   "withFragments": {
+    "measured": 0,
+    "agree": 0,
+    "agreeProductSystems": 0,
+    "agreeKits": 0,
+    "top": null,
+    "distribution": []
+   }
+  },
+  {
+   "claim": "controls.rowShareHeight",
+   "pageType": "all",
+   "viewport": 1440,
+   "transfer": "keep",
+   "rule": "CRAFT-control-heights",
+   "card": [
+    1
+   ],
+   "measured": 3,
+   "agree": 3,
+   "agreeProductSystems": 1,
+   "agreeKits": 2,
+   "top": true,
+   "supportsRule": true,
+   "status": "split",
+   "distribution": [
+    {
+     "bucket": true,
+     "lineages": 3,
+     "productSystems": 1,
+     "kits": 2
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": true,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "cloudscape-form",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": true,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "antpro-table-list",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "shadcn",
+     "kind": "kit",
+     "value": true,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "shadcn-dashboard",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "primer",
+     "kind": "product-system",
+     "value": null,
+     "eligible": 0,
+     "raw": []
+    }
+   ],
+   "withFragments": {
+    "measured": 3,
+    "agree": 3,
+    "agreeProductSystems": 1,
+    "agreeKits": 2,
+    "top": true,
+    "distribution": [
+     {
+      "bucket": true,
+      "lineages": 3,
+      "productSystems": 1,
+      "kits": 2
+     }
+    ]
+   }
+  },
+  {
+   "claim": "controls.shareRadius",
+   "pageType": "dashboard",
+   "viewport": 1440,
+   "transfer": "keep",
+   "rule": null,
+   "card": [
+    8
+   ],
+   "measured": 1,
+   "agree": 1,
+   "agreeProductSystems": 0,
+   "agreeKits": 1,
+   "top": true,
+   "supportsRule": null,
+   "status": "thin",
+   "distribution": [
+    {
+     "bucket": true,
+     "lineages": 1,
+     "productSystems": 0,
+     "kits": 1
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": null,
+     "eligible": 0,
+     "raw": []
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": null,
+     "eligible": 0,
+     "raw": []
+    },
+    {
+     "lineage": "shadcn",
+     "kind": "kit",
+     "value": true,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "shadcn-dashboard",
+       "value": true
+      }
+     ]
+    }
+   ],
+   "withFragments": {
+    "measured": 1,
+    "agree": 1,
+    "agreeProductSystems": 0,
+    "agreeKits": 1,
+    "top": true,
+    "distribution": [
+     {
+      "bucket": true,
+      "lineages": 1,
+      "productSystems": 0,
+      "kits": 1
+     }
+    ]
+   }
+  },
+  {
+   "claim": "controls.shareRadius",
+   "pageType": "list",
+   "viewport": 1440,
+   "transfer": "keep",
+   "rule": null,
+   "card": [
+    8
+   ],
+   "measured": 2,
+   "agree": 1,
+   "agreeProductSystems": 1,
+   "agreeKits": 0,
+   "top": false,
+   "supportsRule": null,
+   "status": "thin",
+   "distribution": [
+    {
+     "bucket": false,
+     "lineages": 1,
+     "productSystems": 1,
+     "kits": 0
+    },
+    {
+     "bucket": true,
+     "lineages": 1,
+     "productSystems": 0,
+     "kits": 1
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": false,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "cloudscape-table",
+       "value": false
+      },
+      {
+       "screen": "cloudscape-cards",
+       "value": false
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": true,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "antpro-table-list",
+       "value": true
+      },
+      {
+       "screen": "antpro-basic-list",
+       "value": true
+      }
+     ]
+    }
+   ],
+   "withFragments": {
+    "measured": 2,
+    "agree": 1,
+    "agreeProductSystems": 1,
+    "agreeKits": 0,
+    "top": false,
+    "distribution": [
+     {
+      "bucket": false,
+      "lineages": 1,
+      "productSystems": 1,
+      "kits": 0
+     },
+     {
+      "bucket": true,
+      "lineages": 1,
+      "productSystems": 0,
+      "kits": 1
+     }
+    ]
+   }
+  },
+  {
+   "claim": "controls.shareRadius",
+   "pageType": "form",
+   "viewport": 1440,
+   "transfer": "keep",
+   "rule": null,
+   "card": [
+    8
+   ],
+   "measured": 3,
+   "agree": 2,
+   "agreeProductSystems": 0,
+   "agreeKits": 2,
+   "top": true,
+   "supportsRule": null,
+   "status": "split",
+   "distribution": [
+    {
+     "bucket": true,
+     "lineages": 2,
+     "productSystems": 0,
+     "kits": 2
+    },
+    {
+     "bucket": false,
+     "lineages": 1,
+     "productSystems": 1,
+     "kits": 0
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": false,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "cloudscape-form",
+       "value": false
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": true,
+     "eligible": 3,
+     "raw": [
+      {
+       "screen": "antpro-basic-form",
+       "value": true
+      },
+      {
+       "screen": "antpro-advanced-form",
+       "value": true
+      },
+      {
+       "screen": "antpro-settings",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "shadcn",
+     "kind": "kit",
+     "value": true,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "shadcn-login",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "primer",
+     "kind": "product-system",
+     "value": null,
+     "eligible": 0,
+     "raw": []
+    }
+   ],
+   "withFragments": {
+    "measured": 4,
+    "agree": 3,
+    "agreeProductSystems": 1,
+    "agreeKits": 2,
+    "top": true,
+    "distribution": [
+     {
+      "bucket": true,
+      "lineages": 3,
+      "productSystems": 1,
+      "kits": 2
+     },
+     {
+      "bucket": false,
+      "lineages": 1,
+      "productSystems": 1,
+      "kits": 0
+     }
+    ]
+   }
+  },
+  {
+   "claim": "controls.shareRadius",
+   "pageType": "detail",
+   "viewport": 1440,
+   "transfer": "keep",
+   "rule": null,
+   "card": [
+    8
+   ],
+   "measured": 1,
+   "agree": 1,
+   "agreeProductSystems": 1,
+   "agreeKits": 0,
+   "top": false,
+   "supportsRule": null,
+   "status": "thin",
+   "distribution": [
+    {
+     "bucket": false,
+     "lineages": 1,
+     "productSystems": 1,
+     "kits": 0
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": false,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "cloudscape-details",
+       "value": false
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": null,
+     "eligible": 0,
+     "raw": []
+    },
+    {
+     "lineage": "primer",
+     "kind": "product-system",
+     "value": null,
+     "eligible": 0,
+     "raw": []
+    }
+   ],
+   "withFragments": {
+    "measured": 1,
+    "agree": 1,
+    "agreeProductSystems": 1,
+    "agreeKits": 0,
+    "top": false,
+    "distribution": [
+     {
+      "bucket": false,
+      "lineages": 1,
+      "productSystems": 1,
+      "kits": 0
+     }
+    ]
+   }
+  },
+  {
+   "claim": "controls.shareRadius",
+   "pageType": "all",
+   "viewport": 1440,
+   "transfer": "keep",
+   "rule": null,
+   "card": [
+    8
+   ],
+   "measured": 3,
+   "agree": 2,
+   "agreeProductSystems": 0,
+   "agreeKits": 2,
+   "top": true,
+   "supportsRule": null,
+   "status": "split",
+   "distribution": [
+    {
+     "bucket": true,
+     "lineages": 2,
+     "productSystems": 0,
+     "kits": 2
+    },
+    {
+     "bucket": false,
+     "lineages": 1,
+     "productSystems": 1,
+     "kits": 0
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": false,
+     "eligible": 4,
+     "raw": [
+      {
+       "screen": "cloudscape-table",
+       "value": false
+      },
+      {
+       "screen": "cloudscape-cards",
+       "value": false
+      },
+      {
+       "screen": "cloudscape-form",
+       "value": false
+      },
+      {
+       "screen": "cloudscape-details",
+       "value": false
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": true,
+     "eligible": 5,
+     "raw": [
+      {
+       "screen": "antpro-table-list",
+       "value": true
+      },
+      {
+       "screen": "antpro-basic-list",
+       "value": true
+      },
+      {
+       "screen": "antpro-basic-form",
+       "value": true
+      },
+      {
+       "screen": "antpro-advanced-form",
+       "value": true
+      },
+      {
+       "screen": "antpro-settings",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "shadcn",
+     "kind": "kit",
+     "value": true,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "shadcn-dashboard",
+       "value": true
+      },
+      {
+       "screen": "shadcn-login",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "primer",
+     "kind": "product-system",
+     "value": null,
+     "eligible": 0,
+     "raw": []
+    }
+   ],
+   "withFragments": {
+    "measured": 4,
+    "agree": 3,
+    "agreeProductSystems": 1,
+    "agreeKits": 2,
+    "top": true,
+    "distribution": [
+     {
+      "bucket": true,
+      "lineages": 3,
+      "productSystems": 1,
+      "kits": 2
+     },
+     {
+      "bucket": false,
+      "lineages": 1,
+      "productSystems": 1,
+      "kits": 0
+     }
+    ]
+   }
+  },
+  {
+   "claim": "controls.pointerUnder44",
+   "pageType": "dashboard",
+   "viewport": 1440,
+   "transfer": "keep",
+   "rule": "CRAFT-control-heights",
+   "card": [
+    3
+   ],
+   "measured": 3,
+   "agree": 3,
+   "agreeProductSystems": 1,
+   "agreeKits": 2,
+   "top": true,
+   "supportsRule": true,
+   "status": "split",
+   "distribution": [
+    {
+     "bucket": true,
+     "lineages": 3,
+     "productSystems": 1,
+     "kits": 2
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": true,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "cloudscape-dashboard",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": true,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "antpro-workplace",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "shadcn",
+     "kind": "kit",
+     "value": true,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "shadcn-dashboard",
+       "value": true
+      }
+     ]
+    }
+   ],
+   "withFragments": {
+    "measured": 3,
+    "agree": 3,
+    "agreeProductSystems": 1,
+    "agreeKits": 2,
+    "top": true,
+    "distribution": [
+     {
+      "bucket": true,
+      "lineages": 3,
+      "productSystems": 1,
+      "kits": 2
+     }
+    ]
+   }
+  },
+  {
+   "claim": "controls.pointerUnder44",
+   "pageType": "list",
+   "viewport": 1440,
+   "transfer": "keep",
+   "rule": "CRAFT-control-heights",
+   "card": [
+    3
+   ],
+   "measured": 2,
+   "agree": 2,
+   "agreeProductSystems": 1,
+   "agreeKits": 1,
+   "top": true,
+   "supportsRule": true,
+   "status": "thin",
+   "distribution": [
+    {
+     "bucket": true,
+     "lineages": 2,
+     "productSystems": 1,
+     "kits": 1
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": true,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "cloudscape-table",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-cards",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": true,
+     "eligible": 3,
+     "raw": [
+      {
+       "screen": "antpro-table-list",
+       "value": true
+      },
+      {
+       "screen": "antpro-basic-list",
+       "value": true
+      },
+      {
+       "screen": "antpro-card-list",
+       "value": false
+      }
+     ]
+    }
+   ],
+   "withFragments": {
+    "measured": 2,
+    "agree": 2,
+    "agreeProductSystems": 1,
+    "agreeKits": 1,
+    "top": true,
+    "distribution": [
+     {
+      "bucket": true,
+      "lineages": 2,
+      "productSystems": 1,
+      "kits": 1
+     }
+    ]
+   }
+  },
+  {
+   "claim": "controls.pointerUnder44",
+   "pageType": "form",
+   "viewport": 1440,
+   "transfer": "keep",
+   "rule": "CRAFT-control-heights",
+   "card": [
+    3
+   ],
+   "measured": 4,
+   "agree": 4,
+   "agreeProductSystems": 2,
+   "agreeKits": 2,
+   "top": true,
+   "supportsRule": true,
+   "status": "candidate",
+   "distribution": [
+    {
+     "bucket": true,
+     "lineages": 4,
+     "productSystems": 2,
+     "kits": 2
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": true,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "cloudscape-form",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-edit",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": true,
+     "eligible": 3,
+     "raw": [
+      {
+       "screen": "antpro-basic-form",
+       "value": true
+      },
+      {
+       "screen": "antpro-advanced-form",
+       "value": true
+      },
+      {
+       "screen": "antpro-settings",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "shadcn",
+     "kind": "kit",
+     "value": true,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "shadcn-login",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "primer",
+     "kind": "product-system",
+     "value": true,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "primer-settings",
+       "value": true
+      }
+     ]
+    }
+   ],
+   "withFragments": {
+    "measured": 5,
+    "agree": 5,
+    "agreeProductSystems": 3,
+    "agreeKits": 2,
+    "top": true,
+    "distribution": [
+     {
+      "bucket": true,
+      "lineages": 5,
+      "productSystems": 3,
+      "kits": 2
+     }
+    ]
+   }
+  },
+  {
+   "claim": "controls.pointerUnder44",
+   "pageType": "detail",
+   "viewport": 1440,
+   "transfer": "keep",
+   "rule": "CRAFT-control-heights",
+   "card": [
+    3
+   ],
+   "measured": 3,
+   "agree": 3,
+   "agreeProductSystems": 2,
+   "agreeKits": 1,
+   "top": true,
+   "supportsRule": true,
+   "status": "candidate",
+   "distribution": [
+    {
+     "bucket": true,
+     "lineages": 3,
+     "productSystems": 2,
+     "kits": 1
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": true,
+     "eligible": 3,
+     "raw": [
+      {
+       "screen": "cloudscape-details",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-details-hub",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-details-tabs",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": true,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "antpro-profile-advanced",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "primer",
+     "kind": "product-system",
+     "value": true,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "primer-issue",
+       "value": true
+      }
+     ]
+    }
+   ],
+   "withFragments": {
+    "measured": 3,
+    "agree": 3,
+    "agreeProductSystems": 2,
+    "agreeKits": 1,
+    "top": true,
+    "distribution": [
+     {
+      "bucket": true,
+      "lineages": 3,
+      "productSystems": 2,
+      "kits": 1
+     }
+    ]
+   }
+  },
+  {
+   "claim": "controls.pointerUnder44",
+   "pageType": "all",
+   "viewport": 1440,
+   "transfer": "keep",
+   "rule": "CRAFT-control-heights",
+   "card": [
+    3
+   ],
+   "measured": 4,
+   "agree": 4,
+   "agreeProductSystems": 2,
+   "agreeKits": 2,
+   "top": true,
+   "supportsRule": true,
+   "status": "candidate",
+   "distribution": [
+    {
+     "bucket": true,
+     "lineages": 4,
+     "productSystems": 2,
+     "kits": 2
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": true,
+     "eligible": 8,
+     "raw": [
+      {
+       "screen": "cloudscape-dashboard",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-table",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-cards",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-form",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-edit",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-details",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-details-hub",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-details-tabs",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": true,
+     "eligible": 8,
+     "raw": [
+      {
+       "screen": "antpro-workplace",
+       "value": true
+      },
+      {
+       "screen": "antpro-table-list",
+       "value": true
+      },
+      {
+       "screen": "antpro-basic-list",
+       "value": true
+      },
+      {
+       "screen": "antpro-card-list",
+       "value": false
+      },
+      {
+       "screen": "antpro-basic-form",
+       "value": true
+      },
+      {
+       "screen": "antpro-advanced-form",
+       "value": true
+      },
+      {
+       "screen": "antpro-settings",
+       "value": true
+      },
+      {
+       "screen": "antpro-profile-advanced",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "shadcn",
+     "kind": "kit",
+     "value": true,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "shadcn-dashboard",
+       "value": true
+      },
+      {
+       "screen": "shadcn-login",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "primer",
+     "kind": "product-system",
+     "value": true,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "primer-issue",
+       "value": true
+      },
+      {
+       "screen": "primer-settings",
+       "value": true
+      }
+     ]
+    }
+   ],
+   "withFragments": {
+    "measured": 5,
+    "agree": 5,
+    "agreeProductSystems": 3,
+    "agreeKits": 2,
+    "top": true,
+    "distribution": [
+     {
+      "bucket": true,
+      "lineages": 5,
+      "productSystems": 3,
+      "kits": 2
+     }
+    ]
+   }
+  },
+  {
+   "claim": "controls.narrowAtLeast44",
+   "pageType": "dashboard",
+   "viewport": 390,
+   "transfer": "keep",
+   "rule": null,
+   "card": [
+    3
+   ],
+   "measured": 3,
+   "agree": 3,
+   "agreeProductSystems": 1,
+   "agreeKits": 2,
+   "top": false,
+   "supportsRule": null,
+   "status": "split",
+   "distribution": [
+    {
+     "bucket": false,
+     "lineages": 3,
+     "productSystems": 1,
+     "kits": 2
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": false,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "cloudscape-dashboard",
+       "value": false
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": false,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "antpro-workplace",
+       "value": false
+      }
+     ]
+    },
+    {
+     "lineage": "shadcn",
+     "kind": "kit",
+     "value": false,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "shadcn-dashboard",
+       "value": false
+      }
+     ]
+    }
+   ],
+   "withFragments": {
+    "measured": 3,
+    "agree": 3,
+    "agreeProductSystems": 1,
+    "agreeKits": 2,
+    "top": false,
+    "distribution": [
+     {
+      "bucket": false,
+      "lineages": 3,
+      "productSystems": 1,
+      "kits": 2
+     }
+    ]
+   }
+  },
+  {
+   "claim": "controls.narrowAtLeast44",
+   "pageType": "list",
+   "viewport": 390,
+   "transfer": "keep",
+   "rule": null,
+   "card": [
+    3
+   ],
+   "measured": 2,
+   "agree": 2,
+   "agreeProductSystems": 1,
+   "agreeKits": 1,
+   "top": false,
+   "supportsRule": null,
+   "status": "thin",
+   "distribution": [
+    {
+     "bucket": false,
+     "lineages": 2,
+     "productSystems": 1,
+     "kits": 1
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": false,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "cloudscape-table",
+       "value": false
+      },
+      {
+       "screen": "cloudscape-cards",
+       "value": false
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": false,
+     "eligible": 3,
+     "raw": [
+      {
+       "screen": "antpro-table-list",
+       "value": false
+      },
+      {
+       "screen": "antpro-basic-list",
+       "value": false
+      },
+      {
+       "screen": "antpro-card-list",
+       "value": true
+      }
+     ]
+    }
+   ],
+   "withFragments": {
+    "measured": 2,
+    "agree": 2,
+    "agreeProductSystems": 1,
+    "agreeKits": 1,
+    "top": false,
+    "distribution": [
+     {
+      "bucket": false,
+      "lineages": 2,
+      "productSystems": 1,
+      "kits": 1
+     }
+    ]
+   }
+  },
+  {
+   "claim": "controls.narrowAtLeast44",
+   "pageType": "form",
+   "viewport": 390,
+   "transfer": "keep",
+   "rule": null,
+   "card": [
+    3
+   ],
+   "measured": 4,
+   "agree": 4,
+   "agreeProductSystems": 2,
+   "agreeKits": 2,
+   "top": false,
+   "supportsRule": null,
+   "status": "candidate",
+   "distribution": [
+    {
+     "bucket": false,
+     "lineages": 4,
+     "productSystems": 2,
+     "kits": 2
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": false,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "cloudscape-form",
+       "value": false
+      },
+      {
+       "screen": "cloudscape-edit",
+       "value": false
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": false,
+     "eligible": 3,
+     "raw": [
+      {
+       "screen": "antpro-basic-form",
+       "value": false
+      },
+      {
+       "screen": "antpro-advanced-form",
+       "value": false
+      },
+      {
+       "screen": "antpro-settings",
+       "value": false
+      }
+     ]
+    },
+    {
+     "lineage": "shadcn",
+     "kind": "kit",
+     "value": false,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "shadcn-login",
+       "value": false
+      }
+     ]
+    },
+    {
+     "lineage": "primer",
+     "kind": "product-system",
+     "value": false,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "primer-settings",
+       "value": false
+      }
+     ]
+    }
+   ],
+   "withFragments": {
+    "measured": 5,
+    "agree": 5,
+    "agreeProductSystems": 3,
+    "agreeKits": 2,
+    "top": false,
+    "distribution": [
+     {
+      "bucket": false,
+      "lineages": 5,
+      "productSystems": 3,
+      "kits": 2
+     }
+    ]
+   }
+  },
+  {
+   "claim": "controls.narrowAtLeast44",
+   "pageType": "detail",
+   "viewport": 390,
+   "transfer": "keep",
+   "rule": null,
+   "card": [
+    3
+   ],
+   "measured": 3,
+   "agree": 3,
+   "agreeProductSystems": 2,
+   "agreeKits": 1,
+   "top": false,
+   "supportsRule": null,
+   "status": "candidate",
+   "distribution": [
+    {
+     "bucket": false,
+     "lineages": 3,
+     "productSystems": 2,
+     "kits": 1
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": false,
+     "eligible": 3,
+     "raw": [
+      {
+       "screen": "cloudscape-details",
+       "value": false
+      },
+      {
+       "screen": "cloudscape-details-hub",
+       "value": false
+      },
+      {
+       "screen": "cloudscape-details-tabs",
+       "value": false
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": false,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "antpro-profile-advanced",
+       "value": false
+      }
+     ]
+    },
+    {
+     "lineage": "primer",
+     "kind": "product-system",
+     "value": false,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "primer-issue",
+       "value": false
+      }
+     ]
+    }
+   ],
+   "withFragments": {
+    "measured": 3,
+    "agree": 3,
+    "agreeProductSystems": 2,
+    "agreeKits": 1,
+    "top": false,
+    "distribution": [
+     {
+      "bucket": false,
+      "lineages": 3,
+      "productSystems": 2,
+      "kits": 1
+     }
+    ]
+   }
+  },
+  {
+   "claim": "controls.narrowAtLeast44",
+   "pageType": "all",
+   "viewport": 390,
+   "transfer": "keep",
+   "rule": null,
+   "card": [
+    3
+   ],
+   "measured": 4,
+   "agree": 4,
+   "agreeProductSystems": 2,
+   "agreeKits": 2,
+   "top": false,
+   "supportsRule": null,
+   "status": "candidate",
+   "distribution": [
+    {
+     "bucket": false,
+     "lineages": 4,
+     "productSystems": 2,
+     "kits": 2
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": false,
+     "eligible": 8,
+     "raw": [
+      {
+       "screen": "cloudscape-dashboard",
+       "value": false
+      },
+      {
+       "screen": "cloudscape-table",
+       "value": false
+      },
+      {
+       "screen": "cloudscape-cards",
+       "value": false
+      },
+      {
+       "screen": "cloudscape-form",
+       "value": false
+      },
+      {
+       "screen": "cloudscape-edit",
+       "value": false
+      },
+      {
+       "screen": "cloudscape-details",
+       "value": false
+      },
+      {
+       "screen": "cloudscape-details-hub",
+       "value": false
+      },
+      {
+       "screen": "cloudscape-details-tabs",
+       "value": false
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": false,
+     "eligible": 8,
+     "raw": [
+      {
+       "screen": "antpro-workplace",
+       "value": false
+      },
+      {
+       "screen": "antpro-table-list",
+       "value": false
+      },
+      {
+       "screen": "antpro-basic-list",
+       "value": false
+      },
+      {
+       "screen": "antpro-card-list",
+       "value": true
+      },
+      {
+       "screen": "antpro-basic-form",
+       "value": false
+      },
+      {
+       "screen": "antpro-advanced-form",
+       "value": false
+      },
+      {
+       "screen": "antpro-settings",
+       "value": false
+      },
+      {
+       "screen": "antpro-profile-advanced",
+       "value": false
+      }
+     ]
+    },
+    {
+     "lineage": "shadcn",
+     "kind": "kit",
+     "value": false,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "shadcn-dashboard",
+       "value": false
+      },
+      {
+       "screen": "shadcn-login",
+       "value": false
+      }
+     ]
+    },
+    {
+     "lineage": "primer",
+     "kind": "product-system",
+     "value": false,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "primer-issue",
+       "value": false
+      },
+      {
+       "screen": "primer-settings",
+       "value": false
+      }
+     ]
+    }
+   ],
+   "withFragments": {
+    "measured": 5,
+    "agree": 5,
+    "agreeProductSystems": 3,
+    "agreeKits": 2,
+    "top": false,
+    "distribution": [
+     {
+      "bucket": false,
+      "lineages": 5,
+      "productSystems": 3,
+      "kits": 2
+     }
+    ]
+   }
+  },
+  {
+   "claim": "button.height",
+   "pageType": "dashboard",
+   "viewport": 1440,
+   "transfer": "adapt",
+   "rule": null,
+   "card": [
+    1,
+    2
+   ],
+   "measured": 3,
+   "agree": 2,
+   "agreeProductSystems": 1,
+   "agreeKits": 1,
+   "top": 32,
+   "supportsRule": null,
+   "status": null,
+   "distribution": [
+    {
+     "bucket": 32,
+     "lineages": 2,
+     "productSystems": 1,
+     "kits": 1
+    },
+    {
+     "bucket": 24,
+     "lineages": 1,
+     "productSystems": 0,
+     "kits": 1
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": 32,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "cloudscape-dashboard",
+       "value": 32
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": 24,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "antpro-workplace",
+       "value": 24
+      }
+     ]
+    },
+    {
+     "lineage": "shadcn",
+     "kind": "kit",
+     "value": 32,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "shadcn-dashboard",
+       "value": 32
+      }
+     ]
+    }
+   ],
+   "withFragments": {
+    "measured": 3,
+    "agree": 2,
+    "agreeProductSystems": 1,
+    "agreeKits": 1,
+    "top": 32,
+    "distribution": [
+     {
+      "bucket": 32,
+      "lineages": 2,
+      "productSystems": 1,
+      "kits": 1
+     },
+     {
+      "bucket": 24,
+      "lineages": 1,
+      "productSystems": 0,
+      "kits": 1
+     }
+    ]
+   }
+  },
+  {
+   "claim": "button.height",
+   "pageType": "list",
+   "viewport": 1440,
+   "transfer": "adapt",
+   "rule": null,
+   "card": [
+    1,
+    2
+   ],
+   "measured": 2,
+   "agree": 2,
+   "agreeProductSystems": 1,
+   "agreeKits": 1,
+   "top": 32,
+   "supportsRule": null,
+   "status": null,
+   "distribution": [
+    {
+     "bucket": 32,
+     "lineages": 2,
+     "productSystems": 1,
+     "kits": 1
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": 32,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "cloudscape-table",
+       "value": 32
+      },
+      {
+       "screen": "cloudscape-cards",
+       "value": 32
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": 32,
+     "eligible": 3,
+     "raw": [
+      {
+       "screen": "antpro-table-list",
+       "value": 32
+      },
+      {
+       "screen": "antpro-basic-list",
+       "value": 32
+      },
+      {
+       "screen": "antpro-card-list",
+       "value": 200
+      }
+     ]
+    }
+   ],
+   "withFragments": {
+    "measured": 2,
+    "agree": 2,
+    "agreeProductSystems": 1,
+    "agreeKits": 1,
+    "top": 32,
+    "distribution": [
+     {
+      "bucket": 32,
+      "lineages": 2,
+      "productSystems": 1,
+      "kits": 1
+     }
+    ]
+   }
+  },
+  {
+   "claim": "button.height",
+   "pageType": "form",
+   "viewport": 1440,
+   "transfer": "adapt",
+   "rule": null,
+   "card": [
+    1,
+    2
+   ],
+   "measured": 4,
+   "agree": 3,
+   "agreeProductSystems": 2,
+   "agreeKits": 1,
+   "top": 32,
+   "supportsRule": null,
+   "status": null,
+   "distribution": [
+    {
+     "bucket": 32,
+     "lineages": 3,
+     "productSystems": 2,
+     "kits": 1
+    },
+    {
+     "bucket": 36,
+     "lineages": 1,
+     "productSystems": 0,
+     "kits": 1
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": 32,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "cloudscape-form",
+       "value": 32
+      },
+      {
+       "screen": "cloudscape-edit",
+       "value": 32
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": 32,
+     "eligible": 3,
+     "raw": [
+      {
+       "screen": "antpro-basic-form",
+       "value": 32
+      },
+      {
+       "screen": "antpro-advanced-form",
+       "value": 32
+      },
+      {
+       "screen": "antpro-settings",
+       "value": 32
+      }
+     ]
+    },
+    {
+     "lineage": "shadcn",
+     "kind": "kit",
+     "value": 36,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "shadcn-login",
+       "value": 36
+      }
+     ]
+    },
+    {
+     "lineage": "primer",
+     "kind": "product-system",
+     "value": 32,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "primer-settings",
+       "value": 32
+      }
+     ]
+    }
+   ],
+   "withFragments": {
+    "measured": 5,
+    "agree": 3,
+    "agreeProductSystems": 2,
+    "agreeKits": 1,
+    "top": 32,
+    "distribution": [
+     {
+      "bucket": 32,
+      "lineages": 3,
+      "productSystems": 2,
+      "kits": 1
+     },
+     {
+      "bucket": 36,
+      "lineages": 1,
+      "productSystems": 0,
+      "kits": 1
+     },
+     {
+      "bucket": 40,
+      "lineages": 1,
+      "productSystems": 1,
+      "kits": 0
+     }
+    ]
+   }
+  },
+  {
+   "claim": "button.height",
+   "pageType": "detail",
+   "viewport": 1440,
+   "transfer": "adapt",
+   "rule": null,
+   "card": [
+    1,
+    2
+   ],
+   "measured": 3,
+   "agree": 2,
+   "agreeProductSystems": 1,
+   "agreeKits": 1,
+   "top": 32,
+   "supportsRule": null,
+   "status": null,
+   "distribution": [
+    {
+     "bucket": 32,
+     "lineages": 2,
+     "productSystems": 1,
+     "kits": 1
+    },
+    {
+     "bucket": 20,
+     "lineages": 1,
+     "productSystems": 1,
+     "kits": 0
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": 32,
+     "eligible": 3,
+     "raw": [
+      {
+       "screen": "cloudscape-details",
+       "value": 32
+      },
+      {
+       "screen": "cloudscape-details-hub",
+       "value": 32
+      },
+      {
+       "screen": "cloudscape-details-tabs",
+       "value": 32
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": 32,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "antpro-profile-advanced",
+       "value": 32
+      }
+     ]
+    },
+    {
+     "lineage": "primer",
+     "kind": "product-system",
+     "value": 20,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "primer-issue",
+       "value": 20
+      }
+     ]
+    }
+   ],
+   "withFragments": {
+    "measured": 3,
+    "agree": 2,
+    "agreeProductSystems": 1,
+    "agreeKits": 1,
+    "top": 32,
+    "distribution": [
+     {
+      "bucket": 32,
+      "lineages": 2,
+      "productSystems": 1,
+      "kits": 1
+     },
+     {
+      "bucket": 20,
+      "lineages": 1,
+      "productSystems": 1,
+      "kits": 0
+     }
+    ]
+   }
+  },
+  {
+   "claim": "button.height",
+   "pageType": "all",
+   "viewport": 1440,
+   "transfer": "adapt",
+   "rule": null,
+   "card": [
+    1,
+    2
+   ],
+   "measured": 4,
+   "agree": 2,
+   "agreeProductSystems": 1,
+   "agreeKits": 1,
+   "top": 32,
+   "supportsRule": null,
+   "status": null,
+   "distribution": [
+    {
+     "bucket": 32,
+     "lineages": 2,
+     "productSystems": 1,
+     "kits": 1
+    },
+    {
+     "bucket": "mixed",
+     "lineages": 2,
+     "productSystems": 1,
+     "kits": 1
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": 32,
+     "eligible": 8,
+     "raw": [
+      {
+       "screen": "cloudscape-dashboard",
+       "value": 32
+      },
+      {
+       "screen": "cloudscape-table",
+       "value": 32
+      },
+      {
+       "screen": "cloudscape-cards",
+       "value": 32
+      },
+      {
+       "screen": "cloudscape-form",
+       "value": 32
+      },
+      {
+       "screen": "cloudscape-edit",
+       "value": 32
+      },
+      {
+       "screen": "cloudscape-details",
+       "value": 32
+      },
+      {
+       "screen": "cloudscape-details-hub",
+       "value": 32
+      },
+      {
+       "screen": "cloudscape-details-tabs",
+       "value": 32
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": 32,
+     "eligible": 8,
+     "raw": [
+      {
+       "screen": "antpro-workplace",
+       "value": 24
+      },
+      {
+       "screen": "antpro-table-list",
+       "value": 32
+      },
+      {
+       "screen": "antpro-basic-list",
+       "value": 32
+      },
+      {
+       "screen": "antpro-card-list",
+       "value": 200
+      },
+      {
+       "screen": "antpro-basic-form",
+       "value": 32
+      },
+      {
+       "screen": "antpro-advanced-form",
+       "value": 32
+      },
+      {
+       "screen": "antpro-settings",
+       "value": 32
+      },
+      {
+       "screen": "antpro-profile-advanced",
+       "value": 32
+      }
+     ]
+    },
+    {
+     "lineage": "shadcn",
+     "kind": "kit",
+     "value": "mixed",
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "shadcn-dashboard",
+       "value": 32
+      },
+      {
+       "screen": "shadcn-login",
+       "value": 36
+      }
+     ]
+    },
+    {
+     "lineage": "primer",
+     "kind": "product-system",
+     "value": "mixed",
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "primer-issue",
+       "value": 20
+      },
+      {
+       "screen": "primer-settings",
+       "value": 32
+      }
+     ]
+    }
+   ],
+   "withFragments": {
+    "measured": 5,
+    "agree": 2,
+    "agreeProductSystems": 1,
+    "agreeKits": 1,
+    "top": 32,
+    "distribution": [
+     {
+      "bucket": 32,
+      "lineages": 2,
+      "productSystems": 1,
+      "kits": 1
+     },
+     {
+      "bucket": "mixed",
+      "lineages": 2,
+      "productSystems": 1,
+      "kits": 1
+     },
+     {
+      "bucket": 40,
+      "lineages": 1,
+      "productSystems": 1,
+      "kits": 0
+     }
+    ]
+   }
+  },
+  {
+   "claim": "field.height",
+   "pageType": "dashboard",
+   "viewport": 1440,
+   "transfer": "adapt",
+   "rule": null,
+   "card": [
+    2
+   ],
+   "measured": 2,
+   "agree": 1,
+   "agreeProductSystems": 0,
+   "agreeKits": 1,
+   "top": 24,
+   "supportsRule": null,
+   "status": null,
+   "distribution": [
+    {
+     "bucket": 24,
+     "lineages": 1,
+     "productSystems": 0,
+     "kits": 1
+    },
+    {
+     "bucket": 32,
+     "lineages": 1,
+     "productSystems": 0,
+     "kits": 1
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": null,
+     "eligible": 0,
+     "raw": []
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": 24,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "antpro-analysis",
+       "value": 24
+      }
+     ]
+    },
+    {
+     "lineage": "shadcn",
+     "kind": "kit",
+     "value": 32,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "shadcn-dashboard",
+       "value": 32
+      }
+     ]
+    }
+   ],
+   "withFragments": {
+    "measured": 2,
+    "agree": 1,
+    "agreeProductSystems": 0,
+    "agreeKits": 1,
+    "top": 24,
+    "distribution": [
+     {
+      "bucket": 24,
+      "lineages": 1,
+      "productSystems": 0,
+      "kits": 1
+     },
+     {
+      "bucket": 32,
+      "lineages": 1,
+      "productSystems": 0,
+      "kits": 1
+     }
+    ]
+   }
+  },
+  {
+   "claim": "field.height",
+   "pageType": "list",
+   "viewport": 1440,
+   "transfer": "adapt",
+   "rule": null,
+   "card": [
+    2
+   ],
+   "measured": 2,
+   "agree": 2,
+   "agreeProductSystems": 1,
+   "agreeKits": 1,
+   "top": 32,
+   "supportsRule": null,
+   "status": null,
+   "distribution": [
+    {
+     "bucket": 32,
+     "lineages": 2,
+     "productSystems": 1,
+     "kits": 1
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": 32,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "cloudscape-table",
+       "value": 32
+      },
+      {
+       "screen": "cloudscape-cards",
+       "value": 32
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": 32,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "antpro-table-list",
+       "value": 32
+      },
+      {
+       "screen": "antpro-basic-list",
+       "value": 32
+      }
+     ]
+    }
+   ],
+   "withFragments": {
+    "measured": 2,
+    "agree": 2,
+    "agreeProductSystems": 1,
+    "agreeKits": 1,
+    "top": 32,
+    "distribution": [
+     {
+      "bucket": 32,
+      "lineages": 2,
+      "productSystems": 1,
+      "kits": 1
+     }
+    ]
+   }
+  },
+  {
+   "claim": "field.height",
+   "pageType": "form",
+   "viewport": 1440,
+   "transfer": "adapt",
+   "rule": null,
+   "card": [
+    2
+   ],
+   "measured": 3,
+   "agree": 2,
+   "agreeProductSystems": 1,
+   "agreeKits": 1,
+   "top": 32,
+   "supportsRule": null,
+   "status": null,
+   "distribution": [
+    {
+     "bucket": 32,
+     "lineages": 2,
+     "productSystems": 1,
+     "kits": 1
+    },
+    {
+     "bucket": 36,
+     "lineages": 1,
+     "productSystems": 0,
+     "kits": 1
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": 32,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "cloudscape-form",
+       "value": 32
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": 32,
+     "eligible": 3,
+     "raw": [
+      {
+       "screen": "antpro-basic-form",
+       "value": 32
+      },
+      {
+       "screen": "antpro-advanced-form",
+       "value": 32
+      },
+      {
+       "screen": "antpro-settings",
+       "value": 32
+      }
+     ]
+    },
+    {
+     "lineage": "shadcn",
+     "kind": "kit",
+     "value": 36,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "shadcn-login",
+       "value": 36
+      }
+     ]
+    },
+    {
+     "lineage": "primer",
+     "kind": "product-system",
+     "value": null,
+     "eligible": 0,
+     "raw": []
+    }
+   ],
+   "withFragments": {
+    "measured": 4,
+    "agree": 2,
+    "agreeProductSystems": 1,
+    "agreeKits": 1,
+    "top": 32,
+    "distribution": [
+     {
+      "bucket": 32,
+      "lineages": 2,
+      "productSystems": 1,
+      "kits": 1
+     },
+     {
+      "bucket": 36,
+      "lineages": 1,
+      "productSystems": 0,
+      "kits": 1
+     },
+     {
+      "bucket": 40,
+      "lineages": 1,
+      "productSystems": 1,
+      "kits": 0
+     }
+    ]
+   }
+  },
+  {
+   "claim": "field.height",
+   "pageType": "detail",
+   "viewport": 1440,
+   "transfer": "adapt",
+   "rule": null,
+   "card": [
+    2
+   ],
+   "measured": 1,
+   "agree": 1,
+   "agreeProductSystems": 1,
+   "agreeKits": 0,
+   "top": 32,
+   "supportsRule": null,
+   "status": null,
+   "distribution": [
+    {
+     "bucket": 32,
+     "lineages": 1,
+     "productSystems": 1,
+     "kits": 0
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": 32,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "cloudscape-details",
+       "value": 32
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": null,
+     "eligible": 0,
+     "raw": []
+    },
+    {
+     "lineage": "primer",
+     "kind": "product-system",
+     "value": null,
+     "eligible": 0,
+     "raw": []
+    }
+   ],
+   "withFragments": {
+    "measured": 1,
+    "agree": 1,
+    "agreeProductSystems": 1,
+    "agreeKits": 0,
+    "top": 32,
+    "distribution": [
+     {
+      "bucket": 32,
+      "lineages": 1,
+      "productSystems": 1,
+      "kits": 0
+     }
+    ]
+   }
+  },
+  {
+   "claim": "field.height",
+   "pageType": "all",
+   "viewport": 1440,
+   "transfer": "adapt",
+   "rule": null,
+   "card": [
+    2
+   ],
+   "measured": 3,
+   "agree": 2,
+   "agreeProductSystems": 1,
+   "agreeKits": 1,
+   "top": 32,
+   "supportsRule": null,
+   "status": null,
+   "distribution": [
+    {
+     "bucket": 32,
+     "lineages": 2,
+     "productSystems": 1,
+     "kits": 1
+    },
+    {
+     "bucket": "mixed",
+     "lineages": 1,
+     "productSystems": 0,
+     "kits": 1
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": 32,
+     "eligible": 4,
+     "raw": [
+      {
+       "screen": "cloudscape-table",
+       "value": 32
+      },
+      {
+       "screen": "cloudscape-cards",
+       "value": 32
+      },
+      {
+       "screen": "cloudscape-form",
+       "value": 32
+      },
+      {
+       "screen": "cloudscape-details",
+       "value": 32
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": 32,
+     "eligible": 6,
+     "raw": [
+      {
+       "screen": "antpro-analysis",
+       "value": 24
+      },
+      {
+       "screen": "antpro-table-list",
+       "value": 32
+      },
+      {
+       "screen": "antpro-basic-list",
+       "value": 32
+      },
+      {
+       "screen": "antpro-basic-form",
+       "value": 32
+      },
+      {
+       "screen": "antpro-advanced-form",
+       "value": 32
+      },
+      {
+       "screen": "antpro-settings",
+       "value": 32
+      }
+     ]
+    },
+    {
+     "lineage": "shadcn",
+     "kind": "kit",
+     "value": "mixed",
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "shadcn-dashboard",
+       "value": 32
+      },
+      {
+       "screen": "shadcn-login",
+       "value": 36
+      }
+     ]
+    },
+    {
+     "lineage": "primer",
+     "kind": "product-system",
+     "value": null,
+     "eligible": 0,
+     "raw": []
+    }
+   ],
+   "withFragments": {
+    "measured": 4,
+    "agree": 2,
+    "agreeProductSystems": 1,
+    "agreeKits": 1,
+    "top": 32,
+    "distribution": [
+     {
+      "bucket": 32,
+      "lineages": 2,
+      "productSystems": 1,
+      "kits": 1
+     },
+     {
+      "bucket": 40,
+      "lineages": 1,
+      "productSystems": 1,
+      "kits": 0
+     },
+     {
+      "bucket": "mixed",
+      "lineages": 1,
+      "productSystems": 0,
+      "kits": 1
+     }
+    ]
+   }
+  },
+  {
+   "claim": "field.textSize",
+   "pageType": "dashboard",
+   "viewport": 1440,
+   "transfer": "adapt",
+   "rule": null,
+   "card": [
+    5
+   ],
+   "measured": 2,
+   "agree": 2,
+   "agreeProductSystems": 0,
+   "agreeKits": 2,
+   "top": 14,
+   "supportsRule": null,
+   "status": null,
+   "distribution": [
+    {
+     "bucket": 14,
+     "lineages": 2,
+     "productSystems": 0,
+     "kits": 2
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": null,
+     "eligible": 0,
+     "raw": []
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": 14,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "antpro-analysis",
+       "value": 14
+      }
+     ]
+    },
+    {
+     "lineage": "shadcn",
+     "kind": "kit",
+     "value": 14,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "shadcn-dashboard",
+       "value": 14
+      }
+     ]
+    }
+   ],
+   "withFragments": {
+    "measured": 2,
+    "agree": 2,
+    "agreeProductSystems": 0,
+    "agreeKits": 2,
+    "top": 14,
+    "distribution": [
+     {
+      "bucket": 14,
+      "lineages": 2,
+      "productSystems": 0,
+      "kits": 2
+     }
+    ]
+   }
+  },
+  {
+   "claim": "field.textSize",
+   "pageType": "list",
+   "viewport": 1440,
+   "transfer": "adapt",
+   "rule": null,
+   "card": [
+    5
+   ],
+   "measured": 2,
+   "agree": 2,
+   "agreeProductSystems": 1,
+   "agreeKits": 1,
+   "top": 14,
+   "supportsRule": null,
+   "status": null,
+   "distribution": [
+    {
+     "bucket": 14,
+     "lineages": 2,
+     "productSystems": 1,
+     "kits": 1
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": 14,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "cloudscape-table",
+       "value": 14
+      },
+      {
+       "screen": "cloudscape-cards",
+       "value": 14
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": 14,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "antpro-table-list",
+       "value": 14
+      },
+      {
+       "screen": "antpro-basic-list",
+       "value": 14
+      }
+     ]
+    }
+   ],
+   "withFragments": {
+    "measured": 2,
+    "agree": 2,
+    "agreeProductSystems": 1,
+    "agreeKits": 1,
+    "top": 14,
+    "distribution": [
+     {
+      "bucket": 14,
+      "lineages": 2,
+      "productSystems": 1,
+      "kits": 1
+     }
+    ]
+   }
+  },
+  {
+   "claim": "field.textSize",
+   "pageType": "form",
+   "viewport": 1440,
+   "transfer": "adapt",
+   "rule": null,
+   "card": [
+    5
+   ],
+   "measured": 3,
+   "agree": 3,
+   "agreeProductSystems": 1,
+   "agreeKits": 2,
+   "top": 14,
+   "supportsRule": null,
+   "status": null,
+   "distribution": [
+    {
+     "bucket": 14,
+     "lineages": 3,
+     "productSystems": 1,
+     "kits": 2
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": 14,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "cloudscape-form",
+       "value": 14
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": 14,
+     "eligible": 3,
+     "raw": [
+      {
+       "screen": "antpro-basic-form",
+       "value": 14
+      },
+      {
+       "screen": "antpro-advanced-form",
+       "value": 14
+      },
+      {
+       "screen": "antpro-settings",
+       "value": 14
+      }
+     ]
+    },
+    {
+     "lineage": "shadcn",
+     "kind": "kit",
+     "value": 14,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "shadcn-login",
+       "value": 14
+      }
+     ]
+    },
+    {
+     "lineage": "primer",
+     "kind": "product-system",
+     "value": null,
+     "eligible": 0,
+     "raw": []
+    }
+   ],
+   "withFragments": {
+    "measured": 4,
+    "agree": 4,
+    "agreeProductSystems": 2,
+    "agreeKits": 2,
+    "top": 14,
+    "distribution": [
+     {
+      "bucket": 14,
+      "lineages": 4,
+      "productSystems": 2,
+      "kits": 2
+     }
+    ]
+   }
+  },
+  {
+   "claim": "field.textSize",
+   "pageType": "detail",
+   "viewport": 1440,
+   "transfer": "adapt",
+   "rule": null,
+   "card": [
+    5
+   ],
+   "measured": 1,
+   "agree": 1,
+   "agreeProductSystems": 1,
+   "agreeKits": 0,
+   "top": 14,
+   "supportsRule": null,
+   "status": null,
+   "distribution": [
+    {
+     "bucket": 14,
+     "lineages": 1,
+     "productSystems": 1,
+     "kits": 0
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": 14,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "cloudscape-details",
+       "value": 14
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": null,
+     "eligible": 0,
+     "raw": []
+    },
+    {
+     "lineage": "primer",
+     "kind": "product-system",
+     "value": null,
+     "eligible": 0,
+     "raw": []
+    }
+   ],
+   "withFragments": {
+    "measured": 1,
+    "agree": 1,
+    "agreeProductSystems": 1,
+    "agreeKits": 0,
+    "top": 14,
+    "distribution": [
+     {
+      "bucket": 14,
+      "lineages": 1,
+      "productSystems": 1,
+      "kits": 0
+     }
+    ]
+   }
+  },
+  {
+   "claim": "field.textSize",
+   "pageType": "all",
+   "viewport": 1440,
+   "transfer": "adapt",
+   "rule": null,
+   "card": [
+    5
+   ],
+   "measured": 3,
+   "agree": 3,
+   "agreeProductSystems": 1,
+   "agreeKits": 2,
+   "top": 14,
+   "supportsRule": null,
+   "status": null,
+   "distribution": [
+    {
+     "bucket": 14,
+     "lineages": 3,
+     "productSystems": 1,
+     "kits": 2
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": 14,
+     "eligible": 4,
+     "raw": [
+      {
+       "screen": "cloudscape-table",
+       "value": 14
+      },
+      {
+       "screen": "cloudscape-cards",
+       "value": 14
+      },
+      {
+       "screen": "cloudscape-form",
+       "value": 14
+      },
+      {
+       "screen": "cloudscape-details",
+       "value": 14
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": 14,
+     "eligible": 6,
+     "raw": [
+      {
+       "screen": "antpro-analysis",
+       "value": 14
+      },
+      {
+       "screen": "antpro-table-list",
+       "value": 14
+      },
+      {
+       "screen": "antpro-basic-list",
+       "value": 14
+      },
+      {
+       "screen": "antpro-basic-form",
+       "value": 14
+      },
+      {
+       "screen": "antpro-advanced-form",
+       "value": 14
+      },
+      {
+       "screen": "antpro-settings",
+       "value": 14
+      }
+     ]
+    },
+    {
+     "lineage": "shadcn",
+     "kind": "kit",
+     "value": 14,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "shadcn-dashboard",
+       "value": 14
+      },
+      {
+       "screen": "shadcn-login",
+       "value": 14
+      }
+     ]
+    },
+    {
+     "lineage": "primer",
+     "kind": "product-system",
+     "value": null,
+     "eligible": 0,
+     "raw": []
+    }
+   ],
+   "withFragments": {
+    "measured": 4,
+    "agree": 4,
+    "agreeProductSystems": 2,
+    "agreeKits": 2,
+    "top": 14,
+    "distribution": [
+     {
+      "bucket": 14,
+      "lineages": 4,
+      "productSystems": 2,
+      "kits": 2
+     }
+    ]
+   }
+  },
+  {
+   "claim": "fields.inPanel",
+   "pageType": "form",
+   "viewport": 1440,
+   "transfer": "keep",
+   "rule": null,
+   "card": [
+    7
+   ],
+   "measured": 3,
+   "agree": 3,
+   "agreeProductSystems": 1,
+   "agreeKits": 2,
+   "top": true,
+   "supportsRule": null,
+   "status": "split",
+   "distribution": [
+    {
+     "bucket": true,
+     "lineages": 3,
+     "productSystems": 1,
+     "kits": 2
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": true,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "cloudscape-form",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": true,
+     "eligible": 3,
+     "raw": [
+      {
+       "screen": "antpro-basic-form",
+       "value": true
+      },
+      {
+       "screen": "antpro-advanced-form",
+       "value": true
+      },
+      {
+       "screen": "antpro-settings",
+       "value": false
+      }
+     ]
+    },
+    {
+     "lineage": "shadcn",
+     "kind": "kit",
+     "value": true,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "shadcn-login",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "primer",
+     "kind": "product-system",
+     "value": null,
+     "eligible": 0,
+     "raw": []
+    }
+   ],
+   "withFragments": {
+    "measured": 4,
+    "agree": 3,
+    "agreeProductSystems": 1,
+    "agreeKits": 2,
+    "top": true,
+    "distribution": [
+     {
+      "bucket": true,
+      "lineages": 3,
+      "productSystems": 1,
+      "kits": 2
+     },
+     {
+      "bucket": false,
+      "lineages": 1,
+      "productSystems": 1,
+      "kits": 0
+     }
+    ]
+   }
+  },
+  {
+   "claim": "text.bodySize",
+   "pageType": "dashboard",
+   "viewport": 1440,
+   "transfer": "adapt",
+   "rule": null,
+   "card": [
+    5
+   ],
+   "measured": 3,
+   "agree": 3,
+   "agreeProductSystems": 1,
+   "agreeKits": 2,
+   "top": 14,
+   "supportsRule": null,
+   "status": null,
+   "distribution": [
+    {
+     "bucket": 14,
+     "lineages": 3,
+     "productSystems": 1,
+     "kits": 2
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": 14,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "cloudscape-dashboard",
+       "value": 14
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": 14,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "antpro-analysis",
+       "value": 14
+      },
+      {
+       "screen": "antpro-workplace",
+       "value": 14
+      }
+     ]
+    },
+    {
+     "lineage": "shadcn",
+     "kind": "kit",
+     "value": 14,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "shadcn-dashboard",
+       "value": 14
+      }
+     ]
+    }
+   ],
+   "withFragments": {
+    "measured": 3,
+    "agree": 3,
+    "agreeProductSystems": 1,
+    "agreeKits": 2,
+    "top": 14,
+    "distribution": [
+     {
+      "bucket": 14,
+      "lineages": 3,
+      "productSystems": 1,
+      "kits": 2
+     }
+    ]
+   }
+  },
+  {
+   "claim": "text.bodySize",
+   "pageType": "list",
+   "viewport": 1440,
+   "transfer": "adapt",
+   "rule": null,
+   "card": [
+    5
+   ],
+   "measured": 2,
+   "agree": 2,
+   "agreeProductSystems": 1,
+   "agreeKits": 1,
+   "top": 14,
+   "supportsRule": null,
+   "status": null,
+   "distribution": [
+    {
+     "bucket": 14,
+     "lineages": 2,
+     "productSystems": 1,
+     "kits": 1
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": 14,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "cloudscape-table",
+       "value": 14
+      },
+      {
+       "screen": "cloudscape-cards",
+       "value": 14
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": 14,
+     "eligible": 3,
+     "raw": [
+      {
+       "screen": "antpro-table-list",
+       "value": 14
+      },
+      {
+       "screen": "antpro-basic-list",
+       "value": 14
+      },
+      {
+       "screen": "antpro-card-list",
+       "value": 14
+      }
+     ]
+    }
+   ],
+   "withFragments": {
+    "measured": 2,
+    "agree": 2,
+    "agreeProductSystems": 1,
+    "agreeKits": 1,
+    "top": 14,
+    "distribution": [
+     {
+      "bucket": 14,
+      "lineages": 2,
+      "productSystems": 1,
+      "kits": 1
+     }
+    ]
+   }
+  },
+  {
+   "claim": "text.bodySize",
+   "pageType": "form",
+   "viewport": 1440,
+   "transfer": "adapt",
+   "rule": null,
+   "card": [
+    5
+   ],
+   "measured": 3,
+   "agree": 2,
+   "agreeProductSystems": 0,
+   "agreeKits": 2,
+   "top": 14,
+   "supportsRule": null,
+   "status": null,
+   "distribution": [
+    {
+     "bucket": 14,
+     "lineages": 2,
+     "productSystems": 0,
+     "kits": 2
+    },
+    {
+     "bucket": "mixed",
+     "lineages": 1,
+     "productSystems": 1,
+     "kits": 0
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": "mixed",
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "cloudscape-form",
+       "value": 12
+      },
+      {
+       "screen": "cloudscape-edit",
+       "value": 14
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": 14,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "antpro-advanced-form",
+       "value": 14
+      }
+     ]
+    },
+    {
+     "lineage": "shadcn",
+     "kind": "kit",
+     "value": 14,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "shadcn-login",
+       "value": 14
+      }
+     ]
+    },
+    {
+     "lineage": "primer",
+     "kind": "product-system",
+     "value": null,
+     "eligible": 0,
+     "raw": []
+    }
+   ],
+   "withFragments": {
+    "measured": 4,
+    "agree": 2,
+    "agreeProductSystems": 0,
+    "agreeKits": 2,
+    "top": 14,
+    "distribution": [
+     {
+      "bucket": 14,
+      "lineages": 2,
+      "productSystems": 0,
+      "kits": 2
+     },
+     {
+      "bucket": 12,
+      "lineages": 1,
+      "productSystems": 1,
+      "kits": 0
+     },
+     {
+      "bucket": "mixed",
+      "lineages": 1,
+      "productSystems": 1,
+      "kits": 0
+     }
+    ]
+   }
+  },
+  {
+   "claim": "text.bodySize",
+   "pageType": "detail",
+   "viewport": 1440,
+   "transfer": "adapt",
+   "rule": null,
+   "card": [
+    5
+   ],
+   "measured": 3,
+   "agree": 2,
+   "agreeProductSystems": 1,
+   "agreeKits": 1,
+   "top": 14,
+   "supportsRule": null,
+   "status": null,
+   "distribution": [
+    {
+     "bucket": 14,
+     "lineages": 2,
+     "productSystems": 1,
+     "kits": 1
+    },
+    {
+     "bucket": 16,
+     "lineages": 1,
+     "productSystems": 1,
+     "kits": 0
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": 14,
+     "eligible": 3,
+     "raw": [
+      {
+       "screen": "cloudscape-details",
+       "value": 14
+      },
+      {
+       "screen": "cloudscape-details-hub",
+       "value": 14
+      },
+      {
+       "screen": "cloudscape-details-tabs",
+       "value": 14
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": 14,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "antpro-profile-basic",
+       "value": 14
+      },
+      {
+       "screen": "antpro-profile-advanced",
+       "value": 14
+      }
+     ]
+    },
+    {
+     "lineage": "primer",
+     "kind": "product-system",
+     "value": 16,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "primer-issue",
+       "value": 16
+      }
+     ]
+    }
+   ],
+   "withFragments": {
+    "measured": 3,
+    "agree": 2,
+    "agreeProductSystems": 1,
+    "agreeKits": 1,
+    "top": 14,
+    "distribution": [
+     {
+      "bucket": 14,
+      "lineages": 2,
+      "productSystems": 1,
+      "kits": 1
+     },
+     {
+      "bucket": 16,
+      "lineages": 1,
+      "productSystems": 1,
+      "kits": 0
+     }
+    ]
+   }
+  },
+  {
+   "claim": "text.bodySize",
+   "pageType": "all",
+   "viewport": 1440,
+   "transfer": "adapt",
+   "rule": null,
+   "card": [
+    5
+   ],
+   "measured": 4,
+   "agree": 3,
+   "agreeProductSystems": 1,
+   "agreeKits": 2,
+   "top": 14,
+   "supportsRule": null,
+   "status": null,
+   "distribution": [
+    {
+     "bucket": 14,
+     "lineages": 3,
+     "productSystems": 1,
+     "kits": 2
+    },
+    {
+     "bucket": 16,
+     "lineages": 1,
+     "productSystems": 1,
+     "kits": 0
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": 14,
+     "eligible": 8,
+     "raw": [
+      {
+       "screen": "cloudscape-dashboard",
+       "value": 14
+      },
+      {
+       "screen": "cloudscape-table",
+       "value": 14
+      },
+      {
+       "screen": "cloudscape-cards",
+       "value": 14
+      },
+      {
+       "screen": "cloudscape-form",
+       "value": 12
+      },
+      {
+       "screen": "cloudscape-edit",
+       "value": 14
+      },
+      {
+       "screen": "cloudscape-details",
+       "value": 14
+      },
+      {
+       "screen": "cloudscape-details-hub",
+       "value": 14
+      },
+      {
+       "screen": "cloudscape-details-tabs",
+       "value": 14
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": 14,
+     "eligible": 8,
+     "raw": [
+      {
+       "screen": "antpro-analysis",
+       "value": 14
+      },
+      {
+       "screen": "antpro-workplace",
+       "value": 14
+      },
+      {
+       "screen": "antpro-table-list",
+       "value": 14
+      },
+      {
+       "screen": "antpro-basic-list",
+       "value": 14
+      },
+      {
+       "screen": "antpro-card-list",
+       "value": 14
+      },
+      {
+       "screen": "antpro-advanced-form",
+       "value": 14
+      },
+      {
+       "screen": "antpro-profile-basic",
+       "value": 14
+      },
+      {
+       "screen": "antpro-profile-advanced",
+       "value": 14
+      }
+     ]
+    },
+    {
+     "lineage": "shadcn",
+     "kind": "kit",
+     "value": 14,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "shadcn-dashboard",
+       "value": 14
+      },
+      {
+       "screen": "shadcn-login",
+       "value": 14
+      }
+     ]
+    },
+    {
+     "lineage": "primer",
+     "kind": "product-system",
+     "value": 16,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "primer-issue",
+       "value": 16
+      }
+     ]
+    }
+   ],
+   "withFragments": {
+    "measured": 5,
+    "agree": 3,
+    "agreeProductSystems": 1,
+    "agreeKits": 2,
+    "top": 14,
+    "distribution": [
+     {
+      "bucket": 14,
+      "lineages": 3,
+      "productSystems": 1,
+      "kits": 2
+     },
+     {
+      "bucket": 12,
+      "lineages": 1,
+      "productSystems": 1,
+      "kits": 0
+     },
+     {
+      "bucket": 16,
+      "lineages": 1,
+      "productSystems": 1,
+      "kits": 0
+     }
+    ]
+   }
+  },
+  {
+   "claim": "table.rowHeight",
+   "pageType": "list",
+   "viewport": 1440,
+   "transfer": "adapt",
+   "rule": null,
+   "card": [],
+   "measured": 2,
+   "agree": 1,
+   "agreeProductSystems": 1,
+   "agreeKits": 0,
+   "top": 40,
+   "supportsRule": null,
+   "status": null,
+   "distribution": [
+    {
+     "bucket": 40,
+     "lineages": 1,
+     "productSystems": 1,
+     "kits": 0
+    },
+    {
+     "bucket": 48,
+     "lineages": 1,
+     "productSystems": 0,
+     "kits": 1
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": 40,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "cloudscape-table",
+       "value": 40
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": 48,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "antpro-table-list",
+       "value": 48
+      }
+     ]
+    }
+   ],
+   "withFragments": null
+  },
+  {
+   "claim": "list.overFourRows",
+   "pageType": "list",
+   "viewport": 1440,
+   "transfer": "keep",
+   "rule": "DL-21-density-by-task",
+   "card": [],
+   "measured": 2,
+   "agree": 1,
+   "agreeProductSystems": 0,
+   "agreeKits": 1,
+   "top": true,
+   "supportsRule": true,
+   "status": "thin",
+   "distribution": [
+    {
+     "bucket": true,
+     "lineages": 1,
+     "productSystems": 0,
+     "kits": 1
+    },
+    {
+     "bucket": "mixed",
+     "lineages": 1,
+     "productSystems": 1,
+     "kits": 0
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": "mixed",
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "cloudscape-table",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-cards",
+       "value": false
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": true,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "antpro-table-list",
+       "value": true
+      },
+      {
+       "screen": "antpro-basic-list",
+       "value": true
+      }
+     ]
+    }
+   ],
+   "withFragments": null
+  },
+  {
+   "claim": "primary.onePerSection",
+   "pageType": "dashboard",
+   "viewport": 1440,
+   "transfer": "keep",
+   "rule": null,
+   "card": [],
+   "measured": 3,
+   "agree": 2,
+   "agreeProductSystems": 1,
+   "agreeKits": 1,
+   "top": true,
+   "supportsRule": null,
+   "status": "split",
+   "distribution": [
+    {
+     "bucket": true,
+     "lineages": 2,
+     "productSystems": 1,
+     "kits": 1
+    },
+    {
+     "bucket": false,
+     "lineages": 1,
+     "productSystems": 0,
+     "kits": 1
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": true,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "cloudscape-dashboard",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": true,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "antpro-analysis",
+       "value": true
+      },
+      {
+       "screen": "antpro-workplace",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "shadcn",
+     "kind": "kit",
+     "value": false,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "shadcn-dashboard",
+       "value": false
+      }
+     ]
+    }
+   ],
+   "withFragments": null
+  },
+  {
+   "claim": "primary.onePerSection",
+   "pageType": "list",
+   "viewport": 1440,
+   "transfer": "keep",
+   "rule": null,
+   "card": [],
+   "measured": 2,
+   "agree": 2,
+   "agreeProductSystems": 1,
+   "agreeKits": 1,
+   "top": true,
+   "supportsRule": null,
+   "status": "thin",
+   "distribution": [
+    {
+     "bucket": true,
+     "lineages": 2,
+     "productSystems": 1,
+     "kits": 1
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": true,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "cloudscape-table",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-cards",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": true,
+     "eligible": 3,
+     "raw": [
+      {
+       "screen": "antpro-table-list",
+       "value": false
+      },
+      {
+       "screen": "antpro-basic-list",
+       "value": true
+      },
+      {
+       "screen": "antpro-card-list",
+       "value": true
+      }
+     ]
+    }
+   ],
+   "withFragments": null
+  },
+  {
+   "claim": "primary.onePerSection",
+   "pageType": "form",
+   "viewport": 1440,
+   "transfer": "keep",
+   "rule": null,
+   "card": [],
+   "measured": 4,
+   "agree": 4,
+   "agreeProductSystems": 2,
+   "agreeKits": 2,
+   "top": true,
+   "supportsRule": null,
+   "status": "candidate",
+   "distribution": [
+    {
+     "bucket": true,
+     "lineages": 4,
+     "productSystems": 2,
+     "kits": 2
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": true,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "cloudscape-edit",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": true,
+     "eligible": 3,
+     "raw": [
+      {
+       "screen": "antpro-basic-form",
+       "value": true
+      },
+      {
+       "screen": "antpro-advanced-form",
+       "value": true
+      },
+      {
+       "screen": "antpro-settings",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "shadcn",
+     "kind": "kit",
+     "value": true,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "shadcn-login",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "primer",
+     "kind": "product-system",
+     "value": true,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "primer-settings",
+       "value": true
+      }
+     ]
+    }
+   ],
+   "withFragments": null
+  },
+  {
+   "claim": "primary.onePerSection",
+   "pageType": "detail",
+   "viewport": 1440,
+   "transfer": "keep",
+   "rule": null,
+   "card": [],
+   "measured": 3,
+   "agree": 2,
+   "agreeProductSystems": 1,
+   "agreeKits": 1,
+   "top": true,
+   "supportsRule": null,
+   "status": "split",
+   "distribution": [
+    {
+     "bucket": true,
+     "lineages": 2,
+     "productSystems": 1,
+     "kits": 1
+    },
+    {
+     "bucket": "mixed",
+     "lineages": 1,
+     "productSystems": 1,
+     "kits": 0
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": true,
+     "eligible": 3,
+     "raw": [
+      {
+       "screen": "cloudscape-details",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-details-hub",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-details-tabs",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": true,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "antpro-profile-basic",
+       "value": true
+      },
+      {
+       "screen": "antpro-profile-advanced",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "primer",
+     "kind": "product-system",
+     "value": "mixed",
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "primer-issue",
+       "value": true
+      },
+      {
+       "screen": "primer-pull-request",
+       "value": false
+      }
+     ]
+    }
+   ],
+   "withFragments": null
+  },
+  {
+   "claim": "primary.onePerSection",
+   "pageType": "all",
+   "viewport": 1440,
+   "transfer": "keep",
+   "rule": null,
+   "card": [],
+   "measured": 4,
+   "agree": 3,
+   "agreeProductSystems": 2,
+   "agreeKits": 1,
+   "top": true,
+   "supportsRule": null,
+   "status": "candidate",
+   "distribution": [
+    {
+     "bucket": true,
+     "lineages": 3,
+     "productSystems": 2,
+     "kits": 1
+    },
+    {
+     "bucket": "mixed",
+     "lineages": 1,
+     "productSystems": 0,
+     "kits": 1
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": true,
+     "eligible": 7,
+     "raw": [
+      {
+       "screen": "cloudscape-dashboard",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-table",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-cards",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-edit",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-details",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-details-hub",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-details-tabs",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": true,
+     "eligible": 10,
+     "raw": [
+      {
+       "screen": "antpro-analysis",
+       "value": true
+      },
+      {
+       "screen": "antpro-workplace",
+       "value": true
+      },
+      {
+       "screen": "antpro-table-list",
+       "value": false
+      },
+      {
+       "screen": "antpro-basic-list",
+       "value": true
+      },
+      {
+       "screen": "antpro-card-list",
+       "value": true
+      },
+      {
+       "screen": "antpro-basic-form",
+       "value": true
+      },
+      {
+       "screen": "antpro-advanced-form",
+       "value": true
+      },
+      {
+       "screen": "antpro-settings",
+       "value": true
+      },
+      {
+       "screen": "antpro-profile-basic",
+       "value": true
+      },
+      {
+       "screen": "antpro-profile-advanced",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "shadcn",
+     "kind": "kit",
+     "value": "mixed",
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "shadcn-dashboard",
+       "value": false
+      },
+      {
+       "screen": "shadcn-login",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "primer",
+     "kind": "product-system",
+     "value": true,
+     "eligible": 3,
+     "raw": [
+      {
+       "screen": "primer-issue",
+       "value": true
+      },
+      {
+       "screen": "primer-pull-request",
+       "value": false
+      },
+      {
+       "screen": "primer-settings",
+       "value": true
+      }
+     ]
+    }
+   ],
+   "withFragments": null
+  },
+  {
+   "claim": "amounts.oneLine",
+   "pageType": "dashboard",
+   "viewport": "both",
+   "transfer": "keep",
+   "rule": "DL-23-amounts-never-wrap",
+   "card": [],
+   "measured": 3,
+   "agree": 3,
+   "agreeProductSystems": 1,
+   "agreeKits": 2,
+   "top": true,
+   "supportsRule": true,
+   "status": "split",
+   "distribution": [
+    {
+     "bucket": true,
+     "lineages": 3,
+     "productSystems": 1,
+     "kits": 2
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": true,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "cloudscape-dashboard",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": true,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "antpro-analysis",
+       "value": true
+      },
+      {
+       "screen": "antpro-workplace",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "shadcn",
+     "kind": "kit",
+     "value": true,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "shadcn-dashboard",
+       "value": true
+      }
+     ]
+    }
+   ],
+   "withFragments": null
+  },
+  {
+   "claim": "amounts.oneLine",
+   "pageType": "list",
+   "viewport": "both",
+   "transfer": "keep",
+   "rule": "DL-23-amounts-never-wrap",
+   "card": [],
+   "measured": 2,
+   "agree": 2,
+   "agreeProductSystems": 1,
+   "agreeKits": 1,
+   "top": true,
+   "supportsRule": true,
+   "status": "thin",
+   "distribution": [
+    {
+     "bucket": true,
+     "lineages": 2,
+     "productSystems": 1,
+     "kits": 1
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": true,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "cloudscape-table",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-cards",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": true,
+     "eligible": 3,
+     "raw": [
+      {
+       "screen": "antpro-table-list",
+       "value": true
+      },
+      {
+       "screen": "antpro-basic-list",
+       "value": true
+      },
+      {
+       "screen": "antpro-card-list",
+       "value": true
+      }
+     ]
+    }
+   ],
+   "withFragments": null
+  },
+  {
+   "claim": "amounts.oneLine",
+   "pageType": "form",
+   "viewport": "both",
+   "transfer": "keep",
+   "rule": "DL-23-amounts-never-wrap",
+   "card": [],
+   "measured": 2,
+   "agree": 2,
+   "agreeProductSystems": 1,
+   "agreeKits": 1,
+   "top": true,
+   "supportsRule": true,
+   "status": "thin",
+   "distribution": [
+    {
+     "bucket": true,
+     "lineages": 2,
+     "productSystems": 1,
+     "kits": 1
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": true,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "cloudscape-form",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": true,
+     "eligible": 3,
+     "raw": [
+      {
+       "screen": "antpro-basic-form",
+       "value": true
+      },
+      {
+       "screen": "antpro-advanced-form",
+       "value": true
+      },
+      {
+       "screen": "antpro-settings",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "shadcn",
+     "kind": "kit",
+     "value": null,
+     "eligible": 0,
+     "raw": []
+    },
+    {
+     "lineage": "primer",
+     "kind": "product-system",
+     "value": null,
+     "eligible": 0,
+     "raw": []
+    }
+   ],
+   "withFragments": null
+  },
+  {
+   "claim": "amounts.oneLine",
+   "pageType": "detail",
+   "viewport": "both",
+   "transfer": "keep",
+   "rule": "DL-23-amounts-never-wrap",
+   "card": [],
+   "measured": 3,
+   "agree": 3,
+   "agreeProductSystems": 2,
+   "agreeKits": 1,
+   "top": true,
+   "supportsRule": true,
+   "status": "candidate",
+   "distribution": [
+    {
+     "bucket": true,
+     "lineages": 3,
+     "productSystems": 2,
+     "kits": 1
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": true,
+     "eligible": 3,
+     "raw": [
+      {
+       "screen": "cloudscape-details",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-details-hub",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-details-tabs",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": true,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "antpro-profile-basic",
+       "value": true
+      },
+      {
+       "screen": "antpro-profile-advanced",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "primer",
+     "kind": "product-system",
+     "value": true,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "primer-pull-request",
+       "value": true
+      }
+     ]
+    }
+   ],
+   "withFragments": null
+  },
+  {
+   "claim": "amounts.oneLine",
+   "pageType": "all",
+   "viewport": "both",
+   "transfer": "keep",
+   "rule": "DL-23-amounts-never-wrap",
+   "card": [],
+   "measured": 4,
+   "agree": 4,
+   "agreeProductSystems": 2,
+   "agreeKits": 2,
+   "top": true,
+   "supportsRule": true,
+   "status": "candidate",
+   "distribution": [
+    {
+     "bucket": true,
+     "lineages": 4,
+     "productSystems": 2,
+     "kits": 2
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": true,
+     "eligible": 7,
+     "raw": [
+      {
+       "screen": "cloudscape-dashboard",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-table",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-cards",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-form",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-details",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-details-hub",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-details-tabs",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": true,
+     "eligible": 10,
+     "raw": [
+      {
+       "screen": "antpro-analysis",
+       "value": true
+      },
+      {
+       "screen": "antpro-workplace",
+       "value": true
+      },
+      {
+       "screen": "antpro-table-list",
+       "value": true
+      },
+      {
+       "screen": "antpro-basic-list",
+       "value": true
+      },
+      {
+       "screen": "antpro-card-list",
+       "value": true
+      },
+      {
+       "screen": "antpro-basic-form",
+       "value": true
+      },
+      {
+       "screen": "antpro-advanced-form",
+       "value": true
+      },
+      {
+       "screen": "antpro-settings",
+       "value": true
+      },
+      {
+       "screen": "antpro-profile-basic",
+       "value": true
+      },
+      {
+       "screen": "antpro-profile-advanced",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "shadcn",
+     "kind": "kit",
+     "value": true,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "shadcn-dashboard",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "primer",
+     "kind": "product-system",
+     "value": true,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "primer-pull-request",
+       "value": true
+      }
+     ]
+    }
+   ],
+   "withFragments": null
+  },
+  {
+   "claim": "icons.noEmoji",
+   "pageType": "dashboard",
+   "viewport": "both",
+   "transfer": "keep",
+   "rule": "CRAFT-functional-icons",
+   "card": [],
+   "measured": 3,
+   "agree": 3,
+   "agreeProductSystems": 1,
+   "agreeKits": 2,
+   "top": true,
+   "supportsRule": true,
+   "status": "split",
+   "distribution": [
+    {
+     "bucket": true,
+     "lineages": 3,
+     "productSystems": 1,
+     "kits": 2
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": true,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "cloudscape-dashboard",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": true,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "antpro-analysis",
+       "value": true
+      },
+      {
+       "screen": "antpro-workplace",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "shadcn",
+     "kind": "kit",
+     "value": true,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "shadcn-dashboard",
+       "value": true
+      }
+     ]
+    }
+   ],
+   "withFragments": null
+  },
+  {
+   "claim": "icons.noEmoji",
+   "pageType": "list",
+   "viewport": "both",
+   "transfer": "keep",
+   "rule": "CRAFT-functional-icons",
+   "card": [],
+   "measured": 2,
+   "agree": 2,
+   "agreeProductSystems": 1,
+   "agreeKits": 1,
+   "top": true,
+   "supportsRule": true,
+   "status": "thin",
+   "distribution": [
+    {
+     "bucket": true,
+     "lineages": 2,
+     "productSystems": 1,
+     "kits": 1
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": true,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "cloudscape-table",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-cards",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": true,
+     "eligible": 3,
+     "raw": [
+      {
+       "screen": "antpro-table-list",
+       "value": true
+      },
+      {
+       "screen": "antpro-basic-list",
+       "value": true
+      },
+      {
+       "screen": "antpro-card-list",
+       "value": true
+      }
+     ]
+    }
+   ],
+   "withFragments": null
+  },
+  {
+   "claim": "icons.noEmoji",
+   "pageType": "form",
+   "viewport": "both",
+   "transfer": "keep",
+   "rule": "CRAFT-functional-icons",
+   "card": [],
+   "measured": 3,
+   "agree": 3,
+   "agreeProductSystems": 1,
+   "agreeKits": 2,
+   "top": true,
+   "supportsRule": true,
+   "status": "split",
+   "distribution": [
+    {
+     "bucket": true,
+     "lineages": 3,
+     "productSystems": 1,
+     "kits": 2
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": true,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "cloudscape-form",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-edit",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": true,
+     "eligible": 3,
+     "raw": [
+      {
+       "screen": "antpro-basic-form",
+       "value": true
+      },
+      {
+       "screen": "antpro-advanced-form",
+       "value": true
+      },
+      {
+       "screen": "antpro-settings",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "shadcn",
+     "kind": "kit",
+     "value": true,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "shadcn-login",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "primer",
+     "kind": "product-system",
+     "value": null,
+     "eligible": 0,
+     "raw": []
+    }
+   ],
+   "withFragments": null
+  },
+  {
+   "claim": "icons.noEmoji",
+   "pageType": "detail",
+   "viewport": "both",
+   "transfer": "keep",
+   "rule": "CRAFT-functional-icons",
+   "card": [],
+   "measured": 3,
+   "agree": 3,
+   "agreeProductSystems": 2,
+   "agreeKits": 1,
+   "top": true,
+   "supportsRule": true,
+   "status": "candidate",
+   "distribution": [
+    {
+     "bucket": true,
+     "lineages": 3,
+     "productSystems": 2,
+     "kits": 1
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": true,
+     "eligible": 3,
+     "raw": [
+      {
+       "screen": "cloudscape-details",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-details-hub",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-details-tabs",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": true,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "antpro-profile-basic",
+       "value": true
+      },
+      {
+       "screen": "antpro-profile-advanced",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "primer",
+     "kind": "product-system",
+     "value": true,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "primer-issue",
+       "value": true
+      },
+      {
+       "screen": "primer-pull-request",
+       "value": true
+      }
+     ]
+    }
+   ],
+   "withFragments": null
+  },
+  {
+   "claim": "icons.noEmoji",
+   "pageType": "all",
+   "viewport": "both",
+   "transfer": "keep",
+   "rule": "CRAFT-functional-icons",
+   "card": [],
+   "measured": 4,
+   "agree": 4,
+   "agreeProductSystems": 2,
+   "agreeKits": 2,
+   "top": true,
+   "supportsRule": true,
+   "status": "candidate",
+   "distribution": [
+    {
+     "bucket": true,
+     "lineages": 4,
+     "productSystems": 2,
+     "kits": 2
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": true,
+     "eligible": 8,
+     "raw": [
+      {
+       "screen": "cloudscape-dashboard",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-table",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-cards",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-form",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-edit",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-details",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-details-hub",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-details-tabs",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": true,
+     "eligible": 10,
+     "raw": [
+      {
+       "screen": "antpro-analysis",
+       "value": true
+      },
+      {
+       "screen": "antpro-workplace",
+       "value": true
+      },
+      {
+       "screen": "antpro-table-list",
+       "value": true
+      },
+      {
+       "screen": "antpro-basic-list",
+       "value": true
+      },
+      {
+       "screen": "antpro-card-list",
+       "value": true
+      },
+      {
+       "screen": "antpro-basic-form",
+       "value": true
+      },
+      {
+       "screen": "antpro-advanced-form",
+       "value": true
+      },
+      {
+       "screen": "antpro-settings",
+       "value": true
+      },
+      {
+       "screen": "antpro-profile-basic",
+       "value": true
+      },
+      {
+       "screen": "antpro-profile-advanced",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "shadcn",
+     "kind": "kit",
+     "value": true,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "shadcn-dashboard",
+       "value": true
+      },
+      {
+       "screen": "shadcn-login",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "primer",
+     "kind": "product-system",
+     "value": true,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "primer-issue",
+       "value": true
+      },
+      {
+       "screen": "primer-pull-request",
+       "value": true
+      }
+     ]
+    }
+   ],
+   "withFragments": null
+  },
+  {
+   "claim": "icons.oneFamily",
+   "pageType": "dashboard",
+   "viewport": "both",
+   "transfer": "keep",
+   "rule": "CRAFT-icon-family",
+   "card": [],
+   "measured": 3,
+   "agree": 3,
+   "agreeProductSystems": 1,
+   "agreeKits": 2,
+   "top": false,
+   "supportsRule": false,
+   "status": "split",
+   "distribution": [
+    {
+     "bucket": false,
+     "lineages": 3,
+     "productSystems": 1,
+     "kits": 2
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": false,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "cloudscape-dashboard",
+       "value": false
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": false,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "antpro-analysis",
+       "value": false
+      },
+      {
+       "screen": "antpro-workplace",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "shadcn",
+     "kind": "kit",
+     "value": false,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "shadcn-dashboard",
+       "value": false
+      }
+     ]
+    }
+   ],
+   "withFragments": null
+  },
+  {
+   "claim": "icons.oneFamily",
+   "pageType": "list",
+   "viewport": "both",
+   "transfer": "keep",
+   "rule": "CRAFT-icon-family",
+   "card": [],
+   "measured": 2,
+   "agree": 1,
+   "agreeProductSystems": 1,
+   "agreeKits": 0,
+   "top": false,
+   "supportsRule": false,
+   "status": "thin",
+   "distribution": [
+    {
+     "bucket": false,
+     "lineages": 1,
+     "productSystems": 1,
+     "kits": 0
+    },
+    {
+     "bucket": true,
+     "lineages": 1,
+     "productSystems": 0,
+     "kits": 1
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": false,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "cloudscape-table",
+       "value": false
+      },
+      {
+       "screen": "cloudscape-cards",
+       "value": false
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": true,
+     "eligible": 3,
+     "raw": [
+      {
+       "screen": "antpro-table-list",
+       "value": true
+      },
+      {
+       "screen": "antpro-basic-list",
+       "value": true
+      },
+      {
+       "screen": "antpro-card-list",
+       "value": true
+      }
+     ]
+    }
+   ],
+   "withFragments": null
+  },
+  {
+   "claim": "icons.oneFamily",
+   "pageType": "form",
+   "viewport": "both",
+   "transfer": "keep",
+   "rule": "CRAFT-icon-family",
+   "card": [],
+   "measured": 3,
+   "agree": 3,
+   "agreeProductSystems": 1,
+   "agreeKits": 2,
+   "top": true,
+   "supportsRule": true,
+   "status": "split",
+   "distribution": [
+    {
+     "bucket": true,
+     "lineages": 3,
+     "productSystems": 1,
+     "kits": 2
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": true,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "cloudscape-form",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-edit",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": true,
+     "eligible": 3,
+     "raw": [
+      {
+       "screen": "antpro-basic-form",
+       "value": true
+      },
+      {
+       "screen": "antpro-advanced-form",
+       "value": true
+      },
+      {
+       "screen": "antpro-settings",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "shadcn",
+     "kind": "kit",
+     "value": true,
+     "eligible": 1,
+     "raw": [
+      {
+       "screen": "shadcn-login",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "primer",
+     "kind": "product-system",
+     "value": null,
+     "eligible": 0,
+     "raw": []
+    }
+   ],
+   "withFragments": null
+  },
+  {
+   "claim": "icons.oneFamily",
+   "pageType": "detail",
+   "viewport": "both",
+   "transfer": "keep",
+   "rule": "CRAFT-icon-family",
+   "card": [],
+   "measured": 3,
+   "agree": 3,
+   "agreeProductSystems": 2,
+   "agreeKits": 1,
+   "top": true,
+   "supportsRule": true,
+   "status": "candidate",
+   "distribution": [
+    {
+     "bucket": true,
+     "lineages": 3,
+     "productSystems": 2,
+     "kits": 1
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": true,
+     "eligible": 3,
+     "raw": [
+      {
+       "screen": "cloudscape-details",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-details-hub",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-details-tabs",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": true,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "antpro-profile-basic",
+       "value": true
+      },
+      {
+       "screen": "antpro-profile-advanced",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "primer",
+     "kind": "product-system",
+     "value": true,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "primer-issue",
+       "value": true
+      },
+      {
+       "screen": "primer-pull-request",
+       "value": true
+      }
+     ]
+    }
+   ],
+   "withFragments": null
+  },
+  {
+   "claim": "icons.oneFamily",
+   "pageType": "all",
+   "viewport": "both",
+   "transfer": "keep",
+   "rule": "CRAFT-icon-family",
+   "card": [],
+   "measured": 4,
+   "agree": 3,
+   "agreeProductSystems": 1,
+   "agreeKits": 2,
+   "top": false,
+   "supportsRule": false,
+   "status": "split",
+   "distribution": [
+    {
+     "bucket": false,
+     "lineages": 3,
+     "productSystems": 1,
+     "kits": 2
+    },
+    {
+     "bucket": true,
+     "lineages": 1,
+     "productSystems": 1,
+     "kits": 0
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": false,
+     "eligible": 8,
+     "raw": [
+      {
+       "screen": "cloudscape-dashboard",
+       "value": false
+      },
+      {
+       "screen": "cloudscape-table",
+       "value": false
+      },
+      {
+       "screen": "cloudscape-cards",
+       "value": false
+      },
+      {
+       "screen": "cloudscape-form",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-edit",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-details",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-details-hub",
+       "value": true
+      },
+      {
+       "screen": "cloudscape-details-tabs",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": false,
+     "eligible": 10,
+     "raw": [
+      {
+       "screen": "antpro-analysis",
+       "value": false
+      },
+      {
+       "screen": "antpro-workplace",
+       "value": true
+      },
+      {
+       "screen": "antpro-table-list",
+       "value": true
+      },
+      {
+       "screen": "antpro-basic-list",
+       "value": true
+      },
+      {
+       "screen": "antpro-card-list",
+       "value": true
+      },
+      {
+       "screen": "antpro-basic-form",
+       "value": true
+      },
+      {
+       "screen": "antpro-advanced-form",
+       "value": true
+      },
+      {
+       "screen": "antpro-settings",
+       "value": true
+      },
+      {
+       "screen": "antpro-profile-basic",
+       "value": true
+      },
+      {
+       "screen": "antpro-profile-advanced",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "shadcn",
+     "kind": "kit",
+     "value": false,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "shadcn-dashboard",
+       "value": false
+      },
+      {
+       "screen": "shadcn-login",
+       "value": true
+      }
+     ]
+    },
+    {
+     "lineage": "primer",
+     "kind": "product-system",
+     "value": true,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "primer-issue",
+       "value": true
+      },
+      {
+       "screen": "primer-pull-request",
+       "value": true
+      }
+     ]
+    }
+   ],
+   "withFragments": null
+  },
+  {
+   "claim": "lineage.rolesConstant",
+   "pageType": "all",
+   "viewport": "both",
+   "transfer": "keep",
+   "rule": "INV-05-no-unexplained-role-drift",
+   "card": [],
+   "measured": 3,
+   "agree": 2,
+   "agreeProductSystems": 1,
+   "agreeKits": 1,
+   "top": false,
+   "supportsRule": false,
+   "status": "split",
+   "distribution": [
+    {
+     "bucket": false,
+     "lineages": 2,
+     "productSystems": 1,
+     "kits": 1
+    },
+    {
+     "bucket": true,
+     "lineages": 1,
+     "productSystems": 1,
+     "kits": 0
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": true,
+     "eligible": 8,
+     "raw": [
+      {
+       "screen": "cloudscape-dashboard",
+       "value": {
+        "accent": "#006ce0",
+        "ink": "#0f141a",
+        "canvas": "#fcfcfd",
+        "spacingBase": null
+       }
+      },
+      {
+       "screen": "cloudscape-table",
+       "value": {
+        "accent": "#006ce0",
+        "ink": "#0f141a",
+        "canvas": "#fcfcfd",
+        "spacingBase": null
+       }
+      },
+      {
+       "screen": "cloudscape-cards",
+       "value": {
+        "accent": "#006ce0",
+        "ink": "#0f141a",
+        "canvas": "#fcfcfd",
+        "spacingBase": 4
+       }
+      },
+      {
+       "screen": "cloudscape-form",
+       "value": {
+        "accent": "#006ce0",
+        "ink": "#0f141a",
+        "canvas": "#fcfcfd",
+        "spacingBase": null
+       }
+      },
+      {
+       "screen": "cloudscape-edit",
+       "value": {
+        "accent": "#006ce0",
+        "ink": "#0f141a",
+        "canvas": "#fcfcfd",
+        "spacingBase": 4
+       }
+      },
+      {
+       "screen": "cloudscape-details",
+       "value": {
+        "accent": "#006ce0",
+        "ink": "#0f141a",
+        "canvas": "#fcfcfd",
+        "spacingBase": null
+       }
+      },
+      {
+       "screen": "cloudscape-details-hub",
+       "value": {
+        "accent": "#006ce0",
+        "ink": "#0f141a",
+        "canvas": "#fcfcfd",
+        "spacingBase": null
+       }
+      },
+      {
+       "screen": "cloudscape-details-tabs",
+       "value": {
+        "accent": "#006ce0",
+        "ink": "#0f141a",
+        "canvas": "#fcfcfd",
+        "spacingBase": 4
+       }
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": false,
+     "eligible": 10,
+     "raw": [
+      {
+       "screen": "antpro-analysis",
+       "value": {
+        "accent": "#1677ff",
+        "ink": "#000000",
+        "canvas": "#ffffff",
+        "spacingBase": 8
+       }
+      },
+      {
+       "screen": "antpro-workplace",
+       "value": {
+        "accent": "#1677ff",
+        "ink": "#000000",
+        "canvas": "#ffffff",
+        "spacingBase": 8
+       }
+      },
+      {
+       "screen": "antpro-table-list",
+       "value": {
+        "accent": "#1890ff",
+        "ink": "#000000",
+        "canvas": "#fafafa",
+        "spacingBase": 4
+       }
+      },
+      {
+       "screen": "antpro-basic-list",
+       "value": {
+        "accent": "#1677ff",
+        "ink": "#000000",
+        "canvas": "#ffffff",
+        "spacingBase": 4
+       }
+      },
+      {
+       "screen": "antpro-card-list",
+       "value": {
+        "accent": "#1677ff",
+        "ink": "#000000",
+        "canvas": "#ffffff",
+        "spacingBase": 8
+       }
+      },
+      {
+       "screen": "antpro-basic-form",
+       "value": {
+        "accent": "#1890ff",
+        "ink": "#000000",
+        "canvas": "#000000",
+        "spacingBase": 4
+       }
+      },
+      {
+       "screen": "antpro-advanced-form",
+       "value": {
+        "accent": "#1890ff",
+        "ink": "#000000",
+        "canvas": "#000000",
+        "spacingBase": 4
+       }
+      },
+      {
+       "screen": "antpro-settings",
+       "value": {
+        "accent": "#1890ff",
+        "ink": "#000000",
+        "canvas": "#000000",
+        "spacingBase": 4
+       }
+      },
+      {
+       "screen": "antpro-profile-basic",
+       "value": {
+        "accent": null,
+        "ink": "#000000",
+        "canvas": "#fafafa",
+        "spacingBase": 4
+       }
+      },
+      {
+       "screen": "antpro-profile-advanced",
+       "value": {
+        "accent": "#1890ff",
+        "ink": "#000000",
+        "canvas": "#ffffff",
+        "spacingBase": 8
+       }
+      }
+     ]
+    },
+    {
+     "lineage": "shadcn",
+     "kind": "kit",
+     "value": null,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "shadcn-dashboard",
+       "value": {
+        "accent": null,
+        "ink": "#000000",
+        "canvas": "#fafafa",
+        "spacingBase": 8
+       }
+      },
+      {
+       "screen": "shadcn-login",
+       "value": {
+        "accent": null,
+        "ink": "#737373",
+        "canvas": "#f5f5f5",
+        "spacingBase": 8
+       }
+      }
+     ]
+    },
+    {
+     "lineage": "primer",
+     "kind": "product-system",
+     "value": false,
+     "eligible": 3,
+     "raw": [
+      {
+       "screen": "primer-issue",
+       "value": {
+        "accent": "#1f883d",
+        "ink": "#59636e",
+        "canvas": "#ffffff",
+        "spacingBase": 8
+       }
+      },
+      {
+       "screen": "primer-pull-request",
+       "value": {
+        "accent": "#0969da",
+        "ink": "#1f2328",
+        "canvas": "#ffffff",
+        "spacingBase": 4
+       }
+      },
+      {
+       "screen": "primer-settings",
+       "value": {
+        "accent": null,
+        "ink": "#1f2328",
+        "canvas": "#ffffff",
+        "spacingBase": 8
+       }
+      }
+     ]
+    }
+   ],
+   "withFragments": null
+  },
+  {
+   "claim": "lineage.spacingBase",
+   "pageType": "all",
+   "viewport": "both",
+   "transfer": "keep",
+   "rule": "CRAFT-spacing-scale",
+   "card": [],
+   "measured": 3,
+   "agree": 3,
+   "agreeProductSystems": 2,
+   "agreeKits": 1,
+   "top": false,
+   "supportsRule": false,
+   "status": "candidate",
+   "distribution": [
+    {
+     "bucket": false,
+     "lineages": 3,
+     "productSystems": 2,
+     "kits": 1
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": false,
+     "eligible": 8,
+     "raw": [
+      {
+       "screen": "cloudscape-dashboard",
+       "value": null
+      },
+      {
+       "screen": "cloudscape-table",
+       "value": null
+      },
+      {
+       "screen": "cloudscape-cards",
+       "value": 4
+      },
+      {
+       "screen": "cloudscape-form",
+       "value": null
+      },
+      {
+       "screen": "cloudscape-edit",
+       "value": 4
+      },
+      {
+       "screen": "cloudscape-details",
+       "value": null
+      },
+      {
+       "screen": "cloudscape-details-hub",
+       "value": null
+      },
+      {
+       "screen": "cloudscape-details-tabs",
+       "value": 4
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": false,
+     "eligible": 10,
+     "raw": [
+      {
+       "screen": "antpro-analysis",
+       "value": 8
+      },
+      {
+       "screen": "antpro-workplace",
+       "value": 8
+      },
+      {
+       "screen": "antpro-table-list",
+       "value": 4
+      },
+      {
+       "screen": "antpro-basic-list",
+       "value": 4
+      },
+      {
+       "screen": "antpro-card-list",
+       "value": 8
+      },
+      {
+       "screen": "antpro-basic-form",
+       "value": 4
+      },
+      {
+       "screen": "antpro-advanced-form",
+       "value": 4
+      },
+      {
+       "screen": "antpro-settings",
+       "value": 4
+      },
+      {
+       "screen": "antpro-profile-basic",
+       "value": 4
+      },
+      {
+       "screen": "antpro-profile-advanced",
+       "value": 8
+      }
+     ]
+    },
+    {
+     "lineage": "shadcn",
+     "kind": "kit",
+     "value": null,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "shadcn-dashboard",
+       "value": 8
+      },
+      {
+       "screen": "shadcn-login",
+       "value": 8
+      }
+     ]
+    },
+    {
+     "lineage": "primer",
+     "kind": "product-system",
+     "value": false,
+     "eligible": 3,
+     "raw": [
+      {
+       "screen": "primer-issue",
+       "value": 8
+      },
+      {
+       "screen": "primer-pull-request",
+       "value": 4
+      },
+      {
+       "screen": "primer-settings",
+       "value": 8
+      }
+     ]
+    }
+   ],
+   "withFragments": null
+  },
+  {
+   "claim": "lineage.buttonHeight",
+   "pageType": "all",
+   "viewport": 1440,
+   "transfer": "keep",
+   "rule": null,
+   "card": [],
+   "measured": 2,
+   "agree": 1,
+   "agreeProductSystems": 0,
+   "agreeKits": 1,
+   "top": false,
+   "supportsRule": null,
+   "status": "thin",
+   "distribution": [
+    {
+     "bucket": false,
+     "lineages": 1,
+     "productSystems": 0,
+     "kits": 1
+    },
+    {
+     "bucket": true,
+     "lineages": 1,
+     "productSystems": 1,
+     "kits": 0
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": true,
+     "eligible": 8,
+     "raw": [
+      {
+       "screen": "cloudscape-dashboard",
+       "value": 32
+      },
+      {
+       "screen": "cloudscape-table",
+       "value": 32
+      },
+      {
+       "screen": "cloudscape-cards",
+       "value": 32
+      },
+      {
+       "screen": "cloudscape-form",
+       "value": 32
+      },
+      {
+       "screen": "cloudscape-edit",
+       "value": 32
+      },
+      {
+       "screen": "cloudscape-details",
+       "value": 32
+      },
+      {
+       "screen": "cloudscape-details-hub",
+       "value": 32
+      },
+      {
+       "screen": "cloudscape-details-tabs",
+       "value": 32
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": false,
+     "eligible": 8,
+     "raw": [
+      {
+       "screen": "antpro-workplace",
+       "value": 24
+      },
+      {
+       "screen": "antpro-table-list",
+       "value": 32
+      },
+      {
+       "screen": "antpro-basic-list",
+       "value": 32
+      },
+      {
+       "screen": "antpro-card-list",
+       "value": 201
+      },
+      {
+       "screen": "antpro-basic-form",
+       "value": 32
+      },
+      {
+       "screen": "antpro-advanced-form",
+       "value": 32
+      },
+      {
+       "screen": "antpro-settings",
+       "value": 32
+      },
+      {
+       "screen": "antpro-profile-advanced",
+       "value": 32
+      }
+     ]
+    },
+    {
+     "lineage": "shadcn",
+     "kind": "kit",
+     "value": null,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "shadcn-dashboard",
+       "value": 32
+      },
+      {
+       "screen": "shadcn-login",
+       "value": 36
+      }
+     ]
+    },
+    {
+     "lineage": "primer",
+     "kind": "product-system",
+     "value": null,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "primer-issue",
+       "value": 20
+      },
+      {
+       "screen": "primer-settings",
+       "value": 32
+      }
+     ]
+    }
+   ],
+   "withFragments": null
+  },
+  {
+   "claim": "motion.reducedMotionRules",
+   "pageType": "all",
+   "viewport": "both",
+   "transfer": "keep",
+   "rule": null,
+   "card": [
+    6
+   ],
+   "measured": 4,
+   "agree": 4,
+   "agreeProductSystems": 2,
+   "agreeKits": 2,
+   "top": true,
+   "supportsRule": null,
+   "status": "candidate",
+   "distribution": [
+    {
+     "bucket": true,
+     "lineages": 4,
+     "productSystems": 2,
+     "kits": 2
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": true,
+     "eligible": 8,
+     "raw": [
+      {
+       "screen": "cloudscape-dashboard",
+       "value": 102
+      },
+      {
+       "screen": "cloudscape-table",
+       "value": 102
+      },
+      {
+       "screen": "cloudscape-cards",
+       "value": 102
+      },
+      {
+       "screen": "cloudscape-form",
+       "value": 103
+      },
+      {
+       "screen": "cloudscape-edit",
+       "value": 102
+      },
+      {
+       "screen": "cloudscape-details",
+       "value": 102
+      },
+      {
+       "screen": "cloudscape-details-hub",
+       "value": 102
+      },
+      {
+       "screen": "cloudscape-details-tabs",
+       "value": 102
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": true,
+     "eligible": 10,
+     "raw": [
+      {
+       "screen": "antpro-analysis",
+       "value": 1
+      },
+      {
+       "screen": "antpro-workplace",
+       "value": 1
+      },
+      {
+       "screen": "antpro-table-list",
+       "value": 4
+      },
+      {
+       "screen": "antpro-basic-list",
+       "value": 1
+      },
+      {
+       "screen": "antpro-card-list",
+       "value": 1
+      },
+      {
+       "screen": "antpro-basic-form",
+       "value": 1
+      },
+      {
+       "screen": "antpro-advanced-form",
+       "value": 1
+      },
+      {
+       "screen": "antpro-settings",
+       "value": 1
+      },
+      {
+       "screen": "antpro-profile-basic",
+       "value": 1
+      },
+      {
+       "screen": "antpro-profile-advanced",
+       "value": 1
+      }
+     ]
+    },
+    {
+     "lineage": "shadcn",
+     "kind": "kit",
+     "value": true,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "shadcn-dashboard",
+       "value": 9
+      },
+      {
+       "screen": "shadcn-login",
+       "value": 9
+      }
+     ]
+    },
+    {
+     "lineage": "primer",
+     "kind": "product-system",
+     "value": true,
+     "eligible": 3,
+     "raw": [
+      {
+       "screen": "primer-issue",
+       "value": 7
+      },
+      {
+       "screen": "primer-pull-request",
+       "value": 7
+      },
+      {
+       "screen": "primer-settings",
+       "value": 4
+      }
+     ]
+    }
+   ],
+   "withFragments": null
+  },
+  {
+   "claim": "motion.transitionAll",
+   "pageType": "all",
+   "viewport": "both",
+   "transfer": "adapt",
+   "rule": null,
+   "card": [],
+   "measured": 4,
+   "agree": 2,
+   "agreeProductSystems": 2,
+   "agreeKits": 0,
+   "top": 0,
+   "supportsRule": null,
+   "status": null,
+   "distribution": [
+    {
+     "bucket": 0,
+     "lineages": 2,
+     "productSystems": 2,
+     "kits": 0
+    },
+    {
+     "bucket": 0.5,
+     "lineages": 2,
+     "productSystems": 0,
+     "kits": 2
+    }
+   ],
+   "lineages": [
+    {
+     "lineage": "cloudscape",
+     "kind": "product-system",
+     "value": 0,
+     "eligible": 8,
+     "raw": [
+      {
+       "screen": "cloudscape-dashboard",
+       "value": {
+        "transitions": 86,
+        "all": 0
+       }
+      },
+      {
+       "screen": "cloudscape-table",
+       "value": {
+        "transitions": 239,
+        "all": 0
+       }
+      },
+      {
+       "screen": "cloudscape-cards",
+       "value": {
+        "transitions": 259,
+        "all": 0
+       }
+      },
+      {
+       "screen": "cloudscape-form",
+       "value": {
+        "transitions": 79,
+        "all": 0
+       }
+      },
+      {
+       "screen": "cloudscape-edit",
+       "value": {
+        "transitions": 30,
+        "all": 0
+       }
+      },
+      {
+       "screen": "cloudscape-details",
+       "value": {
+        "transitions": 22,
+        "all": 0
+       }
+      },
+      {
+       "screen": "cloudscape-details-hub",
+       "value": {
+        "transitions": 56,
+        "all": 0
+       }
+      },
+      {
+       "screen": "cloudscape-details-tabs",
+       "value": {
+        "transitions": 22,
+        "all": 0
+       }
+      }
+     ]
+    },
+    {
+     "lineage": "antpro",
+     "kind": "kit",
+     "value": 0.5,
+     "eligible": 10,
+     "raw": [
+      {
+       "screen": "antpro-analysis",
+       "value": {
+        "transitions": 337,
+        "all": 78
+       }
+      },
+      {
+       "screen": "antpro-workplace",
+       "value": {
+        "transitions": 207,
+        "all": 34
+       }
+      },
+      {
+       "screen": "antpro-table-list",
+       "value": {
+        "transitions": 913,
+        "all": 81
+       }
+      },
+      {
+       "screen": "antpro-basic-list",
+       "value": {
+        "transitions": 205,
+        "all": 40
+       }
+      },
+      {
+       "screen": "antpro-card-list",
+       "value": {
+        "transitions": 222,
+        "all": 10
+       }
+      },
+      {
+       "screen": "antpro-basic-form",
+       "value": {
+        "transitions": 173,
+        "all": 46
+       }
+      },
+      {
+       "screen": "antpro-advanced-form",
+       "value": {
+        "transitions": 255,
+        "all": 54
+       }
+      },
+      {
+       "screen": "antpro-settings",
+       "value": {
+        "transitions": 191,
+        "all": 38
+       }
+      },
+      {
+       "screen": "antpro-profile-basic",
+       "value": {
+        "transitions": 349,
+        "all": 12
+       }
+      },
+      {
+       "screen": "antpro-profile-advanced",
+       "value": {
+        "transitions": 327,
+        "all": 40
+       }
+      }
+     ]
+    },
+    {
+     "lineage": "shadcn",
+     "kind": "kit",
+     "value": 0.5,
+     "eligible": 2,
+     "raw": [
+      {
+       "screen": "shadcn-dashboard",
+       "value": {
+        "transitions": 243,
+        "all": 78
+       }
+      },
+      {
+       "screen": "shadcn-login",
+       "value": {
+        "transitions": 10,
+        "all": 6
+       }
+      }
+     ]
+    },
+    {
+     "lineage": "primer",
+     "kind": "product-system",
+     "value": 0,
+     "eligible": 3,
+     "raw": [
+      {
+       "screen": "primer-issue",
+       "value": {
+        "transitions": 32,
+        "all": 0
+       }
+      },
+      {
+       "screen": "primer-pull-request",
+       "value": {
+        "transitions": 16,
+        "all": 0
+       }
+      },
+      {
+       "screen": "primer-settings",
+       "value": {
+        "transitions": 16,
+        "all": 0
+       }
+      }
+     ]
+    }
+   ],
+   "withFragments": null
+  }
+ ]
+}

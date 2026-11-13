@@ -339,3 +339,85 @@ test("drift CLI: --decisions loads and validates a file; --project-root reads th
     assert.deepEqual(loadDecisions({ projectRoot: join(root, "no-registry") }), [], "no registry, no ledger");
   } finally { rmSync(root, { recursive: true, force: true }); }
 });
+
+// --- the ledger of a project without a registry: .styleseed/decisions.json (WO-11 A6) ----------------------------
+
+const LEGACY_LOCK = `# StyleSeed — Design Lock
+- App domain: saas
+- Surface adapter: product-ui
+- Page type: settings
+- Output grammar: operations-console
+- Brand recipe: enterprise-workbench
+- Density: compact
+`;
+const legacyEntry = (id, axis, values, over = {}) => ({ id, kind: "decision", axis, values, statement: `Recorded ${axis}.`, approvedBy: "example-designer", date: "2026-11-13", source: `corpus:2026-11-12#${axis}`, ...over });
+const LEGACY_FIVE = [
+  legacyEntry("D-001", "controlHeights", [32]), legacyEntry("D-002", "typeSizes", [12, 14, 16]), legacyEntry("D-003", "radii", [4]),
+  legacyEntry("D-004", "tableRowHeights", [40]), legacyEntry("D-005", "spacingBase", [8]),
+];
+const legacyResolve = (root, args = []) => spawnSync(process.execPath, [resolver, "--project-root", root, "--from-lock", "STYLESEED.md", "--agent", "claude", ...args], { encoding: "utf8" });
+const legacyProject = () => { const root = mkdtempSync(join(tmpdir(), "ss-ledger-legacy-")); writeFileSync(join(root, "STYLESEED.md"), LEGACY_LOCK); mkdirSync(join(root, "src")); return root; };
+const writeLedger = (root, entries) => { mkdirSync(join(root, ".styleseed"), { recursive: true }); writeFileSync(join(root, ".styleseed/decisions.json"), `${JSON.stringify(entries, null, 2)}\n`); };
+
+test("legacy round trip: .styleseed/decisions.json compiles into the bundle, --check tracks it, bad entries are refused", () => {
+  const root = legacyProject();
+  const reg = mkdtempSync(join(tmpdir(), "ss-ledger-legacy-registry-"));
+  try {
+    assert.equal(legacyResolve(root).status, 0);
+    const bare = readFileSync(join(root, ".styleseed/effective-rules.md"), "utf8");
+    assert.ok(!bare.includes("## Project decisions"), "no file, no section");
+    writeLedger(root, []);
+    assert.equal(legacyResolve(root).status, 0);
+    assert.equal(readFileSync(join(root, ".styleseed/effective-rules.md"), "utf8"), bare, "an empty ledger is byte-identical to no ledger");
+    assert.equal(legacyResolve(root, ["--check"]).status, 0);
+
+    writeLedger(root, clone(LEGACY_FIVE).reverse());
+    const compiled = legacyResolve(root);
+    assert.equal(compiled.status, 0, compiled.stderr);
+    const bundle = readFileSync(join(root, ".styleseed/effective-rules.md"), "utf8");
+    assert.ok(bundle.includes("## Project decisions\n\nRecorded in `.styleseed/decisions.json`. A decision outranks a default; it never outranks an invariant.\n"), "the section names the file");
+    for (const [id, text] of [["D-001", "controlHeights = 32"], ["D-002", "typeSizes = 12, 14, 16"], ["D-003", "radii = 4"], ["D-004", "tableRowHeights = 40"], ["D-005", "spacingBase = 8"]]) {
+      assert.ok(bundle.includes(`- **${id}** (decision · ${text} · approved by example-designer, 2026-11-13): Recorded `), id);
+    }
+    assert.equal(bundle.replace(/## Project decisions\n[\s\S]*?\n\n## Invariants/u, "## Invariants"), bare, "only the section is added");
+    assert.equal(legacyResolve(root, ["--check"]).status, 0);
+    writeLedger(root, clone(LEGACY_FIVE).map((entry) => (entry.id === "D-001" ? { ...entry, values: [36] } : entry)));
+    const drifted = legacyResolve(root, ["--check"]);
+    assert.equal(drifted.status, 2, "an edited value is context drift");
+    assert.match(drifted.stderr, /StyleSeed context drift/u);
+
+    writeLedger(root, [{ ...LEGACY_FIVE[0], approvedBy: "" }]);
+    const unnamed = legacyResolve(root);
+    assert.equal(unnamed.status, 1);
+    assert.match(unnamed.stderr, /\.styleseed\/decisions\.json D-001\.approvedBy \(max 80 characters\) must be bounded single-line text/u, "an entry without a name is refused with its id");
+    writeLedger(root, [{ ...LEGACY_FIVE[0], scope: { artifacts: ["app-orders"] } }]);
+    const scoped = legacyResolve(root);
+    assert.equal(scoped.status, 1);
+    assert.match(scoped.stderr, /\.styleseed\/decisions\.json D-001: `scope\.artifacts` needs a registry; a project without one has a single artifact\. Use `scope\.screens` or drop the scope\./u);
+    writeLedger(root, [{ ...LEGACY_FIVE[0], scope: { screens: ["settings"] } }]);
+    assert.equal(legacyResolve(root).status, 0, "scope.screens works");
+
+    writeRegistry(reg);
+    writeLedger(reg, clone(LEGACY_FIVE));
+    const refused = resolve_(reg);
+    assert.equal(refused.status, 1);
+    assert.match(refused.stderr, /`\.styleseed\/decisions\.json` is the ledger of a project without a registry, and this project has one\. Move its entries into `decisions` in `\.styleseed\/project\.json` and delete the file\./u);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+    rmSync(reg, { recursive: true, force: true });
+  }
+});
+
+test("drift: loadDecisions reads .styleseed/decisions.json of a project without a registry; --decisions alone wins", () => {
+  const root = legacyProject();
+  try {
+    assert.deepEqual(loadDecisions({ projectRoot: root }), [], "no registry, no file: no ledger");
+    writeLedger(root, clone(LEGACY_FIVE));
+    assert.deepEqual(loadDecisions({ projectRoot: root }).map((entry) => entry.id), ["D-001", "D-002", "D-003", "D-004", "D-005"], "read as if passed with --decisions");
+    const file = join(root, "other.json");
+    writeFileSync(file, JSON.stringify([legacyEntry("D-009", "radii", [6])]));
+    assert.deepEqual(loadDecisions({ projectRoot: root, decisions: file }).map((entry) => entry.id), ["D-009"], "with --decisions only that file is read");
+    writeLedger(root, [{ ...LEGACY_FIVE[0], approvedBy: "" }]);
+    assert.throws(() => loadDecisions({ projectRoot: root }), /decisions\.json D-001\.approvedBy/u);
+  } finally { rmSync(root, { recursive: true, force: true }); }
+});

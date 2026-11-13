@@ -311,7 +311,6 @@ export function engineDefault(axis, defaults, { recipe = null, surface = "pointe
 
 // --- a measured reference (level 2) ---------------------------------------------------------------------------
 
-const TOKEN_REFERENCE_AXES = Object.freeze(["controlHeights", "radii", "typeSizes", "spacingBase", "spacingScale"]);
 const numbersOf = (value) => (Array.isArray(value) ? value : [value]).filter((n) => typeof n === "number" && Number.isFinite(n) && n >= 0);
 
 /**
@@ -328,7 +327,7 @@ export function referenceValues({ slug, summary = null, facts = null, evidence =
     set("controlHeights", summary.controlHeights ?? [], "tokens.controlHeights");
     set("radii", summary.radii ?? [], "tokens.radii");
     set("typeSizes", (summary.typeStepDetail ?? []).map((step) => step?.px), "tokens.typeSizes");
-    set("spacingBase", summary.spacingBase === null || summary.spacingBase === undefined ? [] : [summary.spacingBase], "tokens.spacingBase");
+    set("spacingBase", Number.isInteger(summary.spacingBase) && summary.spacingBase >= 1 ? [summary.spacingBase] : [], "tokens.spacingBase");
     set("spacingScale", summary.spacingScale ?? [], "tokens.spacingScale");
   }
   if (facts && Array.isArray(facts.facts)) {

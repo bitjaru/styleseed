@@ -279,6 +279,7 @@ test("referenceValues: every axis from summary and facts; an approved contract m
   assert.ok(!Object.hasOwn(long.values, "spacingScale"));
   assert.equal(long.observedAt, null);
   assert.deepEqual(referenceValues({ slug: "own-ref", summary: { ...summary, spacingBase: null }, facts: null }).values.spacingBase, undefined);
+  assert.equal(referenceValues({ slug: "own-ref", summary: { ...summary, spacingBase: 0 }, facts: null }).values.spacingBase, undefined, "a spacing unit is a positive integer, as the ledger requires");
 });
 
 test("entryForValues: an exact option, a superset of the corpus value, values in no option, a recorded axis", () => {

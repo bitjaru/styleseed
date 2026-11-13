@@ -5,7 +5,10 @@ with the repository's own probes, and counts where independent design systems (l
 same value for one page type. The counts can move a catalog rule's `evidence` from `inferred` to
 `observed` (a later change to `engine/rules/`, not this folder). The same screens also serve as a
 negative control for the render-fault classes of `ss-verify`: a class that fires on many screens built
-by the teams that maintain these systems has a definition or a threshold worth another look.
+by the teams that maintain these systems has a definition or a threshold worth another look. Since
+the second version of the claims (`consensusVersion` 2) the study also measures the anatomy of those
+screens' buttons, fields, panels, tables, navigation, type, spacing, and motion, and reports each
+dimension as a distribution across lineages.
 
 What it is not: a review, a score, or design acceptance. Nothing a model judges enters a table, no
 public sentence here describes agreement as anything more than counts ("3 of 4 design systems"), no
@@ -13,14 +16,14 @@ row adds a rule or changes a rule's `priority`, `check`, `kind`, or `scope`, and
 
 ## Sources
 
-| Lineage | Name | Kind | Host | Access | Licence of the demos | Terms (automated access) | Checked |
-|---|---|---|---|---|---|---|---|
-| `cloudscape` | AWS Cloudscape | product system | `cloudscape.design` | self-hosted: `cloudscape-design/demos` at `dda7bab`, built and served on `127.0.0.1` | MIT-0 | `restricted`: the AWS Site Terms exclude robots and data-gathering tools, so the hosted pages are never loaded | 2026-11-12 |
-| `patternfly` | Red Hat PatternFly | product system | `www.patternfly.org` | hosted, not loaded while its terms read `restricted` | MIT (`patternfly/patternfly-org`) | `restricted`: the Red Hat terms the site's footer links rule out using the site in a way that deploys a robot or a retrieval application | 2026-11-12 |
-| `antpro` | Ant Design Pro | kit | `preview.pro.ant.design` | hosted | MIT (`ant-design/ant-design-pro`) | `not-mentioned`: the preview app links no terms page | 2026-11-12 |
-| `shadcn` | shadcn/ui | kit | `ui.shadcn.com` | hosted | MIT (`shadcn-ui/ui`) | `not-mentioned`: the site links no terms page | 2026-11-12 |
-| `primer` | GitHub Primer | product system | `primer.style` | hosted | MIT (`primer/react`) | `conditional`: the GitHub Acceptable Use Policies allow research use of public, non-personal information when the publication is open access, as this repository is; whether they cover `primer.style` is not stated | 2026-11-12 |
-| `carbon` | IBM Carbon | product system | `react.carbondesignsystem.com` | hosted (one form story, a fragment) | Apache-2.0 (`carbon-design-system/carbon`) | `robots-txt`: the IBM terms allow a crawler as far as the site's `robots.txt` permits | 2026-11-12 |
+| Lineage | Name | Kind | Context | Host | Access | Licence of the demos | Terms (automated access) | Checked |
+|---|---|---|---|---|---|---|---|---|
+| `cloudscape` | AWS Cloudscape | product system | console | `cloudscape.design` | self-hosted: `cloudscape-design/demos` at `dda7bab`, built and served on `127.0.0.1` | MIT-0 | `restricted`: the AWS Site Terms exclude robots and data-gathering tools, so the hosted pages are never loaded | 2026-11-12 |
+| `patternfly` | Red Hat PatternFly | product system | console | `www.patternfly.org` | hosted, not loaded while its terms read `restricted` | MIT (`patternfly/patternfly-org`) | `restricted`: the Red Hat terms the site's footer links rule out using the site in a way that deploys a robot or a retrieval application | 2026-11-12 |
+| `antpro` | Ant Design Pro | kit | console | `preview.pro.ant.design` | hosted | MIT (`ant-design/ant-design-pro`) | `not-mentioned`: the preview app links no terms page | 2026-11-12 |
+| `shadcn` | shadcn/ui | kit | console | `ui.shadcn.com` | hosted | MIT (`shadcn-ui/ui`) | `not-mentioned`: the site links no terms page | 2026-11-12 |
+| `primer` | GitHub Primer | product system | console | `primer.style` | hosted | MIT (`primer/react`) | `conditional`: the GitHub Acceptable Use Policies allow research use of public, non-personal information when the publication is open access, as this repository is; whether they cover `primer.style` is not stated | 2026-11-12 |
+| `carbon` | IBM Carbon | product system | console | `react.carbondesignsystem.com` | hosted (one form story, a fragment) | Apache-2.0 (`carbon-design-system/carbon`) | `robots-txt`: the IBM terms allow a crawler as far as the site's `robots.txt` permits | 2026-11-12 |
 
 PatternFly's demos are open source (`patternfly/patternfly-org`, MIT), so a later run could measure a
 self-hosted build the way Cloudscape is measured; that is the maintainer's decision.
@@ -34,6 +37,66 @@ for a clause on automated access, recorded with its date; it is not a legal read
 maintainer owns the decision. `consensus-study.mjs --measure` refuses a hosted lineage whose verdict
 is `restricted` or `unchecked`.
 
+**Context.** A lineage may carry `context`: `console` (dense tools for trained users at a desk; the
+default when the field is absent) or `service` (public-facing transaction pages: one question per
+page, large type and controls). It is a label shown in the tables so a reader can see what a split
+depends on; it changes no count and no status.
+
+**Identifiers for sources without hosted pages.** A lineage whose demos exist only as a build of its
+repository (no hosted copy) lists its screens under the reserved top-level domain `.invalid`
+(RFC 2606), for example `https://paste.invalid/iframe.html?viewMode=story&id=…`: an identifier that
+cannot be loaded. The lineage is `self-hosted`, and `--base` maps the identifier onto the local build
+as it does for any other self-hosted lineage.
+
+### Reach per page type
+
+Product systems with at least one full screen, by the state of the switches in the work order that
+added them (WO-12). A candidate row needs 3 agreeing lineages of which 2 are product systems, so a page
+type with one product system cannot produce one.
+
+| Page type | Cloudscape and Primer | and PatternFly (self-hosted) | and GOV.UK (the switches as set for the next run) | and Twilio Paste | Kits available |
+|---|---|---|---|---|---|
+| dashboard | 1 | 2 | 2 | 2 | Ant Design Pro, shadcn/ui, MUI templates, TDesign starter |
+| list | 1 | 2 | 3 | 4 | Ant Design Pro, MUI templates, TDesign starter |
+| form | 2 (Primer's has no field) | 2 | 3 | 4 | Ant Design Pro, shadcn/ui, MUI templates, TDesign starter |
+| detail | 2 | 3 | 4 | 5 | Ant Design Pro, TDesign starter |
+
+Dashboards have two product systems at most: no third product system checked so far publishes a full
+dashboard that can be measured under this study's rules (see "Not measured"). A kit is not relabelled
+as a product system to fill the gap.
+
+### Not measured
+
+Each with the reason it is left out; none is added back without a work order that checks it again.
+
+- TDesign React starter (kit): its switch is `skip`. Measuring it means installing its repository and
+  running its development server with mock data; the hosted preview is never loaded.
+- Twilio Paste (product system): its switch is `skip`. Its hosted site no longer exists, and a build
+  of its Storybook covers the whole repository.
+- SAP OpenUI5 demo kit: the SAP terms rule out automated extraction on the hosted pages; a local build
+  is possible, but a UI5 button paints its box on an inner element and the apps use fragment routes,
+  which the study's tooling does not cover yet.
+- HPE Design System: its page templates render inside documentation pages in a scaled mock browser;
+  the full-screen view needs a click.
+- Elastic EUI: component stories and a skeleton page template; its licence is not an open-source one.
+- Atlassian, Microsoft Fluent, GitLab Pajamas: documentation or component stories only; GitLab's
+  `robots.txt` redirects into a sign-in flow, so it cannot be read.
+- Shopify Polaris: the repository is archived, its licence limits use to applications that integrate
+  with Shopify, and both hosts redirect elsewhere.
+- Salesforce Lightning: documentation only; the repository is archived.
+- VMware Clarity, Adobe React Spectrum, Zendesk Garden, Uber Base Web: documentation, component
+  examples, or build-tool starters; no product screen.
+- Pinterest Gestalt: its `robots.txt` redirects to a sign-in page, so it cannot be read.
+- Nordhealth Nord: web components inside shadow roots, which the probes do not enter.
+- Arco Design Pro (kit): every page redirects to a sign-in page unless local storage holds a session,
+  and this study writes no storage.
+- Tremor (kit): built on the same primitives and default scale as shadcn/ui, so it would count one
+  family twice.
+- Refine (kit): renders through other kits' components, so it is not a lineage of its own.
+- Mantine, Chakra UI (kits): Mantine publishes sections rather than full screens; Chakra's full
+  templates are paid.
+- IBM Carbon beyond its one form story: component stories; the tutorial repository is archived.
+
 ## How a screen is loaded
 
 - One `robots.txt` request per origin (a `robots.txt` that redirects to another origin reads as
@@ -42,7 +105,8 @@ is `restricted` or `unchecked`.
   run. The default browser user agent; no header or URL names this project.
 - Each load: a new browser context with only the viewport and a device scale factor of 1, `load`, a
   wait for network idle and for fonts, 500ms, then the probes in this order: `observe-design`,
-  `observe-structure`, `observe-faults`, the study's control probe, and its dialog guard. This is the
+  `observe-structure`, `observe-faults`, the study's control probe, its anatomy probe, and its dialog
+  guard. This is the
   sequence of `measure-reference.mjs` `observeUrls` with the scroll pass off, which is also how
   `scripts/calibrate-render-faults.mjs` measures the repository's own screens;
   `scripts/test-consensus-browser.mjs` checks that the two give equal output.
@@ -63,6 +127,23 @@ the panel of each field; the emphasis, radius, and text size of each labelled ac
 and button pairs on one row; and the characters set in each font size. It leaves out navigation,
 page-level headers and footers, and anything fixed to the viewport, which the engine probes measure.
 
+The anatomy probe (`scripts/lib/consensus-anatomy.mjs`) measures what sits inside and around those
+controls. It selects buttons and fields exactly as the control probe does and on the same visible box
+(`scripts/test-consensus-browser.mjs` checks that the two agree on every fixture page), then reads per
+button the inset from its outer edge to the label or a leading icon, text size and weight, corner
+radius, border width, and the size of an icon and its gap to the label; per field the inset to where
+the value starts, text size, radius, how its box is drawn (`box`, `under`, `ring`, `fill`, `none`),
+border width, and a leading icon; per field its label's position, gap, size, and weight, and the gap
+to the next field below it; per panel its inset, radius, border, and how it is set apart (border,
+shadow, tone), and the gap to a neighbouring panel; table header and body cells (row height, inset,
+text size, weight); headings; line heights per text size; and icon sizes. A button's inset is the
+declared one (border, padding, and the margins of wrappers down to the label), because a measured
+inset grows with a stretched or minimum-width button; the insets of fields, panels, and cells are
+measured from the box edge to where the content starts, because wrappers hide the declaration. A
+border drawn on a `::before` or `::after` element that covers a panel is read as that panel's border;
+for fields and buttons it is not. Like the control probe it leaves navigation, page-level headers and
+footers, and anything fixed to the viewport out.
+
 ## What is stored, and what never is
 
 ```
@@ -81,15 +162,17 @@ research/consensus/
 A record holds numbers and enums: per viewport the HTTP status, the element count, the document
 height, the dialog share, the design probe's histograms (control heights, radii, target sizes, type,
 spacing) and body size, the structure probe's regions, controls, tables, lists, tabs, stylesheet counts,
-and skipped hosts, the control probe's output, and the fault probe's findings (at most 50 per class),
+and skipped hosts, the control probe's output, the anatomy probe's output (records of version 2), and
+the fault probe's findings (at most 50 per class),
 true counts per class, candidate counts, distributions, icon signatures, and caps; then the screen's
 role colours, spacing base and scale, radius and control-height families, type sizes, the **number** of
 font families, motion counts, and the facts of `analyze-structure.mjs`. The only URL in a record is the
 listed one.
 
-Never stored: a screenshot, page text, a selector, a class name, an asset URL, a font family name, the
-measured page's final URL, or the probes' text, action, link, surface, shadow, border, and backdrop
-colour tables. Every stored `.json` file except `manifest.json` is walked by the allow-list of
+Never stored: a screenshot, page text (labels and headings included), a selector, a class name, an
+asset URL, an icon's name or source, a font family name, the position of any element, the measured
+page's final URL, or the probes' text, action, link, surface, shadow, border, and backdrop colour
+tables. Every stored `.json` file except `manifest.json` is walked by the allow-list of
 `scripts/lib/reference-allow-list.mjs` after the screen ids, lineage ids, and listed URLs of that run's
 manifest are taken out (`stripIds`); `--check` and `scripts/runtime-tests/consensus.test.mjs` run the walk.
 
@@ -114,6 +197,21 @@ with (`product-system`). Ant Design Pro and shadcn/ui are open-source kits whose
 (`kit`). Kits count in every row, but a row needs two agreeing product systems, so kits alone cannot
 carry one: a kit's demo shows what the kit ships, not what a product team settled on.
 
+**Set-valued rows.** A few claims give each lineage a list of values instead of one: the spacing
+steps, type sizes, heading sizes, corner radii, and transition-duration bands a system uses
+(`valueKind: "set"`). Such a row counts, for each value, the lineages whose list holds it, so its
+counts can add up to more than the lineages measured; it has no status. Beside each set, a single
+count per lineage (how many sizes, steps, or radii it uses) is a dimension of its own.
+
+**The spacing sample.** The spacing claims read measured insets and gaps instead of the declared CSS
+of every element: per screen, the inline padding of buttons, fields, and table cells, the inset of
+narrow panels, and the gaps between a label and its field, between stacked fields, between neighbouring
+panels, and between a button's icon and its label, each value with the border it sits inside, keeping
+the combinations that hold at least 10% of their kind on that screen. A border is resolved in favour
+of the 4px grid (a value that is not a multiple of 4 becomes the value less its border when that is
+one), so a 15px padding inside a 1px border counts as 16. A distinct pair of kind and resolved value is
+one step, and a lineage's steps are the union over its screens.
+
 ## Limits
 
 1. Sites change. A run is a dated snapshot; raw numbers are kept so a later run can be compared, and
@@ -137,6 +235,15 @@ carry one: a kit's demo shows what the kit ships, not what a product team settle
    each site serves and on the measuring machine; some pages give the structure probe no sections.
 8. The page type is the study's label, and some screens are mixed.
 9. There is no scroll pass: content a page renders only after scrolling is not measured.
+10. The anatomy probe is new and its tests are heuristics. A label is found through `for`, wrapping,
+    or `aria-labelledby` only; a button's inset is the declared one, so a fixed-width button without
+    padding reads 0; a field with two inputs reads as two; icons are `svg`, `img`, and `role="img"`
+    elements, so icon fonts are not seen; headings are `h1` to `h6` and `role="heading"`, so a system
+    that sets its titles in plain elements has no heading value.
+11. Borders and shadows drawn on a pseudo-element are read for panels only. A field or a button
+    outlined that way reads as `none` or `fill`, and the control probe may then measure the bare input.
+12. The spacing sample resolves a border in favour of the 4px grid. That is the study's assumption: a
+    system that really uses 15px inside a 1px border shows as 16.
 
 ## Re-running
 

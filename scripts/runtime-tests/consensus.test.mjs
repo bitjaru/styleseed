@@ -1,14 +1,14 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
-  CLAIMS, CONSENSUS_VERSION, GATE_CANDIDATES, consensusRows, generateReports, lineageValue, mode, negativeControl, px4, rowStatus,
-  screenClaim, stripIds, validateManifest,
+  CLAIMS, CONSENSUS_VERSION, GATE_CANDIDATES, anatomyAt, consensusDocument, consensusRows, generateReports, lineageValue, mode, negativeControl, px4,
+  renderConsensusMarkdown, rowStatus, screenClaim, spacingSample, stripIds, validateManifest,
 } from "../lib/consensus.mjs";
-import { buildRecord, cachedRobots, checkRunFolder, measureScreens, parseArgs, runFolders, samePage, selfHostedUrl } from "../consensus-study.mjs";
+import { RECORD_VERSION, STUDY_VERSION, buildRecord, cachedRobots, checkRunFolder, measureScreens, parseArgs, runFolders, samePage, selfHostedUrl } from "../consensus-study.mjs";
 import { checkRobots } from "../../engine/.claude/skills/styleseed/workflows/ss-reference/scripts/measure-reference.mjs";
 import { FAULT_CLASSES } from "../../engine/.claude/skills/styleseed/workflows/ss-verify/scripts/analyze-faults.mjs";
 import { disallowedStrings } from "../lib/reference-allow-list.mjs";
@@ -36,6 +36,9 @@ function manifest(screens) {
 const zeroCounts = () => Object.fromEntries(CLASS_IDS.map((id) => [id, 0]));
 const NO_CANDIDATES = { amounts: 0, overlaps: 0, spills: 0, clips: 0, insets: 0, touches: 0, gaps: 0, aligns: 0, emoji: 0 };
 const DISTRIBUTION = () => ({ "tight-inset": { panel: { 2: 0, 4: 1 }, chip: { 2: 0, 4: 0 } }, "text-touch": { 1: 0, 2: 1 }, "near-touch": { 1: 0, 2: 0 }, "near-align": { 1: 1, 2: 2 } });
+// Anatomy-probe output (WO-12) as the probe keys it: every list empty unless given.
+const ANATOMY_LISTS = ["buttons", "fields", "labels", "fieldGaps", "panels", "panelGaps", "cells", "headings", "textLines", "icons"];
+const anatomyBlock = (lists = {}) => ({ ...Object.fromEntries(ANATOMY_LISTS.map((k) => [k, {}])), ...lists, capped: {}, truncated: false });
 // Control-probe output: one field kind and one labelled button, as the probe keys them.
 const ctl = ({ field = null, self = field, fieldR = 6, font = 14, panel = "narrow", button = null, buttonR = 6, emphasis = "filled", n = 1 } = {}) => ({
   fields: field === null ? {} : { [`text|${field}|${self}|${fieldR}|${font}|${panel}`]: n },
@@ -47,6 +50,7 @@ function vp(width, o = {}) {
     design: { controlHeights: {}, radii: {}, targets: {}, type: {}, spacing: {}, bodyFontSize: 14 },
     structure: { regions: [], controls: { buttons: {}, inputs: {}, labels: {}, leftEdges: 0 }, tables: o.tables ?? [], lists: o.lists ?? [], tabs: [], css: { hover: 0, focusVisible: 0, disabled: 0, reducedMotion: 0, breakpoints: {}, unreadableSheets: 0, truncated: false }, skipped: { shadowHosts: 0, iframes: 0 } },
     controls: { fields: o.fields ?? {}, buttons: o.buttons ?? {}, pairs: o.pairs ?? [], textSizes: o.textSizes ?? {}, capped: {}, truncated: false },
+    ...(o.anatomy ? { anatomy: anatomyBlock(o.anatomy) } : {}),
     faults: { counts: { ...zeroCounts(), ...(o.counts ?? {}) }, candidates: { ...NO_CANDIDATES, ...(o.candidates ?? {}) }, findings: [], distribution: o.distribution ?? DISTRIBUTION(), icons: o.icons ?? { sets: {}, unknown: 0 }, capped: o.capped ?? {} },
   };
 }
@@ -428,4 +432,366 @@ test("measureScreens skips without loading: terms, no-base, robots", async () =>
   const down = await measureScreens(manifest([["a1", "alpha", "form"]]), { chromium, today: "2026-11-13", delay: 0, fetchImpl: async () => { throw new TypeError("fetch failed"); } });
   assert.deepEqual(down.rows, [{ screen: "a1", status: "skipped", reason: "robots" }], "an unreadable robots.txt reads as disallowed");
   await assert.rejects(measureScreens(manifest([["a1", "alpha", "form"]]), { chromium, delay: 0, fetchImpl }), /pass today as a date/u);
+});
+
+// --- WO-12: component anatomy ------------------------------------------------------------------------
+
+const NEW_CLAIMS = CLAIMS.filter((c) => c.group !== null);
+const OLD_IDS = ["controls.shareHeight", "controls.rowShareHeight", "controls.shareRadius", "controls.pointerUnder44", "controls.narrowAtLeast44", "button.height", "field.height", "field.textSize", "fields.inPanel", "text.bodySize", "table.rowHeight", "list.overFourRows", "primary.onePerSection", "amounts.oneLine", "icons.noEmoji", "icons.oneFamily", "lineage.rolesConstant", "lineage.spacingBase", "lineage.buttonHeight", "motion.reducedMotionRules", "motion.transitionAll"];
+// Keys of the anatomy probe, built from parts in the probe's order.
+const btn = ({ emphasis = "filled", height = 32, pad = 16, font = 14, weight = 400, radius = 6, border = 0, icon = "none", iconSize = 0, iconGap = 0 } = {}) => [emphasis, height, pad, font, weight, radius, border, icon, iconSize, iconGap].join("|");
+const fld = ({ kind = "text", height = 32, pad = 12, font = 14, radius = 6, style = "box", border = 1, adorned = "none" } = {}) => [kind, height, pad, font, radius, style, border, adorned].join("|");
+const lab = ({ position = "above", gap = 8, font = 14, weight = 500 } = {}) => [position, gap, font, weight].join("|");
+const pnl = ({ size = "narrow", inset = 24, radius = 8, separation = "border", border = 1 } = {}) => [size, inset, radius, separation, border].join("|");
+const cel = ({ part = "body", height = 40, pad = 16, font = 14, weight = 400 } = {}) => [part, height, pad, font, weight].join("|");
+const hed = ({ level = 2, size = 18, weight = 600, line = 24 } = {}) => [level, size, weight, line].join("|");
+const oneForm = () => manifest([["a1", "alpha", "form"]]);
+// A record whose 1440 viewport carries the given anatomy lists (and the same at 390).
+const anatomyRecord = (lists, extra = {}) => { const m = oneForm(); return rec(m, "a1", { at1440: { anatomy: lists, ...(extra.at1440 ?? {}) }, values: extra.values ?? {}, facts: extra.facts ?? [] }); };
+const at = (id, lists, extra) => screenClaim(claim(id), anatomyRecord(lists, extra));
+
+test("WO-12: 48 new claims beside the 21 of the first run, which keep their ids and order", () => {
+  assert.equal(CONSENSUS_VERSION, 2);
+  assert.deepEqual([RECORD_VERSION, STUDY_VERSION], [2, 2]);
+  assert.equal(CLAIMS.length, 69);
+  assert.deepEqual(CLAIMS.slice(0, 21).map((c) => c.id), OLD_IDS);
+  assert.equal(NEW_CLAIMS.length, 48);
+  assert.equal(NEW_CLAIMS.filter((c) => c.scope === "screen").length, 36, "36 per-screen claims");
+  assert.deepEqual(NEW_CLAIMS.filter((c) => c.valueKind === "set").map((c) => c.id), ["spacing.steps", "type.sizes", "heading.sizes", "radius.values", "motion.durations"]);
+  for (const c of NEW_CLAIMS) {
+    assert.deepEqual([c.rule, c.clause, c.expect, c.card], [null, null, null, []], `${c.id}: no new claim maps to a rule`);
+    assert.ok(["buttons", "fields", "panels", "tables", "navigation", "type", "spacing", "motion"].includes(c.group), c.id);
+    assert.ok([null, "px", "ms"].includes(c.unit), c.id);
+    assert.equal(c.viewport, c.group === "motion" ? "both" : 1440, `${c.id}: the 1440 viewport, the motion claims both`);
+    assert.equal(c.fragments, c.scope === "screen" && (c.group === "buttons" || c.group === "fields"), `${c.id}: fragments for per-screen buttons and fields`);
+  }
+  for (const c of CLAIMS.slice(0, 21)) assert.deepEqual([c.group, c.unit, c.valueKind], [null, null, "single"], c.id);
+  assert.deepEqual(CLAIMS.filter((c) => c.transfer === "keep" && c.group !== null).map((c) => c.id), ["button.shape", "button.textMatchesField", "field.style", "label.position", "panel.separation", "radius.panelNotSmaller", "table.headerHeavier", "spacing.onGrid4"]);
+});
+
+test("anatomyAt: keys parsed by part, none and normal kept as strings, text buttons dropped, null without an anatomy block", () => {
+  const r = anatomyRecord({
+    buttons: { [btn({ emphasis: "text", pad: 8 })]: 3, [btn({ emphasis: "outline", pad: 17, border: 1, icon: "trail", iconSize: 12, iconGap: 6 })]: 2 },
+    fields: { [fld({ style: "none", border: 0 })]: 1 },
+    headings: { [hed({ line: "normal" })]: 1 },
+    cells: { [cel({ pad: "none" })]: 4 },
+  });
+  const a = anatomyAt(r, 1440);
+  assert.deepEqual(a.buttons, [{ emphasis: "outline", height: 32, pad: 17, font: 14, weight: 400, radius: 6, border: 1, icon: "trail", iconSize: 12, iconGap: 6, n: 2 }], "the text button is dropped");
+  assert.deepEqual(a.fields, [{ kind: "text", height: 32, pad: 12, font: 14, radius: 6, style: "none", border: 0, adorned: "none", n: 1 }]);
+  assert.deepEqual(a.headings, [{ level: 2, size: 18, weight: 600, line: "normal", n: 1 }]);
+  assert.deepEqual(a.cells, [{ part: "body", height: 40, pad: "none", font: 14, weight: 400, n: 4 }]);
+  assert.deepEqual([a.labels, a.fieldGaps, a.panels, a.panelGaps, a.textLines, a.icons], [[], [], [], [], [], []]);
+  assert.equal(anatomyAt(rec(oneForm(), "a1"), 1440), null, "a record without anatomy (version 1)");
+  assert.equal(anatomyAt(rec(oneForm(), "a1", { at1440: { anatomy: {} }, failed390: "timeout" }), 390), null, "a failed viewport");
+  for (const c of NEW_CLAIMS) assert.deepEqual(screenClaim(c, rec(oneForm(), "a1", { values: { motion: { transitions: 50, durations: [100], properties: {} } } })), { eligible: false, value: null }, `${c.id}: no value without an anatomy block`);
+});
+
+test("each per-screen anatomy claim: eligibility and value (36 claims)", () => {
+  const yes = (value) => ({ eligible: true, value });
+  const NO = { eligible: false, value: null };
+  const lead = btn({ emphasis: "outline", pad: 8, icon: "lead", iconSize: 16, iconGap: 8 }), trail = btn({ emphasis: "outline", pad: 12, icon: "trail", iconSize: 12, iconGap: 6 });
+  const cases = {
+    "button.padX": [
+      [{ buttons: { [btn({ pad: 16 })]: 2, [btn({ emphasis: "outline", pad: 12 })]: 2, [lead]: 5 } }, yes(12), "a tie goes to the smaller pad; a button with a leading icon is left out"],
+      [{ buttons: { [lead]: 2, [btn({ emphasis: "text" })]: 3 } }, NO, "only a leading-icon button and a text button"],
+    ],
+    "button.padRatio": [[{ buttons: { [btn({ pad: 12, height: 32 })]: 1 } }, yes(0.375)], [{ buttons: { [lead]: 1 } }, NO]],
+    "button.textSize": [[{ buttons: { [btn({ font: 13.5 })]: 1 } }, yes(14)], [{}, NO]],
+    "button.textWeight": [[{ buttons: { [btn({ weight: 500 })]: 1, [btn({ weight: 400, pad: 12 })]: 1 } }, yes(400), "a tie goes to the smaller"], [{}, NO]],
+    "button.radius": [[{ buttons: { [btn({ radius: 999 })]: 1 } }, yes(999)], [{ buttons: { [btn({ radius: 6.5 })]: 1 } }, yes(7)], [{}, NO]],
+    "button.shape": [[{ buttons: { [btn({ radius: 0 })]: 1 } }, yes("square")], [{ buttons: { [btn({ radius: 6 })]: 1 } }, yes("rounded")], [{ buttons: { [btn({ radius: 999 })]: 1 } }, yes("pill")], [{ buttons: { [btn({ radius: 1 })]: 1 } }, yes("square")], [{}, NO]],
+    "button.iconSize": [[{ buttons: { [lead]: 1, [trail]: 1 } }, yes(12), "a tie goes to the smaller"], [{ buttons: { [btn()]: 1 } }, NO]],
+    "button.iconGap": [[{ buttons: { [lead]: 1, [trail]: 1 } }, yes(6)], [{ buttons: { [btn()]: 1 } }, NO]],
+    "button.textMatchesField": [
+      [{ buttons: { [btn({ font: 14 })]: 1 }, fields: { [fld({ font: 13.5 })]: 1 } }, yes(true)],
+      [{ buttons: { [btn({ font: 14 })]: 1 }, fields: { [fld({ font: 13 })]: 1 } }, yes(false)],
+      [{ buttons: { [btn()]: 1 } }, NO, "no field"],
+    ],
+    "field.padX": [[{ fields: { [fld({ pad: 12 })]: 1, [fld({ pad: 33, adorned: "lead" })]: 3 } }, yes(12), "an adorned field is left out"], [{ fields: { [fld({ adorned: "lead" })]: 1 } }, NO]],
+    "field.radius": [[{ fields: { [fld({ radius: 4 })]: 1 } }, yes(4)], [{}, NO]],
+    "field.style": [[{ fields: { [fld({ style: "under" })]: 2, [fld({ style: "box" })]: 2 } }, yes("box"), "a tie goes to the one that sorts first"], [{ fields: { [fld({ style: "fill", border: 0 })]: 3, [fld()]: 1 } }, yes("fill")], [{}, NO]],
+    "field.borderWidth": [[{ fields: { [fld({ border: 1 })]: 1, [fld({ style: "fill", border: 0 })]: 5 } }, yes(1)], [{ fields: { [fld({ style: "ring", border: 0 })]: 1 } }, NO, "no box or underline field"]],
+    "label.position": [[{ labels: { [lab()]: 1, [lab({ position: "left", gap: 12 })]: 2, [lab({ position: "none", gap: 0, font: 0, weight: 0 })]: 4 } }, yes("left")], [{ labels: { [lab()]: 1, [lab({ position: "none", gap: 0, font: 0, weight: 0 })]: 4 } }, NO, "one label that is not none"]],
+    "label.gap": [[{ labels: { [lab({ gap: 8 })]: 1, [lab({ position: "left", gap: 12 })]: 3 } }, yes(8)], [{ labels: { [lab({ position: "left" })]: 2 } }, NO]],
+    "label.textWeight": [[{ labels: { [lab({ weight: 500 })]: 2, [lab({ position: "left", weight: 400 })]: 1 } }, yes(500)], [{ labels: { [lab()]: 1 } }, NO]],
+    "form.fieldGap": [[{ fieldGaps: { "plain|16": 3, "helper|36": 1 } }, yes(16)], [{ fieldGaps: { "helper|36": 2 } }, NO]],
+    "panel.inset": [[{ panels: { [pnl({ inset: 25 })]: 1, [pnl({ size: "wide", inset: 32 })]: 4 } }, yes(25), "wide panels are left out"], [{ panels: { [pnl({ size: "wide" })]: 1 } }, NO]],
+    "panel.radius": [[{ panels: { [pnl({ radius: 8 })]: 1 } }, yes(8)], [{}, NO]],
+    "panel.separation": [[{ panels: { [pnl({ separation: "border-tone" })]: 2, [pnl({ separation: "shadow", border: 0 })]: 1 } }, yes("border-tone")], [{}, NO]],
+    "panel.gap": [[{ panelGaps: { "stack|24": 2, "inline|16": 2 } }, yes(16), "both axes; a tie goes to the smaller"], [{}, NO]],
+    "radius.panelNotSmaller": [
+      [{ panels: { [pnl({ radius: 8 })]: 1 }, fields: { [fld({ radius: 6 })]: 1 } }, yes(true)],
+      [{ panels: { [pnl({ radius: 4 })]: 1 }, fields: { [fld({ radius: 6 })]: 1 }, buttons: { [btn({ radius: 2 })]: 1 } }, yes(false), "the field radius when there is a field"],
+      [{ panels: { [pnl({ radius: 8 })]: 1 }, buttons: { [btn({ radius: 6 })]: 1 } }, yes(true), "else the button radius"],
+      [{ panels: { [pnl({ radius: 8 })]: 1 }, buttons: { [btn({ radius: 999 })]: 1 } }, NO, "a pill button"],
+      [{ fields: { [fld()]: 1 } }, NO, "no panel"],
+    ],
+    "table.headerHeight": [[{ cells: { [cel({ part: "head", height: 37 })]: 3 } }, yes(36)], [{ cells: { [cel()]: 1 } }, NO]],
+    "table.bodyRowHeight": [[{ cells: { [cel({ height: 41 })]: 3 } }, yes(40)], [{ cells: { [cel({ part: "head" })]: 1 } }, NO]],
+    "table.cellPadX": [[{ cells: { [cel({ pad: "none" })]: 5, [cel({ pad: 16 })]: 2, [cel({ part: "head", pad: 12 })]: 9 } }, yes(16), "body cells only, none ignored"], [{ cells: { [cel({ pad: "none" })]: 5 } }, NO]],
+    "table.headerHeavier": [[{ cells: { [cel({ part: "head", weight: 600 })]: 1, [cel()]: 2 } }, yes(true)], [{ cells: { [cel({ part: "head" })]: 1, [cel()]: 2 } }, yes(false)], [{ cells: { [cel()]: 2 } }, NO]],
+    "list.itemHeight": [
+      [{ anatomy: {}, lists: [{ items: 6, itemH: { 48: 5, 52: 1 } }, { items: 6, itemH: { 40: 6 } }] }, yes(48), "the first of two lists with the most items"],
+      [{ anatomy: {}, lists: [{ items: 4, itemH: { 48: 4 } }] }, NO, "a four-item list"],
+    ],
+    "nav.sideWidth": [[{ anatomy: {}, regions: [{ kind: "sideNav", w: 238, h: 800, items: 2, itemHeight: 28 }] }, yes(240)], [{ anatomy: {}, regions: [{ kind: "topBar", w: 1440, h: 56 }] }, NO]],
+    "nav.itemHeight": [[{ anatomy: {}, regions: [{ kind: "sideNav", w: 240, items: 13, itemHeight: 29 }] }, yes(28)], [{ anatomy: {}, regions: [{ kind: "sideNav", w: 240, items: 2, itemHeight: 28 }] }, NO, "under 3 items"]],
+    "nav.topBarHeight": [[{ anatomy: {}, regions: [{ kind: "topBar", w: 1440, h: 57 }] }, yes(56)], [{ anatomy: {}, regions: [] }, NO]],
+    "text.lineRatio": [[{ textLines: { "14|20": 300, "12|16": 50 } }, yes(1.45), "20 over 14"], [{ textLines: { "14|20": 150 } }, NO, "under 200 characters"], [{ textLines: { "14|normal": 300 } }, NO, "no numeric line height at the main size"]],
+    "heading.pageTitle": [[{ headings: { [hed({ level: 1, size: 23.5 })]: 1, [hed()]: 3 } }, yes(24)], [{}, NO]],
+    "heading.sectionTitle": [[{ headings: { [hed({ level: 1, size: 24 })]: 1, [hed({ size: 18 })]: 2, [hed({ size: 16 })]: 2 } }, yes(16), "a tie goes to the smaller"], [{ headings: { [hed()]: 3 } }, NO, "one size"]],
+    "heading.weight": [[{ headings: { [hed({ weight: 600 })]: 2, [hed({ size: 24, weight: 700 })]: 1 } }, yes(600)], [{}, NO]],
+    "icon.size": [[{ icons: { 16: 2, 20: 1 } }, yes(16)], [{ icons: { 16: 2 } }, NO, "under 3 icons"]],
+    "motion.duration": [
+      [{ anatomy: {}, transitions: 25, duration: 90 }, yes(100)],
+      [{ anatomy: {}, transitions: 25, duration: 165 }, yes(200)],
+      [{ anatomy: {}, transitions: 19, duration: 90 }, NO, "under 20 transitions"],
+    ],
+  };
+  assert.deepEqual(Object.keys(cases).sort(), NEW_CLAIMS.filter((c) => c.scope === "screen").map((c) => c.id).sort(), "one case per per-screen claim");
+  for (const [id, list] of Object.entries(cases)) for (const [input, expected, note = ""] of list) {
+    let record;
+    if (Object.hasOwn(input, "anatomy")) {
+      // Claims that read the structure probe or the motion summary need only an anatomy block.
+      const s = { regions: input.regions ?? [], lists: input.lists ?? [] };
+      const m = oneForm();
+      record = rec(m, "a1", { at1440: { anatomy: {}, lists: s.lists }, values: { motion: { transitions: input.transitions ?? 0, durations: [], properties: {} } }, facts: input.duration ? [{ id: "states.motion.duration", axis: "states-motion", level: "observed", value: input.duration, unit: "ms", viewport: "both", from: "observations.motion.transitions" }] : [] });
+      record.viewports[0].structure.regions = s.regions;
+    } else record = anatomyRecord(input);
+    assert.deepEqual(screenClaim(claim(id), record), expected, `${id}: ${note || JSON.stringify(input)}`);
+  }
+});
+
+test("spacingSample: the 10% floor, the border resolved toward the grid, a pair per kind", () => {
+  const sample = (lists) => spacingSample(anatomyRecord(lists)).map((p) => `${p.kind} ${p.value}`);
+  assert.deepEqual(sample({ buttons: { [btn({ pad: 16 })]: 9, [btn({ pad: 12 })]: 1 } }), ["buttonPad 12", "buttonPad 16"], "10% stays");
+  assert.deepEqual(sample({ buttons: { [btn({ pad: 16 })]: 10, [btn({ pad: 12 })]: 1 } }), ["buttonPad 16"], "under 10% goes");
+  assert.deepEqual(sample({ buttons: { [btn({ pad: 16, border: 1 })]: 1 } }), ["buttonPad 16"], "a 15px padding inside a 1px border: the declared inset is 16");
+  assert.deepEqual(sample({ buttons: { [btn({ emphasis: "outline", pad: 17, border: 1 })]: 1 } }), ["buttonPad 16"], "17 with a 1px border");
+  assert.deepEqual(sample({ buttons: { [btn({ pad: 22, border: 2 })]: 1 } }), ["buttonPad 20"], "22 with a 2px border");
+  assert.deepEqual(sample({ panels: { [pnl({ inset: 9, border: 0 })]: 1 } }), ["panelInset 9"], "9 with no border stays off the grid");
+  assert.deepEqual(sample({ panels: { [pnl({ inset: 25, border: 1 })]: 1 } }), ["panelInset 24"]);
+  assert.deepEqual(sample({ fields: { [fld({ pad: 17, style: "under", border: 1 })]: 1, [fld({ pad: 13, style: "box", border: 1 })]: 1 } }), ["fieldPad 12", "fieldPad 17"], "a field's border counts only for a box");
+  assert.deepEqual(sample({ buttons: { [btn({ pad: 16 })]: 1, [btn({ pad: 17, border: 1, emphasis: "outline" })]: 1 }, cells: { [cel({ pad: 16 })]: 1, [cel({ part: "head", pad: 16 })]: 1, [cel({ pad: "none" })]: 3 } }), ["buttonPad 16", "cellPad 16"], "one pair per kind and value; head and body cells; none ignored");
+  assert.deepEqual(sample({
+    buttons: { [btn({ pad: 0 })]: 5, [btn({ emphasis: "outline", pad: 8, icon: "lead", iconSize: 16, iconGap: 8 })]: 1 },
+    labels: { [lab({ gap: 4 })]: 1, [lab({ position: "left", gap: 12 })]: 1 }, fieldGaps: { "plain|16": 1, "helper|36": 1 }, panelGaps: { "inline|24": 1, "stack|20": 1 },
+  }), ["labelGap 4", "fieldGap 16", "panelGap 20", "panelGap 24", "iconGap 8"], "values of 0 are dropped; a leading-icon button gives its icon gap, not its padding; left labels and helper gaps are not sampled");
+  assert.equal(spacingSample(rec(oneForm(), "a1")), null);
+});
+
+// Screens of one lineage whose spacing samples hold the given values, ten per kind and screen (each
+// value one instance, so each holds exactly the 10% floor), spread over `screens` screens.
+function spacingScreens(m, lineage, values, screens = 3) {
+  const KINDS = [
+    (v) => ({ cells: { [cel({ pad: v })]: 1 } }), (v) => ({ panelGaps: { [`stack|${v}`]: 1 } }), (v) => ({ fieldGaps: { [`plain|${v}`]: 1 } }), (v) => ({ labels: { [lab({ gap: v })]: 1 } }),
+    (v) => ({ buttons: { [btn({ pad: v })]: 1 } }), (v) => ({ panels: { [pnl({ inset: v, border: 0 })]: 1 } }), (v) => ({ fields: { [fld({ pad: v, style: "fill", border: 0 })]: 1 } }),
+    (v) => ({ buttons: { [btn({ emphasis: "outline", pad: 8, icon: "lead", iconSize: 16, iconGap: v })]: 1 } }),
+  ];
+  const lists = Array.from({ length: screens }, () => ({}));
+  for (let chunk = 0; chunk * 10 < values.length; chunk++) {
+    const target = lists[chunk % screens], make = KINDS[Math.floor(chunk / screens)];
+    for (const v of values.slice(chunk * 10, chunk * 10 + 10)) for (const [list, entries] of Object.entries(make(v))) Object.assign((target[list] ??= {}), entries);
+  }
+  return lists.map((l, i) => rec(m, `${lineage}${i + 1}`, { at1440: { anatomy: l } }));
+}
+// `on` values that are multiples of 4 and `off` values that are not, all distinct.
+const gridValues = (on, off) => [...Array.from({ length: on }, (_, i) => 4 * (i + 1)), ...Array.from({ length: 4 * off }, (_, i) => i + 1).filter((v) => v % 4 !== 0).slice(0, off)];
+
+test("lineage-scope anatomy claims: minimums, grid bands, sets, and the five counts", () => {
+  const m = manifest([["a1", "alpha", "dashboard"], ["a2", "alpha", "list"], ["a3", "alpha", "form"], ["b1", "beta", "dashboard"], ["b2", "beta", "list"]]);
+  const lineage = (records, id, l = "alpha") => row(consensusRows(m, records), id, "all").lineages.find((x) => x.lineage === l)?.value ?? null;
+  const grid = (on, off, screens = 3) => spacingScreens(m, "a", gridValues(on, off), screens);
+  assert.equal(lineage(grid(49, 51), "spacing.grid4Share"), 0.5, "0.49 is under 0.5");
+  assert.equal(lineage(grid(6, 2), "spacing.grid4Share"), 0.9, "0.75 is in the band under 0.9");
+  assert.equal(lineage(grid(9, 1), "spacing.grid4Share"), 1, "0.9 is in the top band");
+  assert.equal(lineage(grid(74, 26), "spacing.onGrid4"), false, "0.74");
+  assert.equal(lineage(grid(6, 2), "spacing.onGrid4"), true, "0.75");
+  const two = spacingScreens(m, "a", gridValues(9, 1), 2);
+  assert.equal(lineage(two, "spacing.grid4Share"), null, "two screens are under the minimum of three");
+  assert.equal(lineage(grid(5, 2), "spacing.grid4Share"), null, "seven pairs are under the minimum of eight");
+  assert.deepEqual(lineage(two, "spacing.steps"), gridValues(9, 1).sort((x, y) => x - y), "steps need two screens and four pairs");
+  assert.equal(lineage(two, "spacing.stepCount"), 10);
+  assert.equal(lineage(spacingScreens(m, "a", [4, 8, 12], 2), "spacing.steps"), null, "three pairs");
+  // type.sizes: a size at 1.9% of the pooled characters is left out.
+  const text = (a, b) => [rec(m, "a1", { at1440: { anatomy: { textLines: a } } }), rec(m, "a2", { at1440: { anatomy: { textLines: b } } })];
+  const typed = text({ "14|20": 600, "16|24": 81 }, { "14|20": 300, "12|16": 19 });
+  assert.deepEqual(lineage(typed, "type.sizes"), [14, 16]);
+  assert.equal(lineage(typed, "type.sizeCount"), 2);
+  assert.deepEqual(lineage(text({ "14|20": 600, "16|24": 80 }, { "14|20": 300, "12|16": 20 }), "type.sizes"), [12, 14, 16], "2.0% stays");
+  assert.equal(lineage(text({ "14|20": 400 }, { "14|20": 500 }), "type.sizes"), null, "under 1,000 characters pooled");
+  assert.equal(lineage([typed[0]], "type.sizes"), null, "one screen");
+  // heading.sizes: sizes (whole px) that 5% or more of the pooled headings have. 21 headings: 24 on 1
+  // (4.8%, left out), 18 on 18 (17.5 rounds to 18), 15 on 2 (9.5%).
+  const heads = [rec(m, "a1", { at1440: { anatomy: { headings: { [hed({ level: 1, size: 24 })]: 1, [hed({ size: 18 })]: 10 } } } }), rec(m, "a2", { at1440: { anatomy: { headings: { [hed({ size: 17.5 })]: 8, [hed({ level: 3, size: 15 })]: 2 } } } })];
+  assert.deepEqual(lineage(heads, "heading.sizes"), [15, 18]);
+  assert.equal(lineage(heads, "heading.sizeCount"), 2);
+  const few = [rec(m, "a1", { at1440: { anatomy: { headings: { [hed({ level: 1, size: 24 })]: 1 } } } }), rec(m, "a2", { at1440: { anatomy: { headings: { [hed()]: 3 } } } })];
+  assert.equal(lineage(few, "heading.sizes"), null, "four headings pooled are under the minimum of five");
+  assert.equal(lineage(few, "heading.sizeCount"), null);
+  // radius.values: the union of the screens' button, field, and panel radius modes.
+  const radii = [rec(m, "a1", { at1440: { anatomy: { buttons: { [btn({ radius: 6 })]: 1 }, panels: { [pnl({ radius: 8 })]: 1 } } } }), rec(m, "a2", { at1440: { anatomy: { fields: { [fld({ radius: 4 })]: 1 }, buttons: { [btn({ radius: 999 })]: 1 } } } })];
+  assert.deepEqual(lineage(radii, "radius.values"), [4, 6, 8, 999]);
+  assert.equal(lineage(radii, "radius.valueCount"), 4);
+  assert.equal(lineage([radii[0]], "radius.values"), null, "one screen");
+  // motion.durations: the union of the duration bands of the screens with 20 transitions or more.
+  const motion = (transitions, durations) => ({ values: { motion: { transitions, durations, properties: {} } }, at1440: { anatomy: {} } });
+  const moving = [rec(m, "a1", motion(25, [90, 165])), rec(m, "a2", motion(40, [250, 600])), rec(m, "a3", motion(10, [450]))];
+  assert.deepEqual(lineage(moving, "motion.durations"), [100, 200, 300, 1000]);
+  assert.equal(lineage(moving.slice(0, 1).concat(moving.slice(2)), "motion.durations"), null, "one screen with 20 transitions");
+  // control.heightCount: 32 on 90% and 36 on 6% of the controls, 40 on 4% left out.
+  const controls = [rec(m, "a1", { at1440: { anatomy: { buttons: { [btn({ height: 32 })]: 40 }, fields: { [fld({ height: 32 })]: 5 } } } }), rec(m, "a2", { at1440: { anatomy: { fields: { [fld({ height: 36 })]: 3, [fld({ height: 40, pad: 8 })]: 2 } } } })];
+  assert.equal(lineage(controls, "control.heightCount"), 2);
+  assert.equal(lineage([controls[0], rec(m, "a2", { at1440: { anatomy: {} } })], "control.heightCount"), null, "one screen with a button or a field");
+  // Rows: lineage-scope claims exist on `all` only and carry the screens read.
+  const rows = consensusRows(m, controls);
+  assert.deepEqual(rows.filter((r) => r.claim === "control.heightCount").map((r) => [r.pageType, r.viewport, r.valueKind, r.group, r.transfer, r.status, r.withFragments]), [["all", 1440, "single", "buttons", "adapt", null, null]]);
+  assert.deepEqual(row(rows, "control.heightCount", "all").lineages.find((l) => l.lineage === "alpha").raw.map((x) => x.value), [{ 32: 45 }, { 36: 3, 40: 2 }]);
+});
+
+test("set rows: one entry per value, counts that exceed the lineages measured, no status; fragments move only withFragments", () => {
+  const m = manifest([["a1", "alpha", "form"], ["a2", "alpha", "list"], ["b1", "beta", "form"], ["b2", "beta", "list"], ["k1", "kit-one", "form"], ["k2", "kit-one", "list"]]);
+  const radii = (b, f) => ({ at1440: { anatomy: { buttons: { [btn({ radius: b })]: 1 }, ...(f === undefined ? {} : { fields: { [fld({ radius: f })]: 1 } }) } } });
+  // alpha holds [8, 16], beta [8, 12, 16], kit-one [4, 8].
+  const records = [rec(m, "a1", radii(8)), rec(m, "a2", radii(16, 16)), rec(m, "b1", radii(8, 12)), rec(m, "b2", radii(16)), rec(m, "k1", radii(4)), rec(m, "k2", radii(8, 8))];
+  const r = row(consensusRows(m, records), "radius.values", "all");
+  assert.deepEqual([r.valueKind, r.group, r.unit, r.transfer, r.viewport], ["set", "panels", "px", "adapt", 1440]);
+  assert.deepEqual([r.measured, r.top, r.agree, r.agreeProductSystems, r.agreeKits], [3, 8, 3, 2, 1]);
+  assert.deepEqual([r.status, r.supportsRule, r.withFragments], [null, null, null]);
+  assert.deepEqual(r.distribution, [
+    { bucket: 8, lineages: 3, productSystems: 2, kits: 1 }, { bucket: 16, lineages: 2, productSystems: 2, kits: 0 },
+    { bucket: 4, lineages: 1, productSystems: 0, kits: 1 }, { bucket: 12, lineages: 1, productSystems: 1, kits: 0 },
+  ]);
+  assert.ok(r.distribution.reduce((n, d) => n + d.lineages, 0) > r.measured, "a set row's counts do not add up to measured");
+  assert.deepEqual(r.lineages.map((l) => [l.lineage, l.kind, l.context, l.value, l.eligible]), [["alpha", "product-system", "console", [8, 16], 2], ["beta", "product-system", "console", [8, 12, 16], 2], ["kit-one", "kit", "console", [4, 8], 2]]);
+  assert.deepEqual(r.lineages[0].raw, [{ screen: "a1", value: { button: 8 } }, { screen: "a2", value: { button: 16, field: 16 } }]);
+  // A fragment changes withFragments of a button claim, never its measured, agree, or status.
+  const fm = manifest([["a-form", "alpha", "form"], ["b-form", "beta", "form"], ["k-form", "kit-one", "form"], ["g-frag", "gamma", "form", "fragment"], ["d-frag", "delta", "form", "fragment"]]);
+  const shape = (radius) => ({ at1440: { anatomy: { buttons: { [btn({ radius })]: 1 } } } });
+  const all = [rec(fm, "a-form", shape(6)), rec(fm, "b-form", shape(6)), rec(fm, "k-form", shape(999)), rec(fm, "g-frag", shape(999)), rec(fm, "d-frag", shape(999))];
+  const withFrag = row(consensusRows(fm, all), "button.shape", "form"), without = row(consensusRows(fm, all.slice(0, 3)), "button.shape", "form");
+  for (const key of ["measured", "agree", "agreeProductSystems", "status", "top", "distribution", "lineages"]) assert.deepEqual(withFrag[key], without[key], key);
+  assert.deepEqual([withFrag.measured, withFrag.agree, withFrag.top, withFrag.status], [3, 2, "rounded", "split"]);
+  assert.deepEqual([withFrag.withFragments.measured, withFrag.withFragments.top, withFrag.withFragments.agree], [5, "pill", 3]);
+  assert.equal(row(consensusRows(fm, all), "panel.inset", "form").withFragments, null, "panels carry no withFragments");
+});
+
+test("the 21 claims of the first run give the same rows with and without an anatomy block, and the same rows as the stored run", () => {
+  const { m, records } = negativeFixture();
+  const withAnatomy = records.map((r) => { const copy = structuredClone(r); for (const v of copy.viewports) if (v.status === "measured") v.anatomy = anatomyBlock({ buttons: { [btn()]: 2 }, fields: { [fld()]: 1 }, panels: { [pnl()]: 1 } }); return copy; });
+  const old = (rows) => rows.filter((r) => OLD_IDS.includes(r.claim));
+  assert.deepEqual(old(consensusRows(m, withAnatomy)), old(consensusRows(m, records)));
+  // The stored 2026-11-12 run: regenerated with this code, every row of the 21 claims equals the
+  // committed row plus valueKind, group, and unit, and its lineage entries gain context.
+  const dir = resolve(studyRoot, "runs/2026-11-12");
+  const stored = JSON.parse(readFileSync(join(dir, "consensus.json"), "utf8"));
+  const storedManifest = JSON.parse(readFileSync(join(dir, "manifest.json"), "utf8"));
+  const storedRecords = readdirSync(join(dir, "screens")).sort().map((n) => JSON.parse(readFileSync(join(dir, "screens", n), "utf8")));
+  const fresh = consensusRows(storedManifest, storedRecords);
+  const freshOld = old(fresh);
+  assert.equal(freshOld.length, stored.rows.length);
+  for (const [i, r] of freshOld.entries()) {
+    const { valueKind, group, unit, ...rest } = r;
+    assert.deepEqual([valueKind, group, unit], ["single", null, null], r.claim);
+    assert.deepEqual(Object.keys(r).filter((k) => !["valueKind", "group", "unit"].includes(k)), Object.keys(stored.rows[i]), `${r.claim} ${r.pageType}: the keys of the first run plus three`);
+    assert.deepEqual({ ...rest, lineages: rest.lineages.map(({ context, ...l }) => { assert.equal(context, "console"); return l; }) }, stored.rows[i], `${r.claim} ${r.pageType}`);
+  }
+  for (const r of fresh.filter((x) => !OLD_IDS.includes(x.claim))) assert.equal(r.measured, 0, `${r.claim}: a record without anatomy gives no value`);
+  assert.deepEqual([...new Set(fresh.map((r) => r.claim))], CLAIMS.map((c) => c.id), "rows for all 69 claim ids");
+});
+
+test("determinism, plain wording, and the allow-list walk with records that carry anatomy", () => {
+  const m = manifest([["a1", "alpha", "dashboard"], ["a2", "alpha", "form"], ["b1", "beta", "list"], ["k1", "kit-one", "form"], ["g-frag", "gamma", "form", "fragment"]]);
+  const lists = (pad, radius) => ({
+    buttons: { [btn({ pad, radius })]: 2, [btn({ emphasis: "outline", pad: 12, icon: "lead", iconSize: 16, iconGap: 8, border: 1 })]: 1, [btn({ emphasis: "text" })]: 4 },
+    fields: { [fld({ radius })]: 3, [fld({ style: "under", adorned: "lead" })]: 1 }, labels: { [lab()]: 3, [lab({ position: "none", gap: 0, font: 0, weight: 0 })]: 1 },
+    fieldGaps: { "plain|16": 2, "helper|36": 1 }, panels: { [pnl({ separation: "border-shadow-tone" })]: 2, [pnl({ size: "wide", separation: "none", border: 0 })]: 1 }, panelGaps: { "stack|24": 1 },
+    cells: { [cel({ part: "head", weight: 600 })]: 3, [cel({ pad: "none" })]: 2, [cel()]: 4 }, headings: { [hed({ level: 1, size: 24, line: "normal" })]: 1, [hed()]: 2 },
+    textLines: { "14|20": 400, "12|normal": 40 }, icons: { 16: 4 },
+  });
+  const records = [
+    rec(m, "a1", { at1440: { anatomy: lists(16, 6) } }), rec(m, "a2", { at1440: { anatomy: lists(16, 6) } }), rec(m, "b1", { at1440: { anatomy: lists(20, 999) } }),
+    rec(m, "k1", { at1440: { anatomy: lists(12, 4) } }), rec(m, "g-frag", { at1440: { anatomy: lists(24, 0) } }),
+  ];
+  const run = runOf(m);
+  const first = generateReports(m, run, records), second = generateReports(m, run, [...records].reverse());
+  for (const name of Object.keys(first)) assert.equal(second[name], first[name], `${name}: records in another order give the same bytes`);
+  for (const name of ["CONSENSUS.md", "NEGATIVE-CONTROL.md"]) for (const word of SEVEN) assert.ok(!first[name].toLowerCase().includes(word), `${name} must not say "${word}"`);
+  for (const name of ["consensus.json", "negative-control.json"]) assert.deepEqual(disallowedStrings(stripIds(JSON.parse(first[name]), m)), [], `${name} passes the walk`);
+  for (const r of records) assert.deepEqual(disallowedStrings(stripIds(r, m)), [], `${r.screen}: a record with anatomy passes the walk`);
+  const consensus = JSON.parse(first["consensus.json"]);
+  assert.equal(consensus.consensusVersion, 2);
+  assert.equal(new Set(consensus.rows.map((r) => r.claim)).size, 69);
+  for (const r of consensus.rows) assert.deepEqual(Object.keys(r), ["claim", "pageType", "viewport", "transfer", "valueKind", "group", "unit", "rule", "card", "measured", "agree", "agreeProductSystems", "agreeKits", "top", "supportsRule", "status", "distribution", "lineages", "withFragments"], r.claim);
+  // A label string in an anatomy key fails the walk.
+  const labelled = structuredClone(records[0]);
+  labelled.viewports[0].anatomy.labels = { "above|8|14|500": 2, "Billing address|8|14|500": 1 };
+  assert.equal(disallowedStrings(stripIds(labelled, m)).length, 1);
+  const named = structuredClone(records[0]);
+  named.viewports[0].anatomy.icons = { "chevron-down": 1 };
+  assert.equal(disallowedStrings(stripIds(named, m)).length, 1, "an icon name fails");
+});
+
+test("validateManifest: the context of a lineage, a .invalid host, the real screens.json", () => {
+  const real = JSON.parse(readFileSync(resolve(studyRoot, "screens.json"), "utf8"));
+  assert.deepEqual(validateManifest(real), []);
+  for (const l of real.lineages) assert.ok(l.context === undefined || ["console", "service"].includes(l.context), l.id);
+  const m = manifest([["a1", "alpha", "form"]]);
+  m.lineages[0].context = "service";
+  m.lineages[1].context = "console";
+  assert.deepEqual(validateManifest(m), []);
+  m.lineages[2].context = "consumer";
+  assert.ok(validateManifest(m).some((e) => /lineages\[2\] \(gamma\)\.context must be one of console, service/u.test(e)), JSON.stringify(validateManifest(m)));
+  delete m.lineages[2].context;
+  // A lineage with no hosted pages lists its screens under the reserved top-level domain .invalid.
+  m.lineages.push({ id: "paste", name: "Twilio Paste", kind: "product-system", context: "console", host: "paste.invalid", access: "self-hosted", basePath: "/", repository: "twilio-labs/paste", licence: "MIT", robots: { checkedAt: null, verdict: "not-checked" }, terms: { url: null, checkedAt: null, automatedAccess: "unchecked", note: "No hosted pages exist; the Storybook is built from the repository." } });
+  m.screens.push({ id: "paste-settings", lineage: "paste", pageType: "form", tier: "screen", url: "https://paste.invalid/iframe.html?viewMode=story&id=website-pagetemplateexamples--settings-example", expect: { elements: 1 } });
+  assert.deepEqual(validateManifest(m), []);
+});
+
+test("stored runs: the 2026-11-12 run passes the walk and is not regenerated (an older consensusVersion)", () => {
+  const dir = resolve(studyRoot, "runs/2026-11-12");
+  const result = checkRunFolder(dir);
+  assert.deepEqual(result.errors, []);
+  assert.deepEqual(result.counts, { listed: 32, measured: 24, failed: 0, skipped: 8 });
+  assert.equal(result.regenerated, false);
+  assert.equal(JSON.parse(readFileSync(join(dir, "consensus.json"), "utf8")).consensusVersion, 1);
+});
+
+test("renderConsensusMarkdown: the anatomy section, set rows, pills, and the sections of the first run unchanged", () => {
+  const m = manifest([["a1", "alpha", "form"], ["a2", "alpha", "list"], ["b1", "beta", "form"], ["b2", "beta", "list"], ["k1", "kit-one", "form"], ["k2", "kit-one", "list"]]);
+  const lists = (radius, fieldRadius) => ({ buttons: { [btn({ radius })]: 1 }, fields: { [fld({ radius: fieldRadius })]: 1 } });
+  const records = [rec(m, "a1", { at1440: { anatomy: lists(999, 8) } }), rec(m, "a2", { at1440: { anatomy: lists(999, 16) } }), rec(m, "b1", { at1440: { anatomy: lists(999, 12) } }), rec(m, "b2", { at1440: { anatomy: lists(8, 16) } }), rec(m, "k1", { at1440: { anatomy: lists(4, 4) } }), rec(m, "k2", { at1440: { anatomy: lists(8, 8) } })];
+  const md = generateReports(m, runOf(m), records)["CONSENSUS.md"];
+  assert.match(md, /the study's control and anatomy probes\./u);
+  const sections = md.split("\n").filter((l) => l.startsWith("## ")).map((l) => l.slice(3));
+  assert.deepEqual(sections, ["Run", "Claims that map to a catalog rule", "Consistency claims without a rule", "Dimensions", "Component anatomy", "What this says about the open cards of `research/reviews/batch-01.md`", "Limits"]);
+  assert.deepEqual(md.split("\n").filter((l) => l.startsWith("### ")), ["### Buttons", "### Fields", "### Panels", "### Tables", "### Navigation", "### Type", "### Spacing", "### Motion"], "every group prints, because its all rows always print");
+  assert.match(md, /\| `button\.radius` \| form \| 3 \| pill on 2 of 3 \(2 product systems\) · 4px on 1 of 3 \(1 kit\) \| pill on 2 of 3 \(2 product systems\) · 4px on 1 of 3 \(1 kit\) \| alpha pill · beta pill · kit-one 4px \| — \|/u, "999 prints as pill");
+  assert.match(md, /\| `radius\.values` \(set\) \| all \| 3 \| 8px on 3 of 3 \(2 product systems, 1 kit\) · 16px on 2 of 3 \(2 product systems\) · pill on 2 of 3 \(2 product systems\) · 4px on 1 of 3 \(1 kit\) · 12px on 1 of 3 \(1 product system\) \| — \| alpha 8px, 16px, pill · beta 8px, 12px, 16px, pill · kit-one 4px, 8px \| — \|/u, "a set row prints on N of M with each lineage's list");
+  assert.match(md, /\| `button\.shape` \| form \| 3 \| pill on 2 of 3 \(2 product systems\) · rounded on 1 of 3 \(1 kit\) \|/u);
+  assert.match(md, /\| `button\.shape` \| all \(context\) \| 3 \| pill on 1 of 3 \(1 product system\) · rounded on 1 of 3 \(1 kit\) · mixed on 1 of 3 \(1 product system\) \|/u);
+  assert.ok(!/\| `button\.padX` \| dashboard \|/u.test(md), "a page-type row with no lineage measured is left out");
+  assert.match(md, /\| `button\.padX` \| all \(context\) \|/u, "the all row is printed");
+  assert.match(md, /\| `nav\.sideWidth` \| all \(context\) \| 0 \| none \| — \| none \| — \|/u, "an all row with nothing measured still prints");
+  assert.match(md, /^12\. The spacing sample resolves a border in favour of the 4px grid/mu, "three limits appended");
+  assert.ok(!md.includes("Context:"), "no contexts when every lineage is a console");
+  const service = structuredClone(m);
+  service.lineages[1].context = "service";
+  assert.match(generateReports(service, runOf(service), records)["CONSENSUS.md"], /; 3 with a measured screen\. Context: 5 console lineages, 1 public-service lineage \(`beta`\)\.\n/u);
+  // The stored 2026-11-12 run, rendered with this code: every section of the first run's claims is
+  // byte for byte what that run committed; the first paragraph names the anatomy probe, the anatomy
+  // section is added, and three limits are appended.
+  const dir = resolve(studyRoot, "runs/2026-11-12");
+  const committed = readFileSync(join(dir, "CONSENSUS.md"), "utf8");
+  const storedManifest = JSON.parse(readFileSync(join(dir, "manifest.json"), "utf8"));
+  const storedRun = JSON.parse(readFileSync(join(dir, "run.json"), "utf8"));
+  const storedRecords = readdirSync(join(dir, "screens")).sort().map((n) => JSON.parse(readFileSync(join(dir, "screens", n), "utf8")));
+  const fresh = renderConsensusMarkdown(consensusDocument(storedManifest, storedRun, storedRecords), storedManifest, storedRun);
+  const section = (text, title) => { const start = text.indexOf(`## ${title}\n`); assert.ok(start >= 0, title); const next = text.indexOf("\n## ", start + 1); return text.slice(start, next < 0 ? undefined : next); };
+  for (const title of ["Run", "Claims that map to a catalog rule", "Consistency claims without a rule", "Dimensions", "What this says about the open cards of `research/reviews/batch-01.md`"]) assert.equal(section(fresh, title), section(committed, title), title);
+  assert.equal(fresh.replace("control and anatomy probes", "control probe").split("\n")[2], committed.split("\n")[2], "the first paragraph changes in one place");
+  assert.ok(section(committed, "Limits").trimEnd().split("\n").every((l) => section(fresh, "Limits").includes(l)), "the nine limits stay");
+  assert.equal(section(fresh, "Limits").trimEnd().split("\n").filter((l) => /^\d+\. /u.test(l)).length, 12);
 });

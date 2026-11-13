@@ -59,6 +59,7 @@ function run(label, command, args, cwd = repoRoot) {
 const node = process.execPath;
 const initialSnapshot = gitSnapshot();
 const coreChecks = [
+  ["Build evidence pack", node, ["scripts/build-evidence-pack.mjs"]],
   ["Build context catalog", node, ["scripts/build-context-catalog.mjs"]],
   ["Build learning catalog", node, ["extensions/learning/runtime/scripts/build-learning-catalog.mjs"]],
   ["Build component contracts", node, ["scripts/build-component-contracts.mjs"]],

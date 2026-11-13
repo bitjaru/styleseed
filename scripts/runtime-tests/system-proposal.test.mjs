@@ -36,7 +36,8 @@ const USES = {
   "table.rowHeight": { axis: "tableRowHeights", use: "value", unit: "px", label: "table row height" },
   "primary.onePerSection": { axis: "primariesPerSection", use: "flag", values: [1], label: "at most one primary action per section" },
   "controls.shareHeight": { axis: "controlHeights", use: "note", label: "fields and buttons share one height" },
-  "lineage.spacingBase": { axis: "spacingBase", use: "note", viewport: "both", label: "one spacing base across a system's measured screens" },
+  // A synthetic note read from a row measured at both widths (viewport "both"): row selection and wording.
+  "synthetic.bothWidths": { axis: "radii", use: "note", viewport: "both", label: "a synthetic note read at both widths" },
 };
 function makePack(rows, { touch = false, extraClaims = [] } = {}) {
   const ids = [...new Set(rows.map((row) => row.claim))];
@@ -79,7 +80,7 @@ test("selectRow: the page row with three systems, else pooled, else the fuller r
     prow("field.height", "dashboard", 2, [b(32, 2, 1, 1)]),
     prow("field.height", "all", 1, [b(36, 1, 1, 0)]),
     prow("field.height", "list", 1, [b(36, 1, 1, 0)]),
-    prow("lineage.spacingBase", "all", 3, [b(false, 3, 2, 1)], { viewport: "both" }),
+    prow("synthetic.bothWidths", "all", 3, [b(false, 3, 2, 1)], { viewport: "both" }),
   ]);
   const at = (claim, page, viewport = 1440) => { const row = selectRow(pack, claim, { page, viewport }); return row && `${row.pageType}:${row.measured}`; };
   assert.equal(at("button.height", "form"), "form:3", "the page row has three systems");
@@ -90,8 +91,11 @@ test("selectRow: the page row with three systems, else pooled, else the fuller r
   assert.equal(at("field.height", "list"), "list:1", "a tie goes to the page's own row");
   assert.equal(at("field.height", "onboarding"), "all:1", "no page row: the pooled row that exists");
   assert.equal(at("field.height", "form"), "all:1", "no form row: the pooled row that exists");
-  assert.equal(at("lineage.spacingBase", "form"), "all:3", "a \"both\" row matches a 1440 read");
-  assert.equal(at("lineage.spacingBase", "form", "both"), "all:3");
+  assert.equal(at("synthetic.bothWidths", "form"), "all:3", "a \"both\" row matches a 1440 read");
+  assert.equal(at("synthetic.bothWidths", "form", "both"), "all:3");
+  const both = axisOf(propose(pack), "radii");
+  assert.deepEqual(both.corpus.notes.map((note) => note.text), ["A synthetic note read at both widths: no on 3 of 3 measured systems (2 product systems, 1 kit). All page types pooled, 1440 and 390 wide."], "a note claim with viewport both reads its \"both\" row");
+  assert.deepEqual(both.options.map((option) => option.basis), ["engine-default"], "a note proposes nothing");
   assert.equal(at("table.rowHeight", "form"), null);
   assert.deepEqual(Object.keys(PAGE_ROWS), ["dashboard", "list", "form", "settings", "detail"]);
 });

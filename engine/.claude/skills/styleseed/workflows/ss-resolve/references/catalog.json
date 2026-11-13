@@ -1,7 +1,7 @@
 {
   "schemaVersion": 5,
   "engineVersion": "5.0.0",
-  "engineRevision": "sha256:5071d125360688d1ab0410279df8d8cd402bbf75c491c3510de9da4599653303",
+  "engineRevision": "sha256:b838357ec29809a9013b98873d40810cd37949e31c0cf8a8d9a1a2e56dfe3125",
   "distributionSource": {
     "schemaVersion": 1,
     "channel": "edge",
@@ -10,7 +10,7 @@
   },
   "distributions": {
     "core": {
-      "revision": "sha256:5071d125360688d1ab0410279df8d8cd402bbf75c491c3510de9da4599653303",
+      "revision": "sha256:b838357ec29809a9013b98873d40810cd37949e31c0cf8a8d9a1a2e56dfe3125",
       "files": [
         {
           "path": "LICENSE",
@@ -159,8 +159,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/references/evidence-pack.json",
-          "sha256": "b9945b7fec102c4a2d9feb12f665d0458fdc10bfddf5fe09ba6594f7746bbaca",
-          "bytes": 23863
+          "sha256": "655ab8402dc7252352167c7f00c26f4b597bcdbc8890b57c8e7cc2a561120a5f",
+          "bytes": 23441
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/references/evidence-pack.schema.json",
@@ -650,7 +650,7 @@
       ]
     },
     "skills": {
-      "revision": "sha256:f211ab4eea10588e61223c5f893963d8f01ff95b0c93000a1ed19e2d793b1d1d",
+      "revision": "sha256:75b5340bccd627d8d183118aa3237b15b9af72cd0eef881ce55bfef10796d5c6",
       "files": [
         {
           "path": "engine/.claude/skills/styleseed/SKILL.md",
@@ -789,8 +789,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/references/evidence-pack.json",
-          "sha256": "b9945b7fec102c4a2d9feb12f665d0458fdc10bfddf5fe09ba6594f7746bbaca",
-          "bytes": 23863
+          "sha256": "655ab8402dc7252352167c7f00c26f4b597bcdbc8890b57c8e7cc2a561120a5f",
+          "bytes": 23441
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/references/evidence-pack.schema.json",
@@ -1278,8 +1278,8 @@
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-resolve/references/evidence-pack.json",
-      "sha256": "b9945b7fec102c4a2d9feb12f665d0458fdc10bfddf5fe09ba6594f7746bbaca",
-      "bytes": 23863
+      "sha256": "655ab8402dc7252352167c7f00c26f4b597bcdbc8890b57c8e7cc2a561120a5f",
+      "bytes": 23441
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-resolve/references/evidence-pack.schema.json",

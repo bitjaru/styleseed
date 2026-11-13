@@ -187,6 +187,8 @@ test("the committed pack and engine defaults are what the builder makes from the
   assert.ok(schemaErrors(schema, { ...committedPack, extra: 1 }).length, "no unknown top-level key");
   assert.ok(schemaErrors(schema, { ...committedPack, rows: [{ ...committedPack.rows[0], lineages: [] }] }).length, "a row cannot carry per-lineage values");
   assert.deepEqual(schemaErrors(schema, { ...committedPack, claims: [{ ...committedPack.claims[0], futureField: true }] }), [], "claims keep unknown keys");
+  assert.ok(!committedPack.claims.some((claim) => claim.id === "lineage.spacingBase") && !committedPack.rows.some((row) => row.claim === "lineage.spacingBase"), "lineage.spacingBase is not packed (its test does not find a system's spacing unit)");
+  assert.ok(Object.hasOwn(NOT_PACKED, "lineage.spacingBase") && !Object.hasOwn(CLAIM_USES, "lineage.spacingBase"));
   assert.deepEqual(normalizeEvidencePack(committedPack), committedPack, "the pack passes its normalizer unchanged");
   assert.deepEqual(normalizeEngineDefaults(committedDefaults), committedDefaults, "the engine defaults pass theirs");
   assert.throws(() => normalizeEvidencePack({ ...committedPack, schemaVersion: 2 }, { file: "ss-resolve/references/evidence-pack.json" }), /^Error: ss-resolve\/references\/evidence-pack\.json: schemaVersion: is 2, newer than this proposer reads \(1\); rebuild with `node scripts\/build-evidence-pack\.mjs`, or reinstall the skill$/u);

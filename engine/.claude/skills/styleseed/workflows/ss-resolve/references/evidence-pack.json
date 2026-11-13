@@ -135,13 +135,6 @@
    "label": "at most one primary action per section"
   },
   {
-   "id": "lineage.spacingBase",
-   "axis": "spacingBase",
-   "use": "note",
-   "viewport": "both",
-   "label": "one spacing base across a system's measured screens"
-  },
-  {
    "id": "lineage.buttonHeight",
    "axis": "controlHeights",
    "use": "note",
@@ -1450,21 +1443,6 @@
      "value": "mixed",
      "lineages": 1,
      "productSystems": 0,
-     "kits": 1
-    }
-   ],
-   "withFragments": null
-  },
-  {
-   "claim": "lineage.spacingBase",
-   "pageType": "all",
-   "viewport": "both",
-   "measured": 3,
-   "buckets": [
-    {
-     "value": false,
-     "lineages": 3,
-     "productSystems": 2,
      "kits": 1
     }
    ],

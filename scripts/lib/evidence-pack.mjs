@@ -33,11 +33,13 @@ export const CLAIM_USES = Object.freeze({
   "controls.narrowAtLeast44": Object.freeze({ axis: "controlHeights", use: "note", viewport: 390, caveat: "A width, not touch input.", label: "default buttons at least 44px" }),
   "lineage.buttonHeight": Object.freeze({ axis: "controlHeights", use: "note", label: "one button height across a system's measured screens" }),
   "controls.shareRadius": Object.freeze({ axis: "radii", use: "note", label: "fields and buttons share a corner radius" }),
-  "lineage.spacingBase": Object.freeze({ axis: "spacingBase", use: "note", viewport: "both", label: "one spacing base across a system's measured screens" }),
 });
 
-// adapt claims that never reach the pack, each with the reason.
-export const NOT_PACKED = Object.freeze({ "motion.transitionAll": "a share band, not a ledger value" });
+// Claims that never reach the pack, each with the reason (an adapt claim must be listed here or in CLAIM_USES).
+export const NOT_PACKED = Object.freeze({
+  "motion.transitionAll": "a share band, not a ledger value",
+  "lineage.spacingBase": "its test reads every declared spacing value and does not find a system's spacing unit; a later run replaces it with a spacing sample",
+});
 
 const NEVER_PROPOSED = new Set(["accent", "ink", "canvas", "fonts"]);
 const USES = new Set(["value", "flag", "note"]);

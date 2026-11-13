@@ -14,6 +14,12 @@ purpose · anatomy · variants · states · do / don't · known gaps · sources,
 - **Known gaps** records where the code, `DESIGN-LANGUAGE.md` and the craft baseline disagree, or where
   the component falls short of a rule. It says what is true today; fixing a gap is a separate change.
 
+Render faults (text over text, text cut or run out of its box, an emoji where an icon belongs) have no place
+in a contract: they are a property of any rendered box, not of one component. Their good and bad pages live
+in `scripts/lib/fault-pairs.mjs`, the fixtures the browser tests measure; `scripts/build-fault-pairs.mjs`
+copies them to `demo-pricing/content/fault-pairs.json`, and the gallery shows each pair side by side at
+`/gallery/faults`.
+
 First set, in the order a designer builds a system (#96, #102): button, badge, tabs, input, select,
 switch, table. The gallery page for each (`/gallery/<id>`) renders these contracts with live examples
 that import the real component.

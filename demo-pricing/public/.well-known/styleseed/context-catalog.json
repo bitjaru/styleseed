@@ -1,7 +1,7 @@
 {
   "schemaVersion": 5,
   "engineVersion": "5.0.0",
-  "engineRevision": "sha256:eaa9e8857fe068bba5e46230bc74c357c6c223bd76e67b05002681f5130662fe",
+  "engineRevision": "sha256:9bddb23ed24bad0c8feb95c8d9855de7d71468941cff8daa475b6fe066b2cd75",
   "distributionSource": {
     "schemaVersion": 1,
     "channel": "edge",
@@ -10,7 +10,7 @@
   },
   "distributions": {
     "core": {
-      "revision": "sha256:eaa9e8857fe068bba5e46230bc74c357c6c223bd76e67b05002681f5130662fe",
+      "revision": "sha256:9bddb23ed24bad0c8feb95c8d9855de7d71468941cff8daa475b6fe066b2cd75",
       "files": [
         {
           "path": "LICENSE",
@@ -429,8 +429,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-verify/references/render-faults.md",
-          "sha256": "8c8e7a97de845a45893a9f977c86834169dc2dd08bf7c6beafc05095477544ab",
-          "bytes": 21639
+          "sha256": "0ab58f6588a40c6dc81f024bbd7d691a3ba77704b0bf0d13467c6fc2c4131b27",
+          "bytes": 21744
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-verify/scripts/analyze-faults.mjs",
@@ -620,7 +620,7 @@
       ]
     },
     "skills": {
-      "revision": "sha256:ddfbe96ffaed47145d33b5a13c8745f7cfbb74eb56494ea9b2067e8d801c67ec",
+      "revision": "sha256:1286361ec418fc285ae1a28ab462716e4cf01ba58e50794dfa1b0b7b398c423f",
       "files": [
         {
           "path": "engine/.claude/skills/styleseed/SKILL.md",
@@ -1029,8 +1029,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-verify/references/render-faults.md",
-          "sha256": "8c8e7a97de845a45893a9f977c86834169dc2dd08bf7c6beafc05095477544ab",
-          "bytes": 21639
+          "sha256": "0ab58f6588a40c6dc81f024bbd7d691a3ba77704b0bf0d13467c6fc2c4131b27",
+          "bytes": 21744
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-verify/scripts/analyze-faults.mjs",
@@ -1488,8 +1488,8 @@
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-verify/references/render-faults.md",
-      "sha256": "8c8e7a97de845a45893a9f977c86834169dc2dd08bf7c6beafc05095477544ab",
-      "bytes": 21639
+      "sha256": "0ab58f6588a40c6dc81f024bbd7d691a3ba77704b0bf0d13467c6fc2c4131b27",
+      "bytes": 21744
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-verify/scripts/analyze-faults.mjs",

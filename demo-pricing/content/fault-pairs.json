@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "scripts/build-fault-pairs.mjs",
+  "pairs": [
+    {
+      "id": "amount-wrap",
+      "summary": "An element whose whole text is one amount is laid out on two or more lines.",
+      "rule": "DL-23-amounts-never-wrap",
+      "gates": false,
+      "interactive": false,
+      "good": "<!doctype html><html lang=\"en\"><meta charset=\"utf-8\"><title>amount-wrap good</title><style>\n*{box-sizing:border-box}body{margin:0;padding:24px;background:#f3f4f2;color:#1b1d1c;font:16px/24px system-ui,sans-serif}\np{margin:0}.card{display:block;width:312px;background:#ffffff;border-radius:8px;padding:24px}\n.value{font-size:32px;line-height:40px;white-space:nowrap}\n</style><body><div class=\"card\"><p>Shipped this week</p><p class=\"value\">10 kg</p></div></body></html>",
+      "bad": "<!doctype html><html lang=\"en\"><meta charset=\"utf-8\"><title>amount-wrap bad</title><style>\n*{box-sizing:border-box}body{margin:0;padding:24px;background:#f3f4f2;color:#1b1d1c;font:16px/24px system-ui,sans-serif}\np{margin:0}.card{display:block;width:312px;background:#ffffff;border-radius:8px;padding:24px}\n.value{width:20px;font-size:32px;line-height:40px}\n</style><body><div class=\"card\"><p>Shipped this week</p><p class=\"value\">10 kg</p></div></body></html>"
+    },
+    {
+      "id": "text-overlap",
+      "summary": "Text of one block is drawn over the text of another.",
+      "rule": null,
+      "gates": false,
+      "interactive": false,
+      "good": "<!doctype html><html lang=\"en\"><meta charset=\"utf-8\"><title>text-overlap good</title><style>\n*{box-sizing:border-box}body{margin:0;padding:24px;background:#f3f4f2;color:#1b1d1c;font:16px/24px system-ui,sans-serif}\np{margin:0}.card{display:block;width:312px;background:#ffffff;border-radius:8px;padding:24px}\n.pull{margin-top:0}\n</style><body><div class=\"card\"><p>Invoice sent to the client</p><p class=\"pull\">Waiting for payment</p></div></body></html>",
+      "bad": "<!doctype html><html lang=\"en\"><meta charset=\"utf-8\"><title>text-overlap bad</title><style>\n*{box-sizing:border-box}body{margin:0;padding:24px;background:#f3f4f2;color:#1b1d1c;font:16px/24px system-ui,sans-serif}\np{margin:0}.card{display:block;width:312px;background:#ffffff;border-radius:8px;padding:24px}\n.pull{margin-top:-20px}\n</style><body><div class=\"card\"><p>Invoice sent to the client</p><p class=\"pull\">Waiting for payment</p></div></body></html>"
+    },
+    {
+      "id": "text-spill",
+      "summary": "Text runs out of the button, card, or cell that holds it.",
+      "rule": null,
+      "gates": false,
+      "interactive": false,
+      "good": "<!doctype html><html lang=\"en\"><meta charset=\"utf-8\"><title>text-spill good</title><style>\n*{box-sizing:border-box}body{margin:0;padding:24px;background:#f3f4f2;color:#1b1d1c;font:16px/24px system-ui,sans-serif}\np{margin:0}.card{display:block;width:312px;background:#ffffff;border-radius:8px;padding:24px}\n.chip{display:inline-block;white-space:nowrap;padding:0 8px;background:#e4eaf5;border-radius:4px;font-size:14px;line-height:24px}\n</style><body><div class=\"card\"><p>Review status</p><span class=\"chip\">Waiting for review</span></div></body></html>",
+      "bad": "<!doctype html><html lang=\"en\"><meta charset=\"utf-8\"><title>text-spill bad</title><style>\n*{box-sizing:border-box}body{margin:0;padding:24px;background:#f3f4f2;color:#1b1d1c;font:16px/24px system-ui,sans-serif}\np{margin:0}.card{display:block;width:312px;background:#ffffff;border-radius:8px;padding:24px}\n.chip{display:inline-block;width:48px;white-space:nowrap;padding:0 8px;background:#e4eaf5;border-radius:4px;font-size:14px;line-height:24px}\n</style><body><div class=\"card\"><p>Review status</p><span class=\"chip\">Waiting for review</span></div></body></html>"
+    },
+    {
+      "id": "text-clip",
+      "summary": "Text is cut off by its own box with no ellipsis or line clamp to show that it was cut.",
+      "rule": null,
+      "gates": false,
+      "interactive": false,
+      "good": "<!doctype html><html lang=\"en\"><meta charset=\"utf-8\"><title>text-clip good</title><style>\n*{box-sizing:border-box}body{margin:0;padding:24px;background:#f3f4f2;color:#1b1d1c;font:16px/24px system-ui,sans-serif}\np{margin:0}.card{display:block;width:312px;background:#ffffff;border-radius:8px;padding:24px}\n.name{width:120px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}\n</style><body><div class=\"card\"><p>Latest export</p><p class=\"name\">quarterly-settlement-report-final.csv</p></div></body></html>",
+      "bad": "<!doctype html><html lang=\"en\"><meta charset=\"utf-8\"><title>text-clip bad</title><style>\n*{box-sizing:border-box}body{margin:0;padding:24px;background:#f3f4f2;color:#1b1d1c;font:16px/24px system-ui,sans-serif}\np{margin:0}.card{display:block;width:312px;background:#ffffff;border-radius:8px;padding:24px}\n.name{width:120px;overflow:hidden;white-space:nowrap}\n</style><body><div class=\"card\"><p>Latest export</p><p class=\"name\">quarterly-settlement-report-final.csv</p></div></body></html>"
+    },
+    {
+      "id": "tight-inset",
+      "summary": "Text sits closer to the inner edge of its panel or chip than the floor.",
+      "rule": null,
+      "gates": false,
+      "interactive": false,
+      "good": "<!doctype html><html lang=\"en\"><meta charset=\"utf-8\"><title>tight-inset good</title><style>\n*{box-sizing:border-box}body{margin:0;padding:24px;background:#f3f4f2;color:#1b1d1c;font:16px/24px system-ui,sans-serif}\np{margin:0}.card{display:block;width:312px;background:#ffffff;border-radius:8px;padding:24px}\n.panel{width:312px;min-height:64px;padding:16px;background:#ffffff;border-radius:8px}\n</style><body><div class=\"panel\"><p>Storage almost full</p><p>Free up space to keep syncing</p></div></body></html>",
+      "bad": "<!doctype html><html lang=\"en\"><meta charset=\"utf-8\"><title>tight-inset bad</title><style>\n*{box-sizing:border-box}body{margin:0;padding:24px;background:#f3f4f2;color:#1b1d1c;font:16px/24px system-ui,sans-serif}\np{margin:0}.card{display:block;width:312px;background:#ffffff;border-radius:8px;padding:24px}\n.panel{width:312px;min-height:64px;padding:2px;background:#ffffff;border-radius:8px}\n</style><body><div class=\"panel\"><p>Storage almost full</p><p>Free up space to keep syncing</p></div></body></html>"
+    },
+    {
+      "id": "text-touch",
+      "summary": "Text stands within 4px of a neighbouring surface on its line, and no authored spacing put it there.",
+      "rule": null,
+      "gates": false,
+      "interactive": false,
+      "good": "<!doctype html><html lang=\"en\"><meta charset=\"utf-8\"><title>text-touch good</title><style>\n*{box-sizing:border-box}body{margin:0;padding:24px;background:#f3f4f2;color:#1b1d1c;font:16px/24px system-ui,sans-serif}\np{margin:0}.card{display:block;width:312px;background:#ffffff;border-radius:8px;padding:24px}\n.row{display:flex;align-items:center;gap:12px}.mark{width:24px;height:24px;background:#1f7a5c;border-radius:4px}\n</style><body><div class=\"card\"><div class=\"row\"><span class=\"mark\"></span><span>Payments online</span></div></div></body></html>",
+      "bad": "<!doctype html><html lang=\"en\"><meta charset=\"utf-8\"><title>text-touch bad</title><style>\n*{box-sizing:border-box}body{margin:0;padding:24px;background:#f3f4f2;color:#1b1d1c;font:16px/24px system-ui,sans-serif}\np{margin:0}.card{display:block;width:312px;background:#ffffff;border-radius:8px;padding:24px}\n.row{display:flex;align-items:center}.mark{width:24px;height:24px;background:#1f7a5c;border-radius:4px}\n</style><body><div class=\"card\"><div class=\"row\"><span class=\"mark\"></span><span>Payments online</span></div></div></body></html>"
+    },
+    {
+      "id": "near-touch",
+      "summary": "Two neighbouring surfaces stand 1 to 3px apart, and no authored spacing put them there.",
+      "rule": null,
+      "gates": false,
+      "interactive": false,
+      "good": "<!doctype html><html lang=\"en\"><meta charset=\"utf-8\"><title>near-touch good</title><style>\n*{box-sizing:border-box}body{margin:0;padding:24px;background:#f3f4f2;color:#1b1d1c;font:16px/24px system-ui,sans-serif}\np{margin:0}.card{display:block;width:312px;background:#ffffff;border-radius:8px;padding:24px}\n.pair{display:flex;justify-content:space-between;width:216px;margin-top:16px}.tile{width:100px;height:48px;background:#e6ecea;border-radius:6px}\n</style><body><div class=\"card\"><p>Two plans</p><div class=\"pair\"><div class=\"tile\"></div><div class=\"tile\"></div></div></div></body></html>",
+      "bad": "<!doctype html><html lang=\"en\"><meta charset=\"utf-8\"><title>near-touch bad</title><style>\n*{box-sizing:border-box}body{margin:0;padding:24px;background:#f3f4f2;color:#1b1d1c;font:16px/24px system-ui,sans-serif}\np{margin:0}.card{display:block;width:312px;background:#ffffff;border-radius:8px;padding:24px}\n.pair{display:flex;justify-content:space-between;width:202px;margin-top:16px}.tile{width:100px;height:48px;background:#e6ecea;border-radius:6px}\n</style><body><div class=\"card\"><p>Two plans</p><div class=\"pair\"><div class=\"tile\"></div><div class=\"tile\"></div></div></div></body></html>"
+    },
+    {
+      "id": "near-align",
+      "summary": "Two stacked blocks start 1 to 3px apart instead of on one edge.",
+      "rule": null,
+      "gates": false,
+      "interactive": false,
+      "good": "<!doctype html><html lang=\"en\"><meta charset=\"utf-8\"><title>near-align good</title><style>\n*{box-sizing:border-box}body{margin:0;padding:24px;background:#f3f4f2;color:#1b1d1c;font:16px/24px system-ui,sans-serif}\np{margin:0}.card{display:block;width:312px;background:#ffffff;border-radius:8px;padding:24px}\n.shift{padding-left:0}\n</style><body><div class=\"card\"><p>Plan</p><p class=\"shift\">Billing contact and invoices</p></div></body></html>",
+      "bad": "<!doctype html><html lang=\"en\"><meta charset=\"utf-8\"><title>near-align bad</title><style>\n*{box-sizing:border-box}body{margin:0;padding:24px;background:#f3f4f2;color:#1b1d1c;font:16px/24px system-ui,sans-serif}\np{margin:0}.card{display:block;width:312px;background:#ffffff;border-radius:8px;padding:24px}\n.shift{padding-left:2px}\n</style><body><div class=\"card\"><p>Plan</p><p class=\"shift\">Billing contact and invoices</p></div></body></html>"
+    },
+    {
+      "id": "emoji-icon",
+      "summary": "An emoji stands where an icon belongs: inside a control, leading a row, or alone in a small tile.",
+      "rule": "CRAFT-functional-icons",
+      "gates": false,
+      "interactive": false,
+      "good": "<!doctype html><html lang=\"en\"><meta charset=\"utf-8\"><title>emoji-icon good</title><style>\n*{box-sizing:border-box}body{margin:0;padding:24px;background:#f3f4f2;color:#1b1d1c;font:16px/24px system-ui,sans-serif}\np{margin:0}.card{display:block;width:312px;background:#ffffff;border-radius:8px;padding:24px}\n.btn{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;font:inherit;color:inherit;background:#eef1f0;border:1px solid #c9d0cd;border-radius:8px}\n</style><body><div class=\"card\"><button class=\"btn\" type=\"button\"><svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><path d=\"M6 16v-5a6 6 0 0 1 12 0v5l2 2H4z\"/></svg><span>Alerts</span></button></div></body></html>",
+      "bad": "<!doctype html><html lang=\"en\"><meta charset=\"utf-8\"><title>emoji-icon bad</title><style>\n*{box-sizing:border-box}body{margin:0;padding:24px;background:#f3f4f2;color:#1b1d1c;font:16px/24px system-ui,sans-serif}\np{margin:0}.card{display:block;width:312px;background:#ffffff;border-radius:8px;padding:24px}\n.btn{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;font:inherit;color:inherit;background:#eef1f0;border:1px solid #c9d0cd;border-radius:8px}\n</style><body><div class=\"card\"><button class=\"btn\" type=\"button\"><span>🔔</span><span>Alerts</span></button></div></body></html>"
+    },
+    {
+      "id": "icon-mix",
+      "summary": "One navigation, list, table, or toolbar mixes icons of different construction (viewBox grid, stroke or fill).",
+      "rule": "CRAFT-icon-family",
+      "gates": false,
+      "interactive": false,
+      "good": "<!doctype html><html lang=\"en\"><meta charset=\"utf-8\"><title>icon-mix good</title><style>\n*{box-sizing:border-box}body{margin:0;padding:24px;background:#f3f4f2;color:#1b1d1c;font:16px/24px system-ui,sans-serif}\np{margin:0}.card{display:block;width:312px;background:#ffffff;border-radius:8px;padding:24px}\n.item{display:flex;align-items:center;gap:12px;padding:8px 0;color:inherit;text-decoration:none}\n</style><body><nav class=\"card\" aria-label=\"Main\"><a class=\"item\" href=\"#home\"><svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><path d=\"M4 11l8-7 8 7v9H4z\"/></svg><span>Home</span></a><a class=\"item\" href=\"#orders\"><svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><path d=\"M4 5h16v14H4z\"/></svg><span>Orders</span></a></nav></body></html>",
+      "bad": "<!doctype html><html lang=\"en\"><meta charset=\"utf-8\"><title>icon-mix bad</title><style>\n*{box-sizing:border-box}body{margin:0;padding:24px;background:#f3f4f2;color:#1b1d1c;font:16px/24px system-ui,sans-serif}\np{margin:0}.card{display:block;width:312px;background:#ffffff;border-radius:8px;padding:24px}\n.item{display:flex;align-items:center;gap:12px;padding:8px 0;color:inherit;text-decoration:none}\n</style><body><nav class=\"card\" aria-label=\"Main\"><a class=\"item\" href=\"#home\"><svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><path d=\"M4 11l8-7 8 7v9H4z\"/></svg><span>Home</span></a><a class=\"item\" href=\"#orders\"><svg viewBox=\"0 0 20 20\" width=\"20\" height=\"20\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M3 4h14v12H3z\"/></svg><span>Orders</span></a></nav></body></html>"
+    },
+    {
+      "id": "frame-jump",
+      "summary": "A box moves in one frame while the rest of the state change is animated.",
+      "rule": "CRAFT-motion-family",
+      "gates": false,
+      "interactive": true,
+      "good": "<!doctype html><html lang=\"en\"><meta charset=\"utf-8\"><title>frame-jump good</title><style>\n*{box-sizing:border-box}body{margin:0;padding:24px;background:#f3f4f2;color:#1b1d1c;font:16px/24px system-ui,sans-serif}\np{margin:0}.card{display:block;width:312px;background:#ffffff;border-radius:8px;padding:24px}\n.row{display:flex;align-items:center;justify-content:space-between}\n.track{position:relative;width:48px;height:28px;padding:0;border:0;border-radius:14px;background:#c9d0cd;cursor:pointer;transition:background-color 200ms ease}\n.thumb{position:absolute;top:4px;left:4px;width:20px;height:20px;border-radius:10px;background:#ffffff;transition:transform 200ms ease,background-color 200ms ease}\n.on .track{background:#1f7a5c}.on .thumb{transform:translateX(20px);background:#f4faf7}\n</style><body><div class=\"card row\" data-styleseed-transition=\"frame-jump\"><span>Weekly digest</span><button class=\"track\" type=\"button\" role=\"switch\" aria-checked=\"false\" aria-label=\"Weekly digest\" data-styleseed-trigger><span class=\"thumb\"></span></button></div>\n<script>const card=document.querySelector('[data-styleseed-transition]'),track=card.querySelector('.track');track.addEventListener('click',()=>{track.setAttribute('aria-checked',String(card.classList.toggle('on')));});</script></body></html>",
+      "bad": "<!doctype html><html lang=\"en\"><meta charset=\"utf-8\"><title>frame-jump bad</title><style>\n*{box-sizing:border-box}body{margin:0;padding:24px;background:#f3f4f2;color:#1b1d1c;font:16px/24px system-ui,sans-serif}\np{margin:0}.card{display:block;width:312px;background:#ffffff;border-radius:8px;padding:24px}\n.row{display:flex;align-items:center;justify-content:space-between}\n.track{position:relative;width:48px;height:28px;padding:0;border:0;border-radius:14px;background:#c9d0cd;cursor:pointer;transition:background-color 200ms ease}\n.thumb{position:absolute;top:4px;left:4px;width:20px;height:20px;border-radius:10px;background:#ffffff;transition:background-color 200ms ease}\n.on .track{background:#1f7a5c}.on .thumb{transform:translateX(20px);background:#f4faf7}\n</style><body><div class=\"card row\" data-styleseed-transition=\"frame-jump\"><span>Weekly digest</span><button class=\"track\" type=\"button\" role=\"switch\" aria-checked=\"false\" aria-label=\"Weekly digest\" data-styleseed-trigger><span class=\"thumb\"></span></button></div>\n<script>const card=document.querySelector('[data-styleseed-transition]'),track=card.querySelector('.track');track.addEventListener('click',()=>{track.setAttribute('aria-checked',String(card.classList.toggle('on')));});</script></body></html>"
+    }
+  ]
+}

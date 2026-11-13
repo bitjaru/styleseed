@@ -185,7 +185,12 @@ outranks a catalog default and never an invariant; an exception adds allowed val
 a default rule, and an exception against an invariant fails the resolve. The compiler lists the
 entries that apply to an artifact in its rules section (so they are part of the method hash), and
 the drift report measures screens against them: `violates` for a value outside a decision, `approved`
-for one an exception covers. See [the decisions ledger](.claude/skills/styleseed/workflows/ss-resolve/references/decisions.md).
+for one an exception covers. A project without a registry keeps the same ledger as an array in
+`.styleseed/decisions.json`, which the resolver compiles into `.styleseed/effective-rules.md`. Values to record are
+proposed with their basis by `ss-resolve/scripts/propose-system.mjs` (the project's decisions, the person's own
+measurement, corpus counts, then the unmeasured engine default), and the engine never writes an entry or a name
+([system proposals](.claude/skills/styleseed/workflows/ss-resolve/references/proposals.md)). See
+[the decisions ledger](.claude/skills/styleseed/workflows/ss-resolve/references/decisions.md).
 
 ## Imported token canon
 

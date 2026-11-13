@@ -439,3 +439,71 @@ test("CLI: refusals exit 1 with their message; --write writes two files; --entry
   }
   assert.ok(!existsSync(root));
 });
+
+// --- the documentation this order adds -------------------------------------------------------------------------
+
+const workflows = resolve(repoRoot, "engine/.claude/skills/styleseed/workflows");
+const doc = (path) => readFileSync(resolve(workflows, path), "utf8");
+// The text from a heading line to the next heading of the same or a higher level.
+function section(text, heading) {
+  const start = text.indexOf(heading);
+  assert.ok(start >= 0, `missing heading ${heading}`);
+  const level = heading.match(/^#+/u)[0].length;
+  const rest = text.slice(start + heading.length);
+  const next = rest.search(new RegExp(`\\n#{1,${level}} `, "u"));
+  return heading + (next < 0 ? rest : rest.slice(0, next));
+}
+// The lock template of ss-setup step 8, as it was before this order: the workflow still writes it unchanged.
+const LOCK_TEMPLATE = `\`\`\`markdown
+# StyleSeed — Design Lock
+<!-- Selections persist here. This file cannot waive StyleSeed core invariants. -->
+- App domain: fintech
+- Surface: mobile-app
+- Surface adapter: product-ui
+- Page type: dashboard
+- Output grammar: consumer-service
+- Grammar path: built-in:engine/RULESETS.md
+- Grammar fallback: consumer-service
+- Reference confidence: n/a
+- Brand recipe: calm-consumer
+- Palette recipe: quiet-mineral
+- Key color: #3182F6
+- Palette character: calm
+- Palette mode: light
+- Palette harmony: auto
+- Surface temperature: neutral
+- Aesthetic profile: none
+- Skin: custom
+- Primary action: #3182F6
+- Font: Pretendard
+- Radius: soft
+- Elevation: light=tonal grouping + restrained shadow · dark=tonal ramp + hairline
+- Density: comfortable
+- Motion: Spring restrained
+- Imagery/data role: personal state first; charts only for a decision
+- Signature move: one calm contextual briefing above the account summary
+- Locked: YYYY-MM-DD
+\`\`\``;
+
+test("wording of the added documentation: counts only, no banned word; setup still writes the same lock", () => {
+  const setup = doc("ss-setup/WORKFLOW.md");
+  const parts = {
+    "proposals.md": doc("ss-resolve/references/proposals.md"),
+    "ss-setup 9a": section(setup, "### 9a. Propose the system values and record what the person decides"),
+    "ss-tokens propose": section(doc("ss-tokens/WORKFLOW.md"), "### `propose` — sizes, radii, and spacing with their basis"),
+    "decisions: Proposed with a basis": section(doc("ss-resolve/references/decisions.md"), "## Proposed with a basis"),
+    "decisions: A project without a registry": section(doc("ss-resolve/references/decisions.md"), "## A project without a registry"),
+  };
+  for (const [name, text] of Object.entries(parts)) {
+    assert.ok(text.length > 200, `${name} is there`);
+    assert.ok(!BANNED.test(text), `${name}: ${text.match(BANNED)?.[0]}`);
+  }
+  assert.ok(parts["ss-setup 9a"].includes("propose-system.mjs --project-root . --surface pointer --write"));
+  assert.ok(parts["ss-setup 9a"].includes("Never fill in a name yourself and never record a"), "the workflow forbids typing a name");
+  assert.ok(!parts["ss-setup 9a"].includes("If the user asked for a first screen"), "the first screen has its own heading");
+  assert.ok(setup.includes("### 9b. First screen\n\nIf the user asked for a first screen"));
+  const step8 = setup.slice(setup.indexOf("### 8. Write the design lock"));
+  assert.equal(step8.slice(step8.indexOf("```markdown"), step8.indexOf("```\n", step8.indexOf("```markdown") + 3) + 3), LOCK_TEMPLATE, "the lock gains no field");
+  assert.ok(parts["proposals.md"].includes("at least 3 measured systems, on at least two thirds") && parts["proposals.md"].includes("at least 1 product system"), "the rule with its three numbers");
+  for (const status of ["recorded", "proposed", "split", "thin", "unmeasured"]) assert.ok(parts["proposals.md"].includes(`| \`${status}\` |`), status);
+});

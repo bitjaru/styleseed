@@ -61,7 +61,14 @@ const denylist = [
   "전문가 승인",
   "디자이너 합의",
   "디자이너가 승인한",
-  "전문가가 검증"
+  "전문가가 검증",
+  // A system proposal (ss-resolve/scripts/propose-system.mjs) states counts ("32px on 3 of 4 measured
+  // systems") and leaves the value to the person; it is never described as recommended by experts.
+  "expert-recommended",
+  "recommended by experts",
+  "designer-recommended",
+  "전문가 추천",
+  "전문가 권장"
 ];
 const failures = [];
 const texts = files.map((path) => ({ path, text: readFileSync(resolve(root, path), "utf8") }));

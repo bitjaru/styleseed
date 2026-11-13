@@ -99,6 +99,7 @@ if (!flags.has("--core")) {
     run("Verify render faults (ten classes, gate by catalog priority, drift bytes unchanged)", node, ["scripts/test-render-faults-browser.mjs"]);
     run("Verify transition frame jumps (pairs, and the nine components of #123)", node, ["scripts/test-transition-jumps-browser.mjs"]);
     run("Verify consensus study (loop parity, control probe, guards)", node, ["scripts/test-consensus-browser.mjs"]);
+    run("Verify the visible control box (fixtures, three-probe parity, drift gate)", node, ["scripts/test-control-box-browser.mjs"]);
     run("Verify reference distance, brief, and project-mode frames", node, ["scripts/test-reference-distance-browser.mjs"]);
     run("Run browser smoke tests", npmCommand, ["run", "test:browser"], demoRoot);
     run("Check pilot React and CSS integration", node, ["scripts/test-design-pilot-library.mjs"]);

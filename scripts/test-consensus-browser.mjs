@@ -7,8 +7,9 @@
 // 2. Control probe: a borderless 22px input inside a bordered 32px box beside a 32px button, a 16px
 //    <button role="checkbox"> with a visually hidden label, an icon-only button, and a white rounded
 //    card on a white page give one field `text|32|22|…` in a panel, one labelled button of 32, no 16px
-//    button, and one pair { field: 32, button: 32 }; the engine design probe on the same page still
-//    records 22 and 16 (the gap the study probe closes). The settings page gives fields and buttons of 36.
+//    button, and one pair { field: 32, button: 32 }; the engine design probe on the same page agrees
+//    (the visible-control-box block is shared): control heights 32 twice. The settings page gives
+//    fields and buttons of 36.
 // 3. Guards: a page that replaces its location with another file → redirected-path; a page under its
 //    expect floor → unexpected-content; a dialog over 64% of the viewport → overlay; no record for any.
 //    A self-hosted lineage is measured from its --base prefix and keeps the listed URL.
@@ -89,7 +90,7 @@ try {
     assert.notEqual(panel, 'none', 'a white rounded card on a white page is a panel');
     assert.deepEqual(Object.keys(c.outputs.controls.buttons).map(k => k.split('|').slice(0, 2).join('|')), ['filled|32'], `one labelled button of 32 and no 16px button: ${JSON.stringify(c.outputs.controls.buttons)}`);
     assert.deepEqual(c.outputs.controls.pairs.map(p => [p.field, p.button]), [[32, 32]]);
-    assert.ok(c.outputs.design.controlHeights['22'] && c.outputs.design.controlHeights['16'], `the engine design probe records the input element and the checkbox: ${JSON.stringify(c.outputs.design.controlHeights)}`);
+    assert.deepEqual(c.outputs.design.controlHeights, { 32: 2 }, `the engine design probe and the study probe read the same boxes (the 32px field box and the 32px button; no 22, no 16): ${JSON.stringify(c.outputs.design.controlHeights)}`);
     noFixtureText(JSON.stringify(c.outputs.controls), 'control probe output');
     console.log(`consensus control probe: field ${fieldKeys[0]}, buttons ${JSON.stringify(c.outputs.controls.buttons)}; design probe control heights ${JSON.stringify(c.outputs.design.controlHeights)}`);
   } finally { await browser.close(); }
@@ -121,7 +122,7 @@ try {
   ]);
   assert.deepEqual(first.records.map(r => r.screen), ['alpha-controls', 'kit-settings'], 'no record for a failed screen');
   assert.match(first.chromium, /^\d+(\.\d+)+$/u);
-  assert.deepEqual(first.probes, { structure: 1, faults: 1, controls: 1 });
+  assert.deepEqual(first.probes, { structure: 2, faults: 1, controls: 2 });
   const kit = first.records.find(r => r.screen === 'kit-settings');
   assert.deepEqual([kit.url, kit.access, kit.robots, kit.scroll], [listed('settings.html'), 'self-hosted', 'not-checked', false], 'a self-hosted screen keeps its listed URL');
   assert.deepEqual(kit.viewports.map(v => [v.viewport, v.status]), [[1440, 'measured'], [390, 'measured']]);

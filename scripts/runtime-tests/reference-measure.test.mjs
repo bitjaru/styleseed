@@ -146,6 +146,25 @@ test("canvas over two viewports: backdrop shares are summed before ranking", () 
   assert.equal(s.inkContrast, contrastRatio("#090c0b", "#111827"));
 });
 
+test("control heights per kind and the control-box version: only when every observation carries them", () => {
+  const boxed = (byKind, over = {}) => observation({ controlHeights: { 32: 6, 36: 2 }, controlHeightsByKind: byKind, controlBoxVersion: 1, ...over });
+  const wide = boxed({ field: { 32: 4 }, button: { 32: 2, 36: 2 } });
+  const narrow = boxed({ field: { 32: 4, 40: 1 }, button: { 32: 2 } }, { viewport: { width: 390, height: 844 }, controlHeights: { 32: 6, 40: 1 } });
+  const s = summarize([wide, narrow]);
+  assert.deepEqual(s.controlHeights, [32, 36, 40]);
+  assert.deepEqual(s.controlHeightsByKind, { field: [32, 40], button: [32, 36] });
+  assert.equal(s.controlBoxVersion, 1);
+  assert.equal(s.distinct.controlHeights, 3);
+  assert.equal(summarize([wide, boxed(wide.controlHeightsByKind, { controlBoxVersion: 2 })]).controlBoxVersion, 1, "the smallest version");
+  // One observation measured before the visible-control-box reading: neither key.
+  const { controlHeightsByKind: _k, controlBoxVersion: _v, ...older } = narrow;
+  const mixed = summarize([wide, older]);
+  assert.equal(Object.hasOwn(mixed, "controlHeightsByKind"), false);
+  assert.equal(Object.hasOwn(mixed, "controlBoxVersion"), false);
+  // Observations without them (stored ones, the synthetic ones above) gain no key.
+  assert.deepEqual(Object.keys(summarize([observation()])).filter((k) => k.startsWith("control")), ["controlHeights"]);
+});
+
 test("--no-scroll turns the scroll pass off; it is on by default", () => {
   assert.equal(parseArgs(["https://example.com/", "--out", "/tmp/x"]).scroll, true);
   assert.equal(parseArgs(["https://example.com/", "--out", "/tmp/x", "--no-scroll"]).scroll, false);

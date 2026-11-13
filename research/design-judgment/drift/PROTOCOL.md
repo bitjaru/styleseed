@@ -347,3 +347,12 @@ model, N runs". Screenshots of the built screens stay in the run folder, never i
   `82e59e3db7ef66dd328636f9901030b100e1a03c`), because PR #118 changed one skill workflow before the
   baseline. The baseline round runs from a checkout at the pinned revision; the re-measure round
   re-pins and records it as an amendment.
+- 2026-11-13, before any run: control heights are read from the visible control box
+  (`engine/REFERENCE-COMPILER.md`, "Measurement and evidence levels") from the commit that adds this
+  line. This changes what `newControlHeights` and `distinct.controlHeights` count; both are
+  secondary, reported values and neither enters the primary endpoint, whose inputs are measured as
+  before. A round measured from a checkout older than that commit (the baseline checkout e3fa054 is
+  one) reads control heights from the input element and from every button, so its two secondary
+  control-height values are stated for that round only and are not compared with a round measured
+  after it. This bullet does not cover the canvas rule that #126 changed; that amendment is separate
+  and still owed before any re-measure.

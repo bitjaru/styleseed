@@ -55,13 +55,13 @@ is `restricted` or `unchecked`.
   A screen is measured when its 1440 viewport is; a failed 390 viewport is kept as a status and left
   out of every 390 count.
 
-The control probe (`scripts/lib/consensus-probe.mjs`) exists because the engine probes record the
-height of the `<input>` element itself and count every `<button>`. A system that wraps a borderless
-22px input in a bordered 32px box reads as 22 there, and a checkbox built on a 16px
-`<button role="checkbox">` reads as a 16px button. The control probe measures the visible box of each
-text field, the labelled action buttons only, the field and button pairs on one row, and the characters
-set in each font size, and it leaves out navigation, page-level headers and footers, and anything
-fixed to the viewport. The engine probes are not changed by this study.
+The control probe (`scripts/lib/consensus-probe.mjs`) reads controls with the definition the engine
+probes use: the visible-control-box block, the same text in `observe-design.mjs`,
+`observe-structure.mjs`, and this probe, compared by `scripts/runtime-tests/control-box.test.mjs`. On
+top of the control heights it records the input element's own height, the radius, the text size, and
+the panel of each field; the emphasis, radius, and text size of each labelled action button; the field
+and button pairs on one row; and the characters set in each font size. It leaves out navigation,
+page-level headers and footers, and anything fixed to the viewport, which the engine probes measure.
 
 ## What is stored, and what never is
 
@@ -126,8 +126,11 @@ carry one: a kit's demo shows what the kit ships, not what a product team settle
    product. Two of the five full-screen lineages are kits.
 4. The sample is small. With three or four lineages on a page type, two thirds is often all of them,
    and one changed page can flip a row.
-5. The control probe is new. Its field-box and panel tests are heuristics checked on five systems at
-   one width: a date-range field with two inputs reads as two bare inputs, and a page's single wide
+5. The control probe's field-box, button, and panel tests are heuristics: the limits of the
+   visible-control-box definition apply (a chip of 24px or more built on a button reads as a button,
+   a link styled as a button by utility classes alone is not read, a borderless input in a small
+   painted container reads at the container, only the state at rest is read; the full list is in
+   `engine/REFERENCE-COMPILER.md`, "Measurement and evidence levels"), and a page's single wide
    surface reads as a panel.
 6. 390 is a width, not a phone: no touch, no coarse pointer, no mobile user agent.
 7. Shadow roots, iframes, and inner scroll containers are not entered; text boxes depend on the fonts
@@ -163,4 +166,8 @@ never loaded.
 - [`runs/2026-11-12/`](runs/2026-11-12/CONSENSUS.md): 24 of 32 screens measured, 0 failed, 8 skipped (PatternFly,
   on its terms). Cloudscape was measured from a local build of `cloudscape-design/demos` at `dda7bab`.
   Chromium 156.0.8078.4. Tables: [`CONSENSUS.md`](runs/2026-11-12/CONSENSUS.md) and
-  [`NEGATIVE-CONTROL.md`](runs/2026-11-12/NEGATIVE-CONTROL.md).
+  [`NEGATIVE-CONTROL.md`](runs/2026-11-12/NEGATIVE-CONTROL.md). Measured with control probe version 1
+  and with engine probes that read the input element and every button (both readings are in each
+  record). Version 1 read a 201px dashed card as a button on one screen, date ranges as two bare 22px
+  inputs on three screens, two 20px pills as buttons on one screen, and a label wrapped at 390 as a
+  52px button on one screen.

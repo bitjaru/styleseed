@@ -135,6 +135,20 @@ carry one: a kit's demo shows what the kit ships, not what a product team settle
 8. The page type is the study's label, and some screens are mixed.
 9. There is no scroll pass: content a page renders only after scrolling is not measured.
 
+## What ships to users
+
+This folder does not ship with the skill. What reaches a user is one generated file,
+`engine/.claude/skills/styleseed/workflows/ss-resolve/references/evidence-pack.json`, built from the one run
+named in `research/consensus/evidence-pack-run.json` (`{ "run": "2026-11-12" }`). It carries, per claim,
+page type, and viewport, how many measured design systems landed in each value bucket, counted by kind
+(product system or kit), plus the run id, the viewports, and each lineage's name and screen counts; it
+carries no per-system or per-screen value and nothing that identifies page text. The system proposer
+(`ss-resolve/scripts/propose-system.mjs`) reads it and prints those counts beside each proposal; the
+claims it may use are listed in `CLAIM_USES` in `scripts/lib/evidence-pack.mjs`. A new run reaches users
+by changing the pointer and rebuilding: `node scripts/build-evidence-pack.mjs` writes the pack (and the
+shipped engine defaults beside it), `node scripts/build-evidence-pack.mjs --check` fails when either is
+out of date. One pack is built from one run, so measurements of different probe versions never mix.
+
 ## Re-running
 
 ```

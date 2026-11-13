@@ -190,7 +190,8 @@ With `--gate`, at-rest drift on accent, ink, canvas, or spacing base exits 3 (IN
 role drift) so CI can block on it. Record approved decisions and exceptions in the project's
 `decisions` ledger instead of lowering the gate (see the
 [decisions ledger guide](../ss-resolve/references/decisions.md)): the report reads it from
-`.styleseed/project.json` with `--project-root`, or from `--decisions <file.json>`. A recorded decision
+`.styleseed/project.json` with `--project-root` (from `.styleseed/decisions.json` when the project has no
+registry), or from `--decisions <file.json>`. A recorded decision
 becomes the baseline for the screens it covers, so a value outside it reads `violates D-…`; a value
 an approved exception covers reads `approved D-…` and is not drift. `--gate` also exits 3 on any
 decision violation.

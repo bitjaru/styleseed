@@ -16,6 +16,9 @@
 // manifest.json) are walked too, after stripIds removes the `screen`, `lineage`, and `url` values
 // that are ids or URLs of that run's manifest; the line after the render-fault line holds their
 // field names, enums, claim segments, and rule ids (consensus.test.mjs, test-consensus-browser.mjs).
+// The evidence pack the skill ships (ss-resolve/references/evidence-pack.json) is walked too, after
+// its generatedBy, run path, lineage ids and names, and claim labels and caveats are removed; the last
+// line holds its field names and enums, including the ledger axis names (evidence-pack.test.mjs).
 export const VOCABULARY = new Set(`
 version viewport width height elements truncated shell documentHeight bodyScrolls overflowX scrollContainers
 regions kind by x y w h position items itemHeight contentWidth insetLeft
@@ -44,6 +47,7 @@ parts bound lower largest scroll startHeight finalHeight cap atTop time
 schemaVersion generator tool slug fallback adapter sources source robots allowed disallowed not-checked S1 transfer keep adapt observe avoid compare op eq min present within tolerance note tokens measured ink fonts spacingBase spacingScale open question user-job color surfaces rendered approval status draft approved reviewer date contractHash
 faults textRuns amounts overlaps spills clips insets touches aligns emoji icons box against lines forced side authored delta context control lead tile panel chip sets groups unknown capped stroke fill class rule gates status fault exception measure inset distribution findings counts amount-wrap text-overlap text-spill text-clip tight-inset text-touch near-touch near-align emoji-icon icon-mix DL-23-amounts-never-wrap INV-06-text-stays-whole CRAFT-functional-icons CRAFT-icon-family
 recordVersion screen access hosted self-hosted httpStatus overlayShare design fields pairs textSizes field button fieldRadius buttonRadius values spacingCoverage fontCount properties all opacity transform shadow layout candidates reason failed http-error redirected-host redirected-path timeout navigation-error unexpected-content overlay terms no-base consensusVersion claims claim pageType detail lineage lineages product-system kit tier fragment agree agreeProductSystems agreeKits productSystems kits bucket top supportsRule candidate split thin mixed true false card eligible raw withFragments shareHeight rowShareHeight shareRadius pointerUnder44 narrowAtLeast44 textSize inPanel bodySize overFourRows onePerSection oneLine noEmoji oneFamily rolesConstant buttonHeight reducedMotionRules transitionAll faultClasses chromium classes screensMeasured screensWithAny lineagesWithAny mostOnOneScreen run listed screens delay CRAFT-control-heights CRAFT-spacing-scale DL-21-density-by-task INV-05-no-unexplained-role-drift bodyFontSize probes lineagesMeasured fragments
+touch use complete flag buckets tableRowHeights listItemHeights headingSizes primariesPerSection transitionDurations
 `.split(/\s+/u).filter(Boolean));
 
 const COLOUR = /(?:rgba?|hsla?|lab|lch|oklab|oklch|color)\([\d\s.,%/-]*\)|#[0-9a-f]{3,8}\b/giu;

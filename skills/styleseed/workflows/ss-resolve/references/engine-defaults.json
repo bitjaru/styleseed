@@ -1,0 +1,172 @@
+{
+ "schemaVersion": 1,
+ "generatedBy": "scripts/build-evidence-pack.mjs",
+ "measured": false,
+ "components": {
+  "button": {
+   "source": "engine/components/ui/button.tsx",
+   "defaultSize": "md",
+   "sizes": [
+    {
+     "key": "xs",
+     "height": 32,
+     "text": 13,
+     "paddingX": 14
+    },
+    {
+     "key": "sm",
+     "height": 36,
+     "text": 14,
+     "paddingX": 14
+    },
+    {
+     "key": "md",
+     "height": 40,
+     "text": 14,
+     "paddingX": 16
+    },
+    {
+     "key": "lg",
+     "height": 52,
+     "text": 18,
+     "paddingX": 20
+    },
+    {
+     "key": "icon",
+     "height": 40,
+     "text": null,
+     "paddingX": null
+    }
+   ]
+  },
+  "input": {
+   "source": "engine/components/ui/input.tsx",
+   "height": 36,
+   "text": 16,
+   "textFromMd": 14,
+   "paddingX": 12
+  },
+  "select": {
+   "source": "engine/components/ui/select.tsx",
+   "defaultSize": "default",
+   "sizes": [
+    {
+     "key": "default",
+     "height": 36,
+     "text": 14,
+     "paddingX": 12
+    },
+    {
+     "key": "sm",
+     "height": 32,
+     "text": 14,
+     "paddingX": 12
+    }
+   ]
+  },
+  "table": {
+   "source": "engine/components/ui/table.tsx",
+   "headHeight": 40,
+   "headPaddingX": 8,
+   "text": 14
+  }
+ },
+ "recipes": {
+  "default": {
+   "controlRadius": 6,
+   "insetRadius": 6,
+   "surfaceRadius": 10,
+   "sectionGap": 24,
+   "pageGutter": 20,
+   "surfacePadding": 20
+  },
+  "calm-consumer": {
+   "controlRadius": 999,
+   "insetRadius": 12,
+   "surfaceRadius": 20,
+   "sectionGap": 24,
+   "pageGutter": 24,
+   "surfacePadding": 24
+  },
+  "native-mobile": {
+   "controlRadius": 12,
+   "insetRadius": 12,
+   "surfaceRadius": 16,
+   "sectionGap": 20,
+   "pageGutter": 20,
+   "surfacePadding": 20
+  },
+  "enterprise-workbench": {
+   "controlRadius": 3,
+   "insetRadius": 2,
+   "surfaceRadius": 4,
+   "sectionGap": 16,
+   "pageGutter": 24,
+   "surfacePadding": 20
+  },
+  "developer-platform": {
+   "controlRadius": 5,
+   "insetRadius": 4,
+   "surfaceRadius": 6,
+   "sectionGap": 16,
+   "pageGutter": 20,
+   "surfacePadding": 16
+  },
+  "commerce-operator": {
+   "controlRadius": 8,
+   "insetRadius": 8,
+   "surfaceRadius": 12,
+   "sectionGap": 20,
+   "pageGutter": 24,
+   "surfacePadding": 20
+  },
+  "public-service": {
+   "controlRadius": 0,
+   "insetRadius": 0,
+   "surfaceRadius": 0,
+   "sectionGap": 32,
+   "pageGutter": 24,
+   "surfacePadding": 0
+  },
+  "creative-professional": {
+   "controlRadius": 5,
+   "insetRadius": 4,
+   "surfaceRadius": 6,
+   "sectionGap": 12,
+   "pageGutter": 16,
+   "surfacePadding": 16
+  },
+  "editorial-authority": {
+   "controlRadius": 2,
+   "insetRadius": 0,
+   "surfaceRadius": 0,
+   "sectionGap": 40,
+   "pageGutter": 24,
+   "surfacePadding": 0
+  },
+  "expressive-brand": {
+   "controlRadius": 10,
+   "insetRadius": 10,
+   "surfaceRadius": 16,
+   "sectionGap": null,
+   "pageGutter": null,
+   "surfacePadding": null
+  }
+ },
+ "spacingScale": {
+  "rule": "CRAFT-spacing-scale",
+  "values": [
+   4,
+   8,
+   12,
+   16,
+   24,
+   32,
+   40,
+   48,
+   64,
+   80,
+   96
+  ]
+ }
+}

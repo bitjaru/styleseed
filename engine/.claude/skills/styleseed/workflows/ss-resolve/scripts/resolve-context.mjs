@@ -4,7 +4,7 @@ import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { canonicalJson, normalizeArtifact, normalizeProject, safeProjectPath } from "./runtime-contract.mjs";
+import { canonicalJson, normalizeArtifact, normalizeDecisions, normalizeProject, parseStrictJson, safeProjectPath } from "./runtime-contract.mjs";
 import { compileContext, compareEntries, defaultCatalog, materializeManifestOutputs } from "./compiler.mjs";
 import { loadProjectRegistry } from "./project-registry.mjs";
 
@@ -332,11 +332,23 @@ const projectRoot = resolve(args["project-root"] ?? process.cwd());
 const agent = args.agent ?? "codex";
 if (!catalog.agents[agent]) throw new Error(`Unknown agent "${agent}"`);
 const registry = loadProjectRegistry(projectRoot, { catalog });
+// The decisions ledger of a project without a registry: a JSON array in the same shape as `decisions` in
+// .styleseed/project.json. A project with a registry keeps its ledger there and must not have this file.
+const LEGACY_LEDGER = ".styleseed/decisions.json";
 
 if (!registry) {
   const lockPath = safeProjectPath(projectRoot, args["from-lock"] ?? "STYLESEED.md");
   const lock = parseLegacyLock(lockPath);
   const normalized = legacyArgsToNormalized(args, lock);
+  const ledgerFile = safeProjectPath(projectRoot, LEGACY_LEDGER);
+  if (existsSync(ledgerFile)) {
+    let raw;
+    try { raw = parseStrictJson(readFileSync(ledgerFile, "utf8")); } catch (error) { throw new Error(`${LEGACY_LEDGER}: ${error.message}; it must be a JSON array of decision entries`); }
+    const entries = normalizeDecisions(raw, catalog, LEGACY_LEDGER);
+    const scoped = entries.find((entry) => entry.scope?.artifacts);
+    if (scoped) throw new Error(`${LEGACY_LEDGER} ${scoped.id}: \`scope.artifacts\` needs a registry; a project without one has a single artifact. Use \`scope.screens\` or drop the scope.`);
+    normalized.project.decisions = entries;
+  }
   const compiled = compileContext({
     catalog,
     projectRoot,
@@ -360,6 +372,7 @@ if (!registry) {
 }
 
 ensureNoRegistryOverrides(args);
+if (existsSync(safeProjectPath(projectRoot, LEGACY_LEDGER))) throw new Error(`\`${LEGACY_LEDGER}\` is the ledger of a project without a registry, and this project has one. Move its entries into \`decisions\` in \`.styleseed/project.json\` and delete the file.`);
 const targets = resolveTargets(registry, args);
 const compiledTargets = targets.map((entry) => compileContext({
   catalog,

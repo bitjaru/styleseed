@@ -38,6 +38,13 @@ A project records approved decisions and approved exceptions in optional project
 against an invariant fails the resolve. The drift report reads the same ledger. See the
 [decisions ledger guide](references/decisions.md).
 
+To propose the values a person may record, run `propose-system.mjs --project-root . --surface pointer --write`
+(`--surface touch` for a touch-first product, `--reference <slug>` for each measured reference). For control height,
+type sizes, corner radius, table row height, and spacing unit it gives a value and its basis, strongest first: the
+project's recorded decision, the person's own measurement, counts over the measured design systems that ship with
+this skill, and the engine default, labelled not measured. It writes no ledger and no name. See
+[system proposals](references/proposals.md).
+
 For spacing recommendations and scoped control, see the [spatial roles guide](references/spacing.md).
 Optional project/artifact `spacing` compiles into a role table and artifact-scoped CSS in the bundle.
 `recommend-spacing.mjs --project-root . --artifact <id>` emits a read-only starting proposal; it does

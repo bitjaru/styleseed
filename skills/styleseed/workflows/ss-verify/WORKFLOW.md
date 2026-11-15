@@ -186,6 +186,10 @@ and scale, type sizes, radii, fonts, and control heights per screen with a basel
 palette roles when `--project-root` points at a StyleSeed project, otherwise the majority across
 the screens. `DRIFT.md` holds the table and a one-line verdict; `drift.json` holds the same data.
 
+Control heights are those of visible control boxes (a wrapped field at its box, action buttons with a
+box and a one-line label); if the project recorded a `controlHeights` decision from an earlier report,
+check it against a run without `--gate` first (see the decisions ledger guide).
+
 With `--gate`, at-rest drift on accent, ink, canvas, or spacing base exits 3 (INV-05: no unexplained
 role drift) so CI can block on it. Record approved decisions and exceptions in the project's
 `decisions` ledger instead of lowering the gate (see the

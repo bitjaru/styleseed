@@ -75,7 +75,8 @@ export function parseArgs(argv) {
 
 // facts.json and summary.json from one measure-reference run, and the robots.txt verdict it
 // recorded: measurements/source.json (project mode) first, else case.draft.json one level up (case
-// mode), else not-checked. Whether the run made its scroll pass is read from summary.json.
+// mode), else not-checked. Whether the run made its scroll pass is read from summary.json, and so is
+// `controlBoxVersion` (null when the probes predate the visible-control-box reading).
 export function readMeasurements(dir) {
   const read = name => {
     const path = join(dir, name);
@@ -92,7 +93,8 @@ export function readMeasurements(dir) {
     try { const verdict = pick(JSON.parse(readFileSync(path, 'utf8'))); return ['allowed', 'disallowed', 'not-checked'].includes(verdict) ? verdict : null; } catch { return null; }
   };
   const robots = verdictIn(join(dir, 'source.json'), doc => doc?.robots) ?? verdictIn(join(dir, '..', 'case.draft.json'), doc => doc?.sources?.[0]?.robots) ?? 'not-checked';
-  return { facts, summary, robots, scroll: Boolean(summary && typeof summary === 'object' && summary.scroll) };
+  const controlBoxVersion = summary && typeof summary === 'object' && Number.isInteger(summary.controlBoxVersion) ? summary.controlBoxVersion : null;
+  return { facts, summary, robots, scroll: Boolean(summary && typeof summary === 'object' && summary.scroll), controlBoxVersion };
 }
 
 // A fresh draft from one measurement: every fact with its default transfer (DEFAULT_TRANSFERS), the
@@ -208,7 +210,7 @@ export function planWrite(args) {
     const path = safeProjectPath(root, `${dirOf(args.slug)}/${name}`);
     return !existsSync(path) || sha256(readFileSync(path)) !== sha256(files[name]);
   });
-  return { root, rel, existing, evidence, text, files, merged, hash, prior, priorApproved, staleApproval, contractChanged: !prior || contractHash(prior) !== hash, changed };
+  return { root, rel, existing, evidence, text, files, merged, hash, prior, priorApproved, staleApproval, contractChanged: !prior || contractHash(prior) !== hash, changed, controlBoxVersion: measurements.controlBoxVersion };
 }
 
 function describePlan(plan, args, log, verb) {
@@ -221,6 +223,8 @@ function describePlan(plan, args, log, verb) {
     if (plan.merged.dropped.length) log(`  dropped ${plan.merged.dropped.length} fact(s) no longer in facts.json: ${plan.merged.dropped.map(d => `${d.key} (${d.transfer})`).join(', ')}`);
   }
   log(`  ${verb.startsWith('dry') ? 'would write' : 'wrote'}: ${CONTRACT_FILES.map(name => `${dirOf(args.slug)}/${name}`).join(', ')}`);
+  // Nothing is refused and evidence.json does not change: the line only says how the two values were read.
+  if (plan.controlBoxVersion === null) log('  control heights: these measurements predate the visible-control-box reading (summary.json has no controlBoxVersion); controlHeights and tells.controlHeights.distinct were read from the input element. Measure the reference again before keeping either');
 }
 
 export function run(args, { log = console.log, warn = console.error, out = text => process.stdout.write(text), date = today() } = {}) {

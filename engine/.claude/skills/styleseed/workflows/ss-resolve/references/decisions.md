@@ -161,6 +161,14 @@ approves 32px for that screen only (`D-002`). The `app-orders` bundle shows both
 `orders` reads `approved D-002`; a 32px control that appears on `settings` reads `violates D-001`,
 and `--gate` fails until someone either fixes `settings` or records why it is different there.
 
+**Control heights are those of visible boxes.** The drift report reads a field at the box a person
+sees and counts only action buttons that have a box and a one-line label
+(`engine/REFERENCE-COMPILER.md`, "Measurement and evidence levels"). A `controlHeights` decision
+recorded from an earlier report may list an inner height (22 for a field whose box is 32px), a
+toggle's size, or a text area's height, and the gate then names the real height as a violation. Run
+the report once without `--gate`, read the control-heights row, and let the decision's owner correct
+the values; the tool never edits the ledger.
+
 **An accent that a partner page may break.** A project decides its teal accent for every screen:
 
 ```json

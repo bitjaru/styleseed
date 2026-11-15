@@ -66,6 +66,30 @@ selectors, class names, element ids, URLs of assets, or screenshots. Caps per vi
 regions, 40 sections, 12 tables, 12 lists, 8 tab sets. A page with several `main` landmarks has
 one main region made of all of them (`parts`); its sections come from every part.
 
+Control heights are read from the box a person sees. A text field's height is that of its visible box:
+the field itself when it paints a border, an outline, or its own background, otherwise the nearest
+wrapper that does, within four ancestors and a little taller and wider than the field (a bordered box
+around a borderless input, an input with an icon or an add-on inside its box). Fields that share one
+box are one control (a date range). A button's height counts when it is an action button with a
+visible box, filled or outlined, and a one-line label, from 24px to 80px: checkboxes, radios, switches,
+tabs, and menu items built on `<button>`, icon-only buttons, buttons without a box, and tiles do not
+count, and neither do text areas, native checkboxes, radios, sliders, and file inputs.
+`observe-design.mjs` tallies these heights in `controlHeights` and per kind in
+`controlHeightsByKind`; `observe-structure.mjs` lists each text-like input once, at its visible box.
+The definition is one block of code kept identical in both probes and in
+`scripts/lib/consensus-probe.mjs`; it changes in all three at once, with its version.
+
+Limits: a chip of 24px or more built on a button reads as a button; so does a navigation item built
+on a button whose active state is filled; a link styled as a button by utility classes alone is not
+read; a borderless input in a small painted container that is not its field reads at the container;
+a custom field without an input element or a field role is not read; only the state at rest is read.
+
+Measurements written before this reading (`measurements/summary.json` without `controlBoxVersion`)
+took the height of the `<input>` element itself and of every button. Fact ids keep their meaning and
+an approved contract stays approved. To refresh a reference, measure it again and run
+`compile-contract.mjs --write --force`; when a kept fact or token changed, the approval returns to
+draft and a person approves again.
+
 Before the probes run, inside the same load, the window is scrolled to the bottom in steps of 80%
 of the viewport and back to the top, so content that reveals on scroll is measured revealed
 (`--no-scroll` turns this off). The pass is bounded by steps, time, and document height

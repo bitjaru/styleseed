@@ -71,8 +71,12 @@ try {
   assert.deepEqual([wide.css.hover, wide.css.focusVisible, wide.css.reducedMotion], [1, 1, 1]);
   assert.deepEqual([wide.controls.labels.above, wide.controls.leftEdges], [6, 1]);
   assert.deepEqual(Object.keys(wide.controls.buttons).sort(), ['filled|rgb(15, 118, 110)|36|main', 'outline|rgb(180, 189, 187)|36|main', 'text|rgb(77, 81, 80)|32|topBar']);
+  // Control heights are those of visible boxes: the two unboxed 32px text buttons of the top bar stay
+  // in the button census above and are not control heights.
+  assert.deepEqual(observations[0].controlHeights, { 36: 12 }, JSON.stringify(observations[0].controlHeights));
 
   const summary = summarize(observations);
+  assert.deepEqual([summary.controlHeights, summary.controlHeightsByKind, summary.controlBoxVersion], [[36], { field: [36], button: [36] }, 1]);
   const [wideSummary] = summary.structure.viewports;
   const primaries = primaryStats(wideSummary, summary.accentDerived);
   assert.deepEqual([primaries.basis, primaries.perSectionMax, primaries.sectionsOverOne, primaries.count], ['accent', 1, 0, 3]);
@@ -83,6 +87,7 @@ try {
   const find = (id, viewport) => facts.facts.find(f => f.id === id && f.viewport === viewport)?.value;
   assert.deepEqual([find('composition.region.sideNav.width', 1440), find('composition.columns.ratio', 1440), find('density.table.rowHeight', 1440), find('navigation.primary.perSectionMax', 1440)], [240, '0.29/0.71', 40, 1]);
   assert.deepEqual([find('responsive.columns', 'both'), find('responsive.region.sideNav', 'both'), find('responsive.breakpoints', 'both')], ['2 -> 1', '240 -> none', [768]]);
+  assert.equal(find('tells.controlHeights.distinct', 'both'), 1);
   for (const axis of ['attention', 'composition', 'imagery-data', 'navigation-action', 'states-motion', 'tells']) assert.ok(facts.facts.some(f => f.axis === axis), `a ${axis} fact`);
   noLeaks(wide, 'structure output (1440)');
   noLeaks(narrow, 'structure output (390)');

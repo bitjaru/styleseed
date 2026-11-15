@@ -223,11 +223,11 @@ one step, and a lineage's steps are the union over its screens.
 ## Fixed before the run
 
 The claims of `consensusVersion` 2 (their eligibility tests, buckets, and thresholds), the spacing
-sample, the agreement rule, and the anatomy probe were committed at `7a3e87f`
-(`7a3e87fdd091ebad713d3e81314cdb2853780ac4`, "anatomy probe and claims") before any page was measured
-with them. The anatomy probe's helper block is a copy of the control probe's selection and box
-helpers; when the control probe takes up the shared visible-control-box block, the same block replaces
-this copy before the first run, and this paragraph then names that commit too.
+sample, and the agreement rule were committed in "anatomy probe and claims"; the anatomy probe as it
+measures was fixed at `2a27c89` (`2a27c892c0a370faef53cf2f56f7ffb5583591ec`, "anatomy probe on the
+shared control box"), which reads buttons and fields through the shared visible-control-box block and
+changed no claim reader, bucket, minimum, or threshold. Both came before any page was measured with
+them.
 
 A reader, a bucket, a threshold, or a probe rule that does what it states and still misreads a real
 page is not changed before the run that shows it is committed. The fix then goes into a commit of its

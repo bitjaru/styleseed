@@ -229,6 +229,11 @@ shared control box"), which reads buttons and fields through the shared visible-
 changed no claim reader, bucket, minimum, or threshold. Both came before any page was measured with
 them.
 
+After run 2026-11-15 two readings of the anatomy probe were found wrong (see "Runs"). The fix was
+committed on its own at `71d42fb` (`71d42fbbb095281a09286dd8eb4db97d55399e33`): anatomy probe version 2,
+`consensusVersion` 3, no claim changed. Run 2026-11-15 stays as committed and is not regenerated; the
+corrected run measures every screen again into a folder of a later date.
+
 A reader, a bucket, a threshold, or a probe rule that does what it states and still misreads a real
 page is not changed before the run that shows it is committed. The fix then goes into a commit of its
 own with its test, raises `consensusVersion` (and the probe's `version` when the probe changes) so the

@@ -18,19 +18,19 @@ row adds a rule or changes a rule's `priority`, `check`, `kind`, or `scope`, and
 
 | Lineage | Name | Kind | Context | Host | Access | Licence of the demos | Terms (automated access) | Checked |
 |---|---|---|---|---|---|---|---|---|
-| `cloudscape` | AWS Cloudscape | product system | console | `cloudscape.design` | self-hosted: `cloudscape-design/demos` at `dda7bab`, built and served on `127.0.0.1` | MIT-0 | `restricted`: the AWS Site Terms exclude robots and data-gathering tools, so the hosted pages are never loaded | 2026-11-12 |
-| `patternfly` | Red Hat PatternFly | product system | console | `www.patternfly.org` | self-hosted from the next run (switch set 2026-11-13): a local build of `patternfly/patternfly-org`, served on `127.0.0.1`; the hosted pages are never loaded | MIT (`patternfly/patternfly-org`) | `restricted`: the Red Hat terms the site's footer links rule out using the site in a way that deploys a robot or a retrieval application | 2026-11-12 |
-| `antpro` | Ant Design Pro | kit | console | `preview.pro.ant.design` | hosted | MIT (`ant-design/ant-design-pro`) | `not-mentioned`: the preview app links no terms page | 2026-11-12 |
-| `shadcn` | shadcn/ui | kit | console | `ui.shadcn.com` | hosted | MIT (`shadcn-ui/ui`) | `not-mentioned`: the site links no terms page | 2026-11-12 |
-| `primer` | GitHub Primer | product system | console | `primer.style` | hosted | MIT (`primer/react`) | `conditional`: the GitHub Acceptable Use Policies allow research use of public, non-personal information when the publication is open access, as this repository is; whether they cover `primer.style` is not stated | 2026-11-12 |
-| `carbon` | IBM Carbon | product system | console | `react.carbondesignsystem.com` | hosted (one form story, a fragment) | Apache-2.0 (`carbon-design-system/carbon`) | `robots-txt`: the IBM terms allow a crawler as far as the site's `robots.txt` permits | 2026-11-12 |
-| `mui` | MUI templates | kit | console | `mui.com` | hosted, not loaded before its terms are checked | MIT (`mui/material-ui`) | `unchecked`: the terms check is made before the first load | — |
-| `govuk` | GOV.UK Frontend | product system | service | `govuk-frontend-review.herokuapp.com` | hosted, not loaded before its terms are checked | MIT (`alphagov/govuk-frontend`) | `unchecked`: the terms check is made before the first load | — |
+| `cloudscape` | AWS Cloudscape | product system | console | `cloudscape.design` | self-hosted: `cloudscape-design/demos`, built and served on `127.0.0.1` (at `dda7bab` for run 2026-11-12, at `9b6815f` for run 2026-11-15) | MIT-0 | `restricted`: the AWS Site Terms exclude robots and data-gathering tools, so the hosted pages are never loaded | 2026-11-12 |
+| `patternfly` | Red Hat PatternFly | product system | console | `www.patternfly.org` | self-hosted since run 2026-11-15: a local build of `patternfly/patternfly-org` at `73cec7b`, served on `127.0.0.1`; the hosted pages are never loaded | MIT (`patternfly/patternfly-org`) | `restricted`: the Red Hat terms the site's footer links rule out using the site in a way that deploys a robot or a retrieval application | 2026-11-12 |
+| `antpro` | Ant Design Pro | kit | console | `preview.pro.ant.design` | hosted | MIT (`ant-design/ant-design-pro`) | `not-mentioned`: the preview app links no terms page | 2026-11-15 |
+| `shadcn` | shadcn/ui | kit | console | `ui.shadcn.com` | hosted | MIT (`shadcn-ui/ui`) | `not-mentioned`: the site links no terms page | 2026-11-15 |
+| `primer` | GitHub Primer | product system | console | `primer.style` | hosted | MIT (`primer/react`) | `conditional`: the GitHub Acceptable Use Policies allow research use of public, non-personal information when the publication is open access, as this repository is; whether they cover `primer.style` is not stated | 2026-11-15 |
+| `carbon` | IBM Carbon | product system | console | `react.carbondesignsystem.com` | hosted (one form story, a fragment) | Apache-2.0 (`carbon-design-system/carbon`) | `robots-txt`: the IBM terms allow a crawler as far as the site's `robots.txt` permits | 2026-11-15 |
+| `mui` | MUI templates | kit | console | `mui.com` | hosted | MIT (`mui/material-ui`) | `not-mentioned`: the legal page links privacy, cookie, licence, store, and service terms; none sets terms for reading the documentation site or names automated access | 2026-11-15 |
+| `govuk` | GOV.UK Frontend | product system | service | `govuk-frontend-review.herokuapp.com` | hosted | MIT (`alphagov/govuk-frontend`) | `not-mentioned`: the review app links no terms page; the GOV.UK terms name no automated access and do not say they cover this host | 2026-11-15 |
 
 PatternFly's demos are open source (`patternfly/patternfly-org`, MIT). The maintainer set it to
-self-hosted on 2026-11-13: a run measures a local build the way Cloudscape is measured, and its
-`selfHosted` entry (repository, commit, licence, build date) is recorded when it is built. The hosted
-site stays `restricted` and is never loaded.
+self-hosted on 2026-11-13: since run 2026-11-15 a local build is measured the way Cloudscape is, and
+its floors come from a preflight on that build (half of each count the preflight read at 1440,
+elements rounded down to the ten). The hosted site stays `restricted` and is never loaded.
 
 `screens.json` lists the 46 screens (44 full screens and 2 fragments), each with its lineage, the page
 type the study assigns (`dashboard`, `list`, `form`, `detail`), its tier (`screen` or `fragment`), its
@@ -58,7 +58,7 @@ Product systems with at least one full screen, by the state of the switches in t
 added them (WO-12). A candidate row needs 3 agreeing lineages of which 2 are product systems, so a page
 type with one product system cannot produce one.
 
-| Page type | Cloudscape and Primer | and PatternFly (self-hosted) | and GOV.UK (the switches as set for the next run) | and Twilio Paste | Kits available |
+| Page type | Cloudscape and Primer | and PatternFly (self-hosted) | and GOV.UK (the switches of run 2026-11-15) | and Twilio Paste | Kits available |
 |---|---|---|---|---|---|
 | dashboard | 1 | 2 | 2 | 2 | Ant Design Pro, shadcn/ui, MUI templates, TDesign starter |
 | list | 1 | 2 | 3 | 4 | Ant Design Pro, MUI templates, TDesign starter |
@@ -293,6 +293,20 @@ folder on `127.0.0.1` with a static file server (`python3 -m http.server <port> 
 `screens.json`, and pass `--base cloudscape=http://127.0.0.1:<port>/`. The hosted Cloudscape pages are
 never loaded.
 
+For PatternFly, clone `patternfly/patternfly-org` outside this repository and build it as its README
+says (Node 22 or later; Yarn 4 through `corepack`): `corepack yarn install`, then `corepack yarn build`.
+The build writes the site to `build/patternfly-org/site`. Serve that folder on `127.0.0.1`
+(`python3 -m http.server <port> --bind 127.0.0.1 --directory build/patternfly-org/site`), record
+`selfHosted` on the lineage, and pass `--base patternfly=http://127.0.0.1:<port>/`. The hosted PatternFly
+pages are never loaded.
+
+A newly self-hosted screen gets its floors from a preflight: copy `screens.json` to a folder outside the
+repository, keep only the new self-hosted lineages, set every `expect` to `{ "elements": 1 }`, run
+`--measure --root <that folder> --delay 0 --base …`, and take half of each count from the 1440 viewport
+of each record (elements rounded down to the ten; a count whose half is under 1 is left out). A screen
+is listed only when the preflight shows a full page: at least 60 elements, and at least 2 fields on a
+form. Stop every server after the run.
+
 ## Runs
 
 - [`runs/2026-11-12/`](runs/2026-11-12/CONSENSUS.md): 24 of 32 screens measured, 0 failed, 8 skipped (PatternFly,
@@ -303,3 +317,16 @@ never loaded.
   record). Version 1 read a 201px dashed card as a button on one screen, date ranges as two bare 22px
   inputs on three screens, two 20px pills as buttons on one screen, and a label wrapped at 390 as a
   52px button on one screen.
+- [`runs/2026-11-15/`](runs/2026-11-15/CONSENSUS.md): 45 of 46 screens measured, 1 failed (`govuk-feedback`,
+  `unexpected-content`: under its floor of 2 fields), 0 skipped. Cloudscape from a local build of
+  `cloudscape-design/demos` at `9b6815f`, PatternFly from a local build of `patternfly/patternfly-org` at
+  `73cec7b`; MUI templates and GOV.UK Frontend measured for the first time. Chromium 156.0.8078.4; probes:
+  structure 2, faults 1, controls 2 (the visible-control-box reading), anatomy 1. Tables:
+  [`CONSENSUS.md`](runs/2026-11-15/CONSENSUS.md) and [`NEGATIVE-CONTROL.md`](runs/2026-11-15/NEGATIVE-CONTROL.md).
+  Two readings of the anatomy probe were found wrong after this run and are fixed for the next one:
+  text under a `display: contents` box (a 0×0 box that does not hide its content) was read as hidden,
+  so on the Cloudscape screens no label was found, no table cell was read, and panel insets were taken
+  from controls and icons only; and a search icon drawn by a positioned sibling over a field's own box
+  was not read as a leading icon, so Cloudscape's text filters count as fields with a 37px inset. The
+  anatomy rows of this run that read labels, table cells, panel insets, or field insets carry those
+  misreadings for Cloudscape (and possibly for the MUI dashboards, whose tables gave no cells).

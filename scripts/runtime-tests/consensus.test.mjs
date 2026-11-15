@@ -19,6 +19,7 @@ const studyRoot = resolve(repoRoot, "research/consensus");
 const CLASS_IDS = FAULT_CLASSES.map((c) => c.id);
 const SEVEN = ["expert", "approved", "endorsed", "validated", "best practice", "industry standard", "proven"];
 const claim = (id) => CLAIMS.find((c) => c.id === id);
+const isDateString = (v) => typeof v === "string" && /^\d{4}-\d{2}-\d{2}$/u.test(v);
 
 // A fictional manifest: four product systems and two kits on fictional hosts.
 const LINEAGES = [["alpha", "product-system"], ["beta", "product-system"], ["gamma", "product-system"], ["delta", "product-system"], ["kit-one", "kit"], ["kit-two", "kit"]];
@@ -752,13 +753,13 @@ test("validateManifest: the context of a lineage, a .invalid host, the real scre
   const byId = new Map(real.lineages.map((l) => [l.id, l]));
   assert.deepEqual(real.lineages.map((l) => l.context ?? "console"), ["console", "console", "console", "console", "console", "console", "console", "service"]);
   assert.deepEqual([byId.get("patternfly").access, byId.get("patternfly").basePath, byId.get("patternfly").terms.automatedAccess], ["self-hosted", "/", "restricted"]);
-  for (const id of ["mui", "govuk"]) assert.deepEqual([byId.get(id).access, byId.get(id).terms.automatedAccess, byId.get(id).terms.checkedAt], ["hosted", "unchecked", null], `${id}: not loaded before its terms check`);
+  for (const id of ["mui", "govuk"]) assert.deepEqual([byId.get(id).access, byId.get(id).terms.automatedAccess, isDateString(byId.get(id).terms.checkedAt)], ["hosted", "not-mentioned", true], `${id}: hosted after its terms check`);
   assert.deepEqual(Object.fromEntries(["mui", "govuk"].map((id) => [id, real.screens.filter((s) => s.lineage === id).map((s) => s.pageType)])), {
     mui: ["dashboard", "list", "form", "form", "form"], govuk: ["list", "list", "list", "form", "form", "form", "form", "detail", "detail"],
   });
 });
 
-test("the real screens.json loads nothing while terms are unchecked and self-hosted builds are not passed", async () => {
+test("the real screens.json loads nothing when no self-hosted build is passed and every robots.txt disallows (a fake fetch)", async () => {
   const real = JSON.parse(readFileSync(resolve(studyRoot, "screens.json"), "utf8"));
   const fetched = [];
   const fetchImpl = async (url) => { fetched.push(new URL(url).host); return { status: 200, ok: true, url, text: async () => "User-agent: *\nDisallow: /" }; };
@@ -766,8 +767,8 @@ test("the real screens.json loads nothing while terms are unchecked and self-hos
   const result = await measureScreens(real, { chromium, today: "2026-11-13", delay: 0, fetchImpl });
   const reasons = {};
   for (const r of result.rows) { const lineage = real.screens.find((s) => s.id === r.screen).lineage; reasons[lineage] = [...new Set([...(reasons[lineage] ?? []), `${r.status} ${r.reason}`])]; }
-  assert.deepEqual(reasons, { cloudscape: ["skipped no-base"], patternfly: ["skipped no-base"], antpro: ["skipped robots"], shadcn: ["skipped robots"], primer: ["skipped robots"], carbon: ["skipped robots"], mui: ["skipped terms"], govuk: ["skipped terms"] });
-  assert.deepEqual([...new Set(fetched)].sort(), ["preview.pro.ant.design", "primer.style", "react.carbondesignsystem.com", "ui.shadcn.com"], "no robots.txt of an unchecked lineage is requested (the fetch here is a fake)");
+  assert.deepEqual(reasons, { cloudscape: ["skipped no-base"], patternfly: ["skipped no-base"], antpro: ["skipped robots"], shadcn: ["skipped robots"], primer: ["skipped robots"], carbon: ["skipped robots"], mui: ["skipped robots"], govuk: ["skipped robots"] });
+  assert.deepEqual([...new Set(fetched)].sort(), ["govuk-frontend-review.herokuapp.com", "mui.com", "preview.pro.ant.design", "primer.style", "react.carbondesignsystem.com", "ui.shadcn.com"], "one robots.txt per hosted origin, none for a self-hosted lineage (the fetch here is a fake)");
 });
 
 test("stored runs: the 2026-11-12 run passes the walk and is not regenerated (an older consensusVersion)", () => {

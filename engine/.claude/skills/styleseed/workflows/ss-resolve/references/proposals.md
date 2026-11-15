@@ -19,7 +19,7 @@ Each axis lists its options strongest first, and the first one is proposed when 
    the entry or record an exception instead.
 2. **The person's own measurement.** A reference the person measured with `/ss-reference`
    (`--reference <slug>`): first one whose axis is kept in the project's reference contract, then one
-   measured but not kept.
+   measured but not kept; then the product's own screens (`--own`, below).
 3. **Corpus counts.** The published demo screens of a few design systems, measured by the StyleSeed
    repository and shipped with this skill as counts (below).
 4. **The engine default.** What the engine's components, brand recipe, and starting spacing scale ship.
@@ -38,7 +38,7 @@ row has 3 measured systems, otherwise the row of all page types pooled; `setting
 | Status | Meaning |
 |---|---|
 | `recorded` | The ledger already decides this axis for the whole project |
-| `proposed` | The first option is a measured reference or a corpus value under the rule |
+| `proposed` | The first option is a measured reference, the product's own screens, or a corpus value under the rule |
 | `split` | The measured systems disagree; the counts are shown |
 | `thin` | Fewer than 3 systems were measured for the row |
 | `unmeasured` | No measured basis; only the engine default is listed |
@@ -59,6 +59,33 @@ The corpus was measured with pointer input, at 1440 wide and the same pages narr
 is not touch. With `--surface touch` nothing is proposed from the corpus; control height shows the
 44px floor of `CRAFT-control-heights`, and the engine default lists only the shipped sizes at or above
 it. A measured reference still proposes, and its values under the floor are marked.
+
+## From the product's own screens
+
+`--own <path>` reads the `inventory.json` that `drift-report.mjs … --inventory` writes for the product's
+screens at rest (a path relative to the project root, for example
+`.styleseed/evidence/drift/<date>/inventory.json`). It adds one option per axis after the references and
+before the corpus counts; when no reference outranks it, that option is the proposal. Two rules decide
+which values the option holds:
+
+- **Control height and corner radius** take the `dominant` values: those on at least 10% of the counted
+  controls (visible control boxes, fields and buttons together) or boxes with a visible edge, and at least
+  the most frequent one. Values under 10% are left out of the option. They stay in the block's first line,
+  and after "If recorded" the block lists the values in use that the drift report would then read as
+  `violates D-…`, with how many elements and screens carry each; add the ones the product keeps with
+  `--entry <axis>=<all values>` before recording.
+- **Type sizes** take the `shared` values: those on at least half of the screens as the drift report counts
+  them (a size that holds at least 2% of a screen's text elements). The share of elements does not decide
+  here, because a type size on few elements can be a real heading: a page title used once per page is small
+  in count and still part of the system.
+- **Spacing unit** takes the base found on the most screens, as the drift report reads it.
+
+The block's first line counts what the screens use ("This product (3 screens measured …): 6 control
+heights in use; 32px on 55% of 102 controls, …"), control heights also for fields and buttons separately.
+The corpus lines follow it unchanged, and nothing joins the two sets of counts. Control heights counted
+before the visible control box (an inventory whose `controlBoxVersion` is null) are the older reading,
+taken from the input element, and give no option. An entry from this option has the source
+`own-screens:<date>#<axis>` and the basis "measured on <n> screens of this product, <date>".
 
 ## Files and options
 

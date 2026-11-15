@@ -218,6 +218,15 @@ catalog rule has priority `blocks`, and an approved ledger exception to a defaul
 screen; the other classes report. The drift files are byte for byte what the run writes without the
 flag. Definitions, thresholds, and limits: [render faults](references/render-faults.md).
 
+With `--inventory`, the run also counts what the screens at rest render, from the same observations, and
+writes `INVENTORY.md` and `inventory.json` beside the drift files: every control height (fields and
+buttons separately as well as together), radius, and type size in use, each with its count, its share,
+the screens that render it, and the screens whose drift row lists it, and each screen's spacing base. It
+is a count of what the screens render; it does not say which values are right.
+`propose-system.mjs --own <dir>/inventory.json` turns it into proposals from the product's own screens
+([system proposals](../ss-resolve/references/proposals.md)). The drift files are byte for byte what the
+run writes without the flag.
+
 With `--reference <slug>` (and `--project-root`), the run also measures the distance from one screen
 (`--screen <label>`, default the first) to the project's approved generated contract
 `.styleseed/rulesets/<slug>/evidence.json`, and writes `DISTANCE.md` and `distance.json` beside the

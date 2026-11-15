@@ -88,7 +88,9 @@ a supplied key, recommend `calm|balanced|vivid|deep` from the product posture ra
 an unbounded mood word. Then confirm light/dark mode, `neutral|warm|cool` surfaces, and
 `auto|tonal|adjacent|contrast` accent relationship. Confirm font/language, density, radius,
 elevation, imagery/data role, and motion inside the grammar's allowed ranges. Do not use generic
-indigo or a stale purple mislabeled as Toss.
+indigo or a stale purple mislabeled as Toss. The words chosen here (density, radius) are postures. The
+numbers for control height, type sizes, corner radius, row height, and spacing unit are proposed with
+their basis in step 9a.
 
 ### 7a. Spatial relationships
 
@@ -96,7 +98,8 @@ Explain the intended groups and spacing tradeoff before selecting numbers. Prese
 spacing tokens. For registry product UI, use the resolver's [spatial roles guide](../ss-resolve/references/spacing.md)
 to recommend and persist page inset, section/group/stack/inline gaps, and component inset separately.
 Keep typography and hit targets independent. Legacy setup keeps native tokens; do not invent
-unparsed lock fields. Recommendations are starting proposals, not approved or measured quality.
+unparsed lock fields. Spatial-role recommendations are heuristic starting values and are not measured.
+The measured proposals are in step 9a.
 
 ### 8. Write the design lock
 
@@ -134,7 +137,8 @@ Create `STYLESEED.md`:
 ```
 
 For a compiled grammar use its actual path and confidence. Reject unknown enum values rather
-than treating the lock as an exemption.
+than treating the lock as an exemption. The lock holds selections. Decided values go to the
+decisions ledger in step 9a; do not add lock lines for them.
 
 ### 9. Scaffold and prove
 
@@ -148,15 +152,47 @@ node <installed-ss-resolve>/scripts/resolve-context.mjs \
 Use `--agent codex` in Codex. The resolver writes `.styleseed/effective-rules.md` and a
 hash-verifiable `.styleseed/manifest.json`. Read the effective bundle, not `llms-full.txt`.
 
+### 9a. Propose the system values and record what the person decides
+
+For product UI, after the first resolve and before any code:
+
+```bash
+node <installed-ss-resolve>/scripts/propose-system.mjs --project-root . --surface pointer --write
+```
+
+Use `--surface touch` when the product is used by touch first, `--artifact <id>` in a registry project, and
+`--reference <slug>` for each reference the person measured with `/ss-reference`. It writes
+`.styleseed/proposals/SYSTEM.md` and `system.json`. For control height, type sizes, corner radius, table row height,
+and spacing unit, each block gives a value and its basis, strongest first: what the project already recorded, what the
+person measured, counts over the measured design systems that ship with this skill ("32px on 3 of 4 measured
+systems"), and last the engine default, which is labelled not measured.
+
+Present one axis at a time with its counts as printed. Where the counts split or are thin, show the distribution and
+what the choice depends on; do not pick for the person. The person takes the proposed value, another option, a value
+of their own, or skips the axis. For anything other than the printed entry, get the entry from
+`--entry <axis>=<values>`; for an entry marked as one part of a set, ask for the remaining values first. Record only
+what the person chose: append the entries to the ledger (`decisions` in `.styleseed/project.json`, or the array in
+`.styleseed/decisions.json` when the project has no registry), number them from the next free `D-` id, and set
+`approvedBy` to the name the person gives and `date` to today. Never fill in a name yourself and never record a
+skipped axis. If nobody can answer, record nothing and report the proposals as open.
+
+Resolve again. The bundle lists the entries under "Project decisions", where they outrank the defaults. A proposal
+is a count and a choice; it does not review the product. Details and limits:
+[system proposals](../ss-resolve/references/proposals.md).
+
+### 9b. First screen
+
 If the user asked for a first screen, build from that bundle, run `/ss-score` to the gate floor,
-and finish with `/ss-verify` when renderable. If visual rendering is unavailable, disclose that
-it was skipped.
+and finish with `/ss-verify` when renderable. When decisions were recorded, measure the built screen
+against them: `drift-report.mjs <url> --out .styleseed/evidence/drift/<date> --project-root . --structure`.
+If visual rendering is unavailable, disclose that it was skipped.
 
 ## Completion report
 
 Report the selected grammar and why, page/domain intersection, brand recipe, palette recipe,
 optional profile, lock path,
-compiled bundle and manifest paths, files changed, score, and visual verification status.
+compiled bundle and manifest paths, files changed, score, visual verification status, and
+the ledger entries recorded (id, axis, basis) and the axes left open.
 Mention `/ss-reference` as the path for future references that need their own grammar.
 
 ## Rules

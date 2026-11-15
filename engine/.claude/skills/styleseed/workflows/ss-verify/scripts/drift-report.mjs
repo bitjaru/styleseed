@@ -162,7 +162,9 @@ export function registryBaseline(projectRoot, paletteId = null) {
 // The project's decisions ledger: `.styleseed/project.json` `decisions` when --project-root holds a
 // registry (a registry that fails to load is an error, never a silent fallback), then the entries of
 // --decisions <file.json> appended. The combined ledger is validated as one, so a file entry may be
-// an exception `to` a registry decision, and ids and axes cannot clash.
+// an exception `to` a registry decision, and ids and axes cannot clash. A project without a registry
+// keeps its ledger in `.styleseed/decisions.json`; with --project-root and no --decisions that file is
+// read exactly as if it had been passed with --decisions.
 export function loadDecisions({ projectRoot = null, decisions = null } = {}, catalog = contextCatalog()) {
   let fromProject = [];
   if (projectRoot) {
@@ -170,6 +172,7 @@ export function loadDecisions({ projectRoot = null, decisions = null } = {}, cat
     try { registry = loadProjectRegistry(resolve(projectRoot), { catalog }); }
     catch (e) { throw new Error(`${e.message} (while reading the .styleseed registry under ${resolve(projectRoot)} for its decisions; fix the registry or drop --project-root)`); }
     fromProject = registry?.project.decisions ?? [];
+    if (!registry && !decisions && existsSync(join(resolve(projectRoot), '.styleseed', 'decisions.json'))) decisions = safeProjectPath(resolve(projectRoot), '.styleseed/decisions.json');
   }
   if (!decisions) return fromProject;
   let raw;

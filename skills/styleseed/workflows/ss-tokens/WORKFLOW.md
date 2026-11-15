@@ -89,6 +89,24 @@ failing contrast pair is reported to the system's owner, not corrected. Only imp
 bundle, palette JSON and `--ss-*` CSS. Fields, default role map and limits:
 [token canon guide](../ss-resolve/references/tokens.md).
 
+### `propose` — sizes, radii, and spacing with their basis
+
+Do not pick control heights, type sizes, radii, row heights, or a spacing unit by eye, and do not copy a preset.
+After the artifact resolves, run:
+
+```bash
+node <installed-ss-resolve>/scripts/propose-system.mjs --project-root . --surface pointer --write
+```
+
+(`--surface touch` for a touch-first product, `--artifact <id>` in a registry project, `--reference <slug>` for each
+reference the person measured.) Read `.styleseed/proposals/SYSTEM.md`: per axis it gives a value and its basis, in
+this order: the project's recorded decision, the person's own measurement, counts over the measured design systems
+that ship with this skill, and the engine default, labelled not measured. Present each axis with its counts, let the
+person choose, and append only what they chose to the decisions ledger with the name they give; `--entry
+<axis>=<values>` prints the entry for a value other than the proposed one. Then resolve again and apply the decided
+values in the token files below. The tool writes no ledger and no name. See
+[system proposals](../ss-resolve/references/proposals.md).
+
 ### `list` — Show current tokens
 Read and display the requested token file in a formatted table.
 
@@ -110,3 +128,5 @@ Read and display the requested token file in a formatted table.
 - New tokens must be added to BOTH the JSON source AND the CSS implementation
 - Treat preset recipes as maintained defaults, not the limit of available colors.
 - Character and role allocation are stronger design controls than complementary/triadic geometry alone.
+- Before adding or changing a size, radius, or spacing token, read the project's recorded decisions. A value
+  outside a decision needs the decision changed or an exception recorded by the person, not a silent token edit.

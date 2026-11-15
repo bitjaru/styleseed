@@ -16,8 +16,9 @@
 // 4. No fixture text in any output, every record passes the allow-list walk, and two runs with the
 //    same injected date give the same record bytes. A measurement regression fixture, not a design judgment.
 // 5. Anatomy probe (WO-12): the anatomy fixture gives exactly the expected output at 1440 and the
-//    same buttons, fields, labels, and cells at 390; on every fixture page and viewport the anatomy
-//    probe selects the same buttons and fields at the same heights as the control probe; the claim
+//    same buttons, fields, labels, and cells at 390; on every fixture page and viewport, the pages of
+//    control-box-fixtures.mjs included, the anatomy probe selects the same buttons and fields at the
+//    same heights as the control probe (both read the shared visible-control-box block); the claim
 //    readers give the expected values on the settings page, the control fixture, and the anatomy
 //    fixture, read from the records measureScreens stores.
 import assert from 'node:assert/strict';
@@ -30,6 +31,9 @@ import { observeFaults } from '../engine/.claude/skills/styleseed/workflows/ss-v
 import { measureScreens, measureViewport } from './consensus-study.mjs';
 import { CLAIMS, screenClaim, spacingSample, stripIds } from './lib/consensus.mjs';
 import { disallowedStrings } from './lib/reference-allow-list.mjs';
+import { observeAnatomy } from './lib/consensus-anatomy.mjs';
+import { observeControls } from './lib/consensus-probe.mjs';
+import { CONTROL_BOX_FIXTURES } from './lib/control-box-fixtures.mjs';
 import { settingsPage } from './lib/reference-settings-page.mjs';
 
 const repoRoot = resolve(fileURLToPath(new URL('../', import.meta.url)));
@@ -131,9 +135,12 @@ const FIXTURE_TEXT = ['Harbour', 'Find invoices', 'unpaid', 'Moving to', 'Nearly
   'Currency', 'KRW', 'Berth', 'Vessel', 'Heron', 'Wrapped label', 'Hidden label', 'quiet', 'receipts', 'Side labels', 'Plain table', 'Wrapped cells', 'Settled', 'Busan', 'Kind 1', 'Row 1', 'Nov 1'];
 
 // The anatomy probe's output on the anatomy fixture at 1440×900 (WO-12 appendix C), and what changes at 390.
+// One key differs from appendix C since the probe reads controls through the shared visible-control-box
+// block: the button whose label sits in a 13px span inside a 12px button reads its text size from the
+// button element (12), as the block defines it; appendix C had 13.
 const ANATOMY_1440 = {
   version: 1, viewport: { width: 1440, height: 900 }, truncated: false,
-  buttons: { 'outline|32|16|14|400|6|1|none|0|0': 1, 'filled|32|16|14|400|6|1|none|0|0': 1, 'filled|32|22|14|700|999|2|none|0|0': 1, 'filled|40|16|14|400|0|0|none|0|0': 1, 'outline|32|13|14|500|6|1|lead|16|8': 1, 'outline|32|13|14|500|6|1|trail|12|6': 1, 'filled|32|14|13|600|4|0|none|0|0': 1, 'filled|36|16|14|500|6|0|none|0|0': 1 },
+  buttons: { 'outline|32|16|14|400|6|1|none|0|0': 1, 'filled|32|16|14|400|6|1|none|0|0': 1, 'filled|32|22|14|700|999|2|none|0|0': 1, 'filled|40|16|14|400|0|0|none|0|0': 1, 'outline|32|13|14|500|6|1|lead|16|8': 1, 'outline|32|13|14|500|6|1|trail|12|6': 1, 'filled|32|14|12|600|4|0|none|0|0': 1, 'filled|36|16|14|500|6|0|none|0|0': 1 },
   fields: { 'text|32|9|14|6|box|1|none': 1, 'text|32|12|14|6|box|1|none': 2, 'text|32|33|14|6|box|1|lead': 1, 'select|32|12|14|6|box|1|none': 1, 'text|40|16|14|0|under|1|none': 1, 'text|36|12|14|8|fill|0|none': 2 },
   labels: { 'above|4|14|500': 4, 'left|12|14|400': 2, 'left|10|14|400': 1, 'none|0|0|0': 1 },
   fieldGaps: { 'plain|16': 3, 'helper|36': 1 },
@@ -175,6 +182,7 @@ try {
   const pages = join(dir, 'pages');
   mkdirSync(pages);
   for (const [name, html] of Object.entries(PAGES)) writeFileSync(join(pages, name), html);
+  for (const [name, { html }] of Object.entries(CONTROL_BOX_FIXTURES)) writeFileSync(join(pages, `box-${name}.html`), html);
   const url = name => pathToFileURL(join(pages, name)).href;
   const { chromium } = await loadBrowser(browserModule);
 
@@ -225,7 +233,18 @@ try {
     assert.deepEqual(wide, ANATOMY_1440, 'the anatomy fixture at 1440 gives the expected output');
     for (const key of ['buttons', 'fields', 'labels', 'fieldGaps', 'cells', 'headings', 'textLines', 'icons', 'capped', 'truncated']) assert.deepEqual(narrow[key], ANATOMY_1440[key], `@390: ${key} as at 1440`);
     assert.deepEqual([narrow.panels, narrow.panelGaps, narrow.viewport], [ANATOMY_390.panels, ANATOMY_390.panelGaps, { width: 390, height: 844 }], '@390: the shadow panel is wider than the viewport less 32px and is not a panel there');
-    console.log(`consensus anatomy probe: anatomy fixture equals the expected output at 1440 (${Object.keys(wide.buttons).length} button, ${Object.keys(wide.fields).length} field, ${Object.keys(wide.panels).length} panel, ${Object.keys(wide.cells).length} cell keys) and keeps its controls at 390; the anatomy and control probes select the same buttons and fields on the settings, control, and anatomy fixtures at 1440 and 390`);
+    // The same parity on every page of the visible-control-box fixtures (WO-10), at both viewports.
+    for (const name of Object.keys(CONTROL_BOX_FIXTURES)) for (const size of SIZES) {
+      const context = await browser.newContext({ viewport: size, deviceScaleFactor: 1 });
+      try {
+        const page = await context.newPage();
+        await page.goto(url(`box-${name}.html`), { waitUntil: 'load' });
+        const [controls, anatomy] = [await page.evaluate(observeControls, { maxElements: 5000 }), await page.evaluate(observeAnatomy, { maxElements: 5000 })];
+        assertParity(controls, anatomy, `control-box fixture ${name} @${size.width}`);
+        noFixtureText(JSON.stringify(anatomy), `anatomy output of control-box fixture ${name}`);
+      } finally { await context.close(); }
+    }
+    console.log(`consensus anatomy probe: anatomy fixture equals the expected output at 1440 (${Object.keys(wide.buttons).length} button, ${Object.keys(wide.fields).length} field, ${Object.keys(wide.panels).length} panel, ${Object.keys(wide.cells).length} cell keys) and keeps its controls at 390; the anatomy and control probes select the same buttons and fields on the settings, control, and anatomy fixtures and on the ${Object.keys(CONTROL_BOX_FIXTURES).length} visible-control-box fixtures at 1440 and 390`);
   } finally { await browser.close(); }
 
   // 3 and 4. Guards and records through measureScreens.

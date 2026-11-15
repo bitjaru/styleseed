@@ -627,7 +627,7 @@ const LIMITS = [
   "Page type is the study's own label, and some screens are mixed (a table with an open detail panel).",
   "No scroll pass. Content a page renders only after scrolling is not measured.",
   "The anatomy probe is new and its tests are heuristics. A label is found through `for`, wrapping, or `aria-labelledby` only. A button's inset is the declared one, so a fixed-width button without padding reads 0. A field with two inputs reads as two fields. Icons are `svg`, `img`, and `role=\"img\"` elements, so icon fonts are not seen. Headings are `h1` to `h6` and `role=\"heading\"`, so a system that sets its titles in plain elements has no heading value.",
-  "Borders and shadows drawn on a pseudo-element are read for panels only. A field or a button outlined that way reads as `none` or `fill`, and the control probe may then measure the bare input.",
+  "An outline drawn on a pseudo-element or a covering child gives a field's or a button's box, height, and radius, and a panel's border, but not a field's drawing style or a button's border width: those are read from the box's own style, so such a field reads as `none` or `fill`.",
   "The spacing sample resolves a border in favour of the 4px grid: a 15px padding inside a 1px border counts as 16. That is the study's assumption, so a system that really uses 15px shows as 16.",
 ];
 

@@ -132,7 +132,8 @@ and button pairs on one row; and the characters set in each font size. It leaves
 page-level headers and footers, and anything fixed to the viewport, which the engine probes measure.
 
 The anatomy probe (`scripts/lib/consensus-anatomy.mjs`) measures what sits inside and around those
-controls. It selects buttons and fields exactly as the control probe does and on the same visible box
+controls. It reads buttons and fields through the same visible-control-box block (a fourth copy,
+compared by the same test) and selects them exactly as the control probe does, on the same visible box
 (`scripts/test-consensus-browser.mjs` checks that the two agree on every fixture page), then reads per
 button the inset from its outer edge to the label or a leading icon, text size and weight, corner
 radius, border width, and the size of an icon and its gap to the label; per field the inset to where
@@ -144,9 +145,11 @@ text size, weight); headings; line heights per text size; and icon sizes. A butt
 declared one (border, padding, and the margins of wrappers down to the label), because a measured
 inset grows with a stretched or minimum-width button; the insets of fields, panels, and cells are
 measured from the box edge to where the content starts, because wrappers hide the declaration. A
-border drawn on a `::before` or `::after` element that covers a panel is read as that panel's border;
-for fields and buttons it is not. Like the control probe it leaves navigation, page-level headers and
-footers, and anything fixed to the viewport out.
+border drawn on a `::before` or `::after` element that covers a panel is read as that panel's border.
+For a field or a button such an outline gives the box, its height, and its radius (the block finds
+it), while the field's drawing style and the button's border width are read from the box's own style.
+Like the control probe it leaves navigation, page-level headers and footers, and anything fixed to the
+viewport out.
 
 ## What is stored, and what never is
 
@@ -261,8 +264,9 @@ what changed; no row of the first is deleted, and no threshold is moved toward a
     padding reads 0; a field with two inputs reads as two; icons are `svg`, `img`, and `role="img"`
     elements, so icon fonts are not seen; headings are `h1` to `h6` and `role="heading"`, so a system
     that sets its titles in plain elements has no heading value.
-11. Borders and shadows drawn on a pseudo-element are read for panels only. A field or a button
-    outlined that way reads as `none` or `fill`, and the control probe may then measure the bare input.
+11. An outline drawn on a pseudo-element or a covering child gives a field's or a button's box, height,
+    and radius, and a panel's border, but not a field's drawing style or a button's border width: those
+    are read from the box's own style, so such a field reads as `none` or `fill`.
 12. The spacing sample resolves a border in favour of the 4px grid. That is the study's assumption: a
     system that really uses 15px inside a 1px border shows as 16.
 

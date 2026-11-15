@@ -811,7 +811,7 @@ test("renderConsensusMarkdown: the anatomy section, set rows, pills, and the sec
   const fresh = renderConsensusMarkdown(consensusDocument(storedManifest, storedRun, storedRecords), storedManifest, storedRun);
   const section = (text, title) => { const start = text.indexOf(`## ${title}\n`); assert.ok(start >= 0, title); const next = text.indexOf("\n## ", start + 1); return text.slice(start, next < 0 ? undefined : next); };
   for (const title of ["Run", "Claims that map to a catalog rule", "Consistency claims without a rule", "Dimensions", "What this says about the open cards of `research/reviews/batch-01.md`"]) assert.equal(section(fresh, title), section(committed, title), title);
-  assert.equal(fresh.replace("control and anatomy probes", "control probe").split("\n")[2], committed.split("\n")[2], "the first paragraph changes in one place");
+  assert.equal(fresh.replace("control and anatomy probes", "control probe").replace("systems an organisation builds its own products or services with", "systems a company builds its own products with").split("\n")[2], committed.split("\n")[2], "the first paragraph changes in two places");
   assert.ok(section(committed, "Limits").trimEnd().split("\n").every((l) => section(fresh, "Limits").includes(l)), "the nine limits stay");
   assert.equal(section(fresh, "Limits").trimEnd().split("\n").filter((l) => /^\d+\. /u.test(l)).length, 12);
 });

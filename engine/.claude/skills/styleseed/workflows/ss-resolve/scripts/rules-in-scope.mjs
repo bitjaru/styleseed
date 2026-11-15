@@ -58,7 +58,9 @@ function renderDecision(entry) {
   return `- **${entry.id}** (${parts.join(" · ")}): ${entry.statement}`;
 }
 
-export function renderRulesSection(rules, selection = {}, { decisions = [], artifactId = null } = {}) {
+// `ledgerPath` is where the entries are recorded: `.styleseed/project.json` for a registry, the array in
+// `.styleseed/decisions.json` for a project without one.
+export function renderRulesSection(rules, selection = {}, { decisions = [], artifactId = null, ledgerPath = ".styleseed/project.json" } = {}) {
   const { invariants, defaults } = selectRules(rules, selection);
   const applicable = decisionsFor(decisions, artifactId);
   if (!invariants.length && !defaults.length && !applicable.length) return "";
@@ -73,7 +75,7 @@ export function renderRulesSection(rules, selection = {}, { decisions = [], arti
     ...(applicable.length ? [
       "## Project decisions",
       "",
-      "Recorded in `.styleseed/project.json`. A decision outranks a default; it never outranks an invariant.",
+      `Recorded in \`${ledgerPath}\`. A decision outranks a default; it never outranks an invariant.`,
       "",
       ...applicable.map(renderDecision),
       "",

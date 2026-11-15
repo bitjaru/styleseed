@@ -275,6 +275,20 @@ what changed; no row of the first is deleted, and no threshold is moved toward a
 12. The spacing sample resolves a border in favour of the 4px grid. That is the study's assumption: a
     system that really uses 15px inside a 1px border shows as 16.
 
+## What ships to users
+
+This folder does not ship with the skill. What reaches a user is one generated file,
+`engine/.claude/skills/styleseed/workflows/ss-resolve/references/evidence-pack.json`, built from the one run
+named in `research/consensus/evidence-pack-run.json` (`{ "run": "2026-11-12" }`). It carries, per claim,
+page type, and viewport, how many measured design systems landed in each value bucket, counted by kind
+(product system or kit), plus the run id, the viewports, and each lineage's name and screen counts; it
+carries no per-system or per-screen value and nothing that identifies page text. The system proposer
+(`ss-resolve/scripts/propose-system.mjs`) reads it and prints those counts beside each proposal; the
+claims it may use are listed in `CLAIM_USES` in `scripts/lib/evidence-pack.mjs`. A new run reaches users
+by changing the pointer and rebuilding: `node scripts/build-evidence-pack.mjs` writes the pack (and the
+shipped engine defaults beside it), `node scripts/build-evidence-pack.mjs --check` fails when either is
+out of date. One pack is built from one run, so measurements of different probe versions never mix.
+
 ## Re-running
 
 ```

@@ -18,6 +18,9 @@
 // field names, enums, claim segments, and rule ids (consensus.test.mjs, test-consensus-browser.mjs).
 // The line after it holds the field names, enums, and claim segments of the anatomy probe and its
 // claims (WO-12).
+// The evidence pack the skill ships (ss-resolve/references/evidence-pack.json) is walked too, after
+// its generatedBy, run path, lineage ids and names, and claim labels and caveats are removed; the last
+// line holds its field names and enums, including the ledger axis names (evidence-pack.test.mjs).
 export const VOCABULARY = new Set(`
 version viewport width height elements truncated shell documentHeight bodyScrolls overflowX scrollContainers
 regions kind by x y w h position items itemHeight contentWidth insetLeft
@@ -47,6 +50,7 @@ schemaVersion generator tool slug fallback adapter sources source robots allowed
 faults textRuns amounts overlaps spills clips insets touches aligns emoji icons box against lines forced side authored delta context control lead tile panel chip sets groups unknown capped stroke fill class rule gates status fault exception measure inset distribution findings counts amount-wrap text-overlap text-spill text-clip tight-inset text-touch near-touch near-align emoji-icon icon-mix DL-23-amounts-never-wrap INV-06-text-stays-whole CRAFT-functional-icons CRAFT-icon-family
 recordVersion screen access hosted self-hosted httpStatus overlayShare design fields pairs textSizes field button fieldRadius buttonRadius values spacingCoverage fontCount properties all opacity transform shadow layout candidates reason failed http-error redirected-host redirected-path timeout navigation-error unexpected-content overlay terms no-base consensusVersion claims claim pageType detail lineage lineages product-system kit tier fragment agree agreeProductSystems agreeKits productSystems kits bucket top supportsRule candidate split thin mixed true false card eligible raw withFragments shareHeight rowShareHeight shareRadius pointerUnder44 narrowAtLeast44 textSize inPanel bodySize overFourRows onePerSection oneLine noEmoji oneFamily rolesConstant buttonHeight reducedMotionRules transitionAll faultClasses chromium classes screensMeasured screensWithAny lineagesWithAny mostOnOneScreen run listed screens delay CRAFT-control-heights CRAFT-spacing-scale DL-21-density-by-task INV-05-no-unexplained-role-drift bodyFontSize probes lineagesMeasured fragments
 anatomy fieldGaps panelGaps cells textLines panels texts trail under ring plain helper border tone border-shadow border-tone shadow-tone border-shadow-tone head square rounded valueKind single set console service radius label padRatio textWeight shape iconSize iconGap textMatchesField style borderWidth fieldGap separation panelNotSmaller bodyRowHeight cellPadX headerHeavier nav sideWidth topBarHeight lineRatio pageTitle sectionTitle grid4Share onGrid4 steps sizeCount stepCount valueCount heightCount buttonPad fieldPad labelGap panelInset panelGap cellPad
+touch use complete flag buckets tableRowHeights listItemHeights headingSizes primariesPerSection transitionDurations
 `.split(/\s+/u).filter(Boolean));
 
 const COLOUR = /(?:rgba?|hsla?|lab|lch|oklab|oklch|color)\([\d\s.,%/-]*\)|#[0-9a-f]{3,8}\b/giu;

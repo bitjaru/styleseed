@@ -9,9 +9,12 @@
 // (scripts/lib/consensus-anatomy.mjs), set-valued rows (`valueKind: "set"`), `group` and `unit` on every
 // row, and `context` on every lineage entry. The 21 claims of version 1 keep their ids, readers, and
 // buckets; a record without an anatomy block has no value for any new claim.
+// Version 3 (after run 2026-11-15) changes no claim: it marks records of the anatomy probe's version 2,
+// which reads text under a `display: contents` box and an icon positioned over a field's own box, so a
+// run measured with version 1 is not regenerated under the corrected reading.
 import { colorDistance } from "../../engine/.claude/skills/styleseed/workflows/ss-reference/scripts/compare-screens.mjs";
 
-export const CONSENSUS_VERSION = 2;
+export const CONSENSUS_VERSION = 3;
 export const PAGE_TYPES = Object.freeze(["dashboard", "list", "form", "detail"]);
 export const ROW_PAGE_TYPES = Object.freeze([...PAGE_TYPES, "all"]);
 export const GATE_CANDIDATES = Object.freeze(["amount-wrap", "text-overlap", "text-spill"]);

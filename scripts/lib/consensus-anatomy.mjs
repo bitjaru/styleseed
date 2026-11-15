@@ -337,7 +337,10 @@ export function observeAnatomy({ maxElements = 5000 } = {}) {
     }
     return 0;
   };
-  const visuallyHidden = el => { for (let p = el; p && p !== document.body; p = p.parentElement) { const { rect, cs } = box(p); if (rect.width <= 1 || rect.height <= 1 || cs.visibility === 'hidden' || cs.display === 'none' || num(cs.opacity) === 0 || /rect\(0(px)?[ ,]+0(px)?[ ,]+0(px)?[ ,]+0(px)?\)/.test(cs.clip || '')) return true; } return false; };
+  // Hidden from a reader: an element or ancestor with no size, hidden, transparent, or clipped to
+  // nothing. A `display: contents` box is passed over: it has no rectangle of its own and hides nothing
+  // (version 2; version 1 read everything under such a box as hidden).
+  const visuallyHidden = el => { for (let p = el; p && p !== document.body; p = p.parentElement) { const { rect, cs } = box(p); if (cs.display === 'contents') continue; if (rect.width <= 1 || rect.height <= 1 || cs.visibility === 'hidden' || cs.display === 'none' || num(cs.opacity) === 0 || /rect\(0(px)?[ ,]+0(px)?[ ,]+0(px)?[ ,]+0(px)?\)/.test(cs.clip || '')) return true; } return false; };
   const range = document.createRange();
   // The rectangle of an element's visible text: the union of the client rects of the text nodes
   // inside `root` (those inside `skip` left out), with the element that holds the first one.
@@ -380,7 +383,7 @@ export function observeAnatomy({ maxElements = 5000 } = {}) {
     return total;
   };
 
-  const out = { version: 1, viewport: { width: vw, height: window.innerHeight }, truncated: false, buttons: {}, fields: {}, labels: {}, fieldGaps: {}, panels: {}, panelGaps: {}, cells: {}, headings: {}, textLines: {}, icons: {}, capped: {} };
+  const out = { version: 2, viewport: { width: vw, height: window.innerHeight }, truncated: false, buttons: {}, fields: {}, labels: {}, fieldGaps: {}, panels: {}, panelGaps: {}, cells: {}, headings: {}, textLines: {}, icons: {}, capped: {} };
   const all = document.querySelectorAll('body *');
   const fields = [], buttons = [], panels = [], texts = [], fieldBoxes = new Set();
   const controlEls = new Set();
@@ -478,7 +481,12 @@ export function observeAnatomy({ maxElements = 5000 } = {}) {
     const er = box(el).rect;
     const t = native ? null : textRect(el);
     const start = native ? er.left + num(cs.borderLeftWidth) + num(cs.paddingLeft) + num(cs.textIndent) : t ? t.left : er.left + num(cs.borderLeftWidth) + num(cs.paddingLeft);
-    const adorned = iconsIn(fb).some(i => { const r = box(i).rect; return r.left + r.width / 2 < start; }) ? 'lead' : 'none';
+    // A leading icon: one inside the box before where the value starts, or one beside the box in the
+    // same parent that lies over the box before the value (an icon positioned over an input that draws
+    // its own box; version 2).
+    const before = i => { const r = box(i).rect; return r.left + r.width / 2 < start; };
+    const over = i => { const r = box(i).rect, cy = r.top + r.height / 2; return r.left + r.width / 2 >= rect.left && cy >= rect.top && cy <= rect.bottom; };
+    const adorned = iconsIn(fb).some(before) || (fb.parentElement && iconsIn(fb.parentElement).some(i => !fb.contains(i) && before(i) && over(i))) ? 'lead' : 'none';
     const sides = ['Top', 'Right', 'Bottom', 'Left'].filter(s => side(fcs, s));
     const style = sides.length === 4 ? 'box' : ringed(fcs) ? 'ring' : sides.length === 1 && sides[0] === 'Bottom' ? 'under' : filledBg(fb) ? 'fill' : 'none';
     const border = style === 'box' || style === 'under' ? half(num(fcs.borderBottomWidth)) : 0;

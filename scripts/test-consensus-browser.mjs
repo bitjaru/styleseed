@@ -129,17 +129,35 @@ ${[1, 2].map(i => `<tr><td><div><input type="checkbox" aria-label="pick"> Row ${
 <section class="pseudo"><h2>Grid</h2><div class="grid" role="grid"><div role="row"><div role="columnheader">Name</div><div role="columnheader">Port</div></div>
 ${[1, 2].map(i => `<div role="row"><div role="gridcell">Heron ${i}</div><div role="gridcell">Busan</div></div>`).join('')}</div></section>
 </main></body></html>`;
-const PAGES = { 'controls.html': controlsPage(), 'settings.html': settingsPage(), 'redirect.html': redirectPage(), 'sparse.html': sparsePage(), 'dialog.html': dialogPage(), 'anatomy.html': anatomyPage() };
+// Two shapes the anatomy probe read wrong in run 2026-11-15 (version 1), fixed in version 2: content
+// under `display: contents` boxes (a page whose <main> is one), and a search icon positioned over an
+// input that draws its own box. Fictional copy.
+const edgeIcon = '<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M7 2a5 5 0 1 0 0 10A5 5 0 0 0 7 2zm4 9 3 3" stroke="#4d5150" stroke-width="2" fill="none"/></svg>';
+const edgePage = () => `<!doctype html><html lang="en"><meta charset="utf-8"><title>anatomy edge fixture</title><style>
+*{box-sizing:border-box}body{margin:0;padding:32px;background:#f4f5f7;color:#1b1d1c;font:14px/20px system-ui,sans-serif}
+main,.contents{display:contents}
+.card{width:480px;background:#ffffff;border:1px solid #d5dbdb;border-radius:8px;padding:24px;margin-bottom:24px}
+.fitem{display:flex;flex-direction:column}.fitem label{display:block;margin-bottom:6px;font-weight:600}
+.f{width:280px;height:32px;padding:0 11px;border:1px solid #b4bdbb;border-radius:6px;font:inherit;background:#ffffff}
+.search{position:relative;width:280px}.search svg{position:absolute;left:12px;top:8px}
+.search input{width:280px;height:32px;padding:0 11px 0 35px;border:1px solid #b4bdbb;border-radius:6px;font:inherit;background:#ffffff}
+table{width:100%;border-collapse:collapse}thead tr{height:36px}tbody tr{height:40px}th,td{padding:0 12px;text-align:left;border-bottom:1px solid #e3e8e7}th{font-weight:600}
+</style><body><main><div class="contents">
+<section class="card"><div class="fitem"><label for="e1">Dock name</label><input id="e1" class="f" type="text" value="West pier"></div></section>
+<section class="card"><div class="search">${edgeIcon}<input type="search" value="cargo" aria-label="Search cargo"></div></section>
+<section class="card"><table><thead><tr><th>Ship</th><th>Slip</th></tr></thead><tbody><tr><td>Gull</td><td>3</td></tr><tr><td>Tern</td><td>4</td></tr></tbody></table></section>
+</div></main></body></html>`;
+const PAGES = { 'edge.html': edgePage(), 'controls.html': controlsPage(), 'settings.html': settingsPage(), 'redirect.html': redirectPage(), 'sparse.html': sparsePage(), 'dialog.html': dialogPage(), 'anatomy.html': anatomyPage() };
 const FIXTURE_TEXT = ['Harbour', 'Find invoices', 'unpaid', 'Moving to', 'Nearly empty', 'Quarterly', 'Welcome aboard', 'Filter', '스토어', '결제', 'owner@', '110-123', 'fx-', 'fixture',
   'Cancel entry', 'Save entry', 'Create ledger', 'Submit form', 'Add row', 'Export list', 'Inner span', 'Continue to review', 'Ledger name', 'North quay', 'Owner email', 'Search entries',
-  'Currency', 'KRW', 'Berth', 'Vessel', 'Heron', 'Wrapped label', 'Hidden label', 'quiet', 'receipts', 'Side labels', 'Plain table', 'Wrapped cells', 'Settled', 'Busan', 'Kind 1', 'Row 1', 'Nov 1'];
+  'Currency', 'KRW', 'Berth', 'Vessel', 'Heron', 'Wrapped label', 'Hidden label', 'quiet', 'receipts', 'Side labels', 'Plain table', 'Wrapped cells', 'Settled', 'Busan', 'Kind 1', 'Row 1', 'Nov 1', 'Dock name', 'West pier', 'cargo', 'Gull', 'Tern', 'Ship', 'Slip'];
 
 // The anatomy probe's output on the anatomy fixture at 1440×900 (WO-12 appendix C), and what changes at 390.
 // One key differs from appendix C since the probe reads controls through the shared visible-control-box
 // block: the button whose label sits in a 13px span inside a 12px button reads its text size from the
 // button element (12), as the block defines it; appendix C had 13.
 const ANATOMY_1440 = {
-  version: 1, viewport: { width: 1440, height: 900 }, truncated: false,
+  version: 2, viewport: { width: 1440, height: 900 }, truncated: false,
   buttons: { 'outline|32|16|14|400|6|1|none|0|0': 1, 'filled|32|16|14|400|6|1|none|0|0': 1, 'filled|32|22|14|700|999|2|none|0|0': 1, 'filled|40|16|14|400|0|0|none|0|0': 1, 'outline|32|13|14|500|6|1|lead|16|8': 1, 'outline|32|13|14|500|6|1|trail|12|6': 1, 'filled|32|14|12|600|4|0|none|0|0': 1, 'filled|36|16|14|500|6|0|none|0|0': 1 },
   fields: { 'text|32|9|14|6|box|1|none': 1, 'text|32|12|14|6|box|1|none': 2, 'text|32|33|14|6|box|1|lead': 1, 'select|32|12|14|6|box|1|none': 1, 'text|40|16|14|0|under|1|none': 1, 'text|36|12|14|8|fill|0|none': 2 },
   labels: { 'above|4|14|500': 4, 'left|12|14|400': 2, 'left|10|14|400': 1, 'none|0|0|0': 1 },
@@ -222,13 +240,21 @@ try {
 
     // 5. The anatomy probe: appendix C at 1440, the same controls at 390, parity on every fixture page.
     const outputs = {};
-    for (const name of ['anatomy.html', 'controls.html']) for (const size of SIZES) {
+    for (const name of ['anatomy.html', 'controls.html', 'edge.html']) for (const size of SIZES) {
       const m = await measureViewport(browser, url(name), size, { allowFile: true });
       assert.equal(m.status, 'measured', JSON.stringify(m));
       assertParity(m.outputs.controls, m.outputs.anatomy, `${name} @${size.width}`);
       noFixtureText(JSON.stringify(m.outputs.anatomy), `anatomy output of ${name} @${size.width}`);
       outputs[`${name}@${size.width}`] = m.outputs.anatomy;
     }
+    // The edge fixture (version 2): the label under display: contents boxes is found, the table cells
+    // are read, the card that holds only a table is a panel, and the icon over the search input's own
+    // box makes it a leading-icon field.
+    const edge = outputs['edge.html@1440'];
+    assert.deepEqual(edge.labels, { 'above|6|14|600': 1, 'none|0|0|0': 1 }, `edge labels ${JSON.stringify(edge.labels)}`);
+    assert.deepEqual(edge.fields, { 'text|32|12|14|6|box|1|none': 1, 'text|32|36|14|6|box|1|lead': 1 }, `edge fields ${JSON.stringify(edge.fields)}`);
+    assert.deepEqual(edge.cells, { 'head|36|12|14|600': 2, 'body|40|12|14|400': 4 }, `edge cells ${JSON.stringify(edge.cells)}`);
+    assert.deepEqual(edge.panels, { 'narrow|25|8|border-tone|1': 2, 'narrow|37|8|border-tone|1': 1 }, `edge panels ${JSON.stringify(edge.panels)}`);
     const wide = outputs['anatomy.html@1440'], narrow = outputs['anatomy.html@390'];
     assert.deepEqual(wide, ANATOMY_1440, 'the anatomy fixture at 1440 gives the expected output');
     for (const key of ['buttons', 'fields', 'labels', 'fieldGaps', 'cells', 'headings', 'textLines', 'icons', 'capped', 'truncated']) assert.deepEqual(narrow[key], ANATOMY_1440[key], `@390: ${key} as at 1440`);
@@ -276,7 +302,7 @@ try {
   ]);
   assert.deepEqual(first.records.map(r => r.screen), ['alpha-controls', 'alpha-anatomy', 'kit-settings'], 'no record for a failed screen');
   assert.match(first.chromium, /^\d+(\.\d+)+$/u);
-  assert.deepEqual(first.probes, { structure: 2, faults: 1, controls: 2, anatomy: 1 });
+  assert.deepEqual(first.probes, { structure: 2, faults: 1, controls: 2, anatomy: 2 });
   const kit = first.records.find(r => r.screen === 'kit-settings');
   assert.deepEqual([kit.url, kit.access, kit.robots, kit.scroll], [listed('settings.html'), 'self-hosted', 'not-checked', false], 'a self-hosted screen keeps its listed URL');
   assert.deepEqual(kit.viewports.map(v => [v.viewport, v.status]), [[1440, 'measured'], [390, 'measured']]);

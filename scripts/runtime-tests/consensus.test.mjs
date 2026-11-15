@@ -452,7 +452,7 @@ const anatomyRecord = (lists, extra = {}) => { const m = oneForm(); return rec(m
 const at = (id, lists, extra) => screenClaim(claim(id), anatomyRecord(lists, extra));
 
 test("WO-12: 48 new claims beside the 21 of the first run, which keep their ids and order", () => {
-  assert.equal(CONSENSUS_VERSION, 2);
+  assert.equal(CONSENSUS_VERSION, 3, "3 since the anatomy probe's version 2 (after run 2026-11-15)");
   assert.deepEqual([RECORD_VERSION, STUDY_VERSION], [2, 2]);
   assert.equal(CLAIMS.length, 69);
   assert.deepEqual(CLAIMS.slice(0, 21).map((c) => c.id), OLD_IDS);
@@ -722,7 +722,7 @@ test("determinism, plain wording, and the allow-list walk with records that carr
   for (const name of ["consensus.json", "negative-control.json"]) assert.deepEqual(disallowedStrings(stripIds(JSON.parse(first[name]), m)), [], `${name} passes the walk`);
   for (const r of records) assert.deepEqual(disallowedStrings(stripIds(r, m)), [], `${r.screen}: a record with anatomy passes the walk`);
   const consensus = JSON.parse(first["consensus.json"]);
-  assert.equal(consensus.consensusVersion, 2);
+  assert.equal(consensus.consensusVersion, CONSENSUS_VERSION);
   assert.equal(new Set(consensus.rows.map((r) => r.claim)).size, 69);
   for (const r of consensus.rows) assert.deepEqual(Object.keys(r), ["claim", "pageType", "viewport", "transfer", "valueKind", "group", "unit", "rule", "card", "measured", "agree", "agreeProductSystems", "agreeKits", "top", "supportsRule", "status", "distribution", "lineages", "withFragments"], r.claim);
   // A label string in an anatomy key fails the walk.
@@ -778,6 +778,11 @@ test("stored runs: the 2026-11-12 run passes the walk and is not regenerated (an
   assert.deepEqual(result.counts, { listed: 32, measured: 24, failed: 0, skipped: 8 });
   assert.equal(result.regenerated, false);
   assert.equal(JSON.parse(readFileSync(join(dir, "consensus.json"), "utf8")).consensusVersion, 1);
+  // The run measured with anatomy probe version 1 is kept as committed and is not regenerated under
+  // version 3, whose records carry the corrected reading.
+  const later = checkRunFolder(resolve(studyRoot, "runs/2026-11-15"));
+  assert.deepEqual([later.errors, later.counts, later.regenerated], [[], { listed: 46, measured: 45, failed: 1, skipped: 0 }, false]);
+  assert.deepEqual(JSON.parse(readFileSync(resolve(studyRoot, "runs/2026-11-15/run.json"), "utf8")).probes, { structure: 2, faults: 1, controls: 2, anatomy: 1 });
 });
 
 test("renderConsensusMarkdown: the anatomy section, set rows, pills, and the sections of the first run unchanged", () => {

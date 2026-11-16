@@ -6,11 +6,13 @@ import { join, relative, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import {
-  PAGE_ROWS, PROPOSAL_AXES, PROPOSAL_RULE, TOUCH_FLOOR, engineDefault, engineDefaultsTable, entryForValues, normalizeEngineDefaults, normalizeEvidencePack,
-  proposeSystem, referenceValues, renderEngineDefaultsMarkdown, renderProposalMarkdown, rowStatus, selectRow,
+  PAGE_ROWS, PROPOSAL_AXES, PROPOSAL_RULE, TOUCH_FLOOR, engineDefault, engineDefaultsTable, entryForValues, normalizeEngineDefaults, normalizeEvidencePack, normalizeInventory,
+  ownScreens, proposeSystem, referenceValues, renderEngineDefaultsMarkdown, renderProposalMarkdown, rowStatus, selectRow,
 } from "../../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/system-proposal.mjs";
 import { contractHash, normalizeReferenceEvidence } from "../../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/reference-contract.mjs";
 import { normalizeDecisions } from "../../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/runtime-contract.mjs";
+import { summarize } from "../../engine/.claude/skills/styleseed/workflows/ss-reference/scripts/analyze-observations.mjs";
+import { DOMINANT_SHARE, INVENTORY_TOOL, INVENTORY_VERSION, systemInventory } from "../../engine/.claude/skills/styleseed/workflows/ss-verify/scripts/system-inventory.mjs";
 
 const repoRoot = resolve(fileURLToPath(new URL("../../", import.meta.url)));
 const resolveDir = resolve(repoRoot, "engine/.claude/skills/styleseed/workflows/ss-resolve");
@@ -55,7 +57,7 @@ function makePack(rows, { touch = false, extraClaims = [] } = {}) {
   });
 }
 const project = (over = {}) => ({ mode: "legacy", decisions: [], density: "compact", recipe: "enterprise-workbench", ledger: { path: ".styleseed/decisions.json", entries: 0, nextId: "D-001" }, ...over });
-const propose = (pack, { page = "form", surface = "pointer", references = [], decisions = [], recipe = "enterprise-workbench", rule } = {}) => proposeSystem({ pack, defaults, project: project({ decisions, recipe }), context: { page, surface }, references, ...(rule ? { rule } : {}) });
+const propose = (pack, { page = "form", surface = "pointer", references = [], own = null, decisions = [], recipe = "enterprise-workbench", rule } = {}) => proposeSystem({ pack, defaults, project: project({ decisions, recipe }), context: { page, surface }, references, own, ...(rule ? { rule } : {}) });
 const axisOf = (proposal, axis) => proposal.axes.find((entry) => entry.axis === axis);
 
 test("rowStatus: agreement needs 3 systems, two thirds, and the product systems the rule asks for", () => {
@@ -443,6 +445,188 @@ test("CLI: refusals exit 1 with their message; --write writes two files; --entry
     rmSync(outside, { recursive: true, force: true });
   }
   assert.ok(!existsSync(root));
+});
+
+// --- the product's own screens (Part B) ---------------------------------------------------------------------------
+
+// The wording rule of B2 for the own-screens bullets: none of these, case-insensitive, whole words.
+const OWN_BANNED = /\b(too many|should|inconsistent|messy|wrong|fix|clean|normally)\b/iu;
+const OWN_PATH = ".styleseed/evidence/drift/2026-11-14/inventory.json";
+const ownObservation = ({ heights = {}, fields = {}, buttons = {}, radii = {}, type = {}, spacing = { 8: 40, 16: 30 }, box = true } = {}) => ({
+  viewport: { width: 1440, height: 900 }, controlHeights: heights, radii, type, spacing, actions: {}, links: {}, text: {}, surfaces: {}, body: {},
+  ...(box ? { controlHeightsByKind: { field: fields, button: buttons }, controlBoxVersion: 1 } : {}),
+});
+// inventory.json as drift-report.mjs --inventory writes it, for synthetic screens (one observation each).
+const inventoryFile = (list) => clone({ tool: INVENTORY_TOOL, version: INVENTORY_VERSION, ...systemInventory(list.map(([label, o]) => ({ label, observations: [o], summary: summarize([o]) })), { observedAt: "2026-11-14" }) });
+const THREE_SCREENS = [
+  ["home", ownObservation({ heights: { 32: 30, 40: 4, 28: 2 }, fields: { 32: 20 }, buttons: { 32: 10, 40: 4, 28: 2 }, radii: { 4: 40, 8: 6, 2: 3 }, type: { "14|400|20": 50, "24|700|32": 3, "12|400|16": 6 } })],
+  ["orders", ownObservation({ heights: { 32: 20, 36: 6, 30: 2 }, fields: { 32: 10, 36: 6 }, buttons: { 32: 10, 30: 2 }, radii: { 4: 30, 10: 5 }, type: { "14|400|20": 40, "13|400|20": 10, "20|600|28": 2 }, spacing: { 8: 40, 12: 20 } })],
+  ["billing", ownObservation({ heights: { 32: 12, 44: 3 }, fields: { 32: 8 }, buttons: { 32: 4, 44: 3 }, radii: { 4: 20, 8: 4 }, type: { "14|400|20": 30, "12|400|16": 5, "24|700|32": 2 }, spacing: { 4: 20, 12: 20 } })],
+];
+const ownOf = (file = inventoryFile(THREE_SCREENS)) => ownScreens({ path: OWN_PATH, inventory: normalizeInventory(file) });
+const ownBullets = (md) => md.split("\n").filter((line) => line.startsWith("- This product") || line.includes("Values in use that would then read") || line.includes("No value in use on these screens"));
+
+test("own screens: the option sits after the references and before the corpus, and makes the axis proposed", () => {
+  const pack = makePack([prow("button.height", "form", 4, [b(32, 3, 2, 1), b(36, 1, 1, 0)])]);
+  const own = ownOf();
+  assert.deepEqual(own.values, { controlHeights: [32], radii: [4], typeSizes: [12, 14, 24], spacingBase: [8] }, "dominant, dominant, shared, majority");
+  const alone = propose(pack, { own });
+  for (const axis of ["controlHeights", "radii", "typeSizes", "spacingBase"]) {
+    const block = axisOf(alone, axis);
+    assert.equal(block.options[0].basis, "own-screens", axis);
+    assert.equal(block.status, "proposed", axis);
+    assert.equal(block.proposed, 0, axis);
+    assert.equal(block.partial, false, axis);
+  }
+  assert.equal(axisOf(alone, "tableRowHeights").own, null, "the inventory covers four axes");
+  assert.equal(alone.inputs.own, OWN_PATH);
+  const heights = axisOf(alone, "controlHeights");
+  assert.deepEqual(heights.options.map((o) => o.basis), ["own-screens", "corpus", "engine-default"], "own screens outrank an agreeing corpus row");
+  assert.equal(heights.options[0].source, "own-screens:2026-11-14#controlHeights");
+  assert.equal(heights.options[0].entry.statement, "Controls use these heights: 32px. Basis: measured on 3 screens of this product, 2026-11-14.");
+  const withRef = axisOf(propose(pack, { own, references: [ref("ref-measured", { controlHeights: [36, 40] }), ref("ref-kept", { controlHeights: [36] }, ["controlHeights"])] }), "controlHeights");
+  assert.deepEqual(withRef.options.map((o) => `${o.basis}:${o.values}`), ["reference:36", "reference:36,40", "own-screens:32", "corpus:32", "engine-default:36,40"], "kept reference, measured reference, own screens, corpus, engine default");
+  assert.equal(withRef.proposed, 0);
+  const md = renderProposalMarkdown(propose(pack, { own }));
+  assert.ok(md.includes("## 1. Control height (`controlHeights`)\n\n**Proposed: 32px** — from this product's own screens.\n\n- This product (3 screens measured 2026-11-14):"), md);
+  assert.ok(md.includes("- Other options: 32px (3 of 4) · 36, 40px (engine default, not measured: button md 40px, input 36px, select 36px)."), md);
+  assert.ok(md.includes("Entry for a chosen value: `propose-system.mjs --project-root . --own .styleseed/evidence/drift/2026-11-14/inventory.json --surface pointer --entry tableRowHeights=<values>`"), "the --entry command carries --own");
+  assert.ok(renderProposalMarkdown(propose(pack, { own, references: [ref("ref-measured", { controlHeights: [36, 40] })] })).includes("- Other options: 32px (this product's own screens) · 32px (3 of 4)"), "listed as an option under a reference");
+  assert.throws(() => propose(pack, { own: { values: {} } }), /pass the ownScreens result/u);
+});
+
+test("own screens: the product's line before the corpus lines, and the values that would then read as violations", () => {
+  const pack = makePack([prow("button.height", "form", 4, [b(32, 3, 2, 1), b(36, 1, 1, 0)])]);
+  const proposal = propose(pack, { own: ownOf() });
+  const md = renderProposalMarkdown(proposal);
+  const heights = [
+    "- This product (3 screens measured 2026-11-14): 6 control heights in use; 32px on 78% of 79 controls; 5 more under 10% each (28, 30, 36, 40, 44px). Fields: 32px on 86% of 44 fields, 36px on 14%. Buttons: 32px on 69% of 35 buttons, 40px on 11%; 3 more under 10% each (28, 30, 44px). The own-screens option takes the control heights on at least 10% of the controls, and at least the most frequent one.",
+    "- Default button height: 32px on 3 of 4 measured systems",
+  ].join("\n");
+  assert.ok(md.includes(heights), `the product's line, then the corpus line unchanged\n${md}`);
+  assert.ok(md.includes("- If recorded: the drift report reads any other control height as `violates D-…`. Add the other sizes the product uses to `values` first, or record an exception later. Values in use that would then read as violations: 36px (6 controls, 1 screen), 40px (4, 1), 44px (3, 1), 28px (2, 1), 30px (2, 1)."), md);
+  assert.ok(md.includes("- This product (3 screens measured 2026-11-14): 5 type sizes in use; 14px on 81% of 148 text elements; 4 more under 10% each (12, 13, 20, 24px). The own-screens option takes the sizes on at least half of the screens, as the drift report counts them: 12, 14, 24px. A size used on few elements can be a real heading, so the share of elements does not decide here."), md);
+  assert.ok(md.includes("Values in use that would then read as violations: 13px (10 text elements, 1 screen), 20px (2, 1)."), md);
+  assert.ok(md.includes("- This product (3 screens measured 2026-11-14): 4 radii in use; 4px on 83% of 108 boxes with a visible edge; 3 more under 10% each (2, 8, 10px). The own-screens option takes the radii on at least 10% of the boxes with a visible edge, and at least the most frequent one."), md);
+  assert.ok(md.includes("Values in use that would then read as violations: 8px (10 boxes with a visible edge, 2 screens), 10px (5, 1), 2px (3, 1)."), md);
+  assert.ok(md.includes("- This product (3 screens measured 2026-11-14): spacing base 8px on 2 of 3 screens; 4px on 1. The own-screens option takes the base on the most screens, as the drift report reads it."), md);
+  assert.ok(md.includes("reads a screen whose measured spacing base differs as `violates D-…`. Values in use that would then read as violations: 4px (1 screen)."), md);
+  assert.ok(md.includes(`${pctOf(DOMINANT_SHARE)} of the controls`), "the proposer states the inventory's dominant share");
+  // Recording the consolidated set leaves nothing to flag.
+  const all = axisOf(propose(pack, { own: ownOf(), references: [ref("own-all", { controlHeights: [28, 30, 32, 36, 40, 44] })] }), "controlHeights");
+  assert.equal(all.own.violationsText, "No value in use on these screens would then read as a violation.");
+  // At most eight values, then "and N more"; a value the drift row does not list is left out.
+  const many = Object.fromEntries([[32, 40], ...[20, 22, 24, 26, 28, 30, 34, 36, 38, 42, 44, 46].map((v) => [v, 2])]);
+  const wide = axisOf(propose(pack, { own: ownOf(inventoryFile([["wide", ownObservation({ heights: { ...many, 50: 1 }, buttons: { ...many, 50: 1 }, radii: { 4: 1 } })]])) }), "controlHeights");
+  assert.equal(wide.own.violations.length, 12, "50px holds 1 of 65 controls, under the drift row's 3% cut");
+  assert.equal(wide.own.violationsText, "Values in use that would then read as violations: 20px (2 controls, 1 screen), 22px (2, 1), 24px (2, 1), 26px (2, 1), 28px (2, 1), 30px (2, 1), 34px (2, 1), 36px (2, 1) and 4 more.");
+  // A recorded axis keeps the product's line and prints no violation list.
+  const recorded = { id: "D-001", kind: "decision", axis: "radii", values: [4, 8], statement: "Corners use 4 and 8px.", approvedBy: "example-designer", date: "2026-11-14" };
+  const withRecord = axisOf(propose(pack, { own: ownOf(), decisions: normalizeDecisions([recorded], catalog) }), "radii");
+  assert.equal(withRecord.status, "recorded");
+  assert.match(withRecord.own.text, /^This product \(3 screens measured 2026-11-14\): 4 radii in use/u);
+  assert.equal(withRecord.own.violations, null);
+});
+
+const pctOf = (share) => `${Math.round(share * 100)}%`;
+
+test("own screens: the older control-height reading gives no option; empty sets give none", () => {
+  const pack = makePack([prow("button.height", "form", 4, [b(32, 3, 2, 1), b(36, 1, 1, 0)])]);
+  const older = inventoryFile([["home", ownObservation({ heights: { 36: 10 }, radii: { 4: 3 }, type: { "14|400|20": 10 }, box: false })]]);
+  assert.equal(older.axes.controlHeights.controlBoxVersion, null);
+  const own = ownOf(older);
+  assert.equal(own.values.controlHeights, undefined);
+  const heights = axisOf(propose(pack, { own }), "controlHeights");
+  assert.deepEqual(heights.options.map((o) => o.basis), ["corpus", "engine-default"], "no own-screens option from the older reading");
+  assert.match(heights.own.text, /these control heights were read from the input element, the older reading without the visible control box, so they give no option here/u);
+  assert.equal(heights.own.violations, null);
+  assert.deepEqual(axisOf(propose(pack, { own }), "radii").options[0].values, [4], "the other axes still have their option");
+  const split = inventoryFile([["a", ownObservation({ type: { "14|400|20": 10 }, radii: { 4: 1 }, heights: { 32: 1 } })], ["b", ownObservation({ type: { "15|400|20": 10 }, radii: { 4: 1 }, heights: { 32: 1 } })], ["c", ownObservation({ type: { "16|400|20": 10 }, radii: { 4: 1 }, heights: { 32: 1 } })]]);
+  assert.deepEqual(split.axes.typeSizes.shared, [], "no size on two of three screens");
+  const types = axisOf(propose(pack, { own: ownOf(split) }), "typeSizes");
+  assert.ok(!types.options.some((o) => o.basis === "own-screens"));
+  assert.ok(types.own.text.startsWith("This product (3 screens measured 2026-11-14): 3 type sizes in use;"), types.own.text);
+});
+
+test("own screens: entries, attribution with --entry, the wording rules, and inventory refusals", () => {
+  const scenarios = [];
+  for (const page of [...Object.keys(catalog.pages), "none"]) for (const surface of ["pointer", "touch"]) {
+    scenarios.push(propose(committedPack, { page, surface, own: ownOf() }));
+    scenarios.push(propose(committedPack, { page, surface, own: ownOf(inventoryFile([["home", ownObservation({ heights: { 36: 10 }, radii: { 4: 3 }, box: false })]])), references: [referenceValues({ slug: "own-ref", summary, facts })] }));
+  }
+  let ownEntries = 0;
+  for (const proposal of scenarios) {
+    const md = renderProposalMarkdown(proposal);
+    assert.ok(!BANNED.test(md), md.match(BANNED)?.[0]);
+    for (const line of ownBullets(md)) assert.ok(!OWN_BANNED.test(line), `${line.match(OWN_BANNED)?.[0]}: ${line}`);
+    for (const axis of proposal.axes) {
+      if (axis.own) assert.ok(!OWN_BANNED.test(`${axis.own.text} ${axis.own.violationsText ?? ""}`), axis.own.text);
+      for (const option of axis.options) {
+        const { entry } = option;
+        if (option.basis === "own-screens") ownEntries += 1;
+        assert.ok(entry.statement.length <= 300 && entry.source.length <= 200, JSON.stringify(entry));
+        assert.ok(!BANNED.test(entry.statement), entry.statement);
+        assert.doesNotThrow(() => normalizeDecisions([{ ...entry, id: "D-001", approvedBy: "example-designer", date: "2026-11-14" }], catalog), JSON.stringify(entry));
+        assert.throws(() => normalizeDecisions([{ ...entry, id: "D-001" }], catalog), /D-001\.approvedBy/u);
+      }
+    }
+  }
+  assert.ok(ownEntries >= 40, `${ownEntries} own-screens entries checked`);
+  const proposal = propose(makePack([prow("button.height", "form", 4, [b(32, 3, 2, 1), b(36, 1, 1, 0)])]), { own: ownOf() });
+  assert.deepEqual(entryForValues(proposal, "controlHeights", [32]), axisOf(proposal, "controlHeights").options[0].entry, "the own-screens option's own entry");
+  const consolidated = entryForValues(proposal, "controlHeights", [32, 40, 44]);
+  assert.deepEqual(consolidated, {
+    kind: "decision", axis: "controlHeights", values: [32, 40, 44],
+    statement: "Controls use these heights: 32, 40, 44px. Basis: 32px measured on 3 screens of this product, 2026-11-14; 40px engine default, not measured (button md 40px, input 36px, select 36px); 44px chosen without a measured basis.",
+    approvedBy: "", date: "", source: "own-screens:2026-11-14#controlHeights; engine-default:components (not measured); chosen: 44",
+  });
+  assert.doesNotThrow(() => normalizeDecisions([{ ...consolidated, id: "D-001", approvedBy: "example-designer", date: "2026-11-14" }], catalog));
+  assert.equal(JSON.stringify(propose(committedPack, { page: "settings", own: ownOf() })), JSON.stringify(propose(committedPack, { page: "settings", own: ownOf() })), "same input, same bytes");
+
+  const good = inventoryFile(THREE_SCREENS);
+  assert.deepEqual(normalizeInventory(clone(good)), good, "a written inventory round-trips");
+  const refuse = (mutate, pattern) => { const bad = clone(good); mutate(bad); assert.throws(() => normalizeInventory(bad, { file: OWN_PATH }), pattern); };
+  refuse((x) => { x.tool = "styleseed drift-report"; }, /inventory\.json: tool: must be "styleseed system-inventory"; count the screens again with `drift-report\.mjs <url>… --out <dir> --inventory`/u);
+  refuse((x) => { x.version = "2"; }, /version: is "2"; this proposer reads version "1"/u);
+  refuse((x) => { x.url = "https://example.test/"; }, /inventory: unknown key\(s\) url/u);
+  refuse((x) => { delete x.axes.radii; }, /axes: missing radii/u);
+  refuse((x) => { x.axes.radii.values[0].count = 0; }, /axes\.radii\.values\[0\]\.count: must be a positive count/u);
+  refuse((x) => { x.axes.radii.total += 1; }, /axes\.radii: values must add up to total and distinct/u);
+  refuse((x) => { x.axes.controlHeights.controlBoxVersion = "1"; }, /controlBoxVersion: must be a version number or null/u);
+  refuse((x) => { x.axes.typeSizes.values[0].screens = 4; }, /must be a count of at most 3 screens/u);
+  refuse((x) => { x.observedAt = "16 Nov"; }, /observedAt: must be the measurement date/u);
+});
+
+test("CLI --own: reads the inventory by its project path, carries it into --entry, refuses a missing or outside file", () => {
+  const root = mkdtempSync(join(tmpdir(), "ss-propose-own-"));
+  try {
+    writeFileSync(join(root, "STYLESEED.md"), LOCK);
+    assert.equal(spawnSync(process.execPath, [resolver, "--project-root", root, "--from-lock", "STYLESEED.md", "--agent", "claude"], { encoding: "utf8" }).status, 0);
+    mkdirSync(join(root, ".styleseed/evidence/drift/2026-11-14"), { recursive: true });
+    writeFileSync(join(root, OWN_PATH), `${JSON.stringify(inventoryFile(THREE_SCREENS), null, 2)}\n`);
+    const before = files(root);
+    let result = cli(root, ["--project-root", ".", "--surface", "pointer", "--own", `./${OWN_PATH}`]);
+    assert.equal(result.status, 0, result.stderr);
+    assert.ok(result.stdout.includes("**Proposed: 32px** — from this product's own screens."), result.stdout);
+    assert.ok(result.stdout.includes(`\`propose-system.mjs --project-root . --own ${OWN_PATH} --surface pointer --entry tableRowHeights=<values>\``), "a leading ./ is dropped");
+    result = cli(root, ["--project-root", ".", "--surface", "pointer", "--own", OWN_PATH, "--entry", "controlHeights=32,40"]);
+    assert.equal(result.status, 0, result.stderr);
+    assert.equal(JSON.parse(result.stdout).source, "own-screens:2026-11-14#controlHeights; engine-default:components (not measured)");
+    assert.equal(JSON.parse(cli(root, ["--project-root", ".", "--surface", "pointer", "--own", OWN_PATH, "--json"]).stdout).inputs.own, OWN_PATH);
+    assert.deepEqual(files(root), before, "nothing written without --write");
+    result = cli(root, ["--project-root", ".", "--surface", "pointer", "--own", OWN_PATH, "--write"]);
+    assert.equal(result.status, 0, result.stderr);
+    assert.ok(result.stdout.includes("controlHeights: proposed 32px (own screens)\n"), result.stdout);
+    result = cli(root, ["--project-root", ".", "--surface", "pointer", "--own", ".styleseed/evidence/drift/none/inventory.json"]);
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /--own \.styleseed\/evidence\/drift\/none\/inventory\.json: the file does not exist\. Count the screens first: drift-report\.mjs <url>… --out <dir> --project-root \. --inventory, then pass --own <dir>\/inventory\.json/u);
+    result = cli(root, ["--project-root", ".", "--surface", "pointer", "--own", "../inventory.json"]);
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /--own \.\.\/inventory\.json: .*; pass the path of inventory\.json relative to --project-root/u);
+    writeFileSync(join(root, "broken.json"), "{");
+    assert.match(cli(root, ["--project-root", ".", "--surface", "pointer", "--own", "broken.json"]).stderr, /--own broken\.json: not valid JSON/u);
+    assert.equal(cli(root, ["--engine-defaults", "--own", OWN_PATH]).status, 1, "--engine-defaults takes no --own");
+  } finally { rmSync(root, { recursive: true, force: true }); }
 });
 
 // --- the documentation this order adds -------------------------------------------------------------------------

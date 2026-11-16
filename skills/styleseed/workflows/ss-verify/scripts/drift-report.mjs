@@ -4,7 +4,7 @@
 //
 //   node drift-report.mjs <url>… --out <dir> [--browser <playwright module>] [--project-root <dir>]
 //                         [--palette <id>] [--decisions <file.json>] [--states error,empty]
-//                         [--labels home,settings] [--gate] [--structure] [--scroll] [--faults] [--max-elements 5000] [--timeout 45000]
+//                         [--labels home,settings] [--gate] [--structure] [--scroll] [--faults] [--inventory] [--max-elements 5000] [--timeout 45000]
 //                         [--reference <slug> [--screen <label>]]
 //
 // URLs may be http(s) or file:. The probe is the read-only observe-design probe from ss-reference;
@@ -34,6 +34,12 @@
 // flag. With --gate, a finding whose catalog rule has priority `blocks` exits 3 unless an approved
 // exception to that (default) rule covers the screen; the other classes report. Without --faults no
 // extra probe runs and no file or key is added.
+//
+// --inventory also counts what the screens at rest render (system-inventory.mjs) from the same
+// observations and writes inventory.json and INVENTORY.md beside the drift files: every control
+// height, radius, and type size in use with its count, share, and screens, and each screen's spacing
+// base. `propose-system.mjs --own <inventory.json>` reads it. No probe is added, and drift.json and
+// DRIFT.md are byte for byte what the same run writes without the flag.
 import { mkdirSync, writeFileSync, readFileSync, readdirSync, existsSync } from 'node:fs';
 import { resolve, join, basename, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -45,12 +51,13 @@ import { CONTRACT_FILES, checkGeneratedContract } from '../../ss-resolve/scripts
 import { SAFE_ID, normalizeDecisions, parseStrictJson, safeProjectPath } from '../../ss-resolve/scripts/runtime-contract.mjs';
 import { observeFaults } from './observe-faults.mjs';
 import { THRESHOLDS, faultsReport, faultsGateFailure, renderFaultsMarkdown } from './analyze-faults.mjs';
+import { INVENTORY_TOOL, INVENTORY_VERSION, renderInventoryMarkdown, systemInventory } from './system-inventory.mjs';
 
-const USAGE = 'usage: drift-report.mjs <url>… --out <dir> [--browser <module>] [--project-root <dir>] [--palette <id>] [--decisions <file.json>] [--states a,b] [--labels a,b] [--gate] [--structure] [--scroll] [--faults] [--reference <slug> [--screen <label>]]';
+const USAGE = 'usage: drift-report.mjs <url>… --out <dir> [--browser <module>] [--project-root <dir>] [--palette <id>] [--decisions <file.json>] [--states a,b] [--labels a,b] [--gate] [--structure] [--scroll] [--faults] [--inventory] [--reference <slug> [--screen <label>]]';
 const contextCatalog = () => JSON.parse(readFileSync(resolve(dirname(fileURLToPath(import.meta.url)), '../../ss-resolve/references/catalog.json'), 'utf8'));
 
 export function parseArgs(argv) {
-  const args = { urls: [], out: null, browser: process.env.STYLESEED_BROWSER_MODULE || null, projectRoot: null, palette: null, decisions: null, states: [], labels: [], maxElements: 5000, timeout: 45000, gate: false, structure: false, scroll: false, faults: false, reference: null, screen: null };
+  const args = { urls: [], out: null, browser: process.env.STYLESEED_BROWSER_MODULE || null, projectRoot: null, palette: null, decisions: null, states: [], labels: [], maxElements: 5000, timeout: 45000, gate: false, structure: false, scroll: false, faults: false, inventory: false, reference: null, screen: null };
   const list = value => String(value ?? '').split(',').map(s => s.trim()).filter(Boolean);
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
@@ -65,6 +72,7 @@ export function parseArgs(argv) {
     else if (a === '--structure') args.structure = true;
     else if (a === '--scroll') args.scroll = true;
     else if (a === '--faults') args.faults = true;
+    else if (a === '--inventory') args.inventory = true;
     else if (a === '--reference') args.reference = argv[++i] ?? '';
     else if (a === '--screen') args.screen = argv[++i] ?? '';
     else if (a === '--max-elements') args.maxElements = Number(argv[++i]);
@@ -237,6 +245,15 @@ export async function report(args, log = console.log, { loadBrowserImpl = loadBr
     writeFileSync(join(args.out, 'FAULTS.md'), renderFaultsMarkdown(faults, faultsMeta));
     log(`render faults: ${faults.verdict}\n  → ${join(args.out, 'FAULTS.md')}`);
     result.faults = faults;
+  }
+
+  // System inventory: its own files, counted from the same observations; nothing above is touched.
+  if (args.inventory) {
+    const inventory = systemInventory(plan.map((p, i) => ({ label: p.label, state: p.state, observations: measured[i].observations, summary: measured[i].summary })), { observedAt: meta.observedAt });
+    writeFileSync(join(args.out, 'inventory.json'), `${JSON.stringify({ tool: INVENTORY_TOOL, version: INVENTORY_VERSION, ...inventory }, null, 2)}\n`);
+    writeFileSync(join(args.out, 'INVENTORY.md'), renderInventoryMarkdown(inventory));
+    const { controlHeights, radii, typeSizes, spacingBase } = inventory.axes;
+    log(`system inventory: ${inventory.screens.length} screen(s) at rest; ${controlHeights.distinct} control height(s), ${radii.distinct} radius value(s), ${typeSizes.distinct} type size(s), spacing base ${spacingBase.majority === null ? 'none' : `${spacingBase.majority}px`} on the most screens\n  → ${join(args.out, 'INVENTORY.md')}`);
   }
   if (!reference) return result;
 

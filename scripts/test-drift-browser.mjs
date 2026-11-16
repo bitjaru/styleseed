@@ -7,14 +7,17 @@
 // table rows (the others use 40px) are named in a structure row, and the gate still follows the
 // role axes only. A fourth page reveals its later sections on scroll; one of them carries the only
 // 28px heading. Measured alone with --structure that size is missing; with --structure --scroll it
-// is there and the report says the pages were scrolled. Without --scroll nothing changes. This is a
-// measurement regression fixture, not a design judgment.
+// is there and the report says the pages were scrolled. Without --scroll nothing changes. With
+// --inventory the three pages also get inventory.json and INVENTORY.md, the drift files keep their
+// bytes, and no page text enters the inventory. This is a measurement regression fixture, not a design
+// judgment.
 import assert from 'node:assert/strict';
-import { mkdtempSync, writeFileSync, readFileSync, rmSync } from 'node:fs';
+import { mkdtempSync, writeFileSync, readFileSync, rmSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { pathToFileURL, fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
+import { disallowedStrings } from './lib/reference-allow-list.mjs';
 
 const repoRoot = resolve(fileURLToPath(new URL('../', import.meta.url)));
 const cli = resolve(repoRoot, 'engine/.claude/skills/styleseed/workflows/ss-verify/scripts/drift-report.mjs');
@@ -56,7 +59,34 @@ try {
   assert.equal(Object.hasOwn(report, 'scroll'), false, 'without --scroll drift.json has no scroll key');
   assert.ok(!dump.includes('scrolled to the bottom'), 'without --scroll DRIFT.md has no scroll sentence');
   assert.ok(!dump.includes('table row height'), 'without --structure the table is unchanged');
+  assert.ok(!existsSync(join(out, 'inventory.json')) && !existsSync(join(out, 'INVENTORY.md')), 'without --inventory no inventory is written');
   console.log(`drift fixture passed: ${report.verdict}`);
+
+  // --inventory: the same three pages; the inventory files are added and the drift files keep their bytes.
+  const counted = join(dir, 'inventory');
+  const withInventory = spawnSync(process.execPath, [cli, ...Object.keys(files).map(name => pathToFileURL(join(dir, name)).href), '--out', counted, '--browser', browser, '--inventory'], { encoding: 'utf8' });
+  assert.equal(withInventory.status, 0, withInventory.stderr || withInventory.stdout);
+  for (const name of ['drift.json', 'DRIFT.md']) assert.ok(readFileSync(join(counted, name)).equals(readFileSync(join(out, name))), `${name} is byte-identical with and without --inventory`);
+  const inventoryText = readFileSync(join(counted, 'inventory.json'), 'utf8');
+  const inventory = JSON.parse(inventoryText);
+  const inventoryMd = readFileSync(join(counted, 'INVENTORY.md'), 'utf8');
+  assert.equal(inventory.tool, 'styleseed system-inventory');
+  assert.equal(inventory.version, '1');
+  assert.deepEqual(inventory.screens, [{ label: 'home' }, { label: 'settings' }, { label: 'billing' }]);
+  assert.deepEqual(inventory.viewports, [[1440, 900], [390, 844]]);
+  assert.equal(inventory.axes.controlHeights.controlBoxVersion, 1);
+  assert.deepEqual(inventory.axes.controlHeights.dominant, [40], JSON.stringify(inventory.axes.controlHeights));
+  assert.deepEqual(inventory.axes.controlHeights.byKind.button.dominant, [40]);
+  assert.deepEqual(inventory.axes.radii.values.map(v => [v.value, v.screens]).sort((a, b) => a[0] - b[0]), [[4, 2], [10, 1]], JSON.stringify(inventory.axes.radii));
+  assert.deepEqual(inventory.axes.radii.shared, report.axes.radii.baseline, 'shared equals the drift baseline');
+  assert.deepEqual(inventory.axes.typeSizes.shared, report.axes.typeSizes.baseline, 'shared equals the drift baseline');
+  assert.equal(inventory.axes.spacingBase.majority, report.baseline.values.spacingBase);
+  assert.ok(inventoryMd.includes('A count of what these screens render. It does not say which values are right.'), inventoryMd);
+  assert.match(withInventory.stdout, /system inventory: 3 screen\(s\) at rest;/u);
+  assert.ok(!inventoryText.includes('결제') && !inventoryText.includes('청구') && !inventoryText.includes('정산') && !inventoryText.includes('file:'), 'no fixture text or URL in inventory.json');
+  assert.ok(!inventoryMd.includes('결제') && !inventoryMd.includes('청구'), 'no fixture text in INVENTORY.md');
+  assert.deepEqual(disallowedStrings({ ...inventory, screens: inventory.screens.map(({ label, ...rest }) => rest) }), [], 'inventory.json passes the allow-list walk without its labels');
+  console.log(`drift inventory fixture passed: control heights ${JSON.stringify(inventory.axes.controlHeights.dominant)}, radii ${JSON.stringify(inventory.axes.radii.dominant)}, type sizes shared ${JSON.stringify(inventory.axes.typeSizes.shared)}`);
 
   // --structure: the 52px rows on billing are named; the role verdict and the gate are unchanged.
   const structured = join(dir, 'structured');

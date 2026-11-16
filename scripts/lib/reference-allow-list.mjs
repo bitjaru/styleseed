@@ -19,8 +19,11 @@
 // The line after it holds the field names, enums, and claim segments of the anatomy probe and its
 // claims (WO-12).
 // The evidence pack the skill ships (ss-resolve/references/evidence-pack.json) is walked too, after
-// its generatedBy, run path, lineage ids and names, and claim labels and caveats are removed; the last
-// line holds its field names and enums, including the ledger axis names (evidence-pack.test.mjs).
+// its generatedBy, run path, lineage ids and names, and claim labels and caveats are removed; the line
+// after the render-fault and consensus lines holds its field names and enums, including the ledger axis
+// names (evidence-pack.test.mjs). The system inventory (`drift-report.mjs --inventory`, inventory.json) is
+// walked after its screen labels are removed; the last line holds its field names and counted nouns
+// (system-inventory.test.mjs, test-drift-browser.mjs).
 export const VOCABULARY = new Set(`
 version viewport width height elements truncated shell documentHeight bodyScrolls overflowX scrollContainers
 regions kind by x y w h position items itemHeight contentWidth insetLeft
@@ -51,6 +54,7 @@ faults textRuns amounts overlaps spills clips insets touches aligns emoji icons 
 recordVersion screen access hosted self-hosted httpStatus overlayShare design fields pairs textSizes field button fieldRadius buttonRadius values spacingCoverage fontCount properties all opacity transform shadow layout candidates reason failed http-error redirected-host redirected-path timeout navigation-error unexpected-content overlay terms no-base consensusVersion claims claim pageType detail lineage lineages product-system kit tier fragment agree agreeProductSystems agreeKits productSystems kits bucket top supportsRule candidate split thin mixed true false card eligible raw withFragments shareHeight rowShareHeight shareRadius pointerUnder44 narrowAtLeast44 textSize inPanel bodySize overFourRows onePerSection oneLine noEmoji oneFamily rolesConstant buttonHeight reducedMotionRules transitionAll faultClasses chromium classes screensMeasured screensWithAny lineagesWithAny mostOnOneScreen run listed screens delay CRAFT-control-heights CRAFT-spacing-scale DL-21-density-by-task INV-05-no-unexplained-role-drift bodyFontSize probes lineagesMeasured fragments
 anatomy fieldGaps panelGaps cells textLines panels texts trail under ring plain helper border tone border-shadow border-tone shadow-tone border-shadow-tone head square rounded valueKind single set console service radius label padRatio textWeight shape iconSize iconGap textMatchesField style borderWidth fieldGap separation panelNotSmaller bodyRowHeight cellPadX headerHeavier nav sideWidth topBarHeight lineRatio pageTitle sectionTitle grid4Share onGrid4 steps sizeCount stepCount valueCount heightCount buttonPad fieldPad labelGap panelInset panelGap cellPad
 touch use complete flag buckets tableRowHeights listItemHeights headingSizes primariesPerSection transitionDurations
+styleseed system-inventory axes counted total reported shared majority byKind controlBoxVersion boxes with a visible
 `.split(/\s+/u).filter(Boolean));
 
 const COLOUR = /(?:rgba?|hsla?|lab|lch|oklab|oklch|color)\([\d\s.,%/-]*\)|#[0-9a-f]{3,8}\b/giu;

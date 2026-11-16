@@ -70,7 +70,7 @@ export function baselineFromRoles(roles = {}) {
   return { accent: hex(roles.primary), ink: hex(roles.foreground), canvas: hex(roles.background) };
 }
 
-function majority(values) {
+export function majority(values) {
   const counts = new Map();
   for (const v of values) if (v !== null && v !== undefined) counts.set(v, (counts.get(v) || 0) + 1);
   let best = null, bestCount = 0;
@@ -79,7 +79,7 @@ function majority(values) {
 }
 
 // Values present on at least half of the screens, in a stable order.
-function majoritySet(lists) {
+export function majoritySet(lists) {
   const need = Math.ceil(lists.length / 2);
   const counts = new Map();
   for (const list of lists) for (const v of new Set(list)) counts.set(v, (counts.get(v) || 0) + 1);

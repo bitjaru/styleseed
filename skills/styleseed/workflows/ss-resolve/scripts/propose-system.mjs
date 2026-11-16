@@ -2,12 +2,13 @@
 // Propose system values with their basis (WO-11 A5). For control height, type sizes, corner radius, table
 // row height, and spacing unit (and the other ledger axes when they have a basis) it prints a value and the
 // counts behind it, strongest basis first: the project's recorded decision, the person's own measured
-// references, counts over the measured design systems in the evidence pack, and the engine default,
-// labelled not measured. Each block carries a ready ledger entry with `approvedBy` and `date` empty: it
-// does not compile until the person who decides gives their name. The tool never writes the ledger.
+// references, the product's own screens (--own, the inventory.json of `drift-report.mjs --inventory`),
+// counts over the measured design systems in the evidence pack, and the engine default, labelled not
+// measured. Each block carries a ready ledger entry with `approvedBy` and `date` empty: it does not
+// compile until the person who decides gives their name. The tool never writes the ledger.
 //
 //   node propose-system.mjs --project-root <dir> --surface pointer|touch [--artifact <id>] [--page <id>]
-//                           [--reference <slug>]… [--write | --json]
+//                           [--reference <slug>]… [--own <inventory.json>] [--write | --json]
 //   node propose-system.mjs --project-root <dir> --surface … [same inputs] --entry <axis>=<v1,v2,…>
 //   node propose-system.mjs --engine-defaults [--page <id>]
 //
@@ -21,19 +22,19 @@ import { fileURLToPath } from "node:url";
 import { SAFE_ID, normalizeDecisions, parseStrictJson, safeProjectPath } from "./runtime-contract.mjs";
 import { loadProjectRegistry } from "./project-registry.mjs";
 import { isApproved, isGeneratedEvidence, normalizeReferenceEvidence } from "./reference-contract.mjs";
-import { PROPOSAL_AXES, engineDefaultsTable, entryForValues, normalizeEngineDefaults, normalizeEvidencePack, proposeSystem, referenceValues, renderEngineDefaultsMarkdown, renderProposalMarkdown } from "./system-proposal.mjs";
+import { PROPOSAL_AXES, engineDefaultsTable, entryForValues, normalizeEngineDefaults, normalizeEvidencePack, normalizeInventory, ownScreens, proposeSystem, referenceValues, renderEngineDefaultsMarkdown, renderProposalMarkdown } from "./system-proposal.mjs";
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const REFERENCES = resolve(scriptDir, "../references");
 const LEDGER_FILE = ".styleseed/decisions.json";
 const PROPOSALS_DIR = ".styleseed/proposals";
-const USAGE = `usage: propose-system.mjs --project-root <dir> --surface pointer|touch [--artifact <id>] [--page <id>] [--reference <slug>]… [--write | --json]
+const USAGE = `usage: propose-system.mjs --project-root <dir> --surface pointer|touch [--artifact <id>] [--page <id>] [--reference <slug>]… [--own <inventory.json>] [--write | --json]
        propose-system.mjs --project-root <dir> --surface pointer|touch [same inputs] --entry <axis>=<v1,v2,…>
        propose-system.mjs --engine-defaults [--page <id>]`;
 const REBUILD = "rebuild with `node scripts/build-evidence-pack.mjs`, or reinstall the skill";
 
 export function parseArgs(argv) {
-  const args = { projectRoot: null, surface: null, artifact: null, page: null, references: [], write: false, json: false, entry: null, engineDefaults: false, help: false };
+  const args = { projectRoot: null, surface: null, artifact: null, page: null, references: [], own: null, write: false, json: false, entry: null, engineDefaults: false, help: false };
   const value = (i, flag) => { const next = argv[i + 1]; if (next === undefined || next.startsWith("--")) throw new Error(`${flag} needs a value\n${USAGE}`); return next; };
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
@@ -42,6 +43,7 @@ export function parseArgs(argv) {
     else if (arg === "--artifact") args.artifact = value(i++, arg);
     else if (arg === "--page") args.page = value(i++, arg);
     else if (arg === "--reference") args.references.push(value(i++, arg));
+    else if (arg === "--own") { if (args.own !== null) throw new Error("--own: pass one inventory.json"); args.own = value(i++, arg).replaceAll("\\", "/").replace(/^(?:\.\/)+/u, ""); }
     else if (arg === "--entry") args.entry = value(i++, arg);
     else if (arg === "--write") args.write = true;
     else if (arg === "--json") args.json = true;
@@ -51,7 +53,7 @@ export function parseArgs(argv) {
   }
   if (args.help) return args;
   if (args.engineDefaults) {
-    const extra = [args.projectRoot && "--project-root", args.surface && "--surface", args.artifact && "--artifact", args.references.length && "--reference", args.write && "--write", args.json && "--json", args.entry && "--entry"].filter(Boolean);
+    const extra = [args.projectRoot && "--project-root", args.surface && "--surface", args.artifact && "--artifact", args.references.length && "--reference", args.own && "--own", args.write && "--write", args.json && "--json", args.entry && "--entry"].filter(Boolean);
     if (extra.length) throw new Error(`--engine-defaults reads only the skill's files and takes --page alone; drop ${extra.join(", ")}`);
     return args;
   }
@@ -171,6 +173,17 @@ export function loadReference(root, slug, catalog) {
   return { values: referenceValues({ slug, summary, facts, evidence }), note };
 }
 
+// The inventory of the product's own screens (--own, a project-relative path to inventory.json).
+export function loadOwn(root, path) {
+  const measure = "Count the screens first: drift-report.mjs <url>… --out <dir> --project-root . --inventory, then pass --own <dir>/inventory.json";
+  let target;
+  try { target = safeProjectPath(root, path); } catch (error) { throw new Error(`--own ${path}: ${error.message}; pass the path of inventory.json relative to --project-root`); }
+  if (!existsSync(target)) throw new Error(`--own ${path}: the file does not exist. ${measure}`);
+  let raw;
+  try { raw = JSON.parse(readFileSync(target, "utf8")); } catch (error) { throw new Error(`--own ${path}: not valid JSON (${error.message}). ${measure}`); }
+  return ownScreens({ path, inventory: normalizeInventory(raw, { file: path }) });
+}
+
 function parseEntry(text) {
   const match = /^([A-Za-z]+)=(.+)$/u.exec(text);
   if (!match) throw new Error(`--entry ${text}: write it as <axis>=<v1,v2,…>, for example --entry controlHeights=32,40`);
@@ -184,7 +197,7 @@ function axisLine(axis) {
   const v = (values) => `${values.join(", ")}${unit}`;
   const first = axis.options[0];
   if (axis.status === "recorded") return `${axis.axis}: recorded ${v(axis.recorded.values)} as ${axis.recorded.id}`;
-  if (axis.status === "proposed") return `${axis.axis}: proposed ${v(first.values)} (${first.basis === "corpus" ? "corpus" : `reference ${first.slug}, ${first.kept ? "kept" : "measured"}`}${axis.partial ? "; one part of the set" : ""})`;
+  if (axis.status === "proposed") return `${axis.axis}: proposed ${v(first.values)} (${first.basis === "corpus" ? "corpus" : first.basis === "own-screens" ? "own screens" : `reference ${first.slug}, ${first.kept ? "kept" : "measured"}`}${axis.partial ? "; one part of the set" : ""})`;
   if (axis.status === "split") return `${axis.axis}: no value proposed (the measured systems split)`;
   if (axis.status === "thin") return `${axis.axis}: no value proposed (fewer than 3 measured systems)`;
   return `${axis.axis}: no measured basis`;
@@ -202,9 +215,10 @@ export function main(argv, { stdout = (text) => process.stdout.write(text), stde
   if (loaded.selection.adapter !== "product-ui") throw new Error(`proposals cover product UI measured in CSS pixels; this artifact uses \`${loaded.selection.adapter}\``);
   const page = args.page !== null ? checkPage(args.page, catalog) : loaded.selection.page;
   const references = args.references.map((slug) => loadReference(loaded.root, slug, catalog));
-  const notes = references.map((ref) => ref.note).filter(Boolean);
-  const proposal = proposeSystem({ pack, defaults, project: loaded.project, context: { artifact: loaded.artifact, page, surface: args.surface }, references: references.map((ref) => ref.values) });
-  const command = `propose-system.mjs --project-root .${loaded.artifact ? ` --artifact ${loaded.artifact}` : ""}${args.page !== null ? ` --page ${page}` : ""}${args.references.map((slug) => ` --reference ${slug}`).join("")} --surface ${args.surface}`;
+  const own = args.own !== null ? loadOwn(loaded.root, args.own) : null;
+  const notes = [...references.map((ref) => ref.note).filter(Boolean), ...(own?.skipped ?? []).map((entry) => `--own ${own.path}: ${entry.axis} has ${entry.count} values; a ledger entry holds at most 24, so this axis gets no own-screens option.`)];
+  const proposal = proposeSystem({ pack, defaults, project: loaded.project, context: { artifact: loaded.artifact, page, surface: args.surface }, references: references.map((ref) => ref.values), own });
+  const command = `propose-system.mjs --project-root .${loaded.artifact ? ` --artifact ${loaded.artifact}` : ""}${args.page !== null ? ` --page ${page}` : ""}${args.references.map((slug) => ` --reference ${slug}`).join("")}${own ? ` --own ${own.path}` : ""} --surface ${args.surface}`;
   if (args.entry !== null) {
     const { axis, values } = parseEntry(args.entry);
     stdout(`${JSON.stringify(entryForValues(proposal, axis, values), null, 2)}\n`);

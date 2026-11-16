@@ -18,7 +18,7 @@ row adds a rule or changes a rule's `priority`, `check`, `kind`, or `scope`, and
 
 | Lineage | Name | Kind | Context | Host | Access | Licence of the demos | Terms (automated access) | Checked |
 |---|---|---|---|---|---|---|---|---|
-| `cloudscape` | AWS Cloudscape | product system | console | `cloudscape.design` | self-hosted: `cloudscape-design/demos`, built and served on `127.0.0.1` (at `dda7bab` for run 2026-11-12, at `9b6815f` for run 2026-11-15) | MIT-0 | `restricted`: the AWS Site Terms exclude robots and data-gathering tools, so the hosted pages are never loaded | 2026-11-12 |
+| `cloudscape` | AWS Cloudscape | product system | console | `cloudscape.design` | self-hosted: `cloudscape-design/demos`, built and served on `127.0.0.1` (at `dda7bab` for run 2026-11-12, at `9b6815f` for runs 2026-11-15 and 2026-11-16) | MIT-0 | `restricted`: the AWS Site Terms exclude robots and data-gathering tools, so the hosted pages are never loaded | 2026-11-12 |
 | `patternfly` | Red Hat PatternFly | product system | console | `www.patternfly.org` | self-hosted since run 2026-11-15: a local build of `patternfly/patternfly-org` at `73cec7b`, served on `127.0.0.1`; the hosted pages are never loaded | MIT (`patternfly/patternfly-org`) | `restricted`: the Red Hat terms the site's footer links rule out using the site in a way that deploys a robot or a retrieval application | 2026-11-12 |
 | `antpro` | Ant Design Pro | kit | console | `preview.pro.ant.design` | hosted | MIT (`ant-design/ant-design-pro`) | `not-mentioned`: the preview app links no terms page | 2026-11-15 |
 | `shadcn` | shadcn/ui | kit | console | `ui.shadcn.com` | hosted | MIT (`shadcn-ui/ui`) | `not-mentioned`: the site links no terms page | 2026-11-15 |
@@ -31,6 +31,13 @@ PatternFly's demos are open source (`patternfly/patternfly-org`, MIT). The maint
 self-hosted on 2026-11-13: since run 2026-11-15 a local build is measured the way Cloudscape is, and
 its floors come from a preflight on that build (half of each count the preflight read at 1440,
 elements rounded down to the ten). The hosted site stays `restricted` and is never loaded.
+
+The built PatternFly pages are not self-contained. Each one asks `cdn.jsdelivr.net` for the script and
+style sheet of a search widget and `www.googletagmanager.com` for an analytics tag, which then reports
+to `www.google-analytics.com`. The study intercepts no request, so every PatternFly load of runs
+2026-11-15 and 2026-11-16 will have made those requests from `127.0.0.1`; the runs did not log them.
+This was found after run 2026-11-16 by loading the sixteen built pages once with every non-local
+request blocked. The built Cloudscape pages asked for nothing outside `127.0.0.1`.
 
 `screens.json` lists the 46 screens (44 full screens and 2 fragments), each with its lineage, the page
 type the study assigns (`dashboard`, `list`, `form`, `detail`), its tier (`screen` or `fragment`), its
@@ -58,7 +65,7 @@ Product systems with at least one full screen, by the state of the switches in t
 added them (WO-12). A candidate row needs 3 agreeing lineages of which 2 are product systems, so a page
 type with one product system cannot produce one.
 
-| Page type | Cloudscape and Primer | and PatternFly (self-hosted) | and GOV.UK (the switches of run 2026-11-15) | and Twilio Paste | Kits available |
+| Page type | Cloudscape and Primer | and PatternFly (self-hosted) | and GOV.UK (the switches of runs 2026-11-15 and 2026-11-16) | and Twilio Paste | Kits available |
 |---|---|---|---|---|---|
 | dashboard | 1 | 2 | 2 | 2 | Ant Design Pro, shadcn/ui, MUI templates, TDesign starter |
 | list | 1 | 2 | 3 | 4 | Ant Design Pro, MUI templates, TDesign starter |
@@ -231,8 +238,11 @@ them.
 
 After run 2026-11-15 two readings of the anatomy probe were found wrong (see "Runs"). The fix was
 committed on its own at `71d42fb` (`71d42fbbb095281a09286dd8eb4db97d55399e33`): anatomy probe version 2,
-`consensusVersion` 3, no claim changed. Run 2026-11-15 stays as committed and is not regenerated; the
-corrected run measures every screen again into a folder of a later date.
+`consensusVersion` 3, no claim changed. Run 2026-11-15 stays as committed and is not regenerated. Run
+2026-11-16 is the corrected run: every screen measured again with that commit's definitions, the same
+manifest and switches, and the same two local builds. It showed three more readings that are wrong
+(limits 14 to 16). They are not fixed here: a corrected run is made once, and a fix goes into a commit
+of its own before a later run.
 
 A reader, a bucket, a threshold, or a probe rule that does what it states and still misreads a real
 page is not changed before the run that shows it is committed. The fix then goes into a commit of its
@@ -250,7 +260,8 @@ what changed; no row of the first is deleted, and no threshold is moved toward a
    everything.
 3. Lineage independence is partial. Web systems for desktop consoles share conventions and
    influences; agreement among them says what such systems do, not what suits a consumer or a mobile
-   product. Two of the five full-screen lineages are kits.
+   product. Three of the seven full-screen lineages measured in runs 2026-11-15 and 2026-11-16 are kits
+   (two of the four measured in run 2026-11-12), and one of the seven is a public-service system.
 4. The sample is small. With three or four lineages on a page type, two thirds is often all of them,
    and one changed page can flip a row.
 5. The control probe's field-box, button, and panel tests are heuristics: the limits of the
@@ -274,6 +285,32 @@ what changed; no row of the first is deleted, and no threshold is moved toward a
     are read from the box's own style, so such a field reads as `none` or `fill`.
 12. The spacing sample resolves a border in favour of the 4px grid. That is the study's assumption: a
     system that really uses 15px inside a 1px border shows as 16.
+13. A button's text size is the button element's own font size, the one definition all four probes
+    share: a 12px button around a 13px label reads 12.
+14. A panel is any painted or rounded box at least 160px wide and 48px high that is no wider than the
+    viewport less 32px, and a narrow panel is one under 70% of the viewport. A square-cornered toned
+    region that is no card passes that test. On Cloudscape it is the wrapper of the side navigation
+    (281px wide; its 7px inset is the distance to an icon inside the navigation): the only narrow panel
+    on `cloudscape-table`, `cloudscape-details`, `cloudscape-details-hub`, and `cloudscape-details-tabs`,
+    and one more on `cloudscape-dashboard` and `cloudscape-cards`. One such region is also stored for
+    `patternfly-tabs-table`, `govuk-bank-holidays`, `mui-checkout`, `mui-crud-dashboard`, and
+    `mui-dashboard`; those were not looked at. In run 2026-11-16 the list, detail, and `all` rows of
+    `panel.inset`, `panel.radius`, `panel.separation`, and `radius.panelNotSmaller` carry these readings,
+    among them the detail rows of `panel.separation` (tone on 3 of 4, shown as a candidate) and
+    `panel.radius` (0px on 3 of 4). The dashboard rows are counted from cards.
+15. A button's icon gap is the distance from its label to its icon. A wide button that sets the icon
+    at its far end reads that whole distance: 637px and 724px on `cloudscape-form`. Those values are in
+    Cloudscape's `spacing.steps` and count in its `spacing.stepCount`, `spacing.grid4Share`, and
+    `spacing.onGrid4`; `button.iconGap` on that screen is 8px only because a tie goes to the smaller
+    value.
+16. A box is read as it is drawn at the moment of the reading, and a rotating element is drawn in a
+    larger box at some angles. The spinner on `patternfly-dashboard` read as a 23px icon in run
+    2026-11-15 and as a 20px icon in run 2026-11-16, from the same build, and the inset of the panel
+    that holds it as 21px and 22px. That alone moved PatternFly's `spacing.steps` (20 became 22) and
+    its `spacing.grid4Share` (1 became 0.9) between the two runs.
+17. A hosted demo that invents its data gives different pages on different loads. Three Ant Design Pro
+    screens gave slightly different line counts per text size in the two runs, and one gave different
+    cell insets at 390. No row changed for it.
 
 ## What ships to users
 
@@ -349,3 +386,17 @@ form. Stop every server after the run.
   was not read as a leading icon, so Cloudscape's text filters count as fields with a 37px inset. The
   anatomy rows of this run that read labels, table cells, panel insets, or field insets carry those
   misreadings for Cloudscape (and possibly for the MUI dashboards, whose tables gave no cells).
+- [`runs/2026-11-16/`](runs/2026-11-16/CONSENSUS.md): the corrected run. 45 of 46 screens measured, 1 failed
+  (`govuk-feedback`, `unexpected-content`, as in run 2026-11-15; its floors were not changed), 0 skipped.
+  The manifest, the switches, and the two local builds of run 2026-11-15. Chromium 156.0.8078.4; probes:
+  structure 2, faults 1, controls 2, anatomy 2; `consensusVersion` 3. Tables:
+  [`CONSENSUS.md`](runs/2026-11-16/CONSENSUS.md) and [`NEGATIVE-CONTROL.md`](runs/2026-11-16/NEGATIVE-CONTROL.md).
+  What changed against run 2026-11-15: 39 of the 261 rows; the other 222 give every lineage the same
+  value in both runs. Cloudscape now has labels (above the field, a 4px gap, weight 700), a 20px gap
+  between stacked fields (44px before), table cells (36px header, 40px body rows, a 20px cell inset), a
+  13px field inset (37px before: its two fields with a search icon are read as fields with a leading
+  icon and left out), icon sizes and icon gaps for its buttons, and a 21px panel inset on its
+  dashboard. The table cells of the two MUI dashboards are read. The one difference with another cause
+  is PatternFly's spacing rows (limit 16). The render-fault table is the same in both runs. The list,
+  detail, and `all` rows of the panel claims and Cloudscape's spacing rows are not to be quoted (limits
+  14 and 15).

@@ -1,7 +1,8 @@
-// System proposal (WO-11 A4): for each ledger axis, the values a person may record and the basis of each,
-// strongest first: the project's recorded decision, the person's own measurement (a reference kept in an
-// approved contract, then a reference measured but not kept), corpus counts from the evidence pack, and
-// last the engine default, always labelled not measured. A proposal is a count and a choice: it states
+// System proposal (WO-11 A4, B2): for each ledger axis, the values a person may record and the basis of
+// each, strongest first: the project's recorded decision, the person's own measurement (a reference kept
+// in an approved contract, then a reference measured but not kept, then the product's own screens as
+// counted by `drift-report.mjs --inventory`), corpus counts from the evidence pack, and last the engine
+// default, always labelled not measured. A proposal is a count and a choice: it states
 // what was measured, on how many systems of which kind, and leaves the value to the person. Nothing is
 // scored, nothing gates, and no entry it prints compiles: `approvedBy` and `date` stay empty until the
 // person who decides puts their name on it. Pure: no I/O, no clock; the same input gives the same bytes.
@@ -50,8 +51,8 @@ const isObject = (value) => Boolean(value) && typeof value === "object" && !Arra
 const isCount = (value) => Number.isInteger(value) && value >= 0;
 const isPositive = (value) => typeof value === "number" && Number.isFinite(value) && value > 0;
 const isText = (value, max) => typeof value === "string" && value.length >= 1 && value.length <= max && !CONTROL.test(value);
-function checker(file) {
-  const fail = (where, message) => { throw new Error(`${file}: ${where}: ${message}; ${REBUILD}`); };
+function checker(file, hint = REBUILD) {
+  const fail = (where, message) => { throw new Error(`${file}: ${where}: ${message}; ${hint}`); };
   const keys = (value, wanted, where) => {
     if (!isObject(value)) fail(where, "must be an object");
     const extra = Object.keys(value).filter((key) => !wanted.includes(key));
@@ -358,6 +359,146 @@ export function referenceValues({ slug, summary = null, facts = null, evidence =
   };
 }
 
+// --- the product's own screens (level 2, after the references; WO-11 B2) ------------------------------------
+
+const INVENTORY_HINT = "count the screens again with `drift-report.mjs <url>… --out <dir> --inventory` and pass <dir>/inventory.json";
+// The inventory's `dominant` rule (ss-verify/scripts/system-inventory.mjs DOMINANT_SHARE, version "1").
+const OWN_DOMINANT = 0.1;
+const OWN_AXES = Object.freeze({
+  controlHeights: { rule: "dominant", one: "control height", many: "control heights" },
+  radii: { rule: "dominant", one: "radius", many: "radii" },
+  typeSizes: { rule: "shared", one: "type size", many: "type sizes" },
+  spacingBase: { rule: "majority" },
+});
+
+/**
+ * The inventory of the product's own screens (inventory.json from `drift-report.mjs --inventory`),
+ * checked strictly and copied.
+ * @param {object} input parsed JSON
+ * @param {{file?: string}} [options] the path printed in errors
+ */
+export function normalizeInventory(input, { file = "inventory.json" } = {}) {
+  const { fail, keys, array } = checker(file, INVENTORY_HINT);
+  keys(input, ["tool", "version", "observedAt", "viewports", "screens", "axes"], "inventory");
+  if (input.tool !== "styleseed system-inventory") fail("tool", "must be \"styleseed system-inventory\"");
+  if (input.version !== "1") fail("version", `is ${JSON.stringify(input.version)}; this proposer reads version "1"`);
+  if (typeof input.observedAt !== "string" || !/^\d{4}-\d{2}-\d{2}$/u.test(input.observedAt)) fail("observedAt", "must be the measurement date (YYYY-MM-DD)");
+  const viewports = array(input.viewports, "viewports").map((pair, index) => { if (!Array.isArray(pair) || pair.length !== 2 || !pair.every((n) => Number.isInteger(n) && n > 0)) fail(`viewports[${index}]`, "must be a [width, height] pair"); return [...pair]; });
+  const screens = array(input.screens, "screens", { min: 1 }).map((screen, index) => {
+    keys(screen, ["label"], `screens[${index}]`);
+    if (!isText(screen.label, 200)) fail(`screens[${index}].label`, "must be the screen label");
+    return { label: screen.label };
+  });
+  const n = screens.length;
+  const sizes = (value, where) => array(value, where).map((v, index) => { if (!(typeof v === "number" && Number.isFinite(v) && v >= 0)) fail(`${where}[${index}]`, "must be a number >= 0"); return v; });
+  const histogram = (a, where, { kind = false, extra = [] } = {}) => {
+    keys(a, [...(kind ? ["counted", "total", "distinct", "values", "dominant"] : ["counted", "total", "distinct", "values", "shared", "dominant"]), ...extra], where);
+    if (!isText(a.counted, 40)) fail(`${where}.counted`, "must name what was counted");
+    if (!isCount(a.total) || !isCount(a.distinct)) fail(where, "total and distinct must be counts");
+    const values = array(a.values, `${where}.values`).map((v, index) => {
+      const at = `${where}.values[${index}]`;
+      keys(v, kind ? ["value", "count", "share", "screens"] : ["value", "count", "share", "screens", "reported"], at);
+      if (!(typeof v.value === "number" && Number.isFinite(v.value) && v.value >= 0)) fail(`${at}.value`, "must be a number >= 0");
+      if (!(Number.isInteger(v.count) && v.count > 0)) fail(`${at}.count`, "must be a positive count");
+      if (!(typeof v.share === "number" && v.share >= 0 && v.share <= 1)) fail(`${at}.share`, "must be a share between 0 and 1");
+      for (const key of kind ? ["screens"] : ["screens", "reported"]) if (!isCount(v[key]) || v[key] > n) fail(`${at}.${key}`, `must be a count of at most ${n} screens`);
+      return kind ? { value: v.value, count: v.count, share: v.share, screens: v.screens } : { value: v.value, count: v.count, share: v.share, screens: v.screens, reported: v.reported };
+    });
+    if (values.length !== a.distinct || values.reduce((sum, v) => sum + v.count, 0) !== a.total) fail(where, "values must add up to total and distinct");
+    return { counted: a.counted, total: a.total, distinct: a.distinct, values, ...(kind ? {} : { shared: sizes(a.shared, `${where}.shared`) }), dominant: sizes(a.dominant, `${where}.dominant`) };
+  };
+  const axes = input.axes;
+  keys(axes, ["controlHeights", "radii", "typeSizes", "spacingBase"], "axes");
+  const heights = axes.controlHeights;
+  const hasKinds = isObject(heights) && Object.hasOwn(heights, "byKind");
+  const controlHeights = histogram(heights, "axes.controlHeights", { extra: ["controlBoxVersion", ...(hasKinds ? ["byKind"] : [])] });
+  if (heights.controlBoxVersion !== null && !(Number.isInteger(heights.controlBoxVersion) && heights.controlBoxVersion >= 1)) fail("axes.controlHeights.controlBoxVersion", "must be a version number or null (the older reading)");
+  controlHeights.controlBoxVersion = heights.controlBoxVersion;
+  if (hasKinds) {
+    keys(heights.byKind, ["field", "button"], "axes.controlHeights.byKind");
+    controlHeights.byKind = { field: histogram(heights.byKind.field, "axes.controlHeights.byKind.field", { kind: true }), button: histogram(heights.byKind.button, "axes.controlHeights.byKind.button", { kind: true }) };
+  }
+  const base = axes.spacingBase;
+  keys(base, ["counted", "values", "majority"], "axes.spacingBase");
+  if (!isText(base.counted, 40)) fail("axes.spacingBase.counted", "must name what was counted");
+  const bases = array(base.values, "axes.spacingBase.values").map((v, index) => {
+    keys(v, ["value", "screens"], `axes.spacingBase.values[${index}]`);
+    if (v.value !== null && !(Number.isInteger(v.value) && v.value >= 1)) fail(`axes.spacingBase.values[${index}].value`, "must be a spacing base in px or null");
+    if (!(Number.isInteger(v.screens) && v.screens >= 1 && v.screens <= n)) fail(`axes.spacingBase.values[${index}].screens`, `must be a count of at most ${n} screens`);
+    return { value: v.value, screens: v.screens };
+  });
+  if (base.majority !== null && !(Number.isInteger(base.majority) && base.majority >= 1)) fail("axes.spacingBase.majority", "must be a spacing base in px or null");
+  return {
+    tool: input.tool, version: input.version, observedAt: input.observedAt, viewports, screens,
+    axes: { controlHeights, radii: histogram(axes.radii, "axes.radii"), typeSizes: histogram(axes.typeSizes, "axes.typeSizes"), spacingBase: { counted: base.counted, values: bases, majority: base.majority } },
+  };
+}
+
+/**
+ * The values the product's own screens give each axis: control heights and radii their `dominant` values
+ * (on at least 10% of the counted controls or boxes, at least the most frequent one), type sizes their
+ * `shared` values (on at least half of the screens as the drift report counts them), and the spacing
+ * unit the base on the most screens. Control heights of the older reading (no `controlBoxVersion`) give
+ * no value. `path` is the project-relative path of the inventory, printed in the `--entry` command.
+ * @param {{path: string, inventory: object}} input inventory normalized (normalizeInventory)
+ */
+export function ownScreens({ path, inventory }) {
+  const { axes } = inventory;
+  const values = {};
+  const set = (axis, list) => { const clean = numeric(numbersOf(list)); if (clean.length) values[axis] = clean; };
+  if (axes.controlHeights.controlBoxVersion !== null) set("controlHeights", axes.controlHeights.dominant);
+  set("radii", axes.radii.dominant);
+  set("typeSizes", axes.typeSizes.shared);
+  if (Number.isInteger(axes.spacingBase.majority) && axes.spacingBase.majority >= 1) values.spacingBase = [axes.spacingBase.majority];
+  const skipped = [];
+  for (const axis of Object.keys(values)) if (values[axis].length > MAX_VALUES) { skipped.push({ axis, count: values[axis].length }); delete values[axis]; }
+  return { path, observedAt: inventory.observedAt, screens: inventory.screens.length, values, skipped, axes: structuredClone(axes) };
+}
+
+const pct = (share) => `${Math.round(share * 100)}%`;
+// "32px on 55% of 102 controls, 36px on 12%; 7 more under 10% each (28, 30, 34px)": the `dominant` values
+// with their shares, in count order, then the others, ascending.
+function inUseText(a, unit) {
+  if (!a.total) return `no ${a.counted} counted`;
+  const top = a.values.filter((v) => a.dominant.includes(v.value));
+  const rest = numeric(a.values.filter((v) => !a.dominant.includes(v.value)).map((v) => v.value));
+  return `${top.map((v, i) => `${v.value}${unit} on ${pct(v.share)}${i === 0 ? ` of ${a.total} ${a.counted}` : ""}`).join(", ")}${rest.length ? `; ${rest.length} more under ${pct(OWN_DOMINANT)}${rest.length > 1 ? " each" : ""} (${list(rest)}${unit})` : ""}`;
+}
+// The own-screens line of one axis, printed before the corpus lines. Counts only: the corpus lines stand
+// beside it unchanged, and nothing joins the two.
+function ownText(def, own) {
+  const a = own.axes[def.axis];
+  const head = `This product (${plural(own.screens, "screen", "screens")} measured ${own.observedAt}):`;
+  if (def.axis === "spacingBase") {
+    const parts = a.values.map((v, i) => `${v.value === null ? "no base found" : `${v.value}px`} on ${v.screens}${i === 0 ? ` of ${plural(own.screens, "screen", "screens")}` : ""}`);
+    return `${head} spacing base ${parts.join("; ")}.${own.values.spacingBase ? " The own-screens option takes the base on the most screens, as the drift report reads it." : ""}`;
+  }
+  const words = OWN_AXES[def.axis];
+  if (def.axis === "controlHeights" && a.controlBoxVersion === null) return `${head} these control heights were read from the input element, the older reading without the visible control box, so they give no option here. Count the screens again with \`drift-report.mjs … --inventory\` to read the visible control boxes.`;
+  const lead = `${head} ${plural(a.distinct, words.one, words.many)} in use; ${inUseText(a, def.unit)}.`;
+  const kinds = def.axis === "controlHeights" && a.byKind ? ` ${["field", "button"].map((kind) => `${cap(a.byKind[kind].counted)}: ${inUseText(a.byKind[kind], def.unit)}.`).join(" ")}` : "";
+  if (!own.values[def.axis]) return `${lead}${kinds}`;
+  const rule = words.rule === "dominant"
+    ? ` The own-screens option takes the ${words.many} on at least ${pct(OWN_DOMINANT)} of the ${a.counted}, and at least the most frequent one.`
+    : ` The own-screens option takes the sizes on at least half of the screens, as the drift report counts them: ${list(a.shared)}${def.unit}. A size used on few elements can be a real heading, so the share of elements does not decide here.`;
+  return `${lead}${kinds}${rule}`;
+}
+// The values in use on the product's screens that the drift report would read as `violates` once the
+// proposed values are recorded: a value its drift row lists on at least one screen (`reported`), with the
+// count of elements in use and the screens that list it; for the spacing unit, each other base.
+function ownViolations(def, own, chosen) {
+  const a = own.axes[def.axis];
+  if (def.axis === "spacingBase") return a.values.filter((v) => v.value !== null && !chosen.includes(v.value)).map((v) => ({ value: v.value, count: null, screens: v.screens }));
+  if (def.axis === "controlHeights" && a.controlBoxVersion === null) return null;
+  return a.values.filter((v) => v.reported > 0 && !chosen.includes(v.value)).map((v) => ({ value: v.value, count: v.count, screens: v.reported }));
+}
+function violationsText(def, own, violations) {
+  if (!violations.length) return "No value in use on these screens would then read as a violation.";
+  const counted = own.axes[def.axis].counted;
+  const items = violations.slice(0, 8).map((v, i) => `${v.value}${def.unit} (${i === 0 ? `${v.count === null ? "" : `${v.count} ${counted}, `}${plural(v.screens, "screen", "screens")}` : `${v.count === null ? "" : `${v.count}, `}${v.screens}`})`);
+  return `Values in use that would then read as violations: ${items.join(", ")}${violations.length > 8 ? ` and ${violations.length - 8} more` : ""}.`;
+}
+
 // --- entries ------------------------------------------------------------------------------------------------
 
 const valuesText = (values, unit) => `${list(values)}${unit}`;
@@ -371,8 +512,9 @@ function corpusBasis(runId, counts, unit, labels = counts.length > 1) {
   return `${parts.join(", ")} (${[...new Set(counts.map((c) => pageText(c.pageType)))].join(" and ")}, corpus run ${runId})`;
 }
 const referenceBasis = (option) => `${option.kept ? "kept in the project's reference contract" : "measured on the project's reference"} ${option.slug}${option.observedAt ? `, ${option.observedAt}` : ""}`;
+const ownBasis = (option) => `measured on ${plural(option.screens, "screen", "screens")} of this product, ${option.observedAt}`;
 const defaultBasis = (option) => `engine default, not measured (${option.from})`;
-const basisText = (def, option, runId) => (option.basis === "corpus" ? corpusBasis(runId, option.counts, def.unit) : option.basis === "reference" ? referenceBasis(option) : defaultBasis(option));
+const basisText = (def, option, runId) => (option.basis === "corpus" ? corpusBasis(runId, option.counts, def.unit) : option.basis === "reference" ? referenceBasis(option) : option.basis === "own-screens" ? ownBasis(option) : defaultBasis(option));
 function sentenceFor(def, option) {
   if (option.basis !== "corpus" || option.counts.some(isFlagCount)) return def.sentence(option.values);
   const clauses = option.values.map((value) => {
@@ -381,7 +523,7 @@ function sentenceFor(def, option) {
   });
   return `${cap(clauses.join("; "))}.`;
 }
-const prefixOf = (option, runId) => (option.basis === "corpus" ? `corpus:${runId}` : option.basis === "reference" ? `${option.kept ? "reference" : "measured"}:${option.slug}` : option.source.split(" ")[0]);
+const prefixOf = (option, runId) => (option.basis === "corpus" ? `corpus:${runId}` : option.basis === "reference" ? `${option.kept ? "reference" : "measured"}:${option.slug}` : option.basis === "own-screens" ? `own-screens:${option.observedAt}` : option.source.split(" ")[0]);
 const severalRows = (prefix, axis, extra = "") => `${prefix}#${axis} (several rows${extra}; see ${PROPOSALS_FILE})`;
 // The ledger's limits: a statement of at most 300 characters, a source of at most 200. A statement that would
 // be longer says "Basis: see source."; if even that is too long, the axis's generic sentence is used.
@@ -399,14 +541,14 @@ function entryFor(def, option, runId) {
 // --- the proposal ---------------------------------------------------------------------------------------------
 
 /**
- * @param {{pack: object, defaults: object, project: {mode: string, decisions: object[], density: string|null, recipe: string|null, ledger: {path: string, entries: number, nextId: string}}, context: {artifact?: string|null, page: string, surface: "pointer"|"touch"}, references?: object[], own?: null, rule?: object}} input
+ * @param {{pack: object, defaults: object, project: {mode: string, decisions: object[], density: string|null, recipe: string|null, ledger: {path: string, entries: number, nextId: string}}, context: {artifact?: string|null, page: string, surface: "pointer"|"touch"}, references?: object[], own?: object|null, rule?: object}} input
  *   pack and defaults normalized; project.decisions normalized (normalizeDecisions); references are
- *   referenceValues results in the order given; own is reserved for proposals from the product's own
- *   measured screens (a later part) and must be null here.
+ *   referenceValues results in the order given; own is the ownScreens result for the product's own
+ *   measured screens, or null.
  * @returns {object} the proposal (written as .styleseed/proposals/system.json)
  */
 export function proposeSystem({ pack, defaults, project, context, references = [], own = null, rule = PROPOSAL_RULE }) {
-  if (own !== null) throw new Error("proposals from the product's own screens are not part of this version of the proposer; pass own: null");
+  if (own !== null && !(isObject(own) && isObject(own.values) && isObject(own.axes) && typeof own.path === "string")) throw new Error("own: pass the ownScreens result for the product's inventory, or null");
   const decisions = project.decisions ?? [];
   const axes = [];
   for (const def of PROPOSAL_AXES) {
@@ -419,17 +561,21 @@ export function proposeSystem({ pack, defaults, project, context, references = [
       const kept = ref.kept.includes(def.axis);
       options.push({ basis: "reference", slug: ref.slug, kept, observedAt: ref.observedAt ?? null, values: [...ref.values[def.axis]], source: `${kept ? "reference" : "measured"}:${ref.slug}#${ref.factIds[def.axis]}` });
     }
+    const ownAxis = own && OWN_AXES[def.axis] ? own : null;
+    if (ownAxis?.values[def.axis]?.length) options.push({ basis: "own-screens", screens: own.screens, observedAt: own.observedAt, values: [...own.values[def.axis]], source: `own-screens:${own.observedAt}#${def.axis}` });
     options.push(...corpus.options);
     const fallback = engineDefault(def.axis, defaults, { recipe: project.recipe, surface: context.surface });
     if (fallback) options.push({ basis: "engine-default", values: fallback.values, from: fallback.from, source: `engine-default:${fallback.id} (not measured)` });
     if (!def.core && !recorded && !options.some((option) => option.basis !== "engine-default")) continue;
     const first = options[0] ?? null;
-    const proposed = !recorded && first && (first.basis === "reference" || (first.basis === "corpus" && corpus.status === "agree")) ? 0 : null;
+    const proposed = !recorded && first && (first.basis === "reference" || first.basis === "own-screens" || (first.basis === "corpus" && corpus.status === "agree")) ? 0 : null;
     const status = recorded ? "recorded" : proposed !== null ? "proposed" : corpus.status === "split" ? "split" : corpus.status === "thin" ? "thin" : "unmeasured";
     const floor = context.surface === "touch" && def.axis === "controlHeights" ? TOUCH_FLOOR : null;
+    const violations = ownAxis && proposed !== null ? ownViolations(def, own, first.values) : null;
     axes.push({
       axis: def.axis, title: def.title, status, partial: proposed !== null && first.partial === true,
       recorded: recorded ? { id: recorded.id, values: [...recorded.values], by: recorded.approvedBy, date: recorded.date } : null, scoped,
+      own: ownAxis ? { text: ownText(def, own), violations, violationsText: violations ? violationsText(def, own, violations) : null } : null,
       corpus: { status: corpus.status, reason: corpus.reason, lines: corpus.lines, notes: corpus.notes }, floor,
       options: recorded ? [] : options.map((option) => {
         const under = floor ? option.values.filter((value) => value < floor.px) : [];
@@ -441,7 +587,7 @@ export function proposeSystem({ pack, defaults, project, context, references = [
   const withScreens = pack.lineages.filter((lineage) => lineage.screens > 0);
   return {
     proposalVersion: PROPOSAL_VERSION,
-    inputs: { mode: project.mode, artifact: context.artifact ?? null, page: context.page, pageRow: PAGE_ROWS[context.page] ?? "all", surface: context.surface, density: project.density ?? null, recipe: project.recipe ?? null, references: references.map((ref) => ref.slug), own: null },
+    inputs: { mode: project.mode, artifact: context.artifact ?? null, page: context.page, pageRow: PAGE_ROWS[context.page] ?? "all", surface: context.surface, density: project.density ?? null, recipe: project.recipe ?? null, references: references.map((ref) => ref.slug), own: own ? own.path : null },
     pack: {
       run: pack.run.id, lineages: pack.lineages.length, withScreens: withScreens.length,
       productSystems: withScreens.filter((lineage) => lineage.kind === "product-system").length, kits: withScreens.filter((lineage) => lineage.kind === "kit").length,
@@ -491,7 +637,7 @@ export function entryForValues(proposal, axis, values) {
       parts.push(corpusBasis(runId, counts, def.unit, true));
       sources.push(corpusSource(runId, counts));
     } else {
-      parts.push(`${valuesText(held, def.unit)} ${option.basis === "reference" ? referenceBasis(option) : defaultBasis(option)}`);
+      parts.push(`${valuesText(held, def.unit)} ${option.basis === "reference" ? referenceBasis(option) : option.basis === "own-screens" ? ownBasis(option) : defaultBasis(option)}`);
       sources.push(option.source);
     }
   }
@@ -508,7 +654,7 @@ export function entryForValues(proposal, axis, values) {
 // --- SYSTEM.md ------------------------------------------------------------------------------------------------
 
 function commandFor(inputs) {
-  return `propose-system.mjs --project-root .${inputs.artifact ? ` --artifact ${inputs.artifact}` : ""}${inputs.references.map((slug) => ` --reference ${slug}`).join("")} --surface ${inputs.surface}`;
+  return `propose-system.mjs --project-root .${inputs.artifact ? ` --artifact ${inputs.artifact}` : ""}${inputs.references.map((slug) => ` --reference ${slug}`).join("")}${inputs.own ? ` --own ${inputs.own}` : ""} --surface ${inputs.surface}`;
 }
 
 /**
@@ -533,22 +679,22 @@ export function renderProposalMarkdown(p, { command = commandFor(p.inputs) } = {
     const first = a.options[0] ?? null;
     out.push(`## ${index + 1}. ${a.title} (\`${a.axis}\`)`, "");
     if (a.status === "recorded") out.push(`**Recorded: ${v(a.recorded.values)}** as ${a.recorded.id} (${a.recorded.by}, ${a.recorded.date}). Nothing is proposed for a recorded axis.`);
-    else if (a.status === "proposed") out.push(`**Proposed: ${v(first.values)}**${a.partial ? " — one part of this axis, not the whole set" : ""} — ${first.basis === "corpus" ? "from the corpus" : `from the project's reference \`${first.slug}\` (${first.kept ? "kept in its contract" : "measured, not kept in a contract"})`}.`);
+    else if (a.status === "proposed") out.push(`**Proposed: ${v(first.values)}**${a.partial ? " — one part of this axis, not the whole set" : ""} — ${first.basis === "corpus" ? "from the corpus" : first.basis === "own-screens" ? "from this product's own screens" : `from the project's reference \`${first.slug}\` (${first.kept ? "kept in its contract" : "measured, not kept in a contract"})`}.`);
     else if (a.status === "split") out.push("**No value proposed: the measured systems split.**");
     else if (a.status === "thin") out.push(`**No value proposed: fewer than ${p.rule.minMeasured} measured systems.**`);
     else out.push(`**No measured basis.**${a.corpus.reason === "touch" ? " The corpus has no touch measurement." : a.corpus.reason === "no-claim" ? " The corpus has no row for this axis yet." : ""}`);
     out.push("");
-    const bullets = a.corpus.lines.map((line) => `- ${line.text}`);
+    const bullets = [...(a.own ? [`- ${a.own.text}`] : []), ...a.corpus.lines.map((line) => `- ${line.text}`)];
     if (a.corpus.notes.length) bullets.push(`- Also measured: ${a.corpus.notes.map((note) => note.text).join(" ")}`);
     if (a.floor) bullets.push(`- Floor: rule \`${a.floor.rule}\` says "${a.floor.clause}".`);
     if (a.status !== "recorded") {
       const said = { input: `input mode (this proposal is for ${p.inputs.surface} input)`, density: `density (the project says \`${p.inputs.density ?? "not set"}\`)`, recipe: `the brand recipe (the project says \`${p.inputs.recipe ?? "not resolved"}\`)` };
       if (def.depends.length) bullets.push(`- Depends on: ${def.depends.map((key) => said[key]).join(" and ")}. The corpus measures ${def.depends.length > 1 ? "neither relationship" : "no such relationship"}.`);
-      const optionText = (o) => `${v(o.values)} (${o.basis === "corpus" ? o.counts.map((c) => `${c.lineages} of ${c.measured}`).join(", ") : o.basis === "reference" ? `reference \`${o.slug}\`, ${o.kept ? "kept" : "measured"}` : `engine default, not measured: ${o.from}`}${o.underFloor ? `; ${v(o.underFloor)} ${o.underFloor.length === 1 ? "is" : "are"} under the floor` : ""})`;
+      const optionText = (o) => `${v(o.values)} (${o.basis === "corpus" ? o.counts.map((c) => `${c.lineages} of ${c.measured}`).join(", ") : o.basis === "reference" ? `reference \`${o.slug}\`, ${o.kept ? "kept" : "measured"}` : o.basis === "own-screens" ? "this product's own screens" : `engine default, not measured: ${o.from}`}${o.underFloor ? `; ${v(o.underFloor)} ${o.underFloor.length === 1 ? "is" : "are"} under the floor` : ""})`;
       const rest = a.options.filter((_, i) => i !== a.proposed);
       if (rest.length) bullets.push(`- ${a.proposed === null ? "Options" : "Other options"}: ${rest.map(optionText).join(" · ")}.`);
       if (a.partial) bullets.push(`- Before recording: this holds ${first.values.length === 1 ? "one value" : `${first.values.length} values`} of a larger set. Add the other values the product uses with \`--entry ${a.axis}=<all values>\`; they have no measured basis here, and the entry's \`source\` says so.`);
-      bullets.push(`- If recorded: ${def.effect}.`);
+      bullets.push(`- If recorded: ${def.effect}.${a.own?.violationsText ? ` ${a.own.violationsText}` : ""}`);
     }
     if (a.scoped.length) bullets.push(`- Scoped entries already on this axis: ${a.scoped.join(", ")}.`);
     if (bullets.length) out.push(...bullets, "");

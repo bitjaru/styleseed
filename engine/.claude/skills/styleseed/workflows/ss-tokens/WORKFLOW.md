@@ -99,7 +99,9 @@ node <installed-ss-resolve>/scripts/propose-system.mjs --project-root . --surfac
 ```
 
 (`--surface touch` for a touch-first product, `--artifact <id>` in a registry project, `--reference <slug>` for each
-reference the person measured.) Read `.styleseed/proposals/SYSTEM.md`: per axis it gives a value and its basis, in
+reference the person measured.) When the product already has screens, count them with `drift-report.mjs … --inventory`
+and pass `--own <dir>/inventory.json`: the values those screens use become an option after the references and before
+the corpus counts. Read `.styleseed/proposals/SYSTEM.md`: per axis it gives a value and its basis, in
 this order: the project's recorded decision, the person's own measurement, counts over the measured design systems
 that ship with this skill, and the engine default, labelled not measured. Present each axis with its counts, let the
 person choose, and append only what they chose to the decisions ledger with the name they give; `--entry

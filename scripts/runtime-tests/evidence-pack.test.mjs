@@ -127,9 +127,11 @@ test("buildEvidencePack is additive: a new keep claim, lineage, page type, and a
   input.consensus.rows.push(
     row("controls.rowShareRadius", "wizard", "keep", 3, [bucket(true, 3, 2, 1)]),
     row("button.height", "wizard", "adapt", 3, [bucket(32, 3, 2, 1)]),
-    // A WO-12 set row: its buckets do not add up to measured; this builder does not know the kind and skips it.
+    // A WO-12 set row: its buckets do not add up to measured; the builder leaves it out.
     row("button.height", "all", "adapt", 4, [bucket(32, 4, 3, 1), bucket(40, 3, 2, 1)], { valueKind: "set", viewport: 390 }),
     row("button.height", "detail", "adapt", 4, [bucket(32, 4, 3, 1)], { valueKind: "value" }),
+    // Every non-set row of a WO-12 run carries valueKind "single" and is packed.
+    row("button.height", "dashboard", "adapt", 4, [bucket(36, 4, 3, 1)], { valueKind: "single" }),
   );
   const { problems, pack } = buildEvidencePack(input);
   assert.deepEqual(problems, []);
@@ -137,6 +139,7 @@ test("buildEvidencePack is additive: a new keep claim, lineage, page type, and a
   assert.ok(pack.lineages.some((lineage) => lineage.id === "epsilon" && lineage.screens === 1));
   assert.ok(pack.rows.some((entry) => entry.claim === "button.height" && entry.pageType === "wizard"));
   assert.ok(pack.rows.some((entry) => entry.claim === "button.height" && entry.pageType === "detail"), "valueKind value is a known kind");
+  assert.ok(pack.rows.some((entry) => entry.claim === "button.height" && entry.pageType === "dashboard"), "valueKind single is a known kind");
   assert.ok(!pack.rows.some((entry) => entry.viewport === 390), "the set row is not packed");
   assert.ok(!pack.claims.some((claim) => claim.id === "controls.rowShareRadius"));
   // A claim whose only rows are set rows is not packed at all, and nothing fails.
@@ -145,6 +148,14 @@ test("buildEvidencePack is additive: a new keep claim, lineage, page type, and a
   const built = buildEvidencePack(setOnly);
   assert.deepEqual(built.problems, []);
   assert.ok(!built.pack.claims.some((claim) => claim.id === "table.rowHeight"));
+  // A kind the builder does not know is a problem on a mapped claim (left out silently, a whole run could
+  // give an empty pack), and no problem on a claim without a CLAIM_USES line.
+  const unknown = synthetic();
+  unknown.consensus.rows.push(row("button.height", "wizard", "adapt", 3, [bucket(32, 3, 2, 1)], { valueKind: "range" }), row("icons.oneFamily", "all", "keep", 4, [bucket(false, 3, 2, 1)], { valueKind: "range" }));
+  const refused = buildEvidencePack(unknown);
+  assert.equal(refused.problems.length, 1);
+  assert.match(refused.problems[0], /\(button\.height\) has valueKind "range", which this builder does not know/u);
+  assert.ok(!refused.pack.rows.some((entry) => entry.pageType === "wizard"));
 
   // The proposer reads claims[] generically: a claim whose use (or axis) it does not know changes nothing.
   const base = normalizeEvidencePack(buildEvidencePack(synthetic()).pack);

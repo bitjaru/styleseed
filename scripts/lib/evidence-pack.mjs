@@ -3,9 +3,11 @@
 //
 // buildEvidencePack copies, from one named corpus run, the rows of the claims listed in CLAIM_USES:
 // value distributions as counts of lineages by kind, never a per-system or per-screen value. A row
-// whose `valueKind` this builder does not know (WO-12 `set` rows) and a claim without a CLAIM_USES
-// line are left out without failing, except an `adapt` claim of the run that is in neither CLAIM_USES
-// nor NOT_PACKED: that is a problem until someone says how the proposer may use it.
+// without a `valueKind` (the first run) and a row whose kind is `value` or `single` (every non-set row
+// of a WO-12 run carries `single`) are packed. A `set` row and a claim without a CLAIM_USES line are
+// left out without failing. Two things are problems: a row of a CLAIM_USES claim whose kind is none of
+// these (left out silently, a run with a new kind would give an empty pack), and an `adapt` claim of
+// the run that is in neither CLAIM_USES nor NOT_PACKED, until someone says how the proposer may use it.
 //
 // buildEngineDefaults reads what the engine ships (component heights and text sizes, recipe radii and
 // gaps, the starting spacing set of a rule) from the source, so "not measured" is structural: these
@@ -43,7 +45,8 @@ export const NOT_PACKED = Object.freeze({
 
 const NEVER_PROPOSED = new Set(["accent", "ink", "canvas", "fonts"]);
 const USES = new Set(["value", "flag", "note"]);
-const KNOWN_VALUE_KINDS = new Set([undefined, "value"]);
+const PACKED_VALUE_KINDS = new Set([undefined, "value", "single"]);
+const SKIPPED_VALUE_KINDS = new Set(["set"]);
 const ROW_FIELDS = ["claim", "pageType", "viewport", "measured", "distribution"];
 
 const bucketOf = (entry) => ({ value: entry.bucket, lineages: entry.lineages, productSystems: entry.productSystems, kits: entry.kits });
@@ -69,12 +72,13 @@ export function buildEvidencePack({ consensus, manifest, run, runPath, claimUses
     const missing = ROW_FIELDS.filter((field) => row?.[field] === undefined);
     if (missing.length) problems.push(`${file}: rows[${index}]${row?.claim ? ` (${row.claim})` : ""} has no ${missing.join(", ")}; a packed row needs claim, pageType, viewport, measured, and distribution`);
     if (row?.transfer === "adapt" && typeof row.claim === "string") adapt.add(row.claim);
+    if (typeof row?.claim === "string" && Object.hasOwn(claimUses, row.claim) && !PACKED_VALUE_KINDS.has(row.valueKind) && !SKIPPED_VALUE_KINDS.has(row.valueKind)) problems.push(`${file}: rows[${index}] (${row.claim}) has valueKind ${JSON.stringify(row.valueKind)}, which this builder does not know (it packs a row without a valueKind and "value" or "single" rows, and leaves "set" rows out); teach scripts/lib/evidence-pack.mjs the kind before the pack is built from this run`);
   });
   for (const id of adapt) {
     if (!Object.hasOwn(claimUses, id) && !Object.hasOwn(notPacked, id)) problems.push(`${file}: claim ${id} is an adapt claim with no line in CLAIM_USES or NOT_PACKED; add a line to CLAIM_USES in scripts/lib/evidence-pack.mjs, or to NOT_PACKED with a reason`);
   }
 
-  const packed = rowsIn.filter((row) => typeof row?.claim === "string" && Object.hasOwn(claimUses, row.claim) && KNOWN_VALUE_KINDS.has(row.valueKind) && !ROW_FIELDS.some((field) => row[field] === undefined));
+  const packed = rowsIn.filter((row) => typeof row?.claim === "string" && Object.hasOwn(claimUses, row.claim) && PACKED_VALUE_KINDS.has(row.valueKind) && !ROW_FIELDS.some((field) => row[field] === undefined));
   for (const row of packed) {
     const use = claimUses[row.claim];
     const buckets = [...row.distribution, ...(row.withFragments?.distribution ?? [])];

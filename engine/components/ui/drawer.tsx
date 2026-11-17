@@ -55,7 +55,7 @@ function Drawer({
             </h2>
             <button
               onClick={onClose}
-              className="size-8 flex items-center justify-center rounded-lg active:bg-surface-muted/50 transition-colors"
+              className="size-[calc(var(--ss-control-height,40px)-8px)] flex items-center justify-center rounded-lg active:bg-surface-muted/50 transition-colors"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="text-text-primary">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

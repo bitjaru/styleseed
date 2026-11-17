@@ -64,7 +64,11 @@ accessibility.
 - Use the grammar's composition, density, type, color, surface, imagery/data, action, state,
   responsive, and motion contracts.
 - Use the recipe's containment, geometry, control, collection, and navigation morphology.
-  Set `data-styleseed-recipe="<id>"` on the artifact root when using bundled pattern components.
+  When the document holds one artifact, set `data-styleseed-recipe="<id>"` on the document root
+  (`<html>`), so content rendered into `body` (dialogs, sheets, popovers, select menus) takes the
+  recipe too. When a document holds several artifacts, set `data-styleseed-recipe="<id>"` on the
+  artifact root when using bundled pattern components; the engine scopes spacing per artifact root
+  the same way.
 - Use product-specific content and evidence. Never copy the StyleSeed demo or a reference screen.
 - Implement loading, empty, error, focus, reduced-motion, and responsive behavior where relevant.
 

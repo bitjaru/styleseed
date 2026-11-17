@@ -48,7 +48,7 @@ Week / Month. Each tab shows a panel; only one panel is visible at a time.
 
 ## From the code
 
-Source `engine/components/ui/tabs.tsx` · `sha256:a71dd6e8a4b3…`
+Source `engine/components/ui/tabs.tsx` · `sha256:bbd179549cd2…`
 
 Import, after copying `engine/components` into `src/components`:
 

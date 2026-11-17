@@ -74,7 +74,7 @@ a screen; everything else is a quieter variant. Navigation to another page is a 
 
 ## From the code
 
-Source `engine/components/ui/button.tsx` · `sha256:f2064403176b…`
+Source `engine/components/ui/button.tsx` · `sha256:39c63d9ca296…`
 
 Import, after copying `engine/components` into `src/components`:
 

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 5,
   "engineVersion": "5.0.0",
-  "engineRevision": "sha256:c625303cc6a47033e2c1e9099c0ac9d14e9123d4cb9fd71b4ffe8c0fae1ffca9",
+  "engineRevision": "sha256:ca27e5796efe4da1e5a1b368f76e7c71b67ded9855b912d5245a174834ba18ca",
   "distributionSource": {
     "schemaVersion": 1,
     "channel": "edge",
@@ -10,7 +10,7 @@
   },
   "distributions": {
     "core": {
-      "revision": "sha256:c625303cc6a47033e2c1e9099c0ac9d14e9123d4cb9fd71b4ffe8c0fae1ffca9",
+      "revision": "sha256:ca27e5796efe4da1e5a1b368f76e7c71b67ded9855b912d5245a174834ba18ca",
       "files": [
         {
           "path": "LICENSE",
@@ -39,8 +39,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-build/WORKFLOW.md",
-          "sha256": "1fb5433e90a5f7d6b70682df7596d80623996aecd492b40bf4cf4b5f2d8e55ca",
-          "bytes": 7069
+          "sha256": "52bf0b4eb116c03b7db9ed06fa6d2f66df1505ac222904869d0318cb480b5498",
+          "bytes": 7378
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-component/WORKFLOW.md",
@@ -79,8 +79,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-page/WORKFLOW.md",
-          "sha256": "1898f1f98adde68f3d5d1d4c75dfdc04e5d0cbca4ac1bbca6968a0a90d8508f1",
-          "bytes": 4656
+          "sha256": "2f62bff8ddc05f5df2ee6bffc298cf7abde6887ef3ba8aa085d11862851eb0a0",
+          "bytes": 4972
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-pattern/WORKFLOW.md",
@@ -544,8 +544,8 @@
         },
         {
           "path": "engine/DESIGN-LANGUAGE.md",
-          "sha256": "286e2321778dd9c94b152be5218dbde4d0c3abb1c4f32c8b44cbf658daef6b8f",
-          "bytes": 99057
+          "sha256": "fca6cee9ea5b72c3163f6994105738c00fbfd07795376216a0441bc9d2ea637c",
+          "bytes": 99090
         },
         {
           "path": "engine/METHODOLOGY.md",
@@ -655,7 +655,7 @@
       ]
     },
     "skills": {
-      "revision": "sha256:841da5bc1c7d42c02b7901d6124ec8e22240e740ffa42f67643caf77d2de27c5",
+      "revision": "sha256:01a2db65f87caa45c8c24f35a14fcfe1362a8fca5943a30cf68e840effba3cae",
       "files": [
         {
           "path": "engine/.claude/skills/styleseed/SKILL.md",
@@ -674,8 +674,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-build/WORKFLOW.md",
-          "sha256": "1fb5433e90a5f7d6b70682df7596d80623996aecd492b40bf4cf4b5f2d8e55ca",
-          "bytes": 7069
+          "sha256": "52bf0b4eb116c03b7db9ed06fa6d2f66df1505ac222904869d0318cb480b5498",
+          "bytes": 7378
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-component/WORKFLOW.md",
@@ -714,8 +714,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-page/WORKFLOW.md",
-          "sha256": "1898f1f98adde68f3d5d1d4c75dfdc04e5d0cbca4ac1bbca6968a0a90d8508f1",
-          "bytes": 4656
+          "sha256": "2f62bff8ddc05f5df2ee6bffc298cf7abde6887ef3ba8aa085d11862851eb0a0",
+          "bytes": 4972
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-pattern/WORKFLOW.md",
@@ -1168,8 +1168,8 @@
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-build/WORKFLOW.md",
-      "sha256": "1fb5433e90a5f7d6b70682df7596d80623996aecd492b40bf4cf4b5f2d8e55ca",
-      "bytes": 7069
+      "sha256": "52bf0b4eb116c03b7db9ed06fa6d2f66df1505ac222904869d0318cb480b5498",
+      "bytes": 7378
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-component/WORKFLOW.md",
@@ -1208,8 +1208,8 @@
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-page/WORKFLOW.md",
-      "sha256": "1898f1f98adde68f3d5d1d4c75dfdc04e5d0cbca4ac1bbca6968a0a90d8508f1",
-      "bytes": 4656
+      "sha256": "2f62bff8ddc05f5df2ee6bffc298cf7abde6887ef3ba8aa085d11862851eb0a0",
+      "bytes": 4972
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-pattern/WORKFLOW.md",
@@ -1673,8 +1673,8 @@
     },
     {
       "path": "DESIGN-LANGUAGE.md",
-      "sha256": "286e2321778dd9c94b152be5218dbde4d0c3abb1c4f32c8b44cbf658daef6b8f",
-      "bytes": 99057
+      "sha256": "fca6cee9ea5b72c3163f6994105738c00fbfd07795376216a0441bc9d2ea637c",
+      "bytes": 99090
     },
     {
       "path": "METHODOLOGY.md",

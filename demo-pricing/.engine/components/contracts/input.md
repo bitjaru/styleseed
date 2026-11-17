@@ -36,7 +36,7 @@ multi-line text uses `Textarea`.
 
 ## Known gaps
 
-- DESIGN-LANGUAGE §44 specifies a 48px field (`h-12`), `rounded-xl`, a transparent border and a brand-coloured focus ring. The code is 36px (`h-9`), `rounded-md`, an `input` border and a `ring`-coloured focus ring. The two disagree; the code is what ships until the designer decides (#96).
+- DESIGN-LANGUAGE §44 specifies a 48px field (`h-12`), `rounded-xl`, a transparent border and a brand-coloured focus ring. The code is 36px (`h-[calc(var(--ss-control-height,40px)-4px)]`), `rounded-md`, an `input` border and a `ring`-coloured focus ring. The two disagree; the code is what ships until the designer decides (#96).
 - 36px is under the 44px touch minimum (DESIGN-LANGUAGE §41).
 - The radius is a fixed `rounded-md`, not the recipe control radius, so an input and a button side by side can have different corners.
 
@@ -50,7 +50,7 @@ multi-line text uses `Textarea`.
 
 ## From the code
 
-Source `engine/components/ui/input.tsx` · `sha256:cb82ffcd1a9a…`
+Source `engine/components/ui/input.tsx` · `sha256:7e044bc1e864…`
 
 Import, after copying `engine/components` into `src/components`:
 

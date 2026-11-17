@@ -13,7 +13,7 @@
 // gaps, the starting spacing set of a rule) from the source, so "not measured" is structural: these
 // numbers live in their own file and the proposer always labels them as unmeasured.
 import { DECISION_AXES } from "../../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/runtime-contract.mjs";
-import { classFacts, parseSource, splitClass } from "../build-component-contracts.mjs";
+import { classFacts as readClassFacts, controlHeightProblem, parseSource, splitClass } from "../build-component-contracts.mjs";
 
 export const PACK_VERSION = 1;
 export const DEFAULTS_VERSION = 1;
@@ -150,6 +150,12 @@ export function buildEngineDefaults({ sources, colours = new Set(), recipesCss, 
     try { parsed[id] = parseSource(sources[id], colours); } catch (error) { problems.push(`${path}: cannot be parsed (${error.message}); fix the component source or the reader in scripts/build-component-contracts.mjs`); }
   }
   const need = (value, where) => { if (value === null || value === undefined) problems.push(`${where} could not be read; the engine defaults need it. Check the class string, or the reader in scripts/lib/evidence-pack.mjs`); return value ?? null; };
+  // classFacts, and a class naming --ss-control-height in another form than the one the reader knows is a problem.
+  const classFacts = (classes, colourNames, where) => {
+    const facts = readClassFacts(classes, colourNames);
+    for (const raw of facts.controlHeightMisfits) { const problem = controlHeightProblem(where, raw); if (!problems.includes(problem)) problems.push(problem); }
+    return facts;
+  };
   const part = (id, slot) => {
     const found = parsed[id]?.parts.find((entry) => entry.slot === slot) ?? null;
     if (parsed[id] && !found) problems.push(`${COMPONENT_SOURCES[id]}: no exported part with data-slot="${slot}"; the engine defaults read it`);
@@ -162,7 +168,7 @@ export function buildEngineDefaults({ sources, colours = new Set(), recipesCss, 
     if (!cva) problems.push(`${COMPONENT_SOURCES.button}: no cva size group; the engine defaults read button sizes from it`);
     else {
       const sizes = Object.entries(cva.variants.size).map(([key, cls]) => {
-        const facts = classFacts(cls, colours);
+        const facts = classFacts(cls, colours, COMPONENT_SOURCES.button);
         return { key, height: need(facts.height, `${COMPONENT_SOURCES.button}: size ${key} height`), text: facts.text, paddingX: facts.paddingX };
       });
       const defaultSize = cva.defaults?.size ?? null;
@@ -175,9 +181,9 @@ export function buildEngineDefaults({ sources, colours = new Set(), recipesCss, 
   let input = null;
   const inputPart = part("input", "input");
   if (inputPart) {
-    const facts = classFacts(inputPart.classes, colours);
+    const facts = classFacts(inputPart.classes, colours, COMPONENT_SOURCES.input);
     const fromMd = inputPart.classes.split(/\s+/u).map(splitClass).find(({ prefixes, utility }) => prefixes.length === 1 && prefixes[0] === "md" && /^text-/u.test(utility));
-    const textFromMd = fromMd ? classFacts(fromMd.utility, colours).text : null;
+    const textFromMd = fromMd ? readClassFacts(fromMd.utility, colours).text : null;
     input = {
       source: COMPONENT_SOURCES.input,
       height: need(facts.height, `${COMPONENT_SOURCES.input}: input height`),
@@ -190,7 +196,7 @@ export function buildEngineDefaults({ sources, colours = new Set(), recipesCss, 
   let select = null;
   const trigger = part("select", "select-trigger");
   if (trigger) {
-    const facts = classFacts(trigger.classes, colours);
+    const facts = classFacts(trigger.classes, colours, COMPONENT_SOURCES.select);
     const sizes = Object.entries(facts.heightsBySize).map(([key, height]) => ({ key, height, text: facts.text, paddingX: facts.paddingX }));
     if (!sizes.length) problems.push(`${COMPONENT_SOURCES.select}: select-trigger height could not be read (no data-[size=…]:h-… class); the engine defaults need it`);
     need(facts.text, `${COMPONENT_SOURCES.select}: select-trigger text size`);
@@ -203,12 +209,12 @@ export function buildEngineDefaults({ sources, colours = new Set(), recipesCss, 
   const head = part("table", "table-head");
   const container = part("table", "table-container");
   if (head && container) {
-    const headFacts = classFacts(head.classes, colours);
+    const headFacts = classFacts(head.classes, colours, COMPONENT_SOURCES.table);
     table = {
       source: COMPONENT_SOURCES.table,
       headHeight: need(headFacts.height, `${COMPONENT_SOURCES.table}: table-head height`),
       headPaddingX: headFacts.paddingX,
-      text: need(classFacts(container.classes, colours).text, `${COMPONENT_SOURCES.table}: table text size`),
+      text: need(classFacts(container.classes, colours, COMPONENT_SOURCES.table).text, `${COMPONENT_SOURCES.table}: table text size`),
     };
   }
 

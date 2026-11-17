@@ -4354,7 +4354,7 @@ OK  active:bg-brand/85 (slightly darker on press)
 
 | Property | Value |
 |----------|-------|
-| Height | `h-[52px]` (lg) |
+| Height | 52px (lg) |
 | Width | `w-full` |
 | Corners | recipe control radius |
 | Text | 18px bold white |
@@ -4756,7 +4756,7 @@ Left: "Close" -- outline style (border-brand text-brand bg-card)
 Right: Action CTA -- solid style (bg-brand text-white)
 ```
 - Button corners: `rounded-full` (pill)
-- Height: `h-11` (44px)
+- Height: `h-[calc(var(--ss-control-height,40px)+4px)]` (44px)
 - **Do NOT use "Cancel" on the left** -> use "Close" consistently
 
 ### Dangerous Action Dialog

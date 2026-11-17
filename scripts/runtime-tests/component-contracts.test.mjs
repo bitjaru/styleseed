@@ -90,7 +90,8 @@ test("every shipped control height hangs off --ss-control-height with the :root 
   assert.equal(recipes.match(/--ss-control-height:/gu).length, 1, "in Part A only :root sets the variable; no recipe block does");
 
   const dir = resolve(repoRoot, "engine/components");
-  const files = readdirSync(dir, { recursive: true }).filter((f) => String(f).endsWith(".tsx")).map(String).sort();
+  // readdirSync returns backslash paths on Windows; the rows of A2 are written with forward slashes.
+  const files = readdirSync(dir, { recursive: true }).map((f) => String(f).replaceAll("\\", "/")).filter((f) => f.endsWith(".tsx")).sort();
   const found = [];
   for (const file of files) {
     const text = readFileSync(resolve(dir, file), "utf8");

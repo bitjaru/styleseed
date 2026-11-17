@@ -1,0 +1,2075 @@
+{
+ "consensusVersion": 3,
+ "run": "2026-11-16",
+ "faultClasses": [
+  "amount-wrap",
+  "text-overlap",
+  "text-spill",
+  "text-clip",
+  "tight-inset",
+  "text-touch",
+  "near-touch",
+  "near-align",
+  "emoji-icon",
+  "icon-mix"
+ ],
+ "classes": [
+  {
+   "class": "amount-wrap",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "screensMeasured": 43,
+     "screensWithAny": 0,
+     "findings": 0,
+     "lineagesMeasured": 7,
+     "lineagesWithAny": 0,
+     "mostOnOneScreen": 0,
+     "candidates": 316
+    },
+    {
+     "viewport": 390,
+     "screensMeasured": 43,
+     "screensWithAny": 0,
+     "findings": 0,
+     "lineagesMeasured": 7,
+     "lineagesWithAny": 0,
+     "mostOnOneScreen": 0,
+     "candidates": 303
+    }
+   ]
+  },
+  {
+   "class": "text-overlap",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "screensMeasured": 43,
+     "screensWithAny": 0,
+     "findings": 0,
+     "lineagesMeasured": 7,
+     "lineagesWithAny": 0,
+     "mostOnOneScreen": 0,
+     "candidates": 4
+    },
+    {
+     "viewport": 390,
+     "screensMeasured": 43,
+     "screensWithAny": 0,
+     "findings": 0,
+     "lineagesMeasured": 7,
+     "lineagesWithAny": 0,
+     "mostOnOneScreen": 0,
+     "candidates": 12
+    }
+   ]
+  },
+  {
+   "class": "text-spill",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "screensMeasured": 43,
+     "screensWithAny": 0,
+     "findings": 0,
+     "lineagesMeasured": 7,
+     "lineagesWithAny": 0,
+     "mostOnOneScreen": 0,
+     "candidates": 0
+    },
+    {
+     "viewport": 390,
+     "screensMeasured": 43,
+     "screensWithAny": 0,
+     "findings": 0,
+     "lineagesMeasured": 7,
+     "lineagesWithAny": 0,
+     "mostOnOneScreen": 0,
+     "candidates": 0
+    }
+   ]
+  },
+  {
+   "class": "text-clip",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "screensMeasured": 43,
+     "screensWithAny": 0,
+     "findings": 0,
+     "lineagesMeasured": 7,
+     "lineagesWithAny": 0,
+     "mostOnOneScreen": 0,
+     "candidates": 0
+    },
+    {
+     "viewport": 390,
+     "screensMeasured": 43,
+     "screensWithAny": 1,
+     "findings": 5,
+     "lineagesMeasured": 7,
+     "lineagesWithAny": 1,
+     "mostOnOneScreen": 5,
+     "candidates": 5
+    }
+   ]
+  },
+  {
+   "class": "tight-inset",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "screensMeasured": 43,
+     "screensWithAny": 2,
+     "findings": 5,
+     "lineagesMeasured": 7,
+     "lineagesWithAny": 1,
+     "mostOnOneScreen": 4,
+     "candidates": 288
+    },
+    {
+     "viewport": 390,
+     "screensMeasured": 43,
+     "screensWithAny": 3,
+     "findings": 9,
+     "lineagesMeasured": 7,
+     "lineagesWithAny": 2,
+     "mostOnOneScreen": 4,
+     "candidates": 247
+    }
+   ]
+  },
+  {
+   "class": "text-touch",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "screensMeasured": 43,
+     "screensWithAny": 1,
+     "findings": 1,
+     "lineagesMeasured": 7,
+     "lineagesWithAny": 1,
+     "mostOnOneScreen": 1,
+     "candidates": 1
+    },
+    {
+     "viewport": 390,
+     "screensMeasured": 43,
+     "screensWithAny": 1,
+     "findings": 1,
+     "lineagesMeasured": 7,
+     "lineagesWithAny": 1,
+     "mostOnOneScreen": 1,
+     "candidates": 1
+    }
+   ]
+  },
+  {
+   "class": "near-touch",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "screensMeasured": 43,
+     "screensWithAny": 0,
+     "findings": 0,
+     "lineagesMeasured": 7,
+     "lineagesWithAny": 0,
+     "mostOnOneScreen": 0,
+     "candidates": 4
+    },
+    {
+     "viewport": 390,
+     "screensMeasured": 43,
+     "screensWithAny": 1,
+     "findings": 1,
+     "lineagesMeasured": 7,
+     "lineagesWithAny": 1,
+     "mostOnOneScreen": 1,
+     "candidates": 5
+    }
+   ]
+  },
+  {
+   "class": "near-align",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "screensMeasured": 43,
+     "screensWithAny": 3,
+     "findings": 4,
+     "lineagesMeasured": 7,
+     "lineagesWithAny": 2,
+     "mostOnOneScreen": 2,
+     "candidates": 15
+    },
+    {
+     "viewport": 390,
+     "screensMeasured": 43,
+     "screensWithAny": 2,
+     "findings": 3,
+     "lineagesMeasured": 7,
+     "lineagesWithAny": 1,
+     "mostOnOneScreen": 2,
+     "candidates": 3
+    }
+   ]
+  },
+  {
+   "class": "emoji-icon",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "screensMeasured": 43,
+     "screensWithAny": 0,
+     "findings": 0,
+     "lineagesMeasured": 7,
+     "lineagesWithAny": 0,
+     "mostOnOneScreen": 0,
+     "candidates": 0
+    },
+    {
+     "viewport": 390,
+     "screensMeasured": 43,
+     "screensWithAny": 0,
+     "findings": 0,
+     "lineagesMeasured": 7,
+     "lineagesWithAny": 0,
+     "mostOnOneScreen": 0,
+     "candidates": 0
+    }
+   ]
+  },
+  {
+   "class": "icon-mix",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "screensMeasured": 43,
+     "screensWithAny": 7,
+     "findings": 8,
+     "lineagesMeasured": 7,
+     "lineagesWithAny": 4,
+     "mostOnOneScreen": 2,
+     "candidates": null
+    },
+    {
+     "viewport": 390,
+     "screensMeasured": 43,
+     "screensWithAny": 5,
+     "findings": 6,
+     "lineagesMeasured": 7,
+     "lineagesWithAny": 2,
+     "mostOnOneScreen": 2,
+     "candidates": null
+    }
+   ]
+  }
+ ],
+ "distribution": [
+  {
+   "viewport": 1440,
+   "tight-inset": {
+    "panel": {
+     "2": 0,
+     "4": 0,
+     "6": 4,
+     "8": 5,
+     "10": 19,
+     "12": 22
+    },
+    "chip": {
+     "2": 0,
+     "4": 0,
+     "6": 0,
+     "8": 29,
+     "10": 82,
+     "12": 117
+    }
+   },
+   "text-touch": {
+    "1": 1,
+    "2": 1,
+    "3": 1,
+    "4": 1,
+    "5": 1,
+    "6": 1
+   },
+   "near-touch": {
+    "1": 0,
+    "2": 0,
+    "3": 0,
+    "4": 0,
+    "5": 0,
+    "6": 0
+   },
+   "near-align": {
+    "1": 0,
+    "2": 0,
+    "3": 4,
+    "4": 4,
+    "5": 15,
+    "6": 15
+   }
+  },
+  {
+   "viewport": 390,
+   "tight-inset": {
+    "panel": {
+     "2": 0,
+     "4": 0,
+     "6": 5,
+     "8": 9,
+     "10": 23,
+     "12": 31
+    },
+    "chip": {
+     "2": 0,
+     "4": 0,
+     "6": 0,
+     "8": 8,
+     "10": 47,
+     "12": 66
+    }
+   },
+   "text-touch": {
+    "1": 1,
+    "2": 1,
+    "3": 1,
+    "4": 1,
+    "5": 1,
+    "6": 1
+   },
+   "near-touch": {
+    "1": 0,
+    "2": 1,
+    "3": 1,
+    "4": 1,
+    "5": 1,
+    "6": 1
+   },
+   "near-align": {
+    "1": 0,
+    "2": 0,
+    "3": 3,
+    "4": 3,
+    "5": 3,
+    "6": 3
+   }
+  }
+ ],
+ "capped": [],
+ "screens": [
+  {
+   "screen": "cloudscape-dashboard",
+   "lineage": "cloudscape",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 1,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 2,
+      "emoji-icon": 0,
+      "icon-mix": 1
+     }
+    },
+    {
+     "viewport": 390,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 2,
+      "emoji-icon": 0,
+      "icon-mix": 1
+     }
+    }
+   ]
+  },
+  {
+   "screen": "cloudscape-table",
+   "lineage": "cloudscape",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 2
+     }
+    },
+    {
+     "viewport": 390,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 2
+     }
+    }
+   ]
+  },
+  {
+   "screen": "cloudscape-cards",
+   "lineage": "cloudscape",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 1
+     }
+    },
+    {
+     "viewport": 390,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 1
+     }
+    }
+   ]
+  },
+  {
+   "screen": "cloudscape-form",
+   "lineage": "cloudscape",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 4,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    },
+    {
+     "viewport": 390,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 4,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    }
+   ]
+  },
+  {
+   "screen": "cloudscape-edit",
+   "lineage": "cloudscape",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    },
+    {
+     "viewport": 390,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 1,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    }
+   ]
+  },
+  {
+   "screen": "cloudscape-details",
+   "lineage": "cloudscape",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 1,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    },
+    {
+     "viewport": 390,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 1,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    }
+   ]
+  },
+  {
+   "screen": "cloudscape-details-hub",
+   "lineage": "cloudscape",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    },
+    {
+     "viewport": 390,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    }
+   ]
+  },
+  {
+   "screen": "cloudscape-details-tabs",
+   "lineage": "cloudscape",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    },
+    {
+     "viewport": 390,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    }
+   ]
+  },
+  {
+   "screen": "patternfly-dashboard",
+   "lineage": "patternfly",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    },
+    {
+     "viewport": 390,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    }
+   ]
+  },
+  {
+   "screen": "patternfly-table",
+   "lineage": "patternfly",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    },
+    {
+     "viewport": 390,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    }
+   ]
+  },
+  {
+   "screen": "patternfly-data-list",
+   "lineage": "patternfly",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 1
+     }
+    },
+    {
+     "viewport": 390,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 1
+     }
+    }
+   ]
+  },
+  {
+   "screen": "patternfly-card-view",
+   "lineage": "patternfly",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    },
+    {
+     "viewport": 390,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    }
+   ]
+  },
+  {
+   "screen": "patternfly-primary-detail",
+   "lineage": "patternfly",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    },
+    {
+     "viewport": 390,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    }
+   ]
+  },
+  {
+   "screen": "patternfly-description-list",
+   "lineage": "patternfly",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    },
+    {
+     "viewport": 390,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    }
+   ]
+  },
+  {
+   "screen": "patternfly-tabs-table",
+   "lineage": "patternfly",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 1
+     }
+    },
+    {
+     "viewport": 390,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 1
+     }
+    }
+   ]
+  },
+  {
+   "screen": "antpro-analysis",
+   "lineage": "antpro",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 1
+     }
+    },
+    {
+     "viewport": 390,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    }
+   ]
+  },
+  {
+   "screen": "antpro-workplace",
+   "lineage": "antpro",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    },
+    {
+     "viewport": 390,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 5,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    }
+   ]
+  },
+  {
+   "screen": "antpro-table-list",
+   "lineage": "antpro",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    },
+    {
+     "viewport": 390,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    }
+   ]
+  },
+  {
+   "screen": "antpro-basic-list",
+   "lineage": "antpro",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    },
+    {
+     "viewport": 390,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    }
+   ]
+  },
+  {
+   "screen": "antpro-card-list",
+   "lineage": "antpro",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    },
+    {
+     "viewport": 390,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    }
+   ]
+  },
+  {
+   "screen": "antpro-basic-form",
+   "lineage": "antpro",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    },
+    {
+     "viewport": 390,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    }
+   ]
+  },
+  {
+   "screen": "antpro-advanced-form",
+   "lineage": "antpro",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    },
+    {
+     "viewport": 390,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    }
+   ]
+  },
+  {
+   "screen": "antpro-settings",
+   "lineage": "antpro",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    },
+    {
+     "viewport": 390,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    }
+   ]
+  },
+  {
+   "screen": "antpro-profile-basic",
+   "lineage": "antpro",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    },
+    {
+     "viewport": 390,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 4,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    }
+   ]
+  },
+  {
+   "screen": "antpro-profile-advanced",
+   "lineage": "antpro",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    },
+    {
+     "viewport": 390,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    }
+   ]
+  },
+  {
+   "screen": "shadcn-dashboard",
+   "lineage": "shadcn",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 1,
+      "near-touch": 0,
+      "near-align": 1,
+      "emoji-icon": 0,
+      "icon-mix": 1
+     }
+    },
+    {
+     "viewport": 390,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 1,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    }
+   ]
+  },
+  {
+   "screen": "shadcn-login",
+   "lineage": "shadcn",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    },
+    {
+     "viewport": 390,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    }
+   ]
+  },
+  {
+   "screen": "primer-issue",
+   "lineage": "primer",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    },
+    {
+     "viewport": 390,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    }
+   ]
+  },
+  {
+   "screen": "primer-pull-request",
+   "lineage": "primer",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    },
+    {
+     "viewport": 390,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 1,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    }
+   ]
+  },
+  {
+   "screen": "primer-settings",
+   "lineage": "primer",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    },
+    {
+     "viewport": 390,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    }
+   ]
+  },
+  {
+   "screen": "mui-dashboard",
+   "lineage": "mui",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    },
+    {
+     "viewport": 390,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    }
+   ]
+  },
+  {
+   "screen": "mui-crud-dashboard",
+   "lineage": "mui",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    },
+    {
+     "viewport": 390,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    }
+   ]
+  },
+  {
+   "screen": "mui-sign-in",
+   "lineage": "mui",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    },
+    {
+     "viewport": 390,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    }
+   ]
+  },
+  {
+   "screen": "mui-sign-up",
+   "lineage": "mui",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    },
+    {
+     "viewport": 390,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    }
+   ]
+  },
+  {
+   "screen": "mui-checkout",
+   "lineage": "mui",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    },
+    {
+     "viewport": 390,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    }
+   ]
+  },
+  {
+   "screen": "govuk-search",
+   "lineage": "govuk",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    },
+    {
+     "viewport": 390,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    }
+   ]
+  },
+  {
+   "screen": "govuk-task-list",
+   "lineage": "govuk",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    },
+    {
+     "viewport": 390,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    }
+   ]
+  },
+  {
+   "screen": "govuk-companies",
+   "lineage": "govuk",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    },
+    {
+     "viewport": 390,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    }
+   ]
+  },
+  {
+   "screen": "govuk-passport-details",
+   "lineage": "govuk",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    },
+    {
+     "viewport": 390,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    }
+   ]
+  },
+  {
+   "screen": "govuk-account-details",
+   "lineage": "govuk",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    },
+    {
+     "viewport": 390,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    }
+   ]
+  },
+  {
+   "screen": "govuk-address",
+   "lineage": "govuk",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    },
+    {
+     "viewport": 390,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    }
+   ]
+  },
+  {
+   "screen": "govuk-check-answers",
+   "lineage": "govuk",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    },
+    {
+     "viewport": 390,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    }
+   ]
+  },
+  {
+   "screen": "govuk-bank-holidays",
+   "lineage": "govuk",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    },
+    {
+     "viewport": 390,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    }
+   ]
+  }
+ ],
+ "fragments": [
+  {
+   "screen": "patternfly-form",
+   "lineage": "patternfly",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    },
+    {
+     "viewport": 390,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 0,
+      "near-touch": 0,
+      "near-align": 0,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    }
+   ]
+  },
+  {
+   "screen": "carbon-form",
+   "lineage": "carbon",
+   "viewports": [
+    {
+     "viewport": 1440,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 1,
+      "near-touch": 0,
+      "near-align": 1,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    },
+    {
+     "viewport": 390,
+     "status": "measured",
+     "counts": {
+      "amount-wrap": 0,
+      "text-overlap": 0,
+      "text-spill": 0,
+      "text-clip": 0,
+      "tight-inset": 0,
+      "text-touch": 1,
+      "near-touch": 0,
+      "near-align": 1,
+      "emoji-icon": 0,
+      "icon-mix": 0
+     }
+    }
+   ]
+  }
+ ]
+}

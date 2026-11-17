@@ -1,6 +1,8 @@
 /*
  * StyleSeed brand recipes control morphology, not brand color.
- * Put data-styleseed-recipe="<id>" on the artifact root. The neutral fallback
+ * Put data-styleseed-recipe="<id>" on <html> when the document holds one artifact, so
+ * content rendered into body (dialogs, sheets, popovers, select menus) takes the recipe
+ * too; on each artifact root when it holds several. The neutral fallback
  * intentionally avoids making the original soft-card language universal.
  */
 :root {
@@ -12,6 +14,7 @@
   --ss-surface-padding: 20px;
   --ss-inset-radius: 6px;
   --ss-control-radius: 6px;
+  --ss-control-height: 40px;
   --ss-icon-radius: 6px;
   --ss-icon-background: var(--surface-muted);
 }

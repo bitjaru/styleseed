@@ -170,7 +170,7 @@
       ],
       "code": {
         "source": "engine/components/ui/button.tsx",
-        "sha256": "sha256:f2064403176b16046f30175c6a7b48a10e358028b1770fb84459117efbdca051",
+        "sha256": "sha256:39c63d9ca2962e2a1840371ec69fd292435b61e3bca94aefa95db98843ba48de",
         "exports": [
           "Button",
           "buttonVariants"
@@ -462,7 +462,7 @@
       ],
       "code": {
         "source": "engine/components/ui/tabs.tsx",
-        "sha256": "sha256:a71dd6e8a4b3ea52bd0723e1b0ce14c7867b11a398d3e40c0d4e6ac1633821bb",
+        "sha256": "sha256:bbd179549cd2988189588ed7b9df9a42d741c6b159ec1ba1aced630f376784f4",
         "exports": [
           "Tabs",
           "TabsList",
@@ -583,7 +583,7 @@
         "Don't put inputs inside consumer-service cards; use a separate page or bottom sheet (DESIGN-LANGUAGE §44, consumer-service scope)."
       ],
       "knownGaps": [
-        "DESIGN-LANGUAGE §44 specifies a 48px field (`h-12`), `rounded-xl`, a transparent border and a brand-coloured focus ring. The code is 36px (`h-9`), `rounded-md`, an `input` border and a `ring`-coloured focus ring. The two disagree; the code is what ships until the designer decides (#96).",
+        "DESIGN-LANGUAGE §44 specifies a 48px field (`h-12`), `rounded-xl`, a transparent border and a brand-coloured focus ring. The code is 36px (`h-[calc(var(--ss-control-height,40px)-4px)]`), `rounded-md`, an `input` border and a `ring`-coloured focus ring. The two disagree; the code is what ships until the designer decides (#96).",
         "36px is under the 44px touch minimum (DESIGN-LANGUAGE §41).",
         "The radius is a fixed `rounded-md`, not the recipe control radius, so an input and a button side by side can have different corners."
       ],
@@ -594,7 +594,7 @@
       ],
       "code": {
         "source": "engine/components/ui/input.tsx",
-        "sha256": "sha256:cb82ffcd1a9accdf9b07edc8e976f43ad1c9cf91968ffd7639df5df14b7ad407",
+        "sha256": "sha256:7e044bc1e8644148a21fdd7de5857d4ddad36dae586b1515957e8ab3bbd00337",
         "exports": [
           "Input"
         ],
@@ -716,7 +716,7 @@
       ],
       "code": {
         "source": "engine/components/ui/select.tsx",
-        "sha256": "sha256:6aaf2111952394fbb8c64a505af02d08da28cc25726d61a991daebe400772480",
+        "sha256": "sha256:77729664562c564f6c9eb60a27a48e7e1ac2668428f19d4c9499cd7ac13a8ab4",
         "exports": [
           "Select",
           "SelectContent",

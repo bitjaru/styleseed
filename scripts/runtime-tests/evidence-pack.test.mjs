@@ -253,10 +253,18 @@ test("engine defaults: sizes equal the component contracts, the spacing set is t
   assert.ok(catalogRules.find((rule) => rule.id === TOUCH_FLOOR.rule).statement.includes(TOUCH_FLOOR.clause), "the touch floor quotes CRAFT-control-heights");
 
   const sources = componentSources();
-  const without = buildEngineDefaults({ sources: { ...sources, input: sources.input.replace(" h-9 ", " ") }, colours: themeColors(), recipesCss: readFileSync(resolve(repoRoot, "engine/css/recipes.css"), "utf8"), rules: catalogRules });
+  const heightless = sources.input.replace(" h-[calc(var(--ss-control-height,40px)-4px)] ", " ");
+  assert.notEqual(heightless, sources.input, "the input's height class was removed");
+  const without = buildEngineDefaults({ sources: { ...sources, input: heightless }, colours: themeColors(), recipesCss: readFileSync(resolve(repoRoot, "engine/css/recipes.css"), "utf8"), rules: catalogRules });
   assert.match(without.problems.join("\n"), /engine\/components\/ui\/input\.tsx: input height could not be read; the engine defaults need it/u);
   const noMd = buildEngineDefaults({ sources: { ...sources, input: sources.input.replace(" md:text-sm", "") }, colours: themeColors(), recipesCss: "", rules: [] });
   assert.match(noMd.problems.join("\n"), /input text size from md \(md:text-sm\) could not be read/u);
   assert.match(noMd.problems.join("\n"), /recipes\.css: no :root block/u);
   assert.match(noMd.problems.join("\n"), /the statement of CRAFT-spacing-scale holds no \{…\} set/u);
+  // WO-17 A3: a class naming --ss-control-height in another form than the one the reader knows is a problem, not a silent null.
+  const shorthand = sources.button.replace(/md: "\S+ /u, "md: \"h-(--ss-control-height,40px) ");
+  assert.notEqual(shorthand, sources.button);
+  const misfit = buildEngineDefaults({ sources: { ...sources, button: shorthand }, colours: themeColors(), recipesCss: readFileSync(resolve(repoRoot, "engine/css/recipes.css"), "utf8"), rules: catalogRules });
+  assert.match(misfit.problems.join("\n"), /^engine\/components\/ui\/button\.tsx: `h-\(--ss-control-height,40px\)` names --ss-control-height in a form the readers do not know/mu);
+  assert.equal(misfit.problems.filter((problem) => problem.includes("names --ss-control-height")).length, 1, "reported once");
 });

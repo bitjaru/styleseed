@@ -50,7 +50,7 @@ operable.
 **What disagrees:**
 - `engine/DESIGN-LANGUAGE.md` §44: 48px (`h-12`).
 - `engine/VISUAL-CRAFT.md` (control height, CC-8): 40px default, 44–48px on touch.
-- The shipped input: 36px (`h-9`).
+- The shipped input: 36px (`h-[calc(var(--ss-control-height,40px)-4px)]`).
 
 **Question:** For a desktop product screen used with a mouse (settings, tables, forms), how tall is the default
 text field?

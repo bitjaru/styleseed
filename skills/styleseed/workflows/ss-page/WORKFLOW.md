@@ -60,8 +60,11 @@ export default function PageName() {
 ```
 
 3. Apply the selected adapter and recipe:
-   - Set `recipe="<manifest selection.recipe>"` on `PageShell`, or
-     `data-styleseed-recipe="<id>"` on a custom artifact root.
+   - When the document holds one artifact, set `data-styleseed-recipe="<id>"` on the document
+     root (`<html>`), so content rendered into `body` (dialogs, sheets, popovers, select menus)
+     takes the recipe too. When a document holds several artifacts, set
+     `recipe="<manifest selection.recipe>"` on `PageShell`, or `data-styleseed-recipe="<id>"` on a
+     custom artifact root; the engine scopes spacing per artifact root the same way.
    - Use the lock's viewports and the adapter's responsive contract. Do not assume 430px mobile.
    - Use `ss-page-padding`, `ss-page-gutter`, `ss-pattern-stack`, `ss-pattern-surface`,
      `ss-pattern-inset`, `ss-pattern-control`, and `ss-pattern-icon` where bundled patterns fit.

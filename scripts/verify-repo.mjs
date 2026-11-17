@@ -101,6 +101,7 @@ if (!flags.has("--core")) {
     run("Verify transition frame jumps (pairs, and the nine components of #123)", node, ["scripts/test-transition-jumps-browser.mjs"]);
     run("Verify consensus study (loop parity, control probe, guards)", node, ["scripts/test-consensus-browser.mjs"]);
     run("Verify the visible control box (fixtures, three-probe parity, drift gate)", node, ["scripts/test-control-box-browser.mjs"]);
+    run("Verify shipped control heights hang off --ss-control-height (today's px; 36px moves each by -4; the recipe on <html> reaches body)", node, ["scripts/test-control-height-browser.mjs"]);
     run("Verify reference distance, brief, and project-mode frames", node, ["scripts/test-reference-distance-browser.mjs"]);
     run("Run browser smoke tests", npmCommand, ["run", "test:browser"], demoRoot);
     run("Check pilot React and CSS integration", node, ["scripts/test-design-pilot-library.mjs"]);

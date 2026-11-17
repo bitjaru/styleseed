@@ -32,11 +32,11 @@ const buttonVariants = cva(
           "bg-transparent text-brand active:bg-brand/8 disabled:text-text-disabled",
       },
       size: {
-        xs: "h-8 px-3.5 gap-1 text-[13px] [&_svg:not([class*='size-'])]:size-3.5",
-        sm: "h-9 px-3.5 gap-1 text-[14px] [&_svg:not([class*='size-'])]:size-3.5",
-        md: "h-10 px-4 gap-1.5 text-[14px] [&_svg:not([class*='size-'])]:size-4",
-        lg: "h-[52px] px-5 gap-2 text-[18px] [&_svg:not([class*='size-'])]:size-[22px]",
-        icon: "size-10 [&_svg:not([class*='size-'])]:size-[18px]",
+        xs: "h-[calc(var(--ss-control-height,40px)-8px)] px-3.5 gap-1 text-[13px] [&_svg:not([class*='size-'])]:size-3.5",
+        sm: "h-[calc(var(--ss-control-height,40px)-4px)] px-3.5 gap-1 text-[14px] [&_svg:not([class*='size-'])]:size-3.5",
+        md: "h-[var(--ss-control-height,40px)] px-4 gap-1.5 text-[14px] [&_svg:not([class*='size-'])]:size-4",
+        lg: "h-[calc(var(--ss-control-height,40px)+12px)] px-5 gap-2 text-[18px] [&_svg:not([class*='size-'])]:size-[22px]",
+        icon: "size-[var(--ss-control-height,40px)] [&_svg:not([class*='size-'])]:size-[18px]",
       },
     },
     defaultVariants: {

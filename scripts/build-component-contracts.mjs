@@ -80,19 +80,27 @@ export function splitClass(cls) {
   return { prefixes: parts.slice(0, -1), utility: parts.at(-1).replace(/^!/u, "") };
 }
 
+// The one form of a shipped control height (WO-17 A2): the variable with its literal px fallback, alone or in a
+// calc() with one px offset, no spaces: `[var(--ss-control-height,40px)]`, `[calc(var(--ss-control-height,40px)-4px)]`.
+// It reads as the fallback plus the offset. Any other var( or calc( stays unreadable.
+const CONTROL_HEIGHT = /^\[(?:var\(--ss-control-height,(\d+(?:\.\d+)?)px\)|calc\(var\(--ss-control-height,(\d+(?:\.\d+)?)px\)([+-])(\d+(?:\.\d+)?)px\))\]$/u;
 const SPACING = (value) => {
   if (/^\d+(\.\d+)?$/u.test(value)) return Number(value) * 4;
   const px = value.match(/^\[(\d+(?:\.\d+)?)px\]$/u); if (px) return Number(px[1]);
   const rem = value.match(/^\[(\d+(?:\.\d+)?)rem\]$/u); if (rem) return Math.round(Number(rem[1]) * 16 * 10) / 10;
+  const control = value.match(CONTROL_HEIGHT); if (control) return control[1] !== undefined ? Number(control[1]) : Math.round((Number(control[2]) + (control[3] === "-" ? -1 : 1) * Number(control[4])) * 10) / 10;
   return null;
 };
 const TEXT_SIZES = { xs: 12, sm: 14, base: 16, lg: 18, xl: 20 };
 
 export function classFacts(classList, colours) {
   const tokens = new Set(); const darkTokens = new Set(); const focus = new Set(); const motion = new Set(); const radius = new Set();
-  let height = null; let width = null; let paddingX = null; let text = null; let icon = null; const heightsBySize = {};
+  let height = null; let width = null; let paddingX = null; let text = null; let icon = null; const heightsBySize = {}; const controlHeightMisfits = [];
   for (const raw of classList.split(/\s+/u).filter(Boolean)) {
     const { prefixes, utility } = splitClass(raw);
+    // A height, size, or min-width class that names --ss-control-height must be the one form (any prefix); both builders report it.
+    const sized = utility.match(/^(?:h|size|min-w)-(.+)$/u);
+    if (sized && sized[1].includes("--ss-control-height") && !CONTROL_HEIGHT.test(sized[1]) && !controlHeightMisfits.includes(raw)) controlHeightMisfits.push(raw);
     const colour = utility.match(/^(?:bg|text|border|ring|outline|fill|stroke|divide|caret|accent)-([a-z][a-z0-9-]*?)(?:\/\d+)?$/u);
     if (colour && colours.has(colour[1])) (prefixes.includes("dark") ? darkTokens : tokens).add(colour[1]);
     if (prefixes.includes("focus-visible") || prefixes.includes("focus")) focus.add(raw);
@@ -110,8 +118,11 @@ export function classFacts(classList, colours) {
     const svg = utility.match(/^size-(.+)$/u);
     if (svg && prefixes.some((p) => p.startsWith("[&_svg") || p.startsWith("[&>svg")) && SPACING(svg[1]) !== null) icon ??= SPACING(svg[1]);
   }
-  return { tokens, darkTokens, focus, motion, radius, height, width, paddingX, text, icon, heightsBySize };
+  return { tokens, darkTokens, focus, motion, radius, height, width, paddingX, text, icon, heightsBySize, controlHeightMisfits };
 }
+
+// The build problem for a class that names --ss-control-height in another form (shared by both builders).
+export const controlHeightProblem = (where, raw) => `${where}: \`${raw}\` names --ss-control-height in a form the readers do not know; write h-[var(--ss-control-height,40px)] or h-[calc(var(--ss-control-height,40px)-4px)] (size-[…] and min-w-[…] the same; no spaces, the fallback equal to the :root value in engine/css/recipes.css), or teach SPACING in scripts/build-component-contracts.mjs`;
 
 function radixPackages(code) {
   const map = {};
@@ -213,11 +224,12 @@ function findSource(id) {
   return null;
 }
 
-export function buildContract(id, md, colours = themeColors()) {
+// `code` replaces the source text read from disk (tests pass a changed source).
+export function buildContract(id, md, colours = themeColors(), code = null) {
   const problems = [];
   const sourceRel = findSource(id);
   if (!sourceRel) return { problems: [`${id}: no component at engine/components/{ui,patterns}/${id}.tsx`] };
-  const code = readFileSync(resolve(root, sourceRel), "utf8");
+  code ??= readFileSync(resolve(root, sourceRel), "utf8");
   const source = parseSource(code, colours);
   const contract = parseContract(md);
   const s = contract.sections;
@@ -251,6 +263,7 @@ export function buildContract(id, md, colours = themeColors()) {
     return { ...part, facts };
   });
   for (const t of all.darkTokens) if (all.tokens.has(t)) all.darkTokens.delete(t);
+  for (const raw of new Set(parts.flatMap((p) => p.facts.controlHeightMisfits))) problems.push(controlHeightProblem(`${id}: ${sourceRel}`, raw));
 
   // Sizes from the cva size group (button, toggle) or from data-[size=] heights (select trigger).
   let sizes = [];

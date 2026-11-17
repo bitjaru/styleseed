@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-// Pattern-consensus study (WO-09 Part A). Measures the published product screens listed in
-// research/consensus/screens.json with the repository's probes (observe-design, observe-structure,
-// observe-faults) and the study's control probe (scripts/lib/consensus-probe.mjs), stores numbers and
-// enums per screen, and generates the agreement table and the negative-control table from them
-// (scripts/lib/consensus.mjs). Method, sources, and limits: research/consensus/README.md.
+// Pattern-consensus study (WO-09 Part A, WO-12 Part A). Measures the published product screens listed
+// in research/consensus/screens.json with the repository's probes (observe-design, observe-structure,
+// observe-faults), the study's control probe (scripts/lib/consensus-probe.mjs), and its anatomy probe
+// (scripts/lib/consensus-anatomy.mjs), stores numbers and enums per screen, and generates the
+// agreement table and the negative-control table from them (scripts/lib/consensus.mjs). Method, sources, and limits: research/consensus/README.md.
 //
 //   node scripts/consensus-study.mjs --measure [--run <YYYY-MM-DD>] [--only <id,id>] [--base <lineage>=<url prefix>]…
 //                                              [--browser <playwright module>] [--delay 4000] [--timeout 45000] [--root research/consensus]
@@ -28,18 +28,21 @@ import { checkRobots, loadBrowser } from "../engine/.claude/skills/styleseed/wor
 import { observeFaults } from "../engine/.claude/skills/styleseed/workflows/ss-verify/scripts/observe-faults.mjs";
 import { analyzeFaults, FAULT_CLASSES } from "../engine/.claude/skills/styleseed/workflows/ss-verify/scripts/analyze-faults.mjs";
 import { observeControls, observeGuards } from "./lib/consensus-probe.mjs";
+import { observeAnatomy } from "./lib/consensus-anatomy.mjs";
 import { CONSENSUS_VERSION, REASONS, generateReports, stripIds, validateManifest } from "./lib/consensus.mjs";
 import { disallowedStrings } from "./lib/reference-allow-list.mjs";
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-export const STUDY_VERSION = 1;
-export const RECORD_VERSION = 1;
+export const STUDY_VERSION = 2;
+export const RECORD_VERSION = 2;
 const SAFE_ID = /^[a-z0-9]+(-[a-z0-9]+)*$/u;
 const DATE = /^\d{4}-\d{2}-\d{2}$/u;
 const MAX_ELEMENTS = 5000;
 const FINDINGS_PER_CLASS = 50;
 const CANDIDATE_LISTS = ["amounts", "overlaps", "spills", "clips", "insets", "touches", "gaps", "aligns", "emoji"];
 const GENERATED = ["consensus.json", "CONSENSUS.md", "negative-control.json", "NEGATIVE-CONTROL.md"];
+// What a record keeps of the anatomy probe's output (scripts/lib/consensus-anatomy.mjs).
+const ANATOMY_KEYS = ["buttons", "fields", "labels", "fieldGaps", "panels", "panelGaps", "cells", "headings", "textLines", "icons", "capped", "truncated"];
 const USAGE = `usage: consensus-study.mjs --measure [--run <YYYY-MM-DD>] [--only <id,id>] [--base <lineage>=<url prefix>]... [--browser <playwright module>] [--delay 4000] [--timeout 45000] [--root research/consensus]
        consensus-study.mjs --report --run <YYYY-MM-DD> [--root research/consensus]
        consensus-study.mjs --check [--run <YYYY-MM-DD>] [--root research/consensus]`;
@@ -127,8 +130,8 @@ export function selfHostedUrl(listed, basePath, base) {
 const errorReason = (e) => (e && (e.name === "TimeoutError" || /Timeout \d+ms exceeded|timeout/iu.test(e.message || "")) ? "timeout" : "navigation-error");
 const total = (map) => Object.values(map ?? {}).reduce((a, b) => a + Number(b), 0);
 
-// One viewport of one screen: a new context, one load, the guards, the five probes, the guards after.
-// Returns { status: "measured", httpStatus, outputs: { design, structure, faults, controls, guards } }
+// One viewport of one screen: a new context, one load, the guards, the six probes, the guards after.
+// Returns { status: "measured", httpStatus, outputs: { design, structure, faults, controls, anatomy, guards } }
 // or { status: "failed", reason }. `expect` (the 1440 viewport only) holds the floors.
 export async function measureViewport(browser, url, { width, height }, { timeout = 45000, allowFile = false, expect = null } = {}) {
   const context = await browser.newContext({ viewport: { width, height }, deviceScaleFactor: 1 });
@@ -151,7 +154,7 @@ export async function measureViewport(browser, url, { width, height }, { timeout
     if (!samePage(url, finalUrl)) return { status: "failed", reason: "redirected-path" };
     const outputs = {};
     try {
-      for (const [key, probe] of [["design", observeDesign], ["structure", observeStructure], ["faults", observeFaults], ["controls", observeControls], ["guards", observeGuards]]) {
+      for (const [key, probe] of [["design", observeDesign], ["structure", observeStructure], ["faults", observeFaults], ["controls", observeControls], ["anatomy", observeAnatomy], ["guards", observeGuards]]) {
         outputs[key] = await page.evaluate(probe, { maxElements: MAX_ELEMENTS });
       }
     } catch (e) { return { status: "failed", reason: errorReason(e) }; }
@@ -174,15 +177,18 @@ function faultsBlock(probe) {
   return { counts, candidates, findings, distribution: a.distribution, icons: a.icons, capped: a.capped };
 }
 
+// A measured viewport as stored. `anatomy` sits beside `controls`; an output without the anatomy probe
+// (a test that builds a record from older outputs) stores none.
 function viewportEntry({ width, height }, m) {
   if (m.status !== "measured") return { viewport: width, height, status: "failed", reason: m.reason };
-  const { design: d, structure: s, faults, controls: c, guards } = m.outputs;
+  const { design: d, structure: s, faults, controls: c, anatomy: a, guards } = m.outputs;
   return {
     viewport: width, height, status: "measured", httpStatus: m.httpStatus,
     elements: d.elements, truncated: d.truncated, documentHeight: d.documentHeight, overlayShare: guards.overlayShare,
     design: { controlHeights: d.controlHeights, radii: d.radii, targets: d.targets, type: d.type, spacing: d.spacing, bodyFontSize: d.body?.fontSize ?? null },
     structure: { regions: s.regions, controls: s.controls, tables: s.tables, lists: s.lists, tabs: s.tabs, css: s.css, skipped: s.skipped },
     controls: { fields: c.fields, buttons: c.buttons, pairs: c.pairs, textSizes: c.textSizes, capped: c.capped, truncated: c.truncated },
+    ...(a ? { anatomy: Object.fromEntries(ANATOMY_KEYS.map((k) => [k, a[k]])) } : {}),
     faults: faultsBlock(faults),
   };
 }
@@ -247,7 +253,7 @@ export async function measureScreens(manifest, { chromium, allowFile = false, de
         if (i === 0 && m.status !== "measured") break;
       }
       if (results[0].status !== "measured") { rows.push({ screen: screen.id, status: "failed", reason: results[0].reason }); log(`${screen.id}: failed (${results[0].reason})`); continue; }
-      probes ??= { structure: results[0].outputs.structure.version ?? null, faults: results[0].outputs.faults.version ?? null, controls: results[0].outputs.controls.version ?? null };
+      probes ??= { structure: results[0].outputs.structure.version ?? null, faults: results[0].outputs.faults.version ?? null, controls: results[0].outputs.controls.version ?? null, anatomy: results[0].outputs.anatomy?.version ?? null };
       records.push(buildRecord({ screen, access: lineage.access, robots, observedAt: today, sizes, results }));
       const narrow = results.slice(1).find((m) => m.status !== "measured");
       rows.push({ screen: screen.id, status: "measured", ...(narrow ? { narrow: narrow.reason } : {}) });

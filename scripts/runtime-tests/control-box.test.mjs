@@ -1,7 +1,8 @@
 // The visible-control-box block (WO-10): one definition of the box a person sees as one control,
-// pasted unchanged into observe-design.mjs, observe-structure.mjs, and scripts/lib/consensus-probe.mjs.
-// This test cuts the block out of the three files as shipped, checks that the copies are equal and
-// that observe-design.mjs carries the block's version, and runs the block against a hand-made DOM:
+// pasted unchanged into observe-design.mjs, observe-structure.mjs, scripts/lib/consensus-probe.mjs, and
+// scripts/lib/consensus-anatomy.mjs (WO-12). This test cuts the block out of the four files as shipped,
+// checks that the copies are equal and that observe-design.mjs carries the block's version, and runs
+// the block against a hand-made DOM:
 // it is given `norm`, `transparent`, `document`, `getComputedStyle`, and `NodeFilter` and nothing else,
 // so a use of any other outside name fails here. scripts/test-control-box-browser.mjs runs the same
 // copies in a browser on the fixture pages.
@@ -16,6 +17,7 @@ const COPIES = [
   "engine/.claude/skills/styleseed/workflows/ss-reference/scripts/observe-design.mjs",
   "engine/.claude/skills/styleseed/workflows/ss-reference/scripts/observe-structure.mjs",
   "scripts/lib/consensus-probe.mjs",
+  "scripts/lib/consensus-anatomy.mjs",
 ];
 const START = "// --- visible control box: shared block, version ";
 const END = "// --- end visible control box";
@@ -30,11 +32,11 @@ function cut(text, file) {
 }
 const BLOCK = cut(read(COPIES[0]), COPIES[0]).block;
 
-test("the three copies of the block are the same text, after norm and transparent", () => {
+test("the four copies of the block are the same text, after norm and transparent", () => {
   for (const file of COPIES) {
     const text = read(file);
     const { from, block } = cut(text, file);
-    assert.equal(block, BLOCK, `${file}: the block differs from the copy in ${COPIES[0]}. Change all three copies in one commit and raise the version.`);
+    assert.equal(block, BLOCK, `${file}: the block differs from the copy in ${COPIES[0]}. Change every copy in one commit and raise the version.`);
     const head = text.slice(0, from);
     assert.ok(head.includes("const norm ="), `${file}: \`const norm =\` must be declared before the block`);
     assert.ok(head.includes("const transparent ="), `${file}: \`const transparent =\` must be declared before the block`);

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 5,
   "engineVersion": "5.0.0",
-  "engineRevision": "sha256:8f72499789b1c84be8b0a45147ec4dd5de9295a4bd8b49b79a75232236599654",
+  "engineRevision": "sha256:b248b28a193ab20eda014cba5021f63035de195295ffdd699e20ed011fe04f52",
   "distributionSource": {
     "schemaVersion": 1,
     "channel": "edge",
@@ -10,7 +10,7 @@
   },
   "distributions": {
     "core": {
-      "revision": "sha256:8f72499789b1c84be8b0a45147ec4dd5de9295a4bd8b49b79a75232236599654",
+      "revision": "sha256:b248b28a193ab20eda014cba5021f63035de195295ffdd699e20ed011fe04f52",
       "files": [
         {
           "path": "LICENSE",
@@ -534,8 +534,8 @@
         },
         {
           "path": "engine/CLAUDE.md",
-          "sha256": "de20fd611ce8fe17ef2cf6c70c7d817a2879933a4f1ea5e68defe1bafc7eb1b8",
-          "bytes": 49719
+          "sha256": "51c8ee9916dab1e01423476ce916ca2caa1c03f4ac9411b4a402dadc5cbbf7ba",
+          "bytes": 49838
         },
         {
           "path": "engine/CRAFT-BASELINE.md",
@@ -1663,8 +1663,8 @@
     },
     {
       "path": "CLAUDE.md",
-      "sha256": "de20fd611ce8fe17ef2cf6c70c7d817a2879933a4f1ea5e68defe1bafc7eb1b8",
-      "bytes": 49719
+      "sha256": "51c8ee9916dab1e01423476ce916ca2caa1c03f4ac9411b4a402dadc5cbbf7ba",
+      "bytes": 49838
     },
     {
       "path": "CRAFT-BASELINE.md",

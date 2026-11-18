@@ -36,9 +36,9 @@ multi-line text uses `Textarea`.
 
 ## Known gaps
 
-- DESIGN-LANGUAGE §44 specifies a 48px field (`h-12`), `rounded-xl`, a transparent border and a brand-coloured focus ring. The code is the brand recipe's control height, 40px at `:root` (`h-[var(--ss-control-height,40px)]`), `rounded-md`, an `input` border and a `ring`-coloured focus ring. The two disagree; the code is what ships until the designer decides (#96).
+- DESIGN-LANGUAGE §44 specifies a 48px field (`h-12`), `rounded-xl`, a transparent border and a brand-coloured focus ring. The code is the brand recipe's control height, 40px at `:root` (`h-[var(--ss-control-height,40px)]`), the brand recipe's control radius (`ss-pattern-control`), an `input` border and a `ring`-coloured focus ring. The two disagree; the code is what ships until the designer decides (#96).
 - At the `:root` control height the input is 40px, under the 44px touch minimum (DESIGN-LANGUAGE §41); its height follows `--ss-control-height`.
-- The radius is a fixed `rounded-md`, not the recipe control radius, so an input and a button side by side can have different corners.
+- The radius is the recipe control radius (`ss-pattern-control`) used by Button and Tabs; a `rounded-*` class passed to the input does not change its corner.
 
 ## Sources
 
@@ -50,7 +50,7 @@ multi-line text uses `Textarea`.
 
 ## From the code
 
-Source `engine/components/ui/input.tsx` · `sha256:d221f38519e0…`
+Source `engine/components/ui/input.tsx` · `sha256:efbec132077e…`
 
 Import, after copying `engine/components` into `src/components`:
 
@@ -63,7 +63,7 @@ import { Input } from "@/components/ui/input";
 | `Input` | `input` | native `<input>` props |
 
 - **Tokens consumed:** `destructive` · `foreground` · `input` · `input-background` · `muted-foreground` · `primary` · `primary-foreground` · `ring`
-- **Radius:** fixed `rounded-md` (not the recipe control radius)
+- **Radius:** recipe control radius (`ss-pattern-control` → `--ss-control-radius`, 0–999px by brand recipe)
 - **Height:** the heights follow `--ss-control-height` (40px at `:root`; set per brand recipe)
 - **Focus:** `focus-visible:border-ring` · `focus-visible:ring-[3px]` · `focus-visible:ring-ring/50`
 - **Motion:** `transition-[color,box-shadow]`
@@ -71,6 +71,5 @@ import { Input } from "@/components/ui/input";
 ### Machine checks
 
 - Height under the 44px touch minimum (DESIGN-LANGUAGE §41) at the `:root` control height (40px): `input` 40px. On touch surfaces, extend the hit area or use a taller size.
-- Radius is fixed (rounded-md) instead of the recipe control radius used by Button and Tabs.
 
 <!-- generated:end -->

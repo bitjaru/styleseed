@@ -586,9 +586,9 @@
         "Don't put inputs inside consumer-service cards; use a separate page or bottom sheet (DESIGN-LANGUAGE §44, consumer-service scope)."
       ],
       "knownGaps": [
-        "DESIGN-LANGUAGE §44 specifies a 48px field (`h-12`), `rounded-xl`, a transparent border and a brand-coloured focus ring. The code is the brand recipe's control height, 40px at `:root` (`h-[var(--ss-control-height,40px)]`), `rounded-md`, an `input` border and a `ring`-coloured focus ring. The two disagree; the code is what ships until the designer decides (#96).",
+        "DESIGN-LANGUAGE §44 specifies a 48px field (`h-12`), `rounded-xl`, a transparent border and a brand-coloured focus ring. The code is the brand recipe's control height, 40px at `:root` (`h-[var(--ss-control-height,40px)]`), the brand recipe's control radius (`ss-pattern-control`), an `input` border and a `ring`-coloured focus ring. The two disagree; the code is what ships until the designer decides (#96).",
         "At the `:root` control height the input is 40px, under the 44px touch minimum (DESIGN-LANGUAGE §41); its height follows `--ss-control-height`.",
-        "The radius is a fixed `rounded-md`, not the recipe control radius, so an input and a button side by side can have different corners."
+        "The radius is the recipe control radius (`ss-pattern-control`) used by Button and Tabs; a `rounded-*` class passed to the input does not change its corner."
       ],
       "sources": [
         "DESIGN-LANGUAGE §44 Input & form rules; §41 Touch targets",
@@ -597,7 +597,7 @@
       ],
       "code": {
         "source": "engine/components/ui/input.tsx",
-        "sha256": "sha256:d221f38519e0dd5cdc73c586fd3a2efe2ec33e8abbf93a62dada5c159e62c408",
+        "sha256": "sha256:efbec132077e43bf3db9d576f26837d8306a341135c4686e72b9806ecacd7b7e",
         "exports": [
           "Input"
         ],
@@ -625,7 +625,7 @@
           "ring"
         ],
         "darkTokens": [],
-        "radius": "fixed `rounded-md` (not the recipe control radius)",
+        "radius": "recipe control radius (`ss-pattern-control` → `--ss-control-radius`, 0–999px by brand recipe)",
         "height": "the heights follow `--ss-control-height` (40px at `:root`; set per brand recipe)",
         "focus": [
           "focus-visible:border-ring",
@@ -636,8 +636,7 @@
           "transition-[color,box-shadow]"
         ],
         "flags": [
-          "Height under the 44px touch minimum (DESIGN-LANGUAGE §41) at the `:root` control height (40px): `input` 40px. On touch surfaces, extend the hit area or use a taller size.",
-          "Radius is fixed (rounded-md) instead of the recipe control radius used by Button and Tabs."
+          "Height under the 44px touch minimum (DESIGN-LANGUAGE §41) at the `:root` control height (40px): `input` 40px. On touch surfaces, extend the hit area or use a taller size."
         ]
       }
     },
@@ -712,7 +711,7 @@
       ],
       "knownGaps": [
         "At the `:root` control height the trigger is 40px (`default`) or 36px (`sm`), under the 44px touch minimum (DESIGN-LANGUAGE §41); its heights follow `--ss-control-height`.",
-        "The trigger's radius is set by its own classes, not the recipe control radius used by Button and Tabs."
+        "The trigger takes the recipe control radius (`ss-pattern-control`) used by Button and Tabs; a `rounded-*` class passed to it does not change its corner."
       ],
       "sources": [
         "DESIGN-LANGUAGE §10 Selection UI rules; §41 Touch targets",
@@ -720,7 +719,7 @@
       ],
       "code": {
         "source": "engine/components/ui/select.tsx",
-        "sha256": "sha256:ae602b6803668c78ffcd11ba7e22f524d98ec9c3d9ea731b43b43d38c22a8d63",
+        "sha256": "sha256:8fcdf0a4c4e3477b3b9a3e646f8cd801cf009fe1b9f04c4e6f70421e0e935161",
         "exports": [
           "Select",
           "SelectContent",
@@ -853,7 +852,7 @@
           "ring"
         ],
         "darkTokens": [],
-        "radius": "fixed `rounded-md`, `rounded-sm` (not the recipe control radius)",
+        "radius": "recipe control radius (`ss-pattern-control` → `--ss-control-radius`, 0–999px by brand recipe); also `rounded-md`, `rounded-sm`",
         "height": "the heights follow `--ss-control-height` (40px at `:root`; set per brand recipe)",
         "focus": [
           "focus-visible:border-ring",
@@ -868,8 +867,7 @@
           "transition-[color,box-shadow]"
         ],
         "flags": [
-          "Height under the 44px touch minimum (DESIGN-LANGUAGE §41) at the `:root` control height (40px): `select-trigger` size `default` 40px, `select-trigger` size `sm` 36px. On touch surfaces, extend the hit area or use a taller size.",
-          "Radius is fixed (rounded-md, rounded-sm) instead of the recipe control radius used by Button and Tabs."
+          "Height under the 44px touch minimum (DESIGN-LANGUAGE §41) at the `:root` control height (40px): `select-trigger` size `default` 40px, `select-trigger` size `sm` 36px. On touch surfaces, extend the hit area or use a taller size."
         ]
       }
     },

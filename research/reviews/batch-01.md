@@ -184,8 +184,10 @@ The shipped CSS sets every transition to 0.01ms, so hover and focus colours swit
 
 **Look at:** https://styleseed-demo.vercel.app/gallery/input and https://styleseed-demo.vercel.app/gallery/button
 
-**What ships:** Button and Tabs take their corner radius from the theme. Input, Select and Badge have a fixed
-radius. In a theme with rounder controls, a button and an input side by side get different corners.
+**What ships:** Button, Tabs, Input, Select and Toggle take their corner radius from the theme (the brand recipe's
+control radius); Textarea takes the recipe's inset radius. Badge has a fixed radius.
+
+Fields now take the recipe's control corner, a pill under one recipe; Badge keeps its own radius.
 
 **Proposition:** Controls that sit together (button, input, select) share one corner radius, and it follows the theme.
 

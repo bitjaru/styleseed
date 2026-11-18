@@ -416,7 +416,7 @@ neutral sans systems are both valid without requiring novelty.
 ### Border Radius
 - Default: `--radius: 0.625rem` (10px)
 - Cards: `rounded-2xl` (16px)
-- Inputs/buttons: `rounded-md` (based on --radius)
+- Buttons, inputs, selects, toggles: the brand recipe's control radius (`ss-pattern-control` → `--ss-control-radius`); textareas: its inset radius (`ss-pattern-inset`)
 
 #### Radius personality → component mapping (one PERSONALITY everywhere, not one number)
 

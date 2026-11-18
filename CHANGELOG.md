@@ -28,6 +28,23 @@ When you update:
 - To keep the old look, set `--ss-control-height`, or pass a height class to the component (a class
   such as `h-9` still wins).
 
+### Fields take the brand recipe's corner
+
+- The input, the select trigger, and a lone toggle now take the brand recipe's control radius
+  (`ss-pattern-control`), the corner of the button. The textarea takes the recipe's inset radius
+  (`ss-pattern-inset`). A toggle group is unchanged: only its two ends are rounded.
+- A skin's `--radius` no longer reaches these four. They drew `rounded-md`: 8px with `toss`, 16px with
+  `arc`, 4px with `stripe`, 6px with `linear`, `notion`, `raycast`, and `vercel`. They now draw the
+  recipe's radius on every skin: for example 6px with no recipe, 3px under `enterprise-workbench`,
+  square under `public-service`, and a pill under `calm-consumer` (the textarea's inset radius is 6px,
+  2px, square, and 12px there).
+
+When you update:
+
+- A `rounded-*` class passed to one of the four no longer changes its corner, as it never did on the
+  button: the recipe classes are plain CSS outside Tailwind's layers. Set `--ss-control-radius` or
+  `--ss-inset-radius` instead.
+
 ## [5.0.0] — 2026-09-30
 
 **Theme: one entry point, the same 22 workflows.** This major release changes the public

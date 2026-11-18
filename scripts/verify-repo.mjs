@@ -102,6 +102,7 @@ if (!flags.has("--core")) {
     run("Verify consensus study (loop parity, control probe, guards)", node, ["scripts/test-consensus-browser.mjs"]);
     run("Verify the visible control box (fixtures, three-probe parity, drift gate)", node, ["scripts/test-control-box-browser.mjs"]);
     run("Verify shipped control heights hang off --ss-control-height (each recipe's height and offsets; 36px moves each by -4; the recipe on <html> reaches body; the drift report reads the proposer's family)", node, ["scripts/test-control-height-browser.mjs"]);
+    run("Verify fields take the recipe's corner (input, select, lone toggle beside the button; textarea the inset radius; the toggle group as before)", node, ["scripts/test-field-corner-browser.mjs"]);
     run("Verify reference distance, brief, and project-mode frames", node, ["scripts/test-reference-distance-browser.mjs"]);
     run("Run browser smoke tests", npmCommand, ["run", "test:browser"], demoRoot);
     run("Check pilot React and CSS integration", node, ["scripts/test-design-pilot-library.mjs"]);

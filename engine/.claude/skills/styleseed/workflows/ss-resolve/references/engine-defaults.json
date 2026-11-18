@@ -1,5 +1,5 @@
 {
- "schemaVersion": 1,
+ "schemaVersion": 2,
  "generatedBy": "scripts/build-evidence-pack.mjs",
  "measured": false,
  "components": {
@@ -41,7 +41,7 @@
   },
   "input": {
    "source": "engine/components/ui/input.tsx",
-   "height": 36,
+   "height": 40,
    "text": 16,
    "textFromMd": 14,
    "paddingX": 12
@@ -52,13 +52,13 @@
    "sizes": [
     {
      "key": "default",
-     "height": 36,
+     "height": 40,
      "text": 14,
      "paddingX": 12
     },
     {
      "key": "sm",
-     "height": 32,
+     "height": 36,
      "text": 14,
      "paddingX": 12
     }
@@ -78,7 +78,8 @@
    "surfaceRadius": 10,
    "sectionGap": 24,
    "pageGutter": 20,
-   "surfacePadding": 20
+   "surfacePadding": 20,
+   "controlHeight": 40
   },
   "calm-consumer": {
    "controlRadius": 999,
@@ -86,7 +87,8 @@
    "surfaceRadius": 20,
    "sectionGap": 24,
    "pageGutter": 24,
-   "surfacePadding": 24
+   "surfacePadding": 24,
+   "controlHeight": 40
   },
   "native-mobile": {
    "controlRadius": 12,
@@ -94,7 +96,8 @@
    "surfaceRadius": 16,
    "sectionGap": 20,
    "pageGutter": 20,
-   "surfacePadding": 20
+   "surfacePadding": 20,
+   "controlHeight": 44
   },
   "enterprise-workbench": {
    "controlRadius": 3,
@@ -102,7 +105,8 @@
    "surfaceRadius": 4,
    "sectionGap": 16,
    "pageGutter": 24,
-   "surfacePadding": 20
+   "surfacePadding": 20,
+   "controlHeight": 36
   },
   "developer-platform": {
    "controlRadius": 5,
@@ -110,7 +114,8 @@
    "surfaceRadius": 6,
    "sectionGap": 16,
    "pageGutter": 20,
-   "surfacePadding": 16
+   "surfacePadding": 16,
+   "controlHeight": 36
   },
   "commerce-operator": {
    "controlRadius": 8,
@@ -118,7 +123,8 @@
    "surfaceRadius": 12,
    "sectionGap": 20,
    "pageGutter": 24,
-   "surfacePadding": 20
+   "surfacePadding": 20,
+   "controlHeight": 40
   },
   "public-service": {
    "controlRadius": 0,
@@ -126,7 +132,8 @@
    "surfaceRadius": 0,
    "sectionGap": 32,
    "pageGutter": 24,
-   "surfacePadding": 0
+   "surfacePadding": 0,
+   "controlHeight": 40
   },
   "creative-professional": {
    "controlRadius": 5,
@@ -134,7 +141,8 @@
    "surfaceRadius": 6,
    "sectionGap": 12,
    "pageGutter": 16,
-   "surfacePadding": 16
+   "surfacePadding": 16,
+   "controlHeight": 40
   },
   "editorial-authority": {
    "controlRadius": 2,
@@ -142,7 +150,8 @@
    "surfaceRadius": 0,
    "sectionGap": 40,
    "pageGutter": 24,
-   "surfacePadding": 0
+   "surfacePadding": 0,
+   "controlHeight": 40
   },
   "expressive-brand": {
    "controlRadius": 10,
@@ -150,8 +159,20 @@
    "surfaceRadius": 16,
    "sectionGap": null,
    "pageGutter": null,
-   "surfacePadding": null
+   "surfacePadding": null,
+   "controlHeight": 40
   }
+ },
+ "controlHeight": {
+  "variable": "--ss-control-height",
+  "offsets": [
+   -12,
+   -8,
+   -4,
+   0,
+   4,
+   12
+  ]
  },
  "spacingScale": {
   "rule": "CRAFT-spacing-scale",

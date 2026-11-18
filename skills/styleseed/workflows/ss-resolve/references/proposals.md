@@ -23,7 +23,13 @@ Each axis lists its options strongest first, and the first one is proposed when 
 3. **Corpus counts.** The published demo screens of a few design systems, measured by the StyleSeed
    repository and shipped with this skill as counts (below).
 4. **The engine default.** What the engine's components, brand recipe, and starting spacing scale ship.
-   It is always labelled `engine default, not measured` and is never proposed.
+   It is always labelled `engine default, not measured` and is never proposed. For control height it is
+   the set of heights the shipped components draw with the project's brand recipe: the recipe's
+   `--ss-control-height` plus each offset the components use (with `enterprise-workbench`, 24, 28, 32,
+   36, 40, 48px). A project that names no recipe, or one the file does not have, gets the `:root`
+   block's set (28, 32, 36, 40, 44, 52px), because that is what the CSS draws. The basis says "the
+   components of this StyleSeed version": an updated skill can describe components the project has not
+   copied again.
 
 ## The rule for a corpus value
 
@@ -57,8 +63,9 @@ do once the entry is recorded ("If recorded: …").
 
 The corpus was measured with pointer input, at 1440 wide and the same pages narrowed to 390. A width
 is not touch. With `--surface touch` nothing is proposed from the corpus; control height shows the
-44px floor of `CRAFT-control-heights`, and the engine default lists only the shipped sizes at or above
-it. A measured reference still proposes, and its values under the floor are marked.
+44px floor of `CRAFT-control-heights`. The engine default is the same set as on pointer, what the
+recipe's components draw (with `native-mobile`, 32, 36, 40, 44, 48, 56px), and its values under the
+floor are marked. A measured reference still proposes, and its values under the floor are marked too.
 
 ## From the product's own screens
 

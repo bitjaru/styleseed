@@ -1660,11 +1660,11 @@ NO  Running dark mode without card borders (shadows alone are invisible)
 
 | Size | Height | Radius | Text | Padding X | Icon | Usage |
 |------|--------|--------|------|----------|------|-------|
-| `xs` | **32px** | recipe control radius | 13px bold | 14px | 14px | Chips, tags, filters |
-| `sm` | **36px** | recipe control radius | 14px bold | 14px | 14px | Inline secondary |
-| `md` | **40px** | recipe control radius | 14px bold | 16px | 16px | **Default button** |
-| `lg` | **52px** | recipe control radius | 18px bold | 20px | 22px | **Large CTA** |
-| `icon` | **40px** | recipe control radius | -- | -- | 18px | TopBar icons |
+| `xs` | **32px** at the default recipe height | recipe control radius | 13px bold | 14px | 14px | Chips, tags, filters |
+| `sm` | **36px** at the default recipe height | recipe control radius | 14px bold | 14px | 14px | Inline secondary |
+| `md` | **40px** at the default recipe height | recipe control radius | 14px bold | 16px | 16px | **Default button** |
+| `lg` | **52px** at the default recipe height | recipe control radius | 18px bold | 20px | 22px | **Large CTA** |
+| `icon` | **40px** at the default recipe height | recipe control radius | -- | -- | 18px | TopBar icons |
 
 Key point: every size takes the **recipe control radius** (`ss-pattern-control` → `--ss-control-radius`,
 set by the brand recipe), so buttons are pill-shaped only when the recipe's controls are.
@@ -2108,7 +2108,7 @@ Left: "Close" -- outline style (border-brand text-brand bg-card)
 Right: Action CTA -- solid style (bg-brand text-white)
 ```
 - Button corners: `rounded-full` (pill)
-- Height: `h-[calc(var(--ss-control-height,40px)+4px)]` (44px)
+- Height: `h-[calc(var(--ss-control-height,40px)+4px)]` (44px at the default recipe height)
 - **Do NOT use "Cancel" on the left** -> use "Close" consistently
 
 ### Dangerous Action Dialog

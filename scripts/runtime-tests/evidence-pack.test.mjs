@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { CLAIM_USES, COMPONENT_SOURCES, NOT_PACKED, buildEngineDefaults, buildEvidencePack } from "../lib/evidence-pack.mjs";
@@ -14,6 +14,8 @@ const references = resolve(repoRoot, "engine/.claude/skills/styleseed/workflows/
 const readJson = (path) => JSON.parse(readFileSync(resolve(repoRoot, path), "utf8"));
 const clone = (value) => JSON.parse(JSON.stringify(value));
 const bytes = (value) => `${JSON.stringify(value, null, 1)}\n`;
+// Every .tsx under engine/components, keyed by repository path (readdirSync returns backslashes on Windows).
+const componentFiles = () => Object.fromEntries(readdirSync(resolve(repoRoot, "engine/components"), { recursive: true }).map((file) => String(file).replaceAll("\\", "/")).filter((file) => file.endsWith(".tsx")).sort().map((file) => [`engine/components/${file}`, readFileSync(resolve(repoRoot, "engine/components", file), "utf8")]));
 
 // --- a synthetic run: three product systems, one kit, one lineage with nothing measured -----------------
 
@@ -169,7 +171,7 @@ test("buildEvidencePack is additive: a new keep claim, lineage, page type, and a
 test("buildEvidencePack is deterministic: same input, same bytes", () => {
   assert.equal(bytes(buildEvidencePack(synthetic()).pack), bytes(buildEvidencePack(synthetic()).pack));
   const sources = Object.fromEntries(Object.entries(COMPONENT_SOURCES).map(([id, path]) => [id, readFileSync(resolve(repoRoot, path), "utf8")]));
-  const input = () => ({ sources, colours: themeColors(), recipesCss: readFileSync(resolve(repoRoot, "engine/css/recipes.css"), "utf8"), rules: readJson("engine/rules/catalog.json").rules });
+  const input = () => ({ sources, componentFiles: componentFiles(), colours: themeColors(), recipesCss: readFileSync(resolve(repoRoot, "engine/css/recipes.css"), "utf8"), rules: readJson("engine/rules/catalog.json").rules });
   assert.equal(bytes(buildEngineDefaults(input()).defaults), bytes(buildEngineDefaults(input()).defaults));
 });
 
@@ -189,7 +191,7 @@ test("the committed pack and engine defaults are what the builder makes from the
   const built = buildEvidencePack({ consensus: readJson(`${runPath}/consensus.json`), manifest: readJson(`${runPath}/manifest.json`), run: readJson(`${runPath}/run.json`), runPath });
   assert.deepEqual(built.problems, []);
   assert.equal(committedPackText, bytes(built.pack), "run node scripts/build-evidence-pack.mjs");
-  const defaults = buildEngineDefaults({ sources: componentSources(), colours: themeColors(), recipesCss: readFileSync(resolve(repoRoot, "engine/css/recipes.css"), "utf8"), rules: catalogRules });
+  const defaults = buildEngineDefaults({ sources: componentSources(), componentFiles: componentFiles(), colours: themeColors(), recipesCss: readFileSync(resolve(repoRoot, "engine/css/recipes.css"), "utf8"), rules: catalogRules });
   assert.deepEqual(defaults.problems, []);
   assert.equal(committedDefaultsText, bytes(defaults.defaults), "run node scripts/build-evidence-pack.mjs");
   const schema = JSON.parse(readFileSync(resolve(references, "evidence-pack.schema.json"), "utf8"));
@@ -235,17 +237,19 @@ test("the committed pack holds no text and no URL: only counts, enums, and the l
 });
 
 test("engine defaults: sizes equal the component contracts, the spacing set is the rule's, a missing height is a build problem", () => {
+  const recipesCss = readFileSync(resolve(repoRoot, "engine/css/recipes.css"), "utf8");
   const contracts = readJson("demo-pricing/content/component-contracts.json").components;
   const sizes = (id) => contracts.find((component) => component.id === id).code.sizes.map(({ key, height, text, paddingX }) => ({ key, height, text, paddingX }));
   assert.deepEqual(committedDefaults.components.button.sizes, sizes("button"));
   assert.deepEqual(committedDefaults.components.select.sizes, sizes("select"));
   assert.equal(committedDefaults.components.button.defaultSize, "md");
   assert.equal(committedDefaults.components.select.defaultSize, "default");
-  assert.deepEqual(committedDefaults.components.input, { source: "engine/components/ui/input.tsx", height: 36, text: 16, textFromMd: 14, paddingX: 12 });
+  assert.deepEqual(committedDefaults.components.input, { source: "engine/components/ui/input.tsx", height: 40, text: 16, textFromMd: 14, paddingX: 12 }, "the heights at the :root value (WO-17 B1: input 40)");
+  assert.deepEqual(committedDefaults.components.select.sizes.map((size) => [size.key, size.height]), [["default", 40], ["sm", 36]]);
   assert.deepEqual(committedDefaults.components.table, { source: "engine/components/ui/table.tsx", headHeight: 40, headPaddingX: 8, text: 14 });
   assert.equal(committedDefaults.measured, false);
   assert.equal(Object.keys(committedDefaults.recipes).length, 10);
-  assert.deepEqual(committedDefaults.recipes["enterprise-workbench"], { controlRadius: 3, insetRadius: 2, surfaceRadius: 4, sectionGap: 16, pageGutter: 24, surfacePadding: 20 });
+  assert.deepEqual(committedDefaults.recipes["enterprise-workbench"], { controlRadius: 3, insetRadius: 2, surfaceRadius: 4, sectionGap: 16, pageGutter: 24, surfacePadding: 20, controlHeight: 36 });
   assert.equal(committedDefaults.recipes["expressive-brand"].sectionGap, null, "a clamp() value is not a plain px number");
   const statement = catalogRules.find((rule) => rule.id === "CRAFT-spacing-scale").statement;
   assert.equal(committedDefaults.spacingScale.rule, "CRAFT-spacing-scale");
@@ -253,9 +257,9 @@ test("engine defaults: sizes equal the component contracts, the spacing set is t
   assert.ok(catalogRules.find((rule) => rule.id === TOUCH_FLOOR.rule).statement.includes(TOUCH_FLOOR.clause), "the touch floor quotes CRAFT-control-heights");
 
   const sources = componentSources();
-  const heightless = sources.input.replace(" h-[calc(var(--ss-control-height,40px)-4px)] ", " ");
+  const heightless = sources.input.replace(" h-[var(--ss-control-height,40px)] ", " ");
   assert.notEqual(heightless, sources.input, "the input's height class was removed");
-  const without = buildEngineDefaults({ sources: { ...sources, input: heightless }, colours: themeColors(), recipesCss: readFileSync(resolve(repoRoot, "engine/css/recipes.css"), "utf8"), rules: catalogRules });
+  const without = buildEngineDefaults({ sources: { ...sources, input: heightless }, componentFiles: componentFiles(), colours: themeColors(), recipesCss, rules: catalogRules });
   assert.match(without.problems.join("\n"), /engine\/components\/ui\/input\.tsx: input height could not be read; the engine defaults need it/u);
   const noMd = buildEngineDefaults({ sources: { ...sources, input: sources.input.replace(" md:text-sm", "") }, colours: themeColors(), recipesCss: "", rules: [] });
   assert.match(noMd.problems.join("\n"), /input text size from md \(md:text-sm\) could not be read/u);
@@ -264,7 +268,44 @@ test("engine defaults: sizes equal the component contracts, the spacing set is t
   // WO-17 A3: a class naming --ss-control-height in another form than the one the reader knows is a problem, not a silent null.
   const shorthand = sources.button.replace(/md: "\S+ /u, "md: \"h-(--ss-control-height,40px) ");
   assert.notEqual(shorthand, sources.button);
-  const misfit = buildEngineDefaults({ sources: { ...sources, button: shorthand }, colours: themeColors(), recipesCss: readFileSync(resolve(repoRoot, "engine/css/recipes.css"), "utf8"), rules: catalogRules });
+  const misfit = buildEngineDefaults({ sources: { ...sources, button: shorthand }, componentFiles: componentFiles(), colours: themeColors(), recipesCss, rules: catalogRules });
   assert.match(misfit.problems.join("\n"), /^engine\/components\/ui\/button\.tsx: `h-\(--ss-control-height,40px\)` names --ss-control-height in a form the readers do not know/mu);
   assert.equal(misfit.problems.filter((problem) => problem.includes("names --ss-control-height")).length, 1, "reported once");
+});
+
+// WO-17 B2, B3: version 2 carries each recipe's control height and the offsets the shipped components draw.
+const B2_HEIGHTS = { default: 40, "calm-consumer": 40, "native-mobile": 44, "enterprise-workbench": 36, "developer-platform": 36, "commerce-operator": 40, "public-service": 40, "creative-professional": 40, "editorial-authority": 40, "expressive-brand": 40 };
+
+test("engine defaults version 2: every recipe's control height, the offsets read from every component file, problems that name the block or the file", () => {
+  const recipesCss = readFileSync(resolve(repoRoot, "engine/css/recipes.css"), "utf8");
+  const files = componentFiles();
+  assert.ok(Object.keys(files).includes("engine/components/patterns/top-bar.tsx") && Object.keys(files).every((path) => /^engine\/components\/[a-z0-9/-]+\.tsx$/u.test(path)), "repository paths with forward slashes");
+  const build = (over = {}) => buildEngineDefaults({ sources: componentSources(), componentFiles: files, colours: themeColors(), recipesCss, rules: catalogRules, ...over });
+  assert.equal(committedDefaults.schemaVersion, 2);
+  assert.deepEqual(Object.keys(committedDefaults), ["schemaVersion", "generatedBy", "measured", "components", "recipes", "controlHeight", "spacingScale"]);
+  assert.deepEqual(Object.fromEntries(Object.entries(committedDefaults.recipes).map(([id, recipe]) => [id, recipe.controlHeight])), B2_HEIGHTS);
+  assert.deepEqual(committedDefaults.controlHeight, { variable: "--ss-control-height", offsets: [-12, -8, -4, 0, 4, 12] });
+  assert.deepEqual(build().problems, []);
+
+  // A block that does not declare the variable, or declares it in another form, is a problem naming the block.
+  const missing = recipesCss.replace(/(\[data-styleseed-recipe="public-service"\] \{[^}]*?)\n  --ss-control-height: 40px;/u, "$1");
+  assert.notEqual(missing, recipesCss);
+  assert.deepEqual(build({ recipesCss: missing }).problems, ["engine/css/recipes.css: the [data-styleseed-recipe=\"public-service\"] block does not declare --ss-control-height; every block states the height its controls draw, as a plain px value such as 40px"]);
+  const rem = recipesCss.replace(/(:root \{[^}]*?)--ss-control-height: 40px;/u, "$1--ss-control-height: 2.5rem;");
+  assert.notEqual(rem, recipesCss);
+  assert.match(build({ recipesCss: rem }).problems.join("\n"), /^engine\/css\/recipes\.css: the :root block declares --ss-control-height: 2\.5rem; write a positive plain px value such as 40px/mu);
+  assert.equal(build({ recipesCss: rem }).defaults.recipes.default.controlHeight, null, "never read as a number");
+
+  // A component with an extra offset changes `offsets`; min-w-[…] is not a height; another form names the file.
+  const drawer = "engine/components/ui/drawer.tsx";
+  const extra = files[drawer].replace("size-[calc(var(--ss-control-height,40px)-8px)]", "size-[calc(var(--ss-control-height,40px)+20px)]");
+  assert.notEqual(extra, files[drawer]);
+  const wider = build({ componentFiles: { ...files, [drawer]: extra } });
+  assert.deepEqual(wider.problems, []);
+  assert.deepEqual(wider.defaults.controlHeight.offsets, [-12, -8, -4, 0, 4, 12, 20], "the button xs still draws -8; the drawer adds +20");
+  const minWidthOnly = build({ componentFiles: { ...files, "engine/components/ui/extra.tsx": "const c = \"min-w-[calc(var(--ss-control-height,40px)+28px)]\";" } });
+  assert.deepEqual(minWidthOnly.defaults.controlHeight.offsets, [-12, -8, -4, 0, 4, 12], "min-w-[…] is not read");
+  const other = build({ componentFiles: { ...files, "engine/components/patterns/extra.tsx": "const s = { height: \"var(--ss-control-height)\" };" } });
+  assert.deepEqual(other.problems, ["engine/components/patterns/extra.tsx: `var(--ss-control-height)` names --ss-control-height in a form the readers do not know; write h-[var(--ss-control-height,40px)] or h-[calc(var(--ss-control-height,40px)-4px)] (size-[…] and min-w-[…] the same; no spaces, the fallback equal to the :root value in engine/css/recipes.css), or teach SPACING in scripts/build-component-contracts.mjs"]);
+  assert.match(build({ componentFiles: undefined }).problems.join("\n"), /^engine\/components: the component files were not read/mu);
 });

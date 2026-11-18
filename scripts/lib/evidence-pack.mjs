@@ -9,14 +9,15 @@
 // these (left out silently, a run with a new kind would give an empty pack), and an `adapt` claim of
 // the run that is in neither CLAIM_USES nor NOT_PACKED, until someone says how the proposer may use it.
 //
-// buildEngineDefaults reads what the engine ships (component heights and text sizes, recipe radii and
-// gaps, the starting spacing set of a rule) from the source, so "not measured" is structural: these
-// numbers live in their own file and the proposer always labels them as unmeasured.
+// buildEngineDefaults reads what the engine ships (component heights and text sizes, recipe radii, gaps,
+// and control heights, the offsets from --ss-control-height that the shipped components draw, the
+// starting spacing set of a rule) from the source, so "not measured" is structural: these numbers live
+// in their own file and the proposer always labels them as unmeasured.
 import { DECISION_AXES } from "../../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/runtime-contract.mjs";
-import { classFacts as readClassFacts, controlHeightProblem, parseSource, splitClass } from "../build-component-contracts.mjs";
+import { classFacts as readClassFacts, controlHeightOffset, controlHeightProblem, parseSource, splitClass } from "../build-component-contracts.mjs";
 
 export const PACK_VERSION = 1;
-export const DEFAULTS_VERSION = 1;
+export const DEFAULTS_VERSION = 2;
 export const GENERATED_BY = "scripts/build-evidence-pack.mjs";
 
 // claim id → how the proposer may use it. `use`: `value` = a numeric bucket is a candidate value of the
@@ -117,32 +118,35 @@ export const COMPONENT_SOURCES = Object.freeze({
   select: "engine/components/ui/select.tsx",
   table: "engine/components/ui/table.tsx",
 });
-const RECIPE_FIELDS = Object.freeze({ controlRadius: "control-radius", insetRadius: "inset-radius", surfaceRadius: "surface-radius", sectionGap: "section-gap", pageGutter: "page-gutter", surfacePadding: "surface-padding" });
+const RECIPE_FIELDS = Object.freeze({ controlRadius: "control-radius", insetRadius: "inset-radius", surfaceRadius: "surface-radius", sectionGap: "section-gap", pageGutter: "page-gutter", surfacePadding: "surface-padding", controlHeight: "control-height" });
+export const CONTROL_HEIGHT_VARIABLE = "--ss-control-height";
 const SPACING_RULE = "CRAFT-spacing-scale";
 
 // `:root` (key `default`) and each `[data-styleseed-recipe="<id>"]` block of recipes.css, in file order.
+const recipeBlocks = (css) => [...String(css).matchAll(/(?:^|\n)\s*(?::root|\[data-styleseed-recipe="([a-z0-9-]+)"\])\s*\{([^}]*)\}/gu)].map((match) => ({ id: match[1] ?? "default", selector: match[1] ? `[data-styleseed-recipe="${match[1]}"]` : ":root", block: match[2] }));
+const recipeValue = (block, name) => block.match(new RegExp(`--ss-${name}:\\s*([^;]+);`, "u"))?.[1]?.trim();
 export function recipeRadii(css) {
   const recipes = {};
-  for (const match of String(css).matchAll(/(?:^|\n)\s*(?::root|\[data-styleseed-recipe="([a-z0-9-]+)"\])\s*\{([^}]*)\}/gu)) {
-    const block = match[2];
+  for (const { id, block } of recipeBlocks(css)) {
     const entry = {};
     for (const [field, name] of Object.entries(RECIPE_FIELDS)) {
-      const value = block.match(new RegExp(`--ss-${name}:\\s*([^;]+);`, "u"))?.[1]?.trim();
+      const value = recipeValue(block, name);
       entry[field] = value !== undefined && /^\d+(?:\.\d+)?px$/u.test(value) ? Number(value.slice(0, -2)) : null;
     }
-    recipes[match[1] ?? "default"] = entry;
+    recipes[id] = entry;
   }
   return recipes;
 }
 
 /**
- * @param {{sources: {button: string, input: string, select: string, table: string}, colours: Set<string>, recipesCss: string, rules: object[]}} input
- *   sources: the text of the four component files of COMPONENT_SOURCES; colours: theme colour names
- *   (build-component-contracts.mjs themeColors); recipesCss: engine/css/recipes.css; rules: the
- *   `rules` of engine/rules/catalog.json.
+ * @param {{sources: {button: string, input: string, select: string, table: string}, componentFiles: Record<string, string>, colours: Set<string>, recipesCss: string, rules: object[]}} input
+ *   sources: the text of the four component files of COMPONENT_SOURCES; componentFiles: repository path
+ *   (forward slashes) to text of every .tsx file under engine/components, read for the control-height offsets;
+ *   colours: theme colour names (build-component-contracts.mjs themeColors); recipesCss:
+ *   engine/css/recipes.css; rules: the `rules` of engine/rules/catalog.json.
  * @returns {{problems: string[], defaults: object}}
  */
-export function buildEngineDefaults({ sources, colours = new Set(), recipesCss, rules }) {
+export function buildEngineDefaults({ sources, componentFiles, colours = new Set(), recipesCss, rules }) {
   const problems = [];
   const parsed = {};
   for (const [id, path] of Object.entries(COMPONENT_SOURCES)) {
@@ -221,6 +225,29 @@ export function buildEngineDefaults({ sources, colours = new Set(), recipesCss, 
   const recipes = recipeRadii(recipesCss);
   if (!Object.hasOwn(recipes, "default")) problems.push("engine/css/recipes.css: no :root block; the engine defaults read the fallback recipe from it");
   if (Object.keys(recipes).length < 2) problems.push("engine/css/recipes.css: no [data-styleseed-recipe=\"<id>\"] block; the engine defaults read recipe radii from them");
+  // Every block states its control height (WO-17 B2); unlike the radii it is never null.
+  for (const { selector, block } of recipeBlocks(recipesCss)) {
+    const value = recipeValue(block, "control-height");
+    if (value === undefined) problems.push(`engine/css/recipes.css: the ${selector} block does not declare ${CONTROL_HEIGHT_VARIABLE}; every block states the height its controls draw, as a plain px value such as 40px`);
+    else if (!/^\d+(?:\.\d+)?px$/u.test(value) || Number(value.slice(0, -2)) <= 0) problems.push(`engine/css/recipes.css: the ${selector} block declares ${CONTROL_HEIGHT_VARIABLE}: ${value}; write a positive plain px value such as 40px (the engine defaults read it as a number)`);
+  }
+
+  // The offsets from --ss-control-height that the shipped components draw: every h-[…] and size-[…] class in
+  // the one form, under any prefix, in engine/components/**/*.tsx (min-w-[…] is not a height and is not read).
+  const offsets = new Set();
+  const filesRead = Boolean(componentFiles) && typeof componentFiles === "object" && Object.keys(componentFiles).length > 0;
+  if (!filesRead) problems.push("engine/components: the component files were not read; the engine defaults read the control-height offsets from every engine/components/**/*.tsx");
+  else for (const path of Object.keys(componentFiles).sort()) {
+    for (const raw of String(componentFiles[path]).match(/[^\s"'`{}]*--ss-control-height[^\s"'`{}]*/gu) ?? []) {
+      const sized = splitClass(raw).utility.match(/^(h|size|min-w)-(.+)$/u);
+      const offset = sized ? controlHeightOffset(sized[2]) : null;
+      if (offset === null) { const problem = controlHeightProblem(path, raw); if (!problems.includes(problem)) problems.push(problem); }
+      else if (sized[1] !== "min-w") offsets.add(offset);
+    }
+  }
+  const controlOffsets = [...offsets].sort((a, b) => a - b);
+  if (filesRead && !controlOffsets.includes(0)) problems.push(`engine/components: no shipped class draws ${CONTROL_HEIGHT_VARIABLE} itself (offset 0); the engine defaults need the default control height`);
+  if (controlOffsets.some((offset) => !Number.isInteger(offset))) problems.push(`engine/components: a control-height offset is not a whole px (${controlOffsets.join(", ")}); the engine defaults hold whole offsets`);
 
   const statement = (rules ?? []).find((rule) => rule.id === SPACING_RULE)?.statement ?? null;
   const set = statement?.match(/\{([\d\s,.]+)\}/u)?.[1] ?? null;
@@ -235,6 +262,7 @@ export function buildEngineDefaults({ sources, colours = new Set(), recipesCss, 
       measured: false,
       components: { button, input, select, table },
       recipes,
+      controlHeight: { variable: CONTROL_HEIGHT_VARIABLE, offsets: controlOffsets },
       spacingScale: { rule: SPACING_RULE, values },
     },
   };

@@ -167,7 +167,7 @@ test("basis order: recorded, then kept reference, measured reference, corpus, en
   const measured = ref("ref-measured", { controlHeights: [40] });
   const kept = ref("ref-kept", { controlHeights: [36] }, ["controlHeights"]);
   const ordered = axisOf(propose(pack, { references: [measured, kept] }), "controlHeights");
-  assert.deepEqual(ordered.options.map((o) => `${o.basis}:${o.slug ?? ""}:${o.values}`), ["reference:ref-kept:36", "reference:ref-measured:40", "corpus::32", "engine-default::36,40"]);
+  assert.deepEqual(ordered.options.map((o) => `${o.basis}:${o.slug ?? ""}:${o.values}`), ["reference:ref-kept:36", "reference:ref-measured:40", "corpus::32", "engine-default::24,28,32,36,40,48"]);
   assert.equal(ordered.proposed, 0, "a reference outranks an agreeing corpus row");
   assert.equal(ordered.status, "proposed");
   assert.equal(ordered.options[0].source, "reference:ref-kept#tokens.controlHeights");
@@ -176,7 +176,7 @@ test("basis order: recorded, then kept reference, measured reference, corpus, en
   assert.equal(ordered.options[1].entry.statement, "Controls use these heights: 40px. Basis: measured on the project's reference ref-measured, 2026-11-01.");
   const refMd = renderProposalMarkdown(propose(pack, { references: [measured, kept] }));
   assert.ok(refMd.includes("**Proposed: 36px** — from the project's reference `ref-kept` (kept in its contract)."), refMd);
-  assert.ok(refMd.includes("- Other options: 40px (reference `ref-measured`, measured) · 32px (3 of 4) · 36, 40px (engine default, not measured: button md 40px, input 36px, select 36px)."), refMd);
+  assert.ok(refMd.includes("- Other options: 40px (reference `ref-measured`, measured) · 32px (3 of 4) · 24, 28, 32, 36, 40, 48px (engine default, not measured: brand recipe enterprise-workbench: default controls 36px; the components of this StyleSeed version draw 24, 28, 32, 36, 40, 48px)."), refMd);
   assert.ok(refMd.includes("Entry for a chosen value") === false || !refMd.includes("--entry controlHeights="), "a proposed axis prints its entry, not the command");
   assert.ok(renderProposalMarkdown(propose(pack, { references: [measured] })).includes("— from the project's reference `ref-measured` (measured, not kept in a contract)."));
 
@@ -192,26 +192,93 @@ test("basis order: recorded, then kept reference, measured reference, corpus, en
   assert.deepEqual(withHeadings.axes.map((a) => a.axis), ["controlHeights", "typeSizes", "radii", "tableRowHeights", "spacingBase", "headingSizes"], "a non-core axis with a reference basis gets a section");
 });
 
-test("touch: no corpus proposal, the 44px floor, the engine default above it, values under the floor marked", () => {
+test("touch: no corpus proposal, the 44px floor, the engine default is the recipe's family, values under the floor marked", () => {
   const pack = makePack([prow("button.height", "form", 4, [b(32, 4, 3, 1)]), prow("field.textSize", "form", 3, [b(14, 3, 2, 1)]), prow("primary.onePerSection", "form", 4, [b(true, 4, 3, 1)])]);
   const proposal = propose(pack, { surface: "touch", page: "dashboard", recipe: "calm-consumer" });
   for (const axis of proposal.axes) assert.deepEqual([axis.axis, axis.corpus.status, axis.corpus.reason, axis.corpus.lines, axis.corpus.notes], [axis.axis, "not-applicable", "touch", [], []]);
   assert.ok(!proposal.axes.some((axis) => axis.options.some((o) => o.basis === "corpus")));
   const heights = axisOf(proposal, "controlHeights");
   assert.deepEqual(heights.floor, TOUCH_FLOOR);
-  assert.deepEqual(heights.options.map((o) => [o.basis, o.values]), [["engine-default", [52]]], "only shipped sizes at or above 44px");
-  assert.equal(heights.options[0].from, "button lg 52px; the default button 40px, input 36px and select 36px are under 44px");
+  assert.deepEqual(heights.options.map((o) => [o.basis, o.values]), [["engine-default", [28, 32, 36, 40, 44, 52]]], "the family calm-consumer's components draw, not only the sizes at or above 44px (WO-17 B4)");
+  assert.equal(heights.options[0].from, "brand recipe calm-consumer: default controls 40px; the components of this StyleSeed version draw 28, 32, 36, 40, 44, 52px", "nothing about the floor in the basis");
+  assert.deepEqual(heights.options[0].underFloor, [28, 32, 36, 40], "the block marks the values under the floor");
   assert.ok(!proposal.axes.some((axis) => axis.axis === "primariesPerSection"), "no basis on touch: the non-core axis is left out");
   const md = renderProposalMarkdown(proposal);
   assert.ok(md.includes("- **This run holds no touch measurement, so nothing below is proposed from the corpus.**"));
   assert.ok(md.includes("**No measured basis.** The corpus has no touch measurement.\n\n- Floor: rule `CRAFT-control-heights` says \"Touch surfaces provide at least 44px targets\"."), md);
+  assert.ok(md.includes("- Options: 28, 32, 36, 40, 44, 52px (engine default, not measured: brand recipe calm-consumer: default controls 40px; the components of this StyleSeed version draw 28, 32, 36, 40, 44, 52px; 28, 32, 36, 40px are under the floor)."), md);
   const withRef = axisOf(propose(pack, { surface: "touch", references: [ref("ref-measured", { controlHeights: [36, 48] })] }), "controlHeights");
   assert.equal(withRef.status, "proposed", "a measured reference still proposes on touch");
   assert.deepEqual(withRef.options[0].underFloor, [36]);
   assert.ok(renderProposalMarkdown(propose(pack, { surface: "touch", references: [ref("ref-measured", { controlHeights: [36, 48] }), ref("ref-two", { controlHeights: [32] })] })).includes("32px (reference `ref-two`, measured; 32px is under the floor)"));
   assert.deepEqual(engineDefault("typeSizes", defaults, { surface: "touch" }).values, [14, 16]);
-  assert.equal(engineDefault("controlHeights", { ...defaults, components: { ...defaults.components, button: { ...defaults.components.button, sizes: defaults.components.button.sizes.filter((s) => s.height < 44) } } }, { surface: "touch" }), null);
+  const short = { ...defaults, components: { ...defaults.components, button: { ...defaults.components.button, sizes: defaults.components.button.sizes.filter((s) => s.height < 44) } } };
+  assert.deepEqual(engineDefault("controlHeights", short, { recipe: "enterprise-workbench", surface: "touch" }).values, [24, 28, 32, 36, 40, 48], "never null on touch: the family the recipe draws, read from the recipe and the offsets, not from the component rows");
   assert.ok(catalog.rules.find((rule) => rule.id === TOUCH_FLOOR.rule).statement.includes(TOUCH_FLOOR.clause));
+});
+
+test("engine default for control heights: the family the recipe's components draw, on both surfaces (WO-17 B4)", () => {
+  const values = (recipe, surface = "pointer") => engineDefault("controlHeights", defaults, { recipe, surface }).values;
+  assert.deepEqual(values("enterprise-workbench"), [24, 28, 32, 36, 40, 48]);
+  assert.deepEqual(values("developer-platform"), [24, 28, 32, 36, 40, 48]);
+  assert.deepEqual(values(null), [28, 32, 36, 40, 44, 52], "no recipe: the :root block's family, because that is what the CSS draws");
+  assert.deepEqual(values("unknown-recipe"), [28, 32, 36, 40, 44, 52], "a recipe the file does not have: the :root family");
+  assert.deepEqual(values("native-mobile", "touch"), [32, 36, 40, 44, 48, 56]);
+  assert.deepEqual(values("calm-consumer", "touch"), [28, 32, 36, 40, 44, 52], "the 40 family on touch, not null");
+  assert.deepEqual(engineDefault("controlHeights", defaults, { recipe: "enterprise-workbench" }), { id: "recipe.enterprise-workbench", values: [24, 28, 32, 36, 40, 48], from: "brand recipe enterprise-workbench: default controls 36px; the components of this StyleSeed version draw 24, 28, 32, 36, 40, 48px" });
+  assert.equal(engineDefault("controlHeights", defaults, {}).id, "recipe.default");
+  assert.equal(engineDefault("radii", defaults, {}), null, "the radii axis still returns null without a recipe; the difference is intended");
+  for (const recipe of [...Object.keys(defaults.recipes), null]) assert.deepEqual(values(recipe, "touch"), values(recipe, "pointer"), `${recipe}: the same family on touch`);
+});
+
+test("the engine-default control-height statement of every recipe on both surfaces stays within the ledger's 300 characters (WO-17 B4)", () => {
+  const pack = makePack([]);
+  for (const recipe of [...Object.keys(catalog.recipes), ...Object.keys(defaults.recipes), null, "unknown-recipe"]) for (const surface of ["pointer", "touch"]) {
+    const option = axisOf(propose(pack, { surface, recipe }), "controlHeights").options.find((o) => o.basis === "engine-default");
+    assert.ok(option, `${recipe}/${surface}: an engine-default option`);
+    assert.ok(option.entry.statement.length <= 300, `${recipe}/${surface}: ${option.entry.statement.length}`);
+    assert.ok(!option.entry.statement.includes("Basis: see source."), `${recipe}/${surface}: the statement carries its basis: ${option.entry.statement}`);
+    assert.match(option.entry.statement, /^Controls use these heights: [\d, ]+px\. Basis: engine default, not measured \(brand recipe [a-z-]+: default controls \d+px; the components of this StyleSeed version draw [\d, ]+px\)\.$/u);
+  }
+});
+
+test("engine defaults: version 1 is refused with the rebuild hint, version 2 needs controlHeight and every recipe's control height; the pack still reads only 1", () => {
+  const raw = JSON.parse(readFileSync(resolve(resolveDir, "references/engine-defaults.json"), "utf8"));
+  const file = { file: "ss-resolve/references/engine-defaults.json" };
+  assert.equal(raw.schemaVersion, 2);
+  assert.throws(() => normalizeEngineDefaults({ ...raw, schemaVersion: 1 }, file), /^Error: ss-resolve\/references\/engine-defaults\.json: schemaVersion: is 1, older than this proposer reads \(2\); rebuild with `node scripts\/build-evidence-pack\.mjs`, or reinstall the skill$/u);
+  assert.throws(() => normalizeEngineDefaults({ ...raw, schemaVersion: 3 }, file), /schemaVersion: is 3, newer than this proposer reads \(2\)/u);
+  const { controlHeight, ...withoutKey } = raw;
+  assert.throws(() => normalizeEngineDefaults(withoutKey), /defaults: missing controlHeight/u);
+  const bad = (over, pattern) => assert.throws(() => normalizeEngineDefaults({ ...raw, controlHeight: { ...controlHeight, ...over } }), pattern);
+  bad({ variable: "--ss-height" }, /controlHeight\.variable: must be "--ss-control-height"/u);
+  bad({ offsets: [] }, /controlHeight\.offsets: must be a non-empty array/u);
+  bad({ offsets: [-4, 4] }, /controlHeight\.offsets: must contain 0/u);
+  bad({ offsets: [0, -4] }, /controlHeight\.offsets: must be distinct whole numbers in ascending order/u);
+  bad({ offsets: [0, 0, 4] }, /must be distinct whole numbers in ascending order/u);
+  bad({ offsets: [0, 4.5] }, /must be distinct whole numbers in ascending order/u);
+  const recipe = (value) => ({ ...raw, recipes: { ...raw.recipes, "enterprise-workbench": { ...raw.recipes["enterprise-workbench"], controlHeight: value } } });
+  assert.throws(() => normalizeEngineDefaults(recipe(null)), /recipes\.enterprise-workbench\.controlHeight: must be a positive number/u);
+  assert.throws(() => normalizeEngineDefaults(recipe(0)), /recipes\.enterprise-workbench\.controlHeight: must be a positive number/u);
+  const { controlHeight: _, ...recipeWithout } = raw.recipes["native-mobile"];
+  assert.throws(() => normalizeEngineDefaults({ ...raw, recipes: { ...raw.recipes, "native-mobile": recipeWithout } }), /recipes\.native-mobile: missing controlHeight/u);
+  const { default: _root, ...withoutRoot } = raw.recipes;
+  assert.throws(() => normalizeEngineDefaults({ ...raw, recipes: withoutRoot }), /recipes: must hold `default`/u);
+  assert.deepEqual(normalizeEngineDefaults(raw), raw, "the committed file passes unchanged");
+  const pack = JSON.parse(readFileSync(resolve(resolveDir, "references/evidence-pack.json"), "utf8"));
+  assert.equal(normalizeEvidencePack(pack).schemaVersion, 1);
+  assert.throws(() => normalizeEvidencePack({ ...pack, schemaVersion: 2 }), /schemaVersion: is 2, newer than this proposer reads \(1\)/u);
+});
+
+test("engine-defaults table: one row for the default control height after the component rows, by recipe (WO-17 B4)", () => {
+  const table = engineDefaultsTable(committedPack, defaults, { page: "form" });
+  const at = table.rows.findIndex((row) => row.item === "Default control height");
+  assert.equal(table.rows[at - 1].item, "Table text", "after the component rows");
+  assert.equal(table.rows[at + 1].item, "Control, inset, and surface radius");
+  assert.deepEqual(table.rows[at], { item: "Default control height", value: "by brand recipe, 36 to 44px (36px: enterprise-workbench, developer-platform · 40px: default, calm-consumer, commerce-operator, public-service, creative-professional, editorial-authority, expressive-brand · 44px: native-mobile)", claim: null, label: "none", row: "—", where: "compared per component above" });
+  const md = renderEngineDefaultsMarkdown(table);
+  assert.ok(md.includes("| Input | 40px | default text field height |"), "component rows at the :root value");
+  assert.ok(md.includes("| Select `sm` | 36px | same |"), md);
 });
 
 test("partial: a value that is one member of a set axis says so; a reference does not", () => {
@@ -299,7 +366,7 @@ test("entryForValues: an exact option, a superset of the corpus value, values in
     statement: "Text uses these sizes: 12, 14, 16px. Basis: text field text size 14px on 3 of 3 measured systems (form pages, corpus run 2026-01-02); 12, 16px chosen without a measured basis.",
     approvedBy: "", date: "", source: "corpus:2026-01-02#field.textSize@form/1440; chosen: 12, 16",
   }, "a superset of the corpus value: attributed, then chosen");
-  assert.deepEqual(entryForValues(corpusOnly, "controlHeights", [32, 40]).source, "corpus:2026-01-02#button.height@form/1440; engine-default:components (not measured)", "40 is attributed to the engine default");
+  assert.deepEqual(entryForValues(corpusOnly, "controlHeights", [32, 40]).source, "corpus:2026-01-02#button.height@form/1440; engine-default:recipe.enterprise-workbench (not measured)", "40 is attributed to the engine default, the recipe's family");
   assert.deepEqual(entryForValues(corpusOnly, "radii", [5, 7]), { kind: "decision", axis: "radii", values: [5, 7], statement: "Corners use these radii: 5, 7px. Basis: 5, 7px chosen without a measured basis.", approvedBy: "", date: "", source: "chosen: 5, 7" }, "values in no option");
   assert.equal(entryForValues(corpusOnly, "headingSizes", [16, 24]).statement, "Headings in the main region use these sizes: 16, 24px. Basis: 16, 24px chosen without a measured basis.", "an axis without a section");
   assert.throws(() => entryForValues(corpusOnly, "accent", [1]), /not an axis the proposer covers/u);
@@ -485,11 +552,11 @@ test("own screens: the option sits after the references and before the corpus, a
   assert.equal(heights.options[0].source, "own-screens:2026-11-14#controlHeights");
   assert.equal(heights.options[0].entry.statement, "Controls use these heights: 32px. Basis: measured on 3 screens of this product, 2026-11-14.");
   const withRef = axisOf(propose(pack, { own, references: [ref("ref-measured", { controlHeights: [36, 40] }), ref("ref-kept", { controlHeights: [36] }, ["controlHeights"])] }), "controlHeights");
-  assert.deepEqual(withRef.options.map((o) => `${o.basis}:${o.values}`), ["reference:36", "reference:36,40", "own-screens:32", "corpus:32", "engine-default:36,40"], "kept reference, measured reference, own screens, corpus, engine default");
+  assert.deepEqual(withRef.options.map((o) => `${o.basis}:${o.values}`), ["reference:36", "reference:36,40", "own-screens:32", "corpus:32", "engine-default:24,28,32,36,40,48"], "kept reference, measured reference, own screens, corpus, engine default");
   assert.equal(withRef.proposed, 0);
   const md = renderProposalMarkdown(propose(pack, { own }));
   assert.ok(md.includes("## 1. Control height (`controlHeights`)\n\n**Proposed: 32px** — from this product's own screens.\n\n- This product (3 screens measured 2026-11-14):"), md);
-  assert.ok(md.includes("- Other options: 32px (3 of 4) · 36, 40px (engine default, not measured: button md 40px, input 36px, select 36px)."), md);
+  assert.ok(md.includes("- Other options: 32px (3 of 4) · 24, 28, 32, 36, 40, 48px (engine default, not measured: brand recipe enterprise-workbench: default controls 36px; the components of this StyleSeed version draw 24, 28, 32, 36, 40, 48px)."), md);
   assert.ok(md.includes("Entry for a chosen value: `propose-system.mjs --project-root . --own .styleseed/evidence/drift/2026-11-14/inventory.json --surface pointer --entry tableRowHeights=<values>`"), "the --entry command carries --own");
   assert.ok(renderProposalMarkdown(propose(pack, { own, references: [ref("ref-measured", { controlHeights: [36, 40] })] })).includes("- Other options: 32px (this product's own screens) · 32px (3 of 4)"), "listed as an option under a reference");
   assert.throws(() => propose(pack, { own: { values: {} } }), /pass the ownScreens result/u);
@@ -575,12 +642,19 @@ test("own screens: entries, attribution with --entry, the wording rules, and inv
   const proposal = propose(makePack([prow("button.height", "form", 4, [b(32, 3, 2, 1), b(36, 1, 1, 0)])]), { own: ownOf() });
   assert.deepEqual(entryForValues(proposal, "controlHeights", [32]), axisOf(proposal, "controlHeights").options[0].entry, "the own-screens option's own entry");
   const consolidated = entryForValues(proposal, "controlHeights", [32, 40, 44]);
+  // With enterprise-workbench the attributed basis runs past 300 characters, so the statement points at the source.
   assert.deepEqual(consolidated, {
     kind: "decision", axis: "controlHeights", values: [32, 40, 44],
-    statement: "Controls use these heights: 32, 40, 44px. Basis: 32px measured on 3 screens of this product, 2026-11-14; 40px engine default, not measured (button md 40px, input 36px, select 36px); 44px chosen without a measured basis.",
-    approvedBy: "", date: "", source: "own-screens:2026-11-14#controlHeights; engine-default:components (not measured); chosen: 44",
+    statement: "Controls use these heights: 32, 40, 44px. Basis: see source.",
+    approvedBy: "", date: "", source: "own-screens:2026-11-14#controlHeights; engine-default:recipe.enterprise-workbench (not measured); chosen: 44",
   });
   assert.doesNotThrow(() => normalizeDecisions([{ ...consolidated, id: "D-001", approvedBy: "example-designer", date: "2026-11-14" }], catalog));
+  const noRecipe = proposeSystem({ pack: makePack([prow("button.height", "form", 4, [b(32, 3, 2, 1), b(36, 1, 1, 0)])]), defaults, project: project({ recipe: null }), context: { page: "form", surface: "pointer" }, own: ownOf() });
+  assert.deepEqual(entryForValues(noRecipe, "controlHeights", [32, 40, 44]), {
+    kind: "decision", axis: "controlHeights", values: [32, 40, 44],
+    statement: "Controls use these heights: 32, 40, 44px. Basis: 32px measured on 3 screens of this product, 2026-11-14; 40, 44px engine default, not measured (brand recipe default: default controls 40px; the components of this StyleSeed version draw 28, 32, 36, 40, 44, 52px).",
+    approvedBy: "", date: "", source: "own-screens:2026-11-14#controlHeights; engine-default:recipe.default (not measured)",
+  }, "without a recipe, 44 is in the :root family: attributed to own screens and the engine default");
   assert.equal(JSON.stringify(propose(committedPack, { page: "settings", own: ownOf() })), JSON.stringify(propose(committedPack, { page: "settings", own: ownOf() })), "same input, same bytes");
 
   const good = inventoryFile(THREE_SCREENS);
@@ -611,7 +685,7 @@ test("CLI --own: reads the inventory by its project path, carries it into --entr
     assert.ok(result.stdout.includes(`\`propose-system.mjs --project-root . --own ${OWN_PATH} --surface pointer --entry tableRowHeights=<values>\``), "a leading ./ is dropped");
     result = cli(root, ["--project-root", ".", "--surface", "pointer", "--own", OWN_PATH, "--entry", "controlHeights=32,40"]);
     assert.equal(result.status, 0, result.stderr);
-    assert.equal(JSON.parse(result.stdout).source, "own-screens:2026-11-14#controlHeights; engine-default:components (not measured)");
+    assert.equal(JSON.parse(result.stdout).source, "own-screens:2026-11-14#controlHeights; engine-default:recipe.enterprise-workbench (not measured)");
     assert.equal(JSON.parse(cli(root, ["--project-root", ".", "--surface", "pointer", "--own", OWN_PATH, "--json"]).stdout).inputs.own, OWN_PATH);
     assert.deepEqual(files(root), before, "nothing written without --write");
     result = cli(root, ["--project-root", ".", "--surface", "pointer", "--own", OWN_PATH, "--write"]);

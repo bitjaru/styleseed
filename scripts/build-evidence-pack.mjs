@@ -2,14 +2,15 @@
 // The evidence pack and the engine defaults (WO-11 A3): the two generated files inside the skill that the
 // system proposer (ss-resolve/scripts/propose-system.mjs) reads. The pack is built from the one corpus run
 // named in research/consensus/evidence-pack-run.json; `research/` itself does not ship. The engine
-// defaults are read from the component sources, engine/css/recipes.css, and the rule catalog.
+// defaults are read from the component sources (every .tsx under engine/components, for the control-height
+// offsets), engine/css/recipes.css, and the rule catalog.
 //
 //   node scripts/build-evidence-pack.mjs            write both files
 //   node scripts/build-evidence-pack.mjs --check    exit 1 if either would change
 //
 // Runs first in verify-repo.mjs: build-context-catalog.mjs hashes every file under the skill, so the
 // files it writes must exist before the catalog is built.
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { COMPONENT_SOURCES, buildEngineDefaults, buildEvidencePack } from "./lib/evidence-pack.mjs";
@@ -49,9 +50,11 @@ const manifest = readJson(`${runPath}/manifest.json`, POINTER_HINT);
 const run = readJson(`${runPath}/run.json`, POINTER_HINT);
 const catalog = readJson("engine/rules/catalog.json", "the engine defaults read the CRAFT-spacing-scale rule from it");
 const sources = Object.fromEntries(Object.entries(COMPONENT_SOURCES).map(([id, path]) => [id, readText(path)]));
+// readdirSync returns backslash paths on Windows; the keys are repository paths with forward slashes.
+const componentFiles = Object.fromEntries(readdirSync(join(root, "engine/components"), { recursive: true }).map((file) => String(file).replaceAll("\\", "/")).filter((file) => file.endsWith(".tsx")).sort().map((file) => [`engine/components/${file}`, readText(`engine/components/${file}`)]));
 
 const built = buildEvidencePack({ consensus, manifest, run, runPath });
-const defaults = buildEngineDefaults({ sources, colours: themeColors(), recipesCss: readText("engine/css/recipes.css"), rules: catalog.rules ?? [] });
+const defaults = buildEngineDefaults({ sources, componentFiles, colours: themeColors(), recipesCss: readText("engine/css/recipes.css"), rules: catalog.rules ?? [] });
 const problems = [...built.problems, ...defaults.problems];
 if (problems.length) {
   console.error(`evidence pack: ${problems.length} problem(s)`);

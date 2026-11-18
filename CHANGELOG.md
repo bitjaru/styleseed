@@ -5,6 +5,29 @@ All notable changes to StyleSeed. Agents can check the latest version at
 
 ## Unreleased
 
+### Control heights follow the brand recipe
+
+- Every shipped control height now follows one variable, `--ss-control-height`, set in
+  `engine/css/recipes.css`; each size is that value plus a fixed offset.
+- The default input, select, toggle, and tab list are 4px taller and now equal the default button.
+  Select `sm` and toggle `sm` and `lg` are 4px taller too. The segmented control's default track is
+  4px shorter and equals the others (its segment is 8px shorter than the track).
+- `enterprise-workbench` and `developer-platform` draw 36px controls, `native-mobile` 44px, every
+  other recipe 40px.
+- Put `data-styleseed-recipe` on `<html>` when a document holds one artifact, so dialogs, sheets,
+  popovers, and select menus rendered into `body` take the recipe too.
+
+When you update:
+
+- Updating the skill does not change the components your project already copied. Until you copy
+  them again, the control heights the proposer prints describe this version's components, not yours.
+- Copy `recipes.css` together with the components. New components with an old `recipes.css` draw
+  40px on every recipe.
+- A screen built on the old advice "use `sm` beside form controls" now has a 36px button beside a
+  40px field. Use the default size.
+- To keep the old look, set `--ss-control-height`, or pass a height class to the component (a class
+  such as `h-9` still wins).
+
 ## [5.0.0] — 2026-09-30
 
 **Theme: one entry point, the same 22 workflows.** This major release changes the public

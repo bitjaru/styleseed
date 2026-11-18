@@ -61,12 +61,16 @@ function checker(file, hint = REBUILD) {
     if (missing.length) fail(where, `missing ${missing.join(", ")}`);
   };
   const array = (value, where, { min = 0 } = {}) => { if (!Array.isArray(value) || value.length < min) fail(where, min ? `must be a non-empty array` : "must be an array"); return value; };
-  const version = (value, where) => {
-    if (!Number.isInteger(value) || value < 1) fail(where, "must be 1");
-    if (value > 1) fail(where, `is ${value}, newer than this proposer reads (1)`);
+  // `accepted` is the one schema version this proposer reads for the file.
+  const version = (value, where, accepted) => {
+    if (!Number.isInteger(value) || value < 1) fail(where, `must be ${accepted}`);
+    if (value > accepted) fail(where, `is ${value}, newer than this proposer reads (${accepted})`);
+    if (value < accepted) fail(where, `is ${value}, older than this proposer reads (${accepted})`);
   };
   return { fail, keys, array, version };
 }
+const PACK_SCHEMA = 1;
+const DEFAULTS_SCHEMA = 2;
 const viewportOk = (value) => value === "both" || (Number.isInteger(value) && value > 0);
 const bucketValueOk = (value) => (typeof value === "number" && Number.isFinite(value)) || typeof value === "boolean" || value === "mixed";
 
@@ -79,7 +83,7 @@ const bucketValueOk = (value) => (typeof value === "number" && Number.isFinite(v
 export function normalizeEvidencePack(input, { file = "evidence-pack.json" } = {}) {
   const { fail, keys, array, version } = checker(file);
   keys(input, ["schemaVersion", "generatedBy", "run", "lineages", "claims", "rows"], "pack");
-  version(input.schemaVersion, "schemaVersion");
+  version(input.schemaVersion, "schemaVersion", PACK_SCHEMA);
   if (!isText(input.generatedBy, 120)) fail("generatedBy", "must name the builder");
   const run = input.run;
   keys(run, ["id", "path", "consensusVersion", "viewports", "scroll", "touch", "screens"], "run");
@@ -139,7 +143,8 @@ export function normalizeEvidencePack(input, { file = "evidence-pack.json" } = {
   };
 }
 
-const RECIPE_KEYS = ["controlRadius", "insetRadius", "surfaceRadius", "sectionGap", "pageGutter", "surfacePadding"];
+const RECIPE_KEYS = ["controlRadius", "insetRadius", "surfaceRadius", "sectionGap", "pageGutter", "surfacePadding", "controlHeight"];
+const CONTROL_HEIGHT_VARIABLE = "--ss-control-height";
 /**
  * The shipped engine defaults (ss-resolve/references/engine-defaults.json), checked strictly and copied.
  * @param {object} input parsed JSON
@@ -147,8 +152,8 @@ const RECIPE_KEYS = ["controlRadius", "insetRadius", "surfaceRadius", "sectionGa
  */
 export function normalizeEngineDefaults(input, { file = "engine-defaults.json" } = {}) {
   const { fail, keys, array, version } = checker(file);
-  keys(input, ["schemaVersion", "generatedBy", "measured", "components", "recipes", "spacingScale"], "defaults");
-  version(input.schemaVersion, "schemaVersion");
+  keys(input, ["schemaVersion", "generatedBy", "measured", "components", "recipes", "controlHeight", "spacingScale"], "defaults");
+  version(input.schemaVersion, "schemaVersion", DEFAULTS_SCHEMA);
   if (!isText(input.generatedBy, 120)) fail("generatedBy", "must name the builder");
   if (input.measured !== false) fail("measured", "must be false: engine defaults are shipped values, not measurements");
   const c = input.components;
@@ -176,16 +181,22 @@ export function normalizeEngineDefaults(input, { file = "engine-defaults.json" }
   keys(c.table, ["source", "headHeight", "headPaddingX", "text"], "components.table");
   if (!isText(c.table.source, 200)) fail("components.table.source", "must be the component path");
   const table = { source: c.table.source, headHeight: positive(c.table.headHeight, "components.table.headHeight"), headPaddingX: numberOrNull(c.table.headPaddingX, "components.table.headPaddingX"), text: positive(c.table.text, "components.table.text") };
-  if (!isObject(input.recipes) || !Object.keys(input.recipes).length) fail("recipes", "must map recipe ids to their radii and gaps");
+  if (!isObject(input.recipes) || !Object.keys(input.recipes).length) fail("recipes", "must map recipe ids to their radii, gaps, and control heights");
+  if (!Object.hasOwn(input.recipes, "default")) fail("recipes", "must hold `default` (the :root block of recipes.css), the control height of a project that names no recipe");
   const recipes = {};
   for (const [id, recipe] of Object.entries(input.recipes)) {
     keys(recipe, RECIPE_KEYS, `recipes.${id}`);
-    recipes[id] = Object.fromEntries(RECIPE_KEYS.map((key) => [key, numberOrNull(recipe[key], `recipes.${id}.${key}`)]));
+    recipes[id] = Object.fromEntries(RECIPE_KEYS.map((key) => [key, key === "controlHeight" ? positive(recipe[key], `recipes.${id}.${key}`) : numberOrNull(recipe[key], `recipes.${id}.${key}`)]));
   }
+  keys(input.controlHeight, ["variable", "offsets"], "controlHeight");
+  if (input.controlHeight.variable !== CONTROL_HEIGHT_VARIABLE) fail("controlHeight.variable", `must be "${CONTROL_HEIGHT_VARIABLE}"`);
+  const offsets = array(input.controlHeight.offsets, "controlHeight.offsets", { min: 1 });
+  if (!offsets.every((offset, index) => Number.isInteger(offset) && (index === 0 || offset > offsets[index - 1]))) fail("controlHeight.offsets", "must be distinct whole numbers in ascending order");
+  if (!offsets.includes(0)) fail("controlHeight.offsets", "must contain 0 (the default control height itself)");
   keys(input.spacingScale, ["rule", "values"], "spacingScale");
   if (!isText(input.spacingScale.rule, 80)) fail("spacingScale.rule", "must be a rule id");
   const values = array(input.spacingScale.values, "spacingScale.values", { min: 1 }).map((value, index) => positive(value, `spacingScale.values[${index}]`));
-  return { schemaVersion: input.schemaVersion, generatedBy: input.generatedBy, measured: false, components: { button, input: inputPart, select, table }, recipes, spacingScale: { rule: input.spacingScale.rule, values } };
+  return { schemaVersion: input.schemaVersion, generatedBy: input.generatedBy, measured: false, components: { button, input: inputPart, select, table }, recipes, controlHeight: { variable: input.controlHeight.variable, offsets: [...offsets] }, spacingScale: { rule: input.spacingScale.rule, values } };
 }
 
 // --- corpus rows --------------------------------------------------------------------------------------------
@@ -269,7 +280,6 @@ function corpusFor(def, pack, context, rule) {
 // --- engine defaults (level 4: shipped, not measured) ----------------------------------------------------
 
 const gcd = (a, b) => (b ? gcd(b, a % b) : a);
-const joinAnd = (items) => (items.length < 2 ? items.join("") : `${items.slice(0, -1).join(", ")} and ${items.at(-1)}`);
 
 /**
  * The shipped value of an axis, or null when the engine ships none for it.
@@ -280,15 +290,14 @@ export function engineDefault(axis, defaults, { recipe = null, surface = "pointe
   const mainButton = button.sizes.find((size) => size.key === button.defaultSize);
   const mainSelect = select.sizes.find((size) => size.key === select.defaultSize);
   if (axis === "controlHeights") {
-    if (surface !== "touch") return { id: "components", values: numeric([mainButton.height, input.height, mainSelect.height]), from: `button ${mainButton.key} ${mainButton.height}px, input ${input.height}px, select ${mainSelect.height}px` };
-    const tall = [
-      ...button.sizes.filter((size) => size.height >= TOUCH_FLOOR.px).map((size) => ({ text: `button ${size.key} ${size.height}px`, height: size.height })),
-      ...(input.height >= TOUCH_FLOOR.px ? [{ text: `input ${input.height}px`, height: input.height }] : []),
-      ...select.sizes.filter((size) => size.height >= TOUCH_FLOOR.px).map((size) => ({ text: `select ${size.key} ${size.height}px`, height: size.height })),
-    ];
-    if (!tall.length) return null;
-    const under = [[`the default button ${mainButton.height}px`, mainButton.height], [`input ${input.height}px`, input.height], [`select ${mainSelect.height}px`, mainSelect.height]].filter(([, height]) => height < TOUCH_FLOOR.px).map(([text]) => text);
-    return { id: "components", values: numeric(tall.map((item) => item.height)), from: `${tall.map((item) => item.text).join(", ")}${under.length ? `; ${joinAnd(under)} ${under.length === 1 ? "is" : "are"} under ${TOUCH_FLOOR.px}px` : ""}` };
+    // The family the shipped components draw with the recipe (WO-17 B4), on both surfaces: the recipe's
+    // --ss-control-height plus every offset the components use. A project that names no recipe, or one the
+    // file does not have, gets the :root block's family, because that is what the CSS draws. The proposal
+    // block prints the touch floor and which values are under it.
+    const id = recipe && Object.hasOwn(defaults.recipes, recipe) ? recipe : "default";
+    const height = defaults.recipes[id].controlHeight;
+    const values = numeric(defaults.controlHeight.offsets.map((offset) => height + offset));
+    return { id: `recipe.${id}`, values, from: `brand recipe ${id}: default controls ${height}px; the components of this StyleSeed version draw ${list(values)}px` };
   }
   if (axis === "typeSizes") {
     if (surface !== "touch") return { id: "components", values: numeric([mainButton.text, input.textFromMd, mainSelect.text, table.text]), from: `button ${mainButton.key} ${mainButton.text}px, input ${input.textFromMd}px from 768 wide, select ${mainSelect.text}px, table ${table.text}px` };
@@ -755,6 +764,11 @@ export function engineDefaultsTable(pack, defaults, { page = "form", rule = PROP
   place("Input text under 768 wide", input.text, "field.textSize", { height: false });
   place("Select text", select.sizes.find((size) => size.key === select.defaultSize).text, "field.textSize", { height: false });
   place("Table text", table.text, "text.bodySize", { height: false });
+  // The rows above read every height at the :root value; the recipes move them together (WO-17 B4).
+  const byHeight = new Map();
+  for (const [id, recipe] of Object.entries(defaults.recipes)) byHeight.set(recipe.controlHeight, [...(byHeight.get(recipe.controlHeight) ?? []), id]);
+  const heights = numeric([...byHeight.keys()]);
+  rows.push({ item: "Default control height", value: `by brand recipe, ${heights[0]} to ${heights.at(-1)}px (${heights.map((height) => `${height}px: ${byHeight.get(height).join(", ")}`).join(" · ")})`, claim: null, label: "none", row: "—", where: "compared per component above" });
   const radii = Object.values(defaults.recipes).flatMap((recipe) => [recipe.controlRadius, recipe.insetRadius, recipe.surfaceRadius]).filter((value) => value !== null);
   rows.push({ item: "Control, inset, and surface radius", value: `by brand recipe, ${Math.min(...radii)} to ${Math.max(...radii)}px`, claim: null, label: "none", row: "—", where: "no corpus claim until a run measures radius" });
   const base = defaults.spacingScale.values.reduce((a, b) => gcd(a, b));

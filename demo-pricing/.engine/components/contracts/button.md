@@ -28,7 +28,7 @@ a screen; everything else is a quieter variant. Navigation to another page is a 
 | Code | Use |
 |---|---|
 | `xs` | Chips, tags and filter buttons. |
-| `sm` | Inline secondary actions; matches the default input and select height. |
+| `sm` | Inline secondary actions. |
 | `md` | The default button. |
 | `lg` | Large or full-width CTA, including a CTA fixed to the bottom of a mobile screen. |
 | `icon` | Icon-only button, for example in a top bar. Needs an `aria-label`. |
@@ -59,8 +59,8 @@ a screen; everything else is a quieter variant. Navigation to another page is a 
 
 ## Known gaps
 
-- `md` (40px), `sm` (36px), `xs` (32px) and `icon` (40px) are under the 44px touch minimum (DESIGN-LANGUAGE §41).
-- The default `md` button (40px) is taller than the default input and select (36px), so the defaults break "buttons, inputs and selects in one context share a height" (CRAFT-BASELINE). Use `sm` beside default form controls.
+- At the `:root` control height (40px), `md` (40px), `sm` (36px), `xs` (32px) and `icon` (40px) are under the 44px touch minimum (DESIGN-LANGUAGE §41). Every size follows `--ss-control-height`, so the numbers move with the brand recipe.
+- The default `md` button, the default input and the default select take one height from the brand recipe (`--ss-control-height`), so they share a height in one context (CRAFT-BASELINE). Use the default size beside default form controls.
 - There is no hover style; pointer users get feedback only on press.
 - There is no loading state; §46 describes one.
 
@@ -96,11 +96,12 @@ import { Button, buttonVariants } from "@/components/ui/button";
 
 - **Tokens consumed:** `accent` · `background` · `border` · `brand` · `destructive` · `foreground` · `secondary` · `surface-muted` · `text-disabled` · `text-primary`
 - **Radius:** recipe control radius (`ss-pattern-control` → `--ss-control-radius`, 0–999px by brand recipe)
+- **Height:** the heights follow `--ss-control-height` (40px at `:root`; set per brand recipe)
 - **Focus:** `focus-visible:ring-2` · `focus-visible:ring-brand/20` · `focus-visible:ring-destructive/20`
 - **Motion:** `duration-150` · `transition-colors`
 
 ### Machine checks
 
-- Height under the 44px touch minimum (DESIGN-LANGUAGE §41): `xs` 32px, `sm` 36px, `md` 40px, `icon` 40px. On touch surfaces, extend the hit area or use a taller size.
+- Height under the 44px touch minimum (DESIGN-LANGUAGE §41) at the `:root` control height (40px): `xs` 32px, `sm` 36px, `md` 40px, `icon` 40px. On touch surfaces, extend the hit area or use a taller size.
 
 <!-- generated:end -->

@@ -60,7 +60,8 @@ test("both builders report a class that names --ss-control-height in another for
   assert.match(buildContract("input", contract("input"), colours, changed).problems.join("\n"), /^input: engine\/components\/ui\/input\.tsx: `h-\[var\(--ss-control-height\)\]` names --ss-control-height in a form the readers do not know/mu);
 });
 
-// WO-17 A2: every shipped control height, the class it carries, and the px it draws today (D = 40px).
+// WO-17 A2 as changed by B1: every shipped control height, the class it carries, and the px it draws at D = 40px.
+// Controls that sit together share D (input, select default, segmented track, toggle default, tab list).
 const CH = (offset) => (offset ? `[calc(var(--ss-control-height,40px)${offset > 0 ? "+" : "-"}${Math.abs(offset)}px)]` : "[var(--ss-control-height,40px)]");
 const A2_ROWS = [
   { file: "ui/button.tsx", row: "xs", before: "xs: \"", cls: `h-${CH(-8)}`, after: " px-3.5", px: 32 },
@@ -68,26 +69,38 @@ const A2_ROWS = [
   { file: "ui/button.tsx", row: "md", before: "md: \"", cls: `h-${CH(0)}`, after: " px-4", px: 40 },
   { file: "ui/button.tsx", row: "lg", before: "lg: \"", cls: `h-${CH(12)}`, after: " px-5", px: 52 },
   { file: "ui/button.tsx", row: "icon", before: "icon: \"", cls: `size-${CH(0)}`, after: " [&_svg", px: 40 },
-  { file: "ui/input.tsx", row: "input", before: "border-input flex ", cls: `h-${CH(-4)}`, after: " w-full", px: 36 },
-  { file: "ui/select.tsx", row: "default", before: " ", cls: `data-[size=default]:h-${CH(-4)}`, after: " data-[size=sm]:", px: 36 },
-  { file: "ui/select.tsx", row: "sm", before: " ", cls: `data-[size=sm]:h-${CH(-8)}`, after: " *:data-[slot=select-value]", px: 32 },
-  { file: "ui/segmented-control.tsx", row: "default", before: "\"", cls: `h-${CH(-4)}`, after: " text-[14px]\"", px: 36 },
+  { file: "ui/input.tsx", row: "input", before: "border-input flex ", cls: `h-${CH(0)}`, after: " w-full", px: 40 },
+  { file: "ui/select.tsx", row: "default", before: " ", cls: `data-[size=default]:h-${CH(0)}`, after: " data-[size=sm]:", px: 40 },
+  { file: "ui/select.tsx", row: "sm", before: " ", cls: `data-[size=sm]:h-${CH(-4)}`, after: " *:data-[slot=select-value]", px: 36 },
+  // The segment carries the height; its track adds p-1, so the default track is D and the segment D - 8.
+  { file: "ui/segmented-control.tsx", row: "default", before: "\"", cls: `h-${CH(-8)}`, after: " text-[14px]\"", px: 32 },
   { file: "ui/segmented-control.tsx", row: "sm", before: "\"", cls: `h-${CH(-12)}`, after: " text-[12px]\"", px: 28 },
-  { file: "ui/toggle.tsx", row: "default", before: "default: \"", cls: `h-${CH(-4)}`, after: ` px-2 min-w-${CH(-4)}"`, px: 36, minWidth: true },
-  { file: "ui/toggle.tsx", row: "sm", before: "sm: \"", cls: `h-${CH(-8)}`, after: ` px-1.5 min-w-${CH(-8)}"`, px: 32, minWidth: true },
-  { file: "ui/toggle.tsx", row: "lg", before: "lg: \"", cls: `h-${CH(0)}`, after: ` px-2.5 min-w-${CH(0)}"`, px: 40, minWidth: true },
-  { file: "ui/tabs.tsx", row: "tab list", before: "inline-flex ", cls: `h-${CH(-4)}`, after: " w-fit", px: 36 },
+  { file: "ui/toggle.tsx", row: "default", before: "default: \"", cls: `h-${CH(0)}`, after: ` px-2 min-w-${CH(0)}"`, px: 40, minWidth: true },
+  { file: "ui/toggle.tsx", row: "sm", before: "sm: \"", cls: `h-${CH(-4)}`, after: ` px-1.5 min-w-${CH(-4)}"`, px: 36, minWidth: true },
+  { file: "ui/toggle.tsx", row: "lg", before: "lg: \"", cls: `h-${CH(4)}`, after: ` px-2.5 min-w-${CH(4)}"`, px: 44, minWidth: true },
+  { file: "ui/tabs.tsx", row: "tab list", before: "inline-flex ", cls: `h-${CH(0)}`, after: " w-fit", px: 40 },
   { file: "ui/confirm-modal.tsx", row: "both buttons", before: "flex-1 ", cls: `h-${CH(4)}`, after: " text-[16px]", px: 44, count: 2 },
   { file: "ui/drawer.tsx", row: "close button", before: "className=\"", cls: `size-${CH(-8)}`, after: " flex items-center", px: 32 },
   { file: "patterns/top-bar.tsx", row: "action button", before: "\"relative ", cls: `size-${CH(0)}`, after: " ss-pattern-control", px: 40 },
 ];
 
-test("every shipped control height hangs off --ss-control-height with the :root fallback, and reads as today's px (WO-17 A2, A4)", () => {
+// WO-17 B2: the control height each block of engine/css/recipes.css declares.
+const B2_HEIGHTS = { default: 40, "calm-consumer": 40, "native-mobile": 44, "enterprise-workbench": 36, "developer-platform": 36, "commerce-operator": 40, "public-service": 40, "creative-professional": 40, "editorial-authority": 40, "expressive-brand": 40 };
+
+test("every shipped control height hangs off --ss-control-height with the :root fallback, and reads as its px at D = 40 (WO-17 A2, A4, B1, B2)", () => {
   const recipes = readFileSync(resolve(repoRoot, "engine/css/recipes.css"), "utf8");
   const rootBlock = recipes.match(/(?:^|\n):root\s*\{([^}]*)\}/u)?.[1] ?? "";
   const rootPx = rootBlock.match(/--ss-control-height:\s*(\d+(?:\.\d+)?)px;/u)?.[1];
   assert.equal(rootPx, "40", "engine/css/recipes.css :root sets --ss-control-height: 40px");
-  assert.equal(recipes.match(/--ss-control-height:/gu).length, 1, "in Part A only :root sets the variable; no recipe block does");
+  const declared = {};
+  for (const block of recipes.matchAll(/(?:^|\n)\s*(?::root|\[data-styleseed-recipe="([a-z0-9-]+)"\])\s*\{([^}]*)\}/gu)) {
+    const values = [...block[2].matchAll(/--ss-control-height:\s*([^;]+);/gu)].map((m) => m[1].trim());
+    assert.equal(values.length, 1, `${block[1] ?? ":root"}: declares --ss-control-height exactly once`);
+    assert.match(values[0], /^\d+px$/u, `${block[1] ?? ":root"}: --ss-control-height is a plain px value`);
+    declared[block[1] ?? "default"] = Number.parseInt(values[0], 10);
+  }
+  assert.deepEqual(declared, B2_HEIGHTS, ":root and every recipe block declare the heights of WO-17 B2");
+  assert.equal(recipes.match(/--ss-control-height:/gu).length, Object.keys(B2_HEIGHTS).length, "no other rule sets the variable");
 
   const dir = resolve(repoRoot, "engine/components");
   // readdirSync returns backslash paths on Windows; the rows of A2 are written with forward slashes.
@@ -118,7 +131,9 @@ test("every shipped control height hangs off --ss-control-height with the :root 
       if (row.minWidth) expected.push(`${row.file} ${row.cls.replace(/^h-/u, "min-w-")}`);
     }
   }
-  assert.deepEqual(found.sort(), expected.sort(), "the classes naming --ss-control-height are exactly the rows of WO-17 A2");
+  assert.deepEqual(found.sort(), expected.sort(), "the classes naming --ss-control-height are exactly the rows of WO-17 A2 (as changed by B1)");
+  const offsets = [...new Set(found.filter((entry) => !/ (?:[^ ]*:)?min-w-/u.test(entry)).map((entry) => classFacts(entry.split(" ")[1], colours)).map((facts) => (Object.values(facts.heightsBySize)[0] ?? facts.height) - 40))].sort((a, b) => a - b);
+  assert.deepEqual(offsets, [-12, -8, -4, 0, 4, 12], "the offsets in shipped sources are exactly -12, -8, -4, 0, +4, +12 (WO-17 B1)");
 });
 
 test("the source parser reads cva variants, sizes, defaults, parts and Radix props", () => {
@@ -143,7 +158,11 @@ test("the seven first-set contracts build, cover the designer's order and flag r
   assert.equal(byId.button.variants.find((v) => v.code === "outline").designer, "Line");
   assert.match(byId.switch.code.flags.join("\n"), /`switch` 18\.4px × 32px/u);
   assert.doesNotMatch(byId.switch.code.flags.join("\n"), /transition-all/u, "the switch names its transitioned properties (detector SS003)");
-  assert.match(byId.input.code.flags.join("\n"), /`input` 36px/u);
+  assert.match(byId.input.code.flags.join("\n"), /^Height under the 44px touch minimum \(DESIGN-LANGUAGE §41\) at the `:root` control height \(40px\): `input` 40px\./mu, "the touch line says its numbers are the :root heights (WO-17 B5)");
+  assert.deepEqual(byId.select.code.sizes.map((s) => [s.key, s.height]), [["default", 40], ["sm", 36]]);
+  for (const id of ["button", "tabs", "input", "select"]) assert.equal(byId[id].code.height, "the heights follow `--ss-control-height` (40px at `:root`; set per brand recipe)", id);
+  for (const id of ["badge", "switch", "table"]) assert.equal(byId[id].code.height, null, `${id} has no height that names the variable`);
+  assert.match(byId.switch.code.flags.join("\n"), /^Height under the 44px touch minimum \(DESIGN-LANGUAGE §41\): `switch`/mu, "a height that does not follow the variable gets no :root note");
   assert.deepEqual(byId.table.code.flags, []);
   assert.ok(byId.badge.code.tokens.includes("primary") && byId.button.code.tokens.includes("brand"), "the brand/primary split the badge contract describes is real");
   for (const c of json.components) {

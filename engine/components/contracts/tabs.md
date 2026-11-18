@@ -35,7 +35,7 @@ Week / Month. Each tab shows a panel; only one panel is visible at a time.
 
 ## Known gaps
 
-- The track is 36px tall, under the 44px touch minimum (DESIGN-LANGUAGE §41).
+- At the `:root` control height the track is 40px tall, under the 44px touch minimum (DESIGN-LANGUAGE §41); its height follows `--ss-control-height`.
 - Only the segmented style exists. The token canon sample (`research/tokens`, `component.tab.bd.active`) assumes an underline tab with an active border; there is no underline variant yet.
 - For two to four options inside a card header, DESIGN-LANGUAGE §10 asks for a pill toggle; `SegmentedControl` or `ToggleGroup` fits that job better than Tabs.
 
@@ -48,7 +48,7 @@ Week / Month. Each tab shows a panel; only one panel is visible at a time.
 
 ## From the code
 
-Source `engine/components/ui/tabs.tsx` · `sha256:bbd179549cd2…`
+Source `engine/components/ui/tabs.tsx` · `sha256:9a9ff7d6501c…`
 
 Import, after copying `engine/components` into `src/components`:
 
@@ -65,11 +65,12 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 - **Tokens consumed:** `card` · `foreground` · `muted` · `muted-foreground` · `ring`; dark mode only: `input`
 - **Radius:** recipe control radius (`ss-pattern-control` → `--ss-control-radius`, 0–999px by brand recipe)
+- **Height:** the heights follow `--ss-control-height` (40px at `:root`; set per brand recipe)
 - **Focus:** `focus-visible:border-ring` · `focus-visible:outline-1` · `focus-visible:outline-ring` · `focus-visible:ring-[3px]` · `focus-visible:ring-ring/50`
 - **Motion:** `transition-[color,box-shadow]`
 
 ### Machine checks
 
-- Height under the 44px touch minimum (DESIGN-LANGUAGE §41): `tabs-list` 36px. On touch surfaces, extend the hit area or use a taller size.
+- Height under the 44px touch minimum (DESIGN-LANGUAGE §41) at the `:root` control height (40px): `tabs-list` 40px. On touch surfaces, extend the hit area or use a taller size.
 
 <!-- generated:end -->

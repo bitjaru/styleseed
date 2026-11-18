@@ -45,7 +45,7 @@ options, show them all with a segmented control or radio group.
 
 ## Known gaps
 
-- The trigger is 36px (`default`) or 32px (`sm`), under the 44px touch minimum (DESIGN-LANGUAGE §41).
+- At the `:root` control height the trigger is 40px (`default`) or 36px (`sm`), under the 44px touch minimum (DESIGN-LANGUAGE §41); its heights follow `--ss-control-height`.
 - The trigger's radius is set by its own classes, not the recipe control radius used by Button and Tabs.
 
 ## Sources
@@ -57,7 +57,7 @@ options, show them all with a segmented control or radio group.
 
 ## From the code
 
-Source `engine/components/ui/select.tsx` · `sha256:77729664562c…`
+Source `engine/components/ui/select.tsx` · `sha256:ae602b680366…`
 
 Import, after copying `engine/components` into `src/components`:
 
@@ -80,17 +80,18 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectScro
 
 | Size | Height | Padding x | Text | Icon |
 |---|---|---|---|---|
-| `default` | 36px | 12px | 14px | — |
-| `sm` | 32px | 12px | 14px | — |
+| `default` | 40px | 12px | 14px | — |
+| `sm` | 36px | 12px | 14px | — |
 
 - **Tokens consumed:** `accent` · `accent-foreground` · `border` · `destructive` · `input` · `input-background` · `muted-foreground` · `popover` · `popover-foreground` · `ring`
 - **Radius:** fixed `rounded-md`, `rounded-sm` (not the recipe control radius)
+- **Height:** the heights follow `--ss-control-height` (40px at `:root`; set per brand recipe)
 - **Focus:** `focus-visible:border-ring` · `focus-visible:ring-[3px]` · `focus-visible:ring-ring/50` · `focus:bg-accent` · `focus:text-accent-foreground`
 - **Motion:** `data-[state=closed]:animate-out` · `data-[state=open]:animate-in` · `transition-[color,box-shadow]`
 
 ### Machine checks
 
-- Height under the 44px touch minimum (DESIGN-LANGUAGE §41): `select-trigger` size `default` 36px, `select-trigger` size `sm` 32px. On touch surfaces, extend the hit area or use a taller size.
+- Height under the 44px touch minimum (DESIGN-LANGUAGE §41) at the `:root` control height (40px): `select-trigger` size `default` 40px, `select-trigger` size `sm` 36px. On touch surfaces, extend the hit area or use a taller size.
 - Radius is fixed (rounded-md, rounded-sm) instead of the recipe control radius used by Button and Tabs.
 
 <!-- generated:end -->

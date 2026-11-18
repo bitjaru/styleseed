@@ -32,6 +32,12 @@ const TOUCH_MIN = 44;
 
 const sha = (text) => createHash("sha256").update(text).digest("hex");
 
+// The :root value of --ss-control-height in engine/css/recipes.css, in px, or null (WO-17 B5).
+export function rootControlHeight(css = readFileSync(resolve(root, "engine/css/recipes.css"), "utf8")) {
+  const value = css.match(/(?:^|\n):root\s*\{([^}]*)\}/u)?.[1]?.match(/--ss-control-height:\s*(\d+(?:\.\d+)?)px;/u)?.[1];
+  return value === undefined ? null : Number(value);
+}
+
 // --- theme colour names -------------------------------------------------------------------------------
 
 export function themeColors() {
@@ -91,6 +97,8 @@ const SPACING = (value) => {
   const control = value.match(CONTROL_HEIGHT); if (control) return control[1] !== undefined ? Number(control[1]) : Math.round((Number(control[2]) + (control[3] === "-" ? -1 : 1) * Number(control[4])) * 10) / 10;
   return null;
 };
+// The px offset from --ss-control-height of a value in the one form (0 for the variable alone), or null (WO-17 B3).
+export const controlHeightOffset = (value) => { const control = value.match(CONTROL_HEIGHT); return control ? (control[1] !== undefined ? 0 : (control[3] === "-" ? -1 : 1) * Number(control[4])) : null; };
 const TEXT_SIZES = { xs: 12, sm: 14, base: 16, lg: 18, xl: 20 };
 
 export function classFacts(classList, colours) {
@@ -264,6 +272,10 @@ export function buildContract(id, md, colours = themeColors(), code = null) {
   });
   for (const t of all.darkTokens) if (all.tokens.has(t)) all.darkTokens.delete(t);
   for (const raw of new Set(parts.flatMap((p) => p.facts.controlHeightMisfits))) problems.push(controlHeightProblem(`${id}: ${sourceRel}`, raw));
+  // A component whose height names --ss-control-height: its heights are read at :root and move with the recipe.
+  const namesVariable = /(?:h|size)-\[(?:calc\()?var\(--ss-control-height,/u.test(code);
+  const rootHeight = namesVariable ? rootControlHeight() : null;
+  if (namesVariable && rootHeight === null) problems.push(`${id}: engine/css/recipes.css sets no --ss-control-height in px in its :root block; the contract's Height line reads it`);
 
   // Sizes from the cva size group (button, toggle) or from data-[size=] heights (select trigger).
   let sizes = [];
@@ -282,7 +294,7 @@ export function buildContract(id, md, colours = themeColors(), code = null) {
     else if (Object.keys(part.facts.heightsBySize).length) for (const [k, h] of Object.entries(part.facts.heightsBySize)) { if (h < TOUCH_MIN) small.push(`\`${part.slot}\` size \`${k}\` ${h}px`); }
     else if (part.facts.height !== null && part.facts.height < TOUCH_MIN) small.push(`\`${part.slot}\` ${part.facts.height}px${part.facts.width ? ` × ${part.facts.width}px` : ""}`);
   }
-  if (small.length) flags.push(`Height under the ${TOUCH_MIN}px touch minimum (DESIGN-LANGUAGE §41): ${[...new Set(small)].join(", ")}. On touch surfaces, extend the hit area or use a taller size.`);
+  if (small.length) flags.push(`Height under the ${TOUCH_MIN}px touch minimum (DESIGN-LANGUAGE §41)${rootHeight !== null ? ` at the \`:root\` control height (${rootHeight}px)` : ""}: ${[...new Set(small)].join(", ")}. On touch surfaces, extend the hit area or use a taller size.`);
   if ([...all.motion].some((m) => splitClass(m).utility === "transition-all")) flags.push("Uses `transition-all`; name the transitioned properties (detector SS003).");
   if (source.hasHex) flags.push("Contains a literal hex colour; use a theme role (detector SS001).");
   const radius = all.radius.has("ss-pattern-control")
@@ -301,6 +313,7 @@ export function buildContract(id, md, colours = themeColors(), code = null) {
     tokens: [...all.tokens].sort(),
     darkTokens: [...all.darkTokens].sort(),
     radius,
+    height: rootHeight !== null ? `the heights follow \`--ss-control-height\` (${rootHeight}px at \`:root\`; set per brand recipe)` : null,
     focus: [...all.focus].sort(),
     motion: [...all.motion].sort(),
     flags,
@@ -358,6 +371,7 @@ export function renderGenerated(result) {
     "",
     `- **Tokens consumed:** ${list(c.tokens) || "none"}${c.darkTokens.length ? `; dark mode only: ${list(c.darkTokens)}` : ""}`,
     `- **Radius:** ${c.radius}`,
+    ...(c.height ? [`- **Height:** ${c.height}`] : []),
     `- **Focus:** ${list(c.focus) || "none set"}`,
     `- **Motion:** ${list(c.motion) || "none"}`,
     "",

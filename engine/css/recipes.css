@@ -28,6 +28,7 @@
   --ss-surface-padding: 24px;
   --ss-inset-radius: 12px;
   --ss-control-radius: 999px;
+  --ss-control-height: 40px;
   --ss-icon-radius: 10px;
   --ss-icon-background: color-mix(in srgb, var(--brand) 10%, transparent);
 }
@@ -41,6 +42,7 @@
   --ss-surface-padding: 20px;
   --ss-inset-radius: 12px;
   --ss-control-radius: 12px;
+  --ss-control-height: 44px;
   --ss-icon-radius: 999px;
   --ss-icon-background: var(--surface-muted);
 }
@@ -54,6 +56,7 @@
   --ss-surface-padding: 20px;
   --ss-inset-radius: 2px;
   --ss-control-radius: 3px;
+  --ss-control-height: 36px;
   --ss-icon-radius: 2px;
   --ss-icon-background: var(--surface-muted);
 }
@@ -67,6 +70,7 @@
   --ss-surface-padding: 16px;
   --ss-inset-radius: 4px;
   --ss-control-radius: 5px;
+  --ss-control-height: 36px;
   --ss-icon-radius: 4px;
   --ss-icon-background: transparent;
 }
@@ -80,6 +84,7 @@
   --ss-surface-padding: 20px;
   --ss-inset-radius: 8px;
   --ss-control-radius: 8px;
+  --ss-control-height: 40px;
   --ss-icon-radius: 6px;
   --ss-icon-background: var(--surface-muted);
 }
@@ -93,6 +98,7 @@
   --ss-surface-padding: 0px;
   --ss-inset-radius: 0px;
   --ss-control-radius: 0px;
+  --ss-control-height: 40px;
   --ss-icon-radius: 0px;
   --ss-icon-background: transparent;
 }
@@ -106,6 +112,7 @@
   --ss-surface-padding: 16px;
   --ss-inset-radius: 4px;
   --ss-control-radius: 5px;
+  --ss-control-height: 40px;
   --ss-icon-radius: 4px;
   --ss-icon-background: var(--surface-muted);
 }
@@ -119,6 +126,7 @@
   --ss-surface-padding: 0px;
   --ss-inset-radius: 0px;
   --ss-control-radius: 2px;
+  --ss-control-height: 40px;
   --ss-icon-radius: 0px;
   --ss-icon-background: transparent;
 }
@@ -132,6 +140,7 @@
   --ss-surface-padding: clamp(20px, 3vw, 40px);
   --ss-inset-radius: 10px;
   --ss-control-radius: 10px;
+  --ss-control-height: 40px;
   --ss-icon-radius: 8px;
   --ss-icon-background: transparent;
 }

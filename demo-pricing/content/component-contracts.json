@@ -103,7 +103,7 @@
         },
         {
           "code": "sm",
-          "use": "Inline secondary actions; matches the default input and select height."
+          "use": "Inline secondary actions."
         },
         {
           "code": "md",
@@ -158,8 +158,8 @@
         "Don't use `destructive` for emphasis that is not destructive."
       ],
       "knownGaps": [
-        "`md` (40px), `sm` (36px), `xs` (32px) and `icon` (40px) are under the 44px touch minimum (DESIGN-LANGUAGE §41).",
-        "The default `md` button (40px) is taller than the default input and select (36px), so the defaults break \"buttons, inputs and selects in one context share a height\" (CRAFT-BASELINE). Use `sm` beside default form controls.",
+        "At the `:root` control height (40px), `md` (40px), `sm` (36px), `xs` (32px) and `icon` (40px) are under the 44px touch minimum (DESIGN-LANGUAGE §41). Every size follows `--ss-control-height`, so the numbers move with the brand recipe.",
+        "The default `md` button, the default input and the default select take one height from the brand recipe (`--ss-control-height`), so they share a height in one context (CRAFT-BASELINE). Use the default size beside default form controls.",
         "There is no hover style; pointer users get feedback only on press.",
         "There is no loading state; §46 describes one."
       ],
@@ -257,6 +257,7 @@
         ],
         "darkTokens": [],
         "radius": "recipe control radius (`ss-pattern-control` → `--ss-control-radius`, 0–999px by brand recipe)",
+        "height": "the heights follow `--ss-control-height` (40px at `:root`; set per brand recipe)",
         "focus": [
           "focus-visible:ring-2",
           "focus-visible:ring-brand/20",
@@ -267,7 +268,7 @@
           "transition-colors"
         ],
         "flags": [
-          "Height under the 44px touch minimum (DESIGN-LANGUAGE §41): `xs` 32px, `sm` 36px, `md` 40px, `icon` 40px. On touch surfaces, extend the hit area or use a taller size."
+          "Height under the 44px touch minimum (DESIGN-LANGUAGE §41) at the `:root` control height (40px): `xs` 32px, `sm` 36px, `md` 40px, `icon` 40px. On touch surfaces, extend the hit area or use a taller size."
         ]
       }
     },
@@ -393,6 +394,7 @@
         ],
         "darkTokens": [],
         "radius": "fixed `rounded-md` (not the recipe control radius)",
+        "height": null,
         "focus": [
           "dark:focus-visible:ring-destructive/40",
           "focus-visible:border-ring",
@@ -452,7 +454,7 @@
         "Don't hide information the user needs to compare at a glance behind separate tabs; show it side by side."
       ],
       "knownGaps": [
-        "The track is 36px tall, under the 44px touch minimum (DESIGN-LANGUAGE §41).",
+        "At the `:root` control height the track is 40px tall, under the 44px touch minimum (DESIGN-LANGUAGE §41); its height follows `--ss-control-height`.",
         "Only the segmented style exists. The token canon sample (`research/tokens`, `component.tab.bd.active`) assumes an underline tab with an active border; there is no underline variant yet.",
         "For two to four options inside a card header, DESIGN-LANGUAGE §10 asks for a pill toggle; `SegmentedControl` or `ToggleGroup` fits that job better than Tabs."
       ],
@@ -462,7 +464,7 @@
       ],
       "code": {
         "source": "engine/components/ui/tabs.tsx",
-        "sha256": "sha256:bbd179549cd2988189588ed7b9df9a42d741c6b159ec1ba1aced630f376784f4",
+        "sha256": "sha256:9a9ff7d6501c2cc88662da7d0691ab71f266ce753c717ff3d2b99d2ab13aabee",
         "exports": [
           "Tabs",
           "TabsList",
@@ -517,6 +519,7 @@
           "input"
         ],
         "radius": "recipe control radius (`ss-pattern-control` → `--ss-control-radius`, 0–999px by brand recipe)",
+        "height": "the heights follow `--ss-control-height` (40px at `:root`; set per brand recipe)",
         "focus": [
           "focus-visible:border-ring",
           "focus-visible:outline-1",
@@ -528,7 +531,7 @@
           "transition-[color,box-shadow]"
         ],
         "flags": [
-          "Height under the 44px touch minimum (DESIGN-LANGUAGE §41): `tabs-list` 36px. On touch surfaces, extend the hit area or use a taller size."
+          "Height under the 44px touch minimum (DESIGN-LANGUAGE §41) at the `:root` control height (40px): `tabs-list` 40px. On touch surfaces, extend the hit area or use a taller size."
         ]
       }
     },
@@ -583,8 +586,8 @@
         "Don't put inputs inside consumer-service cards; use a separate page or bottom sheet (DESIGN-LANGUAGE §44, consumer-service scope)."
       ],
       "knownGaps": [
-        "DESIGN-LANGUAGE §44 specifies a 48px field (`h-12`), `rounded-xl`, a transparent border and a brand-coloured focus ring. The code is 36px (`h-[calc(var(--ss-control-height,40px)-4px)]`), `rounded-md`, an `input` border and a `ring`-coloured focus ring. The two disagree; the code is what ships until the designer decides (#96).",
-        "36px is under the 44px touch minimum (DESIGN-LANGUAGE §41).",
+        "DESIGN-LANGUAGE §44 specifies a 48px field (`h-12`), `rounded-xl`, a transparent border and a brand-coloured focus ring. The code is the brand recipe's control height, 40px at `:root` (`h-[var(--ss-control-height,40px)]`), `rounded-md`, an `input` border and a `ring`-coloured focus ring. The two disagree; the code is what ships until the designer decides (#96).",
+        "At the `:root` control height the input is 40px, under the 44px touch minimum (DESIGN-LANGUAGE §41); its height follows `--ss-control-height`.",
         "The radius is a fixed `rounded-md`, not the recipe control radius, so an input and a button side by side can have different corners."
       ],
       "sources": [
@@ -594,7 +597,7 @@
       ],
       "code": {
         "source": "engine/components/ui/input.tsx",
-        "sha256": "sha256:7e044bc1e8644148a21fdd7de5857d4ddad36dae586b1515957e8ab3bbd00337",
+        "sha256": "sha256:d221f38519e0dd5cdc73c586fd3a2efe2ec33e8abbf93a62dada5c159e62c408",
         "exports": [
           "Input"
         ],
@@ -623,6 +626,7 @@
         ],
         "darkTokens": [],
         "radius": "fixed `rounded-md` (not the recipe control radius)",
+        "height": "the heights follow `--ss-control-height` (40px at `:root`; set per brand recipe)",
         "focus": [
           "focus-visible:border-ring",
           "focus-visible:ring-[3px]",
@@ -632,7 +636,7 @@
           "transition-[color,box-shadow]"
         ],
         "flags": [
-          "Height under the 44px touch minimum (DESIGN-LANGUAGE §41): `input` 36px. On touch surfaces, extend the hit area or use a taller size.",
+          "Height under the 44px touch minimum (DESIGN-LANGUAGE §41) at the `:root` control height (40px): `input` 40px. On touch surfaces, extend the hit area or use a taller size.",
           "Radius is fixed (rounded-md) instead of the recipe control radius used by Button and Tabs."
         ]
       }
@@ -707,7 +711,7 @@
         "Don't use it for actions; a menu of actions is a `DropdownMenu`."
       ],
       "knownGaps": [
-        "The trigger is 36px (`default`) or 32px (`sm`), under the 44px touch minimum (DESIGN-LANGUAGE §41).",
+        "At the `:root` control height the trigger is 40px (`default`) or 36px (`sm`), under the 44px touch minimum (DESIGN-LANGUAGE §41); its heights follow `--ss-control-height`.",
         "The trigger's radius is set by its own classes, not the recipe control radius used by Button and Tabs."
       ],
       "sources": [
@@ -716,7 +720,7 @@
       ],
       "code": {
         "source": "engine/components/ui/select.tsx",
-        "sha256": "sha256:77729664562c564f6c9eb60a27a48e7e1ac2668428f19d4c9499cd7ac13a8ab4",
+        "sha256": "sha256:ae602b6803668c78ffcd11ba7e22f524d98ec9c3d9ea731b43b43d38c22a8d63",
         "exports": [
           "Select",
           "SelectContent",
@@ -822,14 +826,14 @@
         "sizes": [
           {
             "key": "default",
-            "height": 36,
+            "height": 40,
             "paddingX": 12,
             "text": 14,
             "icon": null
           },
           {
             "key": "sm",
-            "height": 32,
+            "height": 36,
             "paddingX": 12,
             "text": 14,
             "icon": null
@@ -850,6 +854,7 @@
         ],
         "darkTokens": [],
         "radius": "fixed `rounded-md`, `rounded-sm` (not the recipe control radius)",
+        "height": "the heights follow `--ss-control-height` (40px at `:root`; set per brand recipe)",
         "focus": [
           "focus-visible:border-ring",
           "focus-visible:ring-[3px]",
@@ -863,7 +868,7 @@
           "transition-[color,box-shadow]"
         ],
         "flags": [
-          "Height under the 44px touch minimum (DESIGN-LANGUAGE §41): `select-trigger` size `default` 36px, `select-trigger` size `sm` 32px. On touch surfaces, extend the hit area or use a taller size.",
+          "Height under the 44px touch minimum (DESIGN-LANGUAGE §41) at the `:root` control height (40px): `select-trigger` size `default` 40px, `select-trigger` size `sm` 36px. On touch surfaces, extend the hit area or use a taller size.",
           "Radius is fixed (rounded-md, rounded-sm) instead of the recipe control radius used by Button and Tabs."
         ]
       }
@@ -950,6 +955,7 @@
           "primary-foreground"
         ],
         "radius": "fixed `rounded-full` (not the recipe control radius)",
+        "height": null,
         "focus": [
           "focus-visible:border-ring",
           "focus-visible:ring-[3px]",
@@ -1104,6 +1110,7 @@
         ],
         "darkTokens": [],
         "radius": "none set",
+        "height": null,
         "focus": [],
         "motion": [
           "transition-colors"

@@ -16,9 +16,9 @@ const toggleVariants = cva(
           "border border-input bg-transparent hover:bg-accent hover:text-accent-foreground",
       },
       size: {
-        default: "h-[calc(var(--ss-control-height,40px)-4px)] px-2 min-w-[calc(var(--ss-control-height,40px)-4px)]",
-        sm: "h-[calc(var(--ss-control-height,40px)-8px)] px-1.5 min-w-[calc(var(--ss-control-height,40px)-8px)]",
-        lg: "h-[var(--ss-control-height,40px)] px-2.5 min-w-[var(--ss-control-height,40px)]",
+        default: "h-[var(--ss-control-height,40px)] px-2 min-w-[var(--ss-control-height,40px)]",
+        sm: "h-[calc(var(--ss-control-height,40px)-4px)] px-1.5 min-w-[calc(var(--ss-control-height,40px)-4px)]",
+        lg: "h-[calc(var(--ss-control-height,40px)+4px)] px-2.5 min-w-[calc(var(--ss-control-height,40px)+4px)]",
       },
     },
     defaultVariants: {

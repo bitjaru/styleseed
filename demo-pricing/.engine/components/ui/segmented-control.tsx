@@ -36,7 +36,7 @@ function SegmentedControl({
               "ss-pattern-control flex-1 flex items-center justify-center font-medium transition-[color,background-color,box-shadow] duration-150",
               size === "sm"
                 ? "h-[calc(var(--ss-control-height,40px)-12px)] text-[12px]"
-                : "h-[calc(var(--ss-control-height,40px)-4px)] text-[14px]",
+                : "h-[calc(var(--ss-control-height,40px)-8px)] text-[14px]",
               isActive
                 ? "bg-card text-text-primary shadow-[var(--shadow-card)]"
                 : "bg-transparent text-text-disabled",

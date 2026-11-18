@@ -25,8 +25,8 @@ The agent fills in **Answer** under each card in the reviewer's own words and ch
 
 **Look at:** https://styleseed-demo.vercel.app/gallery/button and https://styleseed-demo.vercel.app/gallery/input
 
-**What ships:** the default button is 40px tall; the default input and select are 36px. Placed in one row
-they do not line up.
+**What ships:** the default button, input, and select take one height from the brand recipe: 40px by
+default, 36px on two recipes, 44px on one. Placed in one row they line up.
 
 **Proposition (rule `CRAFT-control-heights`):** Buttons, inputs, and selects in one context share a height.
 Touch surfaces provide at least 44px targets; pointer-first dense desktop controls may be smaller when still
@@ -50,7 +50,9 @@ operable.
 **What disagrees:**
 - `engine/DESIGN-LANGUAGE.md` §44: 48px (`h-12`).
 - `engine/VISUAL-CRAFT.md` (control height, CC-8): 40px default, 44–48px on touch.
-- The shipped input: 36px (`h-[calc(var(--ss-control-height,40px)-4px)]`).
+- The shipped input: 40px (`h-[var(--ss-control-height,40px)]`).
+
+The default is now the recipe's height (40px; 36px on two recipes; 44px on one). Say what it should be and on what it depends.
 
 **Question:** For a desktop product screen used with a mouse (settings, tables, forms), how tall is the default
 text field?
@@ -72,7 +74,7 @@ text field?
 **Look at:** https://styleseed-demo.vercel.app/gallery/select and https://styleseed-demo.vercel.app/gallery/tabs
 
 **What disagrees:** `engine/DESIGN-LANGUAGE.md` §41 says touch targets are at least 44×44px and names no
-platform. The shipped select (36px), tabs (36px) and small button (32px) are under it. The component contracts
+platform. The shipped select (40px), tabs (40px) and small button (32px) are under it. The component contracts
 list each of these as a known gap.
 
 **Proposition:** The 44px minimum applies to touch screens only. On a mouse-first desktop product, 32–40px

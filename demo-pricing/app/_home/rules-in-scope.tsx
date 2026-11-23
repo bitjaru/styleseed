@@ -2,6 +2,16 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import styles from "./home.module.css";
 
+// Fixed list so a later priority bump (e.g. DL-23 to blocks) does not reshuffle the landing cards (#131).
+const LANDING_DEFAULT_RULE_IDS = [
+  "CRAFT-control-heights",
+  "CRAFT-functional-icons",
+  "CRAFT-icon-family",
+  "CRAFT-motion-family",
+] as const;
+
+const LANDING_RULE_LINE = /^- \*\*(([A-Z]+(?:-\d+)?)-([a-z0-9-]+))\*\* \((blocks|strong|advisory) · [^)]+\): (.+)$/;
+
 function readRulesInScope() {
   const path = join(process.cwd(), "public", "case-study", "folio", "project-detail.md");
   let bundle: string;
@@ -10,12 +20,22 @@ function readRulesInScope() {
   const section = bundle.split(/^# Rules in scope\s*$/m)[1]?.split(/^# /m)[0];
   const provenance = section?.match(/^Compiled from .+$/m)?.[0];
   const invariants = section?.split("## Invariants\n")[1]?.split("## Defaults for this selection")[0].trim();
-  const defaults = section?.split("## Defaults for this selection\n")[1]?.split("\n").filter((line) => line.startsWith("- **")).slice(0, 4);
-  if (!provenance || !invariants || !defaults?.length) throw new Error("Landing rules artifact has an unexpected Rules in scope section. Check the prebuild output before publishing.");
-  const lines = [...invariants.split("\n").filter((line) => line.trim()), ...defaults];
-  const cards = lines.map((line, index) => {
-    const match = line.match(/^- \*\*((INV-\d+|CRAFT)-([a-z0-9-]+))\*\* \((blocks|strong) · [^)]+\): (.+)$/);
-    if (!match || (index < lines.length - defaults.length && match[2] === "CRAFT")) throw new Error(`Malformed landing rule: ${line}`);
+  const defaultLines = section?.split("## Defaults for this selection\n")[1]?.split("\n").filter((line) => line.startsWith("- **"));
+  if (!provenance || !invariants || !defaultLines?.length) throw new Error("Landing rules artifact has an unexpected Rules in scope section. Check the prebuild output before publishing.");
+  const defaultsById = new Map<string, string>();
+  for (const line of defaultLines) {
+    const id = line.match(LANDING_RULE_LINE)?.[1];
+    if (id) defaultsById.set(id, line);
+  }
+  const defaults = LANDING_DEFAULT_RULE_IDS.map((id) => {
+    const line = defaultsById.get(id);
+    if (!line) throw new Error(`Landing default rule is missing from the bundle: ${id}`);
+    return line;
+  });
+  const invariantLines = invariants.split("\n").filter((line) => line.trim());
+  const cards = [...invariantLines, ...defaults].map((line, index) => {
+    const match = line.match(LANDING_RULE_LINE);
+    if (!match || (index < invariantLines.length && !match[2].startsWith("INV-"))) throw new Error(`Malformed landing rule: ${line}`);
     const [, id, chip, slug, priority, body] = match;
     const sentence = body.match(/^.+?[.!?](?:\s|$)/)?.[0].trim();
     if (!sentence) throw new Error(`Landing rule has no complete first sentence: ${id}`);

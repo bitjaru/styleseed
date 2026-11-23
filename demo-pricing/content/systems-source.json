@@ -1,0 +1,13 @@
+{
+  "run": "2026-11-16",
+  "systems": [
+    { "id": "cloudscape", "example": "cloudscape-form", "summary": "An open-source design system that Amazon Web Services built for its own web applications." },
+    { "id": "patternfly", "example": "patternfly-table", "summary": "The documentation site of PatternFly, published under a Red Hat copyright." },
+    { "id": "antpro", "example": "antpro-table-list", "summary": "A ready-made starting point for enterprise applications, built with React on the Ant Design components." },
+    { "id": "shadcn", "example": "shadcn-dashboard", "summary": "An open-source set of components to customise and build on." },
+    { "id": "primer", "example": "primer-settings", "summary": "The React implementation of Primer, GitHub's design system." },
+    { "id": "mui", "example": "mui-dashboard", "summary": "An open-source React component library that implements Google's Material Design; the screens measured are its page templates." },
+    { "id": "govuk", "example": "govuk-account-details", "summary": "The front-end code for building government platforms and services in the United Kingdom." }
+  ],
+  "partly": [ { "id": "carbon", "note": "it was measured on a single form." } ]
+}

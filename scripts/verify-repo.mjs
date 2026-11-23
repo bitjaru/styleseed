@@ -64,6 +64,7 @@ const coreChecks = [
   ["Build learning catalog", node, ["extensions/learning/runtime/scripts/build-learning-catalog.mjs"]],
   ["Build component contracts", node, ["scripts/build-component-contracts.mjs"]],
   ["Build fault pairs", node, ["scripts/build-fault-pairs.mjs"]],
+  ["Check systems showcase data", node, ["scripts/build-systems-showcase.mjs", "--check"]],
   ["Compile site registry", node, ["engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/resolve-context.mjs", "--project-root", ".", "--all", "--agent", "codex"]],
   ["Build public catalogs", node, ["demo-pricing/scripts/build-llms.mjs"]],
   ["Build spacing proof", node, ["demo-pricing/scripts/build-spacing-proof.mjs"]],
@@ -102,6 +103,7 @@ if (!flags.has("--core")) {
     run("Verify consensus study (loop parity, control probe, guards)", node, ["scripts/test-consensus-browser.mjs"]);
     run("Verify the visible control box (fixtures, three-probe parity, drift gate)", node, ["scripts/test-control-box-browser.mjs"]);
     run("Verify shipped control heights hang off --ss-control-height (each recipe's height and offsets; 36px moves each by -4; the recipe on <html> reaches body; the drift report reads the proposer's family)", node, ["scripts/test-control-height-browser.mjs"]);
+    run("Verify the measured systems page (/systems at 1440 and 390: cells, drawn sizes and contrast, no focus in a strip, labels, links)", node, ["scripts/test-systems-browser.mjs"]);
     run("Verify reference distance, brief, and project-mode frames", node, ["scripts/test-reference-distance-browser.mjs"]);
     run("Run browser smoke tests", npmCommand, ["run", "test:browser"], demoRoot);
     run("Check pilot React and CSS integration", node, ["scripts/test-design-pilot-library.mjs"]);

@@ -24,7 +24,9 @@ const files = [
   "demo-pricing/app/layout.tsx",
   "demo-pricing/app/evaluate/page.tsx",
   "docs/EVALUATOR-QUICKSTART.md",
-  "demo-pricing/content/version-source.json"
+  "demo-pricing/content/version-source.json",
+  "demo-pricing/app/systems/page.tsx",
+  "demo-pricing/content/systems-source.json"
 ];
 const requiredPhrases = [
   "known high-risk identity patterns are blocked; this is a guardrail, not an anonymization guarantee; review the exact package before exposure.",

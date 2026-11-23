@@ -28,6 +28,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE}/how-it-thinks`, lastModified: CONTENT_UPDATED, changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE}/architecture`, lastModified: CONTENT_UPDATED, changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE}/recipes`, lastModified: CONTENT_UPDATED, changeFrequency: "monthly", priority: 0.9 },
+    { url: `${BASE}/systems`, lastModified: CONTENT_UPDATED, changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE}/studio`, lastModified: CONTENT_UPDATED, changeFrequency: "weekly", priority: 0.9 },
     { url: `${BASE}/palettes`, lastModified: CONTENT_UPDATED, changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE}/learn`, lastModified: CONTENT_UPDATED, changeFrequency: "monthly", priority: 0.9 },

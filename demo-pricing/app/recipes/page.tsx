@@ -153,6 +153,12 @@ export default function RecipesPage() {
               Read the recipe contracts <ArrowRight size={14} />
             </a>
             <Link
+              href="/systems"
+              className="inline-flex items-center gap-1.5 border border-neutral-300 bg-white px-5 py-3 hover:border-neutral-950"
+            >
+              Design systems we measured
+            </Link>
+            <Link
               href="/architecture"
               className="inline-flex items-center gap-1.5 border border-neutral-300 bg-white px-5 py-3 hover:border-neutral-950"
             >

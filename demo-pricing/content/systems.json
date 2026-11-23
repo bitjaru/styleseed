@@ -1,0 +1,362 @@
+{
+  "run": "2026-11-16",
+  "systems": [
+    {
+      "id": "cloudscape",
+      "name": "AWS Cloudscape",
+      "kind": "product-system",
+      "licence": "MIT-0",
+      "repository": "cloudscape-design/demos",
+      "access": "self-hosted",
+      "commit": "9b6815f",
+      "summary": "An open-source design system that Amazon Web Services built for its own web applications.",
+      "exampleUrl": "https://cloudscape.design/examples/react/form.html",
+      "screens": 8,
+      "pageTypes": [
+        "dashboard",
+        "list",
+        "form",
+        "detail"
+      ],
+      "values": {
+        "button.height": {
+          "value": 32,
+          "eligible": 8,
+          "holding": 8
+        },
+        "field.height": {
+          "value": 32,
+          "eligible": 4,
+          "holding": 4
+        },
+        "button.radius": {
+          "value": 999,
+          "eligible": 8,
+          "holding": 8
+        },
+        "field.radius": {
+          "value": 8,
+          "eligible": 4,
+          "holding": 4
+        },
+        "table.bodyRowHeight": {
+          "value": 40,
+          "eligible": 4,
+          "holding": 3
+        },
+        "nav.itemHeight": {
+          "value": 28,
+          "eligible": 6,
+          "holding": 6
+        }
+      },
+      "shape": "Buttons are about 32px tall; fields are about 32px tall; buttons are pills; fields have 8px corners; table rows are about 40px."
+    },
+    {
+      "id": "patternfly",
+      "name": "Red Hat PatternFly",
+      "kind": "product-system",
+      "licence": "MIT",
+      "repository": "patternfly/patternfly-org",
+      "access": "self-hosted",
+      "commit": "73cec7b",
+      "summary": "The documentation site of PatternFly, published under a Red Hat copyright.",
+      "exampleUrl": "https://www.patternfly.org/components/table/react-demos/bulk-select/",
+      "screens": 7,
+      "pageTypes": [
+        "dashboard",
+        "list",
+        "detail"
+      ],
+      "values": {
+        "button.height": {
+          "value": 36,
+          "eligible": 7,
+          "holding": 7
+        },
+        "field.height": {
+          "value": 36,
+          "eligible": 4,
+          "holding": 4
+        },
+        "button.radius": {
+          "value": 999,
+          "eligible": 7,
+          "holding": 5
+        },
+        "field.radius": {
+          "value": 6,
+          "eligible": 4,
+          "holding": 4
+        },
+        "table.bodyRowHeight": {
+          "value": "mixed",
+          "eligible": 2,
+          "holding": null
+        },
+        "nav.itemHeight": {
+          "value": 36,
+          "eligible": 7,
+          "holding": 7
+        }
+      },
+      "shape": "Buttons are about 36px tall; fields are about 36px tall; buttons are pills; fields have 6px corners; table rows have no single height."
+    },
+    {
+      "id": "antpro",
+      "name": "Ant Design Pro",
+      "kind": "kit",
+      "licence": "MIT",
+      "repository": "ant-design/ant-design-pro",
+      "access": "hosted",
+      "commit": null,
+      "summary": "A ready-made starting point for enterprise applications, built with React on the Ant Design components.",
+      "exampleUrl": "https://preview.pro.ant.design/list/table-list/",
+      "screens": 10,
+      "pageTypes": [
+        "dashboard",
+        "list",
+        "form",
+        "detail"
+      ],
+      "values": {
+        "button.height": {
+          "value": 32,
+          "eligible": 7,
+          "holding": 6
+        },
+        "field.height": {
+          "value": 32,
+          "eligible": 6,
+          "holding": 6
+        },
+        "button.radius": {
+          "value": 6,
+          "eligible": 7,
+          "holding": 6
+        },
+        "field.radius": {
+          "value": 6,
+          "eligible": 6,
+          "holding": 5
+        },
+        "table.bodyRowHeight": {
+          "value": 48,
+          "eligible": 5,
+          "holding": 3
+        },
+        "nav.itemHeight": {
+          "value": 40,
+          "eligible": 10,
+          "holding": 10
+        }
+      },
+      "shape": "Buttons are about 32px tall; fields are about 32px tall; buttons have 6px corners; fields have 6px corners; table rows are about 48px."
+    },
+    {
+      "id": "shadcn",
+      "name": "shadcn/ui",
+      "kind": "kit",
+      "licence": "MIT",
+      "repository": "shadcn-ui/ui",
+      "access": "hosted",
+      "commit": null,
+      "summary": "An open-source set of components to customise and build on.",
+      "exampleUrl": "https://ui.shadcn.com/view/new-york-v4/dashboard-01",
+      "screens": 2,
+      "pageTypes": [
+        "dashboard",
+        "form"
+      ],
+      "values": {
+        "button.height": {
+          "value": "mixed",
+          "eligible": 2,
+          "holding": null
+        },
+        "field.height": {
+          "value": "mixed",
+          "eligible": 2,
+          "holding": null
+        },
+        "button.radius": {
+          "value": 8,
+          "eligible": 2,
+          "holding": 2
+        },
+        "field.radius": {
+          "value": 8,
+          "eligible": 2,
+          "holding": 2
+        },
+        "table.bodyRowHeight": {
+          "value": 52,
+          "eligible": 1,
+          "holding": 1
+        },
+        "nav.itemHeight": {
+          "value": 32,
+          "eligible": 1,
+          "holding": 1
+        }
+      },
+      "shape": "Button height has no single value; field height has no single value; buttons have 8px corners; fields have 8px corners; table rows are about 52px."
+    },
+    {
+      "id": "primer",
+      "name": "GitHub Primer",
+      "kind": "product-system",
+      "licence": "MIT",
+      "repository": "primer/react",
+      "access": "hosted",
+      "commit": null,
+      "summary": "The React implementation of Primer, GitHub's design system.",
+      "exampleUrl": "https://primer.style/react/storybook/iframe.html?viewMode=story&id=components-splitpagelayout-features--settings-page",
+      "screens": 3,
+      "pageTypes": [
+        "detail",
+        "form"
+      ],
+      "values": {
+        "button.height": {
+          "value": 32,
+          "eligible": 1,
+          "holding": 1
+        },
+        "field.height": {
+          "value": null,
+          "eligible": 0,
+          "holding": null
+        },
+        "button.radius": {
+          "value": 6,
+          "eligible": 1,
+          "holding": 1
+        },
+        "field.radius": {
+          "value": null,
+          "eligible": 0,
+          "holding": null
+        },
+        "table.bodyRowHeight": {
+          "value": null,
+          "eligible": 0,
+          "holding": null
+        },
+        "nav.itemHeight": {
+          "value": null,
+          "eligible": 0,
+          "holding": null
+        }
+      },
+      "shape": "Buttons are about 32px tall; buttons have 6px corners."
+    },
+    {
+      "id": "mui",
+      "name": "MUI templates",
+      "kind": "kit",
+      "licence": "MIT",
+      "repository": "mui/material-ui",
+      "access": "hosted",
+      "commit": null,
+      "summary": "An open-source React component library that implements Google's Material Design; the screens measured are its page templates.",
+      "exampleUrl": "https://mui.com/material-ui/getting-started/templates/dashboard/",
+      "screens": 5,
+      "pageTypes": [
+        "dashboard",
+        "list",
+        "form"
+      ],
+      "values": {
+        "button.height": {
+          "value": 40,
+          "eligible": 5,
+          "holding": 4
+        },
+        "field.height": {
+          "value": "mixed",
+          "eligible": 5,
+          "holding": null
+        },
+        "button.radius": {
+          "value": 8,
+          "eligible": 5,
+          "holding": 5
+        },
+        "field.radius": {
+          "value": 8,
+          "eligible": 5,
+          "holding": 3
+        },
+        "table.bodyRowHeight": {
+          "value": "mixed",
+          "eligible": 2,
+          "holding": null
+        },
+        "nav.itemHeight": {
+          "value": 32,
+          "eligible": 2,
+          "holding": 2
+        }
+      },
+      "shape": "Buttons are about 40px tall; field height has no single value; buttons have 8px corners; fields have 8px corners; table rows have no single height."
+    },
+    {
+      "id": "govuk",
+      "name": "GOV.UK Frontend",
+      "kind": "product-system",
+      "licence": "MIT",
+      "repository": "alphagov/govuk-frontend",
+      "access": "hosted",
+      "commit": null,
+      "summary": "The front-end code for building government platforms and services in the United Kingdom.",
+      "exampleUrl": "https://govuk-frontend-review.herokuapp.com/full-page-examples/update-your-account-details",
+      "screens": 8,
+      "pageTypes": [
+        "list",
+        "form",
+        "detail"
+      ],
+      "values": {
+        "button.height": {
+          "value": 40,
+          "eligible": 8,
+          "holding": 8
+        },
+        "field.height": {
+          "value": 40,
+          "eligible": 4,
+          "holding": 4
+        },
+        "button.radius": {
+          "value": 0,
+          "eligible": 8,
+          "holding": 8
+        },
+        "field.radius": {
+          "value": 0,
+          "eligible": 4,
+          "holding": 4
+        },
+        "table.bodyRowHeight": {
+          "value": 48,
+          "eligible": 1,
+          "holding": 1
+        },
+        "nav.itemHeight": {
+          "value": null,
+          "eligible": 0,
+          "holding": null
+        }
+      },
+      "shape": "Buttons are about 40px tall; fields are about 40px tall; buttons are square; fields are square; table rows are about 48px."
+    }
+  ],
+  "partly": [
+    {
+      "id": "carbon",
+      "name": "IBM Carbon",
+      "note": "it was measured on a single form."
+    }
+  ]
+}

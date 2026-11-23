@@ -126,6 +126,10 @@ contract. Unknown values are resolver errors; they are not exemptions.
    `REFERENCE-COMPILER.md`. Never reduce a reference to a palette swap or clone its protected
    assets, text, or trademarked arrangement.
 4. Select one brand recipe from `BRAND-RECIPES.md`; use `auto` only when its grammar mapping fits.
+   Say where the recommendation comes from in the same message: for `auto`,
+   `This is StyleSeed's default for <kind of product>. It is not measured.`; for an explicit
+   recipe, `This is my recommendation from StyleSeed's built-in looks. It is not measured.`; then,
+   once, `Design systems we measured: https://styleseed-demo.vercel.app/systems`.
 5. Select one palette recipe from `PALETTE-RECIPES.md`; revalidate project overrides.
 6. Select domain/page bias and at most one optional aesthetic profile.
 7. Confirm bounded brand/type/density/radius/elevation/imagery/motion values, write the lock,

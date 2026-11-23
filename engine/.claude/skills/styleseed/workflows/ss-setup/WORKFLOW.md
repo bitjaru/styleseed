@@ -62,6 +62,13 @@ fits. Use an explicit recipe when the product needs a different geometry, contai
 navigation, control, or collection language. A recipe is not a company clone and does not
 select colors.
 
+Say where the recommendation comes from in the same message. When the choice is `auto`:
+`This is StyleSeed's default for <kind of product>. It is not measured.` When you recommend an
+explicit recipe: `This is my recommendation from StyleSeed's built-in looks. It is not measured.`
+Then give the link once: `Design systems we measured: https://styleseed-demo.vercel.app/systems`.
+Say it in the person's language. Never call a recipe measured, typical of an industry, official,
+or endorsed.
+
 ### 5. Palette recipe
 
 Recommend one semantic palette from `PALETTE-RECIPES.md`. Use `auto` when its maintained recipe

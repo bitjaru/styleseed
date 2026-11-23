@@ -770,3 +770,25 @@ test("wording of the added documentation: counts only, no banned word; setup sti
   assert.ok(parts["proposals.md"].includes("at least 3 measured systems, on at least two thirds") && parts["proposals.md"].includes("at least 1 product system"), "the rule with its three numbers");
   for (const status of ["recorded", "proposed", "split", "thin", "unmeasured"]) assert.ok(parts["proposals.md"].includes(`| \`${status}\` |`), status);
 });
+
+// Where setup recommends a brand recipe it says the recommendation is StyleSeed's own and not measured, and gives the
+// page of measured systems. The files are hard-wrapped: every run of whitespace becomes one space before matching.
+const RECIPE_BASIS_URL = "https://styleseed-demo.vercel.app/systems";
+const RECIPE_BASIS_LINES = [
+  "This is StyleSeed's default for <kind of product>. It is not measured.",
+  "This is my recommendation from StyleSeed's built-in looks. It is not measured.",
+  `Design systems we measured: ${RECIPE_BASIS_URL}`,
+];
+
+test("a recommended brand recipe states its basis and gives the link in setup, CLAUDE.md, and AGENTS.md", () => {
+  const files = {
+    "ss-setup/WORKFLOW.md": doc("ss-setup/WORKFLOW.md"),
+    "engine/CLAUDE.md": readFileSync(resolve(repoRoot, "engine/CLAUDE.md"), "utf8"),
+    "engine/AGENTS.md": readFileSync(resolve(repoRoot, "engine/AGENTS.md"), "utf8"),
+  };
+  for (const [name, text] of Object.entries(files)) {
+    const flat = text.replace(/\s+/gu, " ");
+    for (const line of RECIPE_BASIS_LINES) assert.ok(flat.includes(line), `${name} lacks the line: ${line}`);
+    assert.ok(flat.includes(RECIPE_BASIS_URL), `${name} lacks the link ${RECIPE_BASIS_URL}`);
+  }
+});

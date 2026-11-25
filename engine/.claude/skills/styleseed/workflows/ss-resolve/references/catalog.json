@@ -1,7 +1,7 @@
 {
   "schemaVersion": 5,
   "engineVersion": "5.0.0",
-  "engineRevision": "sha256:8f72499789b1c84be8b0a45147ec4dd5de9295a4bd8b49b79a75232236599654",
+  "engineRevision": "sha256:1c521c4d248d0d53305e0ff9a1f197c5d1ccbe9af32b3f2d042eb6e38c50ec7b",
   "distributionSource": {
     "schemaVersion": 1,
     "channel": "edge",
@@ -10,7 +10,7 @@
   },
   "distributions": {
     "core": {
-      "revision": "sha256:8f72499789b1c84be8b0a45147ec4dd5de9295a4bd8b49b79a75232236599654",
+      "revision": "sha256:1c521c4d248d0d53305e0ff9a1f197c5d1ccbe9af32b3f2d042eb6e38c50ec7b",
       "files": [
         {
           "path": "LICENSE",
@@ -374,8 +374,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-setup/WORKFLOW.md",
-          "sha256": "e4ded7269069026a98c7deede093f5000d51b506c4d12559d655f8b623d5af0a",
-          "bytes": 10150
+          "sha256": "7508f70545c55b0836980da06834a03fb669cefafab9fabe88e9185a4706a66c",
+          "bytes": 10640
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-studio/WORKFLOW.md",
@@ -514,8 +514,8 @@
         },
         {
           "path": "engine/AGENTS.md",
-          "sha256": "57d76d72feb1b2c5798ea00b5f4c190d246734411ce0985bfa7e2faa836af52c",
-          "bytes": 11405
+          "sha256": "38dc55e451d339b37c740c10f7beb97a365c5cdb119b7a3c649dfe578af3a22d",
+          "bytes": 11755
         },
         {
           "path": "engine/APP-PLAYBOOKS.md",
@@ -529,13 +529,13 @@
         },
         {
           "path": "engine/BRAND-RECIPES.md",
-          "sha256": "0da7bda079d5b61b100825e358956a772a3b9b4610ea5090e6b490ccdbb51e34",
-          "bytes": 16163
+          "sha256": "3b96fcf5d51d43c617fa877905bb6e065daf0b699f0a1c2176c583454606c821",
+          "bytes": 16453
         },
         {
           "path": "engine/CLAUDE.md",
-          "sha256": "de20fd611ce8fe17ef2cf6c70c7d817a2879933a4f1ea5e68defe1bafc7eb1b8",
-          "bytes": 49719
+          "sha256": "008dc4fa9985191b1ff1df9c9c4a15d766d68b975f6d199409f887a3b51e4198",
+          "bytes": 50057
         },
         {
           "path": "engine/CRAFT-BASELINE.md",
@@ -655,7 +655,7 @@
       ]
     },
     "skills": {
-      "revision": "sha256:106256e9b4f3cb29caa0d34ab43e71eb90599250002d7ac027881e1784680cc7",
+      "revision": "sha256:c577c26fe7cc9f37061082a2615d233e5724c1122fe3f0f51730bb82ceb7009c",
       "files": [
         {
           "path": "engine/.claude/skills/styleseed/SKILL.md",
@@ -1009,8 +1009,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-setup/WORKFLOW.md",
-          "sha256": "e4ded7269069026a98c7deede093f5000d51b506c4d12559d655f8b623d5af0a",
-          "bytes": 10150
+          "sha256": "7508f70545c55b0836980da06834a03fb669cefafab9fabe88e9185a4706a66c",
+          "bytes": 10640
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-studio/WORKFLOW.md",
@@ -1503,8 +1503,8 @@
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-setup/WORKFLOW.md",
-      "sha256": "e4ded7269069026a98c7deede093f5000d51b506c4d12559d655f8b623d5af0a",
-      "bytes": 10150
+      "sha256": "7508f70545c55b0836980da06834a03fb669cefafab9fabe88e9185a4706a66c",
+      "bytes": 10640
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-studio/WORKFLOW.md",
@@ -1643,8 +1643,8 @@
     },
     {
       "path": "AGENTS.md",
-      "sha256": "57d76d72feb1b2c5798ea00b5f4c190d246734411ce0985bfa7e2faa836af52c",
-      "bytes": 11405
+      "sha256": "38dc55e451d339b37c740c10f7beb97a365c5cdb119b7a3c649dfe578af3a22d",
+      "bytes": 11755
     },
     {
       "path": "APP-PLAYBOOKS.md",
@@ -1658,13 +1658,13 @@
     },
     {
       "path": "BRAND-RECIPES.md",
-      "sha256": "0da7bda079d5b61b100825e358956a772a3b9b4610ea5090e6b490ccdbb51e34",
-      "bytes": 16163
+      "sha256": "3b96fcf5d51d43c617fa877905bb6e065daf0b699f0a1c2176c583454606c821",
+      "bytes": 16453
     },
     {
       "path": "CLAUDE.md",
-      "sha256": "de20fd611ce8fe17ef2cf6c70c7d817a2879933a4f1ea5e68defe1bafc7eb1b8",
-      "bytes": 49719
+      "sha256": "008dc4fa9985191b1ff1df9c9c4a15d766d68b975f6d199409f887a3b51e4198",
+      "bytes": 50057
     },
     {
       "path": "CRAFT-BASELINE.md",

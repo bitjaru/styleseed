@@ -31,6 +31,11 @@ surface adapter, accessibility, or project-local reference evidence.
 | `editorial-authority` | reports, journalism, research, documentation | editorial systems, public-content guidance | type-led hierarchy, reading measure, rules and whitespace over cards |
 | `expressive-brand` | launches, campaigns, portfolios, social stories | independent brand and campaign systems | signature composition, display type, controlled contrast and motion |
 
+Where the numbers come from. The corners and spacing of a recipe were written from the
+reference families above (2026-08-03). The heights are StyleSeed's defaults inside the ranges
+of the handbook (2026-11-18). None is measured. Measured systems:
+https://styleseed-demo.vercel.app/systems
+
 ## Auto selection
 
 | Output grammar | Default recipe |

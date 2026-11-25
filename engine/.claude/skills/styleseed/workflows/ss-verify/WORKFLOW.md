@@ -198,13 +198,15 @@ role drift) so CI can block on it. Record approved decisions and exceptions in t
 registry), or from `--decisions <file.json>`. A recorded decision
 becomes the baseline for the screens it covers, so a value outside it reads `violates D-…`; a value
 an approved exception covers reads `approved D-…` and is not drift. `--gate` also exits 3 on any
-decision violation.
+decision violation. A decision on `controlRadius` or `fieldRadius` (a button's or a field's corner) is
+recorded and not checked: the verdict lists it once with its id, `drift.json` lists it under
+`decisions.notChecked`, and `--gate` neither passes nor fails on it.
 
 With `--structure`, the structure probe runs on the same page loads and the table gains rows for
 table row height, list item height, heading sizes in the main region, section gap, primaries per
 section, and transition durations, compared the same way. A structure value outside the shared set
-does not fail `--gate`; a recorded decision on one of these six axes applies like the others
-(`violates D-…` fails `--gate`, `approved D-…` does not). Without the flag the report is unchanged,
+does not fail `--gate`; a recorded decision on one of these six axes applies like one on a token
+axis (`violates D-…` fails `--gate`, `approved D-…` does not). Without the flag the report is unchanged,
 except that a decision on a structure axis is listed once as not measured. `--scroll`
 scrolls each page to the bottom and back inside its one load before measuring, for screens whose
 content reveals on scroll; it is off by default.

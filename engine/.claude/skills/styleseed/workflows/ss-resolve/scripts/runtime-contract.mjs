@@ -178,12 +178,18 @@ function normalizeTokens(input, label) {
 }
 
 // Optional decisions ledger: approved project decisions and approved exceptions to default rules.
-// The axes are the drift axes measured by ss-reference/scripts/compare-screens.mjs (COLOR_AXES,
-// spacingBase, SET_AXES, then STRUCTURE_AXES, which the drift report measures with --structure).
-// They are duplicated here because the resolver must not import from ss-reference;
-// scripts/runtime-tests/decisions-ledger.test.mjs keeps the two lists in parity.
-export const DECISION_AXES = Object.freeze(["accent", "ink", "canvas", "spacingBase", "spacingScale", "typeSizes", "radii", "fonts", "controlHeights", "tableRowHeights", "listItemHeights", "headingSizes", "sectionGaps", "primariesPerSection", "transitionDurations"]);
+// The axes are those of ss-reference/scripts/compare-screens.mjs: the drift axes it measures
+// (COLOR_AXES, spacingBase, SET_AXES, then STRUCTURE_AXES, which the drift report measures with
+// --structure), then RECORD_ONLY_AXES, a button's corner and a field's corner, which the ledger
+// records and the drift report lists without checking. They are duplicated here because the resolver
+// must not import from ss-reference; scripts/runtime-tests/decisions-ledger.test.mjs keeps the lists in
+// parity.
+export const DECISION_AXES = Object.freeze(["accent", "ink", "canvas", "spacingBase", "spacingScale", "typeSizes", "radii", "fonts", "controlHeights", "tableRowHeights", "listItemHeights", "headingSizes", "sectionGaps", "primariesPerSection", "transitionDurations", "controlRadius", "fieldRadius"]);
 const DECISION_COLOR_AXES = new Set(["accent", "ink", "canvas"]);
+// A corner is one value for the whole project: a whole number from 0 to 200, or 999 for a pill (the drift
+// probe reads any radius over 200 as 999). No scope, no exception, and every `radii` decision holds it.
+const DECISION_CORNERS = Object.freeze({ controlRadius: "control corner", fieldRadius: "field corner" });
+const isCornerAxis = (axis) => Object.hasOwn(DECISION_CORNERS, axis);
 const DECISION_ID = /^D-[0-9]{3,}$/;
 const RULE_ID = /^[A-Z]+-[0-9A-Za-z-]+$/;
 const SCREEN_LABEL = /^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$/;
@@ -206,6 +212,10 @@ function decisionValues(values, axis, label) {
   }
   if (axis === "primariesPerSection") {
     if (values.length !== 1 || !Number.isInteger(values[0]) || values[0] < 0) fail(`${label} must hold exactly one integer >= 0 for primariesPerSection (at most this many primary actions per section)`);
+    return [values[0]];
+  }
+  if (isCornerAxis(axis)) {
+    if (values.length !== 1 || !Number.isInteger(values[0]) || values[0] < 0 || (values[0] > 200 && values[0] !== 999)) fail(`${label} must hold exactly one whole number from 0 to 200, or 999 for a pill, for ${axis} (the ${DECISION_CORNERS[axis]} in px)`);
     return [values[0]];
   }
   if (axis === "fonts") {
@@ -264,6 +274,8 @@ export function normalizeDecisions(input, catalog, label = "project.decisions") 
       out.axis = oneOf(entry.axis, DECISION_AXES, `${at}.axis (one of ${DECISION_AXES.join(", ")})`);
       out.values = decisionValues(required(entry.values, `${at}.values (required with axis)`), out.axis, `${at}.values`);
     } else if (entry.values !== undefined) fail(`${at}.values needs an axis; add axis or remove values`);
+    if (isCornerAxis(out.axis) && kind === "exception") fail(`${at}: a corner is one value for the whole project; ${out.axis} takes no exception. Change the value of the ${out.axis} decision instead`);
+    if (isCornerAxis(out.axis) && entry.scope !== undefined) fail(`${at}.scope: a corner is one value for the whole project; drop scope from this ${out.axis} decision`);
     if (entry.scope !== undefined) out.scope = decisionScope(entry.scope, `${at}.scope`);
     out.statement = text(required(entry.statement, `${at}.statement`), `${at}.statement (max 300 characters)`, 300);
     out.approvedBy = text(required(entry.approvedBy, `${at}.approvedBy`), `${at}.approvedBy (max 80 characters)`, 80);
@@ -283,6 +295,7 @@ export function normalizeDecisions(input, catalog, label = "project.decisions") 
     for (let right = left + 1; right < decided.length; right += 1) {
       const [a, b] = [decided[left], decided[right]];
       if (a.axis !== b.axis) continue;
+      if (!a.scope && !b.scope && isCornerAxis(a.axis)) fail(`${label}: ${a.id} and ${b.id} both decide ${a.axis}; a corner is one value for the whole project, so keep one of them and delete the other`);
       if (!a.scope && !b.scope) fail(`${label}: ${a.id} and ${b.id} both decide ${a.axis}; keep one project-wide decision and scope the other to screens or artifacts`);
       const screens = overlaps(a.scope?.screens, b.scope?.screens);
       if (screens.length) fail(`${label}: ${a.id} and ${b.id} both decide ${a.axis} on screen ${screens.join(", ")}; narrow one scope`);
@@ -290,7 +303,17 @@ export function normalizeDecisions(input, catalog, label = "project.decisions") 
       if (artifacts.length) fail(`${label}: ${a.id} and ${b.id} both decide ${a.axis} for artifact ${artifacts.join(", ")}; narrow one scope`);
     }
   }
-  return entries.sort((left, right) => left.id.localeCompare(right.id, "en", { numeric: true }) || (left.id < right.id ? -1 : 1));
+  const sorted = entries.sort((left, right) => left.id.localeCompare(right.id, "en", { numeric: true }) || (left.id < right.id ? -1 : 1));
+  // A recorded corner is one of the project's radii, on every screen: each `radii` decision, project-wide or
+  // scoped, holds it. An exception on `radii` does not count; the corner goes into the decision.
+  const corners = sorted.filter((entry) => entry.kind === "decision" && isCornerAxis(entry.axis));
+  for (const radii of sorted.filter((entry) => entry.kind === "decision" && entry.axis === "radii")) {
+    const missing = corners.filter((corner) => !radii.values.includes(corner.values[0]));
+    if (!missing.length) continue;
+    const add = [...new Set(missing.map((corner) => corner.values[0]))].sort((left, right) => left - right);
+    fail(`${label}: ${radii.id} decides radii ${radii.values.join(", ")}${radii.scope ? " for its scope" : ""} without ${missing.map((corner) => `${corner.values[0]}, the ${DECISION_CORNERS[corner.axis]} recorded as ${corner.id}`).join("; and without ")}; add ${add.join(" and ")} to ${radii.id}.values. Every radii decision, scoped or not, holds the recorded corners; an exception on radii does not count`);
+  }
+  return sorted;
 }
 
 export function normalizeProject(input, catalog) {

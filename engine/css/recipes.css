@@ -180,6 +180,11 @@
   border-radius: var(--ss-control-radius);
 }
 
+/* A field's corner. No recipe sets --ss-field-radius: until a project does, the skin's rounded-md stays. */
+:where(.ss-pattern-field) {
+  border-radius: var(--ss-field-radius, revert-layer);
+}
+
 .ss-pattern-icon {
   border-radius: var(--ss-icon-radius);
   background: var(--ss-icon-background);

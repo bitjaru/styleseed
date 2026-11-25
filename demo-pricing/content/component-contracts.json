@@ -588,7 +588,7 @@
       "knownGaps": [
         "DESIGN-LANGUAGE §44 specifies a 48px field (`h-12`), `rounded-xl`, a transparent border and a brand-coloured focus ring. The code is the brand recipe's control height, 40px at `:root` (`h-[var(--ss-control-height,40px)]`), `rounded-md`, an `input` border and a `ring`-coloured focus ring. The two disagree; the code is what ships until the designer decides (#96).",
         "At the `:root` control height the input is 40px, under the 44px touch minimum (DESIGN-LANGUAGE §41); its height follows `--ss-control-height`.",
-        "The radius is a fixed `rounded-md`, not the recipe control radius, so an input and a button side by side can have different corners."
+        "The radius is the skin's `rounded-md` (or `--ss-field-radius`), not the recipe control radius used by Button and Tabs; a button and a field side by side can have different corners. `recipes.css` stays outside cascade layers and Tailwind's utilities inside one, as `@import \"tailwindcss\"` gives. Once a project sets `--ss-field-radius`, a caller's `rounded-*` class no longer changes the corner; set `[--ss-field-radius:…]` on the element instead. A value that is not a length gives a square field."
       ],
       "sources": [
         "DESIGN-LANGUAGE §44 Input & form rules; §41 Touch targets",
@@ -597,7 +597,7 @@
       ],
       "code": {
         "source": "engine/components/ui/input.tsx",
-        "sha256": "sha256:d221f38519e0dd5cdc73c586fd3a2efe2ec33e8abbf93a62dada5c159e62c408",
+        "sha256": "sha256:b0f54ea2453c8078905f8d27d5c64bf3f9ea859a68ff9e9ce303dfc1770e8868",
         "exports": [
           "Input"
         ],
@@ -625,7 +625,7 @@
           "ring"
         ],
         "darkTokens": [],
-        "radius": "fixed `rounded-md` (not the recipe control radius)",
+        "radius": "the skin's `rounded-md`, or `--ss-field-radius` when the project sets it (`ss-pattern-field`)",
         "height": "the heights follow `--ss-control-height` (40px at `:root`; set per brand recipe)",
         "focus": [
           "focus-visible:border-ring",
@@ -637,7 +637,7 @@
         ],
         "flags": [
           "Height under the 44px touch minimum (DESIGN-LANGUAGE §41) at the `:root` control height (40px): `input` 40px. On touch surfaces, extend the hit area or use a taller size.",
-          "Radius is fixed (rounded-md) instead of the recipe control radius used by Button and Tabs."
+          "Radius is the skin's `rounded-md` (or `--ss-field-radius`), not the recipe control radius used by Button and Tabs; a button and a field side by side can have different corners."
         ]
       }
     },
@@ -712,7 +712,7 @@
       ],
       "knownGaps": [
         "At the `:root` control height the trigger is 40px (`default`) or 36px (`sm`), under the 44px touch minimum (DESIGN-LANGUAGE §41); its heights follow `--ss-control-height`.",
-        "The trigger's radius is set by its own classes, not the recipe control radius used by Button and Tabs."
+        "The trigger's radius is the skin's `rounded-md` (or `--ss-field-radius`), not the recipe control radius used by Button and Tabs; a button and a field side by side can have different corners. `recipes.css` stays outside cascade layers and Tailwind's utilities inside one, as `@import \"tailwindcss\"` gives. Once a project sets `--ss-field-radius`, a caller's `rounded-*` class no longer changes the corner; set `[--ss-field-radius:…]` on the element instead. A value that is not a length gives a square field."
       ],
       "sources": [
         "DESIGN-LANGUAGE §10 Selection UI rules; §41 Touch targets",
@@ -720,7 +720,7 @@
       ],
       "code": {
         "source": "engine/components/ui/select.tsx",
-        "sha256": "sha256:ae602b6803668c78ffcd11ba7e22f524d98ec9c3d9ea731b43b43d38c22a8d63",
+        "sha256": "sha256:a4df82ae4a91b7c68ef4c5937fcfd868f964b93e7f6f50b7d70d21f35266540f",
         "exports": [
           "Select",
           "SelectContent",
@@ -853,7 +853,7 @@
           "ring"
         ],
         "darkTokens": [],
-        "radius": "fixed `rounded-md`, `rounded-sm` (not the recipe control radius)",
+        "radius": "trigger: the skin's `rounded-md`, or `--ss-field-radius` when the project sets it (`ss-pattern-field`); popover `rounded-md`, item `rounded-sm`",
         "height": "the heights follow `--ss-control-height` (40px at `:root`; set per brand recipe)",
         "focus": [
           "focus-visible:border-ring",
@@ -869,7 +869,7 @@
         ],
         "flags": [
           "Height under the 44px touch minimum (DESIGN-LANGUAGE §41) at the `:root` control height (40px): `select-trigger` size `default` 40px, `select-trigger` size `sm` 36px. On touch surfaces, extend the hit area or use a taller size.",
-          "Radius is fixed (rounded-md, rounded-sm) instead of the recipe control radius used by Button and Tabs."
+          "Radius is the skin's `rounded-md` (or `--ss-field-radius`), not the recipe control radius used by Button and Tabs; a button and a field side by side can have different corners."
         ]
       }
     },

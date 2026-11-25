@@ -1,7 +1,7 @@
 {
   "schemaVersion": 5,
   "engineVersion": "5.0.0",
-  "engineRevision": "sha256:1c521c4d248d0d53305e0ff9a1f197c5d1ccbe9af32b3f2d042eb6e38c50ec7b",
+  "engineRevision": "sha256:88aa19711bc6276df708670321ebd6ebc4129d405a58994e31ad3f322c498e44",
   "distributionSource": {
     "schemaVersion": 1,
     "channel": "edge",
@@ -10,7 +10,7 @@
   },
   "distributions": {
     "core": {
-      "revision": "sha256:1c521c4d248d0d53305e0ff9a1f197c5d1ccbe9af32b3f2d042eb6e38c50ec7b",
+      "revision": "sha256:88aa19711bc6276df708670321ebd6ebc4129d405a58994e31ad3f322c498e44",
       "files": [
         {
           "path": "LICENSE",
@@ -44,8 +44,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-component/WORKFLOW.md",
-          "sha256": "51cd756a58cf76a412838453f4e624ee2d3c3238f2a87f78264c682586098902",
-          "bytes": 5850
+          "sha256": "80f79288f24828019c043374075c3501dc91af7da65093368984de0e11ef7a1d",
+          "bytes": 5925
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-copy/WORKFLOW.md",
@@ -79,13 +79,13 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-page/WORKFLOW.md",
-          "sha256": "2f62bff8ddc05f5df2ee6bffc298cf7abde6887ef3ba8aa085d11862851eb0a0",
-          "bytes": 4972
+          "sha256": "f4b9b35ec69ae10db004bec2b3d3127ca6f7fe4ff8b6f71e0ebbe5227c52ca61",
+          "bytes": 5044
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-pattern/WORKFLOW.md",
-          "sha256": "40cde775439ab447645e814529a22f2b76e32cb8e84b92f0c41ee91e92cfb0c5",
-          "bytes": 3600
+          "sha256": "5ff750652ea523670c34b411a88fbbb830f3313f8ec5bf008f66956a125c77f3",
+          "bytes": 3764
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-reference/WORKFLOW.md",
@@ -534,8 +534,8 @@
         },
         {
           "path": "engine/CLAUDE.md",
-          "sha256": "008dc4fa9985191b1ff1df9c9c4a15d766d68b975f6d199409f887a3b51e4198",
-          "bytes": 50057
+          "sha256": "05a0d121b0fb3017f7e94e6a85a818908bed00905728d1f88584be4be85658c4",
+          "bytes": 50178
         },
         {
           "path": "engine/CRAFT-BASELINE.md",
@@ -655,7 +655,7 @@
       ]
     },
     "skills": {
-      "revision": "sha256:c577c26fe7cc9f37061082a2615d233e5724c1122fe3f0f51730bb82ceb7009c",
+      "revision": "sha256:1fed68d74e919b75a6c732f5e28a5ebce3d40165213d3cc59fc884d3c17633d8",
       "files": [
         {
           "path": "engine/.claude/skills/styleseed/SKILL.md",
@@ -679,8 +679,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-component/WORKFLOW.md",
-          "sha256": "51cd756a58cf76a412838453f4e624ee2d3c3238f2a87f78264c682586098902",
-          "bytes": 5850
+          "sha256": "80f79288f24828019c043374075c3501dc91af7da65093368984de0e11ef7a1d",
+          "bytes": 5925
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-copy/WORKFLOW.md",
@@ -714,13 +714,13 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-page/WORKFLOW.md",
-          "sha256": "2f62bff8ddc05f5df2ee6bffc298cf7abde6887ef3ba8aa085d11862851eb0a0",
-          "bytes": 4972
+          "sha256": "f4b9b35ec69ae10db004bec2b3d3127ca6f7fe4ff8b6f71e0ebbe5227c52ca61",
+          "bytes": 5044
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-pattern/WORKFLOW.md",
-          "sha256": "40cde775439ab447645e814529a22f2b76e32cb8e84b92f0c41ee91e92cfb0c5",
-          "bytes": 3600
+          "sha256": "5ff750652ea523670c34b411a88fbbb830f3313f8ec5bf008f66956a125c77f3",
+          "bytes": 3764
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-reference/WORKFLOW.md",
@@ -1173,8 +1173,8 @@
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-component/WORKFLOW.md",
-      "sha256": "51cd756a58cf76a412838453f4e624ee2d3c3238f2a87f78264c682586098902",
-      "bytes": 5850
+      "sha256": "80f79288f24828019c043374075c3501dc91af7da65093368984de0e11ef7a1d",
+      "bytes": 5925
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-copy/WORKFLOW.md",
@@ -1208,13 +1208,13 @@
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-page/WORKFLOW.md",
-      "sha256": "2f62bff8ddc05f5df2ee6bffc298cf7abde6887ef3ba8aa085d11862851eb0a0",
-      "bytes": 4972
+      "sha256": "f4b9b35ec69ae10db004bec2b3d3127ca6f7fe4ff8b6f71e0ebbe5227c52ca61",
+      "bytes": 5044
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-pattern/WORKFLOW.md",
-      "sha256": "40cde775439ab447645e814529a22f2b76e32cb8e84b92f0c41ee91e92cfb0c5",
-      "bytes": 3600
+      "sha256": "5ff750652ea523670c34b411a88fbbb830f3313f8ec5bf008f66956a125c77f3",
+      "bytes": 3764
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-reference/WORKFLOW.md",
@@ -1663,8 +1663,8 @@
     },
     {
       "path": "CLAUDE.md",
-      "sha256": "008dc4fa9985191b1ff1df9c9c4a15d766d68b975f6d199409f887a3b51e4198",
-      "bytes": 50057
+      "sha256": "05a0d121b0fb3017f7e94e6a85a818908bed00905728d1f88584be4be85658c4",
+      "bytes": 50178
     },
     {
       "path": "CRAFT-BASELINE.md",

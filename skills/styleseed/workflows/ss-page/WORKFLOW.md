@@ -67,7 +67,8 @@ export default function PageName() {
      custom artifact root; the engine scopes spacing per artifact root the same way.
    - Use the lock's viewports and the adapter's responsive contract. Do not assume 430px mobile.
    - Use `ss-page-padding`, `ss-page-gutter`, `ss-pattern-stack`, `ss-pattern-surface`,
-     `ss-pattern-inset`, `ss-pattern-control`, and `ss-pattern-icon` where bundled patterns fit.
+     `ss-pattern-inset`, `ss-pattern-control`, `ss-pattern-field` (on an input, a select
+     trigger, or a textarea), and `ss-pattern-icon` where bundled patterns fit.
    - Select components by recipe: aligned panels/rows for workbenches, flat steps for public
      service, reading flow for editorial, focused canvas/tool groups for creative tools, and
      soft grouping only when the recipe calls for it.

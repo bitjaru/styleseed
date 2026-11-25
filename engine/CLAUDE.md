@@ -420,7 +420,8 @@ neutral sans systems are both valid without requiring novelty.
 ### Border Radius
 - Default: `--radius: 0.625rem` (10px)
 - Cards: `rounded-2xl` (16px)
-- Inputs/buttons: `rounded-md` (based on --radius)
+- Inputs, selects, textareas: the skin's `rounded-md`, or `--ss-field-radius` when the project sets it
+- Buttons: the brand recipe's control radius (`--ss-control-radius`)
 
 #### Radius personality → component mapping (one PERSONALITY everywhere, not one number)
 

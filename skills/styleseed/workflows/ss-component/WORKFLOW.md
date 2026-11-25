@@ -83,7 +83,8 @@ Description: $ARGUMENTS
 
 3. Design token usage:
    - Colors: `text-foreground`, `bg-card`, `text-brand`, `text-muted-foreground`, `border-border`
-   - Pattern surfaces: `ss-pattern-surface`; insets/controls/icons use the matching `ss-*` class
+   - Pattern surfaces: `ss-pattern-surface`; insets/controls/icons use the matching `ss-*` class;
+     `ss-pattern-field` goes on an input, a select trigger, or a textarea
    - Primitives use the project token scale; do not hardcode one radius or shadow personality
    - Spacing follows one repeatable selected-recipe rhythm
    - Motion: `duration-[var(--duration-fast)]`, `ease-[var(--ease-default)]`

@@ -14,7 +14,7 @@ const description =
   "visual rhythm, intentional motion.";
 
 export const metadata: Metadata = {
-  title: "Why does AI-generated UI look the same? — StyleSeed",
+  title: "Why does AI-generated UI look the same?",
   description,
   keywords: [
     "why does ai generated ui look the same",

@@ -76,11 +76,13 @@ export const metadata: Metadata = {
     title: "Verify StyleSeed in three minutes",
     description: DESCRIPTION,
     siteName: "StyleSeed",
+    images: [{ url: `${BASE}/og/coherence.png`, width: 1200, height: 680 }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Verify StyleSeed in three minutes",
     description: DESCRIPTION,
+    images: [`${BASE}/og/coherence.png`],
   },
 };
 

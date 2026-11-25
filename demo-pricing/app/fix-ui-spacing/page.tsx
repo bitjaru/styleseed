@@ -5,7 +5,7 @@ import proof from "@/content/spacing-proof.json";
 const BASE = "https://styleseed-demo.vercel.app";
 const title = "Why is my AI-generated UI spacing wrong?";
 const description = "Check grouping, computed CSS, and nested spacing tokens before adding more padding. Try a real 64px to 12px CSS regression example for Claude Code and Codex.";
-export const metadata: Metadata = { title: `${title} · StyleSeed`, description,
+export const metadata: Metadata = { title, description,
   alternates: { canonical: `${BASE}/fix-ui-spacing` },
   openGraph: { type: "article", title, description, url: `${BASE}/fix-ui-spacing` },
   twitter: { card: "summary_large_image", title, description } };

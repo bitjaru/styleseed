@@ -19,7 +19,7 @@ export async function generateMetadata({
   const c = getComponent(id);
   if (!c) return { title: "Not found" };
   return {
-    title: `${c.name} — StyleSeed`,
+    title: c.name,
     description:
       c.description || `${c.type === "ui" ? "UI primitive" : "Composed pattern"} from StyleSeed`,
   };

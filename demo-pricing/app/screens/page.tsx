@@ -9,7 +9,7 @@ const description =
   "Design guides by screen type — dashboard, form, landing page, detail, list & search, settings, onboarding. The job, structure, hierarchy, and patterns for each, and the anti-patterns to avoid.";
 
 export const metadata: Metadata = {
-  title: "Design guides by screen type — dashboard, form, landing & more · StyleSeed",
+  title: "Design guides by screen type — dashboard, form, landing & more",
   description,
   keywords: [
     "dashboard design",

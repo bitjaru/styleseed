@@ -52,9 +52,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: SITE_NAME,
-    title: "StyleSeed — Expert decisions, repeatable by agents",
-    description: SITE_DESC,
-    url: SITE_URL,
+    url: "./",
     locale: "en_US",
     images: [
       {
@@ -67,13 +65,11 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "StyleSeed — Expert decisions, repeatable by agents",
-    description: SITE_DESC,
     images: ["/og/styleseed-og.png"],
     creator: "@bitjaru",
   },
   alternates: {
-    canonical: SITE_URL,
+    canonical: "./",
   },
   category: "technology",
   // Set these in Vercel env (Project → Settings → Environment Variables) after

@@ -62,6 +62,8 @@ Description: $ARGUMENTS
    - Use `ss-pattern-surface` only when containment is earned.
    - Use `ss-page-gutter` or `ss-page-padding` instead of hardcoded universal gutters.
    - Use `ss-pattern-inset`, `ss-pattern-control`, and `ss-pattern-icon` for recipe-aware shape.
+   - Put `ss-pattern-field` on an input, a select trigger, or a textarea: its corner stays the
+     skin's `rounded-md` until the project sets `--ss-field-radius`.
    - Public-service and editorial recipes usually prefer flat flow, rules, and whitespace.
    - Enterprise/developer recipes prefer aligned panels, rows, tables, and compact controls.
    - Calm-consumer may use soft groups; expressive-brand must add a product-specific composition.

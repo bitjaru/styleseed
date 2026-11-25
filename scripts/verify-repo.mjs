@@ -103,6 +103,7 @@ if (!flags.has("--core")) {
     run("Verify consensus study (loop parity, control probe, guards)", node, ["scripts/test-consensus-browser.mjs"]);
     run("Verify the visible control box (fixtures, three-probe parity, drift gate)", node, ["scripts/test-control-box-browser.mjs"]);
     run("Verify shipped control heights hang off --ss-control-height (each recipe's height and offsets; 36px moves each by -4; the recipe on <html> reaches body; the drift report reads the proposer's family)", node, ["scripts/test-control-height-browser.mjs"]);
+    run("Verify a field's own corner (unset, ss-pattern-field changes no computed style in any skin or stylesheet order; set on a wrapper, --ss-field-radius reaches the three fields and not the button)", node, ["scripts/test-field-radius-browser.mjs"]);
     run("Verify the measured systems page (/systems at 1440 and 390: cells, drawn sizes and contrast, no focus in a strip, labels, links)", node, ["scripts/test-systems-browser.mjs"]);
     run("Verify reference distance, brief, and project-mode frames", node, ["scripts/test-reference-distance-browser.mjs"]);
     run("Run browser smoke tests", npmCommand, ["run", "test:browser"], demoRoot);

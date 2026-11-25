@@ -28,6 +28,10 @@ const GEN_HEADER = `${GEN_START} — scripts/build-component-contracts.mjs rewri
 export const DESIGNER_ORDER = ["button", "badge", "tabs", "input", "select", "switch", "table"];
 const REQUIRED = ["Purpose", "Anatomy", "States", "Do", "Don't", "Known gaps", "Sources"];
 const INTERACTIVE_SLOTS = new Set(["button", "input", "textarea", "select-trigger", "tabs-list", "tabs-trigger", "switch", "toggle", "checkbox"]);
+// The pattern classes of engine/css/recipes.css that set a corner: the brand recipe's control radius, and a
+// field's own corner (the skin's rounded-md until a project sets --ss-field-radius; WO-18 C1).
+const CONTROL_CLASS = "ss-pattern-control";
+const FIELD_CLASS = "ss-pattern-field";
 const TOUCH_MIN = 44;
 
 const sha = (text) => createHash("sha256").update(text).digest("hex");
@@ -113,7 +117,7 @@ export function classFacts(classList, colours) {
     if (colour && colours.has(colour[1])) (prefixes.includes("dark") ? darkTokens : tokens).add(colour[1]);
     if (prefixes.includes("focus-visible") || prefixes.includes("focus")) focus.add(raw);
     if (/^(transition|duration|ease|animate)(-|$)/u.test(utility)) motion.add(raw);
-    if (/^rounded(-|$)/u.test(utility) || utility === "ss-pattern-control") radius.add(utility);
+    if (/^rounded(-|$)/u.test(utility) || utility === CONTROL_CLASS || utility === FIELD_CLASS) radius.add(utility);
     // The element's own box: the first height/width wins, so a child (a switch thumb) cannot override the root.
     if (prefixes.length === 0 || (prefixes.length === 1 && prefixes[0].startsWith("data-[size="))) {
       const h = utility.match(/^(?:h|size)-(.+)$/u);
@@ -297,10 +301,26 @@ export function buildContract(id, md, colours = themeColors(), code = null) {
   if (small.length) flags.push(`Height under the ${TOUCH_MIN}px touch minimum (DESIGN-LANGUAGE §41)${rootHeight !== null ? ` at the \`:root\` control height (${rootHeight}px)` : ""}: ${[...new Set(small)].join(", ")}. On touch surfaces, extend the hit area or use a taller size.`);
   if ([...all.motion].some((m) => splitClass(m).utility === "transition-all")) flags.push("Uses `transition-all`; name the transitioned properties (detector SS003).");
   if (source.hasHex) flags.push("Contains a literal hex colour; use a theme role (detector SS001).");
-  const radius = all.radius.has("ss-pattern-control")
-    ? `recipe control radius (\`ss-pattern-control\` → \`--ss-control-radius\`, 0–999px by brand recipe)${[...all.radius].filter((r) => r !== "ss-pattern-control").length ? `; also ${[...all.radius].filter((r) => r !== "ss-pattern-control").map((r) => `\`${r}\``).join(", ")}` : ""}`
-    : all.radius.size ? `fixed ${[...all.radius].map((r) => `\`${r}\``).join(", ")} (not the recipe control radius)` : "none set";
-  if (!all.radius.has("ss-pattern-control") && parts.some((p) => INTERACTIVE_SLOTS.has(p.slot)) && all.radius.size) flags.push(`Radius is fixed (${[...all.radius].join(", ")}) instead of the recipe control radius used by Button and Tabs.`);
+  // Radius (WO-18 C1): one line when every part that sets a corner sets the same one, else one entry per part,
+  // the parts with a pattern class first ("trigger: …"), then the fixed ones ("popover `rounded-md`, item `rounded-sm`").
+  const ticked = (set, skip) => [...set].filter((r) => r !== skip).map((r) => `\`${r}\``).join(", ");
+  const describeRadius = (set) => set.has(CONTROL_CLASS)
+    ? `recipe control radius (\`${CONTROL_CLASS}\` → \`--ss-control-radius\`, 0–999px by brand recipe)${ticked(set, CONTROL_CLASS) ? `; also ${ticked(set, CONTROL_CLASS)}` : ""}`
+    : set.has(FIELD_CLASS) ? `the skin's ${ticked(set, FIELD_CLASS)}, or \`--ss-field-radius\` when the project sets it (\`${FIELD_CLASS}\`)`
+      : set.size ? `fixed ${ticked(set)} (not the recipe control radius)` : "none set";
+  const cornered = parts.filter((p) => p.facts.radius.size);
+  // A part's name in the line: its slot without the component's prefix; a part painted with the popover role is the popover.
+  const partLabel = (p) => { const slot = p.slot ?? p.name; return p.facts.tokens.has("popover") ? "popover" : slot.startsWith(`${id}-`) ? slot.slice(id.length + 1) : slot; };
+  const patterned = (p) => p.facts.radius.has(CONTROL_CLASS) || p.facts.radius.has(FIELD_CLASS);
+  const radius = new Set(cornered.map((p) => [...p.facts.radius].sort().join(" "))).size > 1
+    ? [...cornered.filter(patterned).map((p) => `${partLabel(p)}: ${describeRadius(p.facts.radius)}`), cornered.filter((p) => !patterned(p)).map((p) => `${partLabel(p)} ${ticked(p.facts.radius)}`).join(", ")].filter(Boolean).join("; ")
+    : describeRadius(all.radius);
+  const field = parts.find((p) => p.facts.radius.has(FIELD_CLASS));
+  if (!all.radius.has(CONTROL_CLASS) && parts.some((p) => INTERACTIVE_SLOTS.has(p.slot)) && all.radius.size) {
+    flags.push(field
+      ? `Radius is the skin's ${ticked(field.facts.radius, FIELD_CLASS)} (or \`--ss-field-radius\`), not the recipe control radius used by Button and Tabs; a button and a field side by side can have different corners.`
+      : `Radius is fixed (${[...all.radius].join(", ")}) instead of the recipe control radius used by Button and Tabs.`);
+  }
 
   const code_ = {
     source: sourceRel,

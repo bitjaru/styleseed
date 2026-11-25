@@ -171,6 +171,32 @@ test("the seven first-set contracts build, cover the designer's order and flag r
   }
 });
 
+test("a field's corner is the skin's rounded-md, or --ss-field-radius when the project sets it; other radius lines stay (WO-18 C1)", () => {
+  const { json } = buildAll();
+  const byId = Object.fromEntries(json.components.map((c) => [c.id, c]));
+  assert.equal(byId.input.code.radius, "the skin's `rounded-md`, or `--ss-field-radius` when the project sets it (`ss-pattern-field`)");
+  assert.equal(byId.select.code.radius, "trigger: the skin's `rounded-md`, or `--ss-field-radius` when the project sets it (`ss-pattern-field`); popover `rounded-md`, item `rounded-sm`");
+  const flag = "Radius is the skin's `rounded-md` (or `--ss-field-radius`), not the recipe control radius used by Button and Tabs; a button and a field side by side can have different corners.";
+  for (const id of ["input", "select"]) {
+    assert.ok(byId[id].code.flags.includes(flag), `${id}: the reworded radius flag`);
+    assert.doesNotMatch(byId[id].code.flags.join("\n"), /Radius is fixed/u, `${id}: the old flag is gone`);
+  }
+  const control = "recipe control radius (`ss-pattern-control` → `--ss-control-radius`, 0–999px by brand recipe)";
+  assert.deepEqual(["button", "tabs", "badge", "switch", "table"].map((id) => byId[id].code.radius), [control, control, "fixed `rounded-md` (not the recipe control radius)", "fixed `rounded-full` (not the recipe control radius)", "none set"]);
+  assert.ok(byId.switch.code.flags.includes("Radius is fixed (rounded-full) instead of the recipe control radius used by Button and Tabs."), "a control without the field class keeps the fixed-radius flag");
+  assert.deepEqual([...classFacts("w-full rounded-md ss-pattern-field border", colours).radius], ["rounded-md", "ss-pattern-field"]);
+  // The three fields ship the class beside rounded-md (the select's popover and item do not carry it).
+  for (const file of ["input", "select", "textarea"]) {
+    const text = readFileSync(resolve(repoRoot, `engine/components/ui/${file}.tsx`), "utf8");
+    assert.equal(text.match(/ rounded-md ss-pattern-field /gu)?.length, 1, `engine/components/ui/${file}.tsx: one field carries rounded-md ss-pattern-field`);
+  }
+  // Without the field class the select's parts still read one by one, all fixed.
+  const select = readFileSync(resolve(repoRoot, "engine/components/ui/select.tsx"), "utf8");
+  const plain = buildContract("select", contract("select"), colours, select.replace(" ss-pattern-field", ""));
+  assert.equal(plain.code.radius, "trigger `rounded-md`, popover `rounded-md`, item `rounded-sm`");
+  assert.ok(plain.code.flags.includes("Radius is fixed (rounded-md, rounded-sm) instead of the recipe control radius used by Button and Tabs."));
+});
+
 test("a variant added in code, a stale table row, or a missing section fails the build", () => {
   const md = contract("button");
   const missingRow = md.replace(/^\| `brandGhost` .*\n/mu, "");

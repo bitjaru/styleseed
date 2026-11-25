@@ -15,11 +15,12 @@ const RESULTS_URL = `${EVIDENCE_BASE}/blob/main/bench/v1/results.json`;
 const VALIDATION_URL = `${EVIDENCE_BASE}/blob/main/bench/v1/validation.json`;
 const LEADERBOARD_URL = `${EVIDENCE_BASE}/blob/main/bench/v1/leaderboard.md`;
 
+const title = "BENCH-V1 — StyleSeed's 120-screen design gate benchmark";
 const description =
   "BENCH-V1 measures StyleSeed across 120 rendered Codex and Claude Code benchmark cells. The enforced render-score-revise gate improved both agents by 5.3 points; raw rules alone were inconsistent.";
 
 export const metadata: Metadata = {
-  title: "BENCH-V1 — StyleSeed's 120-screen design gate benchmark",
+  title,
   description,
   robots: { index: true, follow: true },
   alternates: { canonical: `${BASE}/gate` },
@@ -31,7 +32,9 @@ export const metadata: Metadata = {
     siteName: "StyleSeed",
     publishedTime: "2026-07-25T03:07:49.160Z",
     modifiedTime: "2026-07-27T00:00:00.000Z",
+    images: [{ url: `${BASE}/og/coherence.png`, width: 1200, height: 680 }],
   },
+  twitter: { card: "summary_large_image", title },
 };
 
 type ResultRow = {

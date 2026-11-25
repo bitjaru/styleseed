@@ -70,6 +70,77 @@ function assert(condition, message) {
   if (!condition) throw new Error(message);
 }
 
+// Routes outside the sitemap that take their search facts from the root layout; swept with the sitemap pages.
+const searchExtraPaths = ["/gallery/faults", "/gallery/button", "/gallery/transitions", "/try"];
+const siteNameTwice = /StyleSeed\s*[·—–-]\s*StyleSeed\s*$/u;
+const entities = { amp: "&", quot: "\"", lt: "<", gt: ">", "#x27": "'", "#39": "'" };
+
+function decodeEntities(value) {
+  return value.replace(/&(amp|quot|lt|gt|#x27|#39);/gu, (_, name) => entities[name]);
+}
+
+function readHead(html) {
+  const head = html.match(/<head(?:\s[^>]*)?>([\s\S]*?)<\/head>/u)?.[1] ?? "";
+  const attributes = (tag) => Object.fromEntries([...tag.matchAll(/([\w:-]+)="([^"]*)"/gu)].map(([, name, value]) => [name, decodeEntities(value)]));
+  const metas = [...head.matchAll(/<meta\b[^>]*>/gu)].map(([tag]) => attributes(tag));
+  const links = [...head.matchAll(/<link\b[^>]*>/gu)].map(([tag]) => attributes(tag));
+  return {
+    titles: [...head.matchAll(/<title(?:\s[^>]*)?>([^<]*)<\/title>/gu)].map(([, text]) => decodeEntities(text)),
+    canonicals: links.filter((link) => link.rel === "canonical").map((link) => link.href),
+    meta: (key) => metas.filter((meta) => meta.property === key || meta.name === key).map((meta) => meta.content),
+  };
+}
+
+// Every sitemap page, plus the routes above, states its own address and share title to search engines and chat cards.
+// The <loc> values are production addresses: each is fetched from the local server by its path and compared as written.
+async function checkSearchFacts(baseUrl) {
+  const sitemap = await fetch(`${baseUrl}/sitemap.xml`);
+  assert(sitemap.ok, `/sitemap.xml returned HTTP ${sitemap.status}`);
+  const listed = [...(await sitemap.text()).matchAll(/<loc>([^<]+)<\/loc>/gu)].map(([, loc]) => decodeEntities(loc.trim()));
+  assert(listed.length > 0, "/sitemap.xml lists no <loc>; the search-facts sweep has nothing to read");
+  const origin = new URL(listed[0]).origin;
+  const home = readHead(await (await fetch(`${baseUrl}/`)).text());
+  const [homeOgTitle] = home.meta("og:title");
+  const [homeTwitterTitle] = home.meta("twitter:title");
+  const failures = [];
+  if (!homeOgTitle) failures.push("/: og:title is missing, so no page can be compared with the home's");
+  if (!homeTwitterTitle) failures.push("/: twitter:title is missing, so no page can be compared with the home's");
+  const strip = (address) => address.replace(/\/$/u, "");
+  const addresses = [...listed, ...searchExtraPaths.map((path) => `${origin}${path}`)];
+  for (const address of addresses) {
+    const url = new URL(address);
+    const route = url.pathname;
+    if (url.origin !== origin) {
+      failures.push(`${address}: listed under ${url.origin}, not the sitemap's origin ${origin}`);
+      continue;
+    }
+    const response = await fetch(`${baseUrl}${route}${url.search}`, { redirect: "manual" });
+    const page = readHead(await response.text());
+    const own = (key, values) => {
+      if (values.length !== 1 || strip(values[0]) !== strip(address)) failures.push(`${route}: ${key} is ${values.join(", ") || "missing"}, expected its own address ${address}`);
+    };
+    if (!response.ok) failures.push(`${route}: answers HTTP ${response.status}`);
+    own("canonical", page.canonicals);
+    own("og:url", page.meta("og:url"));
+    for (const key of ["og:image", "twitter:image"]) {
+      if (page.meta(key).length === 0) failures.push(`${route}: ${key} is missing`);
+    }
+    if (route !== "/") {
+      for (const [key, homeTitle] of [["og:title", homeOgTitle], ["twitter:title", homeTwitterTitle]]) {
+        if (homeTitle && page.meta(key).includes(homeTitle)) failures.push(`${route}: ${key} is the home's ("${homeTitle}")`);
+      }
+    }
+    if (page.titles.length !== 1) failures.push(`${route}: ${page.titles.length} <title> elements, expected one`);
+    for (const title of page.titles) {
+      if (siteNameTwice.test(title)) failures.push(`${route}: title "${title}" prints the site name twice`);
+    }
+    const descriptions = page.meta("description").length;
+    if (descriptions !== 1) failures.push(`${route}: ${descriptions} description tags, expected one`);
+  }
+  if (failures.length > 0) throw new Error(`Search facts failed (${failures.length}):\n- ${failures.join("\n- ")}`);
+  return { listed: listed.length, extra: searchExtraPaths.length };
+}
+
 function isLocalVercelAnalyticsShim(url) {
   try {
     const parsed = new URL(url);
@@ -262,6 +333,7 @@ try {
       "github stars endpoint returned an invalid fallback payload",
     );
   });
+  const swept = await checkSearchFacts(baseUrl);
 
   browser = await chromium.launch({ headless: true });
   const failures = [
@@ -276,6 +348,7 @@ try {
   if (failures.length > 0) throw new Error(`Browser smoke failures:\n- ${failures.join("\n- ")}`);
   console.log(`Browser smoke verified ${routes.length} routes at desktop and 390x844 mobile/reduced-motion viewports.`);
   console.log("Public version, StyleSeed registry, and single-skill discovery endpoints are readable.");
+  console.log(`Search facts verified on ${swept.listed} sitemap pages and ${swept.extra} more routes: own canonical and og:url, share images, share titles not the home's, one title and one description, the site name once.`);
 } catch (error) {
   console.error(error instanceof Error ? error.stack ?? error.message : String(error));
   if (serverOutput.length > 0) console.error(`Next.js output:\n${serverOutput.join("")}`);

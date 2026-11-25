@@ -9,7 +9,7 @@ const description =
   "Design guides by app type — fintech, SaaS, e-commerce, social, content, productivity, health, dev tools. How to bias color, density, typography, and motion for each, and which design rules apply.";
 
 export const metadata: Metadata = {
-  title: "App design guides by type — fintech, SaaS, e-commerce & more · StyleSeed",
+  title: "App design guides by type — fintech, SaaS, e-commerce & more",
   description,
   keywords: [
     "app design guide",

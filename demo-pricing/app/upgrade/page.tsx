@@ -6,9 +6,10 @@ import notice from "@/content/upgrade-notice.json";
 const title = "Too many StyleSeed skills? Update your existing install.";
 const description = "Keep the workflows and use one StyleSeed entry. Ask your agent to update, back up verified old skills, consolidate the list, and check the result in one request.";
 export const metadata: Metadata = {
-  title: `${title} · StyleSeed`, description,
+  title, description,
   alternates: { canonical: notice.guideUrl },
-  openGraph: { title, description, url: notice.guideUrl, type: "article" },
+  openGraph: { title, description, url: notice.guideUrl, type: "article", images: [{ url: "/og/coherence.png", width: 1200, height: 680 }] },
+  twitter: { card: "summary_large_image", images: ["/og/coherence.png"] },
 };
 
 export default function UpgradePage() {

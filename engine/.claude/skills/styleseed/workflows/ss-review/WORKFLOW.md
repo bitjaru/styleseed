@@ -100,7 +100,8 @@ Review the file: **$ARGUMENTS**
 > Check the deliberate system of roles, not identical values on every component.
 > Cite an applicable task/contract failure; aesthetic preference alone is a suggestion.
 - [ ] **Recipe-bound radius scale** — surfaces, controls, compact choices, and nested elements
-      follow their approved roles. For example, `calm-consumer` permits 12–20px outer surfaces
+      follow their approved roles. A corner the project recorded is an approved role, also where it
+      differs from the recipe. For example, `calm-consumer` permits 12–20px outer surfaces
       and pill controls for true compact choices. Flag unexplained drift, not that valid pairing.
 - [ ] **Identifiable next action within each decision region**; stable semantic,
       categorical, editorial, brand, and content roles keep meanings distinct.

@@ -58,7 +58,7 @@ test("resolver --check passes when expected outputs, manifest declarations, and 
     const manifest = JSON.parse(readFileSync(resolve(projectRoot, ".styleseed/manifest.json"), "utf8"));
     assert.deepEqual(
       manifest.outputs.map((entry) => entry.kind),
-      ["bundle", "palette-json", "palette-css"],
+      ["bundle", "palette-json", "palette-css", "system-css"],
     );
     expectStatus(runResolver(projectRoot, ["--check"]), 0, "resolver check");
   } finally {

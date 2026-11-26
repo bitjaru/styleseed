@@ -29,7 +29,11 @@ Description: $ARGUMENTS
      artifact with `--artifact <id>`. Read `.styleseed/bundles/<id>.md` and
      `.styleseed/manifests/<id>.json`; never restart setup or use a legacy fallback on errors.
    - Only when neither registry file exists, resolve `STYLESEED.md` and read
-     `.styleseed/effective-rules.md` and `.styleseed/manifest.json`.
+     `.styleseed/effective-rules.md` and `.styleseed/manifest.json`. The resolver also writes
+     `.styleseed/system.css`, which draws the button and field corners the ledger records: import it once in the
+     project's global stylesheet, with the other `@import` lines, as plain CSS, not inside `@layer` and not through
+     `@import … layer(…)`; when the project has no global stylesheet yet, add the import when the stylesheet is
+     created.
    - For missing/stale outputs in this authorized build, resolve from the corresponding
      project-owned configuration and re-check without changing approved decisions.
    - `components/patterns/page-shell.tsx` for page layout

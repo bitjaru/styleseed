@@ -181,7 +181,7 @@ test("a field's corner is the skin's rounded-md, or --ss-field-radius when the p
     assert.ok(byId[id].code.flags.includes(flag), `${id}: the reworded radius flag`);
     assert.doesNotMatch(byId[id].code.flags.join("\n"), /Radius is fixed/u, `${id}: the old flag is gone`);
   }
-  const control = "recipe control radius (`ss-pattern-control` → `--ss-control-radius`, 0–999px by brand recipe)";
+  const control = "recipe control radius (`ss-pattern-control` → `--ss-control-radius`, 0–999px by brand recipe or the project's recorded corner)";
   assert.deepEqual(["button", "tabs", "badge", "switch", "table"].map((id) => byId[id].code.radius), [control, control, "fixed `rounded-md` (not the recipe control radius)", "fixed `rounded-full` (not the recipe control radius)", "none set"]);
   assert.ok(byId.switch.code.flags.includes("Radius is fixed (rounded-full) instead of the recipe control radius used by Button and Tabs."), "a control without the field class keeps the fixed-radius flag");
   assert.deepEqual([...classFacts("w-full rounded-md ss-pattern-field border", colours).radius], ["rounded-md", "ss-pattern-field"]);

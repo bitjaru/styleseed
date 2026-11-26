@@ -3,6 +3,8 @@
 // intersects the selection. Order is deterministic (priority, then id) so bundles stay stable.
 // Project decisions from the ledger render above the invariants; with no applicable decision the
 // section is byte-identical to a project without a ledger.
+import { systemCssParagraph } from "./system-css.mjs";
+
 const PRIORITY_RANK = { blocks: 0, strong: 1, advisory: 2 };
 
 export function ruleApplies(rule, selection = {}) {
@@ -59,8 +61,9 @@ function renderDecision(entry) {
 }
 
 // `ledgerPath` is where the entries are recorded: `.styleseed/project.json` for a registry, the array in
-// `.styleseed/decisions.json` for a project without one.
-export function renderRulesSection(rules, selection = {}, { decisions = [], artifactId = null, ledgerPath = ".styleseed/project.json" } = {}) {
+// `.styleseed/decisions.json` for a project without one. `systemCss` is passed by the compile of a project without a
+// registry only, the one that writes `.styleseed/system.css`: a paragraph after the entries says what the file draws.
+export function renderRulesSection(rules, selection = {}, { decisions = [], artifactId = null, ledgerPath = ".styleseed/project.json", systemCss = false } = {}) {
   const { invariants, defaults } = selectRules(rules, selection);
   const applicable = decisionsFor(decisions, artifactId);
   if (!invariants.length && !defaults.length && !applicable.length) return "";
@@ -79,6 +82,7 @@ export function renderRulesSection(rules, selection = {}, { decisions = [], arti
       "",
       ...applicable.map(renderDecision),
       "",
+      ...(systemCss ? [systemCssParagraph(applicable), ""] : []),
     ] : []),
     "## Invariants",
     "",

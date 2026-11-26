@@ -44,7 +44,7 @@ catalog: `engine/rules/catalog.json` never holds a project's decisions.
 | `kind` | Required. `decision` or `exception`. |
 | `rule` | Optional. A rule id from the catalog. On an exception it must be a `default` rule. |
 | `to` | Exception only, optional. The id of a `decision` in this ledger on the same `axis`. An exception names `rule`, `to`, or both: it has to say what it is an exception to. |
-| `axis` | Optional. One of the measured drift axes (`accent`, `ink`, `canvas`, `spacingBase`, `spacingScale`, `typeSizes`, `radii`, `fonts`, `controlHeights`), one of the six structure axes the drift report measures with `--structure` (`tableRowHeights`, `listItemHeights`, `headingSizes`, `sectionGaps`, `primariesPerSection`, `transitionDurations`), or one of two corner axes the drift report does not measure. `controlRadius` is the corner of buttons and of the other controls that share it; this version records it and does not check it, refuses `scope` and exceptions on it, and treats it as the project's decision, while the key of the same name in `engine-defaults.json` is a brand recipe's value. `fieldRadius` is the corner of inputs, selects, and textareas; this version records it and does not check it, and refuses `scope` and exceptions on it. Without an axis the entry is prose: it reaches the bundle but the drift report cannot measure it. |
+| `axis` | Optional. One of the measured drift axes (`accent`, `ink`, `canvas`, `spacingBase`, `spacingScale`, `typeSizes`, `radii`, `fonts`, `controlHeights`), one of the six structure axes the drift report measures with `--structure` (`tableRowHeights`, `listItemHeights`, `headingSizes`, `sectionGaps`, `primariesPerSection`, `transitionDurations`), or one of two corner axes the drift report does not measure. `controlRadius` is the corner of buttons and of the other controls that share it; this version records it, draws it in a project without a registry (`.styleseed/system.css`), does not check it, refuses `scope` and exceptions on it, and treats it as the project's decision, while the key of the same name in `engine-defaults.json` is a brand recipe's value. `fieldRadius` is the corner of inputs, selects, and textareas; this version records it, draws it in a project without a registry, does not check it, and refuses `scope` and exceptions on it. Without an axis the entry is prose: it reaches the bundle but the drift report cannot measure it. |
 | `values` | Required with `axis`, forbidden without it. 1–24 values. Colour axes take exactly one `#RRGGBB` (stored upper case); `spacingBase` exactly one positive integer; `primariesPerSection` exactly one integer ≥ 0, meaning "at most this many primary actions per section"; `controlRadius` and `fieldRadius` exactly one whole number from 0 to 200, or 999 for a pill; `fonts` family names of 1–80 characters; the other axes numbers ≥ 0 (sorted, de-duplicated): px for the heights, sizes, and gaps, ms for `transitionDurations`. |
 | `scope` | Optional. `screens` (drift-report labels such as `settings` or `billing-history`) and/or `artifacts` (artifact ids). No scope means the whole project. |
 | `statement` | Required. One line, at most 300 characters. This is what an agent reads. |
@@ -173,10 +173,18 @@ they are not a review of this project. See [system proposals](proposals.md).
 ## A project without a registry
 
 A project that has `STYLESEED.md` and no registry keeps the same ledger as a JSON array in
-`.styleseed/decisions.json`. The resolver compiles it into `.styleseed/effective-rules.md` exactly as above, and the
+`.styleseed/decisions.json`. The resolver compiles it into `.styleseed/effective-rules.md` as above, and the
 drift report reads it with `--project-root`. `scope.artifacts` is refused there (one artifact); `scope.screens`
 works. When the project later gets a registry, move the array into `decisions` in `.styleseed/project.json` and
 delete the file; the resolver stops until that is done.
+
+Such a project also gets `.styleseed/system.css` on every resolve, also when there is nothing to draw (one comment
+line). It draws the recorded control corner (`--ss-control-radius`) and field corner (`--ss-field-radius`), each
+with its entry id, in one rule whose doubled selectors outrank the brand recipe wherever its attribute sits and on
+either side of `recipes.css`. The project imports it once in its global stylesheet, outside every `@layer`; inside a
+layer the field corner still changes and the control corner does not. The bundle's "Project decisions" section ends
+with one paragraph that says what the file draws. When the project later gets a registry, the resolver no longer
+rewrites the file and no registry manifest lists it: remove the import and the file by hand.
 
 ## Worked examples
 

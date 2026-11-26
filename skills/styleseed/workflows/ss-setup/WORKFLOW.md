@@ -156,8 +156,9 @@ node <installed-ss-resolve>/scripts/resolve-context.mjs \
   --project-root . --from-lock STYLESEED.md --agent claude
 ```
 
-Use `--agent codex` in Codex. The resolver writes `.styleseed/effective-rules.md` and a
-hash-verifiable `.styleseed/manifest.json`. Read the effective bundle, not `llms-full.txt`.
+Use `--agent codex` in Codex. The resolver writes `.styleseed/effective-rules.md`, `.styleseed/system.css`
+(which draws nothing until the ledger records a corner), and a hash-verifiable `.styleseed/manifest.json`. Read the
+effective bundle, not `llms-full.txt`.
 
 ### 9a. Propose the system values and record what the person decides
 
@@ -186,6 +187,14 @@ skipped axis. If nobody can answer, record nothing and report the proposals as o
 Resolve again. The bundle lists the entries under "Project decisions", where they outrank the defaults. A proposal
 is a count and a choice; it does not review the product. Details and limits:
 [system proposals](../ss-resolve/references/proposals.md).
+
+The resolver also writes `.styleseed/system.css`, which draws the button and field corners the ledger records and
+holds one comment line while the ledger records none. Import it once in the project's global stylesheet, with the other
+`@import` lines, as plain CSS: not inside `@layer` and not through `@import … layer(…)`. When the project has no
+global stylesheet yet, add the import when the stylesheet is created. The path is relative to that stylesheet, for
+example `@import "../.styleseed/system.css";` from a Next.js `app/globals.css`, or
+`@import "../../.styleseed/system.css";` from `src/styles/`. A layered import shows as fields that take the
+recorded corner while buttons keep the recipe's.
 
 ### 9b. First screen
 

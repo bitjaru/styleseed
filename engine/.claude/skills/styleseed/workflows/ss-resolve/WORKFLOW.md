@@ -122,5 +122,10 @@ writes `.styleseed/palette.json` plus `.styleseed/palette.css`. The manifest rec
 inputs. The maintained recipe still supplies product posture and semantic restrictions; its fixed
 hex values become fallbacks rather than overriding the generated system.
 
+A project without a registry also gets `.styleseed/system.css` on every resolve, listed in the manifest and
+checked by `--check` like the other outputs. It draws the control and field corners the ledger records
+(`controlRadius`, `fieldRadius`) and holds one comment line when there is none. It is never removed, because the
+project imports it once in its global stylesheet, outside every `@layer`. A registry compile does not write it.
+
 Do not load `llms-full.txt` after a bundle resolves successfully. Load a larger source document
 only when the bundle names an unresolved ambiguity that requires it.

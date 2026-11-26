@@ -73,6 +73,13 @@ function assert(condition, message) {
 // Routes outside the sitemap that take their search facts from the root layout; swept with the sitemap pages.
 const searchExtraPaths = ["/gallery/faults", "/gallery/button", "/gallery/transitions", "/try"];
 const siteNameTwice = /StyleSeed\s*[·—–-]\s*StyleSeed\s*$/u;
+// /faq: the five problem questions, the new-product question, and the page's own 21 entries.
+const faqStructuredQuestions = 27;
+const newProductQuestion = {
+  id: "which-design-system",
+  question: "Which design system should my app start from?",
+  answer: "There is no single best one. It depends on what the product is and who uses it. Start from a few decisions that fit together: a look, a key colour, and how tall and how round the controls are. Before you pick, look at how public design systems draw the same parts. When a tool recommends something, ask where the recommendation comes from. A value measured on public design systems is evidence. A default is a starting point.",
+};
 const entities = { amp: "&", quot: "\"", lt: "<", gt: ">", "#x27": "'", "#39": "'" };
 
 function decodeEntities(value) {
@@ -107,6 +114,7 @@ async function checkSearchFacts(baseUrl) {
   if (!homeTwitterTitle) failures.push("/: twitter:title is missing, so no page can be compared with the home's");
   const strip = (address) => address.replace(/\/$/u, "");
   const addresses = [...listed, ...searchExtraPaths.map((path) => `${origin}${path}`)];
+  const guides = { index: 0, domains: 0 };
   for (const address of addresses) {
     const url = new URL(address);
     const route = url.pathname;
@@ -115,7 +123,14 @@ async function checkSearchFacts(baseUrl) {
       continue;
     }
     const response = await fetch(`${baseUrl}${route}${url.search}`, { redirect: "manual" });
-    const page = readHead(await response.text());
+    const html = await response.text();
+    const page = readHead(html);
+    // The guides are StyleSeed's own guidance, not measured; each says so and links the measured systems.
+    const guide = route.match(/^\/guides(\/[^/]+)?$/u);
+    if (guide) {
+      guides[guide[1] ? "domains" : "index"] += 1;
+      if (!/<a\b[^>]*\bhref="\/systems"/u.test(html)) failures.push(`${route}: no link to /systems; a guide says it is not measured and links "Design systems we measured"`);
+    }
     const own = (key, values) => {
       if (values.length !== 1 || strip(values[0]) !== strip(address)) failures.push(`${route}: ${key} is ${values.join(", ") || "missing"}, expected its own address ${address}`);
     };
@@ -137,8 +152,9 @@ async function checkSearchFacts(baseUrl) {
     const descriptions = page.meta("description").length;
     if (descriptions !== 1) failures.push(`${route}: ${descriptions} description tags, expected one`);
   }
+  if (guides.index !== 1 || guides.domains === 0) failures.push(`/sitemap.xml lists ${guides.index} /guides index and ${guides.domains} /guides/<domain> pages; the /systems link check needs the index and the domain guides`);
   if (failures.length > 0) throw new Error(`Search facts failed (${failures.length}):\n- ${failures.join("\n- ")}`);
-  return { listed: listed.length, extra: searchExtraPaths.length };
+  return { listed: listed.length, extra: searchExtraPaths.length, guides: guides.index + guides.domains };
 }
 
 function isLocalVercelAnalyticsShim(url) {
@@ -268,12 +284,19 @@ async function checkRoutes(browser, baseUrl, label, options) {
         }
         if (route === "/faq") {
           assert(await page.title() === "AI app looks amateur? Fix common UI problems · StyleSeed", "FAQ title does not match the page's search intent");
-          const structuredAnswersMatch = await page.evaluate(() => {
+          const structured = await page.evaluate(() => {
             const schema = Array.from(document.querySelectorAll('script[type="application/ld+json"]')).map((node) => JSON.parse(node.textContent)).find((value) => value["@type"] === "FAQPage");
             const visible = document.body.innerText;
-            return Array.isArray(schema?.mainEntity) && schema.mainEntity.every((entry) => visible.includes(entry.name) && visible.includes(entry.acceptedAnswer.text));
+            const entries = Array.isArray(schema?.mainEntity) ? schema.mainEntity : [];
+            return { count: entries.length, match: entries.length > 0 && entries.every((entry) => visible.includes(entry.name) && visible.includes(entry.acceptedAnswer.text)) };
           });
-          assert(structuredAnswersMatch, "FAQ structured answers differ from visible content");
+          assert(structured.match, "FAQ structured answers differ from visible content");
+          assert(structured.count === faqStructuredQuestions, `FAQ structured data holds ${structured.count} questions, expected ${faqStructuredQuestions} (the entries of content/design-questions.json and the FAQ list in app/faq/page.tsx)`);
+          // The question from a person who has no design system yet: last, visible, and answered as written.
+          const asked = page.locator(`article#${newProductQuestion.id}`);
+          assert(await page.locator("article[id]").last().getAttribute("id") === newProductQuestion.id, `FAQ: ${newProductQuestion.id} is not the last question`);
+          assert(await asked.getByRole("heading", { level: 2, name: newProductQuestion.question, exact: true }).isVisible(), `FAQ: the question "${newProductQuestion.question}" is not visible`);
+          assert(await asked.getByText(newProductQuestion.answer, { exact: true }).isVisible(), `FAQ: the answer to "${newProductQuestion.question}" is not visible as written`);
         }
         const dimensions = await page.evaluate(() => ({
           clientWidth: document.documentElement.clientWidth,
@@ -349,6 +372,7 @@ try {
   console.log(`Browser smoke verified ${routes.length} routes at desktop and 390x844 mobile/reduced-motion viewports.`);
   console.log("Public version, StyleSeed registry, and single-skill discovery endpoints are readable.");
   console.log(`Search facts verified on ${swept.listed} sitemap pages and ${swept.extra} more routes: own canonical and og:url, share images, share titles not the home's, one title and one description, the site name once.`);
+  console.log(`The ${swept.guides} guide pages link to /systems; /faq holds ${faqStructuredQuestions} structured questions, the new-product question last.`);
 } catch (error) {
   console.error(error instanceof Error ? error.stack ?? error.message : String(error));
   if (serverOutput.length > 0) console.error(`Next.js output:\n${serverOutput.join("")}`);

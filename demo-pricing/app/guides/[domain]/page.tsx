@@ -135,7 +135,10 @@ export default async function DomainGuidePage({
             <Link href="/motion" className="font-semibold underline underline-offset-2" style={{ color: d.accent }}>
               {d.seed}
             </Link>{" "}
-            motion seed.
+            motion seed. This guidance is StyleSeed&apos;s own and is not measured.{" "}
+            <Link href="/systems" className="font-semibold underline underline-offset-2" style={{ color: d.accent }}>
+              Design systems we measured
+            </Link>.
           </p>
           {d.showcase.length > 0 && (
             <div className="mt-4 flex flex-wrap gap-2">

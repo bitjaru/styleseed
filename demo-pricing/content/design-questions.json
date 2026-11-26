@@ -88,5 +88,23 @@
       "href": "/fix-ui-spacing",
       "label": "Try the measured 64px → 12px CSS inheritance example"
     }
+  },
+  {
+    "id": "which-design-system",
+    "question": "Which design system should my app start from?",
+    "questionKo": "내 앱은 어떤 디자인 시스템으로 시작해야 하죠?",
+    "answer": "There is no single best one. It depends on what the product is and who uses it. Start from a few decisions that fit together: a look, a key colour, and how tall and how round the controls are. Before you pick, look at how public design systems draw the same parts. When a tool recommends something, ask where the recommendation comes from. A value measured on public design systems is evidence. A default is a starting point.",
+    "answerKo": "정답 하나는 없습니다. 무엇을 만드는지, 누가 쓰는지에 따라 달라집니다. 서로 어울리는 결정 몇 개에서 시작하세요. 룩과 키 컬러, 버튼의 크기와 둥글기입니다. 고르기 전에 공개 디자인 시스템들이 같은 부분을 어떻게 그렸는지 보세요. 도구가 무언가를 추천하면 근거를 물어보세요. 공개 디자인 시스템에서 잰 값은 근거입니다. 기본값은 출발점일 뿐입니다.",
+    "steps": [
+      "Say what the product is and who uses it: a consumer service, an admin console, a developer tool.",
+      "Look at how public design systems draw buttons, fields, and tables, and notice which is closest to what you want.",
+      "Ask your agent to propose a starting system, look at one rendered screen, and say in your own words what to change."
+    ],
+    "prompt": "Set up a design system for this product. Tell me which look you recommend and where that recommendation comes from, show me one screen drawn with it, and wait for my decision before you build more.",
+    "fit": "StyleSeed’s setup recommends one of its built-in looks for the kind of product and says that this is its own default, not a measured value. For control height and text size it shows counts from public design systems where it has them; its other sizes are its own defaults and are labelled so. Choosing one of the measured systems and applying its values is not built yet.",
+    "evidence": {
+      "href": "/systems",
+      "label": "Compare the measured design systems"
+    }
   }
 ]

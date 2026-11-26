@@ -29,7 +29,10 @@ For changes spanning multiple artifacts, resolve and check each affected artifac
 Only when neither registry file exists, use the legacy path: if `STYLESEED.md` is missing,
 run `/ss-setup` before UI code; otherwise preserve it. Invoke `/ss-resolve` (Claude Code) or
 `$ss-resolve` (Codex) with `--from-lock STYLESEED.md --agent <agent>`, read
-`.styleseed/effective-rules.md`, and preserve `.styleseed/manifest.json`.
+`.styleseed/effective-rules.md`, and preserve `.styleseed/manifest.json`. The resolver also writes
+`.styleseed/system.css`, which draws the button and field corners the ledger records: import it once in the
+project's global stylesheet, with the other `@import` lines, as plain CSS, not inside `@layer` and not through
+`@import … layer(…)`; when the project has no global stylesheet yet, add the import when the stylesheet is created.
 
 When the artifact selects a `reference:` grammar and `.styleseed/briefs/<artifact-id>.md` exists,
 read the brief after the bundle. If its verdict section is empty, ask the user that one question

@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import { canonicalJson, normalizeArtifact, normalizeDecisions, normalizeProject, parseStrictJson, safeProjectPath } from "./runtime-contract.mjs";
 import { compileContext, compareEntries, defaultCatalog, materializeManifestOutputs } from "./compiler.mjs";
 import { loadProjectRegistry } from "./project-registry.mjs";
+import { SYSTEM_CSS_PATH, recordedCorners } from "./system-css.mjs";
 
 const skillDir = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const catalog = defaultCatalog;
@@ -222,6 +223,8 @@ function writeOutputs(projectRoot, compiled) {
   ];
   if (compiled.paletteJson) writes.push({ path: compiled.manifest.outputs.find((entry) => entry.kind === "palette-json").path, content: compiled.paletteJson });
   if (compiled.paletteCss) writes.push({ path: compiled.manifest.outputs.find((entry) => entry.kind === "palette-css").path, content: compiled.paletteCss });
+  // A project without a registry: always written, never removed (the project imports it).
+  if (compiled.systemCss) writes.push({ path: compiled.manifest.outputs.find((entry) => entry.kind === "system-css").path, content: compiled.systemCss });
   for (const write of writes) {
     const target = resolve(projectRoot, write.path);
     mkdirSync(dirname(target), { recursive: true });
@@ -368,6 +371,8 @@ if (!registry) {
   console.log(`wrote ${resolve(projectRoot, compiled.manifest.bundle.path)} (${Buffer.byteLength(compiled.bundle)} bytes, ${compiled.manifest.bundle.sha256})`);
   console.log(`wrote ${resolve(projectRoot, compiled.manifestPath)}`);
   if (compiled.paletteJson) console.log(`wrote ${resolve(projectRoot, ".styleseed/palette.json")} and ${resolve(projectRoot, ".styleseed/palette.css")}`);
+  const corners = recordedCorners(normalized.project.decisions ?? []);
+  console.log(`wrote ${resolve(projectRoot, SYSTEM_CSS_PATH)} (${corners.length ? `draws the ${corners.map((corner) => `${corner.title} ${corner.entry.id}`).join(" and the ")}` : "draws nothing yet"}); import it once in the global stylesheet, outside every @layer`);
   process.exit(0);
 }
 

@@ -185,7 +185,8 @@ of motion quality; temporal claims require observed interaction.
 
 **Coherence (12)** — repeatable role relationships (VISUAL-CRAFT §C0). Deduct for
 each axis that drifts from the selected system: radius roles that contradict the recipe (−5;
-do not penalize recipe-approved surface/control differences); two+ competing accent hues used
+do not penalize recipe-approved surface/control differences, or a control or field corner the project
+recorded); two+ competing accent hues used
 for emphasis (−4); mixed shadow languages / light directions (−3); mixed icon
 families or unexplained optical/state drift (−3; coordinated outline/filled state variants are valid); nested contours that violate the recipe's geometry
 (−2; concentric rounded rectangles normally use `max(0, outer − padding)`); unexplained control-height drift

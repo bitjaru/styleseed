@@ -7,6 +7,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { sha256, safeProjectPath } from "./runtime-contract.mjs";
 import { renderRulesSection } from "./rules-in-scope.mjs";
 import { CONTRACT_FILES, checkGeneratedContract } from "./reference-contract.mjs";
+import { SYSTEM_CSS_PATH, renderSystemCss } from "./system-css.mjs";
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const skillDir = resolve(scriptDir, "..");
@@ -337,13 +338,14 @@ export function compileContext({
   // array in .styleseed/decisions.json for a project without one (resolve-context.mjs reads it; without
   // the file the ledger is empty and the bundle is unchanged). The rules section is a hashed source, so a
   // ledger change that reaches this artifact's bundle changes the method hash (registry) or the bundle
-  // and its source entry (legacy), and --check reports it.
+  // and its source entry (legacy), and --check reports it. Only a project without a registry gets
+  // .styleseed/system.css, so only its bundle says what the file draws (`systemCss`).
   const rulesContent = renderRulesSection(catalog.rules ?? [], {
     grammar: reference ? selection.fallback : selection.grammar,
     adapter: selection.adapter,
     domain: selection.domain,
     page: selection.page,
-  }, { decisions: normalizedProject.decisions ?? [], artifactId: registryMode ? normalizedArtifact.id : null, ledgerPath: registryMode ? ".styleseed/project.json" : ".styleseed/decisions.json" });
+  }, { decisions: normalizedProject.decisions ?? [], artifactId: registryMode ? normalizedArtifact.id : null, ledgerPath: registryMode ? ".styleseed/project.json" : ".styleseed/decisions.json", systemCss: !registryMode });
   const sections = [
     { id: "agent-execution", path: "catalog:agents", content: catalog.agents[agent] },
     { id: "core", path: "catalog:core", content: catalog.core },
@@ -378,11 +380,16 @@ export function compileContext({
   const paletteOutput = paletteGeneration ?? tokenCanon?.result ?? null;
   const paletteJson = paletteOutput ? `${stableStringify(paletteOutput)}\n` : null;
   const paletteCss = paletteOutput ? `${paletteOutput.css}\n` : null;
+  // A project without a registry always gets .styleseed/system.css, also with nothing to draw, so the outputs
+  // stay a function of the inputs and a project that imports the file keeps building. A registry compile never
+  // emits it.
+  const systemCss = registryMode ? null : renderSystemCss(normalizedProject.decisions ?? []);
   const bundleEntry = outputEntry("bundle", bundlePath, bundle);
   const outputs = [
     bundleEntry,
     ...(paletteJson ? [outputEntry("palette-json", paletteJsonPath, paletteJson)] : []),
     ...(paletteCss ? [outputEntry("palette-css", paletteCssPath, paletteCss)] : []),
+    ...(systemCss ? [outputEntry("system-css", SYSTEM_CSS_PATH, systemCss)] : []),
   ];
 
   const sources = [
@@ -411,7 +418,7 @@ export function compileContext({
         : null,
       sources: sources.map(({ id, sha256: fileSha, bytes }) => ({ id, sha256: fileSha.replace(/^sha256:/u, ""), bytes })),
     };
-    return { bundle, manifest, paletteJson, paletteCss, manifestPath, outputs, sources };
+    return { bundle, manifest, paletteJson, paletteCss, systemCss, manifestPath, outputs, sources };
   }
 
   if (!inputFiles?.project?.path || typeof inputFiles.project.content !== "string" || !inputFiles?.artifact?.path || typeof inputFiles.artifact.content !== "string") {

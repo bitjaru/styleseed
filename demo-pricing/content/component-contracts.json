@@ -256,7 +256,7 @@
           "text-primary"
         ],
         "darkTokens": [],
-        "radius": "recipe control radius (`ss-pattern-control` → `--ss-control-radius`, 0–999px by brand recipe)",
+        "radius": "recipe control radius (`ss-pattern-control` → `--ss-control-radius`, 0–999px by brand recipe or the project's recorded corner)",
         "height": "the heights follow `--ss-control-height` (40px at `:root`; set per brand recipe)",
         "focus": [
           "focus-visible:ring-2",
@@ -518,7 +518,7 @@
         "darkTokens": [
           "input"
         ],
-        "radius": "recipe control radius (`ss-pattern-control` → `--ss-control-radius`, 0–999px by brand recipe)",
+        "radius": "recipe control radius (`ss-pattern-control` → `--ss-control-radius`, 0–999px by brand recipe or the project's recorded corner)",
         "height": "the heights follow `--ss-control-height` (40px at `:root`; set per brand recipe)",
         "focus": [
           "focus-visible:border-ring",

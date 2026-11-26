@@ -95,7 +95,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 | `icon` | 40px | — | — | 18px |
 
 - **Tokens consumed:** `accent` · `background` · `border` · `brand` · `destructive` · `foreground` · `secondary` · `surface-muted` · `text-disabled` · `text-primary`
-- **Radius:** recipe control radius (`ss-pattern-control` → `--ss-control-radius`, 0–999px by brand recipe)
+- **Radius:** recipe control radius (`ss-pattern-control` → `--ss-control-radius`, 0–999px by brand recipe or the project's recorded corner)
 - **Height:** the heights follow `--ss-control-height` (40px at `:root`; set per brand recipe)
 - **Focus:** `focus-visible:ring-2` · `focus-visible:ring-brand/20` · `focus-visible:ring-destructive/20`
 - **Motion:** `duration-150` · `transition-colors`

@@ -305,7 +305,7 @@ export function buildContract(id, md, colours = themeColors(), code = null) {
   // the parts with a pattern class first ("trigger: …"), then the fixed ones ("popover `rounded-md`, item `rounded-sm`").
   const ticked = (set, skip) => [...set].filter((r) => r !== skip).map((r) => `\`${r}\``).join(", ");
   const describeRadius = (set) => set.has(CONTROL_CLASS)
-    ? `recipe control radius (\`${CONTROL_CLASS}\` → \`--ss-control-radius\`, 0–999px by brand recipe)${ticked(set, CONTROL_CLASS) ? `; also ${ticked(set, CONTROL_CLASS)}` : ""}`
+    ? `recipe control radius (\`${CONTROL_CLASS}\` → \`--ss-control-radius\`, 0–999px by brand recipe or the project's recorded corner)${ticked(set, CONTROL_CLASS) ? `; also ${ticked(set, CONTROL_CLASS)}` : ""}`
     : set.has(FIELD_CLASS) ? `the skin's ${ticked(set, FIELD_CLASS)}, or \`--ss-field-radius\` when the project sets it (\`${FIELD_CLASS}\`)`
       : set.size ? `fixed ${ticked(set)} (not the recipe control radius)` : "none set";
   const cornered = parts.filter((p) => p.facts.radius.size);

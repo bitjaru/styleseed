@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "artifactId": "site-gate",
   "engineVersion": "5.0.0",
-  "engineRevision": "sha256:dc710e8df19a288200c158a489d793bf4cb765ed37ea8568e8cdeb757a66e8b4",
+  "engineRevision": "sha256:257d4c44c8430e5590effbf35162a59d6c5829ef45464dba641614c26e1af906",
   "distributionIntegrity": "verified",
   "selection": {
     "agent": "codex",
@@ -116,14 +116,14 @@
   "bundle": {
     "kind": "bundle",
     "path": ".styleseed/bundles/site-gate.md",
-    "sha256": "sha256:7efd5ea2bf52d13f7d9ca177f47908bcd66eac954a483ccdf918ac3cad133a03",
+    "sha256": "sha256:b76db0948562ea536820fabac263da54af55b901b3ce0ea2cba36696fe1ffa05",
     "bytes": 28401
   },
   "outputs": [
     {
       "kind": "bundle",
       "path": ".styleseed/bundles/site-gate.md",
-      "sha256": "sha256:7efd5ea2bf52d13f7d9ca177f47908bcd66eac954a483ccdf918ac3cad133a03",
+      "sha256": "sha256:b76db0948562ea536820fabac263da54af55b901b3ce0ea2cba36696fe1ffa05",
       "bytes": 28401
     },
     {

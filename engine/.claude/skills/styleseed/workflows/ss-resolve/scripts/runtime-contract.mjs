@@ -316,6 +316,29 @@ export function normalizeDecisions(input, catalog, label = "project.decisions") 
   return sorted;
 }
 
+// The default control height a `controlHeights` entry names (WO-20 C2). `propose-system.mjs --default-height`
+// starts the entry's `source` with the token `default-height:<D>; ` and then says where the height comes from.
+// A reader takes the height from the token and never works it out from the family: the offsets around it belong
+// to one version of the skill. The rest of the source says what the person took: `engine-default:recipe.<id>`
+// is the look's own default height, anything else a height taken from somewhere else. Both functions are pure;
+// nothing in the resolver calls them yet.
+const DEFAULT_HEIGHT_SOURCE = /^default-height:([1-9][0-9]*); (.+)$/u;
+export function defaultHeightSource(height, rest) {
+  if (!Number.isSafeInteger(height) || height < 1) fail(`default height ${height}: give a whole number of px, at least 1`);
+  const source = typeof rest === "string" && !CONTROL.test(rest) ? `default-height:${height}; ${rest}` : "";
+  if (!DEFAULT_HEIGHT_SOURCE.test(source)) fail(`default height ${height}: say where the height comes from in one line of text after the token`);
+  return source;
+}
+// An entry (its `source` and `values`) → null, or { height, lookDefault }. Null when the source does not start
+// with the token or the height is not one of `values`.
+export function parseDefaultHeight(entry) {
+  const match = typeof entry?.source === "string" ? DEFAULT_HEIGHT_SOURCE.exec(entry.source) : null;
+  if (!match) return null;
+  const height = Number(match[1]);
+  if (!Number.isSafeInteger(height) || !Array.isArray(entry.values) || !entry.values.includes(height)) return null;
+  return { height, lookDefault: match[2].startsWith("engine-default:recipe.") };
+}
+
 export function normalizeProject(input, catalog) {
   exactObject(input, ["schemaVersion", "projectId", "defaults", "brand", "spacing", "tokens", "decisions"], "project");
   if (required(input.schemaVersion, "project.schemaVersion") !== 1) fail("project.schemaVersion must be 1");

@@ -6,11 +6,11 @@ import { join, relative, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import {
-  PAGE_ROWS, PROPOSAL_AXES, PROPOSAL_RULE, TOUCH_FLOOR, engineDefault, engineDefaultsTable, entryForValues, normalizeEngineDefaults, normalizeEvidencePack, normalizeInventory,
+  PAGE_ROWS, PROPOSAL_AXES, PROPOSAL_RULE, TOUCH_FLOOR, defaultHeightEntry, engineDefault, engineDefaultsTable, entryForValues, normalizeEngineDefaults, normalizeEvidencePack, normalizeInventory,
   ownScreens, proposeSystem, referenceValues, renderEngineDefaultsMarkdown, renderProposalMarkdown, rowStatus, selectRow,
 } from "../../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/system-proposal.mjs";
 import { contractHash, normalizeReferenceEvidence } from "../../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/reference-contract.mjs";
-import { normalizeDecisions } from "../../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/runtime-contract.mjs";
+import { defaultHeightSource, normalizeDecisions, parseDefaultHeight } from "../../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/runtime-contract.mjs";
 import { summarize } from "../../engine/.claude/skills/styleseed/workflows/ss-reference/scripts/analyze-observations.mjs";
 import { DOMINANT_SHARE, INVENTORY_TOOL, INVENTORY_VERSION, systemInventory } from "../../engine/.claude/skills/styleseed/workflows/ss-verify/scripts/system-inventory.mjs";
 
@@ -796,6 +796,324 @@ test("CLI --own: reads the inventory by its project path, carries it into --entr
     writeFileSync(join(root, "broken.json"), "{");
     assert.match(cli(root, ["--project-root", ".", "--surface", "pointer", "--own", "broken.json"]).stderr, /--own broken\.json: not valid JSON/u);
     assert.equal(cli(root, ["--engine-defaults", "--own", OWN_PATH]).status, 1, "--engine-defaults takes no --own");
+  } finally { rmSync(root, { recursive: true, force: true }); }
+});
+
+// --- a default control height (WO-20 C2) ---------------------------------------------------------------------------
+
+const familyOf = (height) => defaults.controlHeight.offsets.map((offset) => height + offset);
+const FAMILY = (height) => `at that default the shipped components of this StyleSeed version draw ${familyOf(height).join(", ")}px`;
+const heightEntry = (proposal, height, options) => defaultHeightEntry(proposal, defaults, height, options);
+const namedAs = (entry, id) => ({ ...entry, id, approvedBy: "example-designer", date: "2026-11-26" });
+// Every printed height entry: the family, the ledger's limits, the wording rule, compiles once named and never as
+// printed, and the token reads back the height.
+function checkHeightEntry(entry, height) {
+  assert.deepEqual(entry.values, familyOf(height), "the height and every offset the shipped components draw");
+  assert.equal(entry.approvedBy, "");
+  assert.equal(entry.date, "");
+  assert.ok(entry.statement.length <= 300, `${entry.statement.length}: ${entry.statement}`);
+  assert.ok(entry.source.length <= 200, entry.source);
+  assert.ok(!BANNED.test(entry.statement), entry.statement.match(BANNED)?.[0]);
+  assert.doesNotThrow(() => normalizeDecisions([namedAs(entry, "D-001")], catalog), JSON.stringify(entry));
+  assert.throws(() => normalizeDecisions([{ ...entry, id: "D-001" }], catalog), /D-001\.approvedBy/u, "an empty name does not compile");
+  assert.equal(parseDefaultHeight(entry)?.height, height, entry.source);
+}
+const heightException = { id: "D-002", kind: "exception", to: "D-001", axis: "controlHeights", values: [30], scope: { screens: ["orders"] }, statement: "Orders filters are 30px.", approvedBy: "example-designer", date: "2026-11-26" };
+
+test("default-height token: the writer and the parser hold one grammar (WO-20 C2)", () => {
+  assert.equal(defaultHeightSource(32, "chosen: 32"), "default-height:32; chosen: 32");
+  for (const height of [0, -4, 32.5, "32", Number.NaN, 2 ** 53]) assert.throws(() => defaultHeightSource(height, "chosen: 32"), /give a whole number of px, at least 1/u, String(height));
+  for (const rest of ["", "two\nlines", 5, null, undefined]) assert.throws(() => defaultHeightSource(32, rest), /say where the height comes from in one line of text after the token/u, JSON.stringify(rest));
+  const family = [24, 28, 32, 36, 40, 48];
+  const read = (source, values = family) => parseDefaultHeight({ source, values });
+  assert.deepEqual(read("default-height:36; engine-default:recipe.enterprise-workbench (not measured)"), { height: 36, lookDefault: true }, "the look's own default");
+  assert.deepEqual(read("default-height:40; engine-default:recipe.default (not measured)", [28, 32, 36, 40, 44, 52]), { height: 40, lookDefault: true }, "no recipe: the :root height");
+  for (const rest of ["corpus:2026-11-12#button.height@form/1440", "reference:ref-kept#tokens.controlHeights", "measured:ref-measured#tokens.controlHeights", "own-screens:2026-11-14#controlHeights", "chosen: 32", "system:example-system@2026-11-16#button.height", "engine-default:components (not measured)", "corpus:2026-11-12#controlHeights (several rows; see .styleseed/proposals/system.json)"]) {
+    assert.deepEqual(read(`default-height:32; ${rest}`), { height: 32, lookDefault: false }, `a height taken from elsewhere: ${rest}`);
+  }
+  for (const source of [
+    "corpus:2026-11-12#button.height@form/1440", "default-height:032; chosen: 32", "default-height:0; chosen: 0", "default-height:32;chosen: 32", "default-height:32; ",
+    "default-height: 32; chosen: 32", "Default-height:32; chosen: 32", " default-height:32; chosen: 32", "default-height:32.5; chosen: 32", "default-height:32; two\nlines",
+    "default-height:30; chosen: 30",
+  ]) assert.equal(read(source), null, JSON.stringify(source));
+  assert.equal(parseDefaultHeight({ values: family }), null, "no source");
+  assert.equal(parseDefaultHeight({ source: "default-height:32; chosen: 32" }), null, "no values");
+  assert.equal(parseDefaultHeight(null), null);
+  assert.equal(parseDefaultHeight({ source: "default-height:99999999999999999999; chosen", values: [1e20] }), null, "not a safe whole number");
+  for (const [height, rest] of [[32, "chosen: 32"], [13, "x"], [1000, "measured:m#tokens.controlHeights"]]) assert.equal(parseDefaultHeight({ source: defaultHeightSource(height, rest), values: [height] }).height, height, "what the writer writes, the parser reads");
+});
+
+test("--default-height entry for each basis: exact statement and source; the token reads back (WO-20 C2)", () => {
+  const agree = makePack([prow("button.height", "form", 4, [b(32, 3, 2, 1), b(36, 1, 1, 0)])]);
+  const split = makePack([prow("button.height", "form", 4, [b(32, 2, 1, 1), b(36, 1, 1, 0), b(40, 1, 1, 0)])]);
+  const kept = ref("ref-kept", { controlHeights: [36] }, ["controlHeights"]);
+  assert.deepEqual(heightEntry(propose(agree), 32).entry, {
+    kind: "decision", axis: "controlHeights", values: [20, 24, 28, 32, 36, 44],
+    statement: "Default controls are 32px tall; at that default the shipped components of this StyleSeed version draw 20, 24, 28, 32, 36, 44px. Basis: 32px on 3 of 4 measured systems (form pages, corpus run 2026-01-02).",
+    approvedBy: "", date: "", source: "default-height:32; corpus:2026-01-02#button.height@form/1440",
+  });
+  const cases = [
+    ["a corpus row that agrees", propose(agree), 32, "32px on 3 of 4 measured systems (form pages, corpus run 2026-01-02)", "corpus:2026-01-02#button.height@form/1440", false],
+    ["a split row is no basis: chosen", propose(split), 32, "chosen; brand recipe enterprise-workbench draws 36px by default", "chosen: 32", false],
+    ["M8: a kept reference [36] at the recipe's own height; the person's measurement is the basis", propose(agree, { references: [kept] }), 36, "kept in the project's reference contract ref-kept, 2026-11-01", "reference:ref-kept#tokens.controlHeights", false],
+    ["a measured reference", propose(agree, { references: [ref("ref-measured", { controlHeights: [32, 40] })] }), 40, "measured on the project's reference ref-measured, 2026-11-01", "measured:ref-measured#tokens.controlHeights", false],
+    ["own screens", propose(agree, { own: ownOf() }), 32, "measured on 3 screens of this product, 2026-11-14", "own-screens:2026-11-14#controlHeights", false],
+    ["the recipe's own height", propose(agree), 36, "engine default of brand recipe enterprise-workbench, not measured", "engine-default:recipe.enterprise-workbench (not measured)", true],
+    ["no recipe, the :root height", propose(agree, { recipe: null }), 40, "engine default, not measured", "engine-default:recipe.default (not measured)", true],
+    ["no recipe, another height", propose(agree, { recipe: null }), 36, "chosen; the shipped components draw 40px by default", "chosen: 36", false],
+    ["a recipe the file does not have reads as none", propose(agree, { recipe: "unknown-recipe" }), 36, "chosen; the shipped components draw 40px by default", "chosen: 36", false],
+    ["M5: a kept reference [36] stands first and the corpus row agrees on 32", propose(agree, { references: [kept] }), 32, "32px on 3 of 4 measured systems (form pages, corpus run 2026-01-02)", "corpus:2026-01-02#button.height@form/1440", false],
+  ];
+  for (const [label, proposal, height, basis, source, lookDefault] of cases) {
+    const { entry, underFloor } = heightEntry(proposal, height);
+    assert.equal(entry.statement, `Default controls are ${height}px tall; ${FAMILY(height)}. Basis: ${basis}.`, label);
+    assert.equal(entry.source, `default-height:${height}; ${source}`, label);
+    assert.deepEqual(parseDefaultHeight(entry), { height, lookDefault }, label);
+    assert.deepEqual(underFloor, [], `${label}: no floor on pointer`);
+    checkHeightEntry(entry, height);
+  }
+});
+
+test("--default-height fitting: two claims on one row keep the full form, a page row and the pooled row take the shortened one, three claims see source (WO-20 C2, N5)", () => {
+  const select = { id: "select.height", axis: "controlHeights", use: "value", unit: "px", label: "default select trigger height" };
+  const sameRow = heightEntry(propose(makePack([prow("button.height", "form", 4, [b(32, 3, 2, 1)]), prow("field.height", "form", 4, [b(32, 3, 2, 1)])])), 32).entry;
+  assert.equal(sameRow.statement, "Default controls are 32px tall; at that default the shipped components of this StyleSeed version draw 20, 24, 28, 32, 36, 44px. Basis: default button height 32px on 3 of 4 measured systems, default text field height 32px on 3 of 4 measured systems (form pages, corpus run 2026-01-02).");
+  assert.equal(sameRow.statement.length, 284);
+  assert.equal(sameRow.source, "default-height:32; corpus:2026-01-02#button.height+field.height@form/1440");
+  // The field's form row has two systems, so its claim is read from the pooled row; the full form would be 310.
+  const twoRows = heightEntry(propose(makePack([prow("button.height", "form", 4, [b(32, 3, 2, 1)]), prow("field.height", "form", 2, [b(32, 2, 1, 1)]), prow("field.height", "all", 4, [b(32, 3, 2, 1)])])), 32).entry;
+  assert.equal(twoRows.statement, "Default controls are 32px tall (at that default, shipped sizes 20 to 44px). Basis: default button height 32px on 3 of 4 measured systems, default text field height 32px on 3 of 4 measured systems (form pages and all page types pooled, corpus run 2026-01-02).");
+  assert.equal(twoRows.statement.length, 258);
+  assert.equal(twoRows.source, "default-height:32; corpus:2026-01-02#button.height+field.height@form/1440,all/1440");
+  const three = heightEntry(propose(makePack([prow("button.height", "form", 4, [b(32, 3, 2, 1)]), prow("field.height", "all", 4, [b(32, 3, 2, 1)]), prow("select.height", "all", 4, [b(32, 3, 2, 1)])], { extraClaims: [select] })), 32).entry;
+  assert.equal(three.statement, "Default controls are 32px tall (at that default, shipped sizes 20 to 44px). Basis: see source.");
+  assert.equal(three.source, "default-height:32; corpus:2026-01-02#button.height+field.height+select.height@form/1440,all/1440", "the token is kept");
+  // A source over 200 characters takes the fallback and keeps the token.
+  const extraClaims = [1, 2, 3].map((n) => ({ id: `controls.${"h".repeat(60)}${n}`, axis: "controlHeights", use: "value", unit: "px", label: `toolbar control ${n}` }));
+  const long = heightEntry(propose(makePack(extraClaims.map((claim) => prow(claim.id, "form", 4, [b(32, 3, 2, 1)])), { extraClaims })), 32).entry;
+  assert.equal(long.source, "default-height:32; corpus:2026-01-02#controlHeights (several rows; see .styleseed/proposals/system.json)");
+  for (const entry of [sameRow, twoRows, three, long]) checkHeightEntry(entry, 32);
+});
+
+test("--default-height: an agreeing option that holds two values quotes the count of the height alone (N1)", () => {
+  const proposal = propose(makePack([prow("button.height", "form", 4, [b(32, 3, 2, 1)]), prow("field.height", "form", 4, [b(36, 3, 2, 1)])]), { recipe: "calm-consumer" });
+  assert.deepEqual(axisOf(proposal, "controlHeights").options.map((o) => `${o.basis}:${o.values}`), ["corpus:32,36", "engine-default:28,32,36,40,44,52"], "two claims that agree on different values are one option");
+  const at36 = heightEntry(proposal, 36).entry;
+  assert.equal(at36.statement, "Default controls are 36px tall; at that default the shipped components of this StyleSeed version draw 24, 28, 32, 36, 40, 48px. Basis: 36px on 3 of 4 measured systems (form pages, corpus run 2026-01-02).");
+  assert.equal(at36.source, "default-height:36; corpus:2026-01-02#field.height@form/1440");
+  const at32 = heightEntry(proposal, 32).entry;
+  assert.ok(at32.statement.endsWith(". Basis: 32px on 3 of 4 measured systems (form pages, corpus run 2026-01-02)."), at32.statement);
+  assert.equal(at32.source, "default-height:32; corpus:2026-01-02#button.height@form/1440");
+  for (const [entry, height] of [[at36, 36], [at32, 32]]) checkHeightEntry(entry, height);
+});
+
+test("--default-height one step from the recipe's height on both surfaces; the sizes under the touch floor", () => {
+  const pack = makePack([prow("button.height", "form", 4, [b(32, 3, 2, 1), b(36, 1, 1, 0)])]);
+  const pointer = propose(pack);
+  const touch = propose(pack, { surface: "touch" });
+  const chosen = "Basis: chosen; brand recipe enterprise-workbench draws 36px by default.";
+  for (const [proposal, height, basis, source, under] of [
+    [pointer, 32, "Basis: 32px on 3 of 4 measured systems (form pages, corpus run 2026-01-02).", "corpus:2026-01-02#button.height@form/1440", []],
+    [pointer, 40, chosen, "chosen: 40", []],
+    [touch, 32, chosen, "chosen: 32", [20, 24, 28, 32, 36]],
+    [touch, 40, chosen, "chosen: 40", [28, 32, 36, 40]],
+    [touch, 44, chosen, "chosen: 44", [32, 36, 40]],
+  ]) {
+    const { entry, underFloor } = heightEntry(proposal, height);
+    assert.ok(entry.statement.endsWith(` ${basis}`), entry.statement);
+    assert.equal(entry.source, `default-height:${height}; ${source}`);
+    assert.deepEqual(underFloor, under, `${proposal.inputs.surface} ${height}`);
+    checkHeightEntry(entry, height);
+  }
+});
+
+test("--default-height over the shipped pack: every source reads back, its height is one of values, and each is the look's own default or a height from elsewhere", () => {
+  let look = 0;
+  let elsewhere = 0;
+  for (const recipe of [...Object.keys(catalog.recipes), null]) for (const surface of ["pointer", "touch"]) for (const page of [...Object.keys(catalog.pages), "none"]) {
+    const proposal = propose(committedPack, { page, surface, recipe });
+    const drawn = engineDefault("controlHeights", defaults, { recipe });
+    const own = defaults.recipes[drawn.id.slice("recipe.".length)].controlHeight;
+    for (const height of new Set([own - 4, own, own + 4, 32])) {
+      const { entry } = heightEntry(proposal, height);
+      checkHeightEntry(entry, height);
+      const parsed = parseDefaultHeight(entry);
+      assert.equal(parsed.lookDefault, entry.source.slice(entry.source.indexOf("; ") + 2).startsWith("engine-default:recipe."), entry.source);
+      if (parsed.lookDefault) {
+        look += 1;
+        assert.equal(height, own, entry.source);
+        assert.deepEqual(entry.values, drawn.values, "the look's own height: the family the recipe's components draw");
+      } else elsewhere += 1;
+    }
+  }
+  assert.ok(look >= 40 && elsewhere >= 120, `${look} the look's own default, ${elsewhere} from elsewhere`);
+});
+
+test("--default-height on a recorded axis: the basis from the proposal without the record; the replacing entry keeps the id (M6, N2, N3)", () => {
+  const pack = makePack([prow("button.height", "form", 4, [b(32, 3, 2, 1), b(36, 1, 1, 0)])]);
+  const family36 = namedAs(heightEntry(propose(pack), 36).entry, "D-001");
+  const ledger = normalizeDecisions(clone([family36, heightException]), catalog);
+  const recorded = propose(pack, { decisions: ledger });
+  assert.equal(axisOf(recorded, "controlHeights").status, "recorded");
+  assert.throws(() => heightEntry(recorded, 32), /controlHeights: recorded as D-001, so its block has no options; read the basis from the proposal made without that decision/u);
+  const printed = JSON.stringify(recorded);
+  const without = propose(pack, { decisions: ledger.filter((entry) => entry.id !== "D-001") });
+  assert.equal(JSON.stringify(axisOf(without, "controlHeights").options), JSON.stringify(axisOf(propose(pack), "controlHeights").options), "the options of a project with nothing recorded, byte for byte");
+  assert.deepEqual(axisOf(without, "controlHeights").scoped, ["D-002"], "the exception stays in the second proposal");
+  assert.equal(JSON.stringify(recorded), printed, "the first proposal does not change");
+  const replacing = heightEntry(without, 32).entry;
+  assert.equal(replacing.source, "default-height:32; corpus:2026-01-02#button.height@form/1440", "the measured basis is kept");
+  assert.throws(() => normalizeDecisions(clone([family36, heightException, namedAs(replacing, "D-003")]), catalog), /D-001 and D-003 both decide controlHeights/u, "appended beside D-001");
+  assert.throws(() => normalizeDecisions(clone([heightException, namedAs(replacing, "D-003")]), catalog), /D-002\.to: D-001 is not a decision in this ledger/u, "in place of D-001 under a new id");
+  assert.doesNotThrow(() => normalizeDecisions(clone([namedAs(replacing, "D-001"), heightException]), catalog), "in place of D-001, keeping the id");
+});
+
+test("--default-height builder: a caller's basis follows the token as given; the bounds of a height", () => {
+  const pack = makePack([prow("button.height", "form", 4, [b(32, 3, 2, 1)])]);
+  const proposal = propose(pack);
+  const basis = { words: "about 36px on 8 of 8 screens of Example System (run 2026-11-16; heights rounded to the nearest 4px)", source: "system:example-system@2026-11-16#button.height" };
+  const { entry } = heightEntry(proposal, 36, { basis });
+  assert.equal(entry.statement, `Default controls are 36px tall; ${FAMILY(36)}. Basis: ${basis.words}.`);
+  assert.equal(entry.source, "default-height:36; system:example-system@2026-11-16#button.height");
+  assert.deepEqual(parseDefaultHeight(entry), { height: 36, lookDefault: false }, "the recipe's own height handed in by a caller is a height taken from elsewhere");
+  checkHeightEntry(entry, 36);
+  const recorded = propose(pack, { decisions: normalizeDecisions([namedAs(entry, "D-001")], catalog) });
+  assert.equal(heightEntry(recorded, 32, { basis }).entry.source, "default-height:32; system:example-system@2026-11-16#button.height", "a caller's basis reads no options");
+  assert.throws(() => heightEntry(proposal, 32, { basis: { words: "x", source: "s".repeat(190) } }), /default height basis: the source is 209 characters with the token; a ledger source holds at most 200/u);
+  assert.throws(() => heightEntry(proposal, 32, { basis: { source: "chosen: 32" } }), /default height basis: pass \{words, source\}, each one line of text/u);
+  assert.throws(() => heightEntry(proposal, 12), /--default-height 12: the smallest size around it would be 0px; give at least 13/u);
+  assert.deepEqual(heightEntry(proposal, 13).entry.values, [1, 5, 9, 13, 17, 25], "the smallest size is at least 1");
+  for (const height of [32.5, 0, "32"]) assert.throws(() => heightEntry(proposal, height), /give the default control height as a whole number of px/u, String(height));
+});
+
+const APPEND_HEIGHT = "Append it to .styleseed/decisions.json as D-001, with approvedBy set to the name the person gives and date to today. Keep `source` as printed; it carries the default height. Nothing was written.\n";
+const NOT_DRAWN_32 = "Recorded, not drawn: this version does not draw a recorded default height. The components keep the brand recipe's 36px, and the drift report reads 40, 48px as `violates` until it is drawn.\n";
+const lockProject = (prefix) => {
+  const root = mkdtempSync(join(tmpdir(), prefix));
+  writeFileSync(join(root, "STYLESEED.md"), LOCK);
+  mkdirSync(join(root, "src"));
+  assert.equal(spawnSync(process.execPath, [resolver, "--project-root", root, "--from-lock", "STYLESEED.md", "--agent", "claude"], { encoding: "utf8" }).status, 0);
+  return root;
+};
+
+test("CLI --default-height: the entry on stdout, what stderr says, nothing written; the refusals (WO-20 C2)", () => {
+  const root = lockProject("ss-propose-height-");
+  try {
+    const run = (...args) => cli(root, ["--project-root", ".", "--surface", "pointer", ...args]);
+    const before = files(root);
+    let result = run("--default-height", "32");
+    assert.equal(result.status, 0, result.stderr);
+    assert.deepEqual(JSON.parse(result.stdout), { kind: "decision", axis: "controlHeights", values: [20, 24, 28, 32, 36, 44], statement: "Default controls are 32px tall; at that default the shipped components of this StyleSeed version draw 20, 24, 28, 32, 36, 44px. Basis: 32px on 3 of 4 measured systems (form pages, corpus run 2026-11-12).", approvedBy: "", date: "", source: "default-height:32; corpus:2026-11-12#button.height@form/1440" });
+    assert.equal(result.stderr, `${NOT_DRAWN_32}${APPEND_HEIGHT}`);
+    result = run("--default-height", "36");
+    assert.equal(JSON.parse(result.stdout).source, "default-height:36; engine-default:recipe.enterprise-workbench (not measured)");
+    assert.equal(result.stderr, APPEND_HEIGHT, "the recipe's own height: no sentence about drawing");
+    assert.ok(run("--default-height", "40").stderr.startsWith("Recorded, not drawn: this version does not draw a recorded default height. The components keep the brand recipe's 36px, and the drift report reads 24, 48px as `violates` until it is drawn.\n"));
+    result = cli(root, ["--project-root", ".", "--surface", "touch", "--default-height", "32"]);
+    assert.equal(result.status, 0, result.stderr);
+    assert.equal(JSON.parse(result.stdout).source, "default-height:32; chosen: 32", "no corpus basis on touch");
+    assert.equal(result.stderr, `Floor: rule \`CRAFT-control-heights\` says "Touch surfaces provide at least 44px targets". This entry's default is 32px; its sizes under the floor are 20, 24, 28, 32, 36px. The entry is printed: a recorded decision outranks a default rule.\n${NOT_DRAWN_32}${APPEND_HEIGHT}`);
+    assert.ok(!cli(root, ["--project-root", ".", "--surface", "touch", "--default-height", "44"]).stderr.includes("Floor:"), "a default at the floor: no floor line");
+    assert.deepEqual(files(root), before, "--default-height writes nothing");
+
+    result = run("--entry", "controlHeights=32");
+    assert.ok(result.stderr.includes("One control height recorded alone flags the other sizes of the shipped components; for them use `--default-height 32`.\nAppend it to .styleseed/decisions.json as D-001"), result.stderr);
+    for (const arg of ["controlHeights=32,40", "controlRadius=8", "typeSizes=14"]) assert.ok(!run("--entry", arg).stderr.includes("One control height"), arg);
+
+    for (const [args, pattern] of [
+      [["--default-height", "32px"], /^--default-height 32px: give the default control height as a whole number of px, for example --default-height 32\n$/u],
+      [["--default-height", "36.5"], /^--default-height 36\.5: give the default control height as a whole number of px/u],
+      [["--default-height", "12"], /^--default-height 12: the smallest size around it would be 0px; give at least 13\n$/u],
+      [["--default-height", "32", "--default-height", "36"], /^--default-height: pass one height\n$/u],
+      [["--default-height"], /^--default-height needs a value/u],
+      [["--default-height", "32", "--entry", "controlHeights=32"], /^--default-height prints one entry and writes nothing; drop --entry\n$/u],
+      [["--default-height", "32", "--write"], /drop --write\n$/u],
+      [["--default-height", "32", "--json"], /drop --json\n$/u],
+      [["--write", "--default-height", "32", "--json"], /drop --write, --json\n$/u],
+    ]) {
+      result = run(...args);
+      assert.equal(result.status, 1, args.join(" "));
+      assert.match(result.stderr, pattern, args.join(" "));
+      assert.equal(result.stdout, "", args.join(" "));
+    }
+    result = cli(root, ["--engine-defaults", "--default-height", "32"]);
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /--engine-defaults reads only the skill's files and takes --page alone; drop --default-height/u);
+    assert.match(cli(root, ["--help"]).stdout, /\[same inputs\] --default-height <px>\n/u, "the usage names the flag");
+    assert.deepEqual(files(root), before, "nothing written by a refusal");
+
+    // N6: a project that names no recipe.
+    writeFileSync(join(root, ".styleseed/manifest.json"), JSON.stringify({ selection: { adapter: "product-ui", page: "settings" } }));
+    result = run("--default-height", "32");
+    assert.equal(result.status, 0, result.stderr);
+    assert.equal(result.stderr, `Recorded, not drawn: this version does not draw a recorded default height. The components keep the default 40px, and the drift report reads 40, 52px as \`violates\` until it is drawn.\n${APPEND_HEIGHT}`);
+    assert.ok(run("--default-height", "36").stderr.startsWith("Recorded, not drawn: this version does not draw a recorded default height. The components keep the default 40px, and the drift report reads 44, 52px as `violates` until it is drawn.\n"));
+    result = run("--default-height", "40");
+    assert.equal(JSON.parse(result.stdout).source, "default-height:40; engine-default:recipe.default (not measured)");
+    assert.equal(result.stderr, APPEND_HEIGHT);
+  } finally { rmSync(root, { recursive: true, force: true }); }
+});
+
+test("CLI --default-height on a recorded axis: the measured basis is kept, the line names the id, and the entry takes its place (M6, N2)", () => {
+  const root = lockProject("ss-propose-height-recorded-");
+  try {
+    const run = (...args) => cli(root, ["--project-root", ".", "--surface", "pointer", ...args]);
+    const ledger = (entries) => writeFileSync(join(root, ".styleseed/decisions.json"), `${JSON.stringify(entries, null, 2)}\n`);
+    const family36 = namedAs(JSON.parse(run("--default-height", "36").stdout), "D-001");
+    ledger([family36, heightException]);
+    let result = run("--default-height", "32");
+    assert.equal(result.status, 0, result.stderr);
+    const replacing = JSON.parse(result.stdout);
+    assert.equal(replacing.source, "default-height:32; corpus:2026-11-12#button.height@form/1440", "the basis read without D-001");
+    assert.equal(result.stderr, [
+      NOT_DRAWN_32.trimEnd(),
+      "This entry replaces D-001: a ledger holds one project-wide decision on an axis.",
+      "Put it in .styleseed/decisions.json in place of D-001, keeping the id D-001 (an exception may point at it), with approvedBy set to the name the person gives and date to today. Keep `source` as printed; it carries the default height. Nothing was written.",
+      "",
+    ].join("\n"));
+    assert.ok(!/ as D-\d{3}/u.test(result.stderr) && !result.stderr.includes("Append it"), "no line that appends under a new id");
+    assert.equal(run("--entry", "controlHeights=32").status, 1, "--entry still refuses a recorded axis");
+    ledger([family36, heightException, namedAs(replacing, "D-003")]);
+    result = run("--default-height", "32");
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /D-001 and D-003 both decide controlHeights/u, "appended beside D-001");
+    ledger([heightException, namedAs(replacing, "D-003")]);
+    result = run("--default-height", "32");
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /D-002\.to: D-001 is not a decision in this ledger/u, "in place of D-001 under a new id");
+    ledger([namedAs(replacing, "D-001"), heightException]);
+    result = run("--default-height", "36");
+    assert.equal(result.status, 0, `in place of D-001, keeping the id: ${result.stderr}`);
+    assert.equal(JSON.parse(result.stdout).source, "default-height:36; engine-default:recipe.enterprise-workbench (not measured)");
+    assert.match(result.stderr, /^This entry replaces D-001: /u);
+  } finally { rmSync(root, { recursive: true, force: true }); }
+});
+
+test("CLI --default-height in a registry project: the registry's sentence and its ledger", () => {
+  const root = mkdtempSync(join(tmpdir(), "ss-propose-height-registry-"));
+  try {
+    mkdirSync(join(root, ".styleseed/artifacts"), { recursive: true });
+    mkdirSync(join(root, "src"), { recursive: true });
+    writeFileSync(join(root, ".styleseed/project.json"), `${JSON.stringify({
+      schemaVersion: 1, projectId: "propose-height-registry",
+      defaults: { agent: "codex", domain: "saas", adapter: "product-ui", recipe: "enterprise-workbench", palette: "cobalt-instrument", profile: "none", fallback: "operations-console" },
+      brand: { keyColor: "#0F766E", paletteCharacter: "balanced", paletteMode: "light", paletteHarmony: "auto", surfaceTemperature: "cool", fontFamilies: ["Inter"], radius: "soft", elevation: "restrained-shadow", density: "comfortable", motion: { seed: "snap", intensity: "restrained" }, imageryRole: "data-first" },
+    }, null, 2)}\n`);
+    writeFileSync(join(root, ".styleseed/artifacts/index.json"), `${JSON.stringify({ schemaVersion: 1, artifacts: [{ id: "app-settings", config: "app-settings.json" }] }, null, 2)}\n`);
+    writeFileSync(join(root, ".styleseed/artifacts/app-settings.json"), `${JSON.stringify({
+      schemaVersion: 1, id: "app-settings", target: { kind: "route", locator: "/settings" },
+      selection: { grammar: "operations-console", adapter: null, domain: null, page: "settings", recipe: null, palette: null, profile: null, fallback: null },
+      decisions: { primaryDecision: "Which setting needs a change?", primaryAction: "Save settings", signatureMove: "Keep the form stable." },
+      implementation: { sourceRoots: ["src"], tokenFiles: [] },
+      validation: { scoreFloor: 80, requiredRenders: [{ id: "desktop-loaded", state: "loaded", viewport: { width: 1440, height: 1000 } }], temporal: { required: false, scenarios: [] }, humanAcceptance: false },
+    }, null, 2)}\n`);
+    assert.equal(spawnSync(process.execPath, [resolver, "--project-root", root, "--all"], { encoding: "utf8" }).status, 0);
+    const before = files(root);
+    const result = cli(root, ["--project-root", ".", "--surface", "pointer", "--default-height", "32"]);
+    assert.equal(result.status, 0, result.stderr);
+    assert.equal(JSON.parse(result.stdout).source, "default-height:32; corpus:2026-11-12#button.height@form/1440");
+    assert.equal(result.stderr, "Recorded, not drawn: a registry project's recorded default height is not drawn. The components keep the brand recipe's 36px, and the drift report reads 40, 48px as `violates`.\nAppend it to .styleseed/project.json (decisions) as D-001, with approvedBy set to the name the person gives and date to today. Keep `source` as printed; it carries the default height. Nothing was written.\n");
+    assert.deepEqual(files(root), before, "nothing written");
   } finally { rmSync(root, { recursive: true, force: true }); }
 });
 

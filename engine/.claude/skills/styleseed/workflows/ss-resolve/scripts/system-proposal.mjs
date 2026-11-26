@@ -7,6 +7,7 @@
 // scored, nothing gates, and no entry it prints compiles: `approvedBy` and `date` stay empty until the
 // person who decides puts their name on it. Pure: no I/O, no clock; the same input gives the same bytes.
 import { FACT_LEDGER, isApproved, proposeDecisions } from "./reference-contract.mjs";
+import { defaultHeightSource } from "./runtime-contract.mjs";
 
 export const PROPOSAL_VERSION = 1;
 // A corpus value is proposed when it leads on at least minLineages measured systems, on at least
@@ -689,6 +690,85 @@ export function entryForValues(proposal, axis, values) {
   };
   const { statement, source } = fitted(def, chosen, def.sentence(chosen), parts.join("; "), sources.join("; "), fallbackSource);
   return { kind: "decision", axis, values: chosen, statement, approvedBy: "", date: "", source };
+}
+
+// --- a default control height (WO-20 C2) ---------------------------------------------------------------------
+
+// The statement names the default; the family clause holds only where the height is drawn, so it is conditional.
+// Over 300 characters the family clause is shortened first, and only then does the basis become "see source".
+function defaultHeightStatement(height, values, words) {
+  const full = `Default controls are ${height}px tall; at that default the shipped components of this StyleSeed version draw ${list(values)}px. Basis: ${words}.`;
+  if (full.length <= MAX_STATEMENT) return full;
+  const short = (basis) => `Default controls are ${height}px tall (at that default, shipped sizes ${values[0]} to ${values.at(-1)}px). Basis: ${basis}.`;
+  return short(words).length <= MAX_STATEMENT ? short(words) : short("see source");
+}
+
+// The basis of a default height a person chose: the first option of the control-height block that is not the
+// engine default and holds the height. A reference or the product's own screens count as they stand; a corpus
+// option counts when its row agrees, also behind another option, and is quoted by the counts of that height
+// alone (two claims that agree on different values are one option). Otherwise the look's own default, or
+// "chosen" beside the height the look draws.
+function defaultHeightBasis(proposal, height, look) {
+  const def = AXIS_DEF.get("controlHeights");
+  const block = proposal.axes.find((entry) => entry.axis === def.axis);
+  if (block.status === "recorded") throw new Error(`${def.axis}: recorded as ${block.recorded.id}, so its block has no options; read the basis from the proposal made without that decision`);
+  const runId = proposal.pack.run;
+  for (const option of block.options) {
+    if (option.basis === "engine-default" || !option.values.includes(height)) continue;
+    if (option.basis === "corpus") {
+      if (block.corpus.status !== "agree") continue;
+      const counts = option.counts.filter((c) => c.value === height);
+      return { words: corpusBasis(runId, counts, def.unit), source: corpusSource(runId, counts), fallback: severalRows(`corpus:${runId}`, def.axis) };
+    }
+    return { words: option.basis === "reference" ? referenceBasis(option) : ownBasis(option), source: option.source, fallback: severalRows(prefixOf(option, runId), def.axis) };
+  }
+  const own = height === look.height;
+  const words = look.recipe
+    ? (own ? `engine default of brand recipe ${look.recipe}, not measured` : `chosen; brand recipe ${look.recipe} draws ${look.height}px by default`)
+    : (own ? "engine default, not measured" : `chosen; the shipped components draw ${look.height}px by default`);
+  const source = own ? `engine-default:recipe.${look.recipe ?? "default"} (not measured)` : `chosen: ${height}`;
+  return { words, source, fallback: source };
+}
+
+/**
+ * The `controlHeights` entry for a default control height: the height plus every offset the shipped components
+ * draw (engine-defaults.json `controlHeight.offsets`), a statement that names the default, and a `source` that
+ * starts with `default-height:<D>; ` (runtime-contract.mjs defaultHeightSource) and then says where the height
+ * comes from. Without `basis` the basis is read from the proposal's control-height block (defaultHeightBasis);
+ * on a recorded axis the block has no options, so pass the proposal made without the recorded decision. A caller
+ * may hand in a basis of its own, `{words, source}`, printed after "Basis:" and after the token as given.
+ * Pure; like every printed entry, it has no id, no name, and no date.
+ * @param {object} proposal from proposeSystem (its recipe, surface, run, and control-height block)
+ * @param {object} defaults engine defaults, normalized
+ * @param {number} height the default control height in px
+ * @returns {{entry: object, underFloor: number[], look: {recipe: string|null, height: number, values: number[]}}}
+ *   underFloor: the entry's sizes under the touch floor on a touch surface (none on pointer); look: the recipe the
+ *   file has (null for none or one it does not have), the height it draws by default, and the family it draws
+ */
+export function defaultHeightEntry(proposal, defaults, height, { basis = null } = {}) {
+  if (!Number.isSafeInteger(height) || height < 1) throw new Error(`--default-height ${height}: give the default control height as a whole number of px, for example --default-height 32`);
+  const offsets = defaults.controlHeight.offsets;
+  const values = numeric(offsets.map((offset) => height + offset));
+  if (values[0] < 1) throw new Error(`--default-height ${height}: the smallest size around it would be ${values[0]}px; give at least ${1 - offsets[0]}`);
+  const recipe = proposal.inputs.recipe;
+  const drawn = engineDefault("controlHeights", defaults, { recipe });
+  const id = drawn.id.slice("recipe.".length);
+  const look = { recipe: id === "default" ? null : id, height: defaults.recipes[id].controlHeight, values: drawn.values };
+  let words, source;
+  if (basis !== null) {
+    if (!isObject(basis) || !isText(basis.words, MAX_STATEMENT) || !isText(basis.source, MAX_SOURCE)) throw new Error("default height basis: pass {words, source}, each one line of text");
+    words = basis.words;
+    source = defaultHeightSource(height, basis.source);
+    if (source.length > MAX_SOURCE) throw new Error(`default height basis: the source is ${source.length} characters with the token; a ledger source holds at most ${MAX_SOURCE}`);
+  } else {
+    const found = defaultHeightBasis(proposal, height, look);
+    words = found.words;
+    source = defaultHeightSource(height, found.source);
+    if (source.length > MAX_SOURCE) source = defaultHeightSource(height, found.fallback);
+  }
+  const statement = defaultHeightStatement(height, values, words);
+  const underFloor = proposal.inputs.surface === "touch" ? values.filter((value) => value < TOUCH_FLOOR.px) : [];
+  return { entry: { kind: "decision", axis: "controlHeights", values, statement, approvedBy: "", date: "", source }, underFloor, look };
 }
 
 // --- SYSTEM.md ------------------------------------------------------------------------------------------------

@@ -133,8 +133,9 @@ Use `--agent claude` for Claude Code. Review changes to:
 - `.styleseed/effective-rules.md`;
 - `.styleseed/manifest.json`;
 - `.styleseed/palette.json` and `.styleseed/palette.css` when a key color is generated;
-- `.styleseed/system.css`, written on every resolve; it draws the corners the decisions ledger records. A project
-  that does not import it yet imports it once in its global stylesheet, outside every `@layer`.
+- `.styleseed/system.css`, written on every resolve; it draws the default control height and the corners the
+  decisions ledger records. A project that does not import it yet imports it once in its global stylesheet, outside
+  every `@layer`.
 
 The manifest's `engineRevision` must match the published revision, and `--check` must exit 0.
 Report both the old and new bundle hashes.

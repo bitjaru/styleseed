@@ -1,53 +1,97 @@
 // `.styleseed/system.css`: the stylesheet a project without a registry imports once, outside every cascade layer,
-// so the corners its ledger records are drawn. Pure: no I/O. The resolver writes it on every resolve of a lock
-// project, also when there is nothing to draw (the comment line alone), never for a registry, and never removes it:
-// a project imports it, and an import of a missing file stops the project's build.
+// so the default control height and the corners its ledger records are drawn. Pure: no I/O. The resolver writes it
+// on every resolve of a lock project, also when there is nothing to draw (the comment line alone), never for a
+// registry, and never removes it: a project imports it, and an import of a missing file stops the project's build.
 // The selectors are doubled so the rule outranks a recipe block wherever the attribute sits and on either side of
 // recipes.css: `:root:root` (0,2,0) beats `:root` and `[data-styleseed-recipe="…"]` (0,1,0) on <html>, which also
 // reaches a page with no attribute and what is rendered into body beside a nested root;
 // `[data-styleseed-recipe][data-styleseed-recipe]` (0,2,0) beats a recipe block on <body> or a nested root. Inside a
-// layer the control corner loses to the unlayered recipe block, and the field corner, which no recipe sets, still
-// applies. The values are whole numbers the ledger validated and the ids look like D-001: nothing typed reaches the CSS.
+// layer the height and the control corner lose to the unlayered recipe block, and the field corner, which no recipe
+// sets, still applies. The corners are whole numbers the ledger validated, the height is the digits of the entry's
+// `default-height:<px>; ` token (runtime-contract.mjs parseDefaultHeight), and the ids look like D-001: nothing typed
+// reaches the CSS.
+import { parseDefaultHeight } from "./runtime-contract.mjs";
+
 export const SYSTEM_CSS_PATH = ".styleseed/system.css";
 
-// A corner is one value for the whole project (runtime-contract.mjs refuses a scope or an exception on it), so each
-// axis has at most one entry, a project-wide decision.
+// What the file can set, in the order the rule declares it. `title` names it in the bundle and the resolver's final
+// line, `replaces` in the bundle: `of` is whose value it replaces, `what` the value.
+const HEIGHT = Object.freeze({ axis: "controlHeights", variable: "--ss-control-height", title: "default control height", replaces: Object.freeze({ of: "the brand recipe's", what: "control height" }) });
 const CORNERS = Object.freeze([
-  Object.freeze({ axis: "controlRadius", variable: "--ss-control-radius", title: "control corner", replaces: "the brand recipe's control corner" }),
-  Object.freeze({ axis: "fieldRadius", variable: "--ss-field-radius", title: "field corner", replaces: "the skin's field corner" }),
+  Object.freeze({ axis: "controlRadius", variable: "--ss-control-radius", title: "control corner", replaces: Object.freeze({ of: "the brand recipe's", what: "control corner" }) }),
+  Object.freeze({ axis: "fieldRadius", variable: "--ss-field-radius", title: "field corner", replaces: Object.freeze({ of: "the skin's", what: "field corner" }) }),
 ]);
+// A ledger holds at most one project-wide decision per axis (runtime-contract.mjs); a corner can be nothing else.
+const projectWide = (decisions, axis) => decisions.find((entry) => entry.kind === "decision" && entry.axis === axis && !entry.scope) ?? null;
 
-export function recordedCorners(decisions = []) {
-  return CORNERS.map((corner) => ({ ...corner, entry: decisions.find((entry) => entry.kind === "decision" && entry.axis === corner.axis && !entry.scope) ?? null }))
-    .filter((corner) => corner.entry);
+/**
+ * What `.styleseed/system.css` draws, and why a recorded default height is not drawn. The file, the bundle's
+ * paragraph, and the resolver's final line all read this.
+ * - The height: the project-wide `controlHeights` decision, read with parseDefaultHeight and nothing else. Drawn when
+ *   its source carries the token and the rest is not `engine-default:recipe.…` (the person took the height from
+ *   somewhere else); the number is the token's, never a position in the values. A scoped decision is not drawn (the
+ *   file knows no screens), and an exception adds allowed values, not a default.
+ * - The corners: the project-wide `controlRadius` and `fieldRadius` decisions.
+ * @param {object[]} decisions the normalized ledger
+ * @returns {{drawn: {axis: string, variable: string, title: string, replaces: {of: string, what: string}, value: number, entry: object}[],
+ *   heightNotDrawn: {entry: object, reason: "look-default" | "no-default"} | null}}
+ *   drawn: the height first, then the corners; heightNotDrawn: a project-wide `controlHeights` decision the file does
+ *   not draw, because it took a brand recipe's own default ("look-default") or names no default height that its
+ *   values hold ("no-default").
+ */
+export function systemCssDraws(decisions = []) {
+  const heightEntry = projectWide(decisions, HEIGHT.axis);
+  const parsed = heightEntry ? parseDefaultHeight(heightEntry) : null;
+  const height = parsed && !parsed.lookDefault ? { ...HEIGHT, value: parsed.height, entry: heightEntry } : null;
+  const corners = CORNERS.map((corner) => ({ ...corner, entry: projectWide(decisions, corner.axis) }))
+    .filter((corner) => corner.entry)
+    .map((corner) => ({ ...corner, value: corner.entry.values[0] }));
+  return {
+    drawn: [...(height ? [height] : []), ...corners],
+    heightNotDrawn: heightEntry && !height ? { entry: heightEntry, reason: parsed ? "look-default" : "no-default" } : null,
+  };
 }
 
 export function renderSystemCss(decisions = []) {
-  const corners = recordedCorners(decisions);
-  const head = "/* Generated by ss-resolve from .styleseed/decisions.json and rewritten on every resolve; do not edit. A recorded corner is set on every recipe root of the document, because a project without a registry has one look. */";
-  if (!corners.length) return `${head}\n`;
+  const { drawn } = systemCssDraws(decisions);
+  const head = "/* Generated by ss-resolve from .styleseed/decisions.json and rewritten on every resolve; do not edit. A recorded default height or corner is set on every recipe root of the document, because a project without a registry has one look. */";
+  if (!drawn.length) return `${head}\n`;
   return [
     head,
     ":root:root, [data-styleseed-recipe][data-styleseed-recipe] {",
-    ...corners.map(({ variable, entry }) => `  ${variable}: ${entry.values[0]}px; /* ${entry.id} */`),
+    ...drawn.map(({ variable, value, entry }) => `  ${variable}: ${value}px; /* ${entry.id} */`),
     "}",
     "",
   ].join("\n");
 }
 
+// "a", "a and b", "a, b, and c".
+const series = (items) => (items.length < 3 ? items.join(" and ") : `${items.slice(0, -1).join(", ")}, and ${items.at(-1)}`);
+
 // The paragraph the bundle of a lock project prints after the entries of "## Project decisions". Not a `- **` line:
 // the reference brief reads every such line of that section as a decision (ss-reference/scripts/compile-brief.mjs).
+// It names `.styleseed/system.css` once and calls it "the file" after that.
 export function systemCssParagraph(decisions = []) {
-  const corners = recordedCorners(decisions);
+  const { drawn, heightNotDrawn } = systemCssDraws(decisions);
   const importLine = "Import the file once in the global stylesheet, outside every `@layer`.";
-  if (!corners.length) return `\`${SYSTEM_CSS_PATH}\` draws nothing yet. ${importLine}`;
-  const drawn = corners.length === 2
-    ? `the recorded control corner (${corners[0].entry.id}) and field corner (${corners[1].entry.id})`
-    : `the recorded ${corners[0].title} (${corners[0].entry.id})`;
-  const replaces = corners.length === 2
-    ? `They replace ${corners[0].replaces} and ${corners[1].replaces}; the rest of the recipe's geometry stands.`
-    : corners[0].axis === "controlRadius"
-      ? `It replaces ${corners[0].replaces}; the rest of the recipe's geometry stands.`
-      : `It replaces ${corners[0].replaces}; the recipe's geometry stands.`;
-  return `\`${SYSTEM_CSS_PATH}\` draws ${drawn}. ${replaces} ${importLine}`;
+  const notDrawn = !heightNotDrawn ? []
+    : heightNotDrawn.reason === "look-default"
+      ? [`${heightNotDrawn.entry.id} took a brand recipe's own default height, so the file sets none and the controls follow the brand recipe.`]
+      : [`${heightNotDrawn.entry.id} names no default height that its values hold, so the file sets none.`];
+  if (!drawn.length) return [`\`${SYSTEM_CSS_PATH}\` draws nothing yet.`, ...notDrawn, importLine].join(" ");
+  const named = series(drawn.map(({ title, entry }) => `${title} (${entry.id})`));
+  // Whose values they replace: the brand recipe's, then the skin's, each named once ("the brand recipe's control
+  // height and control corner and the skin's field corner").
+  const owners = [...new Set(drawn.map(({ replaces }) => replaces.of))];
+  const replaced = owners.map((of) => `${of} ${drawn.filter(({ replaces }) => replaces.of === of).map(({ replaces }) => replaces.what).join(" and ")}`).join(" and ");
+  // A field corner alone leaves the recipe's geometry whole; anything the brand recipe also sets leaves "the rest".
+  const stands = drawn.length === 1 && drawn[0].axis === "fieldRadius" ? "the recipe's geometry stands" : "the rest of the recipe's geometry stands";
+  return [`\`${SYSTEM_CSS_PATH}\` draws the recorded ${named}.`, `${drawn.length === 1 ? "It replaces" : "They replace"} ${replaced}; ${stands}.`, ...notDrawn, importLine].join(" ");
+}
+
+// The resolver's final line names what the file draws: "draws the default control height D-001, the control corner
+// D-002, and the field corner D-003", or "draws nothing yet".
+export function systemCssDrawsLine(decisions = []) {
+  const { drawn } = systemCssDraws(decisions);
+  return drawn.length ? `draws ${series(drawn.map(({ title, entry }) => `the ${title} ${entry.id}`))}` : "draws nothing yet";
 }

@@ -160,7 +160,7 @@ test("the seven first-set contracts build, cover the designer's order and flag r
   assert.doesNotMatch(byId.switch.code.flags.join("\n"), /transition-all/u, "the switch names its transitioned properties (detector SS003)");
   assert.match(byId.input.code.flags.join("\n"), /^Height under the 44px touch minimum \(DESIGN-LANGUAGE §41\) at the `:root` control height \(40px\): `input` 40px\./mu, "the touch line says its numbers are the :root heights (WO-17 B5)");
   assert.deepEqual(byId.select.code.sizes.map((s) => [s.key, s.height]), [["default", 40], ["sm", 36]]);
-  for (const id of ["button", "tabs", "input", "select"]) assert.equal(byId[id].code.height, "the heights follow `--ss-control-height` (40px at `:root`; set per brand recipe)", id);
+  for (const id of ["button", "tabs", "input", "select"]) assert.equal(byId[id].code.height, "the heights follow `--ss-control-height` (40px at `:root`; set per brand recipe or the project's recorded default height)", id);
   for (const id of ["badge", "switch", "table"]) assert.equal(byId[id].code.height, null, `${id} has no height that names the variable`);
   assert.match(byId.switch.code.flags.join("\n"), /^Height under the 44px touch minimum \(DESIGN-LANGUAGE §41\): `switch`/mu, "a height that does not follow the variable gets no :root note");
   assert.deepEqual(byId.table.code.flags, []);

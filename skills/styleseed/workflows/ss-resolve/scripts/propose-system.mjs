@@ -19,14 +19,16 @@
 // ledger records and nothing proposes (controlRadius, fieldRadius: one value each), refuses a corner already
 // recorded, and says on stderr which recorded `radii` decision lacks the value. --default-height: the
 // `controlHeights` entry for a default control height (the height and the sizes the shipped components draw
-// around it; its `source` starts with `default-height:<px>; `), on stdout; writes nothing. This version records
-// such a height and does not draw it; stderr says so when the height is not the brand recipe's own.
+// around it; its `source` starts with `default-height:<px>; `), on stdout; writes nothing. In a project without a
+// registry, .styleseed/system.css draws such a height after the next resolve unless its source says the person took
+// the brand recipe's own default, and stderr says what the file will do; a registry project records it and does not
+// draw it, and stderr says so when the height is not the brand recipe's own.
 // --engine-defaults: what the engine ships beside the corpus rows; needs no project. Exit 0 on success, 1 on any
 // error.
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { SAFE_ID, normalizeDecisions, parseStrictJson, safeProjectPath } from "./runtime-contract.mjs";
+import { SAFE_ID, normalizeDecisions, parseDefaultHeight, parseStrictJson, safeProjectPath } from "./runtime-contract.mjs";
 import { loadProjectRegistry } from "./project-registry.mjs";
 import { isApproved, isGeneratedEvidence, normalizeReferenceEvidence } from "./reference-contract.mjs";
 import { PROPOSAL_AXES, RECORD_ONLY_DEF, TOUCH_FLOOR, defaultHeightEntry, engineDefaultsTable, entryForValues, normalizeEngineDefaults, normalizeEvidencePack, normalizeInventory, ownScreens, proposeSystem, referenceValues, renderEngineDefaultsMarkdown, renderProposalMarkdown } from "./system-proposal.mjs";
@@ -40,12 +42,17 @@ const USAGE = `usage: propose-system.mjs --project-root <dir> --surface pointer|
        propose-system.mjs --project-root <dir> --surface pointer|touch [same inputs] --default-height <px>
        propose-system.mjs --engine-defaults [--page <id>]`;
 const REBUILD = "rebuild with `node scripts/build-evidence-pack.mjs`, or reinstall the skill";
-// What --default-height says on stderr when the height is not the brand recipe's own (WO-20 C2): this version
-// records the height and does not draw it. Part B2 replaces the sentence of a project without a registry with
-// what .styleseed/system.css then does. `look` is "the brand recipe's 36px" or "the default 40px"; `sizes` the
-// sizes the recipe draws that the entry does not hold ("40, 48px").
-export const NOT_DRAWN = Object.freeze({
-  legacy: (look, sizes) => `Recorded, not drawn: this version does not draw a recorded default height. The components keep ${look}, and the drift report reads ${sizes} as \`violates\` until it is drawn.`,
+// What --default-height says on stderr about drawing the entry it prints (WO-20 C2, B2). A project without a
+// registry: when .styleseed/system.css will draw the entry (parseDefaultHeight on the printed entry: the token, and
+// a rest that is not the look's own default), what the file then does, `differs` when the height is not the brand
+// recipe's and `lookHeight` when it is the brand recipe's height today with a measured source; an entry that took
+// the look's own default gets neither. A registry project: its recorded default height is not drawn, said when the
+// height is not the brand recipe's own. `look` is "the brand recipe's 36px" or "the default 40px", `x` the look's
+// height, `sizes` the sizes the look draws that the entry does not hold ("40, 48px"), `today` "the brand recipe's
+// height" or "the default height".
+export const DEFAULT_HEIGHT_DRAWN = Object.freeze({
+  differs: (height, look, x, sizes) => `Recorded: after the next resolve \`.styleseed/system.css\` draws ${height}px in place of ${look}. Import the file once in the global stylesheet, outside every \`@layer\`; where it is not imported the components keep ${x}px and the drift report reads ${sizes} as \`violates\`.`,
+  lookHeight: (height, today) => `Recorded: after the next resolve \`.styleseed/system.css\` sets ${height}px, which is ${today} today, and keeps it if the look changes.`,
   registry: (look, sizes) => `Recorded, not drawn: a registry project's recorded default height is not drawn. The components keep ${look}, and the drift report reads ${sizes} as \`violates\`.`,
 });
 
@@ -260,7 +267,14 @@ export function main(argv, { stdout = (text) => process.stdout.write(text), stde
     stdout(`${JSON.stringify(entry, null, 2)}\n`);
     for (const note of notes) stderr(`${note}\n`);
     if (underFloor.includes(height)) stderr(`Floor: rule \`${TOUCH_FLOOR.rule}\` says "${TOUCH_FLOOR.clause}". This entry's default is ${height}px; its sizes under the floor are ${underFloor.join(", ")}px. The entry is printed: a recorded decision outranks a default rule.\n`);
-    if (height !== look.height) stderr(`${NOT_DRAWN[loaded.mode](look.recipe ? `the brand recipe's ${look.height}px` : `the default ${look.height}px`, `${look.values.filter((value) => !entry.values.includes(value)).join(", ")}px`)}\n`);
+    const lookText = look.recipe ? `the brand recipe's ${look.height}px` : `the default ${look.height}px`;
+    const sizes = `${look.values.filter((value) => !entry.values.includes(value)).join(", ")}px`;
+    if (loaded.mode === "legacy") {
+      // The resolver's own reading of the entry (system-css.mjs): drawn when the parser finds the token and the
+      // rest is not the look's own default.
+      const drawn = parseDefaultHeight(entry);
+      if (drawn && !drawn.lookDefault) stderr(`${drawn.height !== look.height ? DEFAULT_HEIGHT_DRAWN.differs(drawn.height, lookText, look.height, sizes) : DEFAULT_HEIGHT_DRAWN.lookHeight(drawn.height, look.recipe ? "the brand recipe's height" : "the default height")}\n`);
+    } else if (height !== look.height) stderr(`${DEFAULT_HEIGHT_DRAWN.registry(lookText, sizes)}\n`);
     const keep = "Keep `source` as printed; it carries the default height. Nothing was written.";
     if (recorded) {
       stderr(`This entry replaces ${recorded}: a ledger holds one project-wide decision on an axis.\n`);

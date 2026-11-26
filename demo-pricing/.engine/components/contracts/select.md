@@ -85,7 +85,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectScro
 
 - **Tokens consumed:** `accent` · `accent-foreground` · `border` · `destructive` · `input` · `input-background` · `muted-foreground` · `popover` · `popover-foreground` · `ring`
 - **Radius:** trigger: the skin's `rounded-md`, or `--ss-field-radius` when the project sets it (`ss-pattern-field`); popover `rounded-md`, item `rounded-sm`
-- **Height:** the heights follow `--ss-control-height` (40px at `:root`; set per brand recipe)
+- **Height:** the heights follow `--ss-control-height` (40px at `:root`; set per brand recipe or the project's recorded default height)
 - **Focus:** `focus-visible:border-ring` · `focus-visible:ring-[3px]` · `focus-visible:ring-ring/50` · `focus:bg-accent` · `focus:text-accent-foreground`
 - **Motion:** `data-[state=closed]:animate-out` · `data-[state=open]:animate-in` · `transition-[color,box-shadow]`
 

@@ -130,9 +130,14 @@ taken from the input element, and give no option. An entry from this option has 
   the basis as other entries do (`engine-default:recipe.<id> (not measured)` when the person took the
   brand recipe's own default, `chosen: <px>` when nothing measured holds it): it matches
   `^default-height:([1-9][0-9]*); (.+)$`, and the height is one of `values`. Keep `source` as printed when
-  recording; it carries the default height. This version records the height and does not draw it: the
-  components keep the height the brand recipe draws, and when the two differ the command says so on stderr
-  with the sizes the drift report would then read as `violates`. With `--surface touch` and a default under 44px it
+  recording; it carries the default height. In a project without a registry, `.styleseed/system.css` draws
+  the height after the next resolve unless the person took the brand recipe's own default, and the command
+  says so on stderr: for a height other than the brand recipe's, that where the file is not imported the
+  components keep the brand recipe's height and the drift report reads the sizes the entry does not hold as
+  `violates`; for the brand recipe's own height with a measured basis, that the file sets it and keeps it if
+  the look changes. A registry project records the height and does not draw it: the components keep the
+  height the brand recipe draws, and when the two differ the command says so on stderr with the sizes the
+  drift report then reads as `violates`. With `--surface touch` and a default under 44px it
   prints the entry and the floor line, because a recorded decision outranks a default rule. On a recorded
   axis it names the id the entry replaces: put the entry in its place and keep that id. It takes
   `--reference`, `--own`, `--page`, and `--artifact`, and is refused beside `--entry`, `--write`, `--json`,

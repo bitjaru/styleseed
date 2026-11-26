@@ -7,7 +7,7 @@ a screen; everything else is a quieter variant. Navigation to another page is a 
 
 ## Anatomy
 
-- Container — the `<button>` (or the child element with `asChild`), height and radius from the size and the brand recipe.
+- Container — the `<button>` (or the child element with `asChild`), height and radius from the size and the brand recipe, or the project's recorded default height and corner.
 - Leading or trailing icon — optional SVG, sized automatically per size.
 - Label — a verb and an object, one to three words.
 
@@ -59,8 +59,8 @@ a screen; everything else is a quieter variant. Navigation to another page is a 
 
 ## Known gaps
 
-- At the `:root` control height (40px), `md` (40px), `sm` (36px), `xs` (32px) and `icon` (40px) are under the 44px touch minimum (DESIGN-LANGUAGE §41). Every size follows `--ss-control-height`, so the numbers move with the brand recipe.
-- The default `md` button, the default input and the default select take one height from the brand recipe (`--ss-control-height`), so they share a height in one context (CRAFT-BASELINE). Use the default size beside default form controls.
+- At the `:root` control height (40px), `md` (40px), `sm` (36px), `xs` (32px) and `icon` (40px) are under the 44px touch minimum (DESIGN-LANGUAGE §41). Every size follows `--ss-control-height`, so the numbers move with the brand recipe or the project's recorded default height.
+- The default `md` button, the default input and the default select take one height from the brand recipe or the project's recorded default height (`--ss-control-height`), so they share a height in one context (CRAFT-BASELINE). Use the default size beside default form controls.
 - There is no hover style; pointer users get feedback only on press.
 - There is no loading state; §46 describes one.
 
@@ -96,7 +96,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 
 - **Tokens consumed:** `accent` · `background` · `border` · `brand` · `destructive` · `foreground` · `secondary` · `surface-muted` · `text-disabled` · `text-primary`
 - **Radius:** recipe control radius (`ss-pattern-control` → `--ss-control-radius`, 0–999px by brand recipe or the project's recorded corner)
-- **Height:** the heights follow `--ss-control-height` (40px at `:root`; set per brand recipe)
+- **Height:** the heights follow `--ss-control-height` (40px at `:root`; set per brand recipe or the project's recorded default height)
 - **Focus:** `focus-visible:ring-2` · `focus-visible:ring-brand/20` · `focus-visible:ring-destructive/20`
 - **Motion:** `duration-150` · `transition-colors`
 

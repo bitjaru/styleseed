@@ -987,7 +987,10 @@ test("--default-height builder: a caller's basis follows the token as given; the
 });
 
 const APPEND_HEIGHT = "Append it to .styleseed/decisions.json as D-001, with approvedBy set to the name the person gives and date to today. Keep `source` as printed; it carries the default height. Nothing was written.\n";
-const NOT_DRAWN_32 = "Recorded, not drawn: this version does not draw a recorded default height. The components keep the brand recipe's 36px, and the drift report reads 40, 48px as `violates` until it is drawn.\n";
+// WO-20 B2: in a project without a registry the command says what .styleseed/system.css will do with the entry.
+const drawnAt = (height, look, x, sizes) => `Recorded: after the next resolve \`.styleseed/system.css\` draws ${height}px in place of ${look}. Import the file once in the global stylesheet, outside every \`@layer\`; where it is not imported the components keep ${x}px and the drift report reads ${sizes} as \`violates\`.\n`;
+const DRAWN_32 = "Recorded: after the next resolve `.styleseed/system.css` draws 32px in place of the brand recipe's 36px. Import the file once in the global stylesheet, outside every `@layer`; where it is not imported the components keep 36px and the drift report reads 40, 48px as `violates`.\n";
+assert.equal(drawnAt(32, "the brand recipe's 36px", 36, "40, 48px"), DRAWN_32, "the test's own template");
 const lockProject = (prefix) => {
   const root = mkdtempSync(join(tmpdir(), prefix));
   writeFileSync(join(root, "STYLESEED.md"), LOCK);
@@ -1004,15 +1007,15 @@ test("CLI --default-height: the entry on stdout, what stderr says, nothing writt
     let result = run("--default-height", "32");
     assert.equal(result.status, 0, result.stderr);
     assert.deepEqual(JSON.parse(result.stdout), { kind: "decision", axis: "controlHeights", values: [20, 24, 28, 32, 36, 44], statement: "Default controls are 32px tall; at that default the shipped components of this StyleSeed version draw 20, 24, 28, 32, 36, 44px. Basis: 32px on 3 of 4 measured systems (form pages, corpus run 2026-11-12).", approvedBy: "", date: "", source: "default-height:32; corpus:2026-11-12#button.height@form/1440" });
-    assert.equal(result.stderr, `${NOT_DRAWN_32}${APPEND_HEIGHT}`);
+    assert.equal(result.stderr, `${DRAWN_32}${APPEND_HEIGHT}`);
     result = run("--default-height", "36");
     assert.equal(JSON.parse(result.stdout).source, "default-height:36; engine-default:recipe.enterprise-workbench (not measured)");
     assert.equal(result.stderr, APPEND_HEIGHT, "the recipe's own height: no sentence about drawing");
-    assert.ok(run("--default-height", "40").stderr.startsWith("Recorded, not drawn: this version does not draw a recorded default height. The components keep the brand recipe's 36px, and the drift report reads 24, 48px as `violates` until it is drawn.\n"));
+    assert.ok(run("--default-height", "40").stderr.startsWith(drawnAt(40, "the brand recipe's 36px", 36, "24, 48px")));
     result = cli(root, ["--project-root", ".", "--surface", "touch", "--default-height", "32"]);
     assert.equal(result.status, 0, result.stderr);
     assert.equal(JSON.parse(result.stdout).source, "default-height:32; chosen: 32", "no corpus basis on touch");
-    assert.equal(result.stderr, `Floor: rule \`CRAFT-control-heights\` says "Touch surfaces provide at least 44px targets". This entry's default is 32px; its sizes under the floor are 20, 24, 28, 32, 36px. The entry is printed: a recorded decision outranks a default rule.\n${NOT_DRAWN_32}${APPEND_HEIGHT}`);
+    assert.equal(result.stderr, `Floor: rule \`CRAFT-control-heights\` says "Touch surfaces provide at least 44px targets". This entry's default is 32px; its sizes under the floor are 20, 24, 28, 32, 36px. The entry is printed: a recorded decision outranks a default rule.\n${DRAWN_32}${APPEND_HEIGHT}`);
     assert.ok(!cli(root, ["--project-root", ".", "--surface", "touch", "--default-height", "44"]).stderr.includes("Floor:"), "a default at the floor: no floor line");
     assert.deepEqual(files(root), before, "--default-height writes nothing");
 
@@ -1046,8 +1049,8 @@ test("CLI --default-height: the entry on stdout, what stderr says, nothing writt
     writeFileSync(join(root, ".styleseed/manifest.json"), JSON.stringify({ selection: { adapter: "product-ui", page: "settings" } }));
     result = run("--default-height", "32");
     assert.equal(result.status, 0, result.stderr);
-    assert.equal(result.stderr, `Recorded, not drawn: this version does not draw a recorded default height. The components keep the default 40px, and the drift report reads 40, 52px as \`violates\` until it is drawn.\n${APPEND_HEIGHT}`);
-    assert.ok(run("--default-height", "36").stderr.startsWith("Recorded, not drawn: this version does not draw a recorded default height. The components keep the default 40px, and the drift report reads 44, 52px as `violates` until it is drawn.\n"));
+    assert.equal(result.stderr, `${drawnAt(32, "the default 40px", 40, "40, 52px")}${APPEND_HEIGHT}`);
+    assert.ok(run("--default-height", "36").stderr.startsWith(drawnAt(36, "the default 40px", 40, "44, 52px")));
     result = run("--default-height", "40");
     assert.equal(JSON.parse(result.stdout).source, "default-height:40; engine-default:recipe.default (not measured)");
     assert.equal(result.stderr, APPEND_HEIGHT);
@@ -1066,7 +1069,7 @@ test("CLI --default-height on a recorded axis: the measured basis is kept, the l
     const replacing = JSON.parse(result.stdout);
     assert.equal(replacing.source, "default-height:32; corpus:2026-11-12#button.height@form/1440", "the basis read without D-001");
     assert.equal(result.stderr, [
-      NOT_DRAWN_32.trimEnd(),
+      DRAWN_32.trimEnd(),
       "This entry replaces D-001: a ledger holds one project-wide decision on an axis.",
       "Put it in .styleseed/decisions.json in place of D-001, keeping the id D-001 (an exception may point at it), with approvedBy set to the name the person gives and date to today. Keep `source` as printed; it carries the default height. Nothing was written.",
       "",
@@ -1088,6 +1091,9 @@ test("CLI --default-height on a recorded axis: the measured basis is kept, the l
     assert.match(result.stderr, /^This entry replaces D-001: /u);
   } finally { rmSync(root, { recursive: true, force: true }); }
 });
+
+// Three screens of this product whose controls are all `height` px tall.
+const screensAt = (height) => ["home", "orders", "billing"].map((label) => [label, ownObservation({ heights: { [height]: 20 }, fields: { [height]: 10 }, buttons: { [height]: 10 } })]);
 
 test("CLI --default-height in a registry project: the registry's sentence and its ledger", () => {
   const root = mkdtempSync(join(tmpdir(), "ss-propose-height-registry-"));
@@ -1114,6 +1120,46 @@ test("CLI --default-height in a registry project: the registry's sentence and it
     assert.equal(JSON.parse(result.stdout).source, "default-height:32; corpus:2026-11-12#button.height@form/1440");
     assert.equal(result.stderr, "Recorded, not drawn: a registry project's recorded default height is not drawn. The components keep the brand recipe's 36px, and the drift report reads 40, 48px as `violates`.\nAppend it to .styleseed/project.json (decisions) as D-001, with approvedBy set to the name the person gives and date to today. Keep `source` as printed; it carries the default height. Nothing was written.\n");
     assert.deepEqual(files(root), before, "nothing written");
+    // The look's own height with a measured source: the registry's sentence is not printed (the height is the recipe's).
+    mkdirSync(join(root, ".styleseed/evidence/drift/2026-11-14"), { recursive: true });
+    writeFileSync(join(root, OWN_PATH), `${JSON.stringify(inventoryFile(screensAt(36)), null, 2)}\n`);
+    const own = cli(root, ["--project-root", ".", "--surface", "pointer", "--own", OWN_PATH, "--default-height", "36"]);
+    assert.equal(own.status, 0, own.stderr);
+    assert.equal(JSON.parse(own.stdout).source, "default-height:36; own-screens:2026-11-14#controlHeights");
+    assert.ok(own.stderr.startsWith("Append it to .styleseed/project.json (decisions) as D-001"), own.stderr);
+  } finally { rmSync(root, { recursive: true, force: true }); }
+});
+
+test("CLI --default-height in a project without a registry: what .styleseed/system.css will do, and silence for the look's own default (WO-20 B2)", () => {
+  const root = lockProject("ss-propose-height-drawn-");
+  try {
+    const run = (...args) => cli(root, ["--project-root", ".", "--surface", "pointer", ...args]);
+    mkdirSync(join(root, ".styleseed/evidence/drift/2026-11-14"), { recursive: true });
+    writeFileSync(join(root, OWN_PATH), `${JSON.stringify(inventoryFile(screensAt(36)), null, 2)}\n`);
+    // A height that differs from the look's: the first sentence (also pinned above for 32, 40, and no recipe).
+    let result = run("--default-height", "32");
+    assert.equal(result.stderr, `${DRAWN_32}${APPEND_HEIGHT}`);
+    // The look's own height with a measured source: the file sets it and keeps it if the look changes.
+    result = run("--own", OWN_PATH, "--default-height", "36");
+    assert.equal(result.status, 0, result.stderr);
+    const measured = JSON.parse(result.stdout);
+    assert.equal(measured.source, "default-height:36; own-screens:2026-11-14#controlHeights");
+    assert.deepEqual(parseDefaultHeight(measured), { height: 36, lookDefault: false }, "the file draws it");
+    assert.equal(result.stderr, `Recorded: after the next resolve \`.styleseed/system.css\` sets 36px, which is the brand recipe's height today, and keeps it if the look changes.\n${APPEND_HEIGHT}`);
+    // The look's own default: neither sentence.
+    result = run("--default-height", "36");
+    assert.equal(JSON.parse(result.stdout).source, "default-height:36; engine-default:recipe.enterprise-workbench (not measured)");
+    assert.equal(result.stderr, APPEND_HEIGHT, "an entry that took the look's own default: silence about drawing");
+    assert.ok(!result.stderr.includes("system.css") && !result.stderr.includes("Recorded"), result.stderr);
+    // A project that names no recipe: the default height.
+    writeFileSync(join(root, OWN_PATH), `${JSON.stringify(inventoryFile(screensAt(40)), null, 2)}\n`);
+    writeFileSync(join(root, ".styleseed/manifest.json"), JSON.stringify({ selection: { adapter: "product-ui", page: "settings" } }));
+    result = run("--own", OWN_PATH, "--default-height", "40");
+    assert.equal(result.status, 0, result.stderr);
+    assert.equal(JSON.parse(result.stdout).source, "default-height:40; own-screens:2026-11-14#controlHeights");
+    assert.equal(result.stderr, `Recorded: after the next resolve \`.styleseed/system.css\` sets 40px, which is the default height today, and keeps it if the look changes.\n${APPEND_HEIGHT}`);
+    result = run("--default-height", "40");
+    assert.equal(result.stderr, APPEND_HEIGHT, "no recipe, the default's own height: silence");
   } finally { rmSync(root, { recursive: true, force: true }); }
 });
 

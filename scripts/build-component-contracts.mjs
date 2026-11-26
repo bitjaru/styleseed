@@ -333,7 +333,7 @@ export function buildContract(id, md, colours = themeColors(), code = null) {
     tokens: [...all.tokens].sort(),
     darkTokens: [...all.darkTokens].sort(),
     radius,
-    height: rootHeight !== null ? `the heights follow \`--ss-control-height\` (${rootHeight}px at \`:root\`; set per brand recipe)` : null,
+    height: rootHeight !== null ? `the heights follow \`--ss-control-height\` (${rootHeight}px at \`:root\`; set per brand recipe or the project's recorded default height)` : null,
     focus: [...all.focus].sort(),
     motion: [...all.motion].sort(),
     flags,

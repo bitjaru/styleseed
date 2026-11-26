@@ -65,7 +65,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 - **Tokens consumed:** `card` · `foreground` · `muted` · `muted-foreground` · `ring`; dark mode only: `input`
 - **Radius:** recipe control radius (`ss-pattern-control` → `--ss-control-radius`, 0–999px by brand recipe or the project's recorded corner)
-- **Height:** the heights follow `--ss-control-height` (40px at `:root`; set per brand recipe)
+- **Height:** the heights follow `--ss-control-height` (40px at `:root`; set per brand recipe or the project's recorded default height)
 - **Focus:** `focus-visible:border-ring` · `focus-visible:outline-1` · `focus-visible:outline-ring` · `focus-visible:ring-[3px]` · `focus-visible:ring-ring/50`
 - **Motion:** `transition-[color,box-shadow]`
 

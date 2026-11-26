@@ -320,8 +320,9 @@ export function normalizeDecisions(input, catalog, label = "project.decisions") 
 // starts the entry's `source` with the token `default-height:<D>; ` and then says where the height comes from.
 // A reader takes the height from the token and never works it out from the family: the offsets around it belong
 // to one version of the skill. The rest of the source says what the person took: `engine-default:recipe.<id>`
-// is the look's own default height, anything else a height taken from somewhere else. Both functions are pure;
-// nothing in the resolver calls them yet.
+// is the look's own default height, anything else a height taken from somewhere else. Both functions are pure.
+// The resolver reads the project-wide entry with parseDefaultHeight alone to decide whether .styleseed/system.css
+// sets the height (system-css.mjs), and the proposer to say what the file will do with the entry it prints.
 const DEFAULT_HEIGHT_SOURCE = /^default-height:([1-9][0-9]*); (.+)$/u;
 export function defaultHeightSource(height, rest) {
   if (!Number.isSafeInteger(height) || height < 1) fail(`default height ${height}: give a whole number of px, at least 1`);

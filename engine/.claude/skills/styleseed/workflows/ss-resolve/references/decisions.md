@@ -50,7 +50,7 @@ catalog: `engine/rules/catalog.json` never holds a project's decisions.
 | `statement` | Required. One line, at most 300 characters. This is what an agent reads. |
 | `approvedBy` | Required. Who approved it, at most 80 characters. |
 | `date` | Required. `YYYY-MM-DD`. |
-| `source` | Optional. Where it was decided, at most 200 characters: a review batch, a reference fact, a meeting. A decision proposed from an approved reference contract reads `reference:<slug>#<fact-id>` (for example `reference:ops-console#density.table.rowHeight`), or `reference:<slug>#tokens.<axis>` for a token axis. A proposal from `propose-system.mjs` reads `corpus:<run>#<claim>@<page type>/<viewport>`, `measured:<slug>#tokens.<axis>` (or `#<fact id>`), or `engine-default:<what> (not measured)`; values the person added themselves are listed after `chosen:`. A `controlHeights` entry from `propose-system.mjs --default-height <px>` starts with the token `default-height:<px>; ` and then names its basis in one of these forms, as `own-screens:<date>#controlHeights`, or as `chosen: <px>`: the source matches `^default-height:([1-9][0-9]*); (.+)$`, and the height is one of `values`. The token names the default control height of the family; a rest that starts with `engine-default:recipe.` means the person took the brand recipe's own default. This version records that height and does not draw it. |
+| `source` | Optional. Where it was decided, at most 200 characters: a review batch, a reference fact, a meeting. A decision proposed from an approved reference contract reads `reference:<slug>#<fact-id>` (for example `reference:ops-console#density.table.rowHeight`), or `reference:<slug>#tokens.<axis>` for a token axis. A proposal from `propose-system.mjs` reads `corpus:<run>#<claim>@<page type>/<viewport>`, `measured:<slug>#tokens.<axis>` (or `#<fact id>`), or `engine-default:<what> (not measured)`; values the person added themselves are listed after `chosen:`. A `controlHeights` entry from `propose-system.mjs --default-height <px>` starts with the token `default-height:<px>; ` and then names its basis in one of these forms, as `own-screens:<date>#controlHeights`, or as `chosen: <px>`: the source matches `^default-height:([1-9][0-9]*); (.+)$`, and the height is one of `values`. The token names the default control height of the family; a rest that starts with `engine-default:recipe.` means the person took the brand recipe's own default. To record a default control height, print its entry with `propose-system.mjs --default-height <px>` and keep `source` as printed. In a project without a registry `.styleseed/system.css` draws that height unless the person took the brand recipe's own default (see "A project without a registry"); a registry project records it and does not draw it. |
 
 The resolver validates the ledger with the rest of `project.json`. It refuses, with the entry id and
 what to change: duplicate ids, unknown rule ids, an exception without `rule` or `to`, a `to` that is
@@ -179,12 +179,20 @@ works. When the project later gets a registry, move the array into `decisions` i
 delete the file; the resolver stops until that is done.
 
 Such a project also gets `.styleseed/system.css` on every resolve, also when there is nothing to draw (one comment
-line). It draws the recorded control corner (`--ss-control-radius`) and field corner (`--ss-field-radius`), each
-with its entry id, in one rule whose doubled selectors outrank the brand recipe wherever its attribute sits and on
-either side of `recipes.css`. The project imports it once in its global stylesheet, outside every `@layer`; inside a
-layer the field corner still changes and the control corner does not. The bundle's "Project decisions" section ends
-with one paragraph that says what the file draws. When the project later gets a registry, the resolver no longer
-rewrites the file and no registry manifest lists it: remove the import and the file by hand.
+line). It draws the recorded default control height (`--ss-control-height`), control corner (`--ss-control-radius`),
+and field corner (`--ss-field-radius`), each with its entry id, in one rule whose doubled selectors outrank the brand
+recipe wherever its attribute sits and on either side of `recipes.css`. The height comes from the project-wide
+`controlHeights` decision, read from its `default-height:<px>; ` token and never from its values: the file sets it
+when the rest of the source does not start with `engine-default:recipe.` (the person took the height from somewhere
+else: a reference, the product's own screens, the corpus, or a choice), so it stays when the brand recipe changes. The
+file sets no height when the rest starts with `engine-default:recipe.` (the person took a brand recipe's own default,
+which the recipe draws and a later change of recipe changes) or when the decision names no default height that its
+values hold (an entry from `--entry`, one written by hand, one recorded before the token, or a token whose height is
+not one of `values`); the bundle says which. A scoped `controlHeights` decision and an exception are not drawn by the file, which knows no screens. The
+project imports it once in its global stylesheet, outside every `@layer`; inside a layer the field corner still
+changes and the height and the control corner do not. The bundle's "Project decisions" section ends with one
+paragraph that says what the file draws. When the project later gets a registry, the resolver no longer rewrites the
+file and no registry manifest lists it: remove the import and the file by hand.
 
 ## Worked examples
 

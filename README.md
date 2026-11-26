@@ -4,9 +4,9 @@
 
 # StyleSeed
 
-### Make AI coding agents keep your design system<br />across screens, sessions, and teammates.
+### Get a design system for your product.<br />Have your coding agent keep it on every screen.
 
-<sub>You choose the design decisions. StyleSeed compiles them into the rules an agent reads before each screen, then checks the rendered result. <b>Support experts, not replace them with a collection of tastes.</b> Open source, for Claude Code · Codex · Cursor.</sub>
+<sub>Tell your agent what you are building. StyleSeed proposes a starting system: a look, a palette (built from your key colour when you have one), and control and text sizes. The look is StyleSeed's own default, and it says so. Sizes come with counts measured on public design systems where there are any. You decide. The decisions become the rules your agent reads before each screen, and the rendered result is checked. <b>Support experts, not replace them with a collection of tastes.</b> Open source, for Claude Code · Codex · Cursor.</sub>
 
 <br />
 <br />
@@ -43,6 +43,7 @@ It copies the skills into this project. It does not install globally or change o
 
 - **Codex:** `$styleseed Help improve this screen. Preserve our existing design choices and show me what needs a decision.`
 - **Claude Code:** `/styleseed Help improve this screen. Preserve our existing design choices and show me what needs a decision.`
+- **Starting a new product?** `Set up a design system for this product. Tell me what you recommend and where each recommendation comes from, then wait for my decision.` (with `$styleseed` in Codex, `/styleseed` in Claude Code)
 
 Only `styleseed` is registered. It selects the needed internal workflow from your request.
 Choose unresolved design decisions together, then inspect the actual rendered result.

@@ -171,6 +171,8 @@ assert(registry.context?.engineRevision === catalog.engineRevision, "registry en
 const llms = read("demo-pricing/public/llms.txt");
 assert(llms.includes("invoke `/styleseed studio` or `$styleseed studio`") && llms.includes("`/styleseed resolve` or `$styleseed resolve` directly"), "llms.txt does not route through Studio and ss-resolve");
 assert(llms.includes("archive/debug mirror, not the"), "llms.txt must demote llms-full to archive/debug");
+const llmsFirstParagraph = (llms.split(/\n[ \t]*\n/u)[1] ?? "").replace(/\s+/gu, " ");
+assert(llmsFirstParagraph.includes("/systems") && llmsFirstParagraph.includes("is not measured"), "demo-pricing/public/llms.txt: the first paragraph must name /systems and say a brand recipe \"is not measured\"; edit the router text in demo-pricing/scripts/build-llms.mjs and regenerate");
 
 const smokeRoot = mkdtempSync(join(tmpdir(), "styleseed-resolve-"));
 try {

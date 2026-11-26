@@ -1,9 +1,13 @@
 # StyleSeed — Agent Router
 
-StyleSeed's goal is to make expert design judgment repeatable by coding agents, not replace
-experts with aesthetic preferences. Its open-source design-method engine selects or compiles
-a grammar, binds it to an output surface, and preserves project decisions. Expert-level output
-and universal design-system import are not established capabilities; human review still matters.
+StyleSeed gives a product that has no design system a starting one. Setup proposes a brand recipe, a palette
+(built from a key colour when the person supplies one), and control and text sizes, and the person decides. A
+brand recipe is StyleSeed's default and is not measured. Control height and text size come with counts from
+public design systems where the shipped evidence has them; the other sizes are StyleSeed's defaults and are
+labelled so. A newer measurement of seven design systems is at https://styleseed-demo.vercel.app/systems;
+setup does not read it yet. The goal is to make expert design judgment repeatable by coding agents, not to
+replace experts with aesthetic preferences. Expert-level output and universal design-system import are not
+established capabilities; human review still matters.
 
 ## Recommended path
 
@@ -81,6 +85,16 @@ StyleSeed supplies optional scoped spacing roles and rendered diagnostics. Recom
 Guide and prompt: https://styleseed-demo.vercel.app/faq#ui-spacing-feels-wrong
 Evidence: https://styleseed-demo.vercel.app/fix-ui-spacing
 Example: https://styleseed-demo.vercel.app/fix-ui-spacing
+
+### Which design system should my app start from?
+
+There is no single best one. It depends on what the product is and who uses it. Start from a few decisions that fit together: a look, a key colour, and how tall and how round the controls are. Before you pick, look at how public design systems draw the same parts. When a tool recommends something, ask where the recommendation comes from. A value measured on public design systems is evidence. A default is a starting point.
+
+StyleSeed’s setup recommends one of its built-in looks for the kind of product and says that this is its own default, not a measured value. For control height and text size it shows counts from public design systems where it has them; its other sizes are its own defaults and are labelled so. Choosing one of the measured systems and applying its values is not built yet.
+
+Guide and prompt: https://styleseed-demo.vercel.app/faq#which-design-system
+Evidence: https://styleseed-demo.vercel.app/systems
+Example: https://styleseed-demo.vercel.app/systems
 
 
 ## Context choices

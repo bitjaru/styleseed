@@ -58,6 +58,11 @@ export default function GuidesIndex() {
 
         <p className="mb-8 text-base text-neutral-600">Spacing feels wrong? <Link href="/fix-ui-spacing" className="font-semibold text-teal-800 underline underline-offset-4">Try a measured CSS fix before changing your design.</Link></p>
 
+        <p className="mb-8 text-[15px] leading-relaxed text-neutral-600">
+          These guides are StyleSeed&apos;s own guidance by kind of product. They are not measured.{" "}
+          <Link href="/systems" className="font-semibold text-teal-700 underline underline-offset-4">Design systems we measured</Link>.
+        </p>
+
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {DOMAINS.map((d) => (
             <Link

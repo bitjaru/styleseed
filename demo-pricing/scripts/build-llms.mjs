@@ -244,10 +244,14 @@ writeFileSync(
 
 const llmsRouter = `# StyleSeed — Agent Router
 
-StyleSeed's goal is to make expert design judgment repeatable by coding agents, not replace
-experts with aesthetic preferences. Its open-source design-method engine selects or compiles
-a grammar, binds it to an output surface, and preserves project decisions. Expert-level output
-and universal design-system import are not established capabilities; human review still matters.
+StyleSeed gives a product that has no design system a starting one. Setup proposes a brand recipe, a palette
+(built from a key colour when the person supplies one), and control and text sizes, and the person decides. A
+brand recipe is StyleSeed's default and is not measured. Control height and text size come with counts from
+public design systems where the shipped evidence has them; the other sizes are StyleSeed's defaults and are
+labelled so. A newer measurement of seven design systems is at https://styleseed-demo.vercel.app/systems;
+setup does not read it yet. The goal is to make expert design judgment repeatable by coding agents, not to
+replace experts with aesthetic preferences. Expert-level output and universal design-system import are not
+established capabilities; human review still matters.
 
 ## Recommended path
 

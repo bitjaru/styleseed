@@ -12,12 +12,12 @@ const inter = Inter({
 const SITE_URL = "https://styleseed-demo.vercel.app";
 const SITE_NAME = "StyleSeed";
 const SITE_DESC =
-  "Make expert design judgment repeatable by coding agents. StyleSeed compiles selected rules, preserves project decisions, and supports verification — not designer replacement.";
+  "StyleSeed proposes a starting design system for your product and says where its look and size recommendations come from. Your decisions become the rules your coding agent reads before each screen. Open source for Claude Code, Codex, and Cursor.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "StyleSeed — Expert decisions, repeatable by agents",
+    default: "StyleSeed — a design system for your product and your coding agent",
     template: "%s · StyleSeed",
   },
   description: SITE_DESC,

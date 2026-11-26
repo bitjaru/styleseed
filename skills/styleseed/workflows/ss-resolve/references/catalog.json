@@ -1,7 +1,7 @@
 {
   "schemaVersion": 5,
   "engineVersion": "5.0.0",
-  "engineRevision": "sha256:4f99d85795384728d7017f89b8aa7d6cae80fb379c57ab439dc3a197f5fcf3c7",
+  "engineRevision": "sha256:821bfea974d930b29fba5dad246be9de8e4d4ce651195bd04a3fd8e79caae0f2",
   "distributionSource": {
     "schemaVersion": 1,
     "channel": "edge",
@@ -10,7 +10,7 @@
   },
   "distributions": {
     "core": {
-      "revision": "sha256:4f99d85795384728d7017f89b8aa7d6cae80fb379c57ab439dc3a197f5fcf3c7",
+      "revision": "sha256:821bfea974d930b29fba5dad246be9de8e4d4ce651195bd04a3fd8e79caae0f2",
       "files": [
         {
           "path": "LICENSE",
@@ -254,8 +254,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/resolve-context.mjs",
-          "sha256": "ff9e7fd8b05fea4096831f1627a1bfc604c7105feae26bc72338beafdd7bcbf4",
-          "bytes": 18567
+          "sha256": "c6179e3ead7afa20cc2f2134d60857f57fe81a2f90d83711f41d37970e258d9d",
+          "bytes": 19738
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/rules-in-scope.mjs",
@@ -599,8 +599,8 @@
         },
         {
           "path": "engine/UPDATE.md",
-          "sha256": "0af727d7076865aad80a66badb0ffbff1e75ec76505ce1749052ec683f82220c",
-          "bytes": 8278
+          "sha256": "64822c95124e79f3f17161c94a989f0f5c6eec0f0479f1f1843a77d83102ae29",
+          "bytes": 8639
         },
         {
           "path": "engine/UX-WRITING.md",
@@ -660,7 +660,7 @@
       ]
     },
     "skills": {
-      "revision": "sha256:1d570e6060dfbcea2b4ca791c2c8b9b13d46a7771b9668dc0b3fa720f73a6701",
+      "revision": "sha256:d6b6b5b65bca1dfc7770bba3bd08c701738645d9aa7f325a96c02dabe241e1aa",
       "files": [
         {
           "path": "engine/.claude/skills/styleseed/SKILL.md",
@@ -894,8 +894,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/resolve-context.mjs",
-          "sha256": "ff9e7fd8b05fea4096831f1627a1bfc604c7105feae26bc72338beafdd7bcbf4",
-          "bytes": 18567
+          "sha256": "c6179e3ead7afa20cc2f2134d60857f57fe81a2f90d83711f41d37970e258d9d",
+          "bytes": 19738
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/rules-in-scope.mjs",
@@ -1393,8 +1393,8 @@
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-resolve/scripts/resolve-context.mjs",
-      "sha256": "ff9e7fd8b05fea4096831f1627a1bfc604c7105feae26bc72338beafdd7bcbf4",
-      "bytes": 18567
+      "sha256": "c6179e3ead7afa20cc2f2134d60857f57fe81a2f90d83711f41d37970e258d9d",
+      "bytes": 19738
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-resolve/scripts/rules-in-scope.mjs",
@@ -1738,8 +1738,8 @@
     },
     {
       "path": "UPDATE.md",
-      "sha256": "0af727d7076865aad80a66badb0ffbff1e75ec76505ce1749052ec683f82220c",
-      "bytes": 8278
+      "sha256": "64822c95124e79f3f17161c94a989f0f5c6eec0f0479f1f1843a77d83102ae29",
+      "bytes": 8639
     },
     {
       "path": "UX-WRITING.md",

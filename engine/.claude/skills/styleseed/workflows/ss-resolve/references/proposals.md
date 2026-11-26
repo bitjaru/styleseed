@@ -16,7 +16,8 @@ node <installed-ss-resolve>/scripts/propose-system.mjs --project-root . --surfac
 Each axis lists its options strongest first, and the first one is proposed when it is measured:
 
 1. **The project's recorded decision.** A recorded axis shows `Recorded: …` and proposes nothing; change
-   the entry or record an exception instead.
+   the entry or record an exception instead. For control height, `--default-height <px>` (below) also
+   prints a replacing entry, which goes in place of the recorded one under its id.
 2. **The person's own measurement.** A reference the person measured with `/ss-reference`
    (`--reference <slug>`): first one whose axis is kept in the project's reference contract, then one
    measured but not kept; then the product's own screens (`--own`, below).
@@ -114,7 +115,29 @@ taken from the input element, and give no option. An entry from this option has 
   other controls that share their corner use an 8px corner."). A corner already recorded stops it with
   that entry's id; change the entry instead. When a recorded `radii` decision does not hold the value,
   the entry is printed and one line names that decision and the value to add, because the resolver
-  refuses a `radii` decision without a recorded corner.
+  refuses a `radii` decision without a recorded corner. With a single control height it adds one line:
+  one height recorded alone flags the other sizes of the shipped components; use `--default-height`.
+- `--default-height <px>` prints one `controlHeights` entry for a default control height and writes
+  nothing. Its values are the height and every offset the shipped components draw around it
+  (`controlHeight.offsets` in `references/engine-defaults.json`: for 32, 20, 24, 28, 32, 36, 44px), and its
+  statement names the default ("Default controls are 32px tall; at that default the shipped components of
+  this StyleSeed version draw 20, 24, 28, 32, 36, 44px. Basis: …"). The basis is the first option of the
+  control-height block that is not the engine default and holds the height: a reference or the product's
+  own screens as they stand, a corpus count only on a row that agrees and only the count of that height;
+  otherwise "engine default of brand recipe <id>, not measured" for the recipe's own height, or "chosen"
+  beside the height the recipe draws. On a recorded axis the basis is read from the options the block
+  would have without the record. The `source` starts with the token `default-height:<px>; ` and then names
+  the basis as other entries do (`engine-default:recipe.<id> (not measured)` when the person took the
+  brand recipe's own default, `chosen: <px>` when nothing measured holds it): it matches
+  `^default-height:([1-9][0-9]*); (.+)$`, and the height is one of `values`. Keep `source` as printed when
+  recording; it carries the default height. This version records the height and does not draw it: the
+  components keep the height the brand recipe draws, and when the two differ the command says so on stderr
+  with the sizes the drift report would then read as `violates`. With `--surface touch` and a default under 44px it
+  prints the entry and the floor line, because a recorded decision outranks a default rule. On a recorded
+  axis it names the id the entry replaces: put the entry in its place and keep that id. It takes
+  `--reference`, `--own`, `--page`, and `--artifact`, and is refused beside `--entry`, `--write`, `--json`,
+  and `--engine-defaults`. The entry is built by `defaultHeightEntry` in `system-proposal.mjs`, which a
+  later caller can hand a basis of its own (words and a source, written after the token).
 - `--reference <slug>` adds a reference measured in this project
   (`.styleseed/evidence/_reference/<slug>/measurements/`). When `.styleseed/rulesets/<slug>/evidence.json`
   is a generated contract a person has signed off (see [decisions](decisions.md)), the axes it keeps
@@ -146,7 +169,8 @@ measured basis in this run.
 2. **The tool speaks with more weight than its basis.** "Proposed: 32px" sits on the same line as its
    count, an entry cannot compile without a person's name, and the agent presents the counts as printed.
 3. **Roles and sets.** Recording a single default height or body size as a whole axis makes the next
-   drift run flag every other value; the "If recorded" and "Before recording" lines say so.
+   drift run flag every other value; the "If recorded" and "Before recording" lines say so. For control
+   height, `--default-height` prints the default with the sizes the shipped components draw around it.
 4. **Buckets.** Heights are rounded to 4px in the study (37 counts as 36); a proposal prints the bucket.
 5. **Page types are coarse.** `settings` reads the form rows; a row with fewer than three systems falls
    back to the pooled row, which mixes page types and often has no single value.

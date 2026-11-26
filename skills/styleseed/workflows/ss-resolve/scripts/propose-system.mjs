@@ -10,21 +10,26 @@
 //   node propose-system.mjs --project-root <dir> --surface pointer|touch [--artifact <id>] [--page <id>]
 //                           [--reference <slug>]… [--own <inventory.json>] [--write | --json]
 //   node propose-system.mjs --project-root <dir> --surface … [same inputs] --entry <axis>=<v1,v2,…>
+//   node propose-system.mjs --project-root <dir> --surface … [same inputs] --default-height <px>
 //   node propose-system.mjs --engine-defaults [--page <id>]
 //
 // Default: SYSTEM.md on stdout, nothing written. --json: the proposal object on stdout. --write:
 // .styleseed/proposals/system.json and .styleseed/proposals/SYSTEM.md, then one line per axis. --entry: the
 // entry for a value set the person chose, on stdout; writes nothing. It also takes the two corner axes the
 // ledger records and nothing proposes (controlRadius, fieldRadius: one value each), refuses a corner already
-// recorded, and says on stderr which recorded `radii` decision lacks the value. --engine-defaults: what the engine
-// ships beside the corpus rows; needs no project. Exit 0 on success, 1 on any error.
+// recorded, and says on stderr which recorded `radii` decision lacks the value. --default-height: the
+// `controlHeights` entry for a default control height (the height and the sizes the shipped components draw
+// around it; its `source` starts with `default-height:<px>; `), on stdout; writes nothing. This version records
+// such a height and does not draw it; stderr says so when the height is not the brand recipe's own.
+// --engine-defaults: what the engine ships beside the corpus rows; needs no project. Exit 0 on success, 1 on any
+// error.
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { SAFE_ID, normalizeDecisions, parseStrictJson, safeProjectPath } from "./runtime-contract.mjs";
 import { loadProjectRegistry } from "./project-registry.mjs";
 import { isApproved, isGeneratedEvidence, normalizeReferenceEvidence } from "./reference-contract.mjs";
-import { PROPOSAL_AXES, RECORD_ONLY_DEF, engineDefaultsTable, entryForValues, normalizeEngineDefaults, normalizeEvidencePack, normalizeInventory, ownScreens, proposeSystem, referenceValues, renderEngineDefaultsMarkdown, renderProposalMarkdown } from "./system-proposal.mjs";
+import { PROPOSAL_AXES, RECORD_ONLY_DEF, TOUCH_FLOOR, defaultHeightEntry, engineDefaultsTable, entryForValues, normalizeEngineDefaults, normalizeEvidencePack, normalizeInventory, ownScreens, proposeSystem, referenceValues, renderEngineDefaultsMarkdown, renderProposalMarkdown } from "./system-proposal.mjs";
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const REFERENCES = resolve(scriptDir, "../references");
@@ -32,11 +37,20 @@ const LEDGER_FILE = ".styleseed/decisions.json";
 const PROPOSALS_DIR = ".styleseed/proposals";
 const USAGE = `usage: propose-system.mjs --project-root <dir> --surface pointer|touch [--artifact <id>] [--page <id>] [--reference <slug>]… [--own <inventory.json>] [--write | --json]
        propose-system.mjs --project-root <dir> --surface pointer|touch [same inputs] --entry <axis>=<v1,v2,…>
+       propose-system.mjs --project-root <dir> --surface pointer|touch [same inputs] --default-height <px>
        propose-system.mjs --engine-defaults [--page <id>]`;
 const REBUILD = "rebuild with `node scripts/build-evidence-pack.mjs`, or reinstall the skill";
+// What --default-height says on stderr when the height is not the brand recipe's own (WO-20 C2): this version
+// records the height and does not draw it. Part B2 replaces the sentence of a project without a registry with
+// what .styleseed/system.css then does. `look` is "the brand recipe's 36px" or "the default 40px"; `sizes` the
+// sizes the recipe draws that the entry does not hold ("40, 48px").
+export const NOT_DRAWN = Object.freeze({
+  legacy: (look, sizes) => `Recorded, not drawn: this version does not draw a recorded default height. The components keep ${look}, and the drift report reads ${sizes} as \`violates\` until it is drawn.`,
+  registry: (look, sizes) => `Recorded, not drawn: a registry project's recorded default height is not drawn. The components keep ${look}, and the drift report reads ${sizes} as \`violates\`.`,
+});
 
 export function parseArgs(argv) {
-  const args = { projectRoot: null, surface: null, artifact: null, page: null, references: [], own: null, write: false, json: false, entry: null, engineDefaults: false, help: false };
+  const args = { projectRoot: null, surface: null, artifact: null, page: null, references: [], own: null, write: false, json: false, entry: null, defaultHeight: null, engineDefaults: false, help: false };
   const value = (i, flag) => { const next = argv[i + 1]; if (next === undefined || next.startsWith("--")) throw new Error(`${flag} needs a value\n${USAGE}`); return next; };
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
@@ -47,6 +61,12 @@ export function parseArgs(argv) {
     else if (arg === "--reference") args.references.push(value(i++, arg));
     else if (arg === "--own") { if (args.own !== null) throw new Error("--own: pass one inventory.json"); args.own = value(i++, arg).replaceAll("\\", "/").replace(/^(?:\.\/)+/u, ""); }
     else if (arg === "--entry") args.entry = value(i++, arg);
+    else if (arg === "--default-height") {
+      if (args.defaultHeight !== null) throw new Error("--default-height: pass one height");
+      const raw = value(i++, arg);
+      if (!/^[0-9]+$/u.test(raw)) throw new Error(`--default-height ${raw}: give the default control height as a whole number of px, for example --default-height 32`);
+      args.defaultHeight = Number(raw);
+    }
     else if (arg === "--write") args.write = true;
     else if (arg === "--json") args.json = true;
     else if (arg === "--engine-defaults") args.engineDefaults = true;
@@ -55,13 +75,17 @@ export function parseArgs(argv) {
   }
   if (args.help) return args;
   if (args.engineDefaults) {
-    const extra = [args.projectRoot && "--project-root", args.surface && "--surface", args.artifact && "--artifact", args.references.length && "--reference", args.own && "--own", args.write && "--write", args.json && "--json", args.entry && "--entry"].filter(Boolean);
+    const extra = [args.projectRoot && "--project-root", args.surface && "--surface", args.artifact && "--artifact", args.references.length && "--reference", args.own && "--own", args.write && "--write", args.json && "--json", args.entry && "--entry", args.defaultHeight !== null && "--default-height"].filter(Boolean);
     if (extra.length) throw new Error(`--engine-defaults reads only the skill's files and takes --page alone; drop ${extra.join(", ")}`);
     return args;
   }
   if (!args.projectRoot) throw new Error(`pass --project-root <dir>: the project folder that holds STYLESEED.md or .styleseed/project.json\n${USAGE}`);
   if (!args.surface) throw new Error("pass --surface pointer (mouse or trackpad first) or --surface touch (touch first): the corpus was measured with pointer input only");
   if (!["pointer", "touch"].includes(args.surface)) throw new Error(`--surface ${args.surface}: pass --surface pointer (mouse or trackpad first) or --surface touch (touch first)`);
+  if (args.defaultHeight !== null) {
+    const extra = [args.entry !== null && "--entry", args.write && "--write", args.json && "--json"].filter(Boolean);
+    if (extra.length) throw new Error(`--default-height prints one entry and writes nothing; drop ${extra.join(", ")}`);
+  }
   if (args.write && args.json) throw new Error("--write and --json are separate outputs; pass one of them");
   if (args.entry !== null && (args.write || args.json)) throw new Error("--entry prints one entry and writes nothing; drop --write and --json");
   if (args.artifact !== null && !SAFE_ID.test(args.artifact)) throw new Error(`--artifact ${args.artifact}: not an artifact id (lower-case letters, digits, and hyphens)`);
@@ -219,8 +243,31 @@ export function main(argv, { stdout = (text) => process.stdout.write(text), stde
   const references = args.references.map((slug) => loadReference(loaded.root, slug, catalog));
   const own = args.own !== null ? loadOwn(loaded.root, args.own) : null;
   const notes = [...references.map((ref) => ref.note).filter(Boolean), ...(own?.skipped ?? []).map((entry) => `--own ${own.path}: ${entry.axis} has ${entry.count} values; a ledger entry holds at most 24, so this axis gets no own-screens option.`)];
-  const proposal = proposeSystem({ pack, defaults, project: loaded.project, context: { artifact: loaded.artifact, page, surface: args.surface }, references: references.map((ref) => ref.values), own });
+  const inputs = { pack, defaults, project: loaded.project, context: { artifact: loaded.artifact, page, surface: args.surface }, references: references.map((ref) => ref.values), own };
+  const proposal = proposeSystem(inputs);
   const command = `propose-system.mjs --project-root .${loaded.artifact ? ` --artifact ${loaded.artifact}` : ""}${args.page !== null ? ` --page ${page}` : ""}${args.references.map((slug) => ` --reference ${slug}`).join("")}${own ? ` --own ${own.path}` : ""} --surface ${args.surface}`;
+  const ledgerLine = (place) => `${place}, with approvedBy set to the name the person gives and date to today.`;
+  const ledgerAt = `${loaded.project.ledger.path}${loaded.mode === "registry" ? " (decisions)" : ""}`;
+  if (args.defaultHeight !== null) {
+    // On a recorded axis the block has no options: the basis is read from the proposal the project would get
+    // without its project-wide controlHeights decision (scoped entries and exceptions stay). That second proposal
+    // is only read here; the first is what every other output prints.
+    const block = proposal.axes.find((entry) => entry.axis === "controlHeights");
+    const recorded = block.status === "recorded" ? block.recorded.id : null;
+    const basisProposal = recorded ? proposeSystem({ ...inputs, project: { ...loaded.project, decisions: loaded.project.decisions.filter((entry) => entry.id !== recorded) } }) : proposal;
+    const height = args.defaultHeight;
+    const { entry, underFloor, look } = defaultHeightEntry(basisProposal, defaults, height);
+    stdout(`${JSON.stringify(entry, null, 2)}\n`);
+    for (const note of notes) stderr(`${note}\n`);
+    if (underFloor.includes(height)) stderr(`Floor: rule \`${TOUCH_FLOOR.rule}\` says "${TOUCH_FLOOR.clause}". This entry's default is ${height}px; its sizes under the floor are ${underFloor.join(", ")}px. The entry is printed: a recorded decision outranks a default rule.\n`);
+    if (height !== look.height) stderr(`${NOT_DRAWN[loaded.mode](look.recipe ? `the brand recipe's ${look.height}px` : `the default ${look.height}px`, `${look.values.filter((value) => !entry.values.includes(value)).join(", ")}px`)}\n`);
+    const keep = "Keep `source` as printed; it carries the default height. Nothing was written.";
+    if (recorded) {
+      stderr(`This entry replaces ${recorded}: a ledger holds one project-wide decision on an axis.\n`);
+      stderr(`${ledgerLine(`Put it in ${ledgerAt} in place of ${recorded}, keeping the id ${recorded} (an exception may point at it)`)} ${keep}\n`);
+    } else stderr(`${ledgerLine(`Append it to ${ledgerAt} as ${loaded.project.ledger.nextId}`)} ${keep}\n`);
+    return 0;
+  }
   if (args.entry !== null) {
     const { axis, values } = parseEntry(args.entry);
     // A corner axis has no block, so the ledger is read here: a recorded corner is changed, not appended
@@ -233,7 +280,8 @@ export function main(argv, { stdout = (text) => process.stdout.write(text), stde
     for (const note of notes) stderr(`${note}\n`);
     const lacking = corner ? loaded.project.decisions.filter((d) => d.kind === "decision" && d.axis === "radii" && !d.values.includes(entry.values[0])).map((d) => d.id) : [];
     if (lacking.length) stderr(`radii ${lacking.length === 1 ? `decision ${lacking[0]} does` : `decisions ${lacking.join(", ")} do`} not hold ${entry.values[0]}; add ${entry.values[0]} to ${lacking.length === 1 ? "its" : "their"} values when you append this entry, or the next resolve refuses the ledger.\n`);
-    stderr(`Append it to ${loaded.project.ledger.path}${loaded.mode === "registry" ? " (decisions)" : ""} as ${loaded.project.ledger.nextId}, with approvedBy set to the name the person gives and date to today. Nothing was written.\n`);
+    if (axis === "controlHeights" && entry.values.length === 1) stderr(`One control height recorded alone flags the other sizes of the shipped components; for them use \`--default-height ${entry.values[0]}\`.\n`);
+    stderr(`${ledgerLine(`Append it to ${ledgerAt} as ${loaded.project.ledger.nextId}`)} Nothing was written.\n`);
     return 0;
   }
   if (args.json) {

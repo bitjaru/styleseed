@@ -11,6 +11,51 @@ Nothing is in force until a person records it in the [decisions ledger](decision
 node <installed-ss-resolve>/scripts/propose-system.mjs --project-root . --surface pointer --write
 ```
 
+## The system first
+
+`SYSTEM.md` opens with "The system this project starts with", then "To take it", then "Details and counts": the
+lines about the corpus, the project, and the rule (and the touch line when it applies), the blocks described below,
+"Measured systems", and "Recording". `system.json` holds the first section as its last key, `system`, and the
+Markdown prints the first two sections from that key and the command alone.
+
+The table has eight rows, each named for what takes the value: the default height of controls (buttons, inputs,
+selects, tabs), the corner of buttons and the controls that share it, the corner of inputs, selects, and textareas,
+the corner of list rows, the corner of cards, the padding inside a section card and the other pattern cards, the gap
+between sections, and the side margin of the page. A row the ledger does not record shows what the shipped
+components draw with the project's brand recipe, or with the `:root` block of `recipes.css` when the project names
+none: engine defaults, labelled not measured. A value that is not plain px (the `clamp(…)` of `expressive-brand`)
+prints as not a fixed value. The field corner is the skin's, which no brand recipe sets. A recorded row gives the
+entry's id and what `.styleseed/system.css` does with it, read as the resolver reads it: draws it after a resolve in
+place of the look's value, or sets it and keeps it if the look changes when it equals the look's value. A registry
+project records and does not draw, and the row says so. The height row also says when the recorded default is a
+look's own default (the file leaves it to the look), when the look now draws another height, and when the recorded
+control heights name no default height; when block 1 proposes a height, it says from where. A recorded corner adds
+one line under the table: the drift report does not check a button's or a field's corner. The counts stay under
+"Details and counts".
+
+"To take it" prints the first of these that applies:
+
+| Kind | When | What it prints |
+|---|---|---|
+| `recorded` | The recorded default height is one the file sets, or a look's own default at the height the look draws | Nothing to record |
+| `no-default` | The recorded control heights name no default height | The `--default-height` command whose entry goes in place of the recorded one |
+| `registry` | A registry project, with no project-wide control height recorded, or with a look's own default at a height its look does not draw | No entry: a decision there is project-wide, and its artifacts can have different looks |
+| `floor` | Touch, and the look draws a default under 44px | No entry; the command for a 44px default |
+| `entry` | No project-wide control height recorded | The entry `--default-height` prints for the height the look draws, and what recording it changes |
+| `replace` | A look's own default recorded at a height the look does not draw | The entry for the height the look draws, to put in place of the recorded one under its id |
+
+The entry under "To take it" is the one `--default-height` prints for the same project, built from the proposal the
+project would have without its project-wide `controlHeights` decision. When the product's own screens, a reference,
+or an agreeing corpus row hold the height the look draws, the entry carries that basis, and
+`.styleseed/system.css` then sets the height and keeps it if the look changes; the text says so.
+
+On touch, nothing whose default is under the 44px floor of `CRAFT-control-heights` is offered unless the person asked
+for it: the command for a 44px default is named and its entry is not printed, because the 44px family changes every
+control of the product. A family whose default is 44 still holds 32, 36, and 40px, and block 1 marks them under the
+floor. A registry project is offered no entry: its decision is project-wide while its look is per artifact, and the
+height it records is not drawn. A height for one artifact is a decision with `scope.artifacts`; the drift report
+applies it to the screens named in its `scope.screens`.
+
 ## Basis order
 
 Each axis lists its options strongest first, and the first one is proposed when it is measured:
@@ -24,7 +69,9 @@ Each axis lists its options strongest first, and the first one is proposed when 
 3. **Corpus counts.** The published demo screens of a few design systems, measured by the StyleSeed
    repository and shipped with this skill as counts (below).
 4. **The engine default.** What the engine's components, brand recipe, and starting spacing scale ship.
-   It is always labelled `engine default, not measured` and is never proposed. For control height it is
+   It is always labelled `engine default, not measured` and is never proposed in a block. The first section
+   offers the default height the look draws as one entry, labelled not measured unless a measured option holds
+   the same height (above). For control height it is
    the set of heights the shipped components draw with the project's brand recipe: the recipe's
    `--ss-control-height` plus each offset the components use (with `enterprise-workbench`, 24, 28, 32,
    36, 40, 48px). A project that names no recipe, or one the file does not have, gets the `:root`
@@ -62,7 +109,9 @@ uses, `typeSizes` every text size, and the drift report reads any value outside 
 `violates D-…`. A proposal built from such a role is marked "one part of this axis, not the whole set"
 and adds a "Before recording" line: add the other values with `--entry <axis>=<all values>`; those
 values are listed as chosen without a measured basis. Every block also says what the drift report will
-do once the entry is recorded ("If recorded: …").
+do once the entry is recorded ("If recorded: …"). Control height is the exception: where the corpus proposes
+the height, block 1 prints `--default-height <px>` in place of a one-value entry, and where nothing is proposed
+it names that command before `--entry controlHeights=<values>`.
 
 ## Touch
 
@@ -102,9 +151,11 @@ taken from the input element, and give no option. An entry from this option has 
 ## Files and options
 
 - `--write` writes `.styleseed/proposals/SYSTEM.md` (what a person reads) and
-  `.styleseed/proposals/system.json` (the same proposal with every count). They are not resolver outputs
-  and not manifest inputs; rewrite them whenever the inputs change. Without `--write` the Markdown goes
-  to stdout; `--json` prints the object.
+  `.styleseed/proposals/system.json` (the same proposal with every count; `proposalVersion` 2, with the
+  first section as its last key, `system`). They are not resolver outputs and not manifest inputs; rewrite
+  them whenever the inputs change. It prints one line for the default control height (`system: default
+  control height 36px (the brand recipe, not measured); not recorded`, or the id that records it), then
+  one line per axis. Without `--write` the Markdown goes to stdout; `--json` prints the object.
 - `--entry <axis>=<v1,v2,…>` prints the ledger entry for a value set the person chose: the matching
   option's entry, or the values attributed to the options that hold them, with the rest listed after
   `chosen:`. It writes nothing. Every entry the tool prints has `approvedBy` and `date` empty and no
@@ -175,7 +226,8 @@ measured basis in this run.
    count, an entry cannot compile without a person's name, and the agent presents the counts as printed.
 3. **Roles and sets.** Recording a single default height or body size as a whole axis makes the next
    drift run flag every other value; the "If recorded" and "Before recording" lines say so. For control
-   height, `--default-height` prints the default with the sizes the shipped components draw around it.
+   height, `--default-height` prints the default with the sizes the shipped components draw around it, and
+   block 1 prints that command in place of a one-value entry when the corpus proposes the height.
 4. **Buckets.** Heights are rounded to 4px in the study (37 counts as 36); a proposal prints the bucket.
 5. **Page types are coarse.** `settings` reads the form rows; a row with fewer than three systems falls
    back to the pooled row, which mixes page types and often has no single value.

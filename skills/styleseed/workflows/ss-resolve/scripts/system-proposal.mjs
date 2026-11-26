@@ -1,15 +1,18 @@
-// System proposal (WO-11 A4, B2): for each ledger axis it covers, the values a person may record and the basis of
-// each, strongest first: the project's recorded decision, the person's own measurement (a reference kept
-// in an approved contract, then a reference measured but not kept, then the product's own screens as
-// counted by `drift-report.mjs --inventory`), corpus counts from the evidence pack, and last the engine
-// default, always labelled not measured. A proposal is a count and a choice: it states
-// what was measured, on how many systems of which kind, and leaves the value to the person. Nothing is
+// System proposal (WO-11 A4, B2; WO-20 S). First the system the project starts with (`system`): one table of what
+// the shipped components draw with the project's look and what its ledger records, and under "To take it" one entry
+// for the default control height or the reason there is none. Then, under "Details and counts", for each ledger
+// axis it covers, the values a person may record and the basis of each, strongest first: the project's recorded
+// decision, the person's own measurement (a reference kept in an approved contract, then a reference measured but
+// not kept, then the product's own screens as counted by `drift-report.mjs --inventory`), corpus counts from the
+// evidence pack, and last the engine default, always labelled not measured. A proposal is a count and a choice: it
+// states what was measured, on how many systems of which kind, and leaves the value to the person. Nothing is
 // scored, nothing gates, and no entry it prints compiles: `approvedBy` and `date` stay empty until the
 // person who decides puts their name on it. Pure: no I/O, no clock; the same input gives the same bytes.
 import { FACT_LEDGER, isApproved, proposeDecisions } from "./reference-contract.mjs";
-import { defaultHeightSource } from "./runtime-contract.mjs";
+import { defaultHeightSource, parseDefaultHeight } from "./runtime-contract.mjs";
+import { systemCssDraws } from "./system-css.mjs";
 
-export const PROPOSAL_VERSION = 1;
+export const PROPOSAL_VERSION = 2;
 // A corpus value is proposed when it leads on at least minLineages measured systems, on at least
 // shareNum/shareDen of the systems measured for its row, with at least minProductSystems product systems
 // among them, on a row with at least minMeasured measured systems. Below that only the counts are shown.
@@ -575,9 +578,18 @@ function entryFor(def, option, runId) {
  *   pack and defaults normalized; project.decisions normalized (normalizeDecisions); references are
  *   referenceValues results in the order given; own is the ownScreens result for the product's own
  *   measured screens, or null.
- * @returns {object} the proposal (written as .styleseed/proposals/system.json)
+ * @returns {object} the proposal (written as .styleseed/proposals/system.json); its last key, `system`, is the
+ *   system the project starts with (systemFor)
  */
-export function proposeSystem({ pack, defaults, project, context, references = [], own = null, rule = PROPOSAL_RULE }) {
+export function proposeSystem(input) {
+  const { proposal, corners } = proposeBlocks(input);
+  return { ...proposal, system: systemFor(input, proposal, corners) };
+}
+
+// The proposal without `system`, and the recorded corners it was built with. The second proposal of
+// defaultHeightEntryFor is made here, never with proposeSystem: `system` offers an entry built from that second
+// proposal, so proposeSystem calling itself would never end.
+function proposeBlocks({ pack, defaults, project, context, references = [], own = null, rule = PROPOSAL_RULE }) {
   if (own !== null && !(isObject(own) && isObject(own.values) && isObject(own.axes) && typeof own.path === "string")) throw new Error("own: pass the ownScreens result for the product's inventory, or null");
   const decisions = project.decisions ?? [];
   // The recorded corners (no scope, no exception on these axes) reach the `radii` block's engine default.
@@ -617,7 +629,7 @@ export function proposeSystem({ pack, defaults, project, context, references = [
     });
   }
   const withScreens = pack.lineages.filter((lineage) => lineage.screens > 0);
-  return {
+  const proposal = {
     proposalVersion: PROPOSAL_VERSION,
     inputs: { mode: project.mode, artifact: context.artifact ?? null, page: context.page, pageRow: PAGE_ROWS[context.page] ?? "all", surface: context.surface, density: project.density ?? null, recipe: project.recipe ?? null, references: references.map((ref) => ref.slug), own: own ? own.path : null },
     pack: {
@@ -629,6 +641,7 @@ export function proposeSystem({ pack, defaults, project, context, references = [
     },
     rule: { ...rule }, ledger: { ...project.ledger }, axes,
   };
+  return { proposal, corners };
 }
 
 /**
@@ -694,6 +707,14 @@ export function entryForValues(proposal, axis, values) {
 
 // --- a default control height (WO-20 C2) ---------------------------------------------------------------------
 
+// The look the shipped components draw with a project's recipe: the recipe when the file has it, else null (the
+// :root block), the height it draws by default, and the family it draws (engineDefault("controlHeights")).
+function lookOf(defaults, recipe) {
+  const drawn = engineDefault("controlHeights", defaults, { recipe });
+  const id = drawn.id.slice("recipe.".length);
+  return { recipe: id === "default" ? null : id, height: defaults.recipes[id].controlHeight, values: drawn.values };
+}
+
 // The statement names the default; the family clause holds only where the height is drawn, so it is conditional.
 // Over 300 characters the family clause is shortened first, and only then does the basis become "see source".
 function defaultHeightStatement(height, values, words) {
@@ -750,10 +771,7 @@ export function defaultHeightEntry(proposal, defaults, height, { basis = null } 
   const offsets = defaults.controlHeight.offsets;
   const values = numeric(offsets.map((offset) => height + offset));
   if (values[0] < 1) throw new Error(`--default-height ${height}: the smallest size around it would be ${values[0]}px; give at least ${1 - offsets[0]}`);
-  const recipe = proposal.inputs.recipe;
-  const drawn = engineDefault("controlHeights", defaults, { recipe });
-  const id = drawn.id.slice("recipe.".length);
-  const look = { recipe: id === "default" ? null : id, height: defaults.recipes[id].controlHeight, values: drawn.values };
+  const look = lookOf(defaults, proposal.inputs.recipe);
   let words, source;
   if (basis !== null) {
     if (!isObject(basis) || !isText(basis.words, MAX_STATEMENT) || !isText(basis.source, MAX_SOURCE)) throw new Error("default height basis: pass {words, source}, each one line of text");
@@ -771,23 +789,213 @@ export function defaultHeightEntry(proposal, defaults, height, { basis = null } 
   return { entry: { kind: "decision", axis: "controlHeights", values, statement, approvedBy: "", date: "", source }, underFloor, look };
 }
 
+// A ledger holds at most one project-wide decision per axis (runtime-contract.mjs).
+const projectWideHeight = (entry) => entry.kind === "decision" && entry.axis === "controlHeights" && !entry.scope;
+
+/**
+ * One entry, two printers (WO-20 S): the entry `defaultHeightEntry` builds for a default height from the proposal
+ * the project would have without its project-wide `controlHeights` decision (scoped entries and exceptions stay).
+ * `propose-system.mjs --default-height` prints it, and `system.take` offers it under "To take it". The second
+ * proposal is made without its own `system`, so this never calls proposeSystem.
+ * @param {object} input the proposer's inputs, as proposeSystem takes them
+ * @param {number} height the default control height in px
+ * @returns what defaultHeightEntry returns
+ */
+export function defaultHeightEntryFor(input, height) {
+  const decisions = input.project.decisions ?? [];
+  const without = decisions.filter((entry) => !projectWideHeight(entry));
+  const { proposal } = proposeBlocks(without.length === decisions.length ? input : { ...input, project: { ...input.project, decisions: without } });
+  return defaultHeightEntry(proposal, input.defaults, height);
+}
+
+// --- the system this project starts with (WO-20 S) -------------------------------------------------------------
+
+const SYSTEM_CSS = "`.styleseed/system.css`";
+// The words that depend on the look: the brand recipe the file has, or none (the :root block). None is built by
+// adding 's to another. A corner is "pill corners", "square corners", or "<n>px" (cornerWords); a null control radius
+// (a value that is not plain px) is "corner".
+function lookWords(look) {
+  const corner = (value) => (value === null ? "corner" : cornerWords(value));
+  return look.recipe
+    ? { look: "the brand recipe", lookX: `the brand recipe's ${look.height}px`, draws: "the brand recipe draws", own: "the brand recipe's own default", earlier: "an earlier own default of the brand recipe", corner: (value) => `the brand recipe's ${corner(value)}`, notFixed: "not a fixed value in this brand recipe" }
+    : { look: "StyleSeed's default", lookX: `the default ${look.height}px`, draws: "the components draw", own: "StyleSeed's own default", earlier: "an earlier default of StyleSeed's own", corner: (value) => `the default ${corner(value)}`, notFixed: "not a fixed value" };
+}
+// The look a recorded default was taken from, read only from the exact form the proposer writes after the token,
+// `engine-default:recipe.<id> (not measured)`; nothing a person typed reaches the table. `own` when <id> is this
+// project's look (`default` for none).
+function tookFrom(entry, look, defaults) {
+  const rest = entry.source.slice(entry.source.indexOf("; ") + 2);
+  const match = /^engine-default:recipe\.(.+) \(not measured\)$/u.exec(rest);
+  const id = match ? match[1] : null;
+  if (id === null) return { own: false, words: "the own default of another look" };
+  if (id === (look.recipe ?? "default")) return { own: true, words: null };
+  if (id === "default" && look.recipe) return { own: false, words: "StyleSeed's own default" };
+  if (id !== "default" && Object.hasOwn(defaults.recipes, id)) return { own: false, words: `the own default of brand recipe \`${id}\`` };
+  return { own: false, words: "the own default of another look" };
+}
+
+const ROW_NAMES = Object.freeze({
+  controlHeight: "Default height of controls (buttons, inputs, selects, tabs)",
+  controlRadius: "Corner of buttons and the controls that share it",
+  fieldRadius: "Corner of inputs, selects, and textareas",
+  insetRadius: "Corner of list rows",
+  surfaceRadius: "Corner of cards",
+  surfacePadding: "Padding inside a section card and the other pattern cards",
+  sectionGap: "Gap between sections",
+  pageGutter: "Side margin of the page",
+});
+
+/**
+ * The system the project starts with: what the shipped components draw with its look, what its ledger records, and
+ * what "To take it" offers. What `.styleseed/system.css` draws is read from systemCssDraws alone; the recorded
+ * corners are the object proposeBlocks built for the `radii` block. The renderer prints sections 2 and 3 from this.
+ * @returns {{look: {recipe: string|null, height: number, values: number[]}, heightRow: "H0"|"H1"|"H2"|"H3"|"H4",
+ *   recorded: number|null, corners: {controlRadius: {id: string, value: number}|null, fieldRadius: {id: string, value: number}|null},
+ *   intro: string, rows: {key: string, name: string, value: string, from: string}[], notes: string[],
+ *   take: {kind: string, entry: object|null, id: string|null, height: number|null, pinned: boolean}}}
+ */
+function systemFor(input, proposal, corners) {
+  const { defaults, project, context } = input;
+  const look = lookOf(defaults, project.recipe ?? null);
+  const shipped = defaults.recipes[look.recipe ?? "default"];
+  const X = look.height;
+  const w = lookWords(look);
+  const registry = project.mode === "registry";
+  const touch = context.surface === "touch";
+  const { drawn, heightNotDrawn } = systemCssDraws(project.decisions ?? []);
+  const drawnHeight = drawn.find((entry) => entry.axis === "controlHeights") ?? null;
+  const recordedEntry = drawnHeight?.entry ?? heightNotDrawn?.entry ?? null;
+  const id = recordedEntry?.id ?? null;
+  let heightRow = "H0";
+  let D = null;
+  let took = null;
+  if (drawnHeight) { heightRow = "H1"; D = drawnHeight.value; }
+  else if (heightNotDrawn?.reason === "look-default") { D = parseDefaultHeight(recordedEntry).height; heightRow = D === X ? "H2" : "H3"; took = tookFrom(recordedEntry, look, defaults); }
+  else if (heightNotDrawn) heightRow = "H4";
+
+  // "To take it", in this order of precedence.
+  let take;
+  if (heightRow === "H1" || heightRow === "H2") take = { kind: "recorded", entry: null, id, height: D, pinned: false };
+  else if (heightRow === "H4") take = { kind: "no-default", entry: null, id, height: recordedEntry.values.length === 1 ? recordedEntry.values[0] : null, pinned: false };
+  else if (registry) take = { kind: "registry", entry: null, id, height: null, pinned: false };
+  else if (touch && X < TOUCH_FLOOR.px) take = { kind: "floor", entry: null, id, height: TOUCH_FLOOR.px, pinned: false };
+  else {
+    const { entry } = defaultHeightEntryFor(input, X);
+    take = { kind: heightRow === "H0" ? "entry" : "replace", entry, id, height: X, pinned: parseDefaultHeight(entry)?.lookDefault === false };
+  }
+
+  // The height row.
+  let value, from;
+  if (heightRow === "H0") {
+    value = `${X}px; the other shipped sizes are ${list(look.values.filter((v) => v !== X))}px`;
+    from = `${w.look}, not measured.${take.kind === "entry" ? " Not recorded; the entry under \"To take it\" records it." : " Not recorded."}`;
+    const block = proposal.axes.find((entry) => entry.axis === "controlHeights");
+    if (block.status === "proposed") {
+      const first = block.options[block.proposed];
+      const where = first.basis === "corpus" ? "the corpus, which measured desktop consoles" : first.basis === "own-screens" ? "this product's own screens" : `the project's reference \`${first.slug}\``;
+      from += ` Block 1 proposes ${valuesText(first.values, "px")} from ${where}.`;
+    }
+  } else if (heightRow === "H1" || heightRow === "H2") {
+    const rest = recordedEntry.values.filter((v) => v !== D);
+    value = rest.length ? `${D}px; the other recorded sizes are ${list(rest)}px` : `${D}px`;
+    if (heightRow === "H2") from = took.own ? `recorded as ${id} as ${w.own}; ${w.draws} it.` : `recorded as ${id} as ${took.words}; ${w.draws} the same height.`;
+    else if (!registry) from = D !== X ? `recorded as ${id}. ${SYSTEM_CSS} draws it after a resolve, where the file is imported, in place of ${w.lookX}.` : `recorded as ${id}. ${SYSTEM_CSS} sets it after a resolve, where the file is imported, and keeps it if the look changes.`;
+    else from = D !== X ? `recorded as ${id}. Not drawn for a registry project: the components draw ${w.lookX}.` : `recorded as ${id}; ${w.draws} the same height.`;
+  } else if (heightRow === "H3") {
+    value = `${D}px recorded; ${w.draws} ${X}px`;
+    const ending = take.kind === "replace" ? ` The entry under "To take it" replaces ${id}.` : take.kind === "floor" ? " No entry is offered (touch, below)." : "";
+    from = `recorded as ${id} as ${took.own ? w.earlier : took.words}, and ${registry ? "this artifact's look" : "this project's look"} now draws ${X}px.${ending}`;
+  } else {
+    value = `recorded sizes ${list(recordedEntry.values)}px`;
+    from = `recorded as ${id} without a default height; ${w.draws} ${X}px by default.`;
+  }
+
+  // The rows. A corner prints as pill, square, or <n>px; a null (not plain px) as not a fixed value.
+  const cornerValue = (v) => (v === null ? w.notFixed : v === 999 ? "pill" : v === 0 ? "square" : `${v}px`);
+  const pxValue = (v) => (v === null ? w.notFixed : `${v}px`);
+  const plain = `${w.look}, not measured`;
+  const recordedCorners = { controlRadius: corners.controlRadius ?? null, fieldRadius: corners.fieldRadius ?? null };
+  const control = recordedCorners.controlRadius;
+  const field = recordedCorners.fieldRadius;
+  const controlFrom = !control ? plain
+    : control.value === shipped.controlRadius
+      ? (registry ? `recorded as ${control.id}; ${w.draws} the same corner.` : `recorded as ${control.id}. ${SYSTEM_CSS} sets it after a resolve, where the file is imported, and keeps it if the look changes.`)
+      : (registry ? `recorded as ${control.id}. Not drawn for a registry project: the components draw ${w.corner(shipped.controlRadius)}.` : `recorded as ${control.id}. ${SYSTEM_CSS} draws it after a resolve, where the file is imported, in place of ${w.corner(shipped.controlRadius)}.`);
+  const fieldFrom = !field ? "the skin, not measured; no brand recipe sets it"
+    : registry ? `recorded as ${field.id}. Not drawn for a registry project: the components draw the skin's corner.` : `recorded as ${field.id}. ${SYSTEM_CSS} draws it after a resolve, where the file is imported, in place of the skin's corner.`;
+  const rows = [
+    { key: "controlHeight", value, from },
+    { key: "controlRadius", value: cornerValue(control ? control.value : shipped.controlRadius), from: controlFrom },
+    { key: "fieldRadius", value: field ? cornerValue(field.value) : "the skin's corner", from: fieldFrom },
+    { key: "insetRadius", value: cornerValue(shipped.insetRadius), from: plain },
+    { key: "surfaceRadius", value: cornerValue(shipped.surfaceRadius), from: plain },
+    { key: "surfacePadding", value: pxValue(shipped.surfacePadding), from: plain },
+    { key: "sectionGap", value: pxValue(shipped.sectionGap), from: plain },
+    { key: "pageGutter", value: pxValue(shipped.pageGutter), from: plain },
+  ].map((row) => ({ key: row.key, name: ROW_NAMES[row.key], value: row.value, from: row.from }));
+
+  // Under the table: the corner note, then the touch floor of the default height drawn here.
+  const notes = [];
+  if (control || field) notes.push("The drift report does not check a button's or a field's corner.");
+  const drawnHere = heightRow === "H1" && !registry ? D : X;
+  if (touch && drawnHere < TOUCH_FLOOR.px) notes.push(`Floor: rule \`${TOUCH_FLOOR.rule}\` says "${TOUCH_FLOOR.clause}". The default height drawn here, ${drawnHere}px, is under it.`);
+
+  const intro = look.recipe
+    ? `What the shipped components draw with brand recipe \`${look.recipe}\`${registry && context.artifact ? ` (artifact \`${context.artifact}\`)` : ""}, and what this project's ledger records. The brand recipe's values are engine defaults, not measured; counts over measured design systems are under "Details and counts".`
+    : "What the shipped components draw for a project that names no brand recipe, and what this project's ledger records. These values are engine defaults, not measured; counts over measured design systems are under \"Details and counts\".";
+  return { look, heightRow, recorded: D, corners: recordedCorners, intro, rows, notes, take };
+}
+
 // --- SYSTEM.md ------------------------------------------------------------------------------------------------
 
 function commandFor(inputs) {
   return `propose-system.mjs --project-root .${inputs.artifact ? ` --artifact ${inputs.artifact}` : ""}${inputs.references.map((slug) => ` --reference ${slug}`).join("")}${inputs.own ? ` --own ${inputs.own}` : ""} --surface ${inputs.surface}`;
 }
 
+// "To take it": one entry, or one paragraph that says why there is none. Read from `system` and the command alone,
+// except one clause of `no-default` that differs without a registry (the proposal's `inputs.mode`).
+function takeLines(system, command, registry) {
+  const { take, look } = system;
+  const id = take.id;
+  const json = (entry) => ["```json", JSON.stringify(entry, null, 2), "```"];
+  const keeps = (height) => `\`.styleseed/system.css\` then sets ${height}px, which the look draws already, and keeps it if the look changes.`;
+  if (take.kind === "recorded") return [`Nothing to record: the default height is recorded as \`${id}\`.`];
+  if (take.kind === "no-default") {
+    const head = `The control heights are recorded as \`${id}\` without a default height.`;
+    if (take.height === null) return [`${head} To name one: \`${command} --default-height <px>\`; its entry goes in place of \`${id}\`.`];
+    const drawsInstead = !registry && take.height !== look.height ? `, and \`.styleseed/system.css\` then draws ${take.height}px in place of ${lookWords(look).lookX}` : "";
+    return [`${head} To make ${take.height}px the default height, with the sizes around it: \`${command} --default-height ${take.height}\`; its entry goes in place of \`${id}\`${drawsInstead}.`];
+  }
+  if (take.kind === "registry") return ["No entry is offered in a registry project: a decision there is project-wide, and its artifacts can have different looks. What block 1 prints is project-wide too. A height for one artifact is a decision with `scope.artifacts`; the drift report applies it to the screens named in its `scope.screens`."];
+  if (take.kind === "floor") return [`No entry is offered: the height the look draws, ${look.height}px, is under the touch floor (rule \`${TOUCH_FLOOR.rule}\`). To record a default of ${take.height}px with the sizes around it: \`${command} --default-height ${take.height}\`${id ? `; its entry goes in place of \`${id}\`.` : "."}`];
+  if (take.kind === "entry") {
+    const effect = take.pinned
+      ? `Recording it changes no size today: ${keeps(take.height)} The drift report then reads any other control height as \`violates\`.`
+      : "Recording it changes nothing that is drawn; the drift report then reads any other control height as `violates`.";
+    return ["One entry records the default height above with the sizes around it:", "", ...json(take.entry), "", `It is what \`${command} --default-height ${take.height}\` prints. Record it under the name of the person who decides, as "Recording" says. ${effect} The other rows need no entry. Block 1 is about this same height: what it prints gives another \`controlHeights\` entry, and a ledger holds one project-wide decision on an axis. The blocks from 2 on are separate choices.`];
+  }
+  return [`This entry replaces \`${id}\`, whose default the look does not draw:`, "", ...json(take.entry), "", `It is what \`${command} --default-height ${take.height}\` prints. Put it in place of \`${id}\` and keep the id \`${id}\`, with the name of the person who decides and today's date.${take.pinned ? ` ${keeps(take.height)}` : ""}`];
+}
+
 /**
- * The proposal as SYSTEM.md. Counts only: no score, no review, and none of the words the wording test bans.
+ * The proposal as SYSTEM.md. Counts only: no score, no review, and none of the words the wording test bans. It
+ * opens with the system this project starts with and "To take it", printed from `p.system` and the command, then
+ * the blocks under "Details and counts".
  * @param {object} p the proposal from proposeSystem
- * @param {{command?: string}} [options] the command prefix printed before `--entry` (default: from the inputs)
+ * @param {{command?: string}} [options] the command prefix printed before `--entry` and `--default-height`
+ *   (default: from the inputs, without `--page`; propose-system.mjs passes its own, which carries it)
  */
 export function renderProposalMarkdown(p, { command = commandFor(p.inputs) } = {}) {
   const out = [];
   const share = p.rule.shareNum === 2 && p.rule.shareDen === 3 ? "two thirds" : `${p.rule.shareNum}/${p.rule.shareDen}`;
   const fragmentOnly = p.pack.fragmentOnly ? `, ${p.pack.fragmentOnly === 1 ? "1 more on a form fragment only" : `${p.pack.fragmentOnly} more on form fragments only`}` : "";
   out.push(`# System proposal — ${p.inputs.page} page, ${p.inputs.surface} input`, "");
-  out.push("Not recorded. Each block is a count and a choice that stays with the person who decides for this project. Nothing here reviews the product, and no value is in force until it is recorded in the ledger under that person's name.", "");
+  out.push("The tool records nothing. The first section shows what this project draws today and what its ledger already records. Each block under \"Details and counts\" is a count and a choice that stays with the person who decides for this project. Nothing here reviews the product, and the drift report holds the project to a value only once it is recorded in the ledger under that person's name.", "");
+  const { system } = p;
+  out.push("## The system this project starts with", "", system.intro, "", "| | Value | Where it comes from |", "|---|---|---|", ...system.rows.map((row) => `| ${row.name} | ${row.value} | ${row.from} |`), "");
+  for (const note of system.notes) out.push(note, "");
+  out.push("## To take it", "", ...takeLines(system, command, p.inputs.mode === "registry"), "");
+  out.push("## Details and counts", "");
   out.push(`- Corpus: run \`${p.pack.run}\`. ${plural(p.pack.withScreens, "design system", "design systems")} measured on full product screens (${plural(p.pack.productSystems, "product system", "product systems")}, ${plural(p.pack.kits, "kit", "kits")}; ${plural(p.pack.screens, "published demo screen", "published demo screens")})${fragmentOnly}. Desktop consoles at ${p.pack.viewports[0]} wide${p.pack.viewports[1] ? `, the same pages narrowed to ${p.pack.viewports[1]}` : ""}; ${p.pack.touch ? "touch input measured" : "no touch measurement"}. One system counts once.`);
   out.push(`- Project: page \`${p.inputs.page}\` (corpus rows: ${p.inputs.pageRow === "all" ? "all page types pooled" : p.inputs.pageRow}) · density \`${p.inputs.density ?? "not set"}\` · brand recipe \`${p.inputs.recipe ?? "not resolved"}\` · ledger \`${p.ledger.path}\` (${plural(p.ledger.entries, "entry", "entries")}; next id \`${p.ledger.nextId}\`)`);
   out.push(`- Rule: a corpus value is proposed when it leads on at least ${p.rule.minLineages} measured systems, on at least ${share} of the systems measured for its row, with at least ${plural(p.rule.minProductSystems, "product system", "product systems")} among them. Below that the counts are shown and nothing is proposed.`);
@@ -814,12 +1022,25 @@ export function renderProposalMarkdown(p, { command = commandFor(p.inputs) } = {
       const rest = a.options.filter((_, i) => i !== a.proposed);
       if (rest.length) bullets.push(`- ${a.proposed === null ? "Options" : "Other options"}: ${rest.map(optionText).join(" · ")}.`);
       if (a.partial) bullets.push(`- Before recording: this holds ${first.values.length === 1 ? "one value" : `${first.values.length} values`} of a larger set. Add the other values the product uses with \`--entry ${a.axis}=<all values>\`; they have no measured basis here, and the entry's \`source\` says so.`);
+      // A `radii` decision must hold every recorded corner (runtime-contract.mjs): the ready entry's lacking
+      // corners, ascending, control first on a tie, and the command whose entry holds them.
+      if (a.axis === "radii" && a.proposed !== null) {
+        const { controlRadius, fieldRadius } = p.system.corners;
+        const lacking = [controlRadius && { ...controlRadius, title: "control corner" }, fieldRadius && { ...fieldRadius, title: "field corner" }]
+          .filter((corner) => corner && !first.values.includes(corner.value)).sort((left, right) => left.value - right.value);
+        if (lacking.length) bullets.push(`- Before recording: this entry lacks the recorded ${lacking.map((corner) => `${corner.title} ${corner.value} (${corner.id})`).join(" and ")}, and a \`radii\` decision must hold every recorded corner. Take the entry from \`${command} --entry radii=${numeric([...first.values, ...lacking.map((corner) => corner.value)]).join(",")}\` instead, or the next resolve refuses the ledger.`);
+      }
       bullets.push(`- If recorded: ${def.effect}.${a.own?.violationsText ? ` ${a.own.violationsText}` : ""}`);
     }
     if (a.scoped.length) bullets.push(`- Scoped entries already on this axis: ${a.scoped.join(", ")}.`);
     if (bullets.length) out.push(...bullets, "");
     if (a.status !== "recorded") {
-      if (a.proposed !== null) out.push("```json", JSON.stringify(first.entry, null, 2), "```");
+      // Block 1: a height the corpus proposes is taken with its family from --default-height (K10), and nothing
+      // proposed names --default-height before a set the project brings (M7). Own screens and a reference keep
+      // their entry.
+      if (a.axis === "controlHeights" && a.proposed !== null && first.basis === "corpus") out.push(first.values.length === 1 ? `To record ${first.values[0]}px as the default height, with the sizes around it: \`${command} --default-height ${first.values[0]}\`` : `To record one of these as the default height, with the sizes around it: \`${command} --default-height <px>\``);
+      else if (a.proposed !== null) out.push("```json", JSON.stringify(first.entry, null, 2), "```");
+      else if (a.axis === "controlHeights") out.push(`Entry for a default height, with the sizes around it: \`${command} --default-height <px>\`. Entry for a set the project brings: \`${command} --entry controlHeights=<values>\``);
       else out.push(`Entry for a chosen value: \`${command} --entry ${a.axis}=<values>\``);
       out.push("");
     }

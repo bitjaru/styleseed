@@ -6,9 +6,10 @@ import { join, relative, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import {
-  PAGE_ROWS, PROPOSAL_AXES, PROPOSAL_RULE, TOUCH_FLOOR, defaultHeightEntry, engineDefault, engineDefaultsTable, entryForValues, normalizeEngineDefaults, normalizeEvidencePack, normalizeInventory,
+  PAGE_ROWS, PROPOSAL_AXES, PROPOSAL_RULE, TOUCH_FLOOR, defaultHeightEntry, defaultHeightEntryFor, engineDefault, engineDefaultsTable, entryForValues, normalizeEngineDefaults, normalizeEvidencePack, normalizeInventory,
   ownScreens, proposeSystem, referenceValues, renderEngineDefaultsMarkdown, renderProposalMarkdown, rowStatus, selectRow,
 } from "../../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/system-proposal.mjs";
+import { systemLine } from "../../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/propose-system.mjs";
 import { contractHash, normalizeReferenceEvidence } from "../../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/reference-contract.mjs";
 import { defaultHeightSource, normalizeDecisions, parseDefaultHeight } from "../../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/runtime-contract.mjs";
 import { summarize } from "../../engine/.claude/skills/styleseed/workflows/ss-reference/scripts/analyze-observations.mjs";
@@ -544,7 +545,7 @@ test("CLI: refusals exit 1 with their message; --write writes two files; --entry
       assert.equal(result.status, 0, result.stderr);
       assert.deepEqual(files(root), before, `${args.join(" ")} writes nothing`);
     }
-    assert.equal(JSON.parse(cli(root, ["--project-root", ".", "--surface", "pointer", "--json"]).stdout).proposalVersion, 1);
+    assert.equal(JSON.parse(cli(root, ["--project-root", ".", "--surface", "pointer", "--json"]).stdout).proposalVersion, 2);
     result = cli(root, ["--project-root", ".", "--surface", "pointer", "--entry", "controlHeights=32"]);
     assert.equal(JSON.parse(result.stdout).source, "corpus:2026-11-12#button.height@form/1440");
     assert.match(result.stderr, /Append it to \.styleseed\/decisions\.json as D-001/u);
@@ -1210,13 +1211,26 @@ const LOCK_TEMPLATE = `\`\`\`markdown
 
 test("wording of the added documentation: counts only, no banned word; setup still writes the same lock", () => {
   const setup = doc("ss-setup/WORKFLOW.md");
+  const resolveWorkflow = doc("ss-resolve/WORKFLOW.md");
+  const proposing = resolveWorkflow.slice(resolveWorkflow.indexOf("To propose the values a person may record"), resolveWorkflow.indexOf("\n\n", resolveWorkflow.indexOf("To propose the values a person may record")));
   const parts = {
     "proposals.md": doc("ss-resolve/references/proposals.md"),
     "ss-setup 9a": section(setup, "### 9a. Propose the system values and record what the person decides"),
     "ss-tokens propose": section(doc("ss-tokens/WORKFLOW.md"), "### `propose` — sizes, radii, and spacing with their basis"),
     "decisions: Proposed with a basis": section(doc("ss-resolve/references/decisions.md"), "## Proposed with a basis"),
     "decisions: A project without a registry": section(doc("ss-resolve/references/decisions.md"), "## A project without a registry"),
+    "ss-resolve: proposing": proposing,
   };
+  // WO-20 S: the first section, in each place that describes the document.
+  const flat = (text) => text.replace(/\s+/gu, " ");
+  assert.ok(flat(proposing).includes("Its `SYSTEM.md` opens with the system the project starts with: one table of what the shipped components draw with the project's look and what its ledger records, then one entry to take it or the reason there is none."), proposing);
+  for (const name of ["ss-setup 9a", "ss-tokens propose"]) {
+    assert.ok(flat(parts[name]).includes("The document opens with \"The system this project starts with\", one table of what the look draws and what the ledger records, and under \"To take it\" one entry or the reason there is none; present that first, then the blocks."), name);
+    assert.ok(flat(parts[name]).includes("For a control height taken from the corpus or chosen by the person, get the entry from `--default-height <px>`: one height recorded alone flags the other sizes of the shipped components."), name);
+  }
+  assert.ok(parts["proposals.md"].includes("\n## The system first\n"), "proposals.md: the section on the first part of the document");
+  for (const kind of ["recorded", "no-default", "registry", "floor", "entry", "replace"]) assert.ok(parts["proposals.md"].includes(`| \`${kind}\` |`), `proposals.md names the kind ${kind}`);
+  assert.ok(flat(parts["decisions: Proposed with a basis"]).includes("block names `--default-height <px>` in place of an entry"), "decisions.md says where the height entry is");
   for (const [name, text] of Object.entries(parts)) {
     assert.ok(text.length > 200, `${name} is there`);
     assert.ok(!BANNED.test(text), `${name}: ${text.match(BANNED)?.[0]}`);
@@ -1251,4 +1265,540 @@ test("a recommended brand recipe states its basis and gives the link in setup, C
     for (const line of RECIPE_BASIS_LINES) assert.ok(flat.includes(line), `${name} lacks the line: ${line}`);
     assert.ok(flat.includes(RECIPE_BASIS_URL), `${name} lacks the link ${RECIPE_BASIS_URL}`);
   }
+});
+
+// --- SYSTEM.md opens with the system (WO-20 S) ----------------------------------------------------------------------
+// Expected text is written from the order's words. A proposal rendered from the object gets the command `main` passes
+// when --page is given.
+
+const inputOf = ({ decisions = [], recipe = "enterprise-workbench", surface = "pointer", page = "settings", mode = "legacy", artifact = null, own = null, references = [], pack = committedPack } = {}) => ({
+  pack, defaults, references, own,
+  project: project({ mode, recipe, decisions: normalizeDecisions(clone(decisions), catalog), ...(mode === "registry" ? { ledger: { path: ".styleseed/project.json", entries: decisions.length, nextId: "D-901" } } : {}) }),
+  context: { artifact, page, surface },
+});
+const sys = (options) => proposeSystem(inputOf(options));
+const mainCommand = (p) => `propose-system.mjs --project-root .${p.inputs.artifact ? ` --artifact ${p.inputs.artifact}` : ""} --page ${p.inputs.page}${p.inputs.references.map((slug) => ` --reference ${slug}`).join("")}${p.inputs.own ? ` --own ${p.inputs.own}` : ""} --surface ${p.inputs.surface}`;
+const mdOf = (p) => renderProposalMarkdown(p, { command: mainCommand(p) });
+const between = (text, from, to) => {
+  const start = text.indexOf(from);
+  const end = text.indexOf(to, start + from.length);
+  assert.ok(start >= 0 && end > start, `${from.trim()} … ${to.trim()}\n${text}`);
+  return text.slice(start + from.length, end);
+};
+// Section 2 (from its heading to "## To take it") and section 3 (its text alone).
+const firstSection = (md) => `## The system this project starts with\n${between(md, "## The system this project starts with\n", "## To take it\n")}`;
+const takeOf = (md) => between(md, "## To take it\n\n", "\n\n## Details and counts\n");
+const rowOf = (p, key) => p.system.rows.find((row) => row.key === key);
+const cellsOf = (p, key) => { const row = rowOf(p, key); return [row.value, row.from]; };
+// What --default-height prints for a project (the entry a person records), named as D-001 or another id.
+const printedHeight = (height, options = {}) => defaultHeightEntryFor(inputOf(options), height).entry;
+const recorded = (entry, id = "D-001") => namedAs(entry, id);
+// A hand-written control-height decision.
+const handHeights = (values, source, id = "D-001") => ({ id, kind: "decision", axis: "controlHeights", values, statement: "Controls use these heights.", approvedBy: "example-designer", date: "2026-11-27", ...(source === undefined ? {} : { source }) });
+const SYSTEM_CSS_DRAWS = (id, instead) => `recorded as ${id}. \`.styleseed/system.css\` draws it after a resolve, where the file is imported, in place of ${instead}.`;
+const SYSTEM_CSS_KEEPS = (id) => `recorded as ${id}. \`.styleseed/system.css\` sets it after a resolve, where the file is imported, and keeps it if the look changes.`;
+const NOT_PINNED = "Recording it changes nothing that is drawn; the drift report then reads any other control height as `violates`.";
+const PINNED = (x) => `Recording it changes no size today: \`.styleseed/system.css\` then sets ${x}px, which the look draws already, and keeps it if the look changes. The drift report then reads any other control height as \`violates\`.`;
+const TAIL = "The other rows need no entry. Block 1 is about this same height: what it prints gives another `controlHeights` entry, and a ledger holds one project-wide decision on an axis. The blocks from 2 on are separate choices.";
+const entryText = (p, effect) => ["One entry records the default height above with the sizes around it:", "", "```json", JSON.stringify(p.system.take.entry, null, 2), "```", "", `It is what \`${mainCommand(p)} --default-height ${p.system.take.height}\` prints. Record it under the name of the person who decides, as "Recording" says. ${effect} ${TAIL}`].join("\n");
+const replaceText = (p, id, pinned = "") => [`This entry replaces \`${id}\`, whose default the look does not draw:`, "", "```json", JSON.stringify(p.system.take.entry, null, 2), "```", "", `It is what \`${mainCommand(p)} --default-height ${p.system.take.height}\` prints. Put it in place of \`${id}\` and keep the id \`${id}\`, with the name of the person who decides and today's date.${pinned}`].join("\n");
+const INTRO_RECIPE = (id, artifact = "") => `What the shipped components draw with brand recipe \`${id}\`${artifact}, and what this project's ledger records. The brand recipe's values are engine defaults, not measured; counts over measured design systems are under "Details and counts".`;
+const INTRO_NONE = "What the shipped components draw for a project that names no brand recipe, and what this project's ledger records. These values are engine defaults, not measured; counts over measured design systems are under \"Details and counts\".";
+const HEAD = ["| | Value | Where it comes from |", "|---|---|---|"];
+const REGISTRY_TEXT = "No entry is offered in a registry project: a decision there is project-wide, and its artifacts can have different looks. What block 1 prints is project-wide too. A height for one artifact is a decision with `scope.artifacts`; the drift report applies it to the screens named in its `scope.screens`.";
+const FLOOR_NOTE = (h) => `Floor: rule \`CRAFT-control-heights\` says "Touch surfaces provide at least 44px targets". The default height drawn here, ${h}px, is under it.`;
+
+test("SYSTEM.md: the opening paragraph, then the system, \"To take it\", and the old header bullets under \"Details and counts\" (WO-20 S)", () => {
+  const md = mdOf(sys());
+  const head = md.slice(0, md.indexOf("## The system this project starts with"));
+  assert.equal(head, "# System proposal — settings page, pointer input\n\nThe tool records nothing. The first section shows what this project draws today and what its ledger already records. Each block under \"Details and counts\" is a count and a choice that stays with the person who decides for this project. Nothing here reviews the product, and the drift report holds the project to a value only once it is recorded in the ledger under that person's name.\n\n");
+  const order = ["## The system this project starts with\n", "## To take it\n", "## Details and counts\n\n- Corpus: run `2026-11-12`.", "- Project: page `settings`", "- Rule: a corpus value is proposed", "## 1. Control height (`controlHeights`)", "## Measured systems", "## Recording"].map((part) => md.indexOf(part));
+  assert.ok(order.every((at, i) => at >= 0 && (i === 0 || at > order[i - 1])), JSON.stringify(order));
+  const touch = mdOf(sys({ surface: "touch", recipe: "native-mobile" }));
+  assert.ok(touch.includes("## Details and counts\n\n- Corpus:") && touch.indexOf("- **This run holds no touch measurement") > touch.indexOf("## Details and counts"), "the touch bullet stays with the header bullets");
+});
+
+test("the table, whole and exact: enterprise-workbench, no recipe, expressive-brand, calm-consumer, public-service (WO-20 S)", () => {
+  const workbench = sys();
+  assert.equal(firstSection(mdOf(workbench)), [
+    "## The system this project starts with", "", INTRO_RECIPE("enterprise-workbench"), "", ...HEAD,
+    "| Default height of controls (buttons, inputs, selects, tabs) | 36px; the other shipped sizes are 24, 28, 32, 40, 48px | the brand recipe, not measured. Not recorded; the entry under \"To take it\" records it. Block 1 proposes 32px from the corpus, which measured desktop consoles. |",
+    "| Corner of buttons and the controls that share it | 3px | the brand recipe, not measured |",
+    "| Corner of inputs, selects, and textareas | the skin's corner | the skin, not measured; no brand recipe sets it |",
+    "| Corner of list rows | 2px | the brand recipe, not measured |",
+    "| Corner of cards | 4px | the brand recipe, not measured |",
+    "| Padding inside a section card and the other pattern cards | 20px | the brand recipe, not measured |",
+    "| Gap between sections | 16px | the brand recipe, not measured |",
+    "| Side margin of the page | 24px | the brand recipe, not measured |",
+    "", "",
+  ].join("\n"));
+  assert.equal(takeOf(mdOf(workbench)), entryText(workbench, NOT_PINNED));
+
+  const none = sys({ recipe: null });
+  assert.equal(firstSection(mdOf(none)), [
+    "## The system this project starts with", "", INTRO_NONE, "", ...HEAD,
+    "| Default height of controls (buttons, inputs, selects, tabs) | 40px; the other shipped sizes are 28, 32, 36, 44, 52px | StyleSeed's default, not measured. Not recorded; the entry under \"To take it\" records it. Block 1 proposes 32px from the corpus, which measured desktop consoles. |",
+    "| Corner of buttons and the controls that share it | 6px | StyleSeed's default, not measured |",
+    "| Corner of inputs, selects, and textareas | the skin's corner | the skin, not measured; no brand recipe sets it |",
+    "| Corner of list rows | 6px | StyleSeed's default, not measured |",
+    "| Corner of cards | 10px | StyleSeed's default, not measured |",
+    "| Padding inside a section card and the other pattern cards | 20px | StyleSeed's default, not measured |",
+    "| Gap between sections | 24px | StyleSeed's default, not measured |",
+    "| Side margin of the page | 20px | StyleSeed's default, not measured |",
+    "", "",
+  ].join("\n"));
+  assert.deepEqual(none.system.look, { recipe: null, height: 40, values: [28, 32, 36, 40, 44, 52] });
+  assert.deepEqual(sys({ recipe: "unknown-recipe" }).system.rows, none.system.rows, "a look the file does not have is the \"without\" column");
+
+  const table = (p) => firstSection(mdOf(p)).split("\n").filter((line) => line.startsWith("| ") && !line.startsWith("| |"));
+  assert.deepEqual(table(sys({ recipe: "expressive-brand", page: "dashboard" })), [
+    "| Default height of controls (buttons, inputs, selects, tabs) | 40px; the other shipped sizes are 28, 32, 36, 44, 52px | the brand recipe, not measured. Not recorded; the entry under \"To take it\" records it. |",
+    "| Corner of buttons and the controls that share it | 10px | the brand recipe, not measured |",
+    "| Corner of inputs, selects, and textareas | the skin's corner | the skin, not measured; no brand recipe sets it |",
+    "| Corner of list rows | 10px | the brand recipe, not measured |",
+    "| Corner of cards | 16px | the brand recipe, not measured |",
+    "| Padding inside a section card and the other pattern cards | not a fixed value in this brand recipe | the brand recipe, not measured |",
+    "| Gap between sections | not a fixed value in this brand recipe | the brand recipe, not measured |",
+    "| Side margin of the page | not a fixed value in this brand recipe | the brand recipe, not measured |",
+  ]);
+  assert.deepEqual(table(sys({ recipe: "calm-consumer", page: "dashboard" })), [
+    "| Default height of controls (buttons, inputs, selects, tabs) | 40px; the other shipped sizes are 28, 32, 36, 44, 52px | the brand recipe, not measured. Not recorded; the entry under \"To take it\" records it. |",
+    "| Corner of buttons and the controls that share it | pill | the brand recipe, not measured |",
+    "| Corner of inputs, selects, and textareas | the skin's corner | the skin, not measured; no brand recipe sets it |",
+    "| Corner of list rows | 12px | the brand recipe, not measured |",
+    "| Corner of cards | 20px | the brand recipe, not measured |",
+    "| Padding inside a section card and the other pattern cards | 24px | the brand recipe, not measured |",
+    "| Gap between sections | 24px | the brand recipe, not measured |",
+    "| Side margin of the page | 24px | the brand recipe, not measured |",
+  ]);
+  assert.deepEqual(table(sys({ recipe: "public-service", page: "dashboard" })), [
+    "| Default height of controls (buttons, inputs, selects, tabs) | 40px; the other shipped sizes are 28, 32, 36, 44, 52px | the brand recipe, not measured. Not recorded; the entry under \"To take it\" records it. |",
+    "| Corner of buttons and the controls that share it | square | the brand recipe, not measured |",
+    "| Corner of inputs, selects, and textareas | the skin's corner | the skin, not measured; no brand recipe sets it |",
+    "| Corner of list rows | square | the brand recipe, not measured |",
+    "| Corner of cards | square | the brand recipe, not measured |",
+    "| Padding inside a section card and the other pattern cards | 0px | the brand recipe, not measured |",
+    "| Gap between sections | 32px | the brand recipe, not measured |",
+    "| Side margin of the page | 24px | the brand recipe, not measured |",
+  ]);
+  assert.deepEqual(workbench.system.rows.map((row) => Object.keys(row)), workbench.system.rows.map(() => ["key", "name", "value", "from"]));
+  assert.deepEqual(workbench.system.rows.map((row) => row.key), ["controlHeight", "controlRadius", "fieldRadius", "insetRadius", "surfaceRadius", "surfacePadding", "sectionGap", "pageGutter"]);
+});
+
+test("the height row of H0: block 1's proposal from the corpus, several values, own screens, a reference (WO-20 S)", () => {
+  const ending = (p) => rowOf(p, "controlHeight").from.slice("the brand recipe, not measured. Not recorded; the entry under \"To take it\" records it.".length);
+  assert.equal(ending(sys()), " Block 1 proposes 32px from the corpus, which measured desktop consoles.");
+  assert.equal(ending(sys({ own: ownOf(inventoryFile(screensAt(32))) })), " Block 1 proposes 32px from this product's own screens.");
+  assert.equal(ending(sys({ references: [ref("ref-kept", { controlHeights: [36] }, ["controlHeights"])] })), " Block 1 proposes 36px from the project's reference `ref-kept`.");
+  const two = sys({ pack: makePack([prow("button.height", "form", 4, [b(32, 3, 2, 1)]), prow("field.height", "form", 4, [b(36, 3, 2, 1)])]), page: "form" });
+  assert.equal(ending(two), " Block 1 proposes 32, 36px from the corpus, which measured desktop consoles.");
+  assert.equal(ending(sys({ page: "dashboard" })), "", "nothing proposed: no sentence");
+  assert.equal(systemLine(sys()), "system: default control height 36px (the brand recipe, not measured); not recorded");
+});
+
+test("H1 to H4 without a registry: the height row, \"To take it\", and what `system` holds (WO-20 S)", () => {
+  // H1: a recorded default the file draws, D not X; D equal to X; one recorded value.
+  let p = sys({ decisions: [recorded(printedHeight(32))] });
+  assert.deepEqual(cellsOf(p, "controlHeight"), ["32px; the other recorded sizes are 20, 24, 28, 36, 44px", SYSTEM_CSS_DRAWS("D-001", "the brand recipe's 36px")]);
+  assert.equal(takeOf(mdOf(p)), "Nothing to record: the default height is recorded as `D-001`.");
+  assert.deepEqual([p.system.heightRow, p.system.recorded, p.system.take], ["H1", 32, { kind: "recorded", entry: null, id: "D-001", height: 32, pinned: false }]);
+  assert.equal(systemLine(p), "system: default control height 32px, recorded as D-001");
+  const own36 = ownOf(inventoryFile(screensAt(36)));
+  p = sys({ decisions: [recorded(printedHeight(36, { own: own36 }))] });
+  assert.deepEqual(cellsOf(p, "controlHeight"), ["36px; the other recorded sizes are 24, 28, 32, 40, 48px", SYSTEM_CSS_KEEPS("D-001")]);
+  assert.equal(p.system.heightRow, "H1");
+  p = sys({ decisions: [handHeights([32], "default-height:32; chosen: 32")] });
+  assert.deepEqual(cellsOf(p, "controlHeight"), ["32px", SYSTEM_CSS_DRAWS("D-001", "the brand recipe's 36px")]);
+
+  // H2: a look's own default at the height the look draws, this look and another.
+  p = sys({ decisions: [recorded(printedHeight(36))] });
+  assert.deepEqual(cellsOf(p, "controlHeight"), ["36px; the other recorded sizes are 24, 28, 32, 40, 48px", "recorded as D-001 as the brand recipe's own default; the brand recipe draws it."]);
+  assert.deepEqual([p.system.heightRow, p.system.recorded, p.system.take.kind, p.system.take.height], ["H2", 36, "recorded", 36]);
+  assert.equal(systemLine(p), "system: default control height 36px, recorded as D-001");
+  p = sys({ decisions: [recorded(printedHeight(36, { recipe: "developer-platform" }))] });
+  assert.deepEqual(cellsOf(p, "controlHeight"), ["36px; the other recorded sizes are 24, 28, 32, 40, 48px", "recorded as D-001 as the own default of brand recipe `developer-platform`; the brand recipe draws the same height."]);
+  assert.equal(takeOf(mdOf(p)), "Nothing to record: the default height is recorded as `D-001`.");
+
+  // H3: another look at another height; this look at another height (an earlier own default).
+  p = sys({ decisions: [recorded(printedHeight(40, { recipe: "calm-consumer" }))] });
+  assert.deepEqual(cellsOf(p, "controlHeight"), ["40px recorded; the brand recipe draws 36px", "recorded as D-001 as the own default of brand recipe `calm-consumer`, and this project's look now draws 36px. The entry under \"To take it\" replaces D-001."]);
+  assert.deepEqual([p.system.heightRow, p.system.recorded, p.system.take.kind, p.system.take.id, p.system.take.height, p.system.take.pinned], ["H3", 40, "replace", "D-001", 36, false]);
+  assert.deepEqual(p.system.take.entry, printedHeight(36), "the entry for the height the look draws, from the proposal without D-001");
+  assert.equal(takeOf(mdOf(p)), replaceText(p, "D-001"));
+  assert.equal(systemLine(p), "system: default control height 40px recorded as D-001; the look draws 36px");
+  p = sys({ decisions: [handHeights(familyOf(32), "default-height:32; engine-default:recipe.enterprise-workbench (not measured)")] });
+  assert.deepEqual(cellsOf(p, "controlHeight"), ["32px recorded; the brand recipe draws 36px", "recorded as D-001 as an earlier own default of the brand recipe, and this project's look now draws 36px. The entry under \"To take it\" replaces D-001."]);
+
+  // H4: recorded without a default height; several values, one value at X, one value that is not X.
+  p = sys({ decisions: [handHeights([32, 36])] });
+  assert.deepEqual(cellsOf(p, "controlHeight"), ["recorded sizes 32, 36px", "recorded as D-001 without a default height; the brand recipe draws 36px by default."]);
+  assert.equal(takeOf(mdOf(p)), `The control heights are recorded as \`D-001\` without a default height. To name one: \`${mainCommand(p)} --default-height <px>\`; its entry goes in place of \`D-001\`.`);
+  assert.deepEqual([p.system.heightRow, p.system.recorded, p.system.take], ["H4", null, { kind: "no-default", entry: null, id: "D-001", height: null, pinned: false }]);
+  assert.equal(systemLine(p), "system: control heights recorded as D-001 without a default height");
+  p = sys({ decisions: [handHeights([36])] });
+  assert.equal(takeOf(mdOf(p)), `The control heights are recorded as \`D-001\` without a default height. To make 36px the default height, with the sizes around it: \`${mainCommand(p)} --default-height 36\`; its entry goes in place of \`D-001\`.`);
+  assert.equal(p.system.take.height, 36);
+  p = sys({ decisions: [handHeights([32])] });
+  assert.equal(takeOf(mdOf(p)), `The control heights are recorded as \`D-001\` without a default height. To make 32px the default height, with the sizes around it: \`${mainCommand(p)} --default-height 32\`; its entry goes in place of \`D-001\`, and \`.styleseed/system.css\` then draws 32px in place of the brand recipe's 36px.`);
+  assert.equal(sys({ decisions: [handHeights(familyOf(32), "default-height:30; chosen: 30")] }).system.heightRow, "H4", "a token whose height the values do not hold");
+
+  // A scoped decision or an exception alone changes nothing here.
+  const scopedOnly = sys({ decisions: [{ ...handHeights([28], "default-height:28; chosen: 28", "D-002"), scope: { screens: ["orders"] } }] });
+  assert.deepEqual([scopedOnly.system.heightRow, scopedOnly.system.take.kind], ["H0", "entry"]);
+});
+
+test("a project that names no brand recipe: every \"without\" word in the height row, the corner row, and \"To take it\" (WO-20 S)", () => {
+  const none = (options) => sys({ recipe: null, ...options });
+  let p = none({ decisions: [recorded(printedHeight(32, { recipe: null }))] });
+  assert.deepEqual(cellsOf(p, "controlHeight"), ["32px; the other recorded sizes are 20, 24, 28, 36, 44px", SYSTEM_CSS_DRAWS("D-001", "the default 40px")]);
+  p = none({ decisions: [recorded(printedHeight(40, { recipe: null }))] });
+  assert.deepEqual(cellsOf(p, "controlHeight"), ["40px; the other recorded sizes are 28, 32, 36, 44, 52px", "recorded as D-001 as StyleSeed's own default; the components draw it."]);
+  p = none({ decisions: [handHeights(familyOf(36), "default-height:36; engine-default:recipe.default (not measured)")] });
+  assert.deepEqual(cellsOf(p, "controlHeight"), ["36px recorded; the components draw 40px", "recorded as D-001 as an earlier default of StyleSeed's own, and this project's look now draws 40px. The entry under \"To take it\" replaces D-001."]);
+  assert.equal(takeOf(mdOf(p)), replaceText(p, "D-001"));
+  p = none({ decisions: [handHeights([32])] });
+  assert.deepEqual(cellsOf(p, "controlHeight"), ["recorded sizes 32px", "recorded as D-001 without a default height; the components draw 40px by default."]);
+  assert.equal(takeOf(mdOf(p)), `The control heights are recorded as \`D-001\` without a default height. To make 32px the default height, with the sizes around it: \`${mainCommand(p)} --default-height 32\`; its entry goes in place of \`D-001\`, and \`.styleseed/system.css\` then draws 32px in place of the default 40px.`);
+  const registry = (decisions) => none({ mode: "registry", artifact: "app-settings", decisions });
+  assert.equal(rowOf(registry([recorded(printedHeight(32, { recipe: null }))]), "controlHeight").from, "recorded as D-001. Not drawn for a registry project: the components draw the default 40px.");
+  assert.equal(rowOf(registry([recorded(printedHeight(40, { recipe: null, own: ownOf(inventoryFile(screensAt(40))) }))]), "controlHeight").from, "recorded as D-001; the components draw the same height.");
+  assert.equal(rowOf(registry([corner("D-002", "controlRadius", 8)]), "controlRadius").from, "recorded as D-002. Not drawn for a registry project: the components draw the default 6px.");
+  assert.equal(rowOf(registry([corner("D-002", "controlRadius", 6)]), "controlRadius").from, "recorded as D-002; the components draw the same corner.");
+  assert.equal(registry([]).system.intro, INTRO_NONE, "a registry artifact without a brand recipe: the \"without\" introduction");
+});
+
+test("the look a recorded default was taken from: only the exact form the proposer writes; nothing typed reaches the table (WO-20 S)", () => {
+  const from = (source, options = {}, values = familyOf(36)) => rowOf(sys({ decisions: [handHeights(values, source)], ...options }), "controlHeight").from;
+  for (const source of ["default-height:36; engine-default:recipe.a|b` (not measured)", "default-height:36; engine-default:recipe.enterprise-workbench", "default-height:36; engine-default:recipe. (not measured)", "default-height:36; engine-default:recipe.unknown-look (not measured)"]) {
+    const p = sys({ decisions: [handHeights(familyOf(36), source)] });
+    assert.equal(rowOf(p, "controlHeight").from, "recorded as D-001 as the own default of another look; the brand recipe draws the same height.", source);
+    const section = firstSection(mdOf(p));
+    for (const piece of ["a|b", "unknown-look", "`(", "engine-default"]) assert.ok(!section.includes(piece), `${source}: ${piece}`);
+    assert.equal(section.split("\n").filter((line) => line.startsWith("| ")).every((line) => line.split(" | ").length === 3), true, "every row keeps three cells");
+  }
+  assert.equal(from("default-height:40; engine-default:recipe.default (not measured)", { recipe: "calm-consumer" }, familyOf(40)), "recorded as D-001 as StyleSeed's own default; the brand recipe draws the same height.");
+  assert.equal(from("default-height:40; engine-default:recipe.default (not measured)", {}, familyOf(40)), "recorded as D-001 as StyleSeed's own default, and this project's look now draws 36px. The entry under \"To take it\" replaces D-001.");
+  assert.equal(from("default-height:40; engine-default:recipe.calm-consumer (not measured)", { recipe: null }, familyOf(40)), "recorded as D-001 as the own default of brand recipe `calm-consumer`; the components draw the same height.");
+});
+
+test("the split holds: for every ordered pair of looks, H3 exactly when the two heights differ, H2 otherwise (WO-20 S, S1)", () => {
+  const looks = Object.keys(defaults.recipes);
+  const recipeOf = (look) => (look === "default" ? null : look);
+  let pairs = 0;
+  let same = 0;
+  for (const first of looks) for (const second of looks) {
+    if (first === second) continue;
+    pairs += 1;
+    const entry = printedHeight(defaults.recipes[first].controlHeight, { recipe: recipeOf(first) });
+    const p = sys({ recipe: recipeOf(second), decisions: [recorded(entry)] });
+    const differ = defaults.recipes[first].controlHeight !== defaults.recipes[second].controlHeight;
+    if (!differ) same += 1;
+    assert.deepEqual([p.system.heightRow, p.system.take.kind], differ ? ["H3", "replace"] : ["H2", "recorded"], `${first} -> ${second}`);
+    if (!differ) assert.ok(!mdOf(p).includes("does not draw") && rowOf(p, "controlHeight").from.endsWith("the same height."), `${first} -> ${second}`);
+  }
+  assert.deepEqual([pairs, same], [90, 44]);
+});
+
+test("a registry project: H0, H1 in both forms, and H3 with their words; no entry offered; two artifacts with two looks (WO-20 S, S3)", () => {
+  const registry = (options = {}) => sys({ mode: "registry", artifact: "app-settings", ...options });
+  let p = registry();
+  assert.equal(p.system.intro, INTRO_RECIPE("enterprise-workbench", " (artifact `app-settings`)"));
+  assert.equal(sys({ mode: "registry" }).system.intro, INTRO_RECIPE("enterprise-workbench"), "without inputs.artifact the parenthesis is left out");
+  assert.equal(p.inputs.artifact, "app-settings");
+  assert.equal(rowOf(p, "controlHeight").from, "the brand recipe, not measured. Not recorded. Block 1 proposes 32px from the corpus, which measured desktop consoles.");
+  assert.equal(takeOf(mdOf(p)), REGISTRY_TEXT);
+  assert.deepEqual(p.system.take, { kind: "registry", entry: null, id: null, height: null, pinned: false });
+  assert.ok(!takeOf(mdOf(p)).includes("```"));
+
+  p = registry({ decisions: [recorded(printedHeight(32))] });
+  assert.deepEqual(cellsOf(p, "controlHeight"), ["32px; the other recorded sizes are 20, 24, 28, 36, 44px", "recorded as D-001. Not drawn for a registry project: the components draw the brand recipe's 36px."]);
+  assert.equal(takeOf(mdOf(p)), "Nothing to record: the default height is recorded as `D-001`.");
+  p = registry({ decisions: [recorded(printedHeight(36, { own: ownOf(inventoryFile(screensAt(36))) }))] });
+  assert.deepEqual(cellsOf(p, "controlHeight"), ["36px; the other recorded sizes are 24, 28, 32, 40, 48px", "recorded as D-001; the brand recipe draws the same height."]);
+
+  p = registry({ decisions: [recorded(printedHeight(40, { recipe: "calm-consumer" }))] });
+  assert.deepEqual(cellsOf(p, "controlHeight"), ["40px recorded; the brand recipe draws 36px", "recorded as D-001 as the own default of brand recipe `calm-consumer`, and this artifact's look now draws 36px."]);
+  assert.deepEqual(p.system.take, { kind: "registry", entry: null, id: "D-001", height: null, pinned: false });
+  assert.equal(takeOf(mdOf(p)), REGISTRY_TEXT);
+  assert.equal(registry({ surface: "touch", recipe: "calm-consumer" }).system.take.kind, "registry", "registry comes before floor");
+
+  // One project, two artifacts whose looks draw 36px and 40px, with nothing recorded and with one artifact's own default recorded.
+  for (const decisions of [[], [recorded(printedHeight(36), "D-900")]]) {
+    for (const [artifact, recipe] of [["site-gate", "developer-platform"], ["site-docs", "editorial-authority"]]) {
+      const one = sys({ mode: "registry", artifact, recipe, decisions });
+      assert.equal(one.system.take.entry, null, `${artifact}: no entry offered`);
+      assert.ok(!takeOf(mdOf(one)).includes("```json"), `${artifact}: no entry printed`);
+      assert.ok(["registry", "recorded"].includes(one.system.take.kind), one.system.take.kind);
+    }
+  }
+  assert.equal(sys({ mode: "registry", artifact: "site-docs", recipe: "editorial-authority", decisions: [recorded(printedHeight(36), "D-900")] }).system.heightRow, "H3");
+});
+
+test("the corner rows: recorded control and field corners, equal to the look's or not, with and without a registry; the note; system.corners (WO-20 S)", () => {
+  const control = (value, id = "D-002") => corner(id, "controlRadius", value);
+  const field = (value, id = "D-003") => corner(id, "fieldRadius", value);
+  let p = sys({ decisions: [control(999)] });
+  assert.deepEqual(cellsOf(p, "controlRadius"), ["pill", SYSTEM_CSS_DRAWS("D-002", "the brand recipe's 3px")]);
+  assert.deepEqual(cellsOf(p, "fieldRadius"), ["the skin's corner", "the skin, not measured; no brand recipe sets it"]);
+  assert.deepEqual(p.system.corners, { controlRadius: { id: "D-002", value: 999 }, fieldRadius: null });
+  assert.deepEqual(p.system.notes, ["The drift report does not check a button's or a field's corner."]);
+  assert.ok(firstSection(mdOf(p)).endsWith("| Side margin of the page | 24px | the brand recipe, not measured |\n\nThe drift report does not check a button's or a field's corner.\n\n"), firstSection(mdOf(p)));
+  p = sys({ decisions: [field(8)] });
+  assert.deepEqual(cellsOf(p, "fieldRadius"), ["8px", SYSTEM_CSS_DRAWS("D-003", "the skin's corner")]);
+  assert.deepEqual(p.system.corners, { controlRadius: null, fieldRadius: { id: "D-003", value: 8 } });
+  p = sys({ decisions: [control(0), field(999)] });
+  assert.deepEqual([cellsOf(p, "controlRadius"), cellsOf(p, "fieldRadius")], [["square", SYSTEM_CSS_DRAWS("D-002", "the brand recipe's 3px")], ["pill", SYSTEM_CSS_DRAWS("D-003", "the skin's corner")]]);
+  assert.equal(p.system.notes.length, 1, "one note for both corners");
+  p = sys({ decisions: [control(3)] });
+  assert.deepEqual(cellsOf(p, "controlRadius"), ["3px", SYSTEM_CSS_KEEPS("D-002")], "equal to the look's: the file's words");
+  assert.deepEqual(cellsOf(sys({ recipe: "calm-consumer", decisions: [control(4)] }), "controlRadius"), ["4px", SYSTEM_CSS_DRAWS("D-002", "the brand recipe's pill corners")]);
+  assert.deepEqual(cellsOf(sys({ recipe: "public-service", decisions: [control(8)] }), "controlRadius"), ["8px", SYSTEM_CSS_DRAWS("D-002", "the brand recipe's square corners")]);
+  assert.deepEqual(cellsOf(sys({ recipe: null, decisions: [control(8)] }), "controlRadius"), ["8px", SYSTEM_CSS_DRAWS("D-002", "the default 6px")]);
+
+  const registry = (decisions) => sys({ mode: "registry", artifact: "app-settings", decisions });
+  assert.deepEqual(cellsOf(registry([control(999)]), "controlRadius"), ["pill", "recorded as D-002. Not drawn for a registry project: the components draw the brand recipe's 3px."]);
+  assert.deepEqual(cellsOf(registry([control(3)]), "controlRadius"), ["3px", "recorded as D-002; the brand recipe draws the same corner."]);
+  assert.deepEqual(cellsOf(registry([field(8)]), "fieldRadius"), ["8px", "recorded as D-003. Not drawn for a registry project: the components draw the skin's corner."]);
+  assert.deepEqual(registry([field(8)]).system.notes, ["The drift report does not check a button's or a field's corner."]);
+  assert.deepEqual(sys().system.notes, [], "no corner recorded: no note");
+  assert.deepEqual(sys().system.corners, { controlRadius: null, fieldRadius: null });
+});
+
+test("touch: the floor kind, the note, and an entry at 44px; H3 under the floor; H1 at 32px reads 32 (WO-20 S)", () => {
+  let p = sys({ recipe: "calm-consumer", surface: "touch", page: "dashboard" });
+  assert.equal(rowOf(p, "controlHeight").from, "the brand recipe, not measured. Not recorded.");
+  assert.deepEqual(p.system.notes, [FLOOR_NOTE(40)]);
+  assert.deepEqual(p.system.take, { kind: "floor", entry: null, id: null, height: 44, pinned: false });
+  assert.equal(takeOf(mdOf(p)), `No entry is offered: the height the look draws, 40px, is under the touch floor (rule \`CRAFT-control-heights\`). To record a default of 44px with the sizes around it: \`${mainCommand(p)} --default-height 44\`.`);
+  assert.ok(firstSection(mdOf(p)).endsWith(`|\n\n${FLOOR_NOTE(40)}\n\n`));
+
+  p = sys({ recipe: "native-mobile", surface: "touch", page: "dashboard" });
+  assert.deepEqual([p.system.take.kind, p.system.take.height, p.system.notes], ["entry", 44, []]);
+  assert.equal(takeOf(mdOf(p)), entryText(p, NOT_PINNED));
+
+  p = sys({ recipe: "calm-consumer", surface: "touch", page: "dashboard", decisions: [recorded(printedHeight(44, { recipe: "native-mobile", surface: "touch" }))] });
+  assert.deepEqual(cellsOf(p, "controlHeight"), ["44px recorded; the brand recipe draws 40px", "recorded as D-001 as the own default of brand recipe `native-mobile`, and this project's look now draws 40px. No entry is offered (touch, below)."]);
+  assert.deepEqual(p.system.take, { kind: "floor", entry: null, id: "D-001", height: 44, pinned: false });
+  assert.equal(takeOf(mdOf(p)), `No entry is offered: the height the look draws, 40px, is under the touch floor (rule \`CRAFT-control-heights\`). To record a default of 44px with the sizes around it: \`${mainCommand(p)} --default-height 44\`; its entry goes in place of \`D-001\`.`);
+  assert.deepEqual(p.system.notes, [FLOOR_NOTE(40)], "the note reads the height the look draws");
+
+  p = sys({ recipe: "calm-consumer", surface: "touch", page: "dashboard", decisions: [recorded(printedHeight(32, { recipe: "calm-consumer", surface: "touch" }))] });
+  assert.equal(p.system.heightRow, "H1");
+  assert.deepEqual(p.system.notes, [FLOOR_NOTE(32)], "H1 without a registry: the note reads the recorded default");
+  assert.deepEqual(sys({ mode: "registry", artifact: "app-settings", recipe: "calm-consumer", surface: "touch", page: "dashboard", decisions: [recorded(printedHeight(32, { recipe: "calm-consumer", surface: "touch" }))] }).system.notes, [FLOOR_NOTE(40)], "in a registry the note reads what the look draws");
+  assert.equal(sys({ recipe: "calm-consumer", surface: "touch", decisions: [handHeights([32])] }).system.take.kind, "no-default", "no-default comes before floor");
+});
+
+test("pinned: own screens at the look's height pin the entry and the paragraph says so; without them it does not (WO-20 S, S5)", () => {
+  const own = ownOf(inventoryFile(screensAt(36)));
+  let p = sys({ own });
+  assert.equal(p.system.take.pinned, true);
+  assert.equal(p.system.take.entry.source, "default-height:36; own-screens:2026-11-14#controlHeights");
+  assert.equal(takeOf(mdOf(p)), entryText(p, PINNED(36)));
+  p = sys();
+  assert.equal(p.system.take.pinned, false);
+  assert.equal(takeOf(mdOf(p)), entryText(p, NOT_PINNED));
+  p = sys({ own, decisions: [recorded(printedHeight(40, { recipe: "calm-consumer" }))] });
+  assert.deepEqual([p.system.take.kind, p.system.take.pinned], ["replace", true]);
+  assert.equal(takeOf(mdOf(p)), replaceText(p, "D-001", " `.styleseed/system.css` then sets 36px, which the look draws already, and keeps it if the look changes."));
+  for (const proposal of [sys({ own }), sys(), sys({ recipe: null }), sys({ recipe: "native-mobile", surface: "touch" })]) assert.equal(proposal.system.take.pinned, parseDefaultHeight(proposal.system.take.entry).lookDefault === false, "the parser's answer");
+});
+
+test("block 1: the corpus names --default-height, own screens and a reference keep the entry, nothing proposed names both commands (WO-20 S)", () => {
+  const block1 = (md) => between(md, "## 1. Control height (`controlHeights`)\n", "## 2. ");
+  let p = sys();
+  let md = mdOf(p);
+  assert.ok(block1(md).endsWith(`\n\nTo record 32px as the default height, with the sizes around it: \`${mainCommand(p)} --default-height 32\`\n\n`), block1(md));
+  assert.ok(!block1(md).includes("```json"), "no json block");
+  assert.ok(!md.includes("--entry controlHeights="), "no one-value entry anywhere");
+  assert.ok(block1(md).includes("- If recorded: the drift report reads any other control height as `violates D-…`."), "the bullets stay");
+  assert.ok(p.axes[0].options[0].entry, "the proposal object keeps the option's entry");
+  const two = sys({ pack: makePack([prow("button.height", "form", 4, [b(32, 3, 2, 1)]), prow("field.height", "form", 4, [b(36, 3, 2, 1)])]), page: "form" });
+  assert.ok(block1(mdOf(two)).endsWith(`\n\nTo record one of these as the default height, with the sizes around it: \`${mainCommand(two)} --default-height <px>\`\n\n`));
+  for (const options of [{ own: ownOf() }, { references: [ref("ref-kept", { controlHeights: [36] }, ["controlHeights"])] }]) {
+    p = sys(options);
+    assert.ok(block1(mdOf(p)).endsWith(`\`\`\`json\n${JSON.stringify(p.axes[0].options[0].entry, null, 2)}\n\`\`\`\n\n`), JSON.stringify(Object.keys(options)));
+  }
+  for (const options of [{ page: "dashboard" }, { surface: "touch" }]) {
+    p = sys(options);
+    assert.ok(block1(mdOf(p)).endsWith(`\n\nEntry for a default height, with the sizes around it: \`${mainCommand(p)} --default-height <px>\`. Entry for a set the project brings: \`${mainCommand(p)} --entry controlHeights=<values>\`\n\n`), block1(mdOf(p)));
+  }
+  assert.ok(mdOf(sys({ page: "dashboard" })).includes("Entry for a chosen value: `"), "the other blocks keep their line");
+});
+
+test("the radii bullet: one corner lacking and two, the command's values, its place, absent when the entry holds them; that entry resolves (WO-20 S)", () => {
+  const own = ownOf();
+  const radiiBullets = (p) => between(mdOf(p), "## 3. Corner radius (`radii`)\n", "## 4. ").split("\n").filter((line) => line.startsWith("- "));
+  const both = [corner("D-001", "controlRadius", 999), corner("D-002", "fieldRadius", 8)];
+  let p = sys({ own, decisions: both });
+  let bullets = radiiBullets(p);
+  assert.equal(bullets.at(-2), `- Before recording: this entry lacks the recorded field corner 8 (D-002) and control corner 999 (D-001), and a \`radii\` decision must hold every recorded corner. Take the entry from \`${mainCommand(p)} --entry radii=4,8,999\` instead, or the next resolve refuses the ledger.`);
+  assert.ok(bullets.at(-1).startsWith("- If recorded: "), "directly before \"If recorded\"");
+  const named = (entry, id) => ({ ...entry, id, approvedBy: "example-designer", date: "2026-11-27" });
+  assert.throws(() => normalizeDecisions(clone([...both, named(p.axes[2].options[0].entry, "D-003")]), catalog), /add 8 and 999 to D-003\.values/u, "the ready entry is refused");
+  const commanded = entryForValues(p, "radii", [4, 8, 999]);
+  assert.doesNotThrow(() => normalizeDecisions(clone([...both, named(commanded, "D-003")]), catalog), "the entry its command names resolves");
+  p = sys({ own, decisions: [both[0]] });
+  assert.equal(radiiBullets(p).at(-2), `- Before recording: this entry lacks the recorded control corner 999 (D-001), and a \`radii\` decision must hold every recorded corner. Take the entry from \`${mainCommand(p)} --entry radii=4,999\` instead, or the next resolve refuses the ledger.`);
+  p = sys({ own, decisions: [corner("D-001", "controlRadius", 8), corner("D-002", "fieldRadius", 8)] });
+  assert.ok(radiiBullets(p).at(-2).startsWith("- Before recording: this entry lacks the recorded control corner 8 (D-001) and field corner 8 (D-002), and ") && radiiBullets(p).at(-2).includes("--entry radii=4,8`"), radiiBullets(p).at(-2));
+  p = sys({ own, decisions: [corner("D-001", "controlRadius", 2), corner("D-002", "fieldRadius", 999)] });
+  assert.equal(radiiBullets(p).at(-2), `- Before recording: this entry lacks the recorded control corner 2 (D-001) and field corner 999 (D-002), and a \`radii\` decision must hold every recorded corner. Take the entry from \`${mainCommand(p)} --entry radii=2,4,999\` instead, or the next resolve refuses the ledger.`, "a lacking corner below the entry's value: ascending");
+  p = sys({ own, decisions: [corner("D-001", "controlRadius", 4)] });
+  assert.ok(!radiiBullets(p).some((line) => line.includes("lacks the recorded")), "the entry holds the corner");
+  assert.ok(!radiiBullets(sys({ decisions: both })).some((line) => line.includes("lacks the recorded")), "nothing proposed: no ready entry, no bullet");
+
+  // Beside a partial block's bullet: after it, and directly before "If recorded".
+  const panel = { id: "panel.radius", axis: "radii", use: "value", unit: "px", complete: false, label: "panel radius" };
+  p = sys({ pack: makePack([prow("panel.radius", "form", 4, [b(6, 3, 2, 1)])], { extraClaims: [panel] }), page: "form", decisions: both });
+  bullets = radiiBullets(p);
+  assert.ok(bullets.at(-3).startsWith("- Before recording: this holds one value of a larger set."), bullets.join("\n"));
+  assert.ok(bullets.at(-2).startsWith("- Before recording: this entry lacks the recorded field corner 8 (D-002) and control corner 999 (D-001)") && bullets.at(-2).includes("--entry radii=6,8,999`"), bullets.at(-2));
+  assert.ok(bullets.at(-1).startsWith("- If recorded: "));
+});
+
+test("one entry, two printers: the entry under \"To take it\" is the stdout of --default-height, for entry and replace, through main (WO-20 S, S11)", () => {
+  const root = lockProject("ss-propose-system-first-");
+  try {
+    const run = (...args) => cli(root, ["--project-root", ".", "--surface", "pointer", ...args]);
+    const json = (md) => between(takeOf(md), "```json\n", "\n```");
+    let md = run().stdout;
+    assert.equal(`${json(md)}\n`, run("--default-height", "36").stdout, "entry");
+    assert.ok(takeOf(md).includes("It is what `propose-system.mjs --project-root . --surface pointer --default-height 36` prints."), takeOf(md));
+    mkdirSync(join(root, ".styleseed/evidence/drift/2026-11-14"), { recursive: true });
+    writeFileSync(join(root, OWN_PATH), `${JSON.stringify(inventoryFile(screensAt(36)), null, 2)}\n`);
+    md = run("--own", OWN_PATH).stdout;
+    assert.equal(`${json(md)}\n`, run("--own", OWN_PATH, "--default-height", "36").stdout, "entry, pinned");
+    assert.ok(takeOf(md).includes(PINNED(36)));
+    writeFileSync(join(root, ".styleseed/decisions.json"), `${JSON.stringify([recorded(printedHeight(40, { recipe: "calm-consumer" })), heightException], null, 2)}\n`);
+    md = run().stdout;
+    assert.ok(takeOf(md).startsWith("This entry replaces `D-001`, whose default the look does not draw:"), takeOf(md));
+    assert.equal(`${json(md)}\n`, run("--default-height", "36").stdout, "replace");
+    md = run("--page", "dashboard", "--own", OWN_PATH).stdout;
+    assert.equal(`${json(md)}\n`, run("--page", "dashboard", "--own", OWN_PATH, "--default-height", "36").stdout, "replace, pinned, with --page");
+    assert.ok(takeOf(md).includes("It is what `propose-system.mjs --project-root . --page dashboard --own .styleseed/evidence/drift/2026-11-14/inventory.json --surface pointer --default-height 36` prints."), takeOf(md));
+  } finally { rmSync(root, { recursive: true, force: true }); }
+});
+
+test("--write: the system line after the notes and before the axis lines; system.json carries system last and proposalVersion 2 (WO-20 S)", () => {
+  const root = lockProject("ss-propose-system-write-");
+  try {
+    mkdirSync(join(root, ".styleseed/evidence/_reference/ref-a/measurements"), { recursive: true });
+    writeFileSync(join(root, ".styleseed/evidence/_reference/ref-a/measurements/summary.json"), JSON.stringify(summary));
+    mkdirSync(join(root, ".styleseed/rulesets/ref-a"), { recursive: true });
+    writeFileSync(join(root, ".styleseed/rulesets/ref-a/evidence.json"), "{}\n");
+    const result = cli(root, ["--project-root", ".", "--surface", "pointer", "--reference", "ref-a", "--write"]);
+    assert.equal(result.status, 0, result.stderr);
+    const lines = result.stdout.split("\n");
+    assert.equal(lines[0], "--reference ref-a: .styleseed/rulesets/ref-a/evidence.json is a hand-written contract, so its values count as measured, not kept.");
+    assert.equal(lines[1], "system: default control height 36px (the brand recipe, not measured); not recorded");
+    assert.ok(lines[2].startsWith("controlHeights: "), lines[2]);
+    const written = JSON.parse(readFileSync(join(root, ".styleseed/proposals/system.json"), "utf8"));
+    assert.equal(written.proposalVersion, 2);
+    assert.equal(Object.keys(written).at(-1), "system");
+    assert.deepEqual(Object.keys(written.system), ["look", "heightRow", "recorded", "corners", "intro", "rows", "notes", "take"]);
+    assert.deepEqual(Object.keys(written.system.take), ["kind", "entry", "id", "height", "pinned"]);
+    assert.deepEqual(written.system.look, { recipe: "enterprise-workbench", height: 36, values: [24, 28, 32, 36, 40, 48] });
+    assert.deepEqual(written, JSON.parse(cli(root, ["--project-root", ".", "--surface", "pointer", "--reference", "ref-a", "--json"]).stdout), "--json prints the same object");
+  } finally { rmSync(root, { recursive: true, force: true }); }
+  const noRecipe = sys({ recipe: null });
+  assert.equal(systemLine(noRecipe), "system: default control height 40px (StyleSeed's default, not measured); not recorded");
+});
+
+test("the renderer prints sections 2 and 3 from `system` and the command alone (WO-20 S)", () => {
+  const p = sys();
+  const edited = clone(p);
+  edited.system.intro = "An intro edited by hand.";
+  edited.system.rows = [{ key: "controlHeight", name: "Row edited by hand", value: "1px", from: "nowhere" }];
+  edited.system.notes = ["A note edited by hand.", "A second note."];
+  edited.system.take = { kind: "recorded", entry: null, id: "D-777", height: 1, pinned: false };
+  assert.equal(between(mdOf(edited), "## The system this project starts with\n", "\n\n## Details and counts\n"), [
+    "", "An intro edited by hand.", "", ...HEAD, "| Row edited by hand | 1px | nowhere |", "", "A note edited by hand.", "", "A second note.", "", "## To take it", "",
+    "Nothing to record: the default height is recorded as `D-777`.",
+  ].join("\n"));
+  assert.ok(mdOf(edited).slice(mdOf(edited).indexOf("## Details and counts")) === mdOf(p).slice(mdOf(p).indexOf("## Details and counts")), "the rest is the proposal's");
+  // Another proposal's system in place of this one prints that proposal's first two sections.
+  const other = sys({ recipe: "calm-consumer", surface: "touch", page: "dashboard" });
+  const command = "propose-system.mjs --project-root . --surface touch";
+  const firstTwo = (proposal) => between(renderProposalMarkdown(proposal, { command }), "## The system this project starts with\n", "## Details and counts\n");
+  assert.equal(firstTwo({ ...p, system: other.system }), firstTwo(other));
+});
+
+test("the names hold: each row name is true of the component sources and recipes.css (WO-20 S, S7)", () => {
+  const engine = resolve(repoRoot, "engine");
+  const source = (path) => readFileSync(resolve(engine, path), "utf8");
+  const recipesCss = source("css/recipes.css");
+  for (const path of ["ui/button.tsx", "ui/input.tsx", "ui/select.tsx", "ui/tabs.tsx"]) assert.ok(source(`components/${path}`).includes("var(--ss-control-height"), `${path} reads --ss-control-height`);
+  const carries = (path, name) => new RegExp(`(^|[^a-z-])${name}([^a-z-]|$)`, "u").test(source(`components/${path}`));
+  assert.ok(carries("ui/button.tsx", "ss-pattern-control"), "button.tsx carries ss-pattern-control");
+  for (const path of ["ui/input.tsx", "ui/select.tsx", "ui/textarea.tsx"]) {
+    assert.ok(!carries(path, "ss-pattern-control"), `${path} does not carry ss-pattern-control`);
+    assert.ok(carries(path, "ss-pattern-field"), `${path} carries ss-pattern-field`);
+  }
+  assert.ok(carries("patterns/list-item.tsx", "ss-pattern-inset"));
+  assert.ok(carries("patterns/section-card.tsx", "ss-pattern-surface"));
+  assert.ok(!carries("ui/card.tsx", "ss-pattern-surface"), "card.tsx does not take the padding; read the padding row's name again the day it does");
+  assert.ok(carries("ui/card.tsx", "ss-component-surface"));
+  assert.ok(carries("patterns/page-shell.tsx", "ss-pattern-stack"));
+  const all = [];
+  const walk = (dir) => { for (const entry of readdirSync(dir, { withFileTypes: true })) { const path = join(dir, entry.name); if (entry.isDirectory()) walk(path); else if (entry.name.endsWith(".tsx")) all.push(relative(resolve(engine, "components"), path).split("\\").join("/")); } };
+  walk(resolve(engine, "components"));
+  assert.ok(all.some((path) => carries(path, "ss-page-gutter") || carries(path, "ss-page-padding")), "a component carries ss-page-gutter or ss-page-padding");
+  // Each class holds its variable in recipes.css, and some component carries each class.
+  const rule = (selector) => { const at = recipesCss.indexOf(`${selector} {`); assert.ok(at >= 0, `recipes.css has ${selector}`); return recipesCss.slice(at, recipesCss.indexOf("}", at)); };
+  for (const [selector, className, variable] of [
+    [".ss-pattern-control", "ss-pattern-control", "--ss-control-radius"],
+    [":where(.ss-pattern-field)", "ss-pattern-field", "--ss-field-radius"],
+    [".ss-pattern-inset", "ss-pattern-inset", "--ss-inset-radius"],
+    [".ss-pattern-surface", "ss-pattern-surface", "--ss-surface-radius"],
+    [".ss-pattern-surface", "ss-pattern-surface", "--ss-surface-padding"],
+    [".ss-component-surface", "ss-component-surface", "--ss-surface-radius"],
+    [".ss-pattern-stack", "ss-pattern-stack", "--ss-section-gap"],
+    [".ss-page-gutter", "ss-page-gutter", "--ss-page-gutter"],
+    [".ss-page-padding", "ss-page-padding", "--ss-page-gutter"],
+  ]) {
+    assert.ok(rule(selector).includes(`var(${variable}`), `${selector} holds ${variable}`);
+    assert.ok(all.some((path) => carries(path, className)), `a component carries ${className}`);
+  }
+});
+
+test("wording: the first section of every new state carries no banned word; every entry offered compiles once named; the --write line (WO-20 S)", () => {
+  const own36 = ownOf(inventoryFile(screensAt(36)));
+  const heights = [
+    [], [recorded(printedHeight(32))], [recorded(printedHeight(36, { own: own36 }))], [handHeights([32], "default-height:32; chosen: 32")],
+    [recorded(printedHeight(36))], [recorded(printedHeight(36, { recipe: "developer-platform" }))], [recorded(printedHeight(40, { recipe: "calm-consumer" }))],
+    [handHeights(familyOf(32), "default-height:32; engine-default:recipe.enterprise-workbench (not measured)")], [handHeights([32, 36])], [handHeights([32])], [handHeights([36])],
+  ];
+  const corners = [[], [corner("D-002", "controlRadius", 999)], [corner("D-002", "controlRadius", 3), corner("D-003", "fieldRadius", 8)]];
+  const kinds = new Set();
+  const rowsSeen = new Set();
+  let checked = 0;
+  for (const recipe of ["enterprise-workbench", "calm-consumer", null]) for (const surface of ["pointer", "touch"]) for (const mode of ["legacy", "registry"]) for (const decisions of heights) for (const extra of corners) for (const own of [null, ownOf()]) {
+    const p = sys({ recipe, surface, mode, artifact: mode === "registry" ? "app-settings" : null, decisions: [...decisions, ...extra], own });
+    const md = mdOf(p);
+    assert.ok(!BANNED.test(md), `${md.match(BANNED)?.[0]}`);
+    assert.ok(!BANNED.test(systemLine(p)), systemLine(p));
+    kinds.add(p.system.take.kind);
+    rowsSeen.add(p.system.heightRow);
+    if (p.system.take.entry) {
+      checkHeightEntry(p.system.take.entry, p.system.take.height);
+      assert.doesNotThrow(() => normalizeDecisions(clone([...extra, namedAs(p.system.take.entry, p.system.take.id ?? "D-001")]), catalog));
+    }
+    checked += 1;
+  }
+  assert.deepEqual([...kinds].sort(), ["entry", "floor", "no-default", "recorded", "registry", "replace"]);
+  assert.deepEqual([...rowsSeen].sort(), ["H0", "H1", "H2", "H3", "H4"]);
+  assert.ok(checked >= 700, `${checked} documents`);
+  assert.ok(mdOf(sys({ own: ownOf(), decisions: [corner("D-001", "controlRadius", 999)] })).includes("this entry lacks the recorded control corner 999 (D-001)"), "the radii bullet is among them");
+});
+
+test("determinism: the same input gives the same system, and the second proposal never recurses (WO-20 S)", () => {
+  const run = () => sys({ decisions: [recorded(printedHeight(40, { recipe: "calm-consumer" }))], own: ownOf() });
+  assert.equal(JSON.stringify(run(), null, 2), JSON.stringify(run(), null, 2));
+  assert.equal(mdOf(run()), mdOf(run()));
+  const input = inputOf({ decisions: [recorded(printedHeight(40, { recipe: "calm-consumer" }))] });
+  const before = JSON.stringify(input);
+  assert.deepEqual(defaultHeightEntryFor(input, 36), defaultHeightEntry(sys(), defaults, 36), "the proposal without D-001 is the proposal with nothing recorded");
+  assert.equal(JSON.stringify(input), before, "the inputs are not changed");
+  assert.throws(() => defaultHeightEntry(proposeSystem(input), defaults, 36), /controlHeights: recorded as D-001, so its block has no options/u, "defaultHeightEntry keeps its throw");
 });

@@ -29,7 +29,11 @@ Each axis lists its options strongest first, and the first one is proposed when 
    36, 40, 48px). A project that names no recipe, or one the file does not have, gets the `:root`
    block's set (28, 32, 36, 40, 44, 52px), because that is what the CSS draws. The basis says "the
    components of this StyleSeed version": an updated skill can describe components the project has not
-   copied again.
+   copied again. For corner radius it is the brand recipe's control, inset, and surface radius. When the
+   ledger records a control or field corner (`controlRadius`, `fieldRadius`), the recorded control corner
+   takes the place of the recipe's, the recorded field corner is added, and the basis names those entries
+   ("recorded control corner 999px (D-001) in place of the recipe's 3px"), so an entry taken from this
+   option holds the recorded corners.
 
 ## The rule for a corpus value
 
@@ -103,7 +107,14 @@ taken from the input element, and give no option. An entry from this option has 
 - `--entry <axis>=<v1,v2,…>` prints the ledger entry for a value set the person chose: the matching
   option's entry, or the values attributed to the options that hold them, with the rest listed after
   `chosen:`. It writes nothing. Every entry the tool prints has `approvedBy` and `date` empty and no
-  id; it does not compile until the person's name is on it.
+  id; it does not compile until the person's name is on it. It also takes two axes the ledger records
+  and the tool never proposes, `controlRadius` (the corner of buttons and of the controls that share it)
+  and `fieldRadius` (the corner of inputs, selects, and textareas): exactly one whole number from 0 to
+  200, or 999 for a pill, listed after `chosen:` (`--entry controlRadius=8` prints "Buttons and the
+  other controls that share their corner use an 8px corner."). A corner already recorded stops it with
+  that entry's id; change the entry instead. When a recorded `radii` decision does not hold the value,
+  the entry is printed and one line names that decision and the value to add, because the resolver
+  refuses a `radii` decision without a recorded corner.
 - `--reference <slug>` adds a reference measured in this project
   (`.styleseed/evidence/_reference/<slug>/measurements/`). When `.styleseed/rulesets/<slug>/evidence.json`
   is a generated contract a person has signed off (see [decisions](decisions.md)), the axes it keeps

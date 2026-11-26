@@ -1,4 +1,4 @@
-// System proposal (WO-11 A4, B2): for each ledger axis, the values a person may record and the basis of
+// System proposal (WO-11 A4, B2): for each ledger axis it covers, the values a person may record and the basis of
 // each, strongest first: the project's recorded decision, the person's own measurement (a reference kept
 // in an approved contract, then a reference measured but not kept, then the product's own screens as
 // counted by `drift-report.mjs --inventory`), corpus counts from the evidence pack, and last the engine
@@ -42,6 +42,16 @@ export const PROPOSAL_AXES = Object.freeze([
   { axis: "transitionDurations", core: false, title: "Transition durations", unit: "ms", depends: [], sentence: (v) => `Transitions use these durations: ${list(v)}ms.`, effect: "the drift report, run with `--structure`, reads any other duration as `violates D-…`" },
 ].map((entry) => Object.freeze({ ...entry, depends: Object.freeze(entry.depends) })));
 const AXIS_DEF = new Map(PROPOSAL_AXES.map((entry) => [entry.axis, entry]));
+// Ledger axes the proposer never proposes and `--entry` still prints (WO-20 A): a button's corner and a
+// field's corner. They have no block. A corner is one value for the whole project, a whole number from 0 to
+// 200 or 999 for a pill (runtime-contract.mjs). The keys equal compare-screens.mjs RECORD_ONLY_AXES.
+const cornerClause = (v) => (v === 0 ? "have square corners" : v === 999 ? "are pills" : `use ${an(v)} ${v}px corner`);
+const cornerWords = (v) => (v === 0 ? "square corners" : v === 999 ? "pill corners" : `${v}px`);
+const isCorner = (value) => Number.isInteger(value) && value >= 0 && (value <= 200 || value === 999);
+export const RECORD_ONLY_DEF = Object.freeze({
+  controlRadius: Object.freeze({ axis: "controlRadius", title: "Control corner", unit: "px", sentence: (v) => `Buttons and the other controls that share their corner ${cornerClause(v[0])}.` }),
+  fieldRadius: Object.freeze({ axis: "fieldRadius", title: "Field corner", unit: "px", sentence: (v) => `Inputs, selects, and textareas ${cornerClause(v[0])}.` }),
+});
 
 // --- skill data: strict shape checks ----------------------------------------------------------------------
 
@@ -282,10 +292,13 @@ function corpusFor(def, pack, context, rule) {
 const gcd = (a, b) => (b ? gcd(b, a % b) : a);
 
 /**
- * The shipped value of an axis, or null when the engine ships none for it.
+ * The shipped value of an axis, or null when the engine ships none for it. `corners` carries the project's
+ * recorded corners ({controlRadius, fieldRadius}, each {id, value}): on `radii` the recorded control corner
+ * replaces the recipe's and a recorded field corner is added, and `from` names the entries. Without a recipe
+ * `radii` is null either way.
  * @returns {{id: string, values: number[], from: string} | null}
  */
-export function engineDefault(axis, defaults, { recipe = null, surface = "pointer" } = {}) {
+export function engineDefault(axis, defaults, { recipe = null, surface = "pointer", corners = {} } = {}) {
   const { button, input, select, table } = defaults.components;
   const mainButton = button.sizes.find((size) => size.key === button.defaultSize);
   const mainSelect = select.sizes.find((size) => size.key === select.defaultSize);
@@ -306,10 +319,17 @@ export function engineDefault(axis, defaults, { recipe = null, surface = "pointe
   if (axis === "radii") {
     const entry = recipe ? defaults.recipes[recipe] : null;
     if (!entry) return null;
-    const values = numeric([entry.controlRadius, entry.insetRadius, entry.surfaceRadius].filter((value) => value !== null));
+    const control = corners.controlRadius ?? null;
+    const field = corners.fieldRadius ?? null;
+    const values = numeric([control ? control.value : entry.controlRadius, entry.insetRadius, entry.surfaceRadius, field ? field.value : null].filter((value) => value !== null));
     if (!values.length) return null;
     const part = (label, value) => (value === null ? null : `${label} ${value}px`);
-    return { id: `recipe.${recipe}`, values, from: `brand recipe ${recipe}: ${[part("control", entry.controlRadius), part("inset", entry.insetRadius), part("surface", entry.surfaceRadius)].filter(Boolean).join(", ")}` };
+    const shipped = [control ? null : part("control", entry.controlRadius), part("inset", entry.insetRadius), part("surface", entry.surfaceRadius)].filter(Boolean).join(", ");
+    const recorded = [
+      control ? `recorded control corner ${control.value}px (${control.id})${entry.controlRadius === null ? "" : ` in place of the recipe's ${entry.controlRadius}px`}` : null,
+      field ? `recorded field corner ${field.value}px (${field.id})` : null,
+    ].filter(Boolean);
+    return { id: `recipe.${recipe}`, values, from: `brand recipe ${recipe}: ${[shipped, ...recorded].filter(Boolean).join("; ")}` };
   }
   if (axis === "tableRowHeights") return { id: "components", values: [table.headHeight], from: `table header cell ${table.headHeight}px; body rows have no fixed height` };
   if (axis === "spacingBase") {
@@ -559,6 +579,8 @@ function entryFor(def, option, runId) {
 export function proposeSystem({ pack, defaults, project, context, references = [], own = null, rule = PROPOSAL_RULE }) {
   if (own !== null && !(isObject(own) && isObject(own.values) && isObject(own.axes) && typeof own.path === "string")) throw new Error("own: pass the ownScreens result for the product's inventory, or null");
   const decisions = project.decisions ?? [];
+  // The recorded corners (no scope, no exception on these axes) reach the `radii` block's engine default.
+  const corners = Object.fromEntries(decisions.filter((entry) => entry.kind === "decision" && Object.hasOwn(RECORD_ONLY_DEF, entry.axis)).map((entry) => [entry.axis, { id: entry.id, value: entry.values[0] }]));
   const axes = [];
   for (const def of PROPOSAL_AXES) {
     const recorded = decisions.find((entry) => entry.kind === "decision" && entry.axis === def.axis && !entry.scope) ?? null;
@@ -573,7 +595,7 @@ export function proposeSystem({ pack, defaults, project, context, references = [
     const ownAxis = own && OWN_AXES[def.axis] ? own : null;
     if (ownAxis?.values[def.axis]?.length) options.push({ basis: "own-screens", screens: own.screens, observedAt: own.observedAt, values: [...own.values[def.axis]], source: `own-screens:${own.observedAt}#${def.axis}` });
     options.push(...corpus.options);
-    const fallback = engineDefault(def.axis, defaults, { recipe: project.recipe, surface: context.surface });
+    const fallback = engineDefault(def.axis, defaults, { recipe: project.recipe, surface: context.surface, corners });
     if (fallback) options.push({ basis: "engine-default", values: fallback.values, from: fallback.from, source: `engine-default:${fallback.id} (not measured)` });
     if (!def.core && !recorded && !options.some((option) => option.basis !== "engine-default")) continue;
     const first = options[0] ?? null;
@@ -611,12 +633,21 @@ export function proposeSystem({ pack, defaults, project, context, references = [
 /**
  * The entry for a value set the person chose on one axis. Values equal (as a set) to an option's values give
  * that option's entry, the first in order; otherwise each value is attributed to the first option that holds
- * it and the rest are listed as chosen without a measured basis. A recorded axis is an error. Like every
- * printed entry, it has no id, no name, and no date.
+ * it and the rest are listed as chosen without a measured basis. A recorded axis is an error. A corner axis
+ * (RECORD_ONLY_DEF) takes exactly one value, chosen without a measured basis; it has no block, so whether it
+ * is already recorded is checked by the caller (propose-system.mjs). Like every printed entry, it has no id,
+ * no name, and no date.
  */
 export function entryForValues(proposal, axis, values) {
+  const corner = Object.hasOwn(RECORD_ONLY_DEF, axis) ? RECORD_ONLY_DEF[axis] : null;
+  if (corner) {
+    if (!Array.isArray(values) || values.length !== 1 || !isCorner(values[0])) throw new Error(`--entry ${axis}: give exactly one whole number from 0 to 200, or 999 for a pill (the ${corner.title.toLowerCase()} in px, for example --entry ${axis}=8)`);
+    const chosen = [values[0]];
+    const { statement, source } = fitted(corner, chosen, corner.sentence(chosen), `${cornerWords(chosen[0])} chosen without a measured basis`, `chosen: ${chosen[0]}`, () => `chosen: ${chosen[0]}`);
+    return { kind: "decision", axis, values: chosen, statement, approvedBy: "", date: "", source };
+  }
   const def = AXIS_DEF.get(axis);
-  if (!def) throw new Error(`--entry ${axis}: not an axis the proposer covers (${PROPOSAL_AXES.map((entry) => entry.axis).join(", ")})`);
+  if (!def) throw new Error(`--entry ${axis}: not an axis the proposer covers (${[...PROPOSAL_AXES.map((entry) => entry.axis), ...Object.keys(RECORD_ONLY_DEF)].join(", ")})`);
   if (!Array.isArray(values) || !values.length || !values.every((value) => typeof value === "number" && Number.isFinite(value) && value >= 0)) throw new Error(`--entry ${axis}: give numbers >= 0, comma-separated (for example --entry ${axis}=32,40)`);
   const chosen = numeric(values);
   if (chosen.length > MAX_VALUES) throw new Error(`--entry ${axis}: ${chosen.length} values; a ledger entry holds at most ${MAX_VALUES}`);

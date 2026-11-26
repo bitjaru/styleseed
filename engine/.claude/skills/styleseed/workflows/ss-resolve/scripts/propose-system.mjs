@@ -14,7 +14,9 @@
 //
 // Default: SYSTEM.md on stdout, nothing written. --json: the proposal object on stdout. --write:
 // .styleseed/proposals/system.json and .styleseed/proposals/SYSTEM.md, then one line per axis. --entry: the
-// entry for a value set the person chose, on stdout; writes nothing. --engine-defaults: what the engine
+// entry for a value set the person chose, on stdout; writes nothing. It also takes the two corner axes the
+// ledger records and nothing proposes (controlRadius, fieldRadius: one value each), refuses a corner already
+// recorded, and says on stderr which recorded `radii` decision lacks the value. --engine-defaults: what the engine
 // ships beside the corpus rows; needs no project. Exit 0 on success, 1 on any error.
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
@@ -22,7 +24,7 @@ import { fileURLToPath } from "node:url";
 import { SAFE_ID, normalizeDecisions, parseStrictJson, safeProjectPath } from "./runtime-contract.mjs";
 import { loadProjectRegistry } from "./project-registry.mjs";
 import { isApproved, isGeneratedEvidence, normalizeReferenceEvidence } from "./reference-contract.mjs";
-import { PROPOSAL_AXES, engineDefaultsTable, entryForValues, normalizeEngineDefaults, normalizeEvidencePack, normalizeInventory, ownScreens, proposeSystem, referenceValues, renderEngineDefaultsMarkdown, renderProposalMarkdown } from "./system-proposal.mjs";
+import { PROPOSAL_AXES, RECORD_ONLY_DEF, engineDefaultsTable, entryForValues, normalizeEngineDefaults, normalizeEvidencePack, normalizeInventory, ownScreens, proposeSystem, referenceValues, renderEngineDefaultsMarkdown, renderProposalMarkdown } from "./system-proposal.mjs";
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const REFERENCES = resolve(scriptDir, "../references");
@@ -221,8 +223,16 @@ export function main(argv, { stdout = (text) => process.stdout.write(text), stde
   const command = `propose-system.mjs --project-root .${loaded.artifact ? ` --artifact ${loaded.artifact}` : ""}${args.page !== null ? ` --page ${page}` : ""}${args.references.map((slug) => ` --reference ${slug}`).join("")}${own ? ` --own ${own.path}` : ""} --surface ${args.surface}`;
   if (args.entry !== null) {
     const { axis, values } = parseEntry(args.entry);
-    stdout(`${JSON.stringify(entryForValues(proposal, axis, values), null, 2)}\n`);
+    // A corner axis has no block, so the ledger is read here: a recorded corner is changed, not appended
+    // again, and every recorded `radii` decision must hold the new corner (runtime-contract.mjs).
+    const corner = Object.hasOwn(RECORD_ONLY_DEF, axis) ? RECORD_ONLY_DEF[axis] : null;
+    const recorded = corner ? loaded.project.decisions.find((entry) => entry.kind === "decision" && entry.axis === axis) : null;
+    if (recorded) throw new Error(`--entry ${axis}: the ${corner.title.toLowerCase()} is already recorded as ${recorded.id}; change that entry`);
+    const entry = entryForValues(proposal, axis, values);
+    stdout(`${JSON.stringify(entry, null, 2)}\n`);
     for (const note of notes) stderr(`${note}\n`);
+    const lacking = corner ? loaded.project.decisions.filter((d) => d.kind === "decision" && d.axis === "radii" && !d.values.includes(entry.values[0])).map((d) => d.id) : [];
+    if (lacking.length) stderr(`radii ${lacking.length === 1 ? `decision ${lacking[0]} does` : `decisions ${lacking.join(", ")} do`} not hold ${entry.values[0]}; add ${entry.values[0]} to ${lacking.length === 1 ? "its" : "their"} values when you append this entry, or the next resolve refuses the ledger.\n`);
     stderr(`Append it to ${loaded.project.ledger.path}${loaded.mode === "registry" ? " (decisions)" : ""} as ${loaded.project.ledger.nextId}, with approvedBy set to the name the person gives and date to today. Nothing was written.\n`);
     return 0;
   }

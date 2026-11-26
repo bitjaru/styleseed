@@ -8,8 +8,9 @@ import { fileURLToPath } from "node:url";
 import { DECISION_AXES, normalizeDecisions, normalizeProject } from "../../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/runtime-contract.mjs";
 import { decisionsFor, renderRulesSection } from "../../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/rules-in-scope.mjs";
 import { summarize } from "../../engine/.claude/skills/styleseed/workflows/ss-reference/scripts/analyze-observations.mjs";
-import { COLOR_AXES, SET_AXES, STRUCTURE_AXES, compareScreens, renderDriftMarkdown } from "../../engine/.claude/skills/styleseed/workflows/ss-reference/scripts/compare-screens.mjs";
+import { COLOR_AXES, RECORD_ONLY_AXES, SET_AXES, STRUCTURE_AXES, compareScreens, renderDriftMarkdown } from "../../engine/.claude/skills/styleseed/workflows/ss-reference/scripts/compare-screens.mjs";
 import { gateFailure, loadDecisions, parseArgs } from "../../engine/.claude/skills/styleseed/workflows/ss-verify/scripts/drift-report.mjs";
+import { RECORD_ONLY_DEF } from "../../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/system-proposal.mjs";
 
 const repoRoot = resolve(fileURLToPath(new URL("../../", import.meta.url)));
 const references = resolve(repoRoot, "engine/.claude/skills/styleseed/workflows/ss-resolve/references");
@@ -72,7 +73,8 @@ test("normalizeDecisions rejects ledgers that cannot be applied unambiguously", 
 });
 
 test("the ledger axes match the drift report axes and the project schema", () => {
-  assert.deepEqual([...DECISION_AXES], [...COLOR_AXES, "spacingBase", ...SET_AXES, ...STRUCTURE_AXES], "same axes, same order: colours, spacing base, set axes, then the structure axes");
+  assert.deepEqual([...DECISION_AXES], [...COLOR_AXES, "spacingBase", ...SET_AXES, ...STRUCTURE_AXES, ...RECORD_ONLY_AXES], "same axes, same order: colours, spacing base, set axes, the structure axes, then the record-only corners");
+  assert.deepEqual(Object.keys(RECORD_ONLY_DEF), [...RECORD_ONLY_AXES], "the proposer's record-only map holds exactly the record-only axes");
   assert.deepEqual(projectSchema.$defs.decision.properties.axis.enum, [...DECISION_AXES]);
   assert.deepEqual(Object.keys(projectSchema.$defs.decision.properties).sort(), ["approvedBy", "axis", "date", "id", "kind", "rule", "scope", "source", "statement", "to", "values"]);
   assert.equal(projectSchema.properties.decisions.maxItems, 200);
@@ -97,6 +99,46 @@ test("the six structure axes: numeric value sets, primariesPerSection holds one 
   const project = { schemaVersion: 1, projectId: "ledger", defaults: { agent: "codex", domain: "saas", adapter: "product-ui", recipe: "enterprise-workbench", palette: "cobalt-instrument", profile: "none", fallback: null }, brand: { keyColor: "#175CD3", paletteCharacter: "balanced", paletteMode: "light", paletteHarmony: "auto", surfaceTemperature: "cool", fontFamilies: ["Inter"], radius: "soft", elevation: "restrained-shadow", density: "comfortable", motion: { seed: "snap", intensity: "restrained" }, imageryRole: "data-first" } };
   assert.equal(normalizeProject({ ...clone(project), decisions: [entry("sectionGaps", [32])] }, catalog).decisions[0].axis, "sectionGaps");
   assert.ok(renderRulesSection(catalog.rules, { grammar: "operations-console", adapter: "product-ui", domain: "saas", page: "list" }, { decisions: ledger, artifactId: "app-orders" }).includes("- **D-034** (decision · primariesPerSection = 1 · approved by reviewer-a, 2026-11-11): Structure decision on primariesPerSection."));
+});
+
+// The two corner axes (WO-20 A): a button's corner and a field's corner, recorded for the whole project.
+const PILL_STATEMENT = "Buttons and the other controls that share their corner are pills. Basis: pill corners chosen without a measured basis.";
+const FIELD_STATEMENT = "Inputs, selects, and textareas use a 4px corner. Basis: 4px chosen without a measured basis.";
+const cornerEntry = (id, axis, values, over = {}) => ({ id, kind: "decision", axis, values, statement: `Recorded ${axis}.`, approvedBy: "reviewer-a", date: "2026-11-25", ...over });
+
+test("the two corner axes: one whole number from 0 to 200 or 999, for the whole project only", () => {
+  for (const axis of ["controlRadius", "fieldRadius"]) {
+    for (const value of [0, 8, 200, 999]) assert.deepEqual(normalizeDecisions([cornerEntry("D-001", axis, [value])], catalog)[0].values, [value], `${axis} = ${value}`);
+    for (const values of [[4, 8], [-1], [201], [1000], [8.5], ["8"], []]) {
+      const expected = values.length ? new RegExp(`D-001\\.values must hold exactly one whole number from 0 to 200, or 999 for a pill, for ${axis}`, "u") : /non-empty array of at most 24 values/u;
+      assert.throws(() => normalizeDecisions([cornerEntry("D-001", axis, values)], catalog), expected, `${axis} ${JSON.stringify(values)}`);
+    }
+    assert.throws(() => normalizeDecisions([cornerEntry("D-001", axis, [8], { scope: { screens: ["settings"] } })], catalog), new RegExp(`D-001\\.scope: a corner is one value for the whole project; drop scope from this ${axis} decision`, "u"));
+    assert.throws(() => normalizeDecisions([cornerEntry("D-001", axis, [8], { scope: { artifacts: ["app-orders"] } })], catalog), /a corner is one value for the whole project/u);
+    assert.throws(() => normalizeDecisions([cornerEntry("D-001", axis, [8]), cornerEntry("D-002", axis, [12], { kind: "exception", to: "D-001" })], catalog), new RegExp(`D-002: a corner is one value for the whole project; ${axis} takes no exception\\. Change the value of the ${axis} decision instead`, "u"));
+    assert.throws(() => normalizeDecisions([cornerEntry("D-002", axis, [12], { kind: "exception", rule: "CRAFT-control-heights" })], catalog), /D-002: a corner is one value for the whole project/u, "an exception to a rule on a corner axis is refused too");
+    assert.throws(() => normalizeDecisions([cornerEntry("D-001", axis, [8]), cornerEntry("D-002", axis, [12])], catalog), new RegExp(`D-001 and D-002 both decide ${axis}; a corner is one value for the whole project, so keep one of them and delete the other$`, "u"), "no advice to scope one");
+  }
+});
+
+test("every radii decision holds the recorded corners; an exception on radii does not count", () => {
+  const corners = [cornerEntry("D-002", "controlRadius", [999], { statement: PILL_STATEMENT }), cornerEntry("D-003", "fieldRadius", [4], { statement: FIELD_STATEMENT })];
+  const ok = normalizeDecisions(clone([cornerEntry("D-001", "radii", [3, 4, 999]), ...corners]), catalog);
+  assert.deepEqual(ok.map((entry) => [entry.id, entry.axis, entry.values]), [["D-001", "radii", [3, 4, 999]], ["D-002", "controlRadius", [999]], ["D-003", "fieldRadius", [4]]]);
+  assert.equal(normalizeDecisions(clone(corners), catalog).length, 2, "corners without a radii decision validate");
+  assert.throws(() => normalizeDecisions(clone([cornerEntry("D-001", "radii", [2, 3, 4]), ...corners]), catalog), /^Error: project\.decisions: D-001 decides radii 2, 3, 4 without 999, the control corner recorded as D-002; add 999 to D-001\.values\. Every radii decision, scoped or not, holds the recorded corners; an exception on radii does not count$/u);
+  assert.throws(() => normalizeDecisions(clone([cornerEntry("D-001", "radii", [3, 4, 999]), ...corners, cornerEntry("D-004", "radii", [4], { scope: { screens: ["settings"] } })]), catalog), /D-004 decides radii 4 for its scope without 999, the control corner recorded as D-002; add 999 to D-004\.values/u, "a scoped radii decision holds them too");
+  assert.throws(() => normalizeDecisions(clone([cornerEntry("D-001", "radii", [4]), corners[0], cornerEntry("D-003", "fieldRadius", [8]), cornerEntry("D-004", "radii", [8, 999], { kind: "exception", to: "D-001" })]), catalog), /D-001 decides radii 4 without 999, the control corner recorded as D-002; and without 8, the field corner recorded as D-003; add 8 and 999 to D-001\.values/u, "an exception adding the corners does not count");
+  assert.equal(normalizeDecisions(clone([cornerEntry("D-001", "radii", [4]), cornerEntry("D-004", "radii", [8], { kind: "exception", to: "D-001" })]), catalog).length, 2, "without a corner the rule asks nothing");
+
+  // The bundle prints both statements.
+  const selection = { grammar: "operations-console", adapter: "product-ui", domain: "saas", page: "list" };
+  const section = renderRulesSection(catalog.rules, selection, { decisions: ok, artifactId: "app-orders" });
+  assert.ok(section.includes([
+    "- **D-001** (decision · radii = 3, 4, 999 · approved by reviewer-a, 2026-11-25): Recorded radii.",
+    `- **D-002** (decision · controlRadius = 999 · approved by reviewer-a, 2026-11-25): ${PILL_STATEMENT}`,
+    `- **D-003** (decision · fieldRadius = 4 · approved by reviewer-a, 2026-11-25): ${FIELD_STATEMENT}`,
+  ].join("\n")), section);
 });
 
 test("renderRulesSection lists the decisions that apply to the artifact and annotates excepted defaults", () => {
@@ -406,6 +448,23 @@ test("legacy round trip: .styleseed/decisions.json compiles into the bundle, --c
     rmSync(root, { recursive: true, force: true });
     rmSync(reg, { recursive: true, force: true });
   }
+});
+
+test("legacy resolve: the two corners compile into the bundle; a radii decision without them stops the resolve with both ids", () => {
+  const root = legacyProject();
+  try {
+    const corners = [cornerEntry("D-002", "controlRadius", [999], { statement: PILL_STATEMENT }), cornerEntry("D-003", "fieldRadius", [4], { statement: FIELD_STATEMENT })];
+    writeLedger(root, [cornerEntry("D-001", "radii", [2, 4, 999]), ...corners]);
+    const compiled = legacyResolve(root);
+    assert.equal(compiled.status, 0, compiled.stderr);
+    const bundle = readFileSync(join(root, ".styleseed/effective-rules.md"), "utf8");
+    assert.ok(bundle.includes(`- **D-002** (decision · controlRadius = 999 · approved by reviewer-a, 2026-11-25): ${PILL_STATEMENT}\n- **D-003** (decision · fieldRadius = 4 · approved by reviewer-a, 2026-11-25): ${FIELD_STATEMENT}\n`), bundle);
+    assert.equal(legacyResolve(root, ["--check"]).status, 0);
+    writeLedger(root, [cornerEntry("D-001", "radii", [2, 3, 4]), ...corners]);
+    const refused = legacyResolve(root);
+    assert.equal(refused.status, 1);
+    assert.match(refused.stderr, /\.styleseed\/decisions\.json: D-001 decides radii 2, 3, 4 without 999, the control corner recorded as D-002; add 999 to D-001\.values\./u);
+  } finally { rmSync(root, { recursive: true, force: true }); }
 });
 
 test("drift: loadDecisions reads .styleseed/decisions.json of a project without a registry; --decisions alone wins", () => {

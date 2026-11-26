@@ -375,6 +375,65 @@ test("entryForValues: an exact option, a superset of the corpus value, values in
   assert.equal(entryForValues(corpusOnly, "spacingBase", [8]).statement, "Spacing follows an 8px unit. Basis: 8px chosen without a measured basis.");
 });
 
+// The two corner axes (WO-20 A): recorded, never proposed; --entry prints one chosen value.
+const corner = (id, axis, value) => ({ id, kind: "decision", axis, values: [value], statement: `Recorded ${axis}.`, approvedBy: "example-designer", date: "2026-11-25" });
+
+test("corner entries: the exact statements and sources of one chosen value; one value from 0 to 200 or 999", () => {
+  const proposal = propose(makePack([prow("button.height", "form", 4, [b(32, 3, 2, 1)])]));
+  const cases = [
+    ["controlRadius", 8, "Buttons and the other controls that share their corner use an 8px corner. Basis: 8px chosen without a measured basis.", "chosen: 8"],
+    ["controlRadius", 999, "Buttons and the other controls that share their corner are pills. Basis: pill corners chosen without a measured basis.", "chosen: 999"],
+    ["controlRadius", 0, "Buttons and the other controls that share their corner have square corners. Basis: square corners chosen without a measured basis.", "chosen: 0"],
+    ["fieldRadius", 8, "Inputs, selects, and textareas use an 8px corner. Basis: 8px chosen without a measured basis.", "chosen: 8"],
+  ];
+  for (const [axis, value, statement, source] of cases) {
+    const entry = entryForValues(proposal, axis, [value]);
+    assert.deepEqual(entry, { kind: "decision", axis, values: [value], statement, approvedBy: "", date: "", source }, `${axis}=${value}`);
+    assert.ok(!BANNED.test(entry.statement), entry.statement.match(BANNED)?.[0]);
+    assert.doesNotThrow(() => normalizeDecisions([{ ...entry, id: "D-001", approvedBy: "example-designer", date: "2026-11-25" }], catalog), JSON.stringify(entry));
+    assert.throws(() => normalizeDecisions([{ ...entry, id: "D-001" }], catalog), /D-001\.approvedBy/u, "an empty name does not compile");
+  }
+  assert.equal(entryForValues(proposal, "fieldRadius", [999]).statement, "Inputs, selects, and textareas are pills. Basis: pill corners chosen without a measured basis.");
+  assert.equal(entryForValues(proposal, "fieldRadius", [0]).statement, "Inputs, selects, and textareas have square corners. Basis: square corners chosen without a measured basis.");
+  assert.equal(entryForValues(proposal, "controlRadius", [4]).statement, "Buttons and the other controls that share their corner use a 4px corner. Basis: 4px chosen without a measured basis.");
+  assert.equal(entryForValues(proposal, "controlRadius", [200]).source, "chosen: 200");
+  for (const values of [[8, 12], [250], [201], [1000], [8.5], [-1]]) {
+    assert.throws(() => entryForValues(proposal, "controlRadius", values), /--entry controlRadius: give exactly one whole number from 0 to 200, or 999 for a pill \(the control corner in px, for example --entry controlRadius=8\)/u, JSON.stringify(values));
+  }
+  assert.throws(() => entryForValues(proposal, "fieldRadius", [8, 12]), /--entry fieldRadius: give exactly one whole number from 0 to 200, or 999 for a pill \(the field corner in px/u);
+  assert.throws(() => entryForValues(proposal, "accent", [1]), /not an axis the proposer covers \(controlHeights, typeSizes, radii, tableRowHeights, spacingBase, spacingScale, headingSizes, listItemHeights, sectionGaps, primariesPerSection, transitionDurations, controlRadius, fieldRadius\)/u);
+  assert.ok(!proposal.axes.some((a) => a.axis === "controlRadius" || a.axis === "fieldRadius"), "no block for a corner");
+});
+
+test("the radii block's engine default carries the recorded corners; without them it is unchanged", () => {
+  const pack = makePack([]);
+  const today = { id: "recipe.enterprise-workbench", values: [2, 3, 4], from: "brand recipe enterprise-workbench: control 3px, inset 2px, surface 4px" };
+  assert.deepEqual(engineDefault("radii", defaults, { recipe: "enterprise-workbench" }), today);
+  assert.deepEqual(engineDefault("radii", defaults, { recipe: "enterprise-workbench", corners: {} }), today);
+  const both = { controlRadius: { id: "D-001", value: 999 }, fieldRadius: { id: "D-002", value: 8 } };
+  assert.deepEqual(engineDefault("radii", defaults, { recipe: "enterprise-workbench", corners: both }), { id: "recipe.enterprise-workbench", values: [2, 4, 8, 999], from: "brand recipe enterprise-workbench: inset 2px, surface 4px; recorded control corner 999px (D-001) in place of the recipe's 3px; recorded field corner 8px (D-002)" });
+  assert.deepEqual(engineDefault("radii", defaults, { recipe: "public-service", corners: { fieldRadius: { id: "D-002", value: 0 } } }), { id: "recipe.public-service", values: [0], from: "brand recipe public-service: control 0px, inset 0px, surface 0px; recorded field corner 0px (D-002)" });
+  assert.equal(engineDefault("radii", defaults, { corners: both }), null, "no recipe: still null");
+
+  // A project without a recorded corner: the block's option, byte for byte.
+  const bare = axisOf(propose(pack), "radii");
+  assert.deepEqual(bare.options, [{
+    basis: "engine-default", values: [2, 3, 4], from: today.from, source: "engine-default:recipe.enterprise-workbench (not measured)",
+    entry: { kind: "decision", axis: "radii", values: [2, 3, 4], statement: "Corners use these radii: 2, 3, 4px. Basis: engine default, not measured (brand recipe enterprise-workbench: control 3px, inset 2px, surface 4px).", approvedBy: "", date: "", source: "engine-default:recipe.enterprise-workbench (not measured)" },
+  }]);
+  assert.equal(JSON.stringify(axisOf(propose(pack, { decisions: normalizeDecisions([corner("D-001", "spacingBase", 8)], catalog) }), "radii")), JSON.stringify(bare), "another axis recorded: the same bytes");
+
+  // With both corners recorded: the option holds them and its entry passes the ledger beside them.
+  const corners = [corner("D-001", "controlRadius", 999), corner("D-002", "fieldRadius", 8)];
+  const block = axisOf(propose(pack, { decisions: normalizeDecisions(clone(corners), catalog) }), "radii");
+  assert.equal(block.status, "unmeasured");
+  assert.deepEqual(block.options[0].values, [2, 4, 8, 999]);
+  assert.equal(block.options[0].entry.statement, "Corners use these radii: 2, 4, 8, 999px. Basis: engine default, not measured (brand recipe enterprise-workbench: inset 2px, surface 4px; recorded control corner 999px (D-001) in place of the recipe's 3px; recorded field corner 8px (D-002)).");
+  assert.ok(!BANNED.test(block.options[0].entry.statement));
+  assert.doesNotThrow(() => normalizeDecisions([...clone(corners), { ...block.options[0].entry, id: "D-003", approvedBy: "example-designer", date: "2026-11-25" }], catalog));
+  assert.ok(renderProposalMarkdown(propose(pack, { decisions: normalizeDecisions(clone(corners), catalog) })).includes("- Options: 2, 4, 8, 999px (engine default, not measured: brand recipe enterprise-workbench: inset 2px, surface 4px; recorded control corner 999px (D-001) in place of the recipe's 3px; recorded field corner 8px (D-002))."));
+});
+
 // Every proposal the committed pack can make: every page, both surfaces, every recipe.
 function committedScenarios() {
   const out = [];
@@ -512,6 +571,43 @@ test("CLI: refusals exit 1 with their message; --write writes two files; --entry
     rmSync(outside, { recursive: true, force: true });
   }
   assert.ok(!existsSync(root));
+});
+
+test("CLI --entry on a corner: prints one value, refuses a recorded corner with its id, names a radii decision that lacks the value", () => {
+  const root = mkdtempSync(join(tmpdir(), "ss-propose-corner-"));
+  try {
+    writeFileSync(join(root, "STYLESEED.md"), LOCK);
+    mkdirSync(join(root, "src"));
+    assert.equal(spawnSync(process.execPath, [resolver, "--project-root", root, "--from-lock", "STYLESEED.md", "--agent", "claude"], { encoding: "utf8" }).status, 0);
+    const entry = (arg) => cli(root, ["--project-root", ".", "--surface", "pointer", "--entry", arg]);
+    const ledger = (entries) => writeFileSync(join(root, ".styleseed/decisions.json"), `${JSON.stringify(entries, null, 2)}\n`);
+    let result = entry("controlRadius=8");
+    assert.equal(result.status, 0, result.stderr);
+    assert.deepEqual(JSON.parse(result.stdout), { kind: "decision", axis: "controlRadius", values: [8], statement: "Buttons and the other controls that share their corner use an 8px corner. Basis: 8px chosen without a measured basis.", approvedBy: "", date: "", source: "chosen: 8" });
+    assert.ok(!result.stderr.includes("radii"), result.stderr);
+    for (const arg of ["controlRadius=8,12", "controlRadius=250", "fieldRadius=8.5"]) {
+      result = entry(arg);
+      assert.equal(result.status, 1, arg);
+      assert.match(result.stderr, /give exactly one whole number from 0 to 200, or 999 for a pill/u, arg);
+    }
+
+    ledger([corner("D-001", "controlRadius", 8)]);
+    result = entry("controlRadius=12");
+    assert.equal(result.status, 1);
+    assert.equal(result.stderr, "--entry controlRadius: the control corner is already recorded as D-001; change that entry\n");
+    assert.equal(result.stdout, "", "nothing printed");
+    result = entry("fieldRadius=4");
+    assert.equal(result.status, 0, result.stderr);
+    assert.match(result.stderr, /Append it to \.styleseed\/decisions\.json as D-002/u);
+
+    ledger([{ ...corner("D-001", "radii", 2), values: [2, 3, 4] }]);
+    result = entry("fieldRadius=8");
+    assert.equal(result.status, 0, result.stderr);
+    assert.equal(JSON.parse(result.stdout).source, "chosen: 8");
+    assert.ok(result.stderr.includes("radii decision D-001 does not hold 8; add 8 to its values when you append this entry, or the next resolve refuses the ledger.\n"), result.stderr);
+    result = entry("fieldRadius=4");
+    assert.ok(!result.stderr.includes("does not hold"), "the radii decision holds 4");
+  } finally { rmSync(root, { recursive: true, force: true }); }
 });
 
 // --- the product's own screens (Part B) ---------------------------------------------------------------------------

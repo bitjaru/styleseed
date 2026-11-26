@@ -44,8 +44,8 @@ catalog: `engine/rules/catalog.json` never holds a project's decisions.
 | `kind` | Required. `decision` or `exception`. |
 | `rule` | Optional. A rule id from the catalog. On an exception it must be a `default` rule. |
 | `to` | Exception only, optional. The id of a `decision` in this ledger on the same `axis`. An exception names `rule`, `to`, or both: it has to say what it is an exception to. |
-| `axis` | Optional. One of the measured drift axes: `accent`, `ink`, `canvas`, `spacingBase`, `spacingScale`, `typeSizes`, `radii`, `fonts`, `controlHeights`, or one of the six structure axes the drift report measures with `--structure`: `tableRowHeights`, `listItemHeights`, `headingSizes`, `sectionGaps`, `primariesPerSection`, `transitionDurations`. Without an axis the entry is prose: it reaches the bundle but the drift report cannot measure it. |
-| `values` | Required with `axis`, forbidden without it. 1–24 values. Colour axes take exactly one `#RRGGBB` (stored upper case); `spacingBase` exactly one positive integer; `primariesPerSection` exactly one integer ≥ 0, meaning "at most this many primary actions per section"; `fonts` family names of 1–80 characters; the other axes numbers ≥ 0 (sorted, de-duplicated): px for the heights, sizes, and gaps, ms for `transitionDurations`. |
+| `axis` | Optional. One of the measured drift axes (`accent`, `ink`, `canvas`, `spacingBase`, `spacingScale`, `typeSizes`, `radii`, `fonts`, `controlHeights`), one of the six structure axes the drift report measures with `--structure` (`tableRowHeights`, `listItemHeights`, `headingSizes`, `sectionGaps`, `primariesPerSection`, `transitionDurations`), or one of two corner axes the drift report does not measure. `controlRadius` is the corner of buttons and of the other controls that share it; this version records it and does not check it, refuses `scope` and exceptions on it, and treats it as the project's decision, while the key of the same name in `engine-defaults.json` is a brand recipe's value. `fieldRadius` is the corner of inputs, selects, and textareas; this version records it and does not check it, and refuses `scope` and exceptions on it. Without an axis the entry is prose: it reaches the bundle but the drift report cannot measure it. |
+| `values` | Required with `axis`, forbidden without it. 1–24 values. Colour axes take exactly one `#RRGGBB` (stored upper case); `spacingBase` exactly one positive integer; `primariesPerSection` exactly one integer ≥ 0, meaning "at most this many primary actions per section"; `controlRadius` and `fieldRadius` exactly one whole number from 0 to 200, or 999 for a pill; `fonts` family names of 1–80 characters; the other axes numbers ≥ 0 (sorted, de-duplicated): px for the heights, sizes, and gaps, ms for `transitionDurations`. |
 | `scope` | Optional. `screens` (drift-report labels such as `settings` or `billing-history`) and/or `artifacts` (artifact ids). No scope means the whole project. |
 | `statement` | Required. One line, at most 300 characters. This is what an agent reads. |
 | `approvedBy` | Required. Who approved it, at most 80 characters. |
@@ -55,9 +55,12 @@ catalog: `engine/rules/catalog.json` never holds a project's decisions.
 The resolver validates the ledger with the rest of `project.json`. It refuses, with the entry id and
 what to change: duplicate ids, unknown rule ids, an exception without `rule` or `to`, a `to` that is
 missing or decides a different axis, `values` without an axis, a colour axis with more than one
-value, two project-wide decisions on the same axis, and two scoped decisions on the same axis whose
-screens or artifacts overlap. A scoped decision may coexist with a project-wide one on the same axis;
-the scoped one wins on its screens and artifacts.
+value, two project-wide decisions on the same axis, two scoped decisions on the same axis whose
+screens or artifacts overlap, a `scope` on `controlRadius` or `fieldRadius`, an exception on either of
+them, and a `radii` decision, project-wide or scoped, that does not hold the value of each recorded
+corner (an exception on `radii` does not count; the message names the `radii` entry, the corner entry,
+and the value to add to the decision). A scoped decision may coexist with a project-wide one on the
+same axis, except on the two corner axes; the scoped one wins on its screens and artifacts.
 
 ## Decision versus exception
 
@@ -119,10 +122,16 @@ apply it. Add `scope.screens` to make it measurable.
   is a maximum (a screen with more primaries in one section reads `violates D-…`). Without
   `--structure` such an entry is listed once in the verdict as `Not measured (pass --structure)` and
   in `drift.json` as `decisions.notMeasured`; it neither applies nor fails.
+- A decision on `controlRadius` or `fieldRadius` is recorded and not checked: the probe reads every
+  painted corner into one `radii` set and does not keep a button's corner apart from a field's. Such an
+  entry is listed once in the verdict as `Recorded; this report does not check a button's or a field's
+  corner`, with its id and title, and in `drift.json` as `decisions.notChecked`; it neither applies nor
+  fails, with or without `--structure`. The `radii` decision that holds the corner is checked as before.
 - Axes no entry touches behave exactly as without a ledger.
 - Violations count on at-rest screens, and on state variants for the accent, as drift does.
-  `drift.json` carries `decisions: { applied, violations, excepted, entries }`; `DRIFT.md` adds the
-  statuses to its legend and lists the recorded entries it applied.
+  `drift.json` carries `decisions: { applied, violations, excepted, entries }`, plus `notMeasured` and
+  `notChecked` when they list an entry; `DRIFT.md` adds the statuses to its legend and lists the recorded
+  entries it applied.
 - `--gate` exits 3 on at-rest drift on accent, ink, canvas, or spacing base **or** on any decision
   violation, and names both. A screen whose only deviations are approved exceptions passes.
 
@@ -209,8 +218,10 @@ report could not say which one was approved.
 
 ## Limits (v0)
 
-- The ledger covers the measured token-level axes and the six structure axes above. Other structure
-  (layout, grouping, component choice) has no axis; record it as a prose decision without one.
+- The ledger covers the measured token-level axes and the six structure axes above, and records the two
+  corner axes, which nothing checks yet. Other structure (layout, grouping, component choice) has no
+  axis; record it as a prose decision without one.
 - The drift report applies entries by screen label, not by artifact.
 - A decision is a project record, not evidence that the decision is good design. The drift report
-  measures whether screens follow it; it does not judge it.
+  measures whether screens follow it, except on the two corner axes, which it lists without checking; it
+  does not judge it.

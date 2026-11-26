@@ -1,6 +1,10 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { spawnSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
 import { summarize } from "../../engine/.claude/skills/styleseed/workflows/ss-reference/scripts/analyze-observations.mjs";
 import { compareScreens, baselineFromRoles, renderDriftMarkdown, colorDistance, screenValues } from "../../engine/.claude/skills/styleseed/workflows/ss-reference/scripts/compare-screens.mjs";
 import { parseArgs, labelFor, withState, planScreens, gateFailure } from "../../engine/.claude/skills/styleseed/workflows/ss-verify/scripts/drift-report.mjs";
@@ -197,4 +201,69 @@ test("drift: without --structure a structure-axis decision is reported once as n
   assert.deepEqual(Object.keys(plain.decisions), ["applied", "violations", "excepted", "entries", "notMeasured"]);
   const none = compareScreens([screen("home"), screen("settings")], { decisions: ledgerOf({ ...D020, axis: "radii", values: [4, 12, 999] }) });
   assert.equal(Object.hasOwn(none.decisions, "notMeasured"), false);
+});
+
+// The two corner axes (WO-20 A): recorded, listed once, never applied, never a pass or a fail.
+const CORNERS = [
+  { id: "D-001", kind: "decision", axis: "controlRadius", values: [999], statement: "Buttons and the other controls that share their corner are pills. Basis: pill corners chosen without a measured basis.", approvedBy: "reviewer-a", date: "2026-11-25", source: "chosen: 999" },
+  { id: "D-002", kind: "decision", axis: "fieldRadius", values: [4], statement: "Inputs, selects, and textareas use a 4px corner. Basis: 4px chosen without a measured basis.", approvedBy: "reviewer-a", date: "2026-11-25", source: "chosen: 4" },
+];
+const D003_RADII = { id: "D-003", kind: "decision", axis: "radii", values: [4, 12, 999], statement: "Corners use these radii: 4, 12, 999px.", approvedBy: "reviewer-a", date: "2026-11-25" };
+const NOT_CHECKED = "Recorded; this report does not check a button's or a field's corner";
+const cornerScreens = () => [screen("home"), screen("settings", { radii: { 4: 30, 12: 10, 999: 2, 6: 20 } }), screen("pricing")];
+
+test("drift: corner decisions are listed once in the verdict and under notChecked; never applied, never a violation", () => {
+  const report = compareScreens(cornerScreens(), { decisions: ledgerOf(...CORNERS) });
+  assert.deepEqual(report.decisions.notChecked, [{ id: "D-001", axis: "controlRadius" }, { id: "D-002", axis: "fieldRadius" }]);
+  assert.deepEqual(Object.keys(report.decisions), ["applied", "violations", "excepted", "entries", "notChecked"]);
+  assert.deepEqual([report.decisions.applied, report.decisions.entries, report.decisions.violations, report.decisions.excepted], [[], [], [], []], "neither applied nor in entries");
+  assert.equal(report.baseline.source, "majority across screens", "a corner does not reach the baseline");
+  assert.deepEqual(report.axes.radii.screens[1].status, "extra", "the radii row is as without a ledger");
+  assert.equal(gateFailure(report), null, "the gate neither passes nor fails on them");
+  assert.match(report.verdict, /Recorded; this report does not check a button's or a field's corner: D-001 \(control corner\), D-002 \(field corner\)\./u);
+  const md = renderDriftMarkdown(report);
+  assert.equal(md.split(NOT_CHECKED).length - 1, 1, "the sentence exactly once");
+  assert.ok(!md.includes("undefined"), md);
+  assert.ok(!md.includes("## Recorded decisions"), "nothing was applied");
+  assert.deepEqual(compareScreens(structureScreens(), { structure: true, decisions: ledgerOf(...CORNERS) }).decisions.notChecked.map((d) => d.id), ["D-001", "D-002"], "with --structure too");
+
+  // Beside a radii decision that holds them: radii is checked as before, the corners are not.
+  const withRadii = compareScreens(cornerScreens(), { decisions: ledgerOf(D003_RADII, ...CORNERS) });
+  assert.deepEqual(withRadii.decisions.applied, ["D-003"]);
+  assert.deepEqual(withRadii.decisions.entries.map((d) => d.id), ["D-003"]);
+  assert.deepEqual(withRadii.decisions.notChecked.map((d) => d.id), ["D-001", "D-002"]);
+  assert.deepEqual(withRadii.decisions.violations, [{ id: "D-003", screen: "settings", axis: "radii", values: [6] }]);
+  assert.equal(gateFailure(withRadii), "drift gate: FAIL — decision violations: D-003 on settings (radii 6)");
+  const withRadiiMd = renderDriftMarkdown(withRadii);
+  assert.equal(withRadiiMd.split(NOT_CHECKED).length - 1, 1);
+  assert.ok(!withRadiiMd.includes("undefined"), withRadiiMd);
+  assert.ok(withRadiiMd.includes("## Recorded decisions\n\nFrom the project's decisions ledger. A value outside a decision `violates` it; a value an approved exception covers is not drift.\n\n- D-003 · decision · radii = 4, 12, 999 · whole project\n"), withRadiiMd);
+  // A report without such entries has no notChecked key.
+  assert.equal(Object.hasOwn(compareScreens(cornerScreens(), { decisions: ledgerOf(D003_RADII) }).decisions, "notChecked"), false);
+});
+
+// drift-report.mjs run as a command, with a chromium stub that serves the canned observations above.
+const driftCli = fileURLToPath(new URL("../../engine/.claude/skills/styleseed/workflows/ss-verify/scripts/drift-report.mjs", import.meta.url));
+const synthetic = new URL("../lib/reference-synthetic.mjs", import.meta.url).href;
+
+test("drift CLI --gate: exits 0 for a ledger holding only the two corners, 3 for a radii violation beside them", () => {
+  const dir = mkdtempSync(join(tmpdir(), "ss-drift-corners-"));
+  try {
+    const pages = { "https://example.test/home": observation(), "https://example.test/settings": observation({ radii: { 4: 30, 12: 10, 999: 2, 6: 20 } }) };
+    const stub = join(dir, "stub-browser.mjs");
+    writeFileSync(stub, `import { stubChromium } from ${JSON.stringify(synthetic)};\nconst pages = ${JSON.stringify(pages)};\nexport const { chromium } = stubChromium(Object.fromEntries(Object.entries(pages).map(([url, observation]) => [url, () => observation])));\n`);
+    const run = (name, entries) => {
+      writeFileSync(join(dir, `${name}.json`), JSON.stringify(entries));
+      return spawnSync(process.execPath, [driftCli, ...Object.keys(pages), "--out", join(dir, name), "--decisions", join(dir, `${name}.json`), "--browser", stub, "--gate"], { encoding: "utf8" });
+    };
+    const corners = run("corners", CORNERS);
+    assert.equal(corners.status, 0, corners.stderr);
+    const md = readFileSync(join(dir, "corners/DRIFT.md"), "utf8");
+    assert.equal(md.split(NOT_CHECKED).length - 1, 1, md);
+    assert.ok(!md.includes("undefined"), md);
+    assert.deepEqual(JSON.parse(readFileSync(join(dir, "corners/drift.json"), "utf8")).decisions.notChecked, [{ id: "D-001", axis: "controlRadius" }, { id: "D-002", axis: "fieldRadius" }]);
+    const radii = run("radii", [D003_RADII, ...CORNERS]);
+    assert.equal(radii.status, 3, radii.stderr || radii.stdout);
+    assert.match(radii.stderr, /drift gate: FAIL — decision violations: D-003 on settings \(radii 6\)/u);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
 });

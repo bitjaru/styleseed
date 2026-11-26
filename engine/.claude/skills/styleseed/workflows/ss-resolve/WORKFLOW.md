@@ -32,7 +32,8 @@ an error naming the mapping to add, never a generated colour. Preview read-only 
 `import-tokens.mjs`; see the [token canon guide](references/tokens.md).
 
 A project records approved decisions and approved exceptions in optional project `decisions` (id,
-`decision` or `exception`, optional `rule`/`to`, measured `axis` + `values`, `scope`, statement,
+`decision` or `exception`, optional `rule`/`to`, `axis` + `values` (a measured axis, or one of two
+corner axes the ledger records and nothing checks), `scope`, statement,
 `approvedBy`, date). The resolver compiles the entries that apply to an artifact into the bundle's
 **Rules in scope** section, where a decision outranks a default and never an invariant; an exception
 against an invariant fails the resolve. The drift report reads the same ledger. See the

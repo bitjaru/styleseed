@@ -7,7 +7,9 @@
 // With `structure` (summaries measured with the structure probe), six structure rows are compared
 // the same way. A structure value outside the shared set never fails the gate; a recorded decision
 // on a structure axis applies to these rows like the others (`violates`, `approved`), and without
-// `structure` such a decision is reported once as not measured.
+// `structure` such a decision is reported once as not measured. A decision on a record-only axis
+// (RECORD_ONLY_AXES: a button's corner and a field's corner) is recorded and not checked: it is
+// listed once under `notChecked`, never applied, and never fails the gate.
 //
 // Distance (compareToContract, renderDistanceMarkdown) is a different measurement: one built screen
 // against one approved reference contract, fact by fact, in its own table. It never enters the
@@ -18,12 +20,16 @@ import { primaryStats } from './analyze-structure.mjs';
 export const COLOR_AXES = ['accent', 'ink', 'canvas'];
 export const SET_AXES = ['spacingScale', 'typeSizes', 'radii', 'fonts', 'controlHeights'];
 export const STRUCTURE_AXES = ['tableRowHeights', 'listItemHeights', 'headingSizes', 'sectionGaps', 'primariesPerSection', 'transitionDurations'];
+// Ledger axes this report lists and does not compare: the probe reads every painted corner into `radii`
+// and does not keep a button's corner apart from a field's.
+export const RECORD_ONLY_AXES = ['controlRadius', 'fieldRadius'];
 const STRUCTURE_SCALAR_AXES = new Set(['primariesPerSection']);
 const AXIS_TITLES = {
   accent: 'accent', ink: 'ink', canvas: 'canvas', spacingBase: 'spacing base', spacingScale: 'spacing scale',
   typeSizes: 'type sizes', radii: 'radii', fonts: 'fonts', controlHeights: 'control heights',
   tableRowHeights: 'table row height', listItemHeights: 'list item height', headingSizes: 'heading sizes (main)',
   sectionGaps: 'section gap', primariesPerSection: 'primaries per section (max)', transitionDurations: 'transition durations (ms)',
+  controlRadius: 'control corner', fieldRadius: 'field corner',
 };
 
 export function colorDistance(a, b) {
@@ -258,16 +264,20 @@ export function compareScreens(screens, { baseline = null, nearDistance = 24, de
   if (ledger) {
     // Entries on a structure axis are measured only with `structure`; without it they are listed
     // once as not measured and neither applied nor violated.
+    // Entries on a record-only axis are listed once as not checked, with or without `structure`.
     const unmeasured = d => !structure && STRUCTURE_AXES.includes(d.axis);
+    const recordOnly = d => RECORD_ONLY_AXES.includes(d.axis);
     const reaches = d => (d.kind === 'decision'
       ? rows.some(r => ledger.decisionFor(d.axis, r.label) === d)
       : rows.some(r => ledger.covers(d, r.label)));
-    const applied = ledger.measurable.filter(d => !unmeasured(d) && reaches(d)).map(d => d.id).sort(byId);
+    const applied = ledger.measurable.filter(d => !recordOnly(d) && !unmeasured(d) && reaches(d)).map(d => d.id).sort(byId);
     const notMeasured = ledger.measurable.filter(d => unmeasured(d) && reaches(d)).map(d => d.id).sort(byId);
+    const notChecked = ledger.measurable.filter(recordOnly).map(d => d.id).sort(byId);
     const entries = decisions.filter(d => applied.includes(d.id)).map(d => ({
       id: d.id, kind: d.kind, ...(d.to ? { to: d.to } : {}), ...(d.rule ? { rule: d.rule } : {}), axis: d.axis, values: [...d.values], ...(d.scope ? { scope: d.scope } : {}),
     })).sort((a, b) => byId(a.id, b.id));
-    ledgerReport = { applied, violations, excepted, entries, ...(notMeasured.length ? { notMeasured: notMeasured.map(id => ({ id, axis: decisions.find(d => d.id === id).axis })) } : {}) };
+    const listed = ids => ids.map(id => ({ id, axis: decisions.find(d => d.id === id).axis }));
+    ledgerReport = { applied, violations, excepted, entries, ...(notMeasured.length ? { notMeasured: listed(notMeasured) } : {}), ...(notChecked.length ? { notChecked: listed(notChecked) } : {}) };
   }
   const verdict = verdictFor(rows.length, screensWithDrift, axes, { accentOnlyInState, accentMissing, ledger: ledgerReport, structure: structureReport });
   return { screens: rows, baseline: base, axes, screensWithDrift, accentOnlyInState, ...(ledgerReport ? { decisions: ledgerReport } : {}), ...(structureReport ? { structure: structureReport } : {}), verdict };
@@ -295,6 +305,7 @@ function verdictFor(total, drifted, axes, { accentOnlyInState = [], accentMissin
     lines.push(`Approved exceptions used: ${[...used].sort(([a], [b]) => byId(a, b)).map(([id, list]) => `${id} on ${list.join(', ')}`).join('; ')}.`);
   }
   if (ledger?.notMeasured?.length) lines.push(`Not measured (pass --structure): ${ledger.notMeasured.map(d => `${d.id} (${AXIS_TITLES[d.axis]})`).join(', ')}.`);
+  if (ledger?.notChecked?.length) lines.push(`Recorded; this report does not check a button's or a field's corner: ${ledger.notChecked.map(d => `${d.id} (${AXIS_TITLES[d.axis]})`).join(', ')}.`);
   if (accentOnlyInState.length) lines.push(`On ${accentOnlyInState.join(', ')} the primary action appears only in a state; the accent was read from the state variant.`);
   if (accentMissing.length) lines.push(`No accent was derived on ${accentMissing.join(', ')}; if the primary action appears only in a state, re-measure with --states.`);
   return lines.join(' ');

@@ -139,6 +139,11 @@ Use `--agent claude` for Claude Code. Review changes to:
 The manifest's `engineRevision` must match the published revision, and `--check` must exit 0.
 Report both the old and new bundle hashes.
 
+A project whose lock names a brand recipe or a palette recipe other than the automatic one gets that recipe's and
+that palette's rules after its next resolve, and `--check` reports the project as changed until then; earlier
+resolvers, from 4.1.0 on, built the automatic look and printed the lock's two lines only in the bundle's "Project
+design lock" section.
+
 ## Source-checkout maintainers
 
 For a full StyleSeed checkout, update the intended tag or commit and run:

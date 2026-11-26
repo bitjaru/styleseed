@@ -136,7 +136,11 @@ function parseLegacyLock(path) {
   return { path: "legacy:STYLESEED.md", normalized, duplicates, unknown, text };
 }
 
-function legacyArgsToNormalized(args, lock) {
+// `auto` in any letter case is the automatic look; any other value is an id, matched as written.
+const isAuto = (value) => /^auto$/iu.test(value);
+
+// `lockPath` is the lock's path as given (`--from-lock`, else STYLESEED.md); refusals name it.
+function legacyArgsToNormalized(args, lock, lockPath) {
   const pick = (name, fallback = null) => args[name] ?? lock.normalized[name] ?? fallback;
   const grammar = pick("grammar");
   const adapter = pick("adapter");
@@ -145,11 +149,15 @@ function legacyArgsToNormalized(args, lock) {
   const recipeGrammar = typeof grammar === "string" && grammar.startsWith("reference:")
     ? pick("fallback", null)
     : grammar;
-  const recipeSelection = pick("recipe", "auto");
-  const resolvedRecipe = recipeSelection === "auto" ? AUTO_RECIPE_BY_GRAMMAR[recipeGrammar] : recipeSelection;
+  // The lock keeps its two lines under `recipeSelection` and `paletteSelection` (compiler.mjs prints them
+  // into the bundle under those names). Each argument outranks its own line and nothing else.
+  const recipeSelection = args.recipe ?? lock.normalized.recipeSelection ?? "auto";
+  if (!isAuto(recipeSelection) && !Object.hasOwn(catalog.recipes, recipeSelection)) throw new Error(`${args.recipe !== undefined ? `--recipe ${recipeSelection}` : `${lockPath}: "Brand recipe: ${recipeSelection}"`} is not a brand recipe. Use auto or one of: ${Object.keys(catalog.recipes).join(", ")}.`);
+  const resolvedRecipe = isAuto(recipeSelection) ? AUTO_RECIPE_BY_GRAMMAR[recipeGrammar] : recipeSelection;
   if (!resolvedRecipe) throw new Error(`No automatic brand recipe for grammar "${grammar}".`);
-  const paletteSelection = pick("palette", "auto");
-  const resolvedPalette = paletteSelection === "auto" ? AUTO_PALETTE_BY_RECIPE[resolvedRecipe] : paletteSelection;
+  const paletteSelection = args.palette ?? lock.normalized.paletteSelection ?? "auto";
+  if (!isAuto(paletteSelection) && !Object.hasOwn(catalog.palettes, paletteSelection)) throw new Error(`${args.palette !== undefined ? `--palette ${paletteSelection}` : `${lockPath}: "Palette recipe: ${paletteSelection}"`} is not a palette recipe. Use auto or one of: ${Object.keys(catalog.palettes).join(", ")}.`);
+  const resolvedPalette = isAuto(paletteSelection) ? AUTO_PALETTE_BY_RECIPE[resolvedRecipe] : paletteSelection;
   if (!resolvedPalette) throw new Error(`No automatic palette recipe for brand recipe "${resolvedRecipe}".`);
   const project = normalizeProject({
     schemaVersion: 1,
@@ -188,8 +196,8 @@ function legacyArgsToNormalized(args, lock) {
       adapter,
       domain: pick("domain", "none"),
       page: pick("page", "none"),
-      recipe: recipeSelection === "auto" ? null : recipeSelection,
-      palette: paletteSelection === "auto" ? null : paletteSelection,
+      recipe: isAuto(recipeSelection) ? null : recipeSelection,
+      palette: isAuto(paletteSelection) ? null : paletteSelection,
       profile: pick("profile", "none"),
       fallback: pick("fallback", null),
     },
@@ -342,7 +350,7 @@ const LEGACY_LEDGER = ".styleseed/decisions.json";
 if (!registry) {
   const lockPath = safeProjectPath(projectRoot, args["from-lock"] ?? "STYLESEED.md");
   const lock = parseLegacyLock(lockPath);
-  const normalized = legacyArgsToNormalized(args, lock);
+  const normalized = legacyArgsToNormalized(args, lock, args["from-lock"] ?? "STYLESEED.md");
   const ledgerFile = safeProjectPath(projectRoot, LEGACY_LEDGER);
   if (existsSync(ledgerFile)) {
     let raw;

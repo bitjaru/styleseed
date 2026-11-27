@@ -115,6 +115,7 @@ async function checkSearchFacts(baseUrl) {
   const strip = (address) => address.replace(/\/$/u, "");
   const addresses = [...listed, ...searchExtraPaths.map((path) => `${origin}${path}`)];
   const guides = { index: 0, domains: 0 };
+  const pages = new Map();
   for (const address of addresses) {
     const url = new URL(address);
     const route = url.pathname;
@@ -124,6 +125,7 @@ async function checkSearchFacts(baseUrl) {
     }
     const response = await fetch(`${baseUrl}${route}${url.search}`, { redirect: "manual" });
     const html = await response.text();
+    if (response.ok) pages.set(linkPath(route), html);
     const page = readHead(html);
     // The guides are StyleSeed's own guidance, not measured; each says so and links the measured systems.
     const guide = route.match(/^\/guides(\/[^/]+)?$/u);
@@ -153,8 +155,97 @@ async function checkSearchFacts(baseUrl) {
     if (descriptions !== 1) failures.push(`${route}: ${descriptions} description tags, expected one`);
   }
   if (guides.index !== 1 || guides.domains === 0) failures.push(`/sitemap.xml lists ${guides.index} /guides index and ${guides.domains} /guides/<domain> pages; the /systems link check needs the index and the domain guides`);
+  const links = await checkLinks(baseUrl, origin, listed, pages, failures);
   if (failures.length > 0) throw new Error(`Search facts failed (${failures.length}):\n- ${failures.join("\n- ")}`);
-  return { listed: listed.length, extra: searchExtraPaths.length, guides: guides.index + guides.domains };
+  return { listed: listed.length, extra: searchExtraPaths.length, guides: guides.index + guides.domains, ...links };
+}
+
+// An address as a link names it: the path without ?…, #…, and a trailing slash.
+function linkPath(pathname) {
+  return pathname.replace(/\/+$/u, "") || "/";
+}
+
+// The internal addresses a page's <a href> elements name. An absolute address on the sitemap's origin is internal.
+function pageLinks(html, origin, route) {
+  const found = new Set();
+  for (const [, href] of html.matchAll(/<a\b[^>]*?\shref="([^"]*)"/gu)) {
+    let url;
+    try {
+      url = new URL(decodeEntities(href), `${origin}${route}`);
+    } catch {
+      continue;
+    }
+    if (url.origin === origin) found.add(linkPath(url.pathname));
+  }
+  return found;
+}
+
+// Every sitemap page can be reached from the home by links, and every other address a swept page links answers.
+async function checkLinks(baseUrl, origin, listed, pages, failures) {
+  const sitemapPages = new Set(listed.map((address) => linkPath(new URL(address).pathname)));
+  if (!pages.has("/")) pages.set("/", await (await fetch(`${baseUrl}/`)).text());
+  const linksOf = new Map([...pages].map(([route, html]) => [route, pageLinks(html, origin, route)]));
+
+  // The walk: from /, follow every link to a sitemap page, and repeat from each page reached.
+  const reached = new Set(["/"]);
+  const queue = ["/"];
+  while (queue.length > 0) {
+    for (const target of linksOf.get(queue.shift()) ?? []) {
+      if (sitemapPages.has(target) && !reached.has(target)) {
+        reached.add(target);
+        queue.push(target);
+      }
+    }
+  }
+  const unreached = [...sitemapPages].filter((route) => !reached.has(route));
+  if (unreached.length > 0) failures.push(`not reachable from / by links: ${unreached.join(", ")}; link each from a page that is reached, or take it out of app/sitemap.ts`);
+
+  // The walk alone passes when only the pages with no other link are linked: /motion links every motion page, and
+  // /guides links /screens.
+  const motionPages = [...sitemapPages].filter((route) => /^\/motion\/[^/]+$/u.test(route) && route !== "/motion/guide");
+  if (motionPages.length === 0) failures.push("/sitemap.xml lists no /motion/<key> page; the /motion link check has nothing to read");
+  const fromMotion = linksOf.get("/motion") ?? new Set();
+  const motionMissing = motionPages.filter((route) => !fromMotion.has(route));
+  if (motionMissing.length > 0) failures.push(`/motion: no <a href> to ${motionMissing.join(", ")}; each card's label links its own page`);
+  if (!(linksOf.get("/guides") ?? new Set()).has("/screens")) failures.push("/guides: no <a href> to /screens; the guides index links the design guides by screen type");
+
+  // Every other internal link answers: 200, or 307 or 308 to an address that answers 200.
+  const others = new Map();
+  for (const [route, targets] of linksOf) {
+    for (const target of targets) {
+      if (sitemapPages.has(target)) continue;
+      if (!others.has(target)) others.set(target, []);
+      others.get(target).push(route);
+    }
+  }
+  for (const [target, from] of others) {
+    const response = await fetch(`${baseUrl}${target}`, { redirect: "manual" });
+    await response.arrayBuffer();
+    let answer = `HTTP ${response.status}`;
+    let ok = response.status === 200;
+    if (response.status === 307 || response.status === 308) {
+      const location = response.headers.get("location");
+      const next = location ? new URL(location, `${baseUrl}${target}`) : null;
+      if (next && next.origin === baseUrl) {
+        const followed = await fetch(next, { redirect: "manual" });
+        await followed.arrayBuffer();
+        answer = `HTTP ${response.status} to ${next.pathname}, which answers HTTP ${followed.status}`;
+        ok = followed.status === 200;
+      } else {
+        answer = `HTTP ${response.status} to ${location ?? "no location"}`;
+      }
+    }
+    if (!ok) failures.push(`${target}: linked from ${from.join(", ")}, answers ${answer}; link an address that answers, or add the page or a redirect`);
+  }
+
+  // The home's footer links /components; the redirect in next.config.ts sends it to /gallery.
+  const components = await fetch(`${baseUrl}/components`, { redirect: "manual" });
+  await components.arrayBuffer();
+  const location = components.headers.get("location");
+  const componentsTo = location ? new URL(location, `${baseUrl}/components`).pathname : "no location";
+  if (components.status !== 307 || componentsTo !== "/gallery") failures.push(`/components: answers HTTP ${components.status} to ${componentsTo}, expected 307 to /gallery (the redirect in next.config.ts)`);
+
+  return { reachable: [...sitemapPages].filter((route) => reached.has(route)).length, linked: others.size };
 }
 
 function isLocalVercelAnalyticsShim(url) {
@@ -371,7 +462,7 @@ try {
   if (failures.length > 0) throw new Error(`Browser smoke failures:\n- ${failures.join("\n- ")}`);
   console.log(`Browser smoke verified ${routes.length} routes at desktop and 390x844 mobile/reduced-motion viewports.`);
   console.log("Public version, StyleSeed registry, and single-skill discovery endpoints are readable.");
-  console.log(`Search facts verified on ${swept.listed} sitemap pages and ${swept.extra} more routes: own canonical and og:url, share images, share titles not the home's, one title and one description, the site name once.`);
+  console.log(`Search facts verified on ${swept.listed} sitemap pages and ${swept.extra} more routes: own canonical and og:url, share images, share titles not the home's, one title and one description, the site name once; all ${swept.reachable} sitemap pages reachable from the home by links; ${swept.linked} other linked addresses answer.`);
   console.log(`The ${swept.guides} guide pages link to /systems; /faq holds ${faqStructuredQuestions} structured questions, the new-product question last.`);
 } catch (error) {
   console.error(error instanceof Error ? error.stack ?? error.message : String(error));

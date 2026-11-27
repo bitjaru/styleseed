@@ -37,6 +37,8 @@ jobs:
       - name: Run browser smoke tests
         run: npm run test:browser
         working-directory: demo-pricing
+      - name: Verify the site's own pages with the render-fault probe
+        run: node scripts/test-site-faults-browser.mjs
       - name: Run disposable external application regression
         run: node scripts/test-external-app.mjs --output "$RUNNER_TEMP/styleseed-external-app-report"
       - name: Upload external application diagnostics

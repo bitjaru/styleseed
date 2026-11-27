@@ -167,11 +167,11 @@ export function OrbitDeck(_: ArtifactProps) {
   return (
     <div className="min-h-[640px] bg-[#CCD4DC] p-5 text-white sm:p-8">
       <div className="mx-auto max-w-5xl overflow-hidden rounded-sm bg-[#07111F] shadow-[0_24px_60px_-28px_rgba(3,10,20,0.75)]">
-        <div className="flex items-center justify-between border-b border-white/10 px-7 py-4 text-[10px] font-bold uppercase tracking-[0.18em] text-white/55">
+        <div className="flex items-center justify-between border-b border-white/10 px-7 py-4 text-[10px] font-bold uppercase tracking-[0.18em] text-white/55 max-sm:gap-4">
           <span>Orbit Systems / Launch narrative</span><span>03 — The mechanism</span>
         </div>
-        <div className="grid aspect-[16/9] grid-cols-[1.05fr_0.95fr]">
-          <div className="flex flex-col justify-between p-[8%]">
+        <div className="grid grid-cols-1 sm:aspect-[16/9] sm:grid-cols-[1.05fr_0.95fr]">
+          <div className="flex flex-col justify-between gap-8 p-[8%] sm:gap-0">
             <div className="inline-flex w-fit items-center gap-2 rounded-full border border-[#7BE7C6]/30 bg-[#7BE7C6]/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.16em] text-[#7BE7C6]">
               <Sparkles size={11} /> Operating intelligence
             </div>
@@ -188,12 +188,12 @@ export function OrbitDeck(_: ArtifactProps) {
               <DeckMetric value="Owner" label="who moves next" />
             </div>
           </div>
-          <div className="relative overflow-hidden bg-[radial-gradient(circle_at_50%_45%,rgba(70,112,255,0.28),transparent_42%)]">
+          <div className="relative aspect-square overflow-hidden bg-[radial-gradient(circle_at_50%_45%,rgba(70,112,255,0.28),transparent_42%)] sm:aspect-auto">
             <OrbitGraphic />
           </div>
         </div>
       </div>
-      <div className="mx-auto mt-4 grid max-w-5xl grid-cols-4 gap-2">
+      <div className="mx-auto mt-4 grid max-w-5xl grid-cols-2 gap-2 sm:grid-cols-4">
         {["Thesis", "Friction", "Mechanism", "Decision"].map((label, index) => (
           <div key={label} className={"border-t px-1 pt-2 text-[10px] font-bold uppercase tracking-[0.14em] " + (index === 2 ? "border-[#07111F] text-[#07111F]" : "border-black/20 text-black/35")}>
             0{index + 1} · {label}

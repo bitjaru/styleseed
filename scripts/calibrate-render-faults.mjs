@@ -5,9 +5,10 @@
 // 390, the screens that have any, the candidate distributions, and every finding of the three gate
 // candidates (amount-wrap, text-overlap, text-spill) with its screen, viewport, and box. The rule that
 // reads this table is in the work order and in ss-verify/references/render-faults.md: a candidate
-// gates only when it has zero findings on all 32 screens at both viewports. Not wired into
-// verify-repo.mjs: the landing changes weekly. Output goes to --out <dir> (default: a new temporary
-// folder, printed); never inside the repository.
+// gates only when it has zero findings on all 32 screens at both viewports. This calibration is still
+// run by hand; scripts/test-site-faults-browser.mjs holds the gate classes on every sitemap page in the
+// browser gate (verify-repo.mjs --browser) and in continuous integration. Output goes to --out <dir>
+// (default: a new temporary folder, printed); never inside the repository.
 //
 //   node scripts/calibrate-render-faults.mjs [--out <dir>] [--browser <playwright module>]
 import { mkdtempSync, mkdirSync } from "node:fs";

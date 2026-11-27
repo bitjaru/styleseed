@@ -407,7 +407,7 @@
   .heroCopy > p { max-width: 31ch; }
   .page .hero .copyButton { width: var(--home-space-72); min-width: var(--home-space-72); }
   .page .hero .copyButton[data-copy-state="copied"] { width: var(--home-control-size); min-width: var(--home-control-size); }
-  .ruleCard summary { grid-template-columns: 60px minmax(0, 1fr) 16px; }
+  .ruleCard summary { grid-template-columns: 60px minmax(0, 1fr) auto 16px; }
   .ruleCard p { margin-left: 0; }
   .measuredNumber { font-size: 40px; }
   .measuredSpacing { max-width: var(--home-diagram-width-mobile); }

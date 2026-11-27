@@ -190,7 +190,7 @@ export default function EvaluatePage() {
               <span className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-white/60">
                 macOS · Linux · PowerShell: use npx.cmd
               </span>
-              <span className="font-mono text-xs text-white/50">~3 min</span>
+              <span className="shrink-0 whitespace-nowrap font-mono text-xs text-white/50">~3 min</span>
             </div>
             <pre className="w-max min-w-full whitespace-pre font-mono text-[13px] leading-7 sm:text-sm">
               <code>{INSTALL.map((line) => `$ ${line}`).join("\n")}</code>

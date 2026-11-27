@@ -147,7 +147,9 @@ function KeywordCard({ entry }: { entry: MotionKeyword }) {
       {/* meta */}
       <div className="flex flex-1 flex-col gap-2 p-4">
         <div className="flex items-center justify-between">
-          <span className="text-[15px] font-bold">{entry.label}</span>
+          <Link href={`/motion/${entry.key}`} className="text-[15px] font-bold hover:underline">
+            {entry.label}
+          </Link>
           <button
             type="button"
             onClick={copy}

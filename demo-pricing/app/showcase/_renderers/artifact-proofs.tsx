@@ -284,12 +284,12 @@ function ReportStat({ value, label }: { value: string; label: string }) {
 export function NightPoster(_: ArtifactProps) {
   return (
     <div className="flex min-h-[720px] items-center justify-center bg-[#D8D8D0] p-5 sm:p-8">
-      <article className="relative aspect-[4/5] h-[min(78vh,660px)] max-w-full overflow-hidden bg-[#0B0C0A] text-[#D7FF3F] shadow-[0_28px_70px_-35px_rgba(0,0,0,0.8)]">
+      <article className="relative aspect-[4/5] w-[min(100%,calc(min(78vh,660px)*0.8))] max-sm:min-h-[440px] overflow-hidden bg-[#0B0C0A] text-[#D7FF3F] shadow-[0_28px_70px_-35px_rgba(0,0,0,0.8)]">
         <div className="absolute inset-x-[7%] top-[6%] z-20 flex justify-between text-[10px] font-black uppercase tracking-[0.2em]">
           <span>After Dark</span><span>Seoul / 25</span>
         </div>
         <div className="absolute left-[-8%] top-[13%] rotate-[-12deg] text-[clamp(230px,38vw,430px)] font-black leading-none tracking-[-0.15em] text-[#D7FF3F]">25</div>
-        <div className="absolute left-[8%] top-[43%] z-10 w-[84%] border-y-2 border-[#D7FF3F] py-[3%] text-center text-[clamp(15px,2.3vw,28px)] font-black uppercase tracking-[0.28em] text-[#0B0C0A] mix-blend-difference">
+        <div className="absolute left-[8%] top-[43%] z-10 w-[84%] border-y-2 border-[#D7FF3F]! py-[3%] text-center text-[clamp(15px,2.3vw,28px)] font-black uppercase tracking-[0.28em] text-[#D7FF3F] mix-blend-difference">
           sound · type · motion
         </div>
         <div className="absolute inset-x-[7%] bottom-[7%] z-20 grid grid-cols-[1fr_auto] items-end gap-6">

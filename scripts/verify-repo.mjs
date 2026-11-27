@@ -108,6 +108,7 @@ if (!flags.has("--core")) {
     run("Verify the measured systems page (/systems at 1440 and 390: cells, drawn sizes and contrast, no focus in a strip, labels, links)", node, ["scripts/test-systems-browser.mjs"]);
     run("Verify reference distance, brief, and project-mode frames", node, ["scripts/test-reference-distance-browser.mjs"]);
     run("Run browser smoke tests", npmCommand, ["run", "test:browser"], demoRoot);
+    run("Verify the site's own pages with the render-fault probe (every sitemap page and /try at 1440 and 390)", node, ["scripts/test-site-faults-browser.mjs"]);
     run("Check pilot React and CSS integration", node, ["scripts/test-design-pilot-library.mjs"]);
     run("Calibrate design-pilot browser acceptance", node, ["scripts/test-design-pilot-browser.mjs", "--calibrate"]);
   }

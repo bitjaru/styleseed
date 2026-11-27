@@ -165,7 +165,10 @@ for a fact or axis whose transfer is adapt, observe, or avoid.
 
 `ss-resolve/scripts/propose-system.mjs --project-root . --surface pointer|touch` prints, for control height, type
 sizes, corner radius, table row height, and spacing unit (and for the other measured axes when it has a basis), a
-value, the counts behind it, and a ready entry with `approvedBy` and `date` left empty. It writes no ledger. An entry
+value, the counts behind it, and a ready entry with `approvedBy` and `date` left empty. Where the corpus proposes a
+control height, its block names `--default-height <px>` in place of an entry: the entry for a default control height,
+with the sizes the shipped components draw around it, comes from that command, and the document's first section
+prints it under "To take it" for the height the project's look draws when one is offered. It writes no ledger. An entry
 whose `approvedBy` is empty does not compile, so a proposal cannot reach a bundle before a person has put their name
 on it. Corpus counts describe what the published demo screens of a few design systems rendered on the run's date;
 they are not a review of this project. See [system proposals](proposals.md).

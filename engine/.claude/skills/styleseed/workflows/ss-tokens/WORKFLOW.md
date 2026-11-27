@@ -103,7 +103,11 @@ reference the person measured.) When the product already has screens, count them
 and pass `--own <dir>/inventory.json`: the values those screens use become an option after the references and before
 the corpus counts. Read `.styleseed/proposals/SYSTEM.md`: per axis it gives a value and its basis, in
 this order: the project's recorded decision, the person's own measurement, counts over the measured design systems
-that ship with this skill, and the engine default, labelled not measured. Present each axis with its counts, let the
+that ship with this skill, and the engine default, labelled not measured. The document opens with "The system this
+project starts with", one table of what the look draws and what the ledger records, and under "To take it" one entry
+or the reason there is none; present that first, then the blocks. For a control height taken from the corpus or
+chosen by the person, get the entry from `--default-height <px>`: one height recorded alone flags the other sizes of
+the shipped components. Present each axis with its counts, let the
 person choose, and append only what they chose to the decisions ledger with the name they give; `--entry
 <axis>=<values>` prints the entry for a value other than the proposed one. Then resolve again and apply the decided
 values in the token files below. The tool writes no ledger and no name. See

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 5,
   "engineVersion": "5.0.0",
-  "engineRevision": "sha256:915dbfc8e9483d38142206c1321f2adaa7abf269a1df0b0cffefde5540f2def2",
+  "engineRevision": "sha256:c85a9e82797fb8fdcb651b68befbdae18e5cb4259fe88b6d1f07d9c399d2c70f",
   "distributionSource": {
     "schemaVersion": 1,
     "channel": "edge",
@@ -10,7 +10,7 @@
   },
   "distributions": {
     "core": {
-      "revision": "sha256:915dbfc8e9483d38142206c1321f2adaa7abf269a1df0b0cffefde5540f2def2",
+      "revision": "sha256:c85a9e82797fb8fdcb651b68befbdae18e5cb4259fe88b6d1f07d9c399d2c70f",
       "files": [
         {
           "path": "LICENSE",
@@ -134,8 +134,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/WORKFLOW.md",
-          "sha256": "8e33abc3aea88bb180d76266a8c73dbdcf0c1acad8098a67b97ceb253defcb23",
-          "bytes": 7746
+          "sha256": "afe703b43bc7b58860ee9f91e387ec5f23812ff96cda47e150286a33323d10ae",
+          "bytes": 7963
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/references/artifact-index.schema.json",
@@ -149,8 +149,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/references/decisions.md",
-          "sha256": "8449fc6cd7d49e57c853a176ce916cf12fdf9101c1de16ef60ff2160e673de76",
-          "bytes": 18647
+          "sha256": "ac1c9fbd8e1723c36cb000ca2912c3dab5fa4fabe2d709b1dd607f8a5d5dbc14",
+          "bytes": 18995
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/references/engine-defaults.json",
@@ -184,8 +184,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/references/proposals.md",
-          "sha256": "4dd81f3f7259c413fa2401cee8f53fae2a3919185369b817b2dd4b092d5c041b",
-          "bytes": 14638
+          "sha256": "51145e1a8a96a626837f95748856866c12848833af58801556879e393c336246",
+          "bytes": 19465
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/references/reference-evidence.schema.json",
@@ -239,8 +239,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/propose-system.mjs",
-          "sha256": "844cb7557a19ff40801fbee69728d23c41690a498f8538f7b3c294ef89283c88",
-          "bytes": 25376
+          "sha256": "366e283b01f200af355daf274bd512323838316e1860fa3446d0172af04f41a8",
+          "bytes": 26485
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/recommend-spacing.mjs",
@@ -289,8 +289,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/system-proposal.mjs",
-          "sha256": "3c8c7899d714804c85f3b5a6603fb322d784daa8ff4951534ced2fde6975a016",
-          "bytes": 78679
+          "sha256": "cf50d01dda5be018df149a36eff8876b8847006fa4d7e41186308bf820175ddf",
+          "bytes": 97671
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/token-canon.mjs",
@@ -379,8 +379,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-setup/WORKFLOW.md",
-          "sha256": "4bff08298713042df59242af90872269b5936150389fa0b759ab12f5fcdf6647",
-          "bytes": 11657
+          "sha256": "bfbd8e73c5e883b3082adaab9f186a21ffd10c9c05a0fbf86bf4cc635653cf43",
+          "bytes": 12069
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-studio/WORKFLOW.md",
@@ -409,8 +409,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-tokens/WORKFLOW.md",
-          "sha256": "31c2c4c9772ca5796279730d03455b611846ec43b34985bfe40a04d37161495b",
-          "bytes": 7451
+          "sha256": "4e57918310f97e53ef0e84bc06c2b6f9f1ea246965137de8f055151fca574b6d",
+          "bytes": 7862
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-tokens/scripts/generate-palette.mjs",
@@ -660,7 +660,7 @@
       ]
     },
     "skills": {
-      "revision": "sha256:b091de74c4c77c13f999a0cebe4aaadf15b00d35be45b4b5e5fce19e1dc45c66",
+      "revision": "sha256:667e4d3c7975bfe0bea1c99cf94e872e35887ce8e8150f2ed047e17171aeadac",
       "files": [
         {
           "path": "engine/.claude/skills/styleseed/SKILL.md",
@@ -774,8 +774,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/WORKFLOW.md",
-          "sha256": "8e33abc3aea88bb180d76266a8c73dbdcf0c1acad8098a67b97ceb253defcb23",
-          "bytes": 7746
+          "sha256": "afe703b43bc7b58860ee9f91e387ec5f23812ff96cda47e150286a33323d10ae",
+          "bytes": 7963
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/references/artifact-index.schema.json",
@@ -789,8 +789,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/references/decisions.md",
-          "sha256": "8449fc6cd7d49e57c853a176ce916cf12fdf9101c1de16ef60ff2160e673de76",
-          "bytes": 18647
+          "sha256": "ac1c9fbd8e1723c36cb000ca2912c3dab5fa4fabe2d709b1dd607f8a5d5dbc14",
+          "bytes": 18995
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/references/engine-defaults.json",
@@ -824,8 +824,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/references/proposals.md",
-          "sha256": "4dd81f3f7259c413fa2401cee8f53fae2a3919185369b817b2dd4b092d5c041b",
-          "bytes": 14638
+          "sha256": "51145e1a8a96a626837f95748856866c12848833af58801556879e393c336246",
+          "bytes": 19465
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/references/reference-evidence.schema.json",
@@ -879,8 +879,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/propose-system.mjs",
-          "sha256": "844cb7557a19ff40801fbee69728d23c41690a498f8538f7b3c294ef89283c88",
-          "bytes": 25376
+          "sha256": "366e283b01f200af355daf274bd512323838316e1860fa3446d0172af04f41a8",
+          "bytes": 26485
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/recommend-spacing.mjs",
@@ -929,8 +929,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/system-proposal.mjs",
-          "sha256": "3c8c7899d714804c85f3b5a6603fb322d784daa8ff4951534ced2fde6975a016",
-          "bytes": 78679
+          "sha256": "cf50d01dda5be018df149a36eff8876b8847006fa4d7e41186308bf820175ddf",
+          "bytes": 97671
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/token-canon.mjs",
@@ -1019,8 +1019,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-setup/WORKFLOW.md",
-          "sha256": "4bff08298713042df59242af90872269b5936150389fa0b759ab12f5fcdf6647",
-          "bytes": 11657
+          "sha256": "bfbd8e73c5e883b3082adaab9f186a21ffd10c9c05a0fbf86bf4cc635653cf43",
+          "bytes": 12069
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-studio/WORKFLOW.md",
@@ -1049,8 +1049,8 @@
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-tokens/WORKFLOW.md",
-          "sha256": "31c2c4c9772ca5796279730d03455b611846ec43b34985bfe40a04d37161495b",
-          "bytes": 7451
+          "sha256": "4e57918310f97e53ef0e84bc06c2b6f9f1ea246965137de8f055151fca574b6d",
+          "bytes": 7862
         },
         {
           "path": "engine/.claude/skills/styleseed/workflows/ss-tokens/scripts/generate-palette.mjs",
@@ -1273,8 +1273,8 @@
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-resolve/WORKFLOW.md",
-      "sha256": "8e33abc3aea88bb180d76266a8c73dbdcf0c1acad8098a67b97ceb253defcb23",
-      "bytes": 7746
+      "sha256": "afe703b43bc7b58860ee9f91e387ec5f23812ff96cda47e150286a33323d10ae",
+      "bytes": 7963
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-resolve/references/artifact-index.schema.json",
@@ -1288,8 +1288,8 @@
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-resolve/references/decisions.md",
-      "sha256": "8449fc6cd7d49e57c853a176ce916cf12fdf9101c1de16ef60ff2160e673de76",
-      "bytes": 18647
+      "sha256": "ac1c9fbd8e1723c36cb000ca2912c3dab5fa4fabe2d709b1dd607f8a5d5dbc14",
+      "bytes": 18995
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-resolve/references/engine-defaults.json",
@@ -1323,8 +1323,8 @@
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-resolve/references/proposals.md",
-      "sha256": "4dd81f3f7259c413fa2401cee8f53fae2a3919185369b817b2dd4b092d5c041b",
-      "bytes": 14638
+      "sha256": "51145e1a8a96a626837f95748856866c12848833af58801556879e393c336246",
+      "bytes": 19465
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-resolve/references/reference-evidence.schema.json",
@@ -1378,8 +1378,8 @@
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-resolve/scripts/propose-system.mjs",
-      "sha256": "844cb7557a19ff40801fbee69728d23c41690a498f8538f7b3c294ef89283c88",
-      "bytes": 25376
+      "sha256": "366e283b01f200af355daf274bd512323838316e1860fa3446d0172af04f41a8",
+      "bytes": 26485
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-resolve/scripts/recommend-spacing.mjs",
@@ -1428,8 +1428,8 @@
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-resolve/scripts/system-proposal.mjs",
-      "sha256": "3c8c7899d714804c85f3b5a6603fb322d784daa8ff4951534ced2fde6975a016",
-      "bytes": 78679
+      "sha256": "cf50d01dda5be018df149a36eff8876b8847006fa4d7e41186308bf820175ddf",
+      "bytes": 97671
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-resolve/scripts/token-canon.mjs",
@@ -1518,8 +1518,8 @@
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-setup/WORKFLOW.md",
-      "sha256": "4bff08298713042df59242af90872269b5936150389fa0b759ab12f5fcdf6647",
-      "bytes": 11657
+      "sha256": "bfbd8e73c5e883b3082adaab9f186a21ffd10c9c05a0fbf86bf4cc635653cf43",
+      "bytes": 12069
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-studio/WORKFLOW.md",
@@ -1548,8 +1548,8 @@
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-tokens/WORKFLOW.md",
-      "sha256": "31c2c4c9772ca5796279730d03455b611846ec43b34985bfe40a04d37161495b",
-      "bytes": 7451
+      "sha256": "4e57918310f97e53ef0e84bc06c2b6f9f1ea246965137de8f055151fca574b6d",
+      "bytes": 7862
     },
     {
       "path": ".claude/skills/styleseed/workflows/ss-tokens/scripts/generate-palette.mjs",

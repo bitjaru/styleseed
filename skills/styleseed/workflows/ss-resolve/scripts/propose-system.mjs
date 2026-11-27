@@ -1,11 +1,14 @@
 #!/usr/bin/env node
-// Propose system values with their basis (WO-11 A5). For control height, type sizes, corner radius, table
-// row height, and spacing unit (and the other ledger axes when they have a basis) it prints a value and the
-// counts behind it, strongest basis first: the project's recorded decision, the person's own measured
-// references, the product's own screens (--own, the inventory.json of `drift-report.mjs --inventory`),
-// counts over the measured design systems in the evidence pack, and the engine default, labelled not
-// measured. Each block carries a ready ledger entry with `approvedBy` and `date` empty: it does not
-// compile until the person who decides gives their name. The tool never writes the ledger.
+// Propose system values with their basis (WO-11 A5, WO-20 S). SYSTEM.md opens with the system this project starts
+// with: one table of what the shipped components draw with its look and what its ledger records, then "To take it",
+// one entry for the default control height (what --default-height prints for it) or the reason there is none. Under
+// "Details and counts" follow the blocks: for control height, type sizes, corner radius, table row height, and
+// spacing unit (and the other ledger axes when they have a basis) a value and the counts behind it, strongest basis
+// first: the project's recorded decision, the person's own measured references, the product's own screens (--own,
+// the inventory.json of `drift-report.mjs --inventory`), counts over the measured design systems in the evidence
+// pack, and the engine default, labelled not measured. A block that proposes a value carries a ready ledger entry,
+// except a control height from the corpus, which names --default-height. Every entry has `approvedBy` and `date`
+// empty: it does not compile until the person who decides gives their name. The tool never writes the ledger.
 //
 //   node propose-system.mjs --project-root <dir> --surface pointer|touch [--artifact <id>] [--page <id>]
 //                           [--reference <slug>]… [--own <inventory.json>] [--write | --json]
@@ -14,7 +17,8 @@
 //   node propose-system.mjs --engine-defaults [--page <id>]
 //
 // Default: SYSTEM.md on stdout, nothing written. --json: the proposal object on stdout. --write:
-// .styleseed/proposals/system.json and .styleseed/proposals/SYSTEM.md, then one line per axis. --entry: the
+// .styleseed/proposals/system.json and .styleseed/proposals/SYSTEM.md, then one line for the default control height
+// (`system: …`) and one line per axis. --entry: the
 // entry for a value set the person chose, on stdout; writes nothing. It also takes the two corner axes the
 // ledger records and nothing proposes (controlRadius, fieldRadius: one value each), refuses a corner already
 // recorded, and says on stderr which recorded `radii` decision lacks the value. --default-height: the
@@ -31,7 +35,7 @@ import { fileURLToPath } from "node:url";
 import { SAFE_ID, normalizeDecisions, parseDefaultHeight, parseStrictJson, safeProjectPath } from "./runtime-contract.mjs";
 import { loadProjectRegistry } from "./project-registry.mjs";
 import { isApproved, isGeneratedEvidence, normalizeReferenceEvidence } from "./reference-contract.mjs";
-import { PROPOSAL_AXES, RECORD_ONLY_DEF, TOUCH_FLOOR, defaultHeightEntry, engineDefaultsTable, entryForValues, normalizeEngineDefaults, normalizeEvidencePack, normalizeInventory, ownScreens, proposeSystem, referenceValues, renderEngineDefaultsMarkdown, renderProposalMarkdown } from "./system-proposal.mjs";
+import { PROPOSAL_AXES, RECORD_ONLY_DEF, TOUCH_FLOOR, defaultHeightEntryFor, engineDefaultsTable, entryForValues, normalizeEngineDefaults, normalizeEvidencePack, normalizeInventory, ownScreens, proposeSystem, referenceValues, renderEngineDefaultsMarkdown, renderProposalMarkdown } from "./system-proposal.mjs";
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const REFERENCES = resolve(scriptDir, "../references");
@@ -236,6 +240,15 @@ function axisLine(axis) {
   return `${axis.axis}: no measured basis`;
 }
 
+// The `--write` line for the default control height, read from `system` (heightRow, recorded, look, take.id).
+export function systemLine({ system }) {
+  const { heightRow, recorded, look, take } = system;
+  if (heightRow === "H0") return `system: default control height ${look.height}px (${look.recipe ? "the brand recipe" : "StyleSeed's default"}, not measured); not recorded`;
+  if (heightRow === "H1" || heightRow === "H2") return `system: default control height ${recorded}px, recorded as ${take.id}`;
+  if (heightRow === "H3") return `system: default control height ${recorded}px recorded as ${take.id}; the look draws ${look.height}px`;
+  return `system: control heights recorded as ${take.id} without a default height`;
+}
+
 export function main(argv, { stdout = (text) => process.stdout.write(text), stderr = (text) => process.stderr.write(text) } = {}) {
   const args = parseArgs(argv);
   if (args.help) { stdout(`${USAGE}\n`); return 0; }
@@ -257,13 +270,13 @@ export function main(argv, { stdout = (text) => process.stdout.write(text), stde
   const ledgerAt = `${loaded.project.ledger.path}${loaded.mode === "registry" ? " (decisions)" : ""}`;
   if (args.defaultHeight !== null) {
     // On a recorded axis the block has no options: the basis is read from the proposal the project would get
-    // without its project-wide controlHeights decision (scoped entries and exceptions stay). That second proposal
-    // is only read here; the first is what every other output prints.
+    // without its project-wide controlHeights decision (scoped entries and exceptions stay). defaultHeightEntryFor
+    // makes that second proposal, as it does for the entry under "To take it"; the first is what every other output
+    // prints.
     const block = proposal.axes.find((entry) => entry.axis === "controlHeights");
     const recorded = block.status === "recorded" ? block.recorded.id : null;
-    const basisProposal = recorded ? proposeSystem({ ...inputs, project: { ...loaded.project, decisions: loaded.project.decisions.filter((entry) => entry.id !== recorded) } }) : proposal;
     const height = args.defaultHeight;
-    const { entry, underFloor, look } = defaultHeightEntry(basisProposal, defaults, height);
+    const { entry, underFloor, look } = defaultHeightEntryFor(inputs, height);
     stdout(`${JSON.stringify(entry, null, 2)}\n`);
     for (const note of notes) stderr(`${note}\n`);
     if (underFloor.includes(height)) stderr(`Floor: rule \`${TOUCH_FLOOR.rule}\` says "${TOUCH_FLOOR.clause}". This entry's default is ${height}px; its sizes under the floor are ${underFloor.join(", ")}px. The entry is printed: a recorded decision outranks a default rule.\n`);
@@ -311,7 +324,7 @@ export function main(argv, { stdout = (text) => process.stdout.write(text), stde
   mkdirSync(safeProjectPath(loaded.root, PROPOSALS_DIR), { recursive: true });
   writeFileSync(safeProjectPath(loaded.root, `${PROPOSALS_DIR}/system.json`), `${JSON.stringify(proposal, null, 2)}\n`);
   writeFileSync(safeProjectPath(loaded.root, `${PROPOSALS_DIR}/SYSTEM.md`), markdown);
-  stdout([...notes, ...proposal.axes.map(axisLine), `wrote ${PROPOSALS_DIR}/SYSTEM.md`, `wrote ${PROPOSALS_DIR}/system.json`].map((line) => `${line}\n`).join(""));
+  stdout([...notes, systemLine(proposal), ...proposal.axes.map(axisLine), `wrote ${PROPOSALS_DIR}/SYSTEM.md`, `wrote ${PROPOSALS_DIR}/system.json`].map((line) => `${line}\n`).join(""));
   return 0;
 }
 

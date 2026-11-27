@@ -175,6 +175,11 @@ and spacing unit, each block gives a value and its basis, strongest first: what 
 person measured, counts over the measured design systems that ship with this skill ("32px on 3 of 4 measured
 systems"), and last the engine default, which is labelled not measured.
 
+The document opens with "The system this project starts with", one table of what the look draws and what the
+ledger records, and under "To take it" one entry or the reason there is none; present that first, then the blocks.
+For a control height taken from the corpus or chosen by the person, get the entry from `--default-height <px>`: one
+height recorded alone flags the other sizes of the shipped components.
+
 Present one axis at a time with its counts as printed. Where the counts split or are thin, show the distribution and
 what the choice depends on; do not pick for the person. The person takes the proposed value, another option, a value
 of their own, or skips the axis. For anything other than the printed entry, get the entry from

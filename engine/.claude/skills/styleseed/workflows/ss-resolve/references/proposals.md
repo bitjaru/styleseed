@@ -56,6 +56,44 @@ floor. A registry project is offered no entry: its decision is project-wide whil
 height it records is not drawn. A height for one artifact is a decision with `scope.artifacts`; the drift report
 applies it to the screens named in its `scope.screens`.
 
+## A pick from a measured system
+
+```bash
+node <installed-ss-resolve>/scripts/propose-system.mjs --project-root . --surface pointer --like cloudscape
+```
+
+`--like <system>` takes the id of one of the design systems on the page of measured systems
+(`https://styleseed-demo.vercel.app/systems`) and prints what starting from it would change in this project, what
+each change rests on, what stays, and the ledger entries that record it. Nothing is written; `--json` prints the
+same pick as an object. It reads `references/measured-systems.json` (below), the project's ledger, and its look.
+
+A pick can bring three sizes: the default control height (the system's button height; its field height is printed
+beside it), the corner of buttons and of the controls that share it, and the corner of inputs, selects, and
+textareas. Each row says what the project draws now (a recorded default height only where `.styleseed/system.css`
+draws it), what it would be with the system, and the reading with its counts. The height entry is the one
+`--default-height` builds, with the reading as its basis and `system:<id>@<run>#button.height` after the token; a
+corner entry has the source `system:<id>@<run>#button.radius` or `system:<id>@<run>#field.radius`. An axis the
+ledger already decides for the whole project is replaced under its id, and the other entries take the next ids. The
+page also shows table row height and menu item height; a pick prints them and does not record them, because the
+shipped components cannot draw them from a recorded value yet. Cards, panels, list rows, gaps, and text sizes keep
+the look's values.
+
+A reading is not applied when the system has no single value for it or was not measured for it, and on touch no
+height under the 44px floor of `CRAFT-control-heights` is offered; the command for a 44px default is named instead.
+A pick never changes whether buttons are pills unless the person asks: when exactly one of the project's control
+corner and the system's is a pill (999), that corner is printed under "Optional", to record only when the person
+asks for it. When a `radii` decision, scoped or not, lacks a corner an entry records, the document names the values
+to add before the next resolve.
+
+A pick reads the page's run, where a reading counts the screens of one system; block 1 of `SYSTEM.md` reads the
+evidence pack's run and counts systems on one page type. The two are never mixed in one sentence. Once the entries
+are recorded, each row of the first section of `SYSTEM.md` that a pick brought names the system and its run.
+
+`--like` takes `--surface`, `--page`, and `--json`, and refuses `--write`, `--entry`, `--default-height`,
+`--engine-defaults`, `--reference`, `--own`, and `--artifact`. It works only in a project set up with a lock
+(`STYLESEED.md`): a registry project does not draw a recorded height or corner. An id that is not in the file is
+refused with the list of ids.
+
 ## Basis order
 
 Each axis lists its options strongest first, and the first one is proposed when it is measured:
@@ -160,10 +198,11 @@ taken from the input element, and give no option. An entry from this option has 
   option's entry, or the values attributed to the options that hold them, with the rest listed after
   `chosen:`. It writes nothing. Every entry the tool prints has `approvedBy` and `date` empty and no
   id; it does not compile until the person's name is on it. It also takes two axes the ledger records
-  and the tool never proposes, `controlRadius` (the corner of buttons and of the controls that share it)
+  and no block proposes, `controlRadius` (the corner of buttons and of the controls that share it)
   and `fieldRadius` (the corner of inputs, selects, and textareas): exactly one whole number from 0 to
   200, or 999 for a pill, listed after `chosen:` (`--entry controlRadius=8` prints "Buttons and the
-  other controls that share their corner use an 8px corner."). A corner already recorded stops it with
+  other controls that share their corner use an 8px corner."); a pick (`--like`, above) prints them with
+  the measured system's reading as the basis. A corner already recorded stops it with
   that entry's id; change the entry instead. When a recorded `radii` decision does not hold the value,
   the entry is printed and one line names that decision and the value to add, because the resolver
   refuses a `radii` decision without a recorded corner. With a single control height it adds one line:
@@ -192,8 +231,8 @@ taken from the input element, and give no option. An entry from this option has 
   prints the entry and the floor line, because a recorded decision outranks a default rule. On a recorded
   axis it names the id the entry replaces: put the entry in its place and keep that id. It takes
   `--reference`, `--own`, `--page`, and `--artifact`, and is refused beside `--entry`, `--write`, `--json`,
-  and `--engine-defaults`. The entry is built by `defaultHeightEntry` in `system-proposal.mjs`, which a
-  later caller can hand a basis of its own (words and a source, written after the token).
+  `--engine-defaults`, and `--like`. The entry is built by `defaultHeightEntry` in `system-proposal.mjs`;
+  `--like` hands it a basis of its own (words and a source, written after the token).
 - `--reference <slug>` adds a reference measured in this project
   (`.styleseed/evidence/_reference/<slug>/measurements/`). When `.styleseed/rulesets/<slug>/evidence.json`
   is a generated contract a person has signed off (see [decisions](decisions.md)), the axes it keeps
@@ -209,7 +248,9 @@ The corpus reaches this skill as one generated file, `references/evidence-pack.j
 `scripts/build-evidence-pack.mjs` in the StyleSeed repository from one dated run of its corpus study (in
 the repository's `research/` folder, which does not ship). It holds the run id, the viewports, each design system's name and kind with its
 screen counts, and, per claim, page type, and viewport, how many systems landed in each value bucket,
-counted by kind. It holds no per-system value and nothing from the measured pages' text. The shipped
+counted by kind. It holds no per-system value and nothing from the measured pages' text. The readings of
+the systems of the page are in a second file, `measured-systems.json`, written by the page's generator;
+`--like` reads it. The shipped
 component values sit beside it in `references/engine-defaults.json`, read from the component sources, so
 the two never mix. A later run reaches the skill as a new pack; the run id is printed on every proposal.
 

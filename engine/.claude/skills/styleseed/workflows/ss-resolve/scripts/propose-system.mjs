@@ -14,14 +14,18 @@
 //                           [--reference <slug>]… [--own <inventory.json>] [--write | --json]
 //   node propose-system.mjs --project-root <dir> --surface … [same inputs] --entry <axis>=<v1,v2,…>
 //   node propose-system.mjs --project-root <dir> --surface … [same inputs] --default-height <px>
+//   node propose-system.mjs --project-root <dir> --surface … [--page <id>] --like <system> [--json]
 //   node propose-system.mjs --engine-defaults [--page <id>]
 //
 // Default: SYSTEM.md on stdout, nothing written. --json: the proposal object on stdout. --write:
 // .styleseed/proposals/system.json and .styleseed/proposals/SYSTEM.md, then one line for the default control height
 // (`system: …`) and one line per axis. --entry: the
 // entry for a value set the person chose, on stdout; writes nothing. It also takes the two corner axes the
-// ledger records and nothing proposes (controlRadius, fieldRadius: one value each), refuses a corner already
-// recorded, and says on stderr which recorded `radii` decision lacks the value. --default-height: the
+// ledger records and no block proposes (controlRadius, fieldRadius: one value each; `--like` prints them with a
+// measured basis), refuses a corner already recorded, and says on stderr which recorded `radii` decision lacks the
+// value. --like <system>: in a project set up with a lock, what taking one of the measured systems of
+// references/measured-systems.json would change (the default control height and the two corners), what each rests
+// on, what stays, and the entries that record it; with --json the pick object; writes nothing. --default-height: the
 // `controlHeights` entry for a default control height (the height and the sizes the shipped components draw
 // around it; its `source` starts with `default-height:<px>; `), on stdout; writes nothing. In a project without a
 // registry, .styleseed/system.css draws such a height after the next resolve unless its source says the person took
@@ -33,9 +37,9 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { SAFE_ID, normalizeDecisions, parseDefaultHeight, parseStrictJson, safeProjectPath } from "./runtime-contract.mjs";
-import { loadProjectRegistry } from "./project-registry.mjs";
+import { getRegistryPaths, loadProjectRegistry } from "./project-registry.mjs";
 import { isApproved, isGeneratedEvidence, normalizeReferenceEvidence } from "./reference-contract.mjs";
-import { PROPOSAL_AXES, RECORD_ONLY_DEF, TOUCH_FLOOR, defaultHeightEntryFor, engineDefaultsTable, entryForValues, normalizeEngineDefaults, normalizeEvidencePack, normalizeInventory, ownScreens, proposeSystem, referenceValues, renderEngineDefaultsMarkdown, renderProposalMarkdown } from "./system-proposal.mjs";
+import { LIKE_REFUSALS, PROPOSAL_AXES, RECORD_ONLY_DEF, TOUCH_FLOOR, defaultHeightEntryFor, engineDefaultsTable, entryForValues, normalizeEngineDefaults, normalizeEvidencePack, normalizeInventory, normalizeMeasuredSystems, ownScreens, proposePick, proposeSystem, referenceValues, renderEngineDefaultsMarkdown, renderPickMarkdown, renderProposalMarkdown } from "./system-proposal.mjs";
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const REFERENCES = resolve(scriptDir, "../references");
@@ -44,8 +48,10 @@ const PROPOSALS_DIR = ".styleseed/proposals";
 const USAGE = `usage: propose-system.mjs --project-root <dir> --surface pointer|touch [--artifact <id>] [--page <id>] [--reference <slug>]… [--own <inventory.json>] [--write | --json]
        propose-system.mjs --project-root <dir> --surface pointer|touch [same inputs] --entry <axis>=<v1,v2,…>
        propose-system.mjs --project-root <dir> --surface pointer|touch [same inputs] --default-height <px>
+       propose-system.mjs --project-root <dir> --surface pointer|touch [--page <id>] --like <system> [--json]
        propose-system.mjs --engine-defaults [--page <id>]`;
 const REBUILD = "rebuild with `node scripts/build-evidence-pack.mjs`, or reinstall the skill";
+const MEASURED_REBUILD = "rebuild with `node scripts/build-systems-showcase.mjs`, or reinstall the skill";
 // What --default-height says on stderr about drawing the entry it prints (WO-20 C2, B2). A project without a
 // registry: when .styleseed/system.css will draw the entry (parseDefaultHeight on the printed entry: the token, and
 // a rest that is not the look's own default), what the file then does, `differs` when the height is not the brand
@@ -61,7 +67,7 @@ export const DEFAULT_HEIGHT_DRAWN = Object.freeze({
 });
 
 export function parseArgs(argv) {
-  const args = { projectRoot: null, surface: null, artifact: null, page: null, references: [], own: null, write: false, json: false, entry: null, defaultHeight: null, engineDefaults: false, help: false };
+  const args = { projectRoot: null, surface: null, artifact: null, page: null, references: [], own: null, write: false, json: false, entry: null, defaultHeight: null, engineDefaults: false, like: null, help: false };
   const value = (i, flag) => { const next = argv[i + 1]; if (next === undefined || next.startsWith("--")) throw new Error(`${flag} needs a value\n${USAGE}`); return next; };
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
@@ -78,6 +84,7 @@ export function parseArgs(argv) {
       if (!/^[0-9]+$/u.test(raw)) throw new Error(`--default-height ${raw}: give the default control height as a whole number of px, for example --default-height 32`);
       args.defaultHeight = Number(raw);
     }
+    else if (arg === "--like") { if (args.like !== null) throw new Error("--like: pass one system"); args.like = value(i++, arg); }
     else if (arg === "--write") args.write = true;
     else if (arg === "--json") args.json = true;
     else if (arg === "--engine-defaults") args.engineDefaults = true;
@@ -85,6 +92,11 @@ export function parseArgs(argv) {
     else throw new Error(`unknown argument ${arg}\n${USAGE}`);
   }
   if (args.help) return args;
+  if (args.like !== null) {
+    // A pick reads the project, --surface, and --page; --artifact is answered once the project is known.
+    const flag = [args.write && "--write", args.entry !== null && "--entry", args.defaultHeight !== null && "--default-height", args.engineDefaults && "--engine-defaults", args.references.length > 0 && "--reference", args.own !== null && "--own"].find(Boolean);
+    if (flag) throw new Error(LIKE_REFUSALS.flag(flag));
+  }
   if (args.engineDefaults) {
     const extra = [args.projectRoot && "--project-root", args.surface && "--surface", args.artifact && "--artifact", args.references.length && "--reference", args.own && "--own", args.write && "--write", args.json && "--json", args.entry && "--entry", args.defaultHeight !== null && "--default-height"].filter(Boolean);
     if (extra.length) throw new Error(`--engine-defaults reads only the skill's files and takes --page alone; drop ${extra.join(", ")}`);
@@ -105,12 +117,14 @@ export function parseArgs(argv) {
   return args;
 }
 
-function readSkillJson(name) {
+function readSkillJson(name, hint = REBUILD) {
   const path = resolve(REFERENCES, name);
   const label = `ss-resolve/references/${name}`;
-  if (!existsSync(path)) throw new Error(`${label} is missing; ${REBUILD}`);
-  try { return JSON.parse(readFileSync(path, "utf8")); } catch (error) { throw new Error(`${label} is not valid JSON (${error.message}); ${REBUILD}`); }
+  if (!existsSync(path)) throw new Error(`${label} is missing; ${hint}`);
+  try { return JSON.parse(readFileSync(path, "utf8")); } catch (error) { throw new Error(`${label} is not valid JSON (${error.message}); ${hint}`); }
 }
+// The readings of the measured systems of the page (WO-20 C), written by the page's generator.
+const loadMeasured = () => normalizeMeasuredSystems(readSkillJson("measured-systems.json", MEASURED_REBUILD), { file: "ss-resolve/references/measured-systems.json" });
 function loadSkillData() {
   const pack = normalizeEvidencePack(readSkillJson("evidence-pack.json"), { file: "ss-resolve/references/evidence-pack.json" });
   const defaults = normalizeEngineDefaults(readSkillJson("engine-defaults.json"), { file: "ss-resolve/references/engine-defaults.json" });
@@ -257,13 +271,27 @@ export function main(argv, { stdout = (text) => process.stdout.write(text), stde
     stdout(renderEngineDefaultsMarkdown(engineDefaultsTable(pack, defaults, { page: checkPage(args.page ?? "form", catalog) })));
     return 0;
   }
+  const measured = loadMeasured();
+  if (args.like !== null) {
+    // The refusals of a pick, in order, before anything of a registry is read (it would first ask for --artifact).
+    const paths = getRegistryPaths(args.projectRoot);
+    if (existsSync(paths.projectFile) || existsSync(paths.indexFile)) throw new Error(LIKE_REFUSALS.registry);
+    if (args.artifact !== null) throw new Error(LIKE_REFUSALS.artifact);
+    if (!measured.systems.some((system) => system.id === args.like)) throw new Error(LIKE_REFUSALS.unknown(args.like, measured));
+  }
   const loaded = loadProject(args.projectRoot, catalog, { artifact: args.artifact });
   if (loaded.selection.adapter !== "product-ui") throw new Error(`proposals cover product UI measured in CSS pixels; this artifact uses \`${loaded.selection.adapter}\``);
   const page = args.page !== null ? checkPage(args.page, catalog) : loaded.selection.page;
   const references = args.references.map((slug) => loadReference(loaded.root, slug, catalog));
   const own = args.own !== null ? loadOwn(loaded.root, args.own) : null;
   const notes = [...references.map((ref) => ref.note).filter(Boolean), ...(own?.skipped ?? []).map((entry) => `--own ${own.path}: ${entry.axis} has ${entry.count} values; a ledger entry holds at most 24, so this axis gets no own-screens option.`)];
-  const inputs = { pack, defaults, project: loaded.project, context: { artifact: loaded.artifact, page, surface: args.surface }, references: references.map((ref) => ref.values), own };
+  const inputs = { pack, defaults, measured, project: loaded.project, context: { artifact: loaded.artifact, page, surface: args.surface }, references: references.map((ref) => ref.values), own };
+  if (args.like !== null) {
+    const pick = proposePick(inputs, measured, args.like);
+    if (args.json) stdout(`${JSON.stringify(pick, null, 2)}\n`);
+    else stdout(renderPickMarkdown(pick, { ledgerAt: loaded.project.ledger.path, command: `propose-system.mjs --project-root .${args.page !== null ? ` --page ${page}` : ""} --surface ${args.surface}` }));
+    return 0;
+  }
   const proposal = proposeSystem(inputs);
   const command = `propose-system.mjs --project-root .${loaded.artifact ? ` --artifact ${loaded.artifact}` : ""}${args.page !== null ? ` --page ${page}` : ""}${args.references.map((slug) => ` --reference ${slug}`).join("")}${own ? ` --own ${own.path}` : ""} --surface ${args.surface}`;
   const ledgerLine = (place) => `${place}, with approvedBy set to the name the person gives and date to today.`;

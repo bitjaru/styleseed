@@ -7,7 +7,9 @@
 // evidence pack, and last the engine default, always labelled not measured. A proposal is a count and a choice: it
 // states what was measured, on how many systems of which kind, and leaves the value to the person. Nothing is
 // scored, nothing gates, and no entry it prints compiles: `approvedBy` and `date` stay empty until the
-// person who decides puts their name on it. Pure: no I/O, no clock; the same input gives the same bytes.
+// person who decides puts their name on it. A pick (WO-20 C, proposePick) reads one of the measured systems of the
+// page from measured-systems.json and prints what taking it would change, with the entries that record it.
+// Pure: no I/O, no clock; the same input gives the same bytes.
 import { FACT_LEDGER, isApproved, proposeDecisions } from "./reference-contract.mjs";
 import { defaultHeightSource, parseDefaultHeight } from "./runtime-contract.mjs";
 import { systemCssDraws } from "./system-css.mjs";
@@ -46,9 +48,10 @@ export const PROPOSAL_AXES = Object.freeze([
   { axis: "transitionDurations", core: false, title: "Transition durations", unit: "ms", depends: [], sentence: (v) => `Transitions use these durations: ${list(v)}ms.`, effect: "the drift report, run with `--structure`, reads any other duration as `violates D-…`" },
 ].map((entry) => Object.freeze({ ...entry, depends: Object.freeze(entry.depends) })));
 const AXIS_DEF = new Map(PROPOSAL_AXES.map((entry) => [entry.axis, entry]));
-// Ledger axes the proposer never proposes and `--entry` still prints (WO-20 A): a button's corner and a
-// field's corner. They have no block. A corner is one value for the whole project, a whole number from 0 to
-// 200 or 999 for a pill (runtime-contract.mjs). The keys equal compare-screens.mjs RECORD_ONLY_AXES.
+// Ledger axes no block proposes (WO-20 A): a button's corner and a field's corner. `--entry` prints one as chosen,
+// and `--like` prints one with the measured system's reading as its basis (cornerEntry, WO-20 C). A corner is one
+// value for the whole project, a whole number from 0 to 200 or 999 for a pill (runtime-contract.mjs). The keys equal
+// compare-screens.mjs RECORD_ONLY_AXES.
 const cornerClause = (v) => (v === 0 ? "have square corners" : v === 999 ? "are pills" : `use ${an(v)} ${v}px corner`);
 const cornerWords = (v) => (v === 0 ? "square corners" : v === 999 ? "pill corners" : `${v}px`);
 const isCorner = (value) => Number.isInteger(value) && value >= 0 && (value <= 200 || value === 999);
@@ -211,6 +214,64 @@ export function normalizeEngineDefaults(input, { file = "engine-defaults.json" }
   if (!isText(input.spacingScale.rule, 80)) fail("spacingScale.rule", "must be a rule id");
   const values = array(input.spacingScale.values, "spacingScale.values", { min: 1 }).map((value, index) => positive(value, `spacingScale.values[${index}]`));
   return { schemaVersion: input.schemaVersion, generatedBy: input.generatedBy, measured: false, components: { button, input: inputPart, select, table }, recipes, controlHeight: { variable: input.controlHeight.variable, offsets: [...offsets] }, spacingScale: { rule: input.spacingScale.rule, values } };
+}
+
+// --- the measured systems of the page (WO-20 C) ----------------------------------------------------------------
+
+// The page that shows every reading, screen by screen; a system's anchor is its id.
+export const MEASURED_PAGE = "https://styleseed-demo.vercel.app/systems";
+const MEASURED_SCHEMA = 1;
+const MEASURED_REBUILD = "rebuild with `node scripts/build-systems-showcase.mjs`, or reinstall the skill";
+// The six readings of a system, in the order the page's generator writes them (scripts/build-systems-showcase.mjs
+// CLAIMS). Four are heights in the study's buckets, two are corners.
+export const MEASURED_CLAIMS = Object.freeze(["button.height", "field.height", "button.radius", "field.radius", "table.bodyRowHeight", "nav.itemHeight"]);
+const MEASURED_HEIGHTS = new Set(["button.height", "field.height", "table.bodyRowHeight", "nav.itemHeight"]);
+const RUN_DATE = /^\d{4}-\d{2}-\d{2}$/u;
+
+/**
+ * The readings of the systems of the page (ss-resolve/references/measured-systems.json, written by
+ * scripts/build-systems-showcase.mjs from the same build as the page), checked strictly and copied. Unknown keys and
+ * any other schemaVersion are refused. A height is a whole multiple of `heightStep`, a corner a whole number from 0 to
+ * 200 or 999; counts are whole numbers with holding <= eligible; "mixed" and null carry holding null. A name is one
+ * line without `|` or a backtick, because it is printed in a table.
+ * @param {object} input parsed JSON
+ * @param {{file?: string}} [options] the path printed in errors
+ */
+export function normalizeMeasuredSystems(input, { file = "measured-systems.json" } = {}) {
+  const { fail, keys, array, version } = checker(file, MEASURED_REBUILD);
+  keys(input, ["schemaVersion", "run", "heightStep", "systems"], "file");
+  version(input.schemaVersion, "schemaVersion", MEASURED_SCHEMA);
+  if (typeof input.run !== "string" || !RUN_DATE.test(input.run)) fail("run", "must be the run's date (YYYY-MM-DD)");
+  if (!Number.isInteger(input.heightStep) || input.heightStep < 1) fail("heightStep", "must be a whole number of at least 1");
+  const step = input.heightStep;
+  const seen = new Set();
+  const systems = array(input.systems, "systems", { min: 1 }).map((system, index) => {
+    const at = `systems[${index}]`;
+    keys(system, ["id", "name", "screens", "readings"], at);
+    if (typeof system.id !== "string" || !/^[a-z0-9-]+$/u.test(system.id)) fail(`${at}.id`, "must be a system id (lower-case letters, digits, and hyphens)");
+    if (seen.has(system.id)) fail(`${at}.id`, `"${system.id}" is listed twice; each system is listed once`);
+    seen.add(system.id);
+    if (!isText(system.name, 80) || system.name.includes("|") || system.name.includes("`")) fail(`${at}.name`, "must be one line of at most 80 characters without | or a backtick");
+    if (!isCount(system.screens)) fail(`${at}.screens`, "must be a count");
+    keys(system.readings, [...MEASURED_CLAIMS], `${at}.readings`);
+    const readings = Object.fromEntries(MEASURED_CLAIMS.map((claim) => {
+      const where = `${at}.readings.${claim}`;
+      const reading = system.readings[claim];
+      keys(reading, ["value", "eligible", "holding"], where);
+      if (!isCount(reading.eligible)) fail(`${where}.eligible`, "must be a count");
+      const { value, holding } = reading;
+      if (typeof value === "number") {
+        const height = MEASURED_HEIGHTS.has(claim);
+        if (height ? !(Number.isInteger(value) && value >= 1 && value % step === 0) : !isCorner(value)) fail(`${where}.value`, height ? `must be a whole multiple of heightStep (${step}), at least ${step}` : "must be a whole number from 0 to 200, or 999 for a pill");
+        if (!isCount(holding) || holding > reading.eligible) fail(`${where}.holding`, "must be a count of at most eligible");
+      } else if (value === "mixed" || value === null) {
+        if (holding !== null) fail(`${where}.holding`, `must be null when the value is ${value === null ? "null" : "\"mixed\""}`);
+      } else fail(`${where}.value`, "must be a number, \"mixed\", or null");
+      return [claim, { value, eligible: reading.eligible, holding }];
+    }));
+    return { id: system.id, name: system.name, screens: system.screens, readings };
+  });
+  return { schemaVersion: input.schemaVersion, run: input.run, heightStep: step, systems };
 }
 
 // --- corpus rows --------------------------------------------------------------------------------------------
@@ -655,10 +716,8 @@ function proposeBlocks({ pack, defaults, project, context, references = [], own 
 export function entryForValues(proposal, axis, values) {
   const corner = Object.hasOwn(RECORD_ONLY_DEF, axis) ? RECORD_ONLY_DEF[axis] : null;
   if (corner) {
-    if (!Array.isArray(values) || values.length !== 1 || !isCorner(values[0])) throw new Error(`--entry ${axis}: give exactly one whole number from 0 to 200, or 999 for a pill (the ${corner.title.toLowerCase()} in px, for example --entry ${axis}=8)`);
-    const chosen = [values[0]];
-    const { statement, source } = fitted(corner, chosen, corner.sentence(chosen), `${cornerWords(chosen[0])} chosen without a measured basis`, `chosen: ${chosen[0]}`, () => `chosen: ${chosen[0]}`);
-    return { kind: "decision", axis, values: chosen, statement, approvedBy: "", date: "", source };
+    if (!Array.isArray(values) || values.length !== 1 || !isCorner(values[0])) throw new Error(cornerRefusal(axis));
+    return cornerEntry(axis, values[0]);
   }
   const def = AXIS_DEF.get(axis);
   if (!def) throw new Error(`--entry ${axis}: not an axis the proposer covers (${[...PROPOSAL_AXES.map((entry) => entry.axis), ...Object.keys(RECORD_ONLY_DEF)].join(", ")})`);
@@ -703,6 +762,32 @@ export function entryForValues(proposal, axis, values) {
   };
   const { statement, source } = fitted(def, chosen, def.sentence(chosen), parts.join("; "), sources.join("; "), fallbackSource);
   return { kind: "decision", axis, values: chosen, statement, approvedBy: "", date: "", source };
+}
+
+const cornerRefusal = (axis) => `--entry ${axis}: give exactly one whole number from 0 to 200, or 999 for a pill (the ${RECORD_ONLY_DEF[axis].title.toLowerCase()} in px, for example --entry ${axis}=8)`;
+
+/**
+ * The one builder of a corner entry (`controlRadius`, `fieldRadius`; WO-20 C). Without a basis it is the entry
+ * `--entry` prints, chosen without a measured basis (entryForValues calls it). A caller may hand in a basis of its
+ * own, `{words, source}` as defaultHeightEntry takes it: the statement then reads `<sentence> Basis: <words>.` and the
+ * source is `basis.source` as given. Like every printed entry, it has no id, no name, and no date.
+ * @param {"controlRadius"|"fieldRadius"} axis
+ * @param {number} value a whole number from 0 to 200, or 999 for a pill
+ * @param {{basis?: {words: string, source: string}|null}} [options]
+ */
+export function cornerEntry(axis, value, { basis = null } = {}) {
+  const corner = Object.hasOwn(RECORD_ONLY_DEF, axis) ? RECORD_ONLY_DEF[axis] : null;
+  if (!corner) throw new Error(`corner entry: ${axis} is not a corner axis (${Object.keys(RECORD_ONLY_DEF).join(", ")})`);
+  if (!isCorner(value)) throw new Error(cornerRefusal(axis));
+  const chosen = [value];
+  if (basis === null) {
+    const { statement, source } = fitted(corner, chosen, corner.sentence(chosen), `${cornerWords(value)} chosen without a measured basis`, `chosen: ${value}`, () => `chosen: ${value}`);
+    return { kind: "decision", axis, values: chosen, statement, approvedBy: "", date: "", source };
+  }
+  if (!isObject(basis) || !isText(basis.words, MAX_STATEMENT) || !isText(basis.source, MAX_SOURCE)) throw new Error("corner basis: pass {words, source}, each one line of text");
+  const statement = `${corner.sentence(chosen)} Basis: ${basis.words}.`;
+  if (statement.length > MAX_STATEMENT) throw new Error(`corner basis: the statement is ${statement.length} characters; a ledger statement holds at most ${MAX_STATEMENT}`);
+  return { kind: "decision", axis, values: chosen, statement, approvedBy: "", date: "", source: basis.source };
 }
 
 // --- a default control height (WO-20 C2) ---------------------------------------------------------------------
@@ -834,6 +919,21 @@ function tookFrom(entry, look, defaults) {
   return { own: false, words: "the own default of another look" };
 }
 
+// The sentence a row's "where it comes from" gains when its recorded entry was taken from a measured system (WO-20
+// C5): the entry's source (for the height, what follows its token) is exactly `system:<id>@<run>#<claim>`, the run a
+// date, the id a system of the file, the claim this row's; and when the run is the file's, the recorded value is that
+// system's reading. Anything else, or no file, adds nothing, so nothing a person typed reaches the table.
+const SYSTEM_SOURCE = /^system:([^@#]+)@([^@#]+)#([^@#]+)$/u;
+function readingSentence(measured, claim, source, value) {
+  if (!measured || typeof source !== "string") return "";
+  const match = SYSTEM_SOURCE.exec(source);
+  if (!match || !RUN_DATE.test(match[2]) || match[3] !== claim) return "";
+  const system = measured.systems.find((entry) => entry.id === match[1]);
+  if (!system) return "";
+  if (match[2] === measured.run && system.readings[claim].value !== value) return "";
+  return ` From StyleSeed's reading of ${system.name}, run ${match[2]} (${MEASURED_PAGE}#${system.id}).`;
+}
+
 const ROW_NAMES = Object.freeze({
   controlHeight: "Default height of controls (buttons, inputs, selects, tabs)",
   controlRadius: "Corner of buttons and the controls that share it",
@@ -923,6 +1023,13 @@ function systemFor(input, proposal, corners) {
       : (registry ? `recorded as ${control.id}. Not drawn for a registry project: the components draw ${w.corner(shipped.controlRadius)}.` : `recorded as ${control.id}. ${SYSTEM_CSS} draws it after a resolve, where the file is imported, in place of ${w.corner(shipped.controlRadius)}.`);
   const fieldFrom = !field ? "the skin, not measured; no brand recipe sets it"
     : registry ? `recorded as ${field.id}. Not drawn for a registry project: the components draw the skin's corner.` : `recorded as ${field.id}. ${SYSTEM_CSS} draws it after a resolve, where the file is imported, in place of the skin's corner.`;
+  // WO-20 C: a recorded value taken from a measured system says so, read from the entry's source and the file alone.
+  const decisionOf = (corner) => (corner ? (project.decisions ?? []).find((entry) => entry.id === corner.id) ?? null : null);
+  const readFrom = {
+    controlHeight: heightRow === "H1" ? readingSentence(input.measured, "button.height", recordedEntry.source.slice(recordedEntry.source.indexOf("; ") + 2), D) : "",
+    controlRadius: control ? readingSentence(input.measured, "button.radius", decisionOf(control)?.source, control.value) : "",
+    fieldRadius: field ? readingSentence(input.measured, "field.radius", decisionOf(field)?.source, field.value) : "",
+  };
   const rows = [
     { key: "controlHeight", value, from },
     { key: "controlRadius", value: cornerValue(control ? control.value : shipped.controlRadius), from: controlFrom },
@@ -932,7 +1039,7 @@ function systemFor(input, proposal, corners) {
     { key: "surfacePadding", value: pxValue(shipped.surfacePadding), from: plain },
     { key: "sectionGap", value: pxValue(shipped.sectionGap), from: plain },
     { key: "pageGutter", value: pxValue(shipped.pageGutter), from: plain },
-  ].map((row) => ({ key: row.key, name: ROW_NAMES[row.key], value: row.value, from: row.from }));
+  ].map((row) => ({ key: row.key, name: ROW_NAMES[row.key], value: row.value, from: `${row.from}${readFrom[row.key] ?? ""}` }));
 
   // Under the table: the corner note, then the touch floor of the default height drawn here.
   const notes = [];
@@ -1047,6 +1154,211 @@ export function renderProposalMarkdown(p, { command = commandFor(p.inputs) } = {
   });
   out.push("## Measured systems", "", `${p.pack.systems.map((s) => `${s.name} (${s.kind === "kit" ? "kit" : "product system"}, ${s.screens ? plural(s.screens, "screen", "screens") : `${s.fragments === 1 ? "1 form fragment" : `${s.fragments} form fragments`} only`})`).join(" · ")}. Published demo screens, measured ${p.pack.run}. Per-system values are in the StyleSeed repository, with that run.`, "");
   out.push("## Recording", "", `Append the entries the person chose to \`${p.ledger.path}\`${p.inputs.mode === "registry" ? " (`decisions`)" : " (a JSON array; create it when missing)"}, give each the next \`D-\` number, and fill \`approvedBy\` with the name the person gives and \`date\` with today's date. An entry with an empty name does not compile. Then resolve again; the bundle lists the entries under "Project decisions" and the drift report measures against them.`, "");
+  return out.join("\n");
+}
+
+// --- a pick from a measured system (WO-20 C) -------------------------------------------------------------------
+
+export const PICK_VERSION = 1;
+const PILL = 999;
+// The refusals of `propose-system.mjs --like`, each one sentence (the command prints them and exits 1).
+export const LIKE_REFUSALS = Object.freeze({
+  flag: (flag) => `--like does not take ${flag}: a pick reads only the project, --surface, and --page.`,
+  registry: "`--like` works in a project set up with a lock (`STYLESEED.md`): a registry project does not draw a recorded height or corner.",
+  artifact: "--like does not take --artifact: a project set up with a lock has no artifacts.",
+  unknown: (id, measured) => `--like ${id}: not one of the measured systems (${measured.systems.map((system) => system.id).join(", ")}); see ${MEASURED_PAGE}.`,
+});
+// The three sizes a pick can bring, in the order of Part S's table; each row's name is that table's.
+const PICK_ROWS = Object.freeze([
+  Object.freeze({ what: "height", claim: "button.height", key: "controlHeight", axis: "controlHeights" }),
+  Object.freeze({ what: "controlCorner", claim: "button.radius", key: "controlRadius", axis: "controlRadius" }),
+  Object.freeze({ what: "fieldCorner", claim: "field.radius", key: "fieldRadius", axis: "fieldRadius" }),
+]);
+const cornerReading = (value) => (value === PILL ? "pills" : value === 0 ? "square corners" : `${value}px corners`);
+const projectWideOn = (decisions, axis) => decisions.find((entry) => entry.kind === "decision" && entry.axis === axis && !entry.scope) ?? null;
+
+/**
+ * What taking one of the measured systems would change in a project without a registry: the default control height
+ * (the system's button height) and the two corners, each with the reading it rests on and the ledger entry that
+ * records it, and the two readings the components cannot draw. It reads the project's present values from the
+ * proposal's `system` (what the file draws, not what a token says) and its ledger, and writes nothing.
+ * A pick never changes whether buttons are pills unless the person asks: when exactly one of the project's control
+ * corner and the system's is a pill (999), the control corner is `optional`. On touch no height under 44px is offered.
+ * @param {object} input what proposeSystem takes
+ * @param {object} measured the file, normalized (normalizeMeasuredSystems)
+ * @param {string} id the system's id
+ */
+export function proposePick(input, measured, id) {
+  if (input.project.mode === "registry") throw new Error(LIKE_REFUSALS.registry);
+  const picked = measured.systems.find((system) => system.id === id);
+  if (!picked) throw new Error(LIKE_REFUSALS.unknown(id, measured));
+  const proposal = proposeSystem(input);
+  const { system } = proposal;
+  const decisions = input.project.decisions ?? [];
+  const shipped = input.defaults.recipes[system.look.recipe ?? "default"];
+  const touch = input.context.surface === "touch";
+  const run = measured.run;
+  const on = (reading) => `on ${reading.holding} of ${reading.eligible} screens of ${picked.name}`;
+  const recordedOrLook = (corner, look) => (corner ? { value: corner.value, from: "recorded", id: corner.id } : { value: look, from: "look", id: null });
+  // What the project draws today: a recorded default height only in row H1, where the file draws it.
+  const now = {
+    height: system.heightRow === "H1" ? { value: system.recorded, from: "recorded", id: projectWideOn(decisions, "controlHeights").id } : { value: system.look.height, from: "look", id: null },
+    controlCorner: recordedOrLook(system.corners.controlRadius, shipped.controlRadius ?? null),
+    fieldCorner: recordedOrLook(system.corners.fieldRadius, null),
+  };
+  const radiiDecisions = decisions.filter((entry) => entry.kind === "decision" && entry.axis === "radii");
+  const rows = PICK_ROWS.map((spec) => {
+    const reading = { ...picked.readings[spec.claim] };
+    const current = now[spec.what];
+    const { value } = reading;
+    let outcome = "entry";
+    let why = null;
+    if (value === null) [outcome, why] = ["kept", "not-measured"];
+    else if (value === "mixed") [outcome, why] = ["kept", "mixed"];
+    else if (spec.what === "height" && touch && value < TOUCH_FLOOR.px) [outcome, why] = ["kept", "touch-floor"];
+    else if (current.from === "recorded" && current.value === value) outcome = "same";
+    else if (spec.what === "controlCorner" && (current.value === PILL) !== (value === PILL)) [outcome, why] = ["optional", value === PILL ? "becomes-pill" : "stops-being-pill"];
+    let entry = null;
+    if (outcome === "entry" || outcome === "optional") {
+      const source = `system:${picked.id}@${run}#${spec.claim}`;
+      entry = spec.what === "height"
+        ? defaultHeightEntry(proposal, input.defaults, value, { basis: { words: `buttons about ${value}px ${on(reading)} (run ${run}; heights rounded to the nearest ${measured.heightStep}px)`, source } }).entry
+        : cornerEntry(spec.axis, value, { basis: { words: `${cornerReading(value)} ${on(reading)} (run ${run})`, source } });
+    }
+    return {
+      what: spec.what, claim: spec.claim, name: ROW_NAMES[spec.key], now: { ...current }, reading,
+      beside: spec.what === "height" ? { ...picked.readings["field.height"] } : null,
+      outcome, why, entry, place: null, dropped: null,
+      radii: entry && spec.what !== "height" ? radiiDecisions.filter((d) => !d.values.includes(value)).map((d) => ({ id: d.id, add: [value] })) : [],
+    };
+  });
+  // Ids: an axis with a project-wide decision is replaced under its id; appended entries that are not optional take
+  // the next id and the ids after it, in row order; an appended optional entry takes the one after those.
+  let next = Number(input.project.ledger.nextId.slice(2));
+  const place = (row) => {
+    const existing = projectWideOn(decisions, PICK_ROWS.find((spec) => spec.what === row.what).axis);
+    if (!existing) return { append: `D-${String(next++).padStart(3, "0")}` };
+    if (row.what === "height") row.dropped = existing.values.filter((v) => !row.entry.values.includes(v));
+    return { replace: existing.id };
+  };
+  for (const row of rows) if (row.outcome === "entry") row.place = place(row);
+  for (const row of rows) if (row.outcome === "optional") row.place = place(row);
+  const merged = new Map();
+  for (const row of rows) if (row.outcome === "entry") for (const item of row.radii) merged.set(item.id, numeric([...(merged.get(item.id) ?? []), ...item.add]));
+  return {
+    pickVersion: PICK_VERSION,
+    system: { id: picked.id, name: picked.name, run, screens: picked.screens, page: `${MEASURED_PAGE}#${picked.id}` },
+    count: measured.systems.length,
+    surface: input.context.surface,
+    look: { recipe: system.look.recipe, height: system.look.height, values: [...system.look.values], cardCorner: shipped.surfaceRadius ?? null },
+    rows,
+    notApplied: ["table.bodyRowHeight", "nav.itemHeight"].map((claim) => ({ claim, reading: { ...picked.readings[claim] } })),
+    radii: [...merged].map(([radiiId, add]) => ({ id: radiiId, add })),
+  };
+}
+
+/**
+ * The pick as a document: what taking the system would change, what stays, and the entries that record it. Read from
+ * the pick and the two options alone; none of the words the wording test bans; no possessive of the system's name.
+ * @param {object} pick from proposePick
+ * @param {{ledgerAt?: string, command?: string}} [options] the ledger's path as the placing sentences name it, and the
+ *   command prefix printed before `--default-height` (propose-system.mjs passes the one that carries `--page`)
+ */
+export function renderPickMarkdown(pick, { ledgerAt = ".styleseed/decisions.json", command = `propose-system.mjs --project-root . --surface ${pick.surface}` } = {}) {
+  const { name } = pick.system;
+  const look = pick.look.recipe ? `the brand recipe \`${pick.look.recipe}\`` : "StyleSeed's default look";
+  const cornerValue = (value) => (value === PILL ? "pills" : value === 0 ? "square" : `${value}px`);
+  const valueOf = (row, value) => (row.what === "height" ? `${value}px` : cornerValue(value));
+  const words = (reading, height) => (reading.value === null ? "not measured" : reading.value === "mixed" ? "no single value" : height ? `about ${reading.value}px` : cornerReading(reading.value));
+  const counts = (reading) => (reading.value === null ? "" : reading.value === "mixed" ? `on ${reading.eligible} screens` : `on ${reading.holding} of ${reading.eligible} screens`);
+  const said = (reading, height) => [words(reading, height), counts(reading)].filter(Boolean).join(" ");
+  const json = (entry) => ["```json", JSON.stringify(entry, null, 2), "```"];
+  const series = (values) => (values.length < 3 ? values.join(" and ") : `${values.slice(0, -1).join(", ")}, and ${values.at(-1)}`);
+  const radiiSentence = (items) => `Every radii decision holds the recorded corners: ${items.map((item, index) => `${index === 0 ? "add " : ""}${series(item.add)} to ${item.id}.values`).join(", and ")} before the next resolve, or it refuses the ledger.`;
+  const resolveSentence = "Then resolve. `.styleseed/system.css` draws the recorded values where it is imported: once in the global stylesheet, outside every `@layer`.";
+  const entries = pick.rows.filter((row) => row.outcome === "entry");
+  const changed = entries.filter((row) => row.reading.value !== row.now.value).length;
+  const out = [];
+
+  out.push(`# Starting from ${name}`, "");
+  out.push(`${name} is one of ${pick.count} public design systems StyleSeed measured on ${pick.system.run}, on ${pick.system.screens} of its published demo screens. The readings are StyleSeed's own; StyleSeed is not affiliated with ${name}.`);
+  out.push(`Taking it would change ${changed === 0 ? "none of the three" : changed === 1 ? "one of the three" : changed === 2 ? "two of the three" : "all three"} sizes a pick can bring. Nothing was written.`);
+  out.push(`Every reading, screen by screen: ${pick.system.page}`, "");
+
+  const nowText = (row) => {
+    if (row.now.value === null) return row.what === "fieldCorner" ? "the skin's corner" : `not a fixed value, ${look}`;
+    return `${valueOf(row, row.now.value)}, ${row.now.from === "recorded" ? `recorded as ${row.now.id}` : look}`;
+  };
+  const thenText = (row) => {
+    if (row.outcome === "entry") return row.reading.value === row.now.value ? `${valueOf(row, row.reading.value)}, the same; recorded so it stays if the look changes` : valueOf(row, row.reading.value);
+    if (row.outcome === "same") return `no change: already recorded as ${row.now.id}`;
+    if (row.outcome === "kept") return "no change";
+    return "no change unless asked: see \"Optional\"";
+  };
+  const measuredText = (row) => {
+    const text = row.what === "height" ? `buttons ${said(row.reading, true)}; fields ${said(row.beside, true)}` : said(row.reading, false);
+    return row.why === "touch-floor" ? `${text}; under the ${TOUCH_FLOOR.px}px floor for touch (rule \`${TOUCH_FLOOR.rule}\`)` : text;
+  };
+  out.push("## What it changes", "", `| | Now | With ${name} | Measured there |`, "|---|---|---|---|", ...pick.rows.map((row) => `| ${row.name} | ${nowText(row)} | ${thenText(row)} | ${measuredText(row)} |`), "");
+
+  const [table, menu] = pick.notApplied.map((item) => item.reading);
+  const notApplied = table.value !== null && menu.value !== null
+    ? `Table rows (${said(table, true)} there) and menu items (${said(menu, true)}) are shown on the page and not recorded: the shipped components cannot draw them from a recorded value yet.`
+    : table.value !== null ? `Table rows (${said(table, true)} there) are shown on the page and not recorded; menu items were not measured there. The shipped components cannot draw either from a recorded value yet.`
+      : menu.value !== null ? `Menu items (${said(menu, true)} there) are shown on the page and not recorded; table rows were not measured there. The shipped components cannot draw either from a recorded value yet.`
+        : "Table rows and menu items were not measured there; the shipped components could not draw them from a recorded value yet.";
+  out.push("## What stays", "", `- Cards, panels, and list rows keep the corners of ${look}; gaps and text sizes stay.`, `- ${notApplied}`, "");
+
+  const placing = (row, optional = false) => {
+    if (row.place.append) return `Append it to ${ledgerAt} as ${row.place.append}${optional ? ", the next free id; if entries were added since, run the command again." : "."}`;
+    const id = row.place.replace;
+    if (row.what !== "height") return `Put it in ${ledgerAt} in place of ${id}, keeping the id ${id}.`;
+    const dropped = row.dropped?.length ? ` \`${id}\` held ${valuesText(row.dropped, "px")}, which this entry does not hold; add the ones the product keeps to its values.` : "";
+    return `Put it in ${ledgerAt} in place of ${id}, keeping the id ${id} (an exception may point at it).${dropped}`;
+  };
+  out.push("## To take it", "");
+  if (entries.length) {
+    out.push(`${entries.length === 1 ? "One entry," : `${entries.length} entries, each`} with approvedBy set to the name the person gives and date to today. Keep \`source\` as printed.`, "");
+    for (const row of entries) out.push(`### ${row.name}`, "", ...json(row.entry), "", placing(row), "");
+    if (pick.radii.length) out.push(radiiSentence(pick.radii), "");
+    out.push(resolveSentence, "");
+    const height = entries.find((row) => row.what === "height");
+    if (height) {
+      const id = height.place.append ?? height.place.replace;
+      const sizes = pick.look.values.filter((value) => !height.entry.values.includes(value));
+      out.push(`The drift report then reads any control height outside \`${id}\`'s values as \`violates\`${sizes.length ? `; where the file is not imported the components keep ${pick.look.height}px and it reads ${valuesText(sizes, "px")} so` : ""}. It does not check the corners.`, "");
+    }
+  } else {
+    const thing = { height: "the buttons' height", controlCorner: "the buttons' corner", fieldCorner: "the fields' corner" };
+    const reason = (row) => (row.why === "not-measured" ? `${thing[row.what]} was not measured there`
+      : row.why === "mixed" ? `${thing[row.what]} has no single value there`
+        : row.why === "touch-floor" ? `the buttons there are under the ${TOUCH_FLOOR.px}px floor for touch`
+          : row.outcome === "same" ? `${thing[row.what]} is already recorded as ${row.now.id}`
+            : "the buttons' shape changes only when asked (see \"Optional\")");
+    out.push(`Nothing to record: ${pick.rows.map(reason).join("; ")}.`, "");
+  }
+  const heightRow = pick.rows.find((row) => row.what === "height");
+  if (heightRow.why === "touch-floor" && heightRow.now.value < TOUCH_FLOOR.px) out.push(`To record a ${TOUCH_FLOOR.px}px default with the sizes around it: \`${command} --default-height ${TOUCH_FLOOR.px}\`.`, "");
+
+  const optional = pick.rows.find((row) => row.outcome === "optional");
+  if (optional) {
+    const also = entries.length ? "also " : "";
+    out.push(`## Optional: ${optional.why === "becomes-pill" ? "pill buttons" : "buttons that are not pills"}`, "");
+    if (optional.why === "becomes-pill") {
+      const theirs = optional.now.value === null ? "This project's buttons are not pills" : `This project's buttons have ${cornerValue(optional.now.value)} corners`;
+      out.push(`The buttons of ${name} are pills (${counts(optional.reading)}). ${theirs}, and a pick does not change whether buttons are pills. To make them pills too, ${also}record:`, "");
+    } else out.push(`The buttons of ${name} have ${words(optional.reading, false)} (${counts(optional.reading)}). This project's buttons are pills, and a pick does not change whether buttons are pills. To give them that corner too, ${also}record:`, "");
+    out.push(...json(optional.entry), "", placing(optional, true), "");
+    // A radii decision that still lacks the value after the edits "To take it" names.
+    const added = new Map(pick.radii.map((item) => [item.id, item.add]));
+    const still = optional.radii.filter((item) => !(added.get(item.id) ?? []).includes(optional.reading.value));
+    if (still.length) out.push(radiiSentence(still), "");
+    if (optional.why === "becomes-pill") {
+      const card = pick.look.cardCorner;
+      out.push(`Pill buttons beside ${card === null ? "cards whose corner is not a fixed value" : card === 0 ? "square cards" : `cards with ${card}px corners`} can read as two looks in one product; take this when the person asks for pill buttons.`, "");
+    }
+    if (!entries.length) out.push(resolveSentence, "");
+  }
   return out.join("\n");
 }
 

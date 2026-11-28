@@ -6,8 +6,8 @@ import { join, relative, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import {
-  PAGE_ROWS, PROPOSAL_AXES, PROPOSAL_RULE, TOUCH_FLOOR, defaultHeightEntry, defaultHeightEntryFor, engineDefault, engineDefaultsTable, entryForValues, normalizeEngineDefaults, normalizeEvidencePack, normalizeInventory,
-  ownScreens, proposeSystem, referenceValues, renderEngineDefaultsMarkdown, renderProposalMarkdown, rowStatus, selectRow,
+  PAGE_ROWS, PROPOSAL_AXES, PROPOSAL_RULE, TOUCH_FLOOR, cornerEntry, defaultHeightEntry, defaultHeightEntryFor, engineDefault, engineDefaultsTable, entryForValues, normalizeEngineDefaults, normalizeEvidencePack, normalizeInventory,
+  normalizeMeasuredSystems, ownScreens, proposePick, proposeSystem, referenceValues, renderEngineDefaultsMarkdown, renderPickMarkdown, renderProposalMarkdown, rowStatus, selectRow,
 } from "../../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/system-proposal.mjs";
 import { systemLine } from "../../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/propose-system.mjs";
 import { contractHash, normalizeReferenceEvidence } from "../../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/reference-contract.mjs";
@@ -1801,4 +1801,651 @@ test("determinism: the same input gives the same system, and the second proposal
   assert.deepEqual(defaultHeightEntryFor(input, 36), defaultHeightEntry(sys(), defaults, 36), "the proposal without D-001 is the proposal with nothing recorded");
   assert.equal(JSON.stringify(input), before, "the inputs are not changed");
   assert.throws(() => defaultHeightEntry(proposeSystem(input), defaults, 36), /controlHeights: recorded as D-001, so its block has no options/u, "defaultHeightEntry keeps its throw");
+});
+
+// --- a pick from a measured system (WO-20 C) -----------------------------------------------------------------------
+// Expected text is written from the order's words. The file is the committed one; the ledger's next id is computed as
+// the command computes it.
+
+const measured = normalizeMeasuredSystems(JSON.parse(readFileSync(resolve(resolveDir, "references/measured-systems.json"), "utf8")));
+const SYSTEM_IDS = ["cloudscape", "patternfly", "antpro", "shadcn", "primer", "mui", "govuk"];
+const LOOKS = [...Object.keys(catalog.recipes), null];
+const nextIdOf = (decisions) => `D-${String(decisions.reduce((max, entry) => Math.max(max, Number(entry.id.slice(2))), 0) + 1).padStart(3, "0")}`;
+const pickInput = ({ decisions = [], recipe = "enterprise-workbench", surface = "pointer", page = "settings", withMeasured = true } = {}) => {
+  const normalized = normalizeDecisions(clone(decisions), catalog);
+  return {
+    pack: committedPack, defaults, ...(withMeasured ? { measured } : {}), references: [], own: null,
+    project: project({ recipe, decisions: normalized, ledger: { path: ".styleseed/decisions.json", entries: normalized.length, nextId: nextIdOf(normalized) } }),
+    context: { artifact: null, page, surface },
+  };
+};
+const pickOf = (id, options) => proposePick(pickInput(options), measured, id);
+const pickMd = (pick) => renderPickMarkdown(pick, { ledgerAt: ".styleseed/decisions.json", command: `propose-system.mjs --project-root . --surface ${pick.surface}` });
+const rowsOf = (pick) => pick.rows.map((row) => [row.outcome, row.why, row.entry ? (row.what === "height" ? parseDefaultHeight(row.entry).height : row.entry.values[0]) : null]);
+const jsonBlock = (entry) => ["```json", JSON.stringify(entry, null, 2), "```"].join("\n");
+const RESOLVE = "Then resolve. `.styleseed/system.css` draws the recorded values where it is imported: once in the global stylesheet, outside every `@layer`.";
+const HEIGHT_NAME = "Default height of controls (buttons, inputs, selects, tabs)";
+const CONTROL_NAME = "Corner of buttons and the controls that share it";
+const FIELD_NAME = "Corner of inputs, selects, and textareas";
+const named = (entry, id, date = "2026-11-28") => ({ ...entry, id, approvedBy: "example-designer", date });
+// The entries of a pick, named under the ids it gives them, the optional one only when asked.
+const recordedPick = (pick, { optional = false } = {}) => pick.rows.filter((row) => row.outcome === "entry" || (optional && row.outcome === "optional")).map((row) => named(row.entry, row.place.append ?? row.place.replace));
+const heightOwnDefault = (height, recipe) => named(printedHeight(height, { recipe }), "D-001");
+
+test("the seven on enterprise-workbench, pointer: the outcome and the value of each row (WO-20 C)", () => {
+  assert.deepEqual(measured.systems.map((system) => system.id), SYSTEM_IDS);
+  const expected = {
+    cloudscape: [["entry", null, 32], ["optional", "becomes-pill", 999], ["entry", null, 8]],
+    patternfly: [["entry", null, 36], ["optional", "becomes-pill", 999], ["entry", null, 6]],
+    antpro: [["entry", null, 32], ["entry", null, 6], ["entry", null, 6]],
+    shadcn: [["kept", "mixed", null], ["entry", null, 8], ["entry", null, 8]],
+    primer: [["entry", null, 32], ["entry", null, 6], ["kept", "not-measured", null]],
+    mui: [["entry", null, 40], ["entry", null, 8], ["entry", null, 8]],
+    govuk: [["entry", null, 40], ["entry", null, 0], ["entry", null, 0]],
+  };
+  for (const id of SYSTEM_IDS) assert.deepEqual(rowsOf(pickOf(id)), expected[id], id);
+  const cloudscape = pickOf("cloudscape");
+  assert.deepEqual(Object.keys(cloudscape), ["pickVersion", "system", "count", "surface", "look", "rows", "notApplied", "radii"]);
+  assert.deepEqual(Object.keys(cloudscape.rows[0]), ["what", "claim", "name", "now", "reading", "beside", "outcome", "why", "entry", "place", "dropped", "radii"]);
+  assert.deepEqual(cloudscape.system, { id: "cloudscape", name: "AWS Cloudscape", run: "2026-11-16", screens: 8, page: "https://styleseed-demo.vercel.app/systems#cloudscape" });
+  assert.deepEqual([cloudscape.pickVersion, cloudscape.count, cloudscape.surface], [1, 7, "pointer"]);
+  assert.deepEqual(cloudscape.look, { recipe: "enterprise-workbench", height: 36, values: [24, 28, 32, 36, 40, 48], cardCorner: 4 });
+  assert.deepEqual(cloudscape.rows.map((row) => [row.what, row.claim, row.name]), [["height", "button.height", HEIGHT_NAME], ["controlCorner", "button.radius", CONTROL_NAME], ["fieldCorner", "field.radius", FIELD_NAME]]);
+  assert.deepEqual(cloudscape.rows.map((row) => row.name), sys().system.rows.slice(0, 3).map((row) => row.name), "the names of Part S's table");
+  assert.deepEqual(cloudscape.rows.map((row) => row.now), [{ value: 36, from: "look", id: null }, { value: 3, from: "look", id: null }, { value: null, from: "look", id: null }]);
+  assert.deepEqual(cloudscape.rows[0].beside, { value: 32, eligible: 4, holding: 4 });
+  assert.deepEqual([cloudscape.rows[1].beside, cloudscape.rows[2].beside], [null, null]);
+  assert.deepEqual(cloudscape.notApplied, [{ claim: "table.bodyRowHeight", reading: { value: 40, eligible: 4, holding: 3 } }, { claim: "nav.itemHeight", reading: { value: 28, eligible: 6, holding: 6 } }]);
+  assert.deepEqual(pickOf("mui").rows[0].beside, { value: "mixed", eligible: 5, holding: null }, "mui: the fields are mixed");
+  assert.ok(pickMd(pickOf("mui")).includes("| buttons about 40px on 4 of 5 screens; fields no single value on 5 screens |"));
+  assert.ok(pickMd(pickOf("patternfly")).includes(`| ${HEIGHT_NAME} | 36px, the brand recipe \`enterprise-workbench\` | 36px, the same; recorded so it stays if the look changes |`), "patternfly: the same height, still an entry");
+  assert.ok(pickMd(pickOf("shadcn")).includes(`| ${HEIGHT_NAME} | 36px, the brand recipe \`enterprise-workbench\` | no change | buttons no single value on 2 screens; fields no single value on 2 screens |`));
+  assert.ok(pickMd(pickOf("primer")).includes(`| ${FIELD_NAME} | the skin's corner | no change | not measured |`));
+});
+
+test("whole documents, exact: cloudscape on enterprise-workbench; govuk on calm-consumer; primer on calm-consumer, touch; antpro over a ledger (WO-20 C, W6)", () => {
+  assert.equal(pickMd(pickOf("cloudscape")), [
+    "# Starting from AWS Cloudscape",
+    "",
+    "AWS Cloudscape is one of 7 public design systems StyleSeed measured on 2026-11-16, on 8 of its published demo screens. The readings are StyleSeed's own; StyleSeed is not affiliated with AWS Cloudscape.",
+    "Taking it would change two of the three sizes a pick can bring. Nothing was written.",
+    "Every reading, screen by screen: https://styleseed-demo.vercel.app/systems#cloudscape",
+    "",
+    "## What it changes",
+    "",
+    "| | Now | With AWS Cloudscape | Measured there |",
+    "|---|---|---|---|",
+    "| Default height of controls (buttons, inputs, selects, tabs) | 36px, the brand recipe `enterprise-workbench` | 32px | buttons about 32px on 8 of 8 screens; fields about 32px on 4 of 4 screens |",
+    "| Corner of buttons and the controls that share it | 3px, the brand recipe `enterprise-workbench` | no change unless asked: see \"Optional\" | pills on 8 of 8 screens |",
+    "| Corner of inputs, selects, and textareas | the skin's corner | 8px | 8px corners on 4 of 4 screens |",
+    "",
+    "## What stays",
+    "",
+    "- Cards, panels, and list rows keep the corners of the brand recipe `enterprise-workbench`; gaps and text sizes stay.",
+    "- Table rows (about 40px on 3 of 4 screens there) and menu items (about 28px on 6 of 6 screens) are shown on the page and not recorded: the shipped components cannot draw them from a recorded value yet.",
+    "",
+    "## To take it",
+    "",
+    "2 entries, each with approvedBy set to the name the person gives and date to today. Keep `source` as printed.",
+    "",
+    "### Default height of controls (buttons, inputs, selects, tabs)",
+    "",
+    jsonBlock({ kind: "decision", axis: "controlHeights", values: [20, 24, 28, 32, 36, 44], statement: "Default controls are 32px tall; at that default the shipped components of this StyleSeed version draw 20, 24, 28, 32, 36, 44px. Basis: buttons about 32px on 8 of 8 screens of AWS Cloudscape (run 2026-11-16; heights rounded to the nearest 4px).", approvedBy: "", date: "", source: "default-height:32; system:cloudscape@2026-11-16#button.height" }),
+    "",
+    "Append it to .styleseed/decisions.json as D-001.",
+    "",
+    "### Corner of inputs, selects, and textareas",
+    "",
+    jsonBlock({ kind: "decision", axis: "fieldRadius", values: [8], statement: "Inputs, selects, and textareas use an 8px corner. Basis: 8px corners on 4 of 4 screens of AWS Cloudscape (run 2026-11-16).", approvedBy: "", date: "", source: "system:cloudscape@2026-11-16#field.radius" }),
+    "",
+    "Append it to .styleseed/decisions.json as D-002.",
+    "",
+    RESOLVE,
+    "",
+    "The drift report then reads any control height outside `D-001`'s values as `violates`; where the file is not imported the components keep 36px and it reads 40, 48px so. It does not check the corners.",
+    "",
+    "## Optional: pill buttons",
+    "",
+    "The buttons of AWS Cloudscape are pills (on 8 of 8 screens). This project's buttons have 3px corners, and a pick does not change whether buttons are pills. To make them pills too, also record:",
+    "",
+    jsonBlock({ kind: "decision", axis: "controlRadius", values: [999], statement: "Buttons and the other controls that share their corner are pills. Basis: pills on 8 of 8 screens of AWS Cloudscape (run 2026-11-16).", approvedBy: "", date: "", source: "system:cloudscape@2026-11-16#button.radius" }),
+    "",
+    "Append it to .styleseed/decisions.json as D-003, the next free id; if entries were added since, run the command again.",
+    "",
+    "Pill buttons beside cards with 4px corners can read as two looks in one product; take this when the person asks for pill buttons.",
+    "",
+  ].join("\n"));
+
+  assert.equal(pickMd(pickOf("govuk", { recipe: "calm-consumer", page: "dashboard" })), [
+    "# Starting from GOV.UK Frontend",
+    "",
+    "GOV.UK Frontend is one of 7 public design systems StyleSeed measured on 2026-11-16, on 8 of its published demo screens. The readings are StyleSeed's own; StyleSeed is not affiliated with GOV.UK Frontend.",
+    "Taking it would change one of the three sizes a pick can bring. Nothing was written.",
+    "Every reading, screen by screen: https://styleseed-demo.vercel.app/systems#govuk",
+    "",
+    "## What it changes",
+    "",
+    "| | Now | With GOV.UK Frontend | Measured there |",
+    "|---|---|---|---|",
+    "| Default height of controls (buttons, inputs, selects, tabs) | 40px, the brand recipe `calm-consumer` | 40px, the same; recorded so it stays if the look changes | buttons about 40px on 8 of 8 screens; fields about 40px on 4 of 4 screens |",
+    "| Corner of buttons and the controls that share it | pills, the brand recipe `calm-consumer` | no change unless asked: see \"Optional\" | square corners on 8 of 8 screens |",
+    "| Corner of inputs, selects, and textareas | the skin's corner | square | square corners on 4 of 4 screens |",
+    "",
+    "## What stays",
+    "",
+    "- Cards, panels, and list rows keep the corners of the brand recipe `calm-consumer`; gaps and text sizes stay.",
+    "- Table rows (about 48px on 1 of 1 screens there) are shown on the page and not recorded; menu items were not measured there. The shipped components cannot draw either from a recorded value yet.",
+    "",
+    "## To take it",
+    "",
+    "2 entries, each with approvedBy set to the name the person gives and date to today. Keep `source` as printed.",
+    "",
+    "### Default height of controls (buttons, inputs, selects, tabs)",
+    "",
+    jsonBlock({ kind: "decision", axis: "controlHeights", values: [28, 32, 36, 40, 44, 52], statement: "Default controls are 40px tall; at that default the shipped components of this StyleSeed version draw 28, 32, 36, 40, 44, 52px. Basis: buttons about 40px on 8 of 8 screens of GOV.UK Frontend (run 2026-11-16; heights rounded to the nearest 4px).", approvedBy: "", date: "", source: "default-height:40; system:govuk@2026-11-16#button.height" }),
+    "",
+    "Append it to .styleseed/decisions.json as D-001.",
+    "",
+    "### Corner of inputs, selects, and textareas",
+    "",
+    jsonBlock({ kind: "decision", axis: "fieldRadius", values: [0], statement: "Inputs, selects, and textareas have square corners. Basis: square corners on 4 of 4 screens of GOV.UK Frontend (run 2026-11-16).", approvedBy: "", date: "", source: "system:govuk@2026-11-16#field.radius" }),
+    "",
+    "Append it to .styleseed/decisions.json as D-002.",
+    "",
+    RESOLVE,
+    "",
+    "The drift report then reads any control height outside `D-001`'s values as `violates`. It does not check the corners.",
+    "",
+    "## Optional: buttons that are not pills",
+    "",
+    "The buttons of GOV.UK Frontend have square corners (on 8 of 8 screens). This project's buttons are pills, and a pick does not change whether buttons are pills. To give them that corner too, also record:",
+    "",
+    jsonBlock({ kind: "decision", axis: "controlRadius", values: [0], statement: "Buttons and the other controls that share their corner have square corners. Basis: square corners on 8 of 8 screens of GOV.UK Frontend (run 2026-11-16).", approvedBy: "", date: "", source: "system:govuk@2026-11-16#button.radius" }),
+    "",
+    "Append it to .styleseed/decisions.json as D-003, the next free id; if entries were added since, run the command again.",
+    "",
+  ].join("\n"));
+
+  assert.equal(pickMd(pickOf("primer", { recipe: "calm-consumer", page: "dashboard", surface: "touch" })), [
+    "# Starting from GitHub Primer",
+    "",
+    "GitHub Primer is one of 7 public design systems StyleSeed measured on 2026-11-16, on 3 of its published demo screens. The readings are StyleSeed's own; StyleSeed is not affiliated with GitHub Primer.",
+    "Taking it would change none of the three sizes a pick can bring. Nothing was written.",
+    "Every reading, screen by screen: https://styleseed-demo.vercel.app/systems#primer",
+    "",
+    "## What it changes",
+    "",
+    "| | Now | With GitHub Primer | Measured there |",
+    "|---|---|---|---|",
+    "| Default height of controls (buttons, inputs, selects, tabs) | 40px, the brand recipe `calm-consumer` | no change | buttons about 32px on 1 of 1 screens; fields not measured; under the 44px floor for touch (rule `CRAFT-control-heights`) |",
+    "| Corner of buttons and the controls that share it | pills, the brand recipe `calm-consumer` | no change unless asked: see \"Optional\" | 6px corners on 1 of 1 screens |",
+    "| Corner of inputs, selects, and textareas | the skin's corner | no change | not measured |",
+    "",
+    "## What stays",
+    "",
+    "- Cards, panels, and list rows keep the corners of the brand recipe `calm-consumer`; gaps and text sizes stay.",
+    "- Table rows and menu items were not measured there; the shipped components could not draw them from a recorded value yet.",
+    "",
+    "## To take it",
+    "",
+    "Nothing to record: the buttons there are under the 44px floor for touch; the buttons' shape changes only when asked (see \"Optional\"); the fields' corner was not measured there.",
+    "",
+    "To record a 44px default with the sizes around it: `propose-system.mjs --project-root . --surface touch --default-height 44`.",
+    "",
+    "## Optional: buttons that are not pills",
+    "",
+    "The buttons of GitHub Primer have 6px corners (on 1 of 1 screens). This project's buttons are pills, and a pick does not change whether buttons are pills. To give them that corner too, record:",
+    "",
+    jsonBlock({ kind: "decision", axis: "controlRadius", values: [6], statement: "Buttons and the other controls that share their corner use a 6px corner. Basis: 6px corners on 1 of 1 screens of GitHub Primer (run 2026-11-16).", approvedBy: "", date: "", source: "system:primer@2026-11-16#button.radius" }),
+    "",
+    "Append it to .styleseed/decisions.json as D-001, the next free id; if entries were added since, run the command again.",
+    "",
+    RESOLVE,
+    "",
+  ].join("\n"));
+
+  // A look's own default of another look (row H3), a radii decision lacking 6, and a recorded control corner of 8.
+  const ledger = [heightOwnDefault(40, "calm-consumer"), { ...corner("D-002", "radii", 2), values: [2, 4, 8] }, corner("D-003", "controlRadius", 8)];
+  assert.equal(sys({ decisions: ledger }).system.heightRow, "H3");
+  assert.equal(pickMd(pickOf("antpro", { decisions: ledger })), [
+    "# Starting from Ant Design Pro",
+    "",
+    "Ant Design Pro is one of 7 public design systems StyleSeed measured on 2026-11-16, on 10 of its published demo screens. The readings are StyleSeed's own; StyleSeed is not affiliated with Ant Design Pro.",
+    "Taking it would change all three sizes a pick can bring. Nothing was written.",
+    "Every reading, screen by screen: https://styleseed-demo.vercel.app/systems#antpro",
+    "",
+    "## What it changes",
+    "",
+    "| | Now | With Ant Design Pro | Measured there |",
+    "|---|---|---|---|",
+    "| Default height of controls (buttons, inputs, selects, tabs) | 36px, the brand recipe `enterprise-workbench` | 32px | buttons about 32px on 6 of 7 screens; fields about 32px on 6 of 6 screens |",
+    "| Corner of buttons and the controls that share it | 8px, recorded as D-003 | 6px | 6px corners on 6 of 7 screens |",
+    "| Corner of inputs, selects, and textareas | the skin's corner | 6px | 6px corners on 5 of 6 screens |",
+    "",
+    "## What stays",
+    "",
+    "- Cards, panels, and list rows keep the corners of the brand recipe `enterprise-workbench`; gaps and text sizes stay.",
+    "- Table rows (about 48px on 3 of 5 screens there) and menu items (about 40px on 10 of 10 screens) are shown on the page and not recorded: the shipped components cannot draw them from a recorded value yet.",
+    "",
+    "## To take it",
+    "",
+    "3 entries, each with approvedBy set to the name the person gives and date to today. Keep `source` as printed.",
+    "",
+    "### Default height of controls (buttons, inputs, selects, tabs)",
+    "",
+    jsonBlock({ kind: "decision", axis: "controlHeights", values: [20, 24, 28, 32, 36, 44], statement: "Default controls are 32px tall; at that default the shipped components of this StyleSeed version draw 20, 24, 28, 32, 36, 44px. Basis: buttons about 32px on 6 of 7 screens of Ant Design Pro (run 2026-11-16; heights rounded to the nearest 4px).", approvedBy: "", date: "", source: "default-height:32; system:antpro@2026-11-16#button.height" }),
+    "",
+    "Put it in .styleseed/decisions.json in place of D-001, keeping the id D-001 (an exception may point at it). `D-001` held 40, 52px, which this entry does not hold; add the ones the product keeps to its values.",
+    "",
+    "### Corner of buttons and the controls that share it",
+    "",
+    jsonBlock({ kind: "decision", axis: "controlRadius", values: [6], statement: "Buttons and the other controls that share their corner use a 6px corner. Basis: 6px corners on 6 of 7 screens of Ant Design Pro (run 2026-11-16).", approvedBy: "", date: "", source: "system:antpro@2026-11-16#button.radius" }),
+    "",
+    "Put it in .styleseed/decisions.json in place of D-003, keeping the id D-003.",
+    "",
+    "### Corner of inputs, selects, and textareas",
+    "",
+    jsonBlock({ kind: "decision", axis: "fieldRadius", values: [6], statement: "Inputs, selects, and textareas use a 6px corner. Basis: 6px corners on 5 of 6 screens of Ant Design Pro (run 2026-11-16).", approvedBy: "", date: "", source: "system:antpro@2026-11-16#field.radius" }),
+    "",
+    "Append it to .styleseed/decisions.json as D-004.",
+    "",
+    "Every radii decision holds the recorded corners: add 6 to D-002.values before the next resolve, or it refuses the ledger.",
+    "",
+    RESOLVE,
+    "",
+    "The drift report then reads any control height outside `D-001`'s values as `violates`; where the file is not imported the components keep 36px and it reads 40, 48px so. It does not check the corners.",
+    "",
+  ].join("\n"));
+});
+
+test("pills both ways: a pick never changes whether buttons are pills unless asked; 20 is not a pill (WO-20 C)", () => {
+  const calm = { recipe: "calm-consumer", page: "dashboard" };
+  let pick = pickOf("cloudscape", calm);
+  assert.deepEqual(rowsOf(pick)[1], ["entry", null, 999], "cloudscape on calm-consumer: both pills, an entry");
+  assert.ok(pickMd(pick).includes(`| ${CONTROL_NAME} | pills, the brand recipe \`calm-consumer\` | pills, the same; recorded so it stays if the look changes | pills on 8 of 8 screens |`));
+  assert.ok(!pickMd(pick).includes("## Optional"));
+  pick = pickOf("govuk", calm);
+  assert.deepEqual(rowsOf(pick)[1], ["optional", "stops-being-pill", 0]);
+  const pill = [corner("D-001", "controlRadius", 999)];
+  pick = pickOf("cloudscape", { decisions: pill });
+  assert.deepEqual([pick.rows[1].outcome, pick.rows[1].now, pick.rows[1].entry, pick.rows[1].place], ["same", { value: 999, from: "recorded", id: "D-001" }, null, null]);
+  assert.ok(pickMd(pick).includes(`| ${CONTROL_NAME} | pills, recorded as D-001 | no change: already recorded as D-001 | pills on 8 of 8 screens |`));
+  pick = pickOf("antpro", { decisions: pill });
+  assert.deepEqual([rowsOf(pick)[1], pick.rows[1].place], [["optional", "stops-being-pill", 6], { replace: "D-001" }]);
+  const optional = between(pickMd(pick), "## Optional: buttons that are not pills\n\n", "\n\n```json");
+  assert.equal(optional, "The buttons of Ant Design Pro have 6px corners (on 6 of 7 screens). This project's buttons are pills, and a pick does not change whether buttons are pills. To give them that corner too, also record:");
+  assert.ok(pickMd(pick).endsWith("\n```\n\nPut it in .styleseed/decisions.json in place of D-001, keeping the id D-001.\n"), "a replaced optional entry: the replacing sentence, no caution");
+  const twenty = [corner("D-001", "controlRadius", 20)];
+  pick = pickOf("cloudscape", { decisions: twenty });
+  assert.deepEqual([rowsOf(pick)[1], pick.rows[1].place], [["optional", "becomes-pill", 999], { replace: "D-001" }], "20 is not a pill");
+  assert.ok(pickMd(pick).includes("This project's buttons have 20px corners, and a pick does not change whether buttons are pills. To make them pills too, also record:"));
+  pick = pickOf("antpro", { decisions: twenty });
+  assert.deepEqual([rowsOf(pick)[1], pick.rows[1].place], [["entry", null, 6], { replace: "D-001" }]);
+  // Square words: a project whose buttons are square, and one whose cards are square.
+  pick = pickOf("cloudscape", { recipe: "public-service", page: "dashboard" });
+  assert.ok(pickMd(pick).includes("This project's buttons have square corners, and a pick does not change whether buttons are pills."));
+  assert.ok(pickMd(pick).includes("Pill buttons beside square cards can read as two looks in one product; take this when the person asks for pill buttons."));
+  assert.ok(pickMd(pickOf("cloudscape", { recipe: null })).includes("Pill buttons beside cards with 10px corners can read"), "no recipe: the :root card corner");
+});
+
+test("what is drawn, not what is written: a recorded default the file does not draw is never `now` (WO-20 C, W1)", () => {
+  // On enterprise-workbench (36px) a recorded default that is calm-consumer's own 40: the file sets no height.
+  const ledger = [heightOwnDefault(40, "calm-consumer")];
+  const pick = pickOf("mui", { decisions: ledger });
+  assert.deepEqual(pick.rows[0].now, { value: 36, from: "look", id: null });
+  assert.deepEqual([pick.rows[0].outcome, pick.rows[0].place, pick.rows[0].dropped], ["entry", { replace: "D-001" }, []], "the 40px family holds every value of D-001");
+  assert.ok(pickMd(pick).includes(`| ${HEIGHT_NAME} | 36px, the brand recipe \`enterprise-workbench\` | 40px | buttons about 40px on 4 of 5 screens; fields no single value on 5 screens |`));
+  for (const id of SYSTEM_IDS) assert.notEqual(pickOf(id, { decisions: ledger }).rows[0].outcome, "same", id);
+  // H4 (no default height) and H2 (this look's own default) are not `now` either; H1 is.
+  assert.deepEqual(pickOf("mui", { decisions: [handHeights([36, 40])] }).rows[0].now, { value: 36, from: "look", id: null });
+  assert.deepEqual(pickOf("patternfly", { decisions: [heightOwnDefault(36, "enterprise-workbench")] }).rows[0].now, { value: 36, from: "look", id: null });
+  assert.equal(pickOf("patternfly", { decisions: [heightOwnDefault(36, "enterprise-workbench")] }).rows[0].outcome, "entry", "the look's own default recorded: the system's 36 is still an entry");
+  assert.deepEqual(pickOf("mui", { decisions: [handHeights(familyOf(40), "default-height:40; chosen: 40")] }).rows[0].now, { value: 40, from: "recorded", id: "D-001" });
+  assert.equal(pickOf("mui", { decisions: [handHeights(familyOf(40), "default-height:40; chosen: 40")] }).rows[0].outcome, "same");
+});
+
+test("touch, on enterprise-workbench: six heights kept under the floor with the 44px line, shadcn mixed without it; corners as on pointer (WO-20 C)", () => {
+  const LINE = "To record a 44px default with the sizes around it: `propose-system.mjs --project-root . --surface touch --default-height 44`.";
+  for (const id of SYSTEM_IDS) {
+    const pick = pickOf(id, { surface: "touch" });
+    const pointer = pickOf(id);
+    const md = pickMd(pick);
+    if (id === "shadcn") assert.deepEqual([rowsOf(pick)[0], md.includes(LINE)], [["kept", "mixed", null], false], id);
+    else {
+      assert.deepEqual(rowsOf(pick)[0], ["kept", "touch-floor", null], id);
+      assert.equal(pick.rows[0].entry, null, id);
+      assert.ok(md.includes(`\n\n${LINE}\n`), id);
+      assert.ok(md.includes("; under the 44px floor for touch (rule `CRAFT-control-heights`) |"), id);
+    }
+    assert.deepEqual(rowsOf(pick).slice(1), rowsOf(pointer).slice(1), `${id}: the corners as on pointer`);
+    assert.ok(!md.includes("controlHeights"), `${id}: no height entry`);
+  }
+  // A recorded default of 44 the file draws, and native-mobile, which draws 44: no 44px line.
+  const at44 = pickOf("cloudscape", { surface: "touch", decisions: [handHeights(familyOf(44), "default-height:44; chosen: 44")] });
+  assert.deepEqual([at44.rows[0].now, at44.rows[0].why], [{ value: 44, from: "recorded", id: "D-001" }, "touch-floor"]);
+  assert.ok(!pickMd(at44).includes("--default-height 44"));
+  const mobile = pickOf("cloudscape", { surface: "touch", recipe: "native-mobile", page: "dashboard" });
+  assert.deepEqual([mobile.rows[0].now.value, mobile.rows[0].why], [44, "touch-floor"]);
+  assert.ok(!pickMd(mobile).includes("--default-height 44"));
+  // Nothing to record on touch: the reasons, and the line after them.
+  const md = pickMd(pickOf("shadcn", { surface: "touch", decisions: [corner("D-001", "controlRadius", 8), corner("D-002", "fieldRadius", 8)] }));
+  assert.ok(md.endsWith("## To take it\n\nNothing to record: the buttons' height has no single value there; the buttons' corner is already recorded as D-001; the fields' corner is already recorded as D-002.\n"), md);
+  assert.ok(!md.includes("Then resolve") && !md.includes("The drift report"), "the three sentences do not follow");
+});
+
+test("entries: exact sources, the token, the limits, and no banned word, for all seven on every look and no recipe, both surfaces (WO-20 C)", () => {
+  let entries = 0;
+  let documents = 0;
+  let longestStatement = 0;
+  for (const recipe of LOOKS) for (const surface of ["pointer", "touch"]) for (const id of SYSTEM_IDS) {
+    const pick = pickOf(id, { recipe, surface, page: "dashboard" });
+    const md = pickMd(pick);
+    documents += 1;
+    assert.ok(!BANNED.test(md), `${id} ${recipe} ${surface}: ${md.match(BANNED)?.[0]}`);
+    assert.ok(!md.includes(`${pick.system.name}'s`), "no possessive of the system's name");
+    for (const row of pick.rows) {
+      if (!row.entry) continue;
+      entries += 1;
+      const { entry } = row;
+      const source = `system:${id}@2026-11-16#${row.claim}`;
+      if (row.what === "height") {
+        assert.equal(entry.source, `default-height:${row.reading.value}; ${source}`);
+        assert.deepEqual(parseDefaultHeight(entry), { height: row.reading.value, lookDefault: false });
+        checkHeightEntry(entry, row.reading.value);
+      } else {
+        assert.equal(entry.source, source);
+        assert.deepEqual(entry.values, [row.reading.value]);
+      }
+      assert.ok(entry.statement.length <= 300, `${entry.statement.length}: ${entry.statement}`);
+      assert.ok(entry.source.length <= 200, entry.source);
+      longestStatement = Math.max(longestStatement, entry.statement.length);
+      assert.ok(!BANNED.test(entry.statement), entry.statement);
+      assert.doesNotThrow(() => normalizeDecisions([named(entry, "D-001")], catalog), JSON.stringify(entry));
+      assert.throws(() => normalizeDecisions([{ ...entry, id: "D-001" }], catalog), /D-001\.approvedBy/u, "an empty name does not compile");
+    }
+  }
+  assert.equal(documents, 140, "seven systems, nine brand recipes and no recipe, two surfaces");
+  assert.ok(entries > 300, `${entries} entries`);
+  assert.ok(longestStatement > 200, `${longestStatement}`);
+  // One corner statement whole, with its basis.
+  assert.deepEqual(pickOf("mui").rows[2].entry, { kind: "decision", axis: "fieldRadius", values: [8], statement: "Inputs, selects, and textareas use an 8px corner. Basis: 8px corners on 3 of 5 screens of MUI templates (run 2026-11-16).", approvedBy: "", date: "", source: "system:mui@2026-11-16#field.radius" });
+});
+
+test("placing: ids in row order from the next id, the optional entry after them, replaced decisions keep their id, dropped values on a height only (WO-20 C, W2, Z2)", () => {
+  let pick = pickOf("cloudscape");
+  assert.deepEqual(pick.rows.map((row) => row.place), [{ append: "D-001" }, { append: "D-003" }, { append: "D-002" }]);
+  assert.deepEqual(pick.rows.map((row) => row.dropped), [null, null, null]);
+  assert.deepEqual(pickOf("antpro").rows.map((row) => row.place), [{ append: "D-001" }, { append: "D-002" }, { append: "D-003" }]);
+  assert.deepEqual(pickOf("shadcn").rows.map((row) => row.place), [null, { append: "D-001" }, { append: "D-002" }]);
+
+  // D-001 a height, D-002 a field corner, D-003 radii: two replacements, and the optional entry is D-004, not D-003.
+  const ledger = [handHeights(familyOf(36), "default-height:36; chosen: 36"), corner("D-002", "fieldRadius", 4), { ...corner("D-003", "radii", 2), values: [2, 4] }];
+  pick = pickOf("cloudscape", { decisions: ledger });
+  assert.deepEqual(pick.rows.map((row) => [row.outcome, row.place, row.dropped]), [["entry", { replace: "D-001" }, [40, 48]], ["optional", { append: "D-004" }, null], ["entry", { replace: "D-002" }, null]]);
+  const md = pickMd(pick);
+  assert.ok(md.includes("Put it in .styleseed/decisions.json in place of D-001, keeping the id D-001 (an exception may point at it). `D-001` held 40, 48px, which this entry does not hold; add the ones the product keeps to its values.\n"));
+  assert.ok(md.includes("Put it in .styleseed/decisions.json in place of D-002, keeping the id D-002.\n"), "a replaced corner: no exception, no dropped values");
+  assert.ok(!md.includes("`D-002` held"));
+  assert.ok(md.includes("Append it to .styleseed/decisions.json as D-004, the next free id; if entries were added since, run the command again."));
+  assert.ok(md.includes("| Default height of controls (buttons, inputs, selects, tabs) | 36px, recorded as D-001 | 32px |"));
+  assert.ok(md.includes(`| ${FIELD_NAME} | 4px, recorded as D-002 | 8px |`));
+
+  // A project-wide controlHeights decision without a default height, and one that is a look's own: replaced, the id kept.
+  pick = pickOf("antpro", { decisions: [handHeights([30, 36])] });
+  assert.deepEqual([pick.rows[0].place, pick.rows[0].dropped], [{ replace: "D-001" }, [30]]);
+  assert.ok(pickMd(pick).includes("keeping the id D-001 (an exception may point at it). `D-001` held 30px, which this entry does not hold;"));
+  pick = pickOf("antpro", { decisions: [handHeights([24, 36])] });
+  assert.deepEqual([pick.rows[0].place, pick.rows[0].dropped], [{ replace: "D-001" }, []]);
+  assert.ok(pickMd(pick).includes("keeping the id D-001 (an exception may point at it).\n"), "nothing dropped: no sentence");
+  pick = pickOf("antpro", { decisions: [heightOwnDefault(40, "calm-consumer")] });
+  assert.deepEqual([pick.rows[0].place, pick.rows[0].dropped], [{ replace: "D-001" }, [40, 52]]);
+  // An exception that points at the height decision stays valid after the replacement.
+  const withException = [heightOwnDefault(36, "enterprise-workbench"), { ...heightException }];
+  pick = pickOf("antpro", { decisions: withException });
+  assert.deepEqual(pick.rows.map((row) => row.place), [{ replace: "D-001" }, { append: "D-003" }, { append: "D-004" }]);
+  const placed = withException.map((entry) => (entry.id === "D-001" ? named(pick.rows[0].entry, "D-001") : entry));
+  assert.doesNotThrow(() => normalizeDecisions(clone([...placed, ...recordedPick(pick).filter((entry) => entry.id !== "D-001")]), catalog));
+
+  // A second pick of antpro over its own recorded entries: three rows the same, nothing to record.
+  const first = pickOf("antpro");
+  const again = pickOf("antpro", { decisions: recordedPick(first) });
+  assert.deepEqual(again.rows.map((row) => row.outcome), ["same", "same", "same"]);
+  assert.ok(pickMd(again).includes("## To take it\n\nNothing to record: the buttons' height is already recorded as D-001; the buttons' corner is already recorded as D-002; the fields' corner is already recorded as D-003.\n"));
+  assert.ok(pickMd(again).includes("Taking it would change none of the three sizes a pick can bring."));
+  assert.ok(!pickMd(again).includes("Then resolve"));
+});
+
+test("radii: project-wide and scoped decisions that lack a picked corner are named with the values to add; the optional value in its own section only (WO-20 C, Z6)", () => {
+  const radii = (id, values, screens) => ({ ...corner(id, "radii", values[0]), values, ...(screens ? { scope: { screens } } : {}) });
+  let pick = pickOf("antpro", { decisions: [radii("D-001", [2, 3, 4]), radii("D-002", [2, 4], ["orders"]), radii("D-003", [6, 8], ["billing"])] });
+  assert.deepEqual(pick.radii, [{ id: "D-001", add: [6] }, { id: "D-002", add: [6] }], "the one that holds 6 is not named");
+  assert.deepEqual([pick.rows[1].radii, pick.rows[2].radii], [[{ id: "D-001", add: [6] }, { id: "D-002", add: [6] }], [{ id: "D-001", add: [6] }, { id: "D-002", add: [6] }]]);
+  assert.ok(pickMd(pick).includes("\n\nEvery radii decision holds the recorded corners: add 6 to D-001.values, and 6 to D-002.values before the next resolve, or it refuses the ledger.\n\n"));
+  // Two corners of different values on one decision.
+  pick = pickOf("govuk", { decisions: [radii("D-001", [2, 4])] });
+  assert.deepEqual(pick.radii, [{ id: "D-001", add: [0] }]);
+  pick = pickOf("mui", { decisions: [radii("D-001", [2, 4])], recipe: "developer-platform" });
+  assert.deepEqual(pick.radii, [{ id: "D-001", add: [8] }]);
+  const both = pickOf("antpro", { decisions: [corner("D-001", "fieldRadius", 4), radii("D-002", [2, 4])] });
+  assert.deepEqual(both.radii, [{ id: "D-002", add: [6] }]);
+  // cloudscape: the field corner's 8 under "To take it", the optional 999 in its own section only.
+  pick = pickOf("cloudscape", { decisions: [radii("D-001", [2, 3, 4])] });
+  assert.deepEqual([pick.radii, pick.rows[1].radii], [[{ id: "D-001", add: [8] }], [{ id: "D-001", add: [999] }]]);
+  const md = pickMd(pick);
+  const take = between(md, "## To take it\n", "## Optional");
+  assert.ok(take.includes("Every radii decision holds the recorded corners: add 8 to D-001.values before the next resolve, or it refuses the ledger.") && !take.includes("999 to"), take);
+  assert.ok(md.slice(md.indexOf("## Optional")).includes("\n\nEvery radii decision holds the recorded corners: add 999 to D-001.values before the next resolve, or it refuses the ledger.\n\nPill buttons beside"), "after the placing sentence, before the caution");
+  // The optional value already added by the edits above: no second sentence (Z6).
+  pick = pickOf("antpro", { recipe: "calm-consumer", page: "dashboard", decisions: [radii("D-001", [12, 20])] });
+  assert.deepEqual([pick.rows[1].outcome, pick.rows[1].radii, pick.radii], ["optional", [{ id: "D-001", add: [6] }], [{ id: "D-001", add: [6] }]]);
+  assert.equal(pickMd(pick).split("Every radii decision").length, 2, "one radii sentence");
+  // A radii exception does not count, and a radii decision that holds the corner is not named.
+  assert.deepEqual(pickOf("antpro", { decisions: [radii("D-001", [2, 4, 6])] }).radii, []);
+});
+
+test("it holds: the printed entries, named and placed with the radii edits, resolve and system.css draws them; without the edits the resolve refuses (WO-20 C, Z9)", () => {
+  const root = lockProject("ss-like-holds-");
+  try {
+    const ledgerPath = join(root, ".styleseed/decisions.json");
+    const ledger = (entries) => writeFileSync(ledgerPath, `${JSON.stringify(entries, null, 2)}\n`);
+    const resolveIt = () => spawnSync(process.execPath, [resolver, "--project-root", root, "--from-lock", "STYLESEED.md", "--agent", "claude"], { encoding: "utf8" });
+    const radiiD1 = { ...corner("D-001", "radii", 2), values: [2, 4] };
+    const take = (id, { optional = false } = {}) => {
+      ledger([radiiD1]);
+      const result = cli(root, ["--project-root", ".", "--surface", "pointer", "--like", id, "--json"]);
+      assert.equal(result.status, 0, result.stderr);
+      const pick = JSON.parse(result.stdout);
+      const entries = recordedPick(pick, { optional });
+      const adds = [...pick.radii.flatMap((item) => item.add), ...(optional ? pick.rows.find((row) => row.outcome === "optional").radii.flatMap((item) => item.add) : [])];
+      return { pick, entries, adds };
+    };
+
+    let { pick, entries, adds } = take("antpro");
+    assert.deepEqual(entries.map((entry) => [entry.id, entry.axis]), [["D-002", "controlHeights"], ["D-003", "controlRadius"], ["D-004", "fieldRadius"]]);
+    assert.deepEqual(pick.radii, [{ id: "D-001", add: [6] }]);
+    ledger([radiiD1, ...entries]);
+    let result = resolveIt();
+    assert.equal(result.status, 1, "without the radii edits the resolve refuses");
+    assert.ok(result.stderr.includes(".styleseed/decisions.json: D-001 decides radii 2, 4 without 6, the control corner recorded as D-003; and without 6, the field corner recorded as D-004; add 6 to D-001.values. Every radii decision, scoped or not, holds the recorded corners; an exception on radii does not count"), result.stderr);
+    ledger([{ ...radiiD1, values: numericSet([...radiiD1.values, ...adds]) }, ...entries]);
+    result = resolveIt();
+    assert.equal(result.status, 0, result.stderr);
+    let css = readFileSync(join(root, ".styleseed/system.css"), "utf8");
+    for (const line of ["  --ss-control-height: 32px; /* D-002 */", "  --ss-control-radius: 6px; /* D-003 */", "  --ss-field-radius: 6px; /* D-004 */"]) assert.ok(css.includes(`${line}\n`), `${line}\n${css}`);
+
+    ({ pick, entries, adds } = take("cloudscape", { optional: true }));
+    assert.deepEqual(entries.map((entry) => [entry.id, entry.axis]), [["D-002", "controlHeights"], ["D-004", "controlRadius"], ["D-003", "fieldRadius"]], "rows in order; the optional entry takes the id after the others");
+    assert.deepEqual(numericSet(adds), [8, 999], "the edits add 8 and 999");
+    ledger([radiiD1, ...entries]);
+    assert.equal(resolveIt().status, 1, "without the radii edits the resolve refuses");
+    ledger([{ ...radiiD1, values: numericSet([...radiiD1.values, ...adds]) }, ...entries]);
+    result = resolveIt();
+    assert.equal(result.status, 0, result.stderr);
+    css = readFileSync(join(root, ".styleseed/system.css"), "utf8");
+    for (const line of ["  --ss-control-height: 32px; /* D-002 */", "  --ss-control-radius: 999px; /* D-004 */", "  --ss-field-radius: 8px; /* D-003 */"]) assert.ok(css.includes(`${line}\n`), `${line}\n${css}`);
+  } finally { rmSync(root, { recursive: true, force: true }); }
+});
+const numericSet = (values) => [...new Set(values)].sort((a, b) => a - b);
+
+test("the command: each refusal exact, the registry sentence before --artifact is read, --json is what the document is rendered from, the usage (WO-20 C, Z4)", () => {
+  const root = lockProject("ss-like-cli-");
+  const registryRoot = mkdtempSync(join(tmpdir(), "ss-like-registry-"));
+  try {
+    const run = (...args) => cli(root, ["--project-root", ".", "--surface", "pointer", ...args]);
+    const before = files(root);
+    for (const [args, flag] of [[["--write"], "--write"], [["--entry", "controlRadius=8"], "--entry"], [["--default-height", "32"], "--default-height"], [["--engine-defaults"], "--engine-defaults"], [["--reference", "ref-a"], "--reference"], [["--own", OWN_PATH], "--own"], [["--write", "--json"], "--write"]]) {
+      const result = run("--like", "antpro", ...args);
+      assert.equal(result.status, 1, args.join(" "));
+      assert.equal(result.stderr, `--like does not take ${flag}: a pick reads only the project, --surface, and --page.\n`, args.join(" "));
+      assert.equal(result.stdout, "");
+    }
+    let result = run("--like", "carbon");
+    assert.deepEqual([result.status, result.stderr, result.stdout], [1, "--like carbon: not one of the measured systems (cloudscape, patternfly, antpro, shadcn, primer, mui, govuk); see https://styleseed-demo.vercel.app/systems.\n", ""]);
+    result = run("--like", "antpro", "--artifact", "app-settings");
+    assert.deepEqual([result.status, result.stderr], [1, "--like does not take --artifact: a project set up with a lock has no artifacts.\n"]);
+    assert.equal(run("--like", "antpro", "--like", "govuk").stderr, "--like: pass one system\n");
+    assert.match(run("--like").stderr, /^--like needs a value/u);
+    assert.match(cli(root, ["--help"]).stdout, /\n {7}propose-system\.mjs --project-root <dir> --surface pointer\|touch \[--page <id>\] --like <system> \[--json\]\n/u, "the usage names the flag");
+    assert.match(cli(root, ["--help"]).stdout, /\[same inputs\] --default-height <px>\n/u, "the line before it stays");
+
+    // --json is the object the document is rendered from; neither writes a file.
+    result = run("--like", "cloudscape", "--json");
+    assert.equal(result.status, 0, result.stderr);
+    const pick = JSON.parse(result.stdout);
+    const md = run("--like", "cloudscape");
+    assert.equal(md.status, 0, md.stderr);
+    assert.equal(md.stderr, "");
+    assert.equal(md.stdout, renderPickMarkdown(pick, { ledgerAt: ".styleseed/decisions.json", command: "propose-system.mjs --project-root . --surface pointer" }));
+    assert.deepEqual(pick, JSON.parse(JSON.stringify(pickOf("cloudscape"))), "the pick of the same project, made in the test");
+    const withPage = cli(root, ["--project-root", ".", "--surface", "touch", "--page", "dashboard", "--like", "cloudscape"]);
+    assert.ok(withPage.stdout.includes("To record a 44px default with the sizes around it: `propose-system.mjs --project-root . --page dashboard --surface touch --default-height 44`."), withPage.stdout);
+    assert.deepEqual(files(root), before, "--like writes nothing");
+
+    // A registry with two artifacts: the registry sentence, with and without --artifact, before --artifact is asked for.
+    mkdirSync(join(registryRoot, ".styleseed/artifacts"), { recursive: true });
+    mkdirSync(join(registryRoot, "src"), { recursive: true });
+    writeFileSync(join(registryRoot, ".styleseed/project.json"), `${JSON.stringify({
+      schemaVersion: 1, projectId: "like-registry",
+      defaults: { agent: "codex", domain: "saas", adapter: "product-ui", recipe: "enterprise-workbench", palette: "cobalt-instrument", profile: "none", fallback: "operations-console" },
+      brand: { keyColor: "#0F766E", paletteCharacter: "balanced", paletteMode: "light", paletteHarmony: "auto", surfaceTemperature: "cool", fontFamilies: ["Inter"], radius: "soft", elevation: "restrained-shadow", density: "comfortable", motion: { seed: "snap", intensity: "restrained" }, imageryRole: "data-first" },
+    }, null, 2)}\n`);
+    const artifact = (id, page) => ({
+      schemaVersion: 1, id, target: { kind: "route", locator: `/${id}` },
+      selection: { grammar: "operations-console", adapter: null, domain: null, page, recipe: null, palette: null, profile: null, fallback: null },
+      decisions: { primaryDecision: "Which setting needs a change?", primaryAction: "Save settings", signatureMove: "Keep the form stable." },
+      implementation: { sourceRoots: ["src"], tokenFiles: [] },
+      validation: { scoreFloor: 80, requiredRenders: [{ id: "desktop-loaded", state: "loaded", viewport: { width: 1440, height: 1000 } }], temporal: { required: false, scenarios: [] }, humanAcceptance: false },
+    });
+    writeFileSync(join(registryRoot, ".styleseed/artifacts/index.json"), `${JSON.stringify({ schemaVersion: 1, artifacts: [{ id: "app-settings", config: "app-settings.json" }, { id: "app-list", config: "app-list.json" }] }, null, 2)}\n`);
+    writeFileSync(join(registryRoot, ".styleseed/artifacts/app-settings.json"), `${JSON.stringify(artifact("app-settings", "settings"), null, 2)}\n`);
+    writeFileSync(join(registryRoot, ".styleseed/artifacts/app-list.json"), `${JSON.stringify(artifact("app-list", "list"), null, 2)}\n`);
+    assert.equal(spawnSync(process.execPath, [resolver, "--project-root", registryRoot, "--all"], { encoding: "utf8" }).status, 0);
+    const REGISTRY = "`--like` works in a project set up with a lock (`STYLESEED.md`): a registry project does not draw a recorded height or corner.\n";
+    for (const extra of [[], ["--artifact", "app-settings"]]) {
+      result = cli(registryRoot, ["--project-root", ".", "--surface", "pointer", "--like", "antpro", ...extra]);
+      assert.deepEqual([result.status, result.stderr, result.stdout], [1, REGISTRY, ""], extra.join(" "));
+    }
+    assert.match(cli(registryRoot, ["--project-root", ".", "--surface", "pointer"]).stderr, /pass --artifact <id>/u, "without --like the registry asks for --artifact");
+    assert.throws(() => proposePick({ ...pickInput(), project: { ...pickInput().project, mode: "registry" } }, measured, "antpro"), (error) => `${error.message}\n` === REGISTRY);
+    assert.throws(() => pickOf("carbon"), /--like carbon: not one of the measured systems/u);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+    rmSync(registryRoot, { recursive: true, force: true });
+  }
+});
+
+test("the count: only entries whose value differs from what is drawn; a field corner over the skin's counts (WO-20 C, Z1)", () => {
+  let pick = pickOf("govuk", { recipe: "calm-consumer", page: "dashboard" });
+  assert.deepEqual(rowsOf(pick), [["entry", null, 40], ["optional", "stops-being-pill", 0], ["entry", null, 0]]);
+  assert.ok(pickMd(pick).includes("\nTaking it would change one of the three sizes a pick can bring. Nothing was written.\n"));
+  pick = pickOf("patternfly");
+  assert.deepEqual(rowsOf(pick)[0], ["entry", null, 36]);
+  assert.ok(pickMd(pick).includes("\nTaking it would change one of the three sizes a pick can bring. Nothing was written.\n"));
+  assert.ok(pickMd(pickOf("antpro")).includes("\nTaking it would change all three sizes a pick can bring. Nothing was written.\n"));
+  assert.ok(pickMd(pickOf("shadcn")).includes("\nTaking it would change two of the three sizes a pick can bring. Nothing was written.\n"));
+  for (const id of SYSTEM_IDS) assert.ok(!/would change [0-9]/u.test(pickMd(pickOf(id))), `${id}: the count in words`);
+  assert.ok(pickMd(pickOf("primer", { surface: "touch" })).includes("\nTaking it would change one of the three sizes a pick can bring."), "primer on touch: the control corner alone");
+});
+
+test("Part S names the system a recorded value was taken from, only for the exact source, a date, this row's claim, and the reading (WO-20 C5, W3)", () => {
+  const SENTENCE = " From StyleSeed's reading of Ant Design Pro, run 2026-11-16 (https://styleseed-demo.vercel.app/systems#antpro).";
+  const taken = recordedPick(pickOf("antpro"));
+  let p = proposeSystem(pickInput({ decisions: taken }));
+  assert.equal(p.system.heightRow, "H1");
+  assert.deepEqual(p.system.rows.slice(0, 3).map((row) => row.from), [
+    `${SYSTEM_CSS_DRAWS("D-001", "the brand recipe's 36px")}${SENTENCE}`,
+    `${SYSTEM_CSS_DRAWS("D-002", "the brand recipe's 3px")}${SENTENCE}`,
+    `${SYSTEM_CSS_DRAWS("D-003", "the skin's corner")}${SENTENCE}`,
+  ]);
+  assert.ok(mdOf(p).includes(`| Corner of inputs, selects, and textareas | 6px | ${SYSTEM_CSS_DRAWS("D-003", "the skin's corner")}${SENTENCE} |`));
+  assert.ok(!BANNED.test(mdOf(p)));
+  // Without the file, the same ledger gives today's rows.
+  const without = proposeSystem(pickInput({ decisions: taken, withMeasured: false }));
+  assert.deepEqual(without.system.rows.slice(0, 3).map((row) => row.from), [SYSTEM_CSS_DRAWS("D-001", "the brand recipe's 36px"), SYSTEM_CSS_DRAWS("D-002", "the brand recipe's 3px"), SYSTEM_CSS_DRAWS("D-003", "the skin's corner")]);
+  assert.equal(JSON.stringify(proposeSystem(pickInput({ decisions: taken })).axes), JSON.stringify(without.axes), "only the rows' text differs");
+
+  const fromOf = (decisions, key) => proposeSystem(pickInput({ decisions })).system.rows.find((row) => row.key === key).from;
+  const control = (value, source) => ({ ...corner("D-001", "controlRadius", value), source });
+  for (const [label, entry] of [
+    ["a run that is not a date", control(6, "system:antpro@latest#button.radius")],
+    ["typed text as the run", control(6, "system:antpro@by our design panel#button.radius")],
+    ["an unknown id", control(6, "system:carbon@2026-11-16#button.radius")],
+    ["another row's claim", control(6, "system:antpro@2026-11-16#field.radius")],
+    ["a value edited by hand", control(7, "system:antpro@2026-11-16#button.radius")],
+    ["a prefix", control(6, "x system:antpro@2026-11-16#button.radius")],
+    ["no source", corner("D-001", "controlRadius", 6)],
+  ]) {
+    const from = fromOf([entry], "controlRadius");
+    assert.ok(!from.includes("From StyleSeed"), `${label}: ${from}`);
+    assert.ok(!from.includes("panel") && !from.includes("carbon"), label);
+  }
+  assert.ok(fromOf([control(7, "system:antpro@2026-11-12#button.radius")], "controlRadius").endsWith(" From StyleSeed's reading of Ant Design Pro, run 2026-11-12 (https://styleseed-demo.vercel.app/systems#antpro)."), "another run: the run it names, the value not compared");
+  assert.ok(fromOf([{ ...corner("D-001", "fieldRadius", 8), source: "system:cloudscape@2026-11-16#field.radius" }], "fieldRadius").endsWith(" From StyleSeed's reading of AWS Cloudscape, run 2026-11-16 (https://styleseed-demo.vercel.app/systems#cloudscape)."));
+  // The height: H1 only.
+  const h1 = handHeights(familyOf(32), "default-height:32; system:antpro@2026-11-16#button.height");
+  assert.ok(fromOf([h1], "controlHeight").endsWith(SENTENCE));
+  assert.ok(!fromOf([handHeights(familyOf(36), "default-height:36; system:antpro@2026-11-16#button.height")], "controlHeight").includes("From StyleSeed"), "a height edited by hand");
+  const h4 = handHeights([32], "system:antpro@2026-11-16#button.height");
+  assert.equal(proposeSystem(pickInput({ decisions: [h4] })).system.heightRow, "H4");
+  assert.ok(!fromOf([h4], "controlHeight").includes("From StyleSeed"), "a height row that is not H1");
+  const h4token = handHeights(familyOf(32), "default-height:30; system:antpro@2026-11-16#button.height");
+  assert.ok(!fromOf([h4token], "controlHeight").includes("From StyleSeed"), "a token the values do not hold: H4");
+
+  // With the file and no such entry, the proposal is today's, object and Markdown.
+  for (const recipe of [...LOOKS, "unknown-recipe"]) for (const surface of ["pointer", "touch"]) for (const decisions of [[], [recorded(printedHeight(32))], [corner("D-001", "controlRadius", 999), corner("D-002", "fieldRadius", 8)], [handHeights([32, 36])]]) {
+    const withFile = proposeSystem(pickInput({ recipe, surface, decisions }));
+    const plain = proposeSystem(pickInput({ recipe, surface, decisions, withMeasured: false }));
+    assert.equal(JSON.stringify(withFile), JSON.stringify(plain), `${recipe} ${surface}`);
+    assert.equal(mdOf(withFile), mdOf(plain));
+  }
+});
+
+test("the corner builder: without a basis it is the --entry entry; with one, the statement and source as given; the bounds (WO-20 C2)", () => {
+  const proposal = sys();
+  for (const axis of ["controlRadius", "fieldRadius"]) for (const value of [0, 8, 999]) assert.deepEqual(cornerEntry(axis, value), entryForValues(proposal, axis, [value]), `${axis} ${value}`);
+  assert.deepEqual(cornerEntry("fieldRadius", 8, { basis: { words: "8px corners on 4 of 4 screens of Example System (run 2026-11-16)", source: "system:example-system@2026-11-16#field.radius" } }), { kind: "decision", axis: "fieldRadius", values: [8], statement: "Inputs, selects, and textareas use an 8px corner. Basis: 8px corners on 4 of 4 screens of Example System (run 2026-11-16).", approvedBy: "", date: "", source: "system:example-system@2026-11-16#field.radius" });
+  assert.throws(() => cornerEntry("controlRadius", 8, { basis: { words: "x" } }), /corner basis: pass \{words, source\}, each one line of text/u);
+  assert.throws(() => cornerEntry("controlRadius", 8, { basis: { words: "two\nlines", source: "s" } }), /corner basis: pass \{words, source\}/u);
+  assert.throws(() => cornerEntry("controlRadius", 8, { basis: { words: "w".repeat(260), source: "s" } }), /corner basis: the statement is \d+ characters; a ledger statement holds at most 300/u);
+  assert.throws(() => cornerEntry("controlRadius", 250), /--entry controlRadius: give exactly one whole number from 0 to 200, or 999 for a pill/u);
+  assert.throws(() => cornerEntry("radii", 8), /corner entry: radii is not a corner axis \(controlRadius, fieldRadius\)/u);
+});
+
+test("the texts of a pick: proposals.md, decisions.md, and the resolve workflow name it; setup and ss-tokens do not yet (WO-20 C6)", () => {
+  const flat = (text) => text.replace(/\s+/gu, " ");
+  const proposals = doc("ss-resolve/references/proposals.md");
+  assert.ok(proposals.indexOf("\n## The system first\n") < proposals.indexOf("\n## A pick from a measured system\n") && proposals.indexOf("\n## A pick from a measured system\n") < proposals.indexOf("\n## Basis order\n"), "the new section follows \"The system first\"");
+  const pickSection = section(proposals, "## A pick from a measured system");
+  for (const words of ["--like <system>", "Nothing is written", "table row height and menu item height", "never changes whether buttons are pills unless the person asks", "never mixed in one sentence", "a registry project does not draw a recorded height or corner", "`--engine-defaults`, `--reference`, `--own`, and `--artifact`"]) assert.ok(flat(pickSection).includes(words), words);
+  assert.ok(!BANNED.test(pickSection), pickSection.match(BANNED)?.[0]);
+  assert.ok(flat(proposals).includes("It holds no per-system value and nothing from the measured pages' text. The readings of the systems of the page are in a second file, `measured-systems.json`, written by the page's generator; `--like` reads it."));
+  assert.ok(flat(proposals).includes("`--like` hands it a basis of its own") && !proposals.includes("later caller"));
+  assert.ok(!flat(proposals).includes("the tool never proposes"), "line 163 corrected");
+  assert.ok(flat(doc("ss-resolve/references/decisions.md")).includes("An entry from `propose-system.mjs --like` reads `system:<id>@<run>#<claim>`"));
+  const resolveWorkflow = doc("ss-resolve/WORKFLOW.md");
+  const proposing = resolveWorkflow.slice(resolveWorkflow.indexOf("To propose the values a person may record"), resolveWorkflow.indexOf("\n\n", resolveWorkflow.indexOf("To propose the values a person may record")));
+  assert.ok(flat(proposing).includes("With `--like <system>` it prints, for one of the design systems on the page of measured systems, what taking it would change"), proposing);
+  assert.ok(!resolveWorkflow.includes("--entry"), "the workflow names no --entry");
+  const setup = doc("ss-setup/WORKFLOW.md");
+  for (const [name, text] of [["ss-setup 9a", section(setup, "### 9a. Propose the system values and record what the person decides")], ["ss-tokens propose", section(doc("ss-tokens/WORKFLOW.md"), "### `propose` — sizes, radii, and spacing with their basis")]]) assert.ok(!text.includes("--like") && !text.includes("measured-systems"), `${name}: setup does not offer a pick until Part D`);
 });

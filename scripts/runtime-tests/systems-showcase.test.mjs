@@ -5,7 +5,9 @@ import { mkdirSync, mkdtempSync, readFileSync, rmSync, unlinkSync, writeFileSync
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { CLAIMS, OUT_PATH, SOURCE_PATH, buildSystemsShowcase, loadInputs, serialize, shapeOf } from "../build-systems-showcase.mjs";
+import { CLAIMS, HEIGHT_STEP, OUT_PATH, PICK_PATH, SOURCE_PATH, buildSystemsShowcase, loadInputs, pickFileOf, serialize, shapeOf } from "../build-systems-showcase.mjs";
+import { px4 } from "../lib/consensus.mjs";
+import { MEASURED_CLAIMS, normalizeMeasuredSystems } from "../../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/system-proposal.mjs";
 
 const repoRoot = resolve(fileURLToPath(new URL("../../", import.meta.url)));
 const script = join(repoRoot, "scripts/build-systems-showcase.mjs");
@@ -160,8 +162,120 @@ for (const [name, mutate, message] of THROWS) {
       assert.equal(result.status, 1, `${name}: exit 1`);
       assert.ok(result.stderr.startsWith(`systems showcase: ${message}`), `${name}: stderr was\n${result.stderr}`);
       assert.throws(() => readFileSync(join(root, OUT_PATH)), /ENOENT/u, `${name}: nothing written`);
+      assert.throws(() => readFileSync(join(root, PICK_PATH)), /ENOENT/u, `${name}: no skill file written`);
     } finally { rmSync(root, { recursive: true, force: true }); }
     assert.throws(() => buildSystemsShowcase((() => { const f = inputs(); mutate(f); return f; })()), (error) => error.message.startsWith(message));
   });
 }
+
+// --- the skill's measured-systems.json (WO-20 C1) ------------------------------------------------------------------
+
+const committedPick = () => readFileSync(join(repoRoot, PICK_PATH), "utf8");
+
+test("the committed measured-systems.json is what pickFileOf gives for the committed build; systems.json is untouched by it", () => {
+  const showcase = buildSystemsShowcase(loadInputs(repoRoot));
+  const before = serialize(showcase);
+  assert.equal(committedPick(), serialize(pickFileOf(showcase)));
+  assert.equal(serialize(showcase), before, "pickFileOf does not change the page's object");
+  assert.equal(readFileSync(join(repoRoot, OUT_PATH), "utf8"), before, "systems.json is still what the generator writes for the page");
+  assert.equal(PICK_PATH, "engine/.claude/skills/styleseed/workflows/ss-resolve/references/measured-systems.json");
+});
+
+test("measured-systems.json holds only the listed keys: no text, no address; the systems and readings in the page's order", () => {
+  const text = committedPick();
+  const file = JSON.parse(text);
+  assert.deepEqual(Object.keys(file), ["schemaVersion", "run", "heightStep", "systems"]);
+  assert.deepEqual([file.schemaVersion, file.run, file.heightStep], [1, RUN, 4]);
+  assert.deepEqual(file.systems.map((system) => system.id), Object.keys(TABLE), "the page's order");
+  for (const system of file.systems) {
+    assert.deepEqual(Object.keys(system), ["id", "name", "screens", "readings"], system.id);
+    assert.deepEqual(Object.keys(system.readings), [...CLAIMS], `${system.id}: CLAIMS order`);
+    const [screens, ...cells] = TABLE[system.id];
+    assert.equal(system.screens, screens, system.id);
+    CLAIMS.forEach((claim, index) => {
+      assert.deepEqual(Object.keys(system.readings[claim]), ["value", "eligible", "holding"], `${system.id} ${claim}`);
+      const [value, eligible, holding] = cells[index];
+      assert.deepEqual(system.readings[claim], { value, eligible, holding }, `${system.id} ${claim}: the page's reading unchanged`);
+    });
+  }
+  assert.ok(!text.includes("://"), "no address");
+  for (const key of ["summary", "shape", "exampleUrl", "repository", "licence", "commit", "kind", "access", "pageTypes", "partly"]) assert.ok(!text.includes(`"${key}"`), `no ${key}`);
+  const source = readJson(SOURCE_PATH);
+  for (const entry of source.systems) assert.ok(!text.includes(entry.summary), `${entry.id}: no summary text`);
+  assert.deepEqual([...MEASURED_CLAIMS], [...CLAIMS], "the skill reads the claims the page's generator writes, in its order");
+  assert.deepEqual(normalizeMeasuredSystems(file), file, "the committed file passes the skill's normaliser unchanged");
+});
+
+test("heightStep is the study's rounding: px4 equals rounding to heightStep for every whole px from 0 to 200, and every height is a multiple", () => {
+  const file = JSON.parse(committedPick());
+  assert.equal(HEIGHT_STEP, 4);
+  assert.equal(file.heightStep, HEIGHT_STEP);
+  for (let v = 0; v <= 200; v += 1) assert.equal(px4(v), Math.round(v / file.heightStep) * file.heightStep, `px4(${v})`);
+  let heights = 0;
+  for (const system of file.systems) for (const claim of ["button.height", "field.height", "table.bodyRowHeight", "nav.itemHeight"]) {
+    const { value } = system.readings[claim];
+    if (typeof value !== "number") continue;
+    heights += 1;
+    assert.equal(value % file.heightStep, 0, `${system.id} ${claim}: ${value}`);
+  }
+  assert.equal(heights, 19, "the numeric heights of TABLE");
+});
+
+test("--check names the stale file, for each of the two; a --root without the skill's folder gets it", () => {
+  const root = makeRoot();
+  try {
+    assert.equal(cli(root).status, 0);
+    const pickFile = join(root, PICK_PATH);
+    const first = readFileSync(pickFile, "utf8");
+    assert.equal(first, committedPick(), "the temporary root writes the committed bytes");
+    assert.equal(cli(root, "--check").status, 0);
+    const edited = JSON.parse(first);
+    edited.systems[0].readings["field.radius"].value = 6;
+    writeFileSync(pickFile, serialize(edited));
+    let result = cli(root, "--check");
+    assert.equal(result.status, 1);
+    assert.equal(result.stderr, `systems showcase: ${PICK_PATH} is out of date; run node scripts/build-systems-showcase.mjs\n`);
+    assert.equal(readFileSync(pickFile, "utf8"), serialize(edited), "--check leaves it as it is");
+    assert.equal(cli(root).status, 0);
+    assert.equal(readFileSync(pickFile, "utf8"), first, "the generator rewrites it");
+    const out = join(root, OUT_PATH);
+    writeFileSync(out, `${readFileSync(out, "utf8")} `);
+    result = cli(root, "--check");
+    assert.equal(result.stderr, `systems showcase: ${OUT_PATH} is out of date; run node scripts/build-systems-showcase.mjs\n`);
+    writeFileSync(pickFile, "{}\n");
+    result = cli(root, "--check");
+    assert.equal(result.stderr, `systems showcase: ${OUT_PATH} and ${PICK_PATH} are out of date; run node scripts/build-systems-showcase.mjs\n`);
+  } finally { rmSync(root, { recursive: true, force: true }); }
+});
+
+test("the normaliser refuses what no entry can hold, with the file, the field, and the rebuild hint", () => {
+  const good = () => JSON.parse(committedPick());
+  const at = (file, id) => file.systems.find((system) => system.id === id);
+  const refusals = [
+    ["an unknown key", (f) => { f.summary = "text"; }, /measured-systems\.json: file: unknown key\(s\) summary; rebuild with `node scripts\/build-systems-showcase\.mjs`, or reinstall the skill/u],
+    ["an unknown key in a system", (f) => { f.systems[0].exampleUrl = "x"; }, /systems\[0\]: unknown key\(s\) exampleUrl/u],
+    ["another schemaVersion", (f) => { f.schemaVersion = 2; }, /schemaVersion: is 2, newer than this proposer reads \(1\)/u],
+    ["a number with holding: null", (f) => { at(f, "cloudscape").readings["button.height"].holding = null; }, /systems\[0\]\.readings\.button\.height\.holding: must be a count of at most eligible/u],
+    ["holding > eligible", (f) => { at(f, "antpro").readings["button.radius"].holding = 8; }, /systems\[2\]\.readings\.button\.radius\.holding: must be a count of at most eligible/u],
+    ["\"mixed\" with a count", (f) => { at(f, "shadcn").readings["button.height"].holding = 2; }, /systems\[3\]\.readings\.button\.height\.holding: must be null when the value is "mixed"/u],
+    ["null with a count", (f) => { at(f, "primer").readings["field.height"].holding = 0; }, /systems\[4\]\.readings\.field\.height\.holding: must be null when the value is null/u],
+    ["a height of 37.5", (f) => { at(f, "patternfly").readings["button.height"].value = 37.5; }, /systems\[1\]\.readings\.button\.height\.value: must be a whole multiple of heightStep \(4\), at least 4/u],
+    ["a height off the step", (f) => { at(f, "patternfly").readings["field.height"].value = 37; }, /systems\[1\]\.readings\.field\.height\.value: must be a whole multiple of heightStep/u],
+    ["a corner of 250", (f) => { at(f, "govuk").readings["field.radius"].value = 250; }, /systems\[6\]\.readings\.field\.radius\.value: must be a whole number from 0 to 200, or 999 for a pill/u],
+    ["a name with |", (f) => { at(f, "mui").name = "MUI | templates"; }, /systems\[5\]\.name: must be one line of at most 80 characters without \| or a backtick/u],
+    ["a name with a backtick", (f) => { at(f, "mui").name = "MUI `templates`"; }, /systems\[5\]\.name: must be one line/u],
+    ["two systems with one id", (f) => { f.systems[1].id = "cloudscape"; }, /systems\[1\]\.id: "cloudscape" is listed twice; each system is listed once/u],
+    ["an id with a capital", (f) => { f.systems[0].id = "Cloudscape"; }, /systems\[0\]\.id: must be a system id/u],
+    ["a run that is not a date", (f) => { f.run = "latest"; }, /run: must be the run's date \(YYYY-MM-DD\)/u],
+    ["a heightStep of 0", (f) => { f.heightStep = 0; }, /heightStep: must be a whole number of at least 1/u],
+    ["a reading left out", (f) => { delete at(f, "cloudscape").readings["nav.itemHeight"]; }, /systems\[0\]\.readings: missing nav\.itemHeight/u],
+    ["a value that is text", (f) => { at(f, "cloudscape").readings["button.radius"].value = "pill"; }, /button\.radius\.value: must be a number, "mixed", or null/u],
+  ];
+  for (const [name, mutate, pattern] of refusals) {
+    const file = good();
+    mutate(file);
+    assert.throws(() => normalizeMeasuredSystems(file), pattern, name);
+  }
+  assert.doesNotThrow(() => normalizeMeasuredSystems(good()));
+});
 

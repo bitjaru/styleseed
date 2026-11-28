@@ -1,0 +1,266 @@
+{
+  "schemaVersion": 1,
+  "run": "2026-11-16",
+  "heightStep": 4,
+  "systems": [
+    {
+      "id": "cloudscape",
+      "name": "AWS Cloudscape",
+      "screens": 8,
+      "readings": {
+        "button.height": {
+          "value": 32,
+          "eligible": 8,
+          "holding": 8
+        },
+        "field.height": {
+          "value": 32,
+          "eligible": 4,
+          "holding": 4
+        },
+        "button.radius": {
+          "value": 999,
+          "eligible": 8,
+          "holding": 8
+        },
+        "field.radius": {
+          "value": 8,
+          "eligible": 4,
+          "holding": 4
+        },
+        "table.bodyRowHeight": {
+          "value": 40,
+          "eligible": 4,
+          "holding": 3
+        },
+        "nav.itemHeight": {
+          "value": 28,
+          "eligible": 6,
+          "holding": 6
+        }
+      }
+    },
+    {
+      "id": "patternfly",
+      "name": "Red Hat PatternFly",
+      "screens": 7,
+      "readings": {
+        "button.height": {
+          "value": 36,
+          "eligible": 7,
+          "holding": 7
+        },
+        "field.height": {
+          "value": 36,
+          "eligible": 4,
+          "holding": 4
+        },
+        "button.radius": {
+          "value": 999,
+          "eligible": 7,
+          "holding": 5
+        },
+        "field.radius": {
+          "value": 6,
+          "eligible": 4,
+          "holding": 4
+        },
+        "table.bodyRowHeight": {
+          "value": "mixed",
+          "eligible": 2,
+          "holding": null
+        },
+        "nav.itemHeight": {
+          "value": 36,
+          "eligible": 7,
+          "holding": 7
+        }
+      }
+    },
+    {
+      "id": "antpro",
+      "name": "Ant Design Pro",
+      "screens": 10,
+      "readings": {
+        "button.height": {
+          "value": 32,
+          "eligible": 7,
+          "holding": 6
+        },
+        "field.height": {
+          "value": 32,
+          "eligible": 6,
+          "holding": 6
+        },
+        "button.radius": {
+          "value": 6,
+          "eligible": 7,
+          "holding": 6
+        },
+        "field.radius": {
+          "value": 6,
+          "eligible": 6,
+          "holding": 5
+        },
+        "table.bodyRowHeight": {
+          "value": 48,
+          "eligible": 5,
+          "holding": 3
+        },
+        "nav.itemHeight": {
+          "value": 40,
+          "eligible": 10,
+          "holding": 10
+        }
+      }
+    },
+    {
+      "id": "shadcn",
+      "name": "shadcn/ui",
+      "screens": 2,
+      "readings": {
+        "button.height": {
+          "value": "mixed",
+          "eligible": 2,
+          "holding": null
+        },
+        "field.height": {
+          "value": "mixed",
+          "eligible": 2,
+          "holding": null
+        },
+        "button.radius": {
+          "value": 8,
+          "eligible": 2,
+          "holding": 2
+        },
+        "field.radius": {
+          "value": 8,
+          "eligible": 2,
+          "holding": 2
+        },
+        "table.bodyRowHeight": {
+          "value": 52,
+          "eligible": 1,
+          "holding": 1
+        },
+        "nav.itemHeight": {
+          "value": 32,
+          "eligible": 1,
+          "holding": 1
+        }
+      }
+    },
+    {
+      "id": "primer",
+      "name": "GitHub Primer",
+      "screens": 3,
+      "readings": {
+        "button.height": {
+          "value": 32,
+          "eligible": 1,
+          "holding": 1
+        },
+        "field.height": {
+          "value": null,
+          "eligible": 0,
+          "holding": null
+        },
+        "button.radius": {
+          "value": 6,
+          "eligible": 1,
+          "holding": 1
+        },
+        "field.radius": {
+          "value": null,
+          "eligible": 0,
+          "holding": null
+        },
+        "table.bodyRowHeight": {
+          "value": null,
+          "eligible": 0,
+          "holding": null
+        },
+        "nav.itemHeight": {
+          "value": null,
+          "eligible": 0,
+          "holding": null
+        }
+      }
+    },
+    {
+      "id": "mui",
+      "name": "MUI templates",
+      "screens": 5,
+      "readings": {
+        "button.height": {
+          "value": 40,
+          "eligible": 5,
+          "holding": 4
+        },
+        "field.height": {
+          "value": "mixed",
+          "eligible": 5,
+          "holding": null
+        },
+        "button.radius": {
+          "value": 8,
+          "eligible": 5,
+          "holding": 5
+        },
+        "field.radius": {
+          "value": 8,
+          "eligible": 5,
+          "holding": 3
+        },
+        "table.bodyRowHeight": {
+          "value": "mixed",
+          "eligible": 2,
+          "holding": null
+        },
+        "nav.itemHeight": {
+          "value": 32,
+          "eligible": 2,
+          "holding": 2
+        }
+      }
+    },
+    {
+      "id": "govuk",
+      "name": "GOV.UK Frontend",
+      "screens": 8,
+      "readings": {
+        "button.height": {
+          "value": 40,
+          "eligible": 8,
+          "holding": 8
+        },
+        "field.height": {
+          "value": 40,
+          "eligible": 4,
+          "holding": 4
+        },
+        "button.radius": {
+          "value": 0,
+          "eligible": 8,
+          "holding": 8
+        },
+        "field.radius": {
+          "value": 0,
+          "eligible": 4,
+          "holding": 4
+        },
+        "table.bodyRowHeight": {
+          "value": 48,
+          "eligible": 1,
+          "holding": 1
+        },
+        "nav.itemHeight": {
+          "value": null,
+          "eligible": 0,
+          "holding": null
+        }
+      }
+    }
+  ]
+}

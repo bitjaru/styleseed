@@ -45,7 +45,9 @@ type sizes, corner radius, table row height, and spacing unit it gives a value a
 project's recorded decision, the person's own measurement, counts over the measured design systems that ship with
 this skill, and the engine default, labelled not measured. Its `SYSTEM.md` opens with the system the project starts
 with: one table of what the shipped components draw with the project's look and what its ledger records, then one
-entry to take it or the reason there is none. It writes no ledger and no name. See
+entry to take it or the reason there is none. With `--like <system>` it prints, for one of the design systems on the
+page of measured systems, what taking it would change (the default control height and the two corners), what each
+change rests on, and the entries that record it. It writes no ledger and no name. See
 [system proposals](references/proposals.md).
 
 For spacing recommendations and scoped control, see the [spatial roles guide](references/spacing.md).

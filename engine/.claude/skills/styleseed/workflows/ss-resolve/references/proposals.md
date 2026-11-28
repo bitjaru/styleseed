@@ -64,8 +64,14 @@ node <installed-ss-resolve>/scripts/propose-system.mjs --project-root . --surfac
 
 `--like <system>` takes the id of one of the design systems on the page of measured systems
 (`https://styleseed-demo.vercel.app/systems`) and prints what starting from it would change in this project, what
-each change rests on, what stays, and the ledger entries that record it. Nothing is written; `--json` prints the
-same pick as an object. It reads `references/measured-systems.json` (below), the project's ledger, and its look.
+each change rests on, what stays, and the ledger entries that record it. Nothing is recorded. Nothing is written
+either, unless `--draw` is passed: it writes one file, `.styleseed/proposals/pick-<system>.html`, a page with no
+script and no outside resource that draws a field and two buttons at the sizes the project draws now and at the sizes
+it would draw with the system (and, when the buttons' shape is under "Optional", a third panel with that corner); a
+field corner the project does not record is drawn at 6px and captioned as the theme's corner. The document's opening
+then names the file where it otherwise says "Nothing was written". `--json` prints the same pick as an object; with
+`--draw` the object also holds the drawing's path, under `drawing`. It reads `references/measured-systems.json`
+(below), the project's ledger, and its look.
 
 A pick can bring three sizes: the default control height (the system's button height; its field height is printed
 beside it), the corner of buttons and of the controls that share it, and the corner of inputs, selects, and
@@ -89,8 +95,8 @@ A pick reads the page's run, where a reading counts the screens of one system; b
 evidence pack's run and counts systems on one page type. The two are never mixed in one sentence. Once the entries
 are recorded, each row of the first section of `SYSTEM.md` that a pick brought names the system and its run.
 
-`--like` takes `--surface`, `--page`, and `--json`, and refuses `--write`, `--entry`, `--default-height`,
-`--engine-defaults`, `--reference`, `--own`, and `--artifact`. It works only in a project set up with a lock
+`--like` takes `--surface`, `--page`, `--draw`, and `--json`, and refuses `--write`, `--entry`, `--default-height`,
+`--engine-defaults`, `--reference`, `--own`, and `--artifact`; `--draw` is refused without `--like`. It works only in a project set up with a lock
 (`STYLESEED.md`): a registry project does not draw a recorded height or corner. An id that is not in the file is
 refused with the list of ids.
 

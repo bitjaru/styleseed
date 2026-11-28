@@ -98,10 +98,10 @@
     "steps": [
       "Say what the product is and who uses it: a consumer service, an admin console, a developer tool.",
       "Look at how public design systems draw buttons, fields, and tables, and notice which is closest to what you want.",
-      "Ask your agent to propose a starting system, look at one rendered screen, and say in your own words what to change."
+      "Ask your agent to propose a starting system, look at the sizes drawn side by side, and say in your own words what to change."
     ],
-    "prompt": "Set up a design system for this product. Tell me which look you recommend and where that recommendation comes from, show me one screen drawn with it, and wait for my decision before you build more.",
-    "fit": "StyleSeed’s setup recommends one of its built-in looks for the kind of product and says that this is its own default, not a measured value. For control height and text size it shows counts from public design systems where it has them; its other sizes are its own defaults and are labelled so. Choosing one of the measured systems and applying its values is not built yet.",
+    "prompt": "Set up a design system for this product. Tell me which look you recommend and where that recommendation comes from, show me the sizes it would change, drawn, and wait for my decision before you build more.",
+    "fit": "StyleSeed’s setup recommends one of its built-in looks for the kind of product and says that this is its own default, not a measured value. For control height and text size it shows counts from public design systems where it has them; its other sizes are its own defaults and are labelled so. Setup can take the button height and the button and field corners from one of the measured systems: it draws them and asks before recording them.",
     "evidence": {
       "href": "/systems",
       "label": "Compare the measured design systems"

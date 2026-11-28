@@ -30,7 +30,7 @@ const defaults = readJson('engine/.claude/skills/styleseed/workflows/ss-resolve/
 const LABELS = [['button.height', 'Button height', false], ['field.height', 'Field height', false], ['button.radius', 'Button corner', true], ['field.radius', 'Field corner', true], ['table.bodyRowHeight', 'Table row', false], ['nav.itemHeight', 'Menu item', false]];
 const KIND = { 'product-system': 'Built by an organisation for its own products or services', kit: 'Published for other teams to build with' };
 const DEFAULT_ROWS = [['calm-consumer', "StyleSeed's own default. Not measured."], ['native-mobile', "StyleSeed's own values for a phone-first app, when someone picks them. Not measured."]];
-const SMALL_PRINT = ['This page is for looking.', 'Setup does not take a system from here yet.', 'Heights are rounded to the nearest 4px.', 'Not affiliated with or endorsed by any of the projects shown.'];
+const SMALL_PRINT = ['Setup can take the button height and the button and field corners from one of these systems: it draws them first and asks.', 'Table rows and menu items are shown here and not taken.', 'Heights are rounded to the nearest 4px.', 'Not affiliated with or endorsed by any of the projects shown.'];
 const FORBIDDEN = ['recipe', 'kit', 'well-made', 'best', 'official'];
 
 const value = (reading, corner) => reading.value === null ? 'not measured' : reading.value === 'mixed' ? 'no single value'

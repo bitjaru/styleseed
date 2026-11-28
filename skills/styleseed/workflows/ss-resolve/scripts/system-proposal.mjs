@@ -8,7 +8,8 @@
 // states what was measured, on how many systems of which kind, and leaves the value to the person. Nothing is
 // scored, nothing gates, and no entry it prints compiles: `approvedBy` and `date` stay empty until the
 // person who decides puts their name on it. A pick (WO-20 C, proposePick) reads one of the measured systems of the
-// page from measured-systems.json and prints what taking it would change, with the entries that record it.
+// page from measured-systems.json and prints what taking it would change, with the entries that record it; its
+// drawing (WO-20 D, pickDrawing) shows the sizes now and with the system side by side.
 // Pure: no I/O, no clock; the same input gives the same bytes.
 import { FACT_LEDGER, isApproved, proposeDecisions } from "./reference-contract.mjs";
 import { defaultHeightSource, parseDefaultHeight } from "./runtime-contract.mjs";
@@ -1261,10 +1262,12 @@ export function proposePick(input, measured, id) {
  * The pick as a document: what taking the system would change, what stays, and the entries that record it. Read from
  * the pick and the two options alone; none of the words the wording test bans; no possessive of the system's name.
  * @param {object} pick from proposePick
- * @param {{ledgerAt?: string, command?: string}} [options] the ledger's path as the placing sentences name it, and the
- *   command prefix printed before `--default-height` (propose-system.mjs passes the one that carries `--page`)
+ * @param {{ledgerAt?: string, command?: string, drawing?: string|null}} [options] the ledger's path as the placing
+ *   sentences name it, the command prefix printed before `--default-height` (propose-system.mjs passes the one that
+ *   carries `--page`), and the project-relative path of the drawing `--draw` wrote (WO-20 D), which replaces
+ *   "Nothing was written." with the sentence that names it
  */
-export function renderPickMarkdown(pick, { ledgerAt = ".styleseed/decisions.json", command = `propose-system.mjs --project-root . --surface ${pick.surface}` } = {}) {
+export function renderPickMarkdown(pick, { ledgerAt = ".styleseed/decisions.json", command = `propose-system.mjs --project-root . --surface ${pick.surface}`, drawing = null } = {}) {
   const { name } = pick.system;
   const look = pick.look.recipe ? `the brand recipe \`${pick.look.recipe}\`` : "StyleSeed's default look";
   const cornerValue = (value) => (value === PILL ? "pills" : value === 0 ? "square" : `${value}px`);
@@ -1282,7 +1285,7 @@ export function renderPickMarkdown(pick, { ledgerAt = ".styleseed/decisions.json
 
   out.push(`# Starting from ${name}`, "");
   out.push(`${name} is one of ${pick.count} public design systems StyleSeed measured on ${pick.system.run}, on ${pick.system.screens} of its published demo screens. The readings are StyleSeed's own; StyleSeed is not affiliated with ${name}.`);
-  out.push(`Taking it would change ${changed === 0 ? "none of the three" : changed === 1 ? "one of the three" : changed === 2 ? "two of the three" : "all three"} sizes a pick can bring. Nothing was written.`);
+  out.push(`Taking it would change ${changed === 0 ? "none of the three" : changed === 1 ? "one of the three" : changed === 2 ? "two of the three" : "all three"} sizes a pick can bring. ${drawing === null ? "Nothing was written." : `Nothing was recorded; the drawing is at \`${drawing}\`.`}`);
   out.push(`Every reading, screen by screen: ${pick.system.page}`, "");
 
   const nowText = (row) => {
@@ -1360,6 +1363,101 @@ export function renderPickMarkdown(pick, { ledgerAt = ".styleseed/decisions.json
     if (!entries.length) out.push(resolveSentence, "");
   }
   return out.join("\n");
+}
+
+// --- the drawing of a pick (WO-20 D) ---------------------------------------------------------------------------
+
+// A corner the proposer does not know is drawn at 6px: a field whose corner the project does not record takes the
+// skin's corner, and the proposer does not know the project's theme (6px is Tailwind's `rounded-md`, the corner of
+// four of the seven skins); a control corner that is not a plain number in the recipe values is drawn the same way.
+// The caption says so in both cases.
+export const DRAWN_UNKNOWN_CORNER = 6;
+
+/**
+ * The drawing `propose-system.mjs --like <id> --draw` writes, as data: one panel for what the project draws now, one
+ * for what it would draw with the system (the reading of a row whose outcome is `entry`, what it draws now for every
+ * other outcome), and, only when the control corner is `optional`, a third with the optional entry's corner. Each
+ * panel holds the px it is drawn at and its caption. Read from the pick alone; renderPickDrawing renders it.
+ * @param {object} pick from proposePick
+ * @returns {{heading: string, panels: {title: string, height: number, control: number, field: number, caption: string}[]}}
+ */
+export function pickDrawing(pick) {
+  const { name } = pick.system;
+  const [height, control, field] = ["height", "controlCorner", "fieldCorner"].map((what) => pick.rows.find((row) => row.what === what));
+  const withSystem = (row) => (row.outcome === "entry" ? row.reading.value : row.now.value);
+  const shown = `shown at ${DRAWN_UNKNOWN_CORNER}px`;
+  const panel = (title, h, c, f) => ({
+    title,
+    height: h,
+    control: c ?? DRAWN_UNKNOWN_CORNER,
+    field: f ?? DRAWN_UNKNOWN_CORNER,
+    caption: `controls ${h}px · buttons ${c === null ? `a corner that is not a fixed value (${shown})` : cornerReading(c)} · fields ${f === null ? `your theme's corner (${shown})` : cornerReading(f)}`,
+  });
+  const panels = [
+    panel("Now", height.now.value, control.now.value, field.now.value),
+    panel(`With ${name}`, withSystem(height), withSystem(control), withSystem(field)),
+  ];
+  if (control.outcome === "optional") panels.push(panel(`With ${name}, ${control.why === "becomes-pill" ? "pill buttons" : "buttons that are not pills"}`, withSystem(height), control.entry.values[0], withSystem(field)));
+  return { heading: `${name}: what would change`, panels };
+}
+
+const escapeHtml = (text) => String(text).replace(/[&<>"]/gu, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;" })[ch]);
+
+/**
+ * The drawing as one self-contained HTML page: no script, no external resource, inline CSS, the system font stack.
+ * Each panel draws a field and a row of two buttons at its sizes, side by side, stacked under 640px. Rendered from
+ * the drawing alone; every text is escaped.
+ * @param {{heading: string, panels: object[]}} drawing from pickDrawing
+ */
+export function renderPickDrawing(drawing) {
+  const px = (value) => {
+    if (!(typeof value === "number" && Number.isFinite(value) && value >= 0)) throw new Error(`pick drawing: ${value} is not a size in px`);
+    return `${value}px`;
+  };
+  const panel = (p, index) => [
+    `<section class="panel" data-panel="${index + 1}">`,
+    `<h2>${escapeHtml(p.title)}</h2>`,
+    `<label>Email<input type="email" placeholder="name@example.com" readonly style="height:${px(p.height)};border-radius:${px(p.field)}"></label>`,
+    `<div class="buttons"><button type="button" class="secondary" style="height:${px(p.height)};border-radius:${px(p.control)}">Cancel</button><button type="button" class="primary" style="height:${px(p.height)};border-radius:${px(p.control)}">Save</button></div>`,
+    `<p class="caption">${escapeHtml(p.caption)}</p>`,
+    "</section>",
+  ].join("\n");
+  const css = [
+    "*{box-sizing:border-box}",
+    "html{-webkit-text-size-adjust:100%}",
+    "body{margin:0;padding:24px 16px;background:#fff;color:#111;font-family:system-ui,-apple-system,\"Segoe UI\",Roboto,\"Helvetica Neue\",Arial,sans-serif}",
+    "main{max-width:1200px;margin:0 auto}",
+    "h1{margin:0 0 16px;font-size:18px;line-height:1.4;font-weight:600}",
+    `.panels{display:grid;grid-template-columns:repeat(${drawing.panels.length},minmax(0,1fr));gap:16px}`,
+    "@media (max-width:639px){.panels{grid-template-columns:minmax(0,1fr)}}",
+    ".panel{min-width:0;border:1px solid #e5e5e5;border-radius:8px;padding:16px}",
+    "h2{margin:0 0 12px;font-size:15px;line-height:1.4;font-weight:600}",
+    "label{display:flex;flex-direction:column;gap:6px;font-size:14px;line-height:1.4}",
+    "input{display:block;width:100%;margin:0;border:1px solid #cfcfcf;background:#fff;color:#111;padding:0 12px;font:inherit;font-size:14px}",
+    ".buttons{display:flex;gap:8px;margin-top:12px}",
+    "button{margin:0;border:0;padding:0 16px;font:inherit;font-size:14px;font-weight:600;line-height:1}",
+    ".primary{background:#111;color:#fff}",
+    ".secondary{background:#e9e9e9;color:#111}",
+    ".caption{margin:12px 0 0;font-size:12px;line-height:1.5;color:#555}",
+  ].join("\n");
+  return [
+    "<!doctype html>",
+    "<html lang=\"en\">",
+    "<head>",
+    "<meta charset=\"utf-8\">",
+    "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">",
+    `<title>${escapeHtml(drawing.heading)}</title>`,
+    `<style>\n${css}\n</style>`,
+    "</head>",
+    "<body>",
+    "<main>",
+    `<h1>${escapeHtml(drawing.heading)}</h1>`,
+    `<div class="panels">\n${drawing.panels.map(panel).join("\n")}\n</div>`,
+    "</main>",
+    "</body>",
+    "</html>",
+    "",
+  ].join("\n");
 }
 
 // --- engine defaults against the corpus ------------------------------------------------------------------------

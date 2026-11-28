@@ -14,7 +14,7 @@
 //                           [--reference <slug>]… [--own <inventory.json>] [--write | --json]
 //   node propose-system.mjs --project-root <dir> --surface … [same inputs] --entry <axis>=<v1,v2,…>
 //   node propose-system.mjs --project-root <dir> --surface … [same inputs] --default-height <px>
-//   node propose-system.mjs --project-root <dir> --surface … [--page <id>] --like <system> [--json]
+//   node propose-system.mjs --project-root <dir> --surface … [--page <id>] --like <system> [--draw] [--json]
 //   node propose-system.mjs --engine-defaults [--page <id>]
 //
 // Default: SYSTEM.md on stdout, nothing written. --json: the proposal object on stdout. --write:
@@ -25,7 +25,9 @@
 // measured basis), refuses a corner already recorded, and says on stderr which recorded `radii` decision lacks the
 // value. --like <system>: in a project set up with a lock, what taking one of the measured systems of
 // references/measured-systems.json would change (the default control height and the two corners), what each rests
-// on, what stays, and the entries that record it; with --json the pick object; writes nothing. --default-height: the
+// on, what stays, and the entries that record it; with --json the pick object. It records nothing; with --draw it
+// writes one file, .styleseed/proposals/pick-<system>.html, the sizes now and with the system drawn side by side
+// (pickDrawing), and the document's opening names it. --default-height: the
 // `controlHeights` entry for a default control height (the height and the sizes the shipped components draw
 // around it; its `source` starts with `default-height:<px>; `), on stdout; writes nothing. In a project without a
 // registry, .styleseed/system.css draws such a height after the next resolve unless its source says the person took
@@ -39,16 +41,18 @@ import { fileURLToPath } from "node:url";
 import { SAFE_ID, normalizeDecisions, parseDefaultHeight, parseStrictJson, safeProjectPath } from "./runtime-contract.mjs";
 import { getRegistryPaths, loadProjectRegistry } from "./project-registry.mjs";
 import { isApproved, isGeneratedEvidence, normalizeReferenceEvidence } from "./reference-contract.mjs";
-import { LIKE_REFUSALS, PROPOSAL_AXES, RECORD_ONLY_DEF, TOUCH_FLOOR, defaultHeightEntryFor, engineDefaultsTable, entryForValues, normalizeEngineDefaults, normalizeEvidencePack, normalizeInventory, normalizeMeasuredSystems, ownScreens, proposePick, proposeSystem, referenceValues, renderEngineDefaultsMarkdown, renderPickMarkdown, renderProposalMarkdown } from "./system-proposal.mjs";
+import { LIKE_REFUSALS, PROPOSAL_AXES, RECORD_ONLY_DEF, TOUCH_FLOOR, defaultHeightEntryFor, engineDefaultsTable, entryForValues, normalizeEngineDefaults, normalizeEvidencePack, normalizeInventory, normalizeMeasuredSystems, ownScreens, pickDrawing, proposePick, proposeSystem, referenceValues, renderEngineDefaultsMarkdown, renderPickDrawing, renderPickMarkdown, renderProposalMarkdown } from "./system-proposal.mjs";
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const REFERENCES = resolve(scriptDir, "../references");
 const LEDGER_FILE = ".styleseed/decisions.json";
 const PROPOSALS_DIR = ".styleseed/proposals";
+// The drawing of a pick (WO-20 D): the one file `--like <system> --draw` writes, relative to the project.
+export const pickDrawingPath = (id) => `${PROPOSALS_DIR}/pick-${id}.html`;
 const USAGE = `usage: propose-system.mjs --project-root <dir> --surface pointer|touch [--artifact <id>] [--page <id>] [--reference <slug>]… [--own <inventory.json>] [--write | --json]
        propose-system.mjs --project-root <dir> --surface pointer|touch [same inputs] --entry <axis>=<v1,v2,…>
        propose-system.mjs --project-root <dir> --surface pointer|touch [same inputs] --default-height <px>
-       propose-system.mjs --project-root <dir> --surface pointer|touch [--page <id>] --like <system> [--json]
+       propose-system.mjs --project-root <dir> --surface pointer|touch [--page <id>] --like <system> [--draw] [--json]
        propose-system.mjs --engine-defaults [--page <id>]`;
 const REBUILD = "rebuild with `node scripts/build-evidence-pack.mjs`, or reinstall the skill";
 const MEASURED_REBUILD = "rebuild with `node scripts/build-systems-showcase.mjs`, or reinstall the skill";
@@ -67,7 +71,7 @@ export const DEFAULT_HEIGHT_DRAWN = Object.freeze({
 });
 
 export function parseArgs(argv) {
-  const args = { projectRoot: null, surface: null, artifact: null, page: null, references: [], own: null, write: false, json: false, entry: null, defaultHeight: null, engineDefaults: false, like: null, help: false };
+  const args = { projectRoot: null, surface: null, artifact: null, page: null, references: [], own: null, write: false, json: false, entry: null, defaultHeight: null, engineDefaults: false, like: null, draw: false, help: false };
   const value = (i, flag) => { const next = argv[i + 1]; if (next === undefined || next.startsWith("--")) throw new Error(`${flag} needs a value\n${USAGE}`); return next; };
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
@@ -85,6 +89,7 @@ export function parseArgs(argv) {
       args.defaultHeight = Number(raw);
     }
     else if (arg === "--like") { if (args.like !== null) throw new Error("--like: pass one system"); args.like = value(i++, arg); }
+    else if (arg === "--draw") args.draw = true;
     else if (arg === "--write") args.write = true;
     else if (arg === "--json") args.json = true;
     else if (arg === "--engine-defaults") args.engineDefaults = true;
@@ -97,6 +102,7 @@ export function parseArgs(argv) {
     const flag = [args.write && "--write", args.entry !== null && "--entry", args.defaultHeight !== null && "--default-height", args.engineDefaults && "--engine-defaults", args.references.length > 0 && "--reference", args.own !== null && "--own"].find(Boolean);
     if (flag) throw new Error(LIKE_REFUSALS.flag(flag));
   }
+  if (args.draw && args.like === null) throw new Error("--draw draws the sizes a pick would change; pass it with --like <system>");
   if (args.engineDefaults) {
     const extra = [args.projectRoot && "--project-root", args.surface && "--surface", args.artifact && "--artifact", args.references.length && "--reference", args.own && "--own", args.write && "--write", args.json && "--json", args.entry && "--entry", args.defaultHeight !== null && "--default-height"].filter(Boolean);
     if (extra.length) throw new Error(`--engine-defaults reads only the skill's files and takes --page alone; drop ${extra.join(", ")}`);
@@ -288,8 +294,15 @@ export function main(argv, { stdout = (text) => process.stdout.write(text), stde
   const inputs = { pack, defaults, measured, project: loaded.project, context: { artifact: loaded.artifact, page, surface: args.surface }, references: references.map((ref) => ref.values), own };
   if (args.like !== null) {
     const pick = proposePick(inputs, measured, args.like);
-    if (args.json) stdout(`${JSON.stringify(pick, null, 2)}\n`);
-    else stdout(renderPickMarkdown(pick, { ledgerAt: loaded.project.ledger.path, command: `propose-system.mjs --project-root .${args.page !== null ? ` --page ${page}` : ""} --surface ${args.surface}` }));
+    // --draw (WO-20 D): the one file it writes, with the helper --write uses; the document and the object name it.
+    let drawing = null;
+    if (args.draw) {
+      drawing = pickDrawingPath(pick.system.id);
+      mkdirSync(safeProjectPath(loaded.root, PROPOSALS_DIR), { recursive: true });
+      writeFileSync(safeProjectPath(loaded.root, drawing), renderPickDrawing(pickDrawing(pick)));
+    }
+    if (args.json) stdout(`${JSON.stringify(drawing === null ? pick : { ...pick, drawing }, null, 2)}\n`);
+    else stdout(renderPickMarkdown(pick, { ledgerAt: loaded.project.ledger.path, command: `propose-system.mjs --project-root .${args.page !== null ? ` --page ${page}` : ""} --surface ${args.surface}`, drawing }));
     return 0;
   }
   const proposal = proposeSystem(inputs);

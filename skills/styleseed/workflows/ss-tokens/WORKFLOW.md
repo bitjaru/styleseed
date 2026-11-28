@@ -113,6 +113,10 @@ person choose, and append only what they chose to the decisions ledger with the 
 values in the token files below. The tool writes no ledger and no name. See
 [system proposals](../ss-resolve/references/proposals.md).
 
+In a project set up with a lock, to take the sizes of one of the measured design systems instead, use
+`--like <id> --draw` and present it as setup's step 9a does; where the ledger already records a height, the pick
+replaces it and says which sizes it dropped.
+
 ### `list` — Show current tokens
 Read and display the requested token file in a formatted table.
 

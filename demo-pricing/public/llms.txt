@@ -5,9 +5,10 @@ StyleSeed gives a product that has no design system a starting one. Setup propos
 brand recipe is StyleSeed's default and is not measured. Control height and text size come with counts from
 public design systems where the shipped evidence has them; the other sizes are StyleSeed's defaults and are
 labelled so. A newer measurement of seven design systems is at https://styleseed-demo.vercel.app/systems;
-setup does not read it yet. The goal is to make expert design judgment repeatable by coding agents, not to
-replace experts with aesthetic preferences. Expert-level output and universal design-system import are not
-established capabilities; human review still matters.
+setup can take a project's control height and button and field corners from one of them, after drawing them.
+The goal is to make expert design judgment repeatable by coding agents, not to replace experts with aesthetic
+preferences. Expert-level output and universal design-system import are not established capabilities; human
+review still matters.
 
 ## Recommended path
 
@@ -90,7 +91,7 @@ Example: https://styleseed-demo.vercel.app/fix-ui-spacing
 
 There is no single best one. It depends on what the product is and who uses it. Start from a few decisions that fit together: a look, a key colour, and how tall and how round the controls are. Before you pick, look at how public design systems draw the same parts. When a tool recommends something, ask where the recommendation comes from. A value measured on public design systems is evidence. A default is a starting point.
 
-StyleSeed’s setup recommends one of its built-in looks for the kind of product and says that this is its own default, not a measured value. For control height and text size it shows counts from public design systems where it has them; its other sizes are its own defaults and are labelled so. Choosing one of the measured systems and applying its values is not built yet.
+StyleSeed’s setup recommends one of its built-in looks for the kind of product and says that this is its own default, not a measured value. For control height and text size it shows counts from public design systems where it has them; its other sizes are its own defaults and are labelled so. Setup can take the button height and the button and field corners from one of the measured systems: it draws them and asks before recording them.
 
 Guide and prompt: https://styleseed-demo.vercel.app/faq#which-design-system
 Evidence: https://styleseed-demo.vercel.app/systems

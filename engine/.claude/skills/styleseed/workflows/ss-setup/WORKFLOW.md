@@ -97,7 +97,7 @@ an unbounded mood word. Then confirm light/dark mode, `neutral|warm|cool` surfac
 elevation, imagery/data role, and motion inside the grammar's allowed ranges. Do not use generic
 indigo or a stale purple mislabeled as Toss. The words chosen here (density, radius) are postures. The
 numbers for control height, type sizes, corner radius, row height, and spacing unit are proposed with
-their basis in step 9a.
+their basis in step 9b.
 
 ### 7a. Spatial relationships
 
@@ -106,7 +106,7 @@ spacing tokens. For registry product UI, use the resolver's [spatial roles guide
 to recommend and persist page inset, section/group/stack/inline gaps, and component inset separately.
 Keep typography and hit targets independent. Legacy setup keeps native tokens; do not invent
 unparsed lock fields. Spatial-role recommendations are heuristic starting values and are not measured.
-The measured proposals are in step 9a.
+The measured proposals are in step 9b.
 
 ### 8. Write the design lock
 
@@ -145,7 +145,7 @@ Create `STYLESEED.md`:
 
 For a compiled grammar use its actual path and confidence. Reject unknown enum values rather
 than treating the lock as an exemption. The lock holds selections. Decided values go to the
-decisions ledger in step 9a; do not add lock lines for them.
+decisions ledger in steps 9a and 9b; do not add lock lines for them.
 
 ### 9. Scaffold and prove
 
@@ -160,7 +160,44 @@ Use `--agent codex` in Codex. The resolver writes `.styleseed/effective-rules.md
 (which draws nothing until the ledger records a default control height or a corner), and a hash-verifiable
 `.styleseed/manifest.json`. Read the effective bundle, not `llms-full.txt`.
 
-### 9a. Propose the system values and record what the person decides
+### 9a. Take the sizes of a measured design system, or keep this look's
+
+For product UI in a project set up with a lock, after the first resolve. Ask once, in the person's language,
+with the link: seven public design systems were measured (https://styleseed-demo.vercel.app/systems); take the
+button height and the button and field corners of one of them, or keep the ones of the look chosen in step 4.
+Do not list sizes or numbers in the question.
+
+If they keep the look, go on to 9b. If they name a system in their own words, match it to one of these:
+cloudscape (AWS Cloudscape), patternfly (Red Hat PatternFly), antpro (Ant Design Pro), shadcn (shadcn/ui),
+primer (GitHub Primer), mui (MUI templates), govuk (GOV.UK Frontend). If two could match, ask which. If none
+matches, or the person asks you to choose, name the seven and let them pick; do not pick for them.
+
+Run:
+
+```bash
+node <installed-ss-resolve>/scripts/propose-system.mjs --project-root . --surface pointer --like <id> --draw
+```
+
+Use `--surface touch` as 9b says. Show the person the drawing it writes: open the file, or attach a screenshot
+of it; if you can do neither, give the file's path and describe the two panels in one sentence each. Say in at
+most three sentences, in their language, what would change and what stays, from the document's first table and
+"What stays". Do not read out its other words (the look's name, ledger, radii, approvedBy, the drift report, the
+44px command): the document is for you.
+
+- When "To take it" has entries: ask "take these sizes", yes or no. When the document also has "Optional", ask
+  that as a second yes-or-no question with its panel of the drawing, only after a yes to the first.
+- When "To take it" has nothing to record and there is no "Optional": say nothing would change and go on to 9b.
+- When "To take it" has nothing to record and there is an "Optional": ask only the optional question, with its
+  panel.
+- When the person answers with a correction in words ("rounder", "smaller"), offer a closer system or keeping
+  the look. Never turn the words into a number of your own.
+
+On a yes: ask once for the name to record ("Which name should these choices be recorded under?"), append the
+entries the person said yes to, as the document places them, with that name and today's date, and resolve
+again. Then import `.styleseed/system.css` as 9b says, and go on to 9b. On a no, or if nobody can answer,
+record nothing and go on to 9b.
+
+### 9b. Propose the system values and record what the person decides
 
 For product UI, after the first resolve and before any code:
 
@@ -168,7 +205,8 @@ For product UI, after the first resolve and before any code:
 node <installed-ss-resolve>/scripts/propose-system.mjs --project-root . --surface pointer --write
 ```
 
-Use `--surface touch` when the product is used by touch first, `--artifact <id>` in a registry project, and
+When 9a recorded a default height, the height row already says so, and "To take it" has nothing to record for the
+height. Use `--surface touch` when the product is used by touch first, `--artifact <id>` in a registry project, and
 `--reference <slug>` for each reference the person measured with `/ss-reference`. It writes
 `.styleseed/proposals/SYSTEM.md` and `system.json`. For control height, type sizes, corner radius, table row height,
 and spacing unit, each block gives a value and its basis, strongest first: what the project already recorded, what the
@@ -202,7 +240,7 @@ The path is relative to that stylesheet, for example `@import "../.styleseed/sys
 `app/globals.css`, or `@import "../../.styleseed/system.css";` from `src/styles/`. A layered import shows as fields
 that take the recorded corner while buttons keep the recipe's corner and every control keeps the recipe's height.
 
-### 9b. First screen
+### 9c. First screen
 
 If the user asked for a first screen, build from that bundle, run `/ss-score` to the gate floor,
 and finish with `/ss-verify` when renderable. When decisions were recorded, measure the built screen

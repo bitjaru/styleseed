@@ -6,10 +6,10 @@ import { join, relative, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import {
-  PAGE_ROWS, PROPOSAL_AXES, PROPOSAL_RULE, TOUCH_FLOOR, cornerEntry, defaultHeightEntry, defaultHeightEntryFor, engineDefault, engineDefaultsTable, entryForValues, normalizeEngineDefaults, normalizeEvidencePack, normalizeInventory,
-  normalizeMeasuredSystems, ownScreens, proposePick, proposeSystem, referenceValues, renderEngineDefaultsMarkdown, renderPickMarkdown, renderProposalMarkdown, rowStatus, selectRow,
+  DRAWN_UNKNOWN_CORNER, PAGE_ROWS, PROPOSAL_AXES, PROPOSAL_RULE, TOUCH_FLOOR, cornerEntry, defaultHeightEntry, defaultHeightEntryFor, engineDefault, engineDefaultsTable, entryForValues, normalizeEngineDefaults, normalizeEvidencePack, normalizeInventory,
+  normalizeMeasuredSystems, ownScreens, pickDrawing, proposePick, proposeSystem, referenceValues, renderEngineDefaultsMarkdown, renderPickDrawing, renderPickMarkdown, renderProposalMarkdown, rowStatus, selectRow,
 } from "../../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/system-proposal.mjs";
-import { systemLine } from "../../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/propose-system.mjs";
+import { pickDrawingPath, systemLine } from "../../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/propose-system.mjs";
 import { contractHash, normalizeReferenceEvidence } from "../../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/reference-contract.mjs";
 import { defaultHeightSource, normalizeDecisions, parseDefaultHeight } from "../../engine/.claude/skills/styleseed/workflows/ss-resolve/scripts/runtime-contract.mjs";
 import { summarize } from "../../engine/.claude/skills/styleseed/workflows/ss-reference/scripts/analyze-observations.mjs";
@@ -1215,7 +1215,8 @@ test("wording of the added documentation: counts only, no banned word; setup sti
   const proposing = resolveWorkflow.slice(resolveWorkflow.indexOf("To propose the values a person may record"), resolveWorkflow.indexOf("\n\n", resolveWorkflow.indexOf("To propose the values a person may record")));
   const parts = {
     "proposals.md": doc("ss-resolve/references/proposals.md"),
-    "ss-setup 9a": section(setup, "### 9a. Propose the system values and record what the person decides"),
+    "ss-setup 9a": section(setup, "### 9a. Take the sizes of a measured design system, or keep this look's"),
+    "ss-setup 9b": section(setup, "### 9b. Propose the system values and record what the person decides"),
     "ss-tokens propose": section(doc("ss-tokens/WORKFLOW.md"), "### `propose` — sizes, radii, and spacing with their basis"),
     "decisions: Proposed with a basis": section(doc("ss-resolve/references/decisions.md"), "## Proposed with a basis"),
     "decisions: A project without a registry": section(doc("ss-resolve/references/decisions.md"), "## A project without a registry"),
@@ -1224,7 +1225,7 @@ test("wording of the added documentation: counts only, no banned word; setup sti
   // WO-20 S: the first section, in each place that describes the document.
   const flat = (text) => text.replace(/\s+/gu, " ");
   assert.ok(flat(proposing).includes("Its `SYSTEM.md` opens with the system the project starts with: one table of what the shipped components draw with the project's look and what its ledger records, then one entry to take it or the reason there is none."), proposing);
-  for (const name of ["ss-setup 9a", "ss-tokens propose"]) {
+  for (const name of ["ss-setup 9b", "ss-tokens propose"]) {
     assert.ok(flat(parts[name]).includes("The document opens with \"The system this project starts with\", one table of what the look draws and what the ledger records, and under \"To take it\" one entry or the reason there is none; present that first, then the blocks."), name);
     assert.ok(flat(parts[name]).includes("For a control height taken from the corpus or chosen by the person, get the entry from `--default-height <px>`: one height recorded alone flags the other sizes of the shipped components."), name);
   }
@@ -1235,10 +1236,10 @@ test("wording of the added documentation: counts only, no banned word; setup sti
     assert.ok(text.length > 200, `${name} is there`);
     assert.ok(!BANNED.test(text), `${name}: ${text.match(BANNED)?.[0]}`);
   }
-  assert.ok(parts["ss-setup 9a"].includes("propose-system.mjs --project-root . --surface pointer --write"));
-  assert.ok(parts["ss-setup 9a"].includes("Never fill in a name yourself and never record a"), "the workflow forbids typing a name");
-  assert.ok(!parts["ss-setup 9a"].includes("If the user asked for a first screen"), "the first screen has its own heading");
-  assert.ok(setup.includes("### 9b. First screen\n\nIf the user asked for a first screen"));
+  assert.ok(parts["ss-setup 9b"].includes("propose-system.mjs --project-root . --surface pointer --write"));
+  assert.ok(parts["ss-setup 9b"].includes("Never fill in a name yourself and never record a"), "the workflow forbids typing a name");
+  assert.ok(!parts["ss-setup 9b"].includes("If the user asked for a first screen"), "the first screen has its own heading");
+  assert.ok(setup.includes("### 9c. First screen\n\nIf the user asked for a first screen"));
   const step8 = setup.slice(setup.indexOf("### 8. Write the design lock"));
   assert.equal(step8.slice(step8.indexOf("```markdown"), step8.indexOf("```\n", step8.indexOf("```markdown") + 3) + 3), LOCK_TEMPLATE, "the lock gains no field");
   assert.ok(parts["proposals.md"].includes("at least 3 measured systems, on at least two thirds") && parts["proposals.md"].includes("at least 1 product system"), "the rule with its three numbers");
@@ -2305,7 +2306,7 @@ test("the command: each refusal exact, the registry sentence before --artifact i
     assert.deepEqual([result.status, result.stderr], [1, "--like does not take --artifact: a project set up with a lock has no artifacts.\n"]);
     assert.equal(run("--like", "antpro", "--like", "govuk").stderr, "--like: pass one system\n");
     assert.match(run("--like").stderr, /^--like needs a value/u);
-    assert.match(cli(root, ["--help"]).stdout, /\n {7}propose-system\.mjs --project-root <dir> --surface pointer\|touch \[--page <id>\] --like <system> \[--json\]\n/u, "the usage names the flag");
+    assert.match(cli(root, ["--help"]).stdout, /\n {7}propose-system\.mjs --project-root <dir> --surface pointer\|touch \[--page <id>\] --like <system> \[--draw\] \[--json\]\n/u, "the usage names the flag");
     assert.match(cli(root, ["--help"]).stdout, /\[same inputs\] --default-height <px>\n/u, "the line before it stays");
 
     // --json is the object the document is rendered from; neither writes a file.
@@ -2431,12 +2432,12 @@ test("the corner builder: without a basis it is the --entry entry; with one, the
   assert.throws(() => cornerEntry("radii", 8), /corner entry: radii is not a corner axis \(controlRadius, fieldRadius\)/u);
 });
 
-test("the texts of a pick: proposals.md, decisions.md, and the resolve workflow name it; setup and ss-tokens do not yet (WO-20 C6)", () => {
+test("the texts of a pick: proposals.md, decisions.md, and the resolve workflow name it; setup's 9a and ss-tokens offer it (WO-20 C6, D)", () => {
   const flat = (text) => text.replace(/\s+/gu, " ");
   const proposals = doc("ss-resolve/references/proposals.md");
   assert.ok(proposals.indexOf("\n## The system first\n") < proposals.indexOf("\n## A pick from a measured system\n") && proposals.indexOf("\n## A pick from a measured system\n") < proposals.indexOf("\n## Basis order\n"), "the new section follows \"The system first\"");
   const pickSection = section(proposals, "## A pick from a measured system");
-  for (const words of ["--like <system>", "Nothing is written", "table row height and menu item height", "never changes whether buttons are pills unless the person asks", "never mixed in one sentence", "a registry project does not draw a recorded height or corner", "`--engine-defaults`, `--reference`, `--own`, and `--artifact`"]) assert.ok(flat(pickSection).includes(words), words);
+  for (const words of ["--like <system>", "Nothing is recorded. Nothing is written either, unless `--draw` is passed: it writes one file, `.styleseed/proposals/pick-<system>.html`", "table row height and menu item height", "never changes whether buttons are pills unless the person asks", "never mixed in one sentence", "a registry project does not draw a recorded height or corner", "`--like` takes `--surface`, `--page`, `--draw`, and `--json`, and refuses", "`--engine-defaults`, `--reference`, `--own`, and `--artifact`; `--draw` is refused without `--like`."]) assert.ok(flat(pickSection).includes(words), words);
   assert.ok(!BANNED.test(pickSection), pickSection.match(BANNED)?.[0]);
   assert.ok(flat(proposals).includes("It holds no per-system value and nothing from the measured pages' text. The readings of the systems of the page are in a second file, `measured-systems.json`, written by the page's generator; `--like` reads it."));
   assert.ok(flat(proposals).includes("`--like` hands it a basis of its own") && !proposals.includes("later caller"));
@@ -2447,5 +2448,234 @@ test("the texts of a pick: proposals.md, decisions.md, and the resolve workflow 
   assert.ok(flat(proposing).includes("With `--like <system>` it prints, for one of the design systems on the page of measured systems, what taking it would change"), proposing);
   assert.ok(!resolveWorkflow.includes("--entry"), "the workflow names no --entry");
   const setup = doc("ss-setup/WORKFLOW.md");
-  for (const [name, text] of [["ss-setup 9a", section(setup, "### 9a. Propose the system values and record what the person decides")], ["ss-tokens propose", section(doc("ss-tokens/WORKFLOW.md"), "### `propose` — sizes, radii, and spacing with their basis")]]) assert.ok(!text.includes("--like") && !text.includes("measured-systems"), `${name}: setup does not offer a pick until Part D`);
+  // WO-20 D: setup's new step 9a offers a pick and draws it; ss-tokens names it for a project set up with a lock.
+  const nineA = section(setup, "### 9a. Take the sizes of a measured design system, or keep this look's");
+  assert.ok(nineA.includes("--like <id>") && nineA.includes("--draw"), "setup 9a runs the pick with --draw");
+  assert.ok(section(doc("ss-tokens/WORKFLOW.md"), "### `propose` — sizes, radii, and spacing with their basis").includes("--like"), "ss-tokens names --like");
+});
+
+// --- the drawing of a pick, and setup's step 9a (WO-20 D) ------------------------------------------------------------
+// Expected panels are written from the order's table (D.1): panel 1 is each row's `now`, panel 2 the reading of a row
+// whose outcome is `entry` and `now` for every other outcome, panel 3 only for an optional control corner.
+
+const unescapeHtml = (text) => text.replace(/&(amp|lt|gt|quot);/gu, (_, name) => ({ amp: "&", lt: "<", gt: ">", quot: "\"" })[name]);
+// The panels an HTML drawing draws, read back from its markup: the inline sizes of the field and of both buttons.
+const drawnPanels = (html) => [...html.matchAll(/<section class="panel" data-panel="(\d+)">([\s\S]*?)<\/section>/gu)].map(([, n, body]) => {
+  const sizes = (tag) => [...body.matchAll(new RegExp(`<${tag}\\b[^>]*style="height:([0-9.]+)px;border-radius:([0-9.]+)px"`, "gu"))].map((m) => [Number(m[1]), Number(m[2])]);
+  return { n: Number(n), title: unescapeHtml(body.match(/<h2>([^<]*)<\/h2>/u)[1]), field: sizes("input"), buttons: sizes("button"), caption: unescapeHtml(body.match(/<p class="caption">([^<]*)<\/p>/u)[1]) };
+});
+const captionWords = (value) => (value === 999 ? "pills" : value === 0 ? "square corners" : `${value}px corners`);
+const expectedPanel = (title, height, control, field) => ({
+  title, height, control, field: field ?? 6,
+  caption: `controls ${height}px · buttons ${captionWords(control)} · fields ${field === null ? "your theme's corner (shown at 6px)" : captionWords(field)}`,
+});
+const DRAW_LOOKS = ["enterprise-workbench", "calm-consumer", "native-mobile"];
+
+test("pickDrawing: panel 1 is what is drawn now, panel 2 the reading of an entry row and now for every other outcome, panel 3 only for an optional corner; the HTML draws the panels (WO-20 D, P3)", () => {
+  assert.equal(DRAWN_UNKNOWN_CORNER, 6, "an unrecorded field is drawn at 6px");
+  const seen = new Set();
+  let cases = 0;
+  for (const recipe of DRAW_LOOKS) for (const surface of ["pointer", "touch"]) {
+    const antpro = recordedPick(pickOf("antpro", { recipe, surface }));
+    for (const decisions of [[], antpro]) for (const id of SYSTEM_IDS) {
+      const where = `${id} on ${recipe}, ${surface}, ${decisions.length ? "antpro recorded" : "empty ledger"}`;
+      const pick = pickOf(id, { recipe, surface, decisions });
+      const [height, control, field] = pick.rows;
+      for (const row of pick.rows) seen.add(`${row.outcome}${row.why ? `:${row.why}` : ""}`);
+      assert.ok(Number.isFinite(control.now.value), `${where}: every shipped look has a plain control corner`);
+      const then = (row) => (row.outcome === "entry" ? row.reading.value : row.now.value);
+      const expected = [
+        expectedPanel("Now", height.now.value, control.now.value, field.now.value),
+        expectedPanel(`With ${pick.system.name}`, then(height), then(control), then(field)),
+      ];
+      if (control.outcome === "optional") {
+        assert.equal(control.entry.values[0], control.reading.value, where);
+        expected.push(expectedPanel(`With ${pick.system.name}, ${control.why === "becomes-pill" ? "pill buttons" : "buttons that are not pills"}`, then(height), control.entry.values[0], then(field)));
+      }
+      const drawing = pickDrawing(pick);
+      assert.deepEqual(drawing, { heading: `${pick.system.name}: what would change`, panels: expected }, where);
+      const html = renderPickDrawing(drawing);
+      const read = drawnPanels(html);
+      assert.deepEqual(read.map((panel) => panel.n), expected.map((_, index) => index + 1), `${where}: one section per panel`);
+      read.forEach((panel, index) => {
+        const want = expected[index];
+        assert.deepEqual(panel.field, [[want.height, want.field]], `${where}: panel ${index + 1} field`);
+        assert.deepEqual(panel.buttons, [[want.height, want.control], [want.height, want.control]], `${where}: panel ${index + 1} buttons`);
+        assert.equal(panel.title, want.title, where);
+        assert.equal(panel.caption, want.caption, where);
+      });
+      assert.equal(unescapeHtml(html.match(/<h1>([^<]*)<\/h1>/u)[1]), drawing.heading, where);
+      cases += 1;
+    }
+  }
+  assert.equal(cases, 84);
+  assert.deepEqual([...seen].sort(), ["entry", "kept:mixed", "kept:not-measured", "kept:touch-floor", "optional:becomes-pill", "optional:stops-being-pill", "same"], "every outcome is drawn");
+
+  // The two wrong drawings the review named (P3): a mixed height and a height under the touch floor keep what is drawn.
+  assert.equal(pickDrawing(pickOf("shadcn")).panels[1].height, 36, "shadcn: the height is mixed, panel 2 keeps 36");
+  assert.equal(pickDrawing(pickOf("cloudscape", { surface: "touch" })).panels[1].height, 36, "cloudscape on touch: 32 is under the floor, panel 2 keeps 36");
+  assert.equal(pickDrawing(pickOf("primer")).panels[1].field, 6, "primer: the field is not measured, panel 2 keeps the theme's corner");
+  assert.equal(pickDrawing(pickOf("primer")).panels[1].caption, "controls 32px · buttons 6px corners · fields your theme's corner (shown at 6px)");
+  assert.deepEqual(pickDrawing(pickOf("cloudscape")).panels.map((panel) => [panel.title, panel.height, panel.control, panel.field]), [["Now", 36, 3, 6], ["With AWS Cloudscape", 32, 3, 8], ["With AWS Cloudscape, pill buttons", 32, 999, 8]]);
+  assert.deepEqual(pickDrawing(pickOf("govuk", { recipe: "calm-consumer" })).panels.map((panel) => [panel.title, panel.height, panel.control, panel.field]), [["Now", 40, 999, 6], ["With GOV.UK Frontend", 40, 999, 0], ["With GOV.UK Frontend, buttons that are not pills", 40, 0, 0]]);
+  // A control corner that is not a plain number (no shipped look has one) is drawn at 6px and captioned so.
+  const odd = clone(pickOf("antpro", { decisions: recordedPick(pickOf("antpro")) }));
+  odd.rows[1] = { ...odd.rows[1], now: { value: null, from: "look", id: null }, outcome: "kept", why: "mixed", entry: null };
+  assert.deepEqual(pickDrawing(odd).panels[0], { title: "Now", height: 32, control: 6, field: 6, caption: "controls 32px · buttons a corner that is not a fixed value (shown at 6px) · fields 6px corners" });
+});
+
+test("the drawing page: no script, no outside resource, inline sizes only; a name with <, & and \" is escaped (WO-20 D)", () => {
+  for (const recipe of DRAW_LOOKS) for (const id of SYSTEM_IDS) {
+    const html = renderPickDrawing(pickDrawing(pickOf(id, { recipe })));
+    assert.ok(html.startsWith("<!doctype html>\n<html lang=\"en\">"), id);
+    assert.ok(!/<script/iu.test(html), `${id}: a script`);
+    assert.ok(!/\b(?:src|href)\s*=/iu.test(html) && !/http/iu.test(html), `${id}: an outside resource`);
+    assert.ok(!html.includes("@import") && !html.includes("url("), `${id}: an import or url()`);
+    assert.ok(!/<link\b/iu.test(html), `${id}: a linked stylesheet`);
+    assert.ok(html.includes("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">") && html.includes("@media (max-width:639px){.panels{grid-template-columns:minmax(0,1fr)}}"), `${id}: stacked under 640px`);
+    for (const colour of ["background:#111", "background:#e9e9e9", "border:1px solid #cfcfcf", "background:#fff"]) assert.ok(html.includes(colour), `${id}: ${colour}`);
+    assert.ok(!BANNED.test(html), html.match(BANNED)?.[0]);
+  }
+  // A fictional system whose name holds the three characters: the normaliser takes it, the page escapes it.
+  const fictional = clone(JSON.parse(readFileSync(resolve(resolveDir, "references/measured-systems.json"), "utf8")));
+  fictional.systems[0] = { ...fictional.systems[0], id: "example-lab", name: "Example <b>Lab</b> & \"Co\"" };
+  const file = normalizeMeasuredSystems(fictional);
+  const pick = proposePick(pickInput(), file, "example-lab");
+  const drawing = pickDrawing(pick);
+  assert.equal(drawing.heading, "Example <b>Lab</b> & \"Co\": what would change");
+  const html = renderPickDrawing(drawing);
+  assert.ok(!html.includes("<b>") && !html.includes("& \""), "nothing of the name reaches the markup unescaped");
+  const escaped = "Example &lt;b&gt;Lab&lt;/b&gt; &amp; &quot;Co&quot;";
+  assert.equal(html.split(escaped).length - 1, 2 + drawing.panels.length - 1, "the title, the heading, and the titles of the panels after the first");
+  assert.throws(() => renderPickDrawing({ heading: "x", panels: [{ title: "Now", height: "36px\" onload=\"x", control: 3, field: 6, caption: "c" }] }), /pick drawing: .* is not a size in px/u);
+});
+
+test("--draw: writes .styleseed/proposals/pick-<id>.html and nothing else; the document names it in place of \"Nothing was written.\"; --json carries its path; refused without --like (WO-20 D, P2)", () => {
+  const root = lockProject("ss-like-draw-");
+  try {
+    const run = (...args) => cli(root, ["--project-root", ".", "--surface", "pointer", ...args]);
+    const before = files(root);
+    const REFUSED = "--draw draws the sizes a pick would change; pass it with --like <system>\n";
+    for (const extra of [[], ["--write"], ["--json"], ["--default-height", "32"], ["--entry", "controlRadius=8"]]) {
+      const result = run("--draw", ...extra);
+      assert.deepEqual([result.status, result.stderr, result.stdout], [1, REFUSED, ""], extra.join(" "));
+    }
+    assert.equal(cli(root, ["--engine-defaults", "--draw"]).stderr, REFUSED, "--engine-defaults does not take it either");
+    assert.equal(run("--like", "antpro", "--draw", "--write").stderr, "--like does not take --write: a pick reads only the project, --surface, and --page.\n");
+    assert.deepEqual(files(root), before, "a refusal writes nothing");
+
+    const path = pickDrawingPath("antpro");
+    assert.equal(path, ".styleseed/proposals/pick-antpro.html");
+    const plain = run("--like", "antpro");
+    const drawn = run("--like", "antpro", "--draw");
+    assert.equal(drawn.status, 0, drawn.stderr);
+    assert.equal(drawn.stderr, "");
+    assert.deepEqual(files(root), [...before, path].sort(), "--draw writes the drawing and nothing else");
+    const lines = drawn.stdout.split("\n").filter((line) => line.includes("the drawing is at"));
+    assert.equal(lines.length, 1);
+    assert.ok(lines[0].endsWith("sizes a pick can bring. Nothing was recorded; the drawing is at `.styleseed/proposals/pick-antpro.html`."), lines[0]);
+    const named = lines[0].match(/the drawing is at `([^`]+)`\.$/u)[1];
+    assert.equal(named, path, "the path the document names is the path written");
+    assert.ok(existsSync(join(root, ...named.split("/"))));
+    assert.ok(!drawn.stdout.includes("Nothing was written."));
+    assert.equal(drawn.stdout, plain.stdout.replace("sizes a pick can bring. Nothing was written.\n", `sizes a pick can bring. Nothing was recorded; the drawing is at \`${path}\`.\n`), "only that sentence changes");
+    const pick = JSON.parse(run("--like", "antpro", "--json").stdout);
+    assert.equal(drawn.stdout, renderPickMarkdown(pick, { ledgerAt: ".styleseed/decisions.json", command: "propose-system.mjs --project-root . --surface pointer", drawing: path }));
+    assert.equal(readFileSync(join(root, ...named.split("/")), "utf8"), renderPickDrawing(pickDrawing(pick)), "the file is the drawing of the pick");
+
+    const json = run("--like", "govuk", "--draw", "--json");
+    assert.equal(json.status, 0, json.stderr);
+    const object = JSON.parse(json.stdout);
+    const { drawing, ...rest } = object;
+    assert.equal(drawing, ".styleseed/proposals/pick-govuk.html");
+    assert.equal(Object.keys(object).at(-1), "drawing");
+    assert.deepEqual(rest, JSON.parse(run("--like", "govuk", "--json").stdout), "--json with --draw is the pick and the drawing's path");
+    assert.deepEqual(files(root), [...before, path, drawing].sort());
+    assert.equal(run("--like", "govuk", "--draw").stdout.split("\n").filter((line) => line.includes("Nothing was recorded; the drawing is at `.styleseed/proposals/pick-govuk.html`.")).length, 1);
+    assert.deepEqual(files(root), [...before, path, drawing].sort(), "drawing again rewrites the same file");
+  } finally { rmSync(root, { recursive: true, force: true }); }
+});
+
+test("the document with a drawing: for every system on three looks only the opening's last sentence changes, and nothing else moves (WO-20 D, P2)", () => {
+  for (const recipe of DRAW_LOOKS) for (const surface of ["pointer", "touch"]) for (const id of SYSTEM_IDS) {
+    const pick = pickOf(id, { recipe, surface });
+    const options = { ledgerAt: ".styleseed/decisions.json", command: `propose-system.mjs --project-root . --surface ${surface}` };
+    const plain = renderPickMarkdown(pick, options);
+    const drawn = renderPickMarkdown(pick, { ...options, drawing: pickDrawingPath(id) });
+    assert.equal(plain.split("Nothing was written.").length, 2, `${id}: one "Nothing was written."`);
+    assert.equal(drawn, plain.replace("Nothing was written.", `Nothing was recorded; the drawing is at \`.styleseed/proposals/pick-${id}.html\`.`), `${id} on ${recipe}, ${surface}`);
+    assert.equal(renderPickMarkdown(pick, { ...options, drawing: null }), plain, "drawing null is the document without --draw");
+    assert.ok(!BANNED.test(drawn));
+  }
+});
+
+test("setup asks once: 9a, 9b, 9c in order; 9a runs the pick with --draw, asks without numbers, names the systems of the file, and asks for the name; 9b says what 9a recorded; ss-tokens names --like (WO-20 D, P4, P5, P8)", () => {
+  const setup = doc("ss-setup/WORKFLOW.md");
+  const flat = (text) => text.replace(/\s+/gu, " ");
+  const headings = setup.split("\n").filter((line) => /^### 9/u.test(line));
+  assert.deepEqual(headings, ["### 9. Scaffold and prove", "### 9a. Take the sizes of a measured design system, or keep this look's", "### 9b. Propose the system values and record what the person decides", "### 9c. First screen"]);
+  const nineA = section(setup, headings[1]);
+  const a = flat(nineA);
+  for (const words of [
+    "For product UI in a project set up with a lock, after the first resolve. Ask once, in the person's language, with the link:",
+    "(https://styleseed-demo.vercel.app/systems); take the button height and the button and field corners of one of them, or keep the ones of the look chosen in step 4.",
+    "Do not list sizes or numbers in the question.",
+    "If they keep the look, go on to 9b.",
+    "If two could match, ask which.",
+    "node <installed-ss-resolve>/scripts/propose-system.mjs --project-root . --surface pointer --like <id> --draw",
+    "Use `--surface touch` as 9b says.",
+    "open the file, or attach a screenshot of it; if you can do neither, give the file's path and describe the two panels in one sentence each.",
+    "Do not read out its other words (the look's name, ledger, radii, approvedBy, the drift report, the 44px command): the document is for you.",
+    "- When \"To take it\" has entries: ask \"take these sizes\", yes or no. When the document also has \"Optional\", ask that as a second yes-or-no question with its panel of the drawing, only after a yes to the first.",
+    "- When \"To take it\" has nothing to record and there is no \"Optional\": say nothing would change and go on to 9b.",
+    "- When \"To take it\" has nothing to record and there is an \"Optional\": ask only the optional question, with its panel.",
+    "- When the person answers with a correction in words (\"rounder\", \"smaller\"), offer a closer system or keeping the look. Never turn the words into a number of your own.",
+    "On a yes: ask once for the name to record (\"Which name should these choices be recorded under?\"), append the entries the person said yes to, as the document places them, with that name and today's date, and resolve again.",
+    "Then import `.styleseed/system.css` as 9b says, and go on to 9b. On a no, or if nobody can answer, record nothing and go on to 9b.",
+  ]) assert.ok(a.includes(words), words);
+  assert.ok(!BANNED.test(nineA), nineA.match(BANNED)?.[0]);
+  // The count word and the `id (name)` pairs come from the file (P8).
+  const count = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve"][measured.systems.length];
+  assert.ok(a.includes(`with the link: ${count} public design systems were measured (`), count);
+  assert.ok(a.includes(`If none matches, or the person asks you to choose, name the ${count} and let them pick; do not pick for them.`), count);
+  const pairs = measured.systems.map((system) => `${system.id} (${system.name})`);
+  assert.ok(a.includes(`match it to one of these: ${pairs.join(", ")}.`), pairs.join(", "));
+  // section() stops at a line that starts with #: none inside the step's code fence.
+  const fences = [...nineA.matchAll(/```[a-z]*\n([\s\S]*?)```/gu)].map((match) => match[1]);
+  assert.equal(fences.length, 1);
+  for (const line of fences[0].split("\n")) assert.ok(!line.startsWith("#"), line);
+  // 9b: the new sentence, and the import paragraph stays there.
+  const nineB = flat(section(setup, headings[2]));
+  assert.ok(nineB.includes("When 9a recorded a default height, the height row already says so, and \"To take it\" has nothing to record for the height."));
+  assert.ok(nineB.includes("Import it once in the project's global stylesheet, with the other `@import` lines, as plain CSS: not inside `@layer` and not through `@import … layer(…)`."), "the import paragraph stays in 9b");
+  assert.ok(!a.includes("Import it once in the project's global stylesheet"), "9a points to 9b for the import");
+  // The step numbers named elsewhere in setup follow.
+  for (const words of ["are proposed with their basis in step 9b.", "The measured proposals are in step 9b.", "Decided values go to the decisions ledger in steps 9a and 9b; do not add lock lines for them."]) assert.ok(flat(setup).includes(words), words);
+  // ss-tokens: one sentence after the paragraph that ends with the link to the proposals guide.
+  const tokens = flat(section(doc("ss-tokens/WORKFLOW.md"), "### `propose` — sizes, radii, and spacing with their basis"));
+  assert.ok(tokens.includes("See [system proposals](../ss-resolve/references/proposals.md). In a project set up with a lock, to take the sizes of one of the measured design systems instead, use `--like <id> --draw` and present it as setup's step 9a does; where the ledger already records a height, the pick replaces it and says which sizes it dropped."));
+  assert.ok(!BANNED.test(tokens));
+});
+
+test("the public sentences: setup can take three sizes of a measured system after drawing them; the page, the FAQ entry, and llms.txt (WO-20 D.5)", () => {
+  const read = (path) => readFileSync(resolve(repoRoot, path), "utf8");
+  const page = read("demo-pricing/app/systems/page.tsx");
+  const small = "Setup can take the button height and the button and field corners from one of these systems: it draws them first and asks. Table rows and menu items are shown here and not taken.";
+  assert.ok(page.includes(`${small} Heights are rounded to the nearest 4px.`));
+  assert.ok(!page.includes("This page is for looking.") && !page.includes("Setup does not take a system from here yet."));
+  for (const word of ["recipe", "kit", "well-made", "best", "official"]) assert.ok(!small.toLowerCase().includes(word), `the page's banned substring ${word}`);
+  const entry = JSON.parse(read("demo-pricing/content/design-questions.json")).find((question) => question.id === "which-design-system");
+  assert.ok(entry.fit.endsWith(". Setup can take the button height and the button and field corners from one of the measured systems: it draws them and asks before recording them."), entry.fit);
+  assert.ok(!entry.fit.includes("not built yet"));
+  assert.equal(entry.steps[2], "Ask your agent to propose a starting system, look at the sizes drawn side by side, and say in your own words what to change.");
+  assert.equal(entry.prompt, "Set up a design system for this product. Tell me which look you recommend and where that recommendation comes from, show me the sizes it would change, drawn, and wait for my decision before you build more.");
+  for (const text of [entry.fit, entry.prompt, ...entry.steps]) assert.ok(!text.includes("rendered screen") && !text.includes("one screen drawn"), text);
+  const llms = read("demo-pricing/public/llms.txt");
+  const first = (llms.split(/\n[ \t]*\n/u)[1] ?? "").replace(/\s+/gu, " ");
+  const router = "setup can take a project's control height and button and field corners from one of them, after drawing them.";
+  assert.ok(first.includes(`A newer measurement of seven design systems is at https://styleseed-demo.vercel.app/systems; ${router}`), first);
+  assert.ok(first.includes("/systems") && first.includes("is not measured"), "validate-engine's two phrases still hold");
+  assert.ok(!llms.includes("setup does not read it yet") && !llms.includes("is not built yet"));
+  assert.ok(llms.includes(entry.fit), "llms.txt carries the FAQ entry's fit line");
+  for (const text of [small, entry.fit, router]) assert.ok(!BANNED.test(text), text.match(BANNED)?.[0]);
 });

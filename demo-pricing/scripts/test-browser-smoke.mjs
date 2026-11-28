@@ -79,6 +79,8 @@ const newProductQuestion = {
   id: "which-design-system",
   question: "Which design system should my app start from?",
   answer: "There is no single best one. It depends on what the product is and who uses it. Start from a few decisions that fit together: a look, a key colour, and how tall and how round the controls are. Before you pick, look at how public design systems draw the same parts. When a tool recommends something, ask where the recommendation comes from. A value measured on public design systems is evidence. A default is a starting point.",
+  // WO-20 D: setup can take three sizes of a measured system, drawn first.
+  fit: "StyleSeed’s setup recommends one of its built-in looks for the kind of product and says that this is its own default, not a measured value. For control height and text size it shows counts from public design systems where it has them; its other sizes are its own defaults and are labelled so. Setup can take the button height and the button and field corners from one of the measured systems: it draws them and asks before recording them.",
 };
 const entities = { amp: "&", quot: "\"", lt: "<", gt: ">", "#x27": "'", "#39": "'" };
 
@@ -388,6 +390,7 @@ async function checkRoutes(browser, baseUrl, label, options) {
           assert(await page.locator("article[id]").last().getAttribute("id") === newProductQuestion.id, `FAQ: ${newProductQuestion.id} is not the last question`);
           assert(await asked.getByRole("heading", { level: 2, name: newProductQuestion.question, exact: true }).isVisible(), `FAQ: the question "${newProductQuestion.question}" is not visible`);
           assert(await asked.getByText(newProductQuestion.answer, { exact: true }).isVisible(), `FAQ: the answer to "${newProductQuestion.question}" is not visible as written`);
+          assert(await asked.getByText(newProductQuestion.fit, { exact: true }).isVisible(), `FAQ: the fit line of "${newProductQuestion.question}" is not visible as written (content/design-questions.json)`);
         }
         const dimensions = await page.evaluate(() => ({
           clientWidth: document.documentElement.clientWidth,

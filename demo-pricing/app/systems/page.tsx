@@ -182,7 +182,7 @@ export default function SystemsPage() {
           <h1 className="text-[clamp(36px,6vw,56px)] font-semibold leading-[1.05] tracking-[-0.035em]">Design systems we measured</h1>
           <p data-head className="mt-5 max-w-3xl text-[17px] leading-relaxed text-neutral-600 sm:text-[18px]">{HEAD}</p>
           <p data-small-print className="mt-4 text-[13px] leading-5 text-neutral-500">
-            This page is for looking. Setup does not take a system from here yet. Heights are rounded to the nearest 4px. Not affiliated with or endorsed by any of the projects shown.
+            Setup can take the button height and the button and field corners from one of these systems: it draws them first and asks. Table rows and menu items are shown here and not taken. Heights are rounded to the nearest 4px. Not affiliated with or endorsed by any of the projects shown.
           </p>
         </header>
 

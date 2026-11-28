@@ -20,7 +20,7 @@
   },
   "context": {
     "engineVersion": "5.0.0",
-    "engineRevision": "sha256:c85a9e82797fb8fdcb651b68befbdae18e5cb4259fe88b6d1f07d9c399d2c70f",
+    "engineRevision": "sha256:40b9663dcb985e8a4d42ce4c10a5ef5fb881193960bdc536078c3dbbeb9bbdea",
     "resolverSkill": "https://raw.githubusercontent.com/bitjaru/styleseed/main/engine/.claude/skills/styleseed/workflows/ss-resolve/WORKFLOW.md",
     "catalogUrl": "https://styleseed-demo.vercel.app/.well-known/styleseed/context-catalog.json",
     "grammarIds": [

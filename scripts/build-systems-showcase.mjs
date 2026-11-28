@@ -4,19 +4,26 @@
 // (research/consensus/runs/<run>/consensus.json, run.json, manifest.json). Nothing on the page is typed by hand
 // except the source file's summaries and example ids.
 //
+// From the same build it writes the skill's ss-resolve/references/measured-systems.json (WO-20 Part C), which
+// `propose-system.mjs --like` reads: the run, the step heights are rounded to, and for each system of the page its
+// id, name, screen count, and six readings, and nothing else of it (no text, no address).
+//
 // A system's reading is the study's own row value: the one row with that claim, pageType "all", viewport 1440,
 // and the system's entry in its lineages[]. Heights are the study's 4px buckets and corners are rounded to 1px
 // (scripts/lib/consensus.mjs); this script derives no second, exact value beside the study's.
 //
-//   node scripts/build-systems-showcase.mjs [--root <dir>]            write the JSON
-//   node scripts/build-systems-showcase.mjs [--root <dir>] --check    exit 1 if the JSON would change
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+//   node scripts/build-systems-showcase.mjs [--root <dir>]            write both JSON files
+//   node scripts/build-systems-showcase.mjs [--root <dir>] --check    exit 1 if either would change
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 export const SOURCE_PATH = "demo-pricing/content/systems-source.json";
 export const OUT_PATH = "demo-pricing/content/systems.json";
+export const PICK_PATH = "engine/.claude/skills/styleseed/workflows/ss-resolve/references/measured-systems.json";
 export const CLAIMS = Object.freeze(["button.height", "field.height", "button.radius", "field.radius", "table.bodyRowHeight", "nav.itemHeight"]);
+// The step the study rounds heights to (px4 in scripts/lib/consensus.mjs); a unit test holds the two together.
+export const HEIGHT_STEP = 4;
 const RUN_NAME = /^[0-9A-Za-z][0-9A-Za-z._-]{0,63}$/u;
 const SITE = "pageType \"all\", viewport 1440";
 
@@ -147,6 +154,22 @@ export function loadInputs(root) {
 
 export const serialize = (json) => `${JSON.stringify(json, null, 2)}\n`;
 
+// The skill's measured-systems.json from the page's build: the systems in the page's order, each reading the page's
+// {value, eligible, holding} unchanged, in CLAIMS order. Id and name are its only identifiers.
+export function pickFileOf(showcase) {
+  return {
+    schemaVersion: 1,
+    run: showcase.run,
+    heightStep: HEIGHT_STEP,
+    systems: showcase.systems.map((system) => ({
+      id: system.id,
+      name: system.name,
+      screens: system.screens,
+      readings: Object.fromEntries(CLAIMS.map((claim) => [claim, { value: system.values[claim].value, eligible: system.values[claim].eligible, holding: system.values[claim].holding }])),
+    })),
+  };
+}
+
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const usage = "usage: node scripts/build-systems-showcase.mjs [--root <dir>] [--check]";
   const fail = (message) => { console.error(`systems showcase: ${message}`); process.exit(1); };
@@ -160,10 +183,14 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
   }
   let json;
   try { json = buildSystemsShowcase(loadInputs(root)); } catch (error) { fail(error.message); }
-  const next = serialize(json);
-  const outFile = join(root, OUT_PATH);
-  const stale = !existsSync(outFile) || readFileSync(outFile, "utf8") !== next;
-  if (check && stale) fail(`${OUT_PATH} is out of date; run node scripts/build-systems-showcase.mjs`);
-  if (stale && !check) writeFileSync(outFile, next);
-  console.log(`systems showcase: run ${json.run}, ${json.systems.length} systems (${json.systems.map((system) => system.id).join(", ")}), ${json.partly.length} partly${stale && !check ? `; wrote ${OUT_PATH}` : ""}`);
+  const outputs = [[OUT_PATH, serialize(json)], [PICK_PATH, serialize(pickFileOf(json))]];
+  const stale = outputs.filter(([path, next]) => { const file = join(root, path); return !existsSync(file) || readFileSync(file, "utf8") !== next; }).map(([path]) => path);
+  if (check && stale.length) fail(`${stale.join(" and ")} ${stale.length === 1 ? "is" : "are"} out of date; run node scripts/build-systems-showcase.mjs`);
+  if (!check) for (const [path, next] of outputs) {
+    if (!stale.includes(path)) continue;
+    // The skill's folder need not exist under a --root that holds only the page's inputs.
+    mkdirSync(dirname(join(root, path)), { recursive: true });
+    writeFileSync(join(root, path), next);
+  }
+  console.log(`systems showcase: run ${json.run}, ${json.systems.length} systems (${json.systems.map((system) => system.id).join(", ")}), ${json.partly.length} partly${stale.length && !check ? `; wrote ${stale.join(", ")}` : ""}`);
 }

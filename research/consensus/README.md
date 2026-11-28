@@ -314,7 +314,7 @@ what changed; no row of the first is deleted, and no threshold is moved toward a
 
 ## What ships to users
 
-This folder does not ship with the skill. What reaches a user is one generated file,
+This folder does not ship with the skill. What reaches a user is two generated files. The first is
 `engine/.claude/skills/styleseed/workflows/ss-resolve/references/evidence-pack.json`, built from the one run
 named in `research/consensus/evidence-pack-run.json` (`{ "run": "2026-11-12" }`). It carries, per claim,
 page type, and viewport, how many measured design systems landed in each value bucket, counted by kind
@@ -325,6 +325,13 @@ claims it may use are listed in `CLAIM_USES` in `scripts/lib/evidence-pack.mjs`.
 by changing the pointer and rebuilding: `node scripts/build-evidence-pack.mjs` writes the pack (and the
 shipped engine defaults beside it), `node scripts/build-evidence-pack.mjs --check` fails when either is
 out of date. One pack is built from one run, so measurements of different probe versions never mix.
+
+The second is `engine/.claude/skills/styleseed/workflows/ss-resolve/references/measured-systems.json`, written
+by `scripts/build-systems-showcase.mjs` from the same build as the page `/systems` (the run named in
+`demo-pricing/content/systems-source.json`). It carries the run, the step the study rounds heights to, and, for each
+system of the page, its id, name, screen count, and six readings, and nothing else of it (no text, no address).
+`propose-system.mjs --like` reads it; `node scripts/build-systems-showcase.mjs --check` fails when it or the
+page's file is out of date.
 
 ## Re-running
 
